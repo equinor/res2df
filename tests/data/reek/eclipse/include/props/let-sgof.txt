@@ -1,0 +1,30 @@
+SGOF
+ a_w = 0 
+ l_w = 1.69  
+ b_w = 1.969  
+ m_w = 1.18  
+                    
+ a_n = 0    
+ l_n = 4.26  
+ b_n = 4.255 
+ m_n = 1 
+
+ SWL  = 0
+ SWC  = 0
+ SWU  = 0.68 
+ SNC  = 0.36
+
+ KRW  = 0.87
+ KRN  = 1
+ KRWU = 1
+ KRNL = 1
+
+ pc_cw = 0 
+ pc_aw = 0 
+ pc_cn = 0 
+ pc_an = 0 
+ pc_swr =0 
+ pc_snr =0
+
+delta = 0.02
+

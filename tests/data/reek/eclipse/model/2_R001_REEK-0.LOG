@@ -1,0 +1,1543 @@
+ ECLIPSE   Version 2014.2. Build Number 11112014. (Arch : Linux X86_64 (64 bit, LINUX_REL5IL1364OP)
+
+ Proprietary Notice
+ This application contains the confidential and
+ proprietary trade secrets of Schlumberger and may 
+ not be copied or stored in an information retrieval
+ system, transferred, used, distributed, translated,
+ or retransmitted in any form or by any means, electron
+ or mechanical, in whole or in part, without the
+ express written permission of the copyright owner.
+
+ ECLIPSE is a mark of Schlumberger. Copyright (c)
+ 1981-2014 Schlumberger. All rights reserved.
+
+     1 READING RUNSPEC 
+     2 READING TITLE   
+     3 READING SAVE    
+     4 READING NOECHO  
+     5 READING DIMENS  
+     6 READING START   
+     7 READING OIL     
+     8 READING GAS     
+     9 READING WATER   
+    10 READING DISGAS  
+    11 READING METRIC  
+    12 READING GRIDOPTS
+    13 READING ENDSCALE
+    14 READING EQLOPTS 
+    15 READING TABDIMS 
+    16 READING EQLDIMS 
+    17 READING REGDIMS 
+    18 READING FAULTDIM
+    19 READING WELLDIMS
+    20 READING VFPPDIMS
+    21 READING VFPIDIMS
+    22 READING SMRYDIMS
+    23 READING UNIFIN  
+    24 READING UNIFOUT 
+    25 READING NOINSPEC
+    26 READING NORSSPEC
+    27 READING GRID    
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           CHECKING FOR LICENSES                                           
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE MEMORY REQUIRED TO PROCESS THE GRID SECTION IS              
+ @                15088 KBYTES                                               
+    29 READING NOECHO  
+    30 READING INIT    
+    31 READING GRIDFILE
+    32 READING MESSAGES
+    33 READING PINCH   
+    34 READING NOECHO  
+    35 READING INCLUDE ../include/grid/reek.grid                                                                                                           
+    36 READING NOECHO  
+    37 READING MAPUNITS
+    38 READING MAPAXES 
+    39 READING GRIDUNIT
+    40 READING SPECGRID
+    41 READING GDORIENT
+    42 READING COORD   
+    43 READING ZCORN   
+    44 READING ACTNUM  
+    45 READING ECHO    
+               END OF INCLUDE FILE 
+    46 READING INCLUDE ../include/grid/reek.faults                                                                                                         
+    47 READING FAULTS  
+               END OF INCLUDE FILE 
+    48 READING INCLUDE ../include/grid/reek.poro                                                                                                           
+    49 READING PORO    
+               END OF INCLUDE FILE 
+    50 READING INCLUDE ../include/grid/reek.perm                                                                                                           
+    51 READING PERMX   
+    52 READING PERMY   
+    53 READING PERMZ   
+               END OF INCLUDE FILE 
+    54 READING MULTIPLY
+    55 READING INCLUDE ../include/grid/reek.multflt                                                                                                        
+    56 READING MULTFLT 
+               END OF INCLUDE FILE 
+    57 READING INCLUDE ../include/grid/reek.multz                                                                                                          
+    58 READING EQUALS  
+               END OF INCLUDE FILE 
+    59 READING EDIT    
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           FLUX FLAG SET IN RUNSPEC BUT FLUXNUM KEYWORD                    
+ @           NOT USED -- SAVE SPACE BY SETTING NTFREG = 0                    
+ @           IN RUNSPEC KEYWORD REGDIMS.                                     
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           NEITHER OLDTRAN,OLDTRANR NOR NEWTRAN SPECIFIED                  
+ @           TRANSMISSIBILITIES TO BE CALCULATED                             
+ @           USING  NEWTRAN                                                  
+    60 READING PROPS   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @                182 NON-NEIGHBOUR CONNECTIONS HAVE BEEN IGNORED            
+ @           AS THEIR TRANSMISSIBILITY IS LESS THAN 0.100000E-05             
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           3286 NON-NEIGHBOUR CONNECTIONS PRESENT                          
+
+ @--COMMENT  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           LEFT HANDED GRIDS MAY NOT BE SUPPORTED                          
+ @            IN ALL PRE AND POST PROCESSORS                                 
+
+ @--COMMENT  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE GRID APPEARS TO BE LEFT HANDED, BUT                         
+ @           IS SPECIFIED IN GDORIENT AS RIGHT HANDED.                       
+ @           ENSURE GDORIENT IS CORRECTLY DEFINED.                           
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           NUMBER OF ACTIVE CELLS IS 35817                                 
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE MEMORY REQUIRED TO PROCESS THE SOLUTION SECTION IS          
+ @               594188 KBYTES                                               
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @              89915 CHARACTER VARIABLES USED                               
+    61 READING INCLUDE ../include/props/swof.inc                                                                                                           
+    62 READING SWOF    
+               END OF INCLUDE FILE 
+    63 READING INCLUDE ../include/props/sgof.txt                                                                                                           
+    64 READING SGOF    
+               END OF INCLUDE FILE 
+    65 READING INCLUDE ../include/props/reek.endpoints                                                                                                     
+    66 READING EQUALS  
+               END OF INCLUDE FILE 
+    67 READING COPY    
+    68 READING MULTIPLY
+    69 READING ADD     
+    70 READING SCALECRS
+    71 READING INCLUDE ../include/props/reek.pvt                                                                                                           
+    72 READING ROCKOPTS
+    73 READING ROCK    
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           ALTHOUGH ROCK DATA WAS ASSOCIATED WITH ROCKNUM                  
+ @           THE NUMBER OF REGIONS WAS NOT EXPLICITLY SET                    
+ @           USING ARGUMENT 13 OF KEYWORD TABDIMS                            
+ @           ROCK WILL BE ASSOCIATED WITH PVTNUM INSTEAD                     
+    74 READING PVTW    
+    75 READING PVTO    
+    76 READING PVDG    
+    77 READING DENSITY 
+               END OF INCLUDE FILE 
+    78 READING INCLUDE ../include/props/reek.swatinit                                                                                                      
+    79 READING SWATINIT
+               END OF INCLUDE FILE 
+    80 READING REGIONS 
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE PROCESSED PVTO DATA FOR TABLE   1                           
+ @           HAS UNDERSATURATED BO LINES THAT WILL INTERSECT                 
+ @           IF EXTRAPOLATED                                                 
+ @           AT RS VALUES OF     522.8400  SM3/SM3 AND     630.0000  SM3/SM3 
+ @           AND A PRESSURE OF       745.57   BARSA                          
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE PROCESSED PVTO DATA FOR TABLE   1                           
+ @           HAS UNDERSATURATED BO LINES THAT WILL INTERSECT                 
+ @           IF EXTRAPOLATED                                                 
+ @           AT RS VALUES OF     522.8400  SM3/SM3 AND     630.0000  SM3/SM3 
+ @           AND A PRESSURE OF       745.99   BARSA                          
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE MAXIMUM PRESSURE ENTERED IN THE PVT TABLES                  
+ @           FOR THE OIL PHASE IS    700.100. THIS IS GREATER THAN           
+ @           THE MAXIMUM PRESSURE FOR THE GAS PHASE,    700.000              
+ @           AND MAY LEAD TO PVT TABLE EXTRAPOLATION                         
+    81 READING INCLUDE ../include/regions/reek.eqlnum                                                                                                      
+    82 READING EQLNUM  
+               END OF INCLUDE FILE 
+    83 READING INCLUDE ../include/regions/reek.fipnum                                                                                                      
+    84 READING FIPNUM  
+               END OF INCLUDE FILE 
+    85 READING EQUALS  
+    86 READING SOLUTION
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           SAVE FILE HAS BEEN WRITTEN.                                     
+    87 READING INCLUDE ../include/solution/reek.equil                                                                                                      
+    88 READING EQUIL   
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE FINE GRID BLOCK EQUILIBRATION SHOULD NOT                    
+ @           USUALLY BE USED WITH THE SWATINIT KEYWORD AS                    
+ @           THE INTEGRATED SOLUTION WILL NOT IN GENERAL                     
+ @           HONOUR THE SWATINIT DATA.                                       
+ @           FOR EQUILIBRATION REGION 1                                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           THE FINE GRID BLOCK EQUILIBRATION SHOULD NOT                    
+ @           USUALLY BE USED WITH THE SWATINIT KEYWORD AS                    
+ @           THE INTEGRATED SOLUTION WILL NOT IN GENERAL                     
+ @           HONOUR THE SWATINIT DATA.                                       
+ @           FOR EQUILIBRATION REGION 2                                      
+               END OF INCLUDE FILE 
+    89 READING RSVD    
+    90 READING RPTSOL  
+    91 READING RPTRST  
+    92 READING SUMMARY 
+    93 READING INCLUDE ../include/summary/reek.smry                                                                                                        
+    94 READING FOPR    
+    95 READING FOPRH   
+    96 READING FGPR    
+    97 READING FGPRH   
+    98 READING FWPR    
+    99 READING FWPRH   
+   100 READING FLPR    
+   101 READING FLPRH   
+   102 READING FVPR    
+   103 READING FOPRF   
+   104 READING FOPRS   
+   105 READING FGSR    
+   106 READING FGPRF   
+   107 READING FGPRS   
+   108 READING FOPP    
+   109 READING FWPP    
+   110 READING FGPP    
+   111 READING FMWPR   
+   112 READING FMWIN   
+   113 READING FVIR    
+   114 READING FWIR    
+   115 READING FWIRH   
+   116 READING FGIR    
+   117 READING FGIRH   
+   118 READING FGLIR   
+   119 READING FMCTP   
+   120 READING FVPT    
+   121 READING FOPT    
+   122 READING FOPTH   
+   123 READING FWPT    
+   124 READING FWPTH   
+   125 READING FGPT    
+   126 READING FGPTH   
+   127 READING FWIT    
+   128 READING FWITH   
+   129 READING FGIT    
+   130 READING FGITH   
+   131 READING FOPTF   
+   132 READING FOPTS   
+   133 READING FWIP    
+   134 READING FOIP    
+   135 READING FGIP    
+   136 READING FWCT    
+   137 READING FWCTH   
+   138 READING FGOR    
+   139 READING FGORH   
+   140 READING FGLR    
+   141 READING FWGR    
+   142 READING FPR     
+   143 READING RPR     
+   144 READING ROIP    
+   145 READING ROIPL   
+   146 READING ROIPG   
+   147 READING RGIP    
+   148 READING RGIPL   
+   149 READING RGIPG   
+   150 READING RGPR    
+   151 READING RGPT    
+   152 READING GMWPR   
+   153 READING GGLIR   
+   154 READING GOPR    
+   155 READING GOPRH   
+   156 READING GGPR    
+   157 READING GGPRH   
+   158 READING GWPR    
+   159 READING GWPRH   
+   160 READING GVPR    
+   161 READING GLPR    
+   162 READING GOPRF   
+   163 READING GOPRS   
+   164 READING GGPRF   
+   165 READING GGPRS   
+   166 READING GWCT    
+   167 READING GWCTH   
+   168 READING GGOR    
+   169 READING GGORH   
+   170 READING GWGR    
+   171 READING GGLR    
+   172 READING GOPT    
+   173 READING GOPTH   
+   174 READING GGPT    
+   175 READING GGPTH   
+   176 READING GWPT    
+   177 READING GWPTH   
+   178 READING GVPT    
+   179 READING GLPT    
+   180 READING GOPTF   
+   181 READING GOPTS   
+   182 READING GGPTF   
+   183 READING GGPTS   
+   184 READING GWIR    
+   185 READING GVIR    
+   186 READING GWIRH   
+   187 READING GGIR    
+   188 READING GGIRH   
+   189 READING GOPP    
+   190 READING GGPP    
+   191 READING GWPP    
+   192 READING GMCTP   
+   193 READING WOPR    
+   194 READING WOPRH   
+   195 READING WGPR    
+   196 READING WGPRH   
+   197 READING WWPR    
+   198 READING WWPRH   
+   199 READING WOPT    
+   200 READING WWPT    
+   201 READING WGPT    
+   202 READING WOPTH   
+   203 READING WWPTH   
+   204 READING WGPTH   
+   205 READING WWCT    
+   206 READING WWCTH   
+   207 READING WGOR    
+   208 READING WGORH   
+   209 READING WWIR    
+   210 READING WWIRH   
+   211 READING WGIR    
+   212 READING WGIRH   
+   213 READING WWIT    
+   214 READING WWITH   
+   215 READING WGIT    
+   216 READING WGITH   
+   217 READING WBHP    
+   218 READING WTHP    
+   219 READING WPI     
+   220 READING WVPR    
+   221 READING WBP     
+   222 READING WBP4    
+   223 READING WBP9    
+   224 READING WMCTL   
+   225 READING WLPR    
+   226 READING WGLIR   
+   227 READING WOGLR   
+   228 READING BPR     
+   229 READING TCPU    
+   230 READING TCPUDAY 
+               END OF INCLUDE FILE 
+   231 READING SCHEDULE
+   232 READING TUNING  
+   233 READING INCLUDE ../include/schedule/reek_history.sch                                                                                                
+   234 READING GRUPTREE
+   235 READING DATES   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           DRSDT KEYWORD HAS NOT BEEN ENTERED, SO THE                      
+ @           MAXIMUM GAS RE-SOLUTION RATE IS DEFAULTED TO INFINITY.          
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           RESTART FILE WRITTEN   REPORT     0                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+ STEP    1 TIME=      1.00  DAYS (    +1.0  DAYS INIT  1 ITS) (2-JAN-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    2 TIME=      4.00  DAYS (    +3.0  DAYS MAXF  1 ITS) (5-JAN-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+
+ @--PROBLEM  AT TIME        4.0   DAYS    ( 5-JAN-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (MAXS)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   5.00         
+ STEP    3 TIME=      4.50  DAYS (   +12.0 HOURS CHOP  1 ITS) (5-JAN-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    4 TIME=      5.13  DAYS (   +15.0 HOURS DIFF  1 ITS) (6-JAN-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    5 TIME=      6.10  DAYS (   +23.4 HOURS DIFF  1 ITS) (7-JAN-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    6 TIME=      7.63  DAYS (    +1.5  DAYS DIFF  1 ITS) (8-JAN-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    7 TIME=     10.01  DAYS (    +2.4  DAYS DIFF  1 ITS) (11-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    8 TIME=     13.74  DAYS (    +3.7  DAYS DIFF  1 ITS) (14-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP    9 TIME=     18.74  DAYS (    +5.0  DAYS MAXS  2 ITS) (19-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP   10 TIME=     23.74  DAYS (    +5.0  DAYS MAXS  5 ITS) (24-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP   11 TIME=     27.37  DAYS (    +3.6  DAYS HALF  1 ITS) (28-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+
+ @--PROBLEM  AT TIME       27.4   DAYS    (28-JAN-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (REPT)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   3.63         
+ STEP   12 TIME=     27.73  DAYS (    +8.7 HOURS CHOP  1 ITS) (28-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP   13 TIME=     28.19  DAYS (   +10.9 HOURS DIFF  1 ITS) (29-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP   14 TIME=     28.89  DAYS (   +17.0 HOURS DIFF  1 ITS) (29-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP   15 TIME=     29.95  DAYS (    +1.1  DAYS HALF  1 ITS) (30-JAN-2000)      
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+ STEP   16 TIME=     31.00  DAYS (    +1.1  DAYS REPT  1 ITS) (1-FEB-2000)       
+  PAV=   306.4  BARSA  WCT= 0.00 GOR= 0.00000   SM3/SM3 WGR= 0.00000   SM3/SM3   
+
+ @--MESSAGE  AT TIME       31.0   DAYS    ( 1-FEB-2000):
+ @           RESTART FILE WRITTEN   REPORT     1                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   236 READING WELSPECS
+   237 READING COMPORD 
+   238 READING COMPDAT 
+   239 READING WCONHIST
+   240 READING WCONINJH
+   241 READING WRFTPLT 
+   242 READING DATES   
+ STEP   17 TIME=     32.00  DAYS (    +1.0  DAYS MAXW  4 ITS) (2-FEB-2000)       
+  PAV=   305.6  BARSA  WCT=0.205 GOR=   184.00  SM3/SM3 WGR=   0.0014  SM3/SM3   
+
+ @--PROBLEM  AT TIME       32.0   DAYS    ( 2-FEB-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (TRNC)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   2.33         
+ STEP   18 TIME=     32.23  DAYS (    +5.6 HOURS CHOP  4 ITS) (2-FEB-2000)       
+  PAV=   305.4  BARSA  WCT=0.202 GOR=   184.00  SM3/SM3 WGR=   0.0014  SM3/SM3   
+ STEP   19 TIME=     32.52  DAYS (    +7.0 HOURS DIFF  1 ITS) (2-FEB-2000)       
+  PAV=   305.1  BARSA  WCT=0.200 GOR=   184.00  SM3/SM3 WGR=   0.0014  SM3/SM3   
+ STEP   20 TIME=     32.98  DAYS (   +10.9 HOURS DIFF  4 ITS) (2-FEB-2000)       
+  PAV=   304.8  BARSA  WCT=0.197 GOR=   184.00  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP   21 TIME=     33.69  DAYS (   +17.0 HOURS DIFF  8 ITS) (3-FEB-2000)       
+  PAV=   304.2  BARSA  WCT=0.193 GOR=   184.00  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP   22 TIME=     34.80  DAYS (    +1.1  DAYS DIFF  9 ITS) (4-FEB-2000)       
+  PAV=   303.4  BARSA  WCT=0.189 GOR=   184.00  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--PROBLEM  AT TIME       34.8   DAYS    ( 4-FEB-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.73         
+ STEP   23 TIME=     34.97  DAYS (    +4.2 HOURS CHOP  1 ITS) (4-FEB-2000)       
+  PAV=   303.3  BARSA  WCT=0.188 GOR=   184.00  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP   24 TIME=     35.19  DAYS (    +5.2 HOURS DIFF  1 ITS) (5-FEB-2000)       
+  PAV=   303.1  BARSA  WCT=0.187 GOR=   184.00  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP   25 TIME=     35.53  DAYS (    +8.1 HOURS DIFF  1 ITS) (5-FEB-2000)       
+  PAV=   302.9  BARSA  WCT=0.186 GOR=   184.00  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP   26 TIME=     36.06  DAYS (   +12.7 HOURS DIFF  2 ITS) (6-FEB-2000)       
+  PAV=   302.5  BARSA  WCT=0.184 GOR=   184.00  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP   27 TIME=     36.88  DAYS (   +19.8 HOURS DIFF  3 ITS) (6-FEB-2000)       
+  PAV=   302.0  BARSA  WCT=0.181 GOR=   184.00  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP   28 TIME=     38.18  DAYS (    +1.3  DAYS DIFF  4 ITS) (8-FEB-2000)       
+  PAV=   301.1  BARSA  WCT=0.177 GOR=   184.00  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP   29 TIME=     40.19  DAYS (    +2.0  DAYS DIFF  5 ITS) (10-FEB-2000)      
+  PAV=   299.9  BARSA  WCT=0.172 GOR=   184.00  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP   30 TIME=     43.35  DAYS (    +3.2  DAYS DIFF 12 ITS) (13-FEB-2000)      
+  PAV=   298.1  BARSA  WCT=0.165 GOR=   184.00  SM3/SM3 WGR=   0.0011  SM3/SM3   
+
+ @--PROBLEM  AT TIME       43.3   DAYS    (13-FEB-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   4.93         
+ STEP   31 TIME=     43.84  DAYS (   +11.8 HOURS CHOP  2 ITS) (13-FEB-2000)      
+  PAV=   297.8  BARSA  WCT=0.164 GOR=   184.00  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP   32 TIME=     44.46  DAYS (   +14.8 HOURS DIFF  3 ITS) (14-FEB-2000)      
+  PAV=   297.4  BARSA  WCT=0.163 GOR=   184.00  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP   33 TIME=     45.42  DAYS (   +23.1 HOURS DIFF  3 ITS) (15-FEB-2000)      
+  PAV=   296.9  BARSA  WCT=0.161 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   34 TIME=     46.93  DAYS (    +1.5  DAYS DIFF  2 ITS) (16-FEB-2000)      
+  PAV=   296.1  BARSA  WCT=0.158 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+
+ @--PROBLEM  AT TIME       46.9   DAYS    (16-FEB-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   2.35         
+ STEP   35 TIME=     47.16  DAYS (    +5.6 HOURS CHOP  1 ITS) (17-FEB-2000)      
+  PAV=   295.9  BARSA  WCT=0.158 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   36 TIME=     47.45  DAYS (    +7.1 HOURS DIFF  1 ITS) (17-FEB-2000)      
+  PAV=   295.8  BARSA  WCT=0.158 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   37 TIME=     47.91  DAYS (   +11.0 HOURS DIFF  1 ITS) (17-FEB-2000)      
+  PAV=   295.5  BARSA  WCT=0.157 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   38 TIME=     48.63  DAYS (   +17.2 HOURS DIFF  3 ITS) (18-FEB-2000)      
+  PAV=   295.1  BARSA  WCT=0.156 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   39 TIME=     49.75  DAYS (    +1.1  DAYS DIFF  3 ITS) (19-FEB-2000)      
+  PAV=   294.5  BARSA  WCT=0.155 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   40 TIME=     51.50  DAYS (    +1.8  DAYS DIFF  2 ITS) (21-FEB-2000)      
+  PAV=   293.6  BARSA  WCT=0.153 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   41 TIME=     54.24  DAYS (    +2.7  DAYS DIFF  6 ITS) (24-FEB-2000)      
+  PAV=   292.3  BARSA  WCT=0.151 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   42 TIME=     57.12  DAYS (    +2.9  DAYS HALF  2 ITS) (27-FEB-2000)      
+  PAV=   290.9  BARSA  WCT=0.149 GOR=   184.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   43 TIME=     60.00  DAYS (    +2.9  DAYS REPT  3 ITS) (1-MAR-2000)       
+  PAV=   289.5  BARSA  WCT=0.148 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME       60.0   DAYS    ( 1-MAR-2000):
+ @           RESTART FILE WRITTEN   REPORT     2                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   243 READING WCONHIST
+   244 READING WCONINJH
+   245 READING DATES   
+
+ @--PROBLEM  AT TIME       60.0   DAYS    ( 1-MAR-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (MAXW)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.00         
+ STEP   44 TIME=     60.10  DAYS (    +2.4 HOURS CHOP  1 ITS) (1-MAR-2000)       
+  PAV=   289.4  BARSA  WCT=0.147 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   45 TIME=     60.23  DAYS (    +3.0 HOURS DIFF  1 ITS) (1-MAR-2000)       
+  PAV=   289.4  BARSA  WCT=0.147 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   46 TIME=     60.42  DAYS (    +4.7 HOURS DIFF  1 ITS) (1-MAR-2000)       
+  PAV=   289.3  BARSA  WCT=0.147 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   47 TIME=     60.73  DAYS (    +7.3 HOURS DIFF  1 ITS) (1-MAR-2000)       
+  PAV=   289.1  BARSA  WCT=0.147 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   48 TIME=     61.20  DAYS (   +11.4 HOURS DIFF  1 ITS) (2-MAR-2000)       
+  PAV=   288.9  BARSA  WCT=0.147 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   49 TIME=     61.95  DAYS (   +17.9 HOURS DIFF  1 ITS) (2-MAR-2000)       
+  PAV=   288.5  BARSA  WCT=0.146 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   50 TIME=     63.11  DAYS (    +1.2  DAYS DIFF  2 ITS) (4-MAR-2000)       
+  PAV=   288.0  BARSA  WCT=0.146 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   51 TIME=     64.93  DAYS (    +1.8  DAYS DIFF  2 ITS) (5-MAR-2000)       
+  PAV=   287.1  BARSA  WCT=0.146 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   52 TIME=     67.77  DAYS (    +2.8  DAYS DIFF  4 ITS) (8-MAR-2000)       
+  PAV=   285.8  BARSA  WCT=0.146 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   53 TIME=     72.21  DAYS (    +4.4  DAYS DIFF  2 ITS) (13-MAR-2000)      
+  PAV=   283.8  BARSA  WCT=0.146 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   54 TIME=     77.21  DAYS (    +5.0  DAYS MAXS  3 ITS) (18-MAR-2000)      
+  PAV=   281.7  BARSA  WCT=0.146 GOR=   183.56  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   55 TIME=     82.21  DAYS (    +5.0  DAYS MAXS  3 ITS) (23-MAR-2000)      
+  PAV=   279.6  BARSA  WCT=0.148 GOR=   182.94  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   56 TIME=     86.61  DAYS (    +4.4  DAYS HALF  3 ITS) (27-MAR-2000)      
+  PAV=   277.8  BARSA  WCT=0.149 GOR=   182.46  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   57 TIME=     91.00  DAYS (    +4.4  DAYS REPT  2 ITS) (1-APR-2000)       
+  PAV=   276.1  BARSA  WCT=0.152 GOR=   181.57  SM3/SM3 WGR=   0.0010  SM3/SM3   
+
+ @--MESSAGE  AT TIME       91.0   DAYS    ( 1-APR-2000):
+ @           RESTART FILE WRITTEN   REPORT     3                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   246 READING WCONHIST
+   247 READING DATES   
+ STEP   58 TIME=     92.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-APR-2000)       
+  PAV=   275.8  BARSA  WCT=0.150 GOR=   183.00  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   59 TIME=     94.99  DAYS (    +3.0  DAYS TRNC  2 ITS) (4-APR-2000)       
+  PAV=   275.0  BARSA  WCT=0.150 GOR=   183.09  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   60 TIME=     99.99  DAYS (    +5.0  DAYS MAXS  5 ITS) (9-APR-2000)       
+  PAV=   273.6  BARSA  WCT=0.148 GOR=   182.95  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   61 TIME=    104.99  DAYS (    +5.0  DAYS MAXS  3 ITS) (14-APR-2000)      
+  PAV=   272.3  BARSA  WCT=0.146 GOR=   182.74  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   62 TIME=    109.99  DAYS (    +5.0  DAYS MAXS  3 ITS) (19-APR-2000)      
+  PAV=   271.0  BARSA  WCT=0.144 GOR=   182.51  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   63 TIME=    114.99  DAYS (    +5.0  DAYS MAXS  3 ITS) (24-APR-2000)      
+  PAV=   269.7  BARSA  WCT=0.143 GOR=   182.26  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   64 TIME=    118.00  DAYS (    +3.0  DAYS HALF  3 ITS) (27-APR-2000)      
+  PAV=   269.0  BARSA  WCT=0.142 GOR=   182.11  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   65 TIME=    121.00  DAYS (    +3.0  DAYS REPT  3 ITS) (1-MAY-2000)       
+  PAV=   268.2  BARSA  WCT=0.141 GOR=   181.95  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      121.0   DAYS    ( 1-MAY-2000):
+ @           RESTART FILE WRITTEN   REPORT     4                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   248 READING WCONHIST
+   249 READING DATES   
+ STEP   66 TIME=    122.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-MAY-2000)       
+  PAV=   268.0  BARSA  WCT=0.139 GOR=   182.50  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   67 TIME=    125.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-MAY-2000)       
+  PAV=   267.5  BARSA  WCT=0.138 GOR=   182.53  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   68 TIME=    130.00  DAYS (    +5.0  DAYS MAXS  7 ITS) (10-MAY-2000)      
+  PAV=   266.6  BARSA  WCT=0.136 GOR=   182.48  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   69 TIME=    135.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (15-MAY-2000)      
+  PAV=   265.7  BARSA  WCT=0.134 GOR=   182.42  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   70 TIME=    140.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (20-MAY-2000)      
+  PAV=   264.8  BARSA  WCT=0.132 GOR=   182.34  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   71 TIME=    145.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (25-MAY-2000)      
+  PAV=   263.9  BARSA  WCT=0.130 GOR=   182.27  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   72 TIME=    148.50  DAYS (    +3.5  DAYS HALF  7 ITS) (28-MAY-2000)      
+  PAV=   263.3  BARSA  WCT=0.129 GOR=   182.22  SM3/SM3 WGR=   0.0008  SM3/SM3   
+
+ @--PROBLEM  AT TIME      148.5   DAYS    (28-MAY-2000):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (REPT)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   3.50         
+ STEP   73 TIME=    148.85  DAYS (    +8.4 HOURS CHOP  1 ITS) (28-MAY-2000)      
+  PAV=   263.3  BARSA  WCT=0.128 GOR=   182.22  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   74 TIME=    149.29  DAYS (   +10.5 HOURS DIFF  1 ITS) (29-MAY-2000)      
+  PAV=   263.2  BARSA  WCT=0.128 GOR=   182.21  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   75 TIME=    149.97  DAYS (   +16.4 HOURS DIFF  2 ITS) (29-MAY-2000)      
+  PAV=   263.1  BARSA  WCT=0.128 GOR=   182.20  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   76 TIME=    150.99  DAYS (    +1.0  DAYS HALF  3 ITS) (30-MAY-2000)      
+  PAV=   262.9  BARSA  WCT=0.128 GOR=   182.18  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   77 TIME=    152.00  DAYS (    +1.0  DAYS REPT  4 ITS) (1-JUN-2000)       
+  PAV=   262.7  BARSA  WCT=0.127 GOR=   182.17  SM3/SM3 WGR=   0.0008  SM3/SM3   
+
+ @--MESSAGE  AT TIME      152.0   DAYS    ( 1-JUN-2000):
+ @           RESTART FILE WRITTEN   REPORT     5                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   250 READING WELSPECS
+   251 READING COMPORD 
+   252 READING COMPDAT 
+   253 READING WCONHIST
+   254 READING WCONINJH
+   255 READING WRFTPLT 
+   256 READING DATES   
+ STEP   78 TIME=    153.00  DAYS (    +1.0  DAYS MAXW  3 ITS) (2-JUN-2000)       
+  PAV=   262.6  BARSA  WCT=0.134 GOR=   181.72  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   79 TIME=    156.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-JUN-2000)       
+  PAV=   262.6  BARSA  WCT=0.134 GOR=   181.64  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   80 TIME=    161.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-JUN-2000)      
+  PAV=   262.5  BARSA  WCT=0.133 GOR=   181.65  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   81 TIME=    166.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (15-JUN-2000)      
+  PAV=   262.4  BARSA  WCT=0.133 GOR=   181.75  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   82 TIME=    171.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (20-JUN-2000)      
+  PAV=   262.3  BARSA  WCT=0.132 GOR=   181.92  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   83 TIME=    176.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (25-JUN-2000)      
+  PAV=   262.2  BARSA  WCT=0.132 GOR=   182.13  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   84 TIME=    179.00  DAYS (    +3.0  DAYS HALF  3 ITS) (28-JUN-2000)      
+  PAV=   262.2  BARSA  WCT=0.132 GOR=   182.27  SM3/SM3 WGR=   0.0008  SM3/SM3   
+ STEP   85 TIME=    182.00  DAYS (    +3.0  DAYS REPT 10 ITS) (1-JLY-2000)       
+  PAV=   262.1  BARSA  WCT=0.131 GOR=   182.42  SM3/SM3 WGR=   0.0008  SM3/SM3   
+
+ @--MESSAGE  AT TIME      182.0   DAYS    ( 1-JLY-2000):
+ @           RESTART FILE WRITTEN   REPORT     6                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   257 READING WCONHIST
+   258 READING WCONINJH
+   259 READING DATES   
+ STEP   86 TIME=    183.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-JLY-2000)       
+  PAV=   262.1  BARSA  WCT=0.143 GOR=   181.76  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   87 TIME=    186.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-JLY-2000)       
+  PAV=   262.1  BARSA  WCT=0.144 GOR=   181.80  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   88 TIME=    191.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-JLY-2000)      
+  PAV=   262.0  BARSA  WCT=0.144 GOR=   182.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   89 TIME=    196.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-JLY-2000)      
+  PAV=   262.0  BARSA  WCT=0.145 GOR=   182.24  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   90 TIME=    201.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (20-JLY-2000)      
+  PAV=   261.9  BARSA  WCT=0.145 GOR=   182.50  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   91 TIME=    206.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (25-JLY-2000)      
+  PAV=   261.7  BARSA  WCT=0.145 GOR=   182.74  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   92 TIME=    209.50  DAYS (    +3.5  DAYS HALF  4 ITS) (28-JLY-2000)      
+  PAV=   261.7  BARSA  WCT=0.145 GOR=   182.89  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   93 TIME=    213.00  DAYS (    +3.5  DAYS REPT  3 ITS) (1-AUG-2000)       
+  PAV=   261.6  BARSA  WCT=0.145 GOR=   183.05  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      213.0   DAYS    ( 1-AUG-2000):
+ @           RESTART FILE WRITTEN   REPORT     7                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   260 READING WCONHIST
+   261 READING WCONINJH
+   262 READING DATES   
+ STEP   94 TIME=    214.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-AUG-2000)       
+  PAV=   261.6  BARSA  WCT=0.148 GOR=   183.07  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   95 TIME=    217.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-AUG-2000)       
+  PAV=   261.6  BARSA  WCT=0.148 GOR=   183.21  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP   96 TIME=    222.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-AUG-2000)      
+  PAV=   261.5  BARSA  WCT=0.148 GOR=   183.43  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   97 TIME=    227.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (15-AUG-2000)      
+  PAV=   261.5  BARSA  WCT=0.148 GOR=   183.63  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   98 TIME=    232.00  DAYS (    +5.0  DAYS MAXS  8 ITS) (20-AUG-2000)      
+  PAV=   261.4  BARSA  WCT=0.147 GOR=   183.82  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP   99 TIME=    237.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (25-AUG-2000)      
+  PAV=   261.3  BARSA  WCT=0.146 GOR=   184.00  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  100 TIME=    240.50  DAYS (    +3.5  DAYS HALF  5 ITS) (28-AUG-2000)      
+  PAV=   261.2  BARSA  WCT=0.146 GOR=   184.11  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  101 TIME=    244.00  DAYS (    +3.5  DAYS REPT  6 ITS) (1-SEP-2000)       
+  PAV=   261.1  BARSA  WCT=0.145 GOR=   184.21  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      244.0   DAYS    ( 1-SEP-2000):
+ @           RESTART FILE WRITTEN   REPORT     8                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   263 READING WCONHIST
+   264 READING WCONINJH
+   265 READING DATES   
+ STEP  102 TIME=    245.00  DAYS (    +1.0  DAYS MAXW  5 ITS) (2-SEP-2000)       
+  PAV=   261.1  BARSA  WCT=0.146 GOR=   184.30  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  103 TIME=    248.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-SEP-2000)       
+  PAV=   261.1  BARSA  WCT=0.146 GOR=   184.42  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  104 TIME=    253.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (10-SEP-2000)      
+  PAV=   261.1  BARSA  WCT=0.145 GOR=   184.59  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  105 TIME=    258.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-SEP-2000)      
+  PAV=   261.1  BARSA  WCT=0.144 GOR=   184.74  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  106 TIME=    263.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (20-SEP-2000)      
+  PAV=   261.0  BARSA  WCT=0.143 GOR=   184.88  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  107 TIME=    268.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (25-SEP-2000)      
+  PAV=   260.9  BARSA  WCT=0.142 GOR=   185.01  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  108 TIME=    271.00  DAYS (    +3.0  DAYS HALF  3 ITS) (28-SEP-2000)      
+  PAV=   260.9  BARSA  WCT=0.142 GOR=   185.09  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  109 TIME=    274.00  DAYS (    +3.0  DAYS REPT  3 ITS) (1-OCT-2000)       
+  PAV=   260.8  BARSA  WCT=0.141 GOR=   185.16  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      274.0   DAYS    ( 1-OCT-2000):
+ @           RESTART FILE WRITTEN   REPORT     9                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   266 READING WCONHIST
+   267 READING WCONINJH
+   268 READING DATES   
+ STEP  110 TIME=    275.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-OCT-2000)       
+  PAV=   260.8  BARSA  WCT=0.142 GOR=   185.25  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  111 TIME=    278.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-OCT-2000)       
+  PAV=   260.8  BARSA  WCT=0.142 GOR=   185.35  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  112 TIME=    283.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (10-OCT-2000)      
+  PAV=   260.8  BARSA  WCT=0.141 GOR=   185.41  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  113 TIME=    288.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (15-OCT-2000)      
+  PAV=   260.8  BARSA  WCT=0.140 GOR=   185.47  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  114 TIME=    293.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (20-OCT-2000)      
+  PAV=   260.8  BARSA  WCT=0.140 GOR=   185.53  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  115 TIME=    298.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (25-OCT-2000)      
+  PAV=   260.7  BARSA  WCT=0.140 GOR=   185.51  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  116 TIME=    301.50  DAYS (    +3.5  DAYS HALF  3 ITS) (28-OCT-2000)      
+  PAV=   260.7  BARSA  WCT=0.140 GOR=   185.40  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  117 TIME=    305.00  DAYS (    +3.5  DAYS REPT  2 ITS) (1-NOV-2000)       
+  PAV=   260.6  BARSA  WCT=0.140 GOR=   185.31  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      305.0   DAYS    ( 1-NOV-2000):
+ @           RESTART FILE WRITTEN   REPORT    10                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   269 READING WCONHIST
+   270 READING WCONINJH
+   271 READING DATES   
+ STEP  118 TIME=    306.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-NOV-2000)       
+  PAV=   260.6  BARSA  WCT=0.141 GOR=   185.33  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  119 TIME=    309.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-NOV-2000)       
+  PAV=   260.6  BARSA  WCT=0.141 GOR=   185.30  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  120 TIME=    314.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-NOV-2000)      
+  PAV=   260.6  BARSA  WCT=0.141 GOR=   185.25  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  121 TIME=    319.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (15-NOV-2000)      
+  PAV=   260.6  BARSA  WCT=0.142 GOR=   185.23  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  122 TIME=    324.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (20-NOV-2000)      
+  PAV=   260.6  BARSA  WCT=0.142 GOR=   185.21  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  123 TIME=    329.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (25-NOV-2000)      
+  PAV=   260.5  BARSA  WCT=0.142 GOR=   185.20  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  124 TIME=    332.00  DAYS (    +3.0  DAYS HALF  2 ITS) (28-NOV-2000)      
+  PAV=   260.5  BARSA  WCT=0.142 GOR=   185.20  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  125 TIME=    335.00  DAYS (    +3.0  DAYS REPT  4 ITS) (1-DEC-2000)       
+  PAV=   260.5  BARSA  WCT=0.143 GOR=   185.19  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      335.0   DAYS    ( 1-DEC-2000):
+ @           RESTART FILE WRITTEN   REPORT    11                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   272 READING WCONHIST
+   273 READING WCONINJH
+   274 READING DATES   
+ STEP  126 TIME=    336.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-DEC-2000)       
+  PAV=   260.5  BARSA  WCT=0.143 GOR=   185.22  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  127 TIME=    339.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-DEC-2000)       
+  PAV=   260.5  BARSA  WCT=0.143 GOR=   185.24  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  128 TIME=    344.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-DEC-2000)      
+  PAV=   260.5  BARSA  WCT=0.144 GOR=   185.27  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  129 TIME=    349.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (15-DEC-2000)      
+  PAV=   260.5  BARSA  WCT=0.144 GOR=   185.28  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  130 TIME=    354.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (20-DEC-2000)      
+  PAV=   260.4  BARSA  WCT=0.145 GOR=   185.30  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  131 TIME=    359.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (25-DEC-2000)      
+  PAV=   260.4  BARSA  WCT=0.146 GOR=   185.32  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  132 TIME=    362.50  DAYS (    +3.5  DAYS HALF  4 ITS) (28-DEC-2000)      
+  PAV=   260.4  BARSA  WCT=0.146 GOR=   185.33  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  133 TIME=    366.00  DAYS (    +3.5  DAYS REPT  4 ITS) (1-JAN-2001)       
+  PAV=   260.3  BARSA  WCT=0.147 GOR=   185.34  SM3/SM3 WGR=   0.0009  SM3/SM3   
+
+ @--MESSAGE  AT TIME      366.0   DAYS    ( 1-JAN-2001):
+ @           RESTART FILE WRITTEN   REPORT    12                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   275 READING WELSPECS
+   276 READING COMPORD 
+   277 READING COMPDAT 
+   278 READING WCONHIST
+   279 READING WCONINJH
+   280 READING WRFTPLT 
+   281 READING DATES   
+ STEP  134 TIME=    367.00  DAYS (    +1.0  DAYS MAXW  3 ITS) (2-JAN-2001)       
+  PAV=   260.1  BARSA  WCT=0.146 GOR=   184.90  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  135 TIME=    370.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-JAN-2001)       
+  PAV=   259.3  BARSA  WCT=0.145 GOR=   184.69  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  136 TIME=    375.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-JAN-2001)      
+  PAV=   258.2  BARSA  WCT=0.148 GOR=   183.99  SM3/SM3 WGR=   0.0009  SM3/SM3   
+ STEP  137 TIME=    380.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (15-JAN-2001)      
+  PAV=   257.3  BARSA  WCT=0.151 GOR=   182.40  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP  138 TIME=    385.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (20-JAN-2001)      
+  PAV=   256.6  BARSA  WCT=0.156 GOR=   181.41  SM3/SM3 WGR=   0.0010  SM3/SM3   
+ STEP  139 TIME=    390.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (25-JAN-2001)      
+  PAV=   255.9  BARSA  WCT=0.161 GOR=   180.54  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP  140 TIME=    393.50  DAYS (    +3.5  DAYS HALF  3 ITS) (28-JAN-2001)      
+  PAV=   255.5  BARSA  WCT=0.164 GOR=   180.39  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP  141 TIME=    397.00  DAYS (    +3.5  DAYS REPT  3 ITS) (1-FEB-2001)       
+  PAV=   255.1  BARSA  WCT=0.166 GOR=   180.23  SM3/SM3 WGR=   0.0011  SM3/SM3   
+
+ @--MESSAGE  AT TIME      397.0   DAYS    ( 1-FEB-2001):
+ @           RESTART FILE WRITTEN   REPORT    13                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   282 READING WCONHIST
+   283 READING WCONINJH
+   284 READING DATES   
+ STEP  142 TIME=    398.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-FEB-2001)       
+  PAV=   255.0  BARSA  WCT=0.169 GOR=   180.89  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP  143 TIME=    401.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-FEB-2001)       
+  PAV=   254.9  BARSA  WCT=0.171 GOR=   180.99  SM3/SM3 WGR=   0.0011  SM3/SM3   
+ STEP  144 TIME=    406.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (10-FEB-2001)      
+  PAV=   254.6  BARSA  WCT=0.173 GOR=   180.99  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  145 TIME=    411.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-FEB-2001)      
+  PAV=   254.4  BARSA  WCT=0.175 GOR=   180.89  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  146 TIME=    416.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (20-FEB-2001)      
+  PAV=   254.1  BARSA  WCT=0.177 GOR=   180.56  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  147 TIME=    420.50  DAYS (    +4.5  DAYS HALF  7 ITS) (24-FEB-2001)      
+  PAV=   253.8  BARSA  WCT=0.178 GOR=   180.21  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  148 TIME=    425.00  DAYS (    +4.5  DAYS REPT  3 ITS) (1-MAR-2001)       
+  PAV=   253.6  BARSA  WCT=0.180 GOR=   179.85  SM3/SM3 WGR=   0.0012  SM3/SM3   
+
+ @--MESSAGE  AT TIME      425.0   DAYS    ( 1-MAR-2001):
+ @           RESTART FILE WRITTEN   REPORT    14                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   285 READING WELSPECS
+   286 READING COMPORD 
+   287 READING COMPDAT 
+   288 READING WCONHIST
+   289 READING WCONINJH
+   290 READING WRFTPLT 
+   291 READING DATES   
+ STEP  149 TIME=    426.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.174 GOR=   180.15  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  150 TIME=    429.00  DAYS (    +3.0  DAYS MAXF  4 ITS) (5-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.176 GOR=   180.04  SM3/SM3 WGR=   0.0012  SM3/SM3   
+
+ @--PROBLEM  AT TIME      429.0   DAYS    ( 5-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (MAXS)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   5.00         
+ STEP  151 TIME=    429.50  DAYS (   +12.0 HOURS CHOP  3 ITS) (5-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.176 GOR=   180.03  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  152 TIME=    430.13  DAYS (   +15.0 HOURS DIFF  3 ITS) (6-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.176 GOR=   180.01  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  153 TIME=    431.10  DAYS (   +23.4 HOURS DIFF  5 ITS) (7-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.177 GOR=   179.98  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  154 TIME=    432.63  DAYS (    +1.5  DAYS DIFF  6 ITS) (8-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.178 GOR=   179.93  SM3/SM3 WGR=   0.0012  SM3/SM3   
+
+ @--PROBLEM  AT TIME      432.6   DAYS    ( 8-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   2.38         
+ STEP  155 TIME=    432.87  DAYS (    +5.7 HOURS CHOP  2 ITS) (8-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.178 GOR=   179.92  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  156 TIME=    433.16  DAYS (    +7.2 HOURS DIFF  3 ITS) (9-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.178 GOR=   179.91  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  157 TIME=    433.63  DAYS (   +11.2 HOURS DIFF  4 ITS) (9-MAR-2001)       
+  PAV=   253.5  BARSA  WCT=0.178 GOR=   179.90  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  158 TIME=    434.36  DAYS (   +17.5 HOURS DIFF  4 ITS) (10-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.179 GOR=   179.87  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  159 TIME=    435.49  DAYS (    +1.1  DAYS DIFF  5 ITS) (11-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.179 GOR=   179.83  SM3/SM3 WGR=   0.0012  SM3/SM3   
+
+ @--PROBLEM  AT TIME      435.5   DAYS    (11-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.78         
+ STEP  160 TIME=    435.67  DAYS (    +4.3 HOURS CHOP  2 ITS) (11-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.179 GOR=   179.83  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  161 TIME=    435.89  DAYS (    +5.3 HOURS DIFF  3 ITS) (11-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.179 GOR=   179.82  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  162 TIME=    436.24  DAYS (    +8.3 HOURS DIFF  4 ITS) (12-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.180 GOR=   179.81  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  163 TIME=    436.78  DAYS (   +13.0 HOURS DIFF  5 ITS) (12-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.180 GOR=   179.79  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  164 TIME=    437.63  DAYS (   +20.3 HOURS DIFF  8 ITS) (13-MAR-2001)      
+  PAV=   253.5  BARSA  WCT=0.180 GOR=   179.76  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  165 TIME=    438.95  DAYS (    +1.3  DAYS DIFF  5 ITS) (14-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.181 GOR=   179.72  SM3/SM3 WGR=   0.0012  SM3/SM3   
+
+ @--PROBLEM  AT TIME      439.0   DAYS    (14-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   2.07         
+ STEP  166 TIME=    439.16  DAYS (    +5.0 HOURS CHOP  3 ITS) (15-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.181 GOR=   179.71  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  167 TIME=    439.42  DAYS (    +6.2 HOURS DIFF  3 ITS) (15-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.181 GOR=   179.70  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  168 TIME=    439.82  DAYS (    +9.7 HOURS DIFF  3 ITS) (15-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.182 GOR=   179.69  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  169 TIME=    440.45  DAYS (   +15.1 HOURS DIFF  5 ITS) (16-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.182 GOR=   179.67  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  170 TIME=    441.44  DAYS (   +23.7 HOURS DIFF 11 ITS) (17-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.182 GOR=   179.63  SM3/SM3 WGR=   0.0012  SM3/SM3   
+
+ @--PROBLEM  AT TIME      441.4   DAYS    (17-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.54         
+ STEP  171 TIME=    441.59  DAYS (    +3.7 HOURS CHOP  3 ITS) (17-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.182 GOR=   179.63  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  172 TIME=    441.79  DAYS (    +4.6 HOURS DIFF  3 ITS) (17-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.183 GOR=   179.62  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  173 TIME=    442.09  DAYS (    +7.2 HOURS DIFF  3 ITS) (18-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.183 GOR=   179.61  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  174 TIME=    442.56  DAYS (   +11.3 HOURS DIFF  5 ITS) (18-MAR-2001)      
+  PAV=   253.6  BARSA  WCT=0.183 GOR=   179.59  SM3/SM3 WGR=   0.0012  SM3/SM3   
+ STEP  175 TIME=    443.29  DAYS (   +17.6 HOURS DIFF  6 ITS) (19-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.183 GOR=   179.57  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--PROBLEM  AT TIME      443.3   DAYS    (19-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.15         
+ STEP  176 TIME=    443.41  DAYS (    +2.8 HOURS CHOP  1 ITS) (19-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.183 GOR=   179.57  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  177 TIME=    443.55  DAYS (    +3.4 HOURS DIFF  2 ITS) (19-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.184 GOR=   179.56  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  178 TIME=    443.77  DAYS (    +5.4 HOURS DIFF  3 ITS) (19-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.184 GOR=   179.55  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  179 TIME=    444.12  DAYS (    +8.4 HOURS DIFF  3 ITS) (20-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.184 GOR=   179.54  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  180 TIME=    444.67  DAYS (   +13.1 HOURS DIFF  4 ITS) (20-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.184 GOR=   179.52  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  181 TIME=    445.53  DAYS (   +20.5 HOURS DIFF  9 ITS) (21-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.185 GOR=   179.50  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--PROBLEM  AT TIME      445.5   DAYS    (21-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.34         
+ STEP  182 TIME=    445.66  DAYS (    +3.2 HOURS CHOP  1 ITS) (21-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.185 GOR=   179.49  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  183 TIME=    445.83  DAYS (    +4.0 HOURS DIFF  1 ITS) (21-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.185 GOR=   179.49  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  184 TIME=    446.09  DAYS (    +6.3 HOURS DIFF  2 ITS) (22-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.185 GOR=   179.48  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  185 TIME=    446.50  DAYS (    +9.8 HOURS DIFF  2 ITS) (22-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.185 GOR=   179.46  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  186 TIME=    447.13  DAYS (   +15.3 HOURS DIFF  6 ITS) (23-MAR-2001)      
+  PAV=   253.7  BARSA  WCT=0.185 GOR=   179.44  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  187 TIME=    448.13  DAYS (   +23.9 HOURS DIFF  6 ITS) (24-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.186 GOR=   179.41  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  188 TIME=    449.69  DAYS (    +1.6  DAYS DIFF 11 ITS) (25-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.187 GOR=   179.36  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--PROBLEM  AT TIME      449.7   DAYS    (25-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   2.43         
+ STEP  189 TIME=    449.93  DAYS (    +5.8 HOURS CHOP  2 ITS) (25-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.187 GOR=   179.36  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  190 TIME=    450.23  DAYS (    +7.3 HOURS DIFF  2 ITS) (26-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.187 GOR=   179.35  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  191 TIME=    450.71  DAYS (   +11.4 HOURS DIFF  3 ITS) (26-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.187 GOR=   179.33  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  192 TIME=    451.45  DAYS (   +17.8 HOURS DIFF  4 ITS) (27-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.188 GOR=   179.31  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--PROBLEM  AT TIME      451.4   DAYS    (27-MAR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (DIFF)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   1.16         
+ STEP  193 TIME=    451.57  DAYS (    +2.8 HOURS CHOP  1 ITS) (27-MAR-2001)      
+  PAV=   253.8  BARSA  WCT=0.188 GOR=   179.31  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  194 TIME=    451.71  DAYS (    +3.5 HOURS DIFF  1 ITS) (27-MAR-2001)      
+  PAV=   253.9  BARSA  WCT=0.188 GOR=   179.30  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  195 TIME=    451.94  DAYS (    +5.4 HOURS DIFF  1 ITS) (27-MAR-2001)      
+  PAV=   253.9  BARSA  WCT=0.188 GOR=   179.30  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  196 TIME=    452.29  DAYS (    +8.5 HOURS DIFF  1 ITS) (28-MAR-2001)      
+  PAV=   253.9  BARSA  WCT=0.188 GOR=   179.28  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  197 TIME=    452.84  DAYS (   +13.3 HOURS DIFF  3 ITS) (28-MAR-2001)      
+  PAV=   253.9  BARSA  WCT=0.188 GOR=   179.27  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  198 TIME=    453.71  DAYS (   +20.7 HOURS DIFF  1 ITS) (29-MAR-2001)      
+  PAV=   253.9  BARSA  WCT=0.189 GOR=   179.24  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  199 TIME=    454.85  DAYS (    +1.1  DAYS HALF  4 ITS) (30-MAR-2001)      
+  PAV=   253.9  BARSA  WCT=0.189 GOR=   179.21  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  200 TIME=    456.00  DAYS (    +1.1  DAYS REPT  4 ITS) (1-APR-2001)       
+  PAV=   254.0  BARSA  WCT=0.190 GOR=   179.18  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--MESSAGE  AT TIME      456.0   DAYS    ( 1-APR-2001):
+ @           RESTART FILE WRITTEN   REPORT    15                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   292 READING WCONHIST
+   293 READING WCONINJH
+   294 READING DATES   
+ STEP  201 TIME=    457.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-APR-2001)       
+  PAV=   253.9  BARSA  WCT=0.186 GOR=   179.34  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  202 TIME=    460.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-APR-2001)       
+  PAV=   253.9  BARSA  WCT=0.188 GOR=   179.25  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  203 TIME=    465.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-APR-2001)      
+  PAV=   254.0  BARSA  WCT=0.192 GOR=   179.12  SM3/SM3 WGR=   0.0013  SM3/SM3   
+
+ @--PROBLEM  AT TIME      465.0   DAYS    (10-APR-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (MAXS)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   5.00         
+ STEP  204 TIME=    465.50  DAYS (   +12.0 HOURS CHOP  3 ITS) (10-APR-2001)      
+  PAV=   254.0  BARSA  WCT=0.192 GOR=   179.11  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  205 TIME=    466.13  DAYS (   +15.0 HOURS DIFF  3 ITS) (11-APR-2001)      
+  PAV=   254.0  BARSA  WCT=0.192 GOR=   179.09  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  206 TIME=    467.10  DAYS (   +23.4 HOURS DIFF  3 ITS) (12-APR-2001)      
+  PAV=   254.0  BARSA  WCT=0.193 GOR=   179.07  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  207 TIME=    468.63  DAYS (    +1.5  DAYS DIFF  1 ITS) (13-APR-2001)      
+  PAV=   254.0  BARSA  WCT=0.194 GOR=   179.03  SM3/SM3 WGR=   0.0013  SM3/SM3   
+ STEP  208 TIME=    471.01  DAYS (    +2.4  DAYS DIFF  4 ITS) (16-APR-2001)      
+  PAV=   254.1  BARSA  WCT=0.196 GOR=   178.97  SM3/SM3 WGR=   0.0014  SM3/SM3   
+ STEP  209 TIME=    474.74  DAYS (    +3.7  DAYS DIFF  2 ITS) (19-APR-2001)      
+  PAV=   254.1  BARSA  WCT=0.199 GOR=   178.92  SM3/SM3 WGR=   0.0014  SM3/SM3   
+ STEP  210 TIME=    479.74  DAYS (    +5.0  DAYS MAXS  3 ITS) (24-APR-2001)      
+  PAV=   254.2  BARSA  WCT=0.203 GOR=   178.88  SM3/SM3 WGR=   0.0014  SM3/SM3   
+ STEP  211 TIME=    482.87  DAYS (    +3.1  DAYS HALF  2 ITS) (27-APR-2001)      
+  PAV=   254.2  BARSA  WCT=0.205 GOR=   178.87  SM3/SM3 WGR=   0.0014  SM3/SM3   
+ STEP  212 TIME=    486.00  DAYS (    +3.1  DAYS REPT  2 ITS) (1-MAY-2001)       
+  PAV=   254.3  BARSA  WCT=0.208 GOR=   178.89  SM3/SM3 WGR=   0.0015  SM3/SM3   
+
+ @--MESSAGE  AT TIME      486.0   DAYS    ( 1-MAY-2001):
+ @           RESTART FILE WRITTEN   REPORT    16                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   295 READING WCONHIST
+   296 READING WCONINJH
+   297 READING DATES   
+ STEP  213 TIME=    487.00  DAYS (    +1.0  DAYS MAXW  3 ITS) (2-MAY-2001)       
+  PAV=   254.3  BARSA  WCT=0.208 GOR=   178.91  SM3/SM3 WGR=   0.0015  SM3/SM3   
+ STEP  214 TIME=    490.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-MAY-2001)       
+  PAV=   254.3  BARSA  WCT=0.211 GOR=   178.91  SM3/SM3 WGR=   0.0015  SM3/SM3   
+ STEP  215 TIME=    495.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-MAY-2001)      
+  PAV=   254.4  BARSA  WCT=0.216 GOR=   178.91  SM3/SM3 WGR=   0.0015  SM3/SM3   
+ STEP  216 TIME=    500.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-MAY-2001)      
+  PAV=   254.4  BARSA  WCT=0.221 GOR=   178.91  SM3/SM3 WGR=   0.0016  SM3/SM3   
+
+ @--PROBLEM  AT TIME      500.0   DAYS    (15-MAY-2001):
+ @           NON-LINEAR EQUATION CONVERGENCE FAILURE (MAXS)                  
+ @           ITERATION LIMIT REACHED - TIME STEP CHOPPED FROM   5.00         
+ STEP  217 TIME=    500.50  DAYS (   +12.0 HOURS CHOP  2 ITS) (15-MAY-2001)      
+  PAV=   254.5  BARSA  WCT=0.221 GOR=   178.91  SM3/SM3 WGR=   0.0016  SM3/SM3   
+ STEP  218 TIME=    501.13  DAYS (   +15.0 HOURS DIFF  2 ITS) (16-MAY-2001)      
+  PAV=   254.5  BARSA  WCT=0.222 GOR=   178.92  SM3/SM3 WGR=   0.0016  SM3/SM3   
+ STEP  219 TIME=    502.10  DAYS (   +23.4 HOURS DIFF  1 ITS) (17-MAY-2001)      
+  PAV=   254.5  BARSA  WCT=0.223 GOR=   178.92  SM3/SM3 WGR=   0.0016  SM3/SM3   
+ STEP  220 TIME=    503.63  DAYS (    +1.5  DAYS DIFF  4 ITS) (18-MAY-2001)      
+  PAV=   254.5  BARSA  WCT=0.225 GOR=   178.92  SM3/SM3 WGR=   0.0016  SM3/SM3   
+ STEP  221 TIME=    506.01  DAYS (    +2.4  DAYS DIFF  4 ITS) (21-MAY-2001)      
+  PAV=   254.5  BARSA  WCT=0.228 GOR=   178.92  SM3/SM3 WGR=   0.0017  SM3/SM3   
+ STEP  222 TIME=    509.74  DAYS (    +3.7  DAYS DIFF  6 ITS) (24-MAY-2001)      
+  PAV=   254.6  BARSA  WCT=0.233 GOR=   178.92  SM3/SM3 WGR=   0.0017  SM3/SM3   
+ STEP  223 TIME=    513.37  DAYS (    +3.6  DAYS HALF  2 ITS) (28-MAY-2001)      
+  PAV=   254.6  BARSA  WCT=0.239 GOR=   178.92  SM3/SM3 WGR=   0.0018  SM3/SM3   
+ STEP  224 TIME=    517.00  DAYS (    +3.6  DAYS REPT  3 ITS) (1-JUN-2001)       
+  PAV=   254.7  BARSA  WCT=0.244 GOR=   178.92  SM3/SM3 WGR=   0.0018  SM3/SM3   
+
+ @--MESSAGE  AT TIME      517.0   DAYS    ( 1-JUN-2001):
+ @           RESTART FILE WRITTEN   REPORT    17                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   298 READING WCONHIST
+   299 READING WCONINJH
+   300 READING DATES   
+ STEP  225 TIME=    518.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-JUN-2001)       
+  PAV=   254.7  BARSA  WCT=0.246 GOR=   178.91  SM3/SM3 WGR=   0.0018  SM3/SM3   
+ STEP  226 TIME=    521.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-JUN-2001)       
+  PAV=   254.7  BARSA  WCT=0.251 GOR=   178.90  SM3/SM3 WGR=   0.0019  SM3/SM3   
+ STEP  227 TIME=    526.00  DAYS (    +5.0  DAYS MAXS  8 ITS) (10-JUN-2001)      
+  PAV=   254.8  BARSA  WCT=0.259 GOR=   178.89  SM3/SM3 WGR=   0.0020  SM3/SM3   
+ STEP  228 TIME=    531.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-JUN-2001)      
+  PAV=   254.8  BARSA  WCT=0.269 GOR=   178.89  SM3/SM3 WGR=   0.0021  SM3/SM3   
+ STEP  229 TIME=    536.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-JUN-2001)      
+  PAV=   254.9  BARSA  WCT=0.278 GOR=   178.88  SM3/SM3 WGR=   0.0022  SM3/SM3   
+ STEP  230 TIME=    541.00  DAYS (    +5.0  DAYS MAXS  7 ITS) (25-JUN-2001)      
+  PAV=   254.9  BARSA  WCT=0.288 GOR=   178.87  SM3/SM3 WGR=   0.0023  SM3/SM3   
+ STEP  231 TIME=    544.00  DAYS (    +3.0  DAYS HALF  2 ITS) (28-JUN-2001)      
+  PAV=   255.0  BARSA  WCT=0.294 GOR=   178.86  SM3/SM3 WGR=   0.0023  SM3/SM3   
+ STEP  232 TIME=    547.00  DAYS (    +3.0  DAYS REPT  7 ITS) (1-JLY-2001)       
+  PAV=   255.0  BARSA  WCT=0.301 GOR=   178.85  SM3/SM3 WGR=   0.0024  SM3/SM3   
+
+ @--MESSAGE  AT TIME      547.0   DAYS    ( 1-JLY-2001):
+ @           RESTART FILE WRITTEN   REPORT    18                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   301 READING WCONHIST
+   302 READING WCONINJH
+   303 READING DATES   
+ STEP  233 TIME=    548.00  DAYS (    +1.0  DAYS MAXW  3 ITS) (2-JLY-2001)       
+  PAV=   255.0  BARSA  WCT=0.302 GOR=   178.82  SM3/SM3 WGR=   0.0024  SM3/SM3   
+ STEP  234 TIME=    551.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-JLY-2001)       
+  PAV=   255.1  BARSA  WCT=0.308 GOR=   178.80  SM3/SM3 WGR=   0.0025  SM3/SM3   
+ STEP  235 TIME=    556.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-JLY-2001)      
+  PAV=   255.1  BARSA  WCT=0.318 GOR=   178.77  SM3/SM3 WGR=   0.0026  SM3/SM3   
+ STEP  236 TIME=    561.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-JLY-2001)      
+  PAV=   255.2  BARSA  WCT=0.328 GOR=   178.75  SM3/SM3 WGR=   0.0027  SM3/SM3   
+ STEP  237 TIME=    566.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-JLY-2001)      
+  PAV=   255.2  BARSA  WCT=0.338 GOR=   178.75  SM3/SM3 WGR=   0.0029  SM3/SM3   
+ STEP  238 TIME=    571.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-JLY-2001)      
+  PAV=   255.3  BARSA  WCT=0.346 GOR=   178.76  SM3/SM3 WGR=   0.0030  SM3/SM3   
+ STEP  239 TIME=    574.50  DAYS (    +3.5  DAYS HALF  2 ITS) (28-JLY-2001)      
+  PAV=   255.3  BARSA  WCT=0.352 GOR=   178.77  SM3/SM3 WGR=   0.0030  SM3/SM3   
+ STEP  240 TIME=    578.00  DAYS (    +3.5  DAYS REPT  2 ITS) (1-AUG-2001)       
+  PAV=   255.4  BARSA  WCT=0.358 GOR=   178.79  SM3/SM3 WGR=   0.0031  SM3/SM3   
+
+ @--MESSAGE  AT TIME      578.0   DAYS    ( 1-AUG-2001):
+ @           RESTART FILE WRITTEN   REPORT    19                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   304 READING WCONHIST
+   305 READING WCONINJH
+   306 READING DATES   
+ STEP  241 TIME=    579.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-AUG-2001)       
+  PAV=   255.4  BARSA  WCT=0.358 GOR=   178.77  SM3/SM3 WGR=   0.0031  SM3/SM3   
+ STEP  242 TIME=    582.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-AUG-2001)       
+  PAV=   255.4  BARSA  WCT=0.363 GOR=   178.78  SM3/SM3 WGR=   0.0032  SM3/SM3   
+ STEP  243 TIME=    587.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-AUG-2001)      
+  PAV=   255.5  BARSA  WCT=0.369 GOR=   178.78  SM3/SM3 WGR=   0.0033  SM3/SM3   
+ STEP  244 TIME=    592.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-AUG-2001)      
+  PAV=   255.5  BARSA  WCT=0.375 GOR=   178.78  SM3/SM3 WGR=   0.0034  SM3/SM3   
+ STEP  245 TIME=    597.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (20-AUG-2001)      
+  PAV=   255.6  BARSA  WCT=0.381 GOR=   178.78  SM3/SM3 WGR=   0.0034  SM3/SM3   
+ STEP  246 TIME=    602.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (25-AUG-2001)      
+  PAV=   255.6  BARSA  WCT=0.386 GOR=   178.82  SM3/SM3 WGR=   0.0035  SM3/SM3   
+ STEP  247 TIME=    605.50  DAYS (    +3.5  DAYS HALF  5 ITS) (28-AUG-2001)      
+  PAV=   255.7  BARSA  WCT=0.390 GOR=   178.88  SM3/SM3 WGR=   0.0036  SM3/SM3   
+ STEP  248 TIME=    609.00  DAYS (    +3.5  DAYS REPT  3 ITS) (1-SEP-2001)       
+  PAV=   255.7  BARSA  WCT=0.394 GOR=   178.91  SM3/SM3 WGR=   0.0036  SM3/SM3   
+
+ @--MESSAGE  AT TIME      609.0   DAYS    ( 1-SEP-2001):
+ @           RESTART FILE WRITTEN   REPORT    20                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   307 READING WCONHIST
+   308 READING WCONINJH
+   309 READING DATES   
+ STEP  249 TIME=    610.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-SEP-2001)       
+  PAV=   255.7  BARSA  WCT=0.393 GOR=   178.91  SM3/SM3 WGR=   0.0036  SM3/SM3   
+ STEP  250 TIME=    613.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-SEP-2001)       
+  PAV=   255.7  BARSA  WCT=0.396 GOR=   178.92  SM3/SM3 WGR=   0.0037  SM3/SM3   
+ STEP  251 TIME=    618.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-SEP-2001)      
+  PAV=   255.8  BARSA  WCT=0.400 GOR=   178.90  SM3/SM3 WGR=   0.0037  SM3/SM3   
+ STEP  252 TIME=    623.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (15-SEP-2001)      
+  PAV=   255.8  BARSA  WCT=0.405 GOR=   178.89  SM3/SM3 WGR=   0.0038  SM3/SM3   
+ STEP  253 TIME=    628.00  DAYS (    +5.0  DAYS MAXS  8 ITS) (20-SEP-2001)      
+  PAV=   255.9  BARSA  WCT=0.409 GOR=   178.88  SM3/SM3 WGR=   0.0039  SM3/SM3   
+ STEP  254 TIME=    633.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-SEP-2001)      
+  PAV=   255.9  BARSA  WCT=0.413 GOR=   178.88  SM3/SM3 WGR=   0.0039  SM3/SM3   
+ STEP  255 TIME=    636.00  DAYS (    +3.0  DAYS HALF  3 ITS) (28-SEP-2001)      
+  PAV=   256.0  BARSA  WCT=0.416 GOR=   178.87  SM3/SM3 WGR=   0.0040  SM3/SM3   
+ STEP  256 TIME=    639.00  DAYS (    +3.0  DAYS REPT  3 ITS) (1-OCT-2001)       
+  PAV=   256.0  BARSA  WCT=0.418 GOR=   178.87  SM3/SM3 WGR=   0.0040  SM3/SM3   
+
+ @--MESSAGE  AT TIME      639.0   DAYS    ( 1-OCT-2001):
+ @           RESTART FILE WRITTEN   REPORT    21                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   310 READING WCONHIST
+   311 READING WCONINJH
+   312 READING DATES   
+ STEP  257 TIME=    640.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-OCT-2001)       
+  PAV=   256.0  BARSA  WCT=0.417 GOR=   178.86  SM3/SM3 WGR=   0.0040  SM3/SM3   
+ STEP  258 TIME=    643.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-OCT-2001)       
+  PAV=   256.1  BARSA  WCT=0.420 GOR=   178.85  SM3/SM3 WGR=   0.0040  SM3/SM3   
+ STEP  259 TIME=    648.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-OCT-2001)      
+  PAV=   256.1  BARSA  WCT=0.424 GOR=   178.84  SM3/SM3 WGR=   0.0041  SM3/SM3   
+ STEP  260 TIME=    653.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (15-OCT-2001)      
+  PAV=   256.2  BARSA  WCT=0.428 GOR=   178.86  SM3/SM3 WGR=   0.0042  SM3/SM3   
+ STEP  261 TIME=    658.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (20-OCT-2001)      
+  PAV=   256.2  BARSA  WCT=0.432 GOR=   178.87  SM3/SM3 WGR=   0.0043  SM3/SM3   
+ STEP  262 TIME=    663.00  DAYS (    +5.0  DAYS MAXS  6 ITS) (25-OCT-2001)      
+  PAV=   256.3  BARSA  WCT=0.436 GOR=   178.88  SM3/SM3 WGR=   0.0043  SM3/SM3   
+ STEP  263 TIME=    666.50  DAYS (    +3.5  DAYS HALF  5 ITS) (28-OCT-2001)      
+  PAV=   256.3  BARSA  WCT=0.439 GOR=   178.88  SM3/SM3 WGR=   0.0044  SM3/SM3   
+ STEP  264 TIME=    670.00  DAYS (    +3.5  DAYS REPT  3 ITS) (1-NOV-2001)       
+  PAV=   256.4  BARSA  WCT=0.441 GOR=   178.89  SM3/SM3 WGR=   0.0044  SM3/SM3   
+
+ @--MESSAGE  AT TIME      670.0   DAYS    ( 1-NOV-2001):
+ @           RESTART FILE WRITTEN   REPORT    22                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   313 READING WCONHIST
+   314 READING WCONINJH
+   315 READING DATES   
+ STEP  265 TIME=    671.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-NOV-2001)       
+  PAV=   256.4  BARSA  WCT=0.440 GOR=   178.93  SM3/SM3 WGR=   0.0044  SM3/SM3   
+ STEP  266 TIME=    674.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-NOV-2001)       
+  PAV=   256.4  BARSA  WCT=0.443 GOR=   178.91  SM3/SM3 WGR=   0.0044  SM3/SM3   
+ STEP  267 TIME=    679.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-NOV-2001)      
+  PAV=   256.5  BARSA  WCT=0.446 GOR=   178.88  SM3/SM3 WGR=   0.0045  SM3/SM3   
+ STEP  268 TIME=    684.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (15-NOV-2001)      
+  PAV=   256.5  BARSA  WCT=0.450 GOR=   178.87  SM3/SM3 WGR=   0.0046  SM3/SM3   
+ STEP  269 TIME=    689.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (20-NOV-2001)      
+  PAV=   256.6  BARSA  WCT=0.454 GOR=   178.85  SM3/SM3 WGR=   0.0046  SM3/SM3   
+ STEP  270 TIME=    694.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (25-NOV-2001)      
+  PAV=   256.7  BARSA  WCT=0.457 GOR=   178.85  SM3/SM3 WGR=   0.0047  SM3/SM3   
+ STEP  271 TIME=    697.00  DAYS (    +3.0  DAYS HALF  3 ITS) (28-NOV-2001)      
+  PAV=   256.7  BARSA  WCT=0.460 GOR=   178.85  SM3/SM3 WGR=   0.0048  SM3/SM3   
+ STEP  272 TIME=    700.00  DAYS (    +3.0  DAYS REPT  2 ITS) (1-DEC-2001)       
+  PAV=   256.7  BARSA  WCT=0.462 GOR=   178.85  SM3/SM3 WGR=   0.0048  SM3/SM3   
+
+ @--MESSAGE  AT TIME      700.0   DAYS    ( 1-DEC-2001):
+ @           RESTART FILE WRITTEN   REPORT    23                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   316 READING WCONHIST
+   317 READING WCONINJH
+   318 READING DATES   
+ STEP  273 TIME=    701.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-DEC-2001)       
+  PAV=   256.7  BARSA  WCT=0.461 GOR=   178.89  SM3/SM3 WGR=   0.0048  SM3/SM3   
+ STEP  274 TIME=    704.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-DEC-2001)       
+  PAV=   256.8  BARSA  WCT=0.463 GOR=   178.84  SM3/SM3 WGR=   0.0048  SM3/SM3   
+ STEP  275 TIME=    709.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (10-DEC-2001)      
+  PAV=   256.8  BARSA  WCT=0.467 GOR=   178.78  SM3/SM3 WGR=   0.0049  SM3/SM3   
+ STEP  276 TIME=    714.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (15-DEC-2001)      
+  PAV=   256.9  BARSA  WCT=0.470 GOR=   178.74  SM3/SM3 WGR=   0.0050  SM3/SM3   
+ STEP  277 TIME=    719.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (20-DEC-2001)      
+  PAV=   257.0  BARSA  WCT=0.474 GOR=   178.71  SM3/SM3 WGR=   0.0050  SM3/SM3   
+ STEP  278 TIME=    724.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (25-DEC-2001)      
+  PAV=   257.0  BARSA  WCT=0.477 GOR=   178.68  SM3/SM3 WGR=   0.0051  SM3/SM3   
+ STEP  279 TIME=    727.50  DAYS (    +3.5  DAYS HALF  3 ITS) (28-DEC-2001)      
+  PAV=   257.1  BARSA  WCT=0.480 GOR=   178.66  SM3/SM3 WGR=   0.0052  SM3/SM3   
+ STEP  280 TIME=    731.00  DAYS (    +3.5  DAYS REPT  2 ITS) (1-JAN-2002)       
+  PAV=   257.1  BARSA  WCT=0.482 GOR=   178.64  SM3/SM3 WGR=   0.0052  SM3/SM3   
+
+ @--MESSAGE  AT TIME      731.0   DAYS    ( 1-JAN-2002):
+ @           RESTART FILE WRITTEN   REPORT    24                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   319 READING WCONHIST
+   320 READING WCONINJH
+   321 READING DATES   
+ STEP  281 TIME=    732.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-JAN-2002)       
+  PAV=   257.1  BARSA  WCT=0.481 GOR=   178.67  SM3/SM3 WGR=   0.0052  SM3/SM3   
+ STEP  282 TIME=    735.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-JAN-2002)       
+  PAV=   257.1  BARSA  WCT=0.483 GOR=   178.60  SM3/SM3 WGR=   0.0052  SM3/SM3   
+ STEP  283 TIME=    740.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-JAN-2002)      
+  PAV=   257.2  BARSA  WCT=0.487 GOR=   178.52  SM3/SM3 WGR=   0.0053  SM3/SM3   
+ STEP  284 TIME=    745.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (15-JAN-2002)      
+  PAV=   257.3  BARSA  WCT=0.490 GOR=   178.48  SM3/SM3 WGR=   0.0054  SM3/SM3   
+ STEP  285 TIME=    750.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (20-JAN-2002)      
+  PAV=   257.3  BARSA  WCT=0.494 GOR=   178.45  SM3/SM3 WGR=   0.0055  SM3/SM3   
+ STEP  286 TIME=    755.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (25-JAN-2002)      
+  PAV=   257.4  BARSA  WCT=0.498 GOR=   178.42  SM3/SM3 WGR=   0.0055  SM3/SM3   
+ STEP  287 TIME=    758.50  DAYS (    +3.5  DAYS HALF  2 ITS) (28-JAN-2002)      
+  PAV=   257.4  BARSA  WCT=0.500 GOR=   178.40  SM3/SM3 WGR=   0.0056  SM3/SM3   
+ STEP  288 TIME=    762.00  DAYS (    +3.5  DAYS REPT  3 ITS) (1-FEB-2002)       
+  PAV=   257.5  BARSA  WCT=0.503 GOR=   178.38  SM3/SM3 WGR=   0.0057  SM3/SM3   
+
+ @--MESSAGE  AT TIME      762.0   DAYS    ( 1-FEB-2002):
+ @           RESTART FILE WRITTEN   REPORT    25                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   322 READING WCONHIST
+   323 READING WCONINJH
+   324 READING DATES   
+ STEP  289 TIME=    763.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-FEB-2002)       
+  PAV=   257.5  BARSA  WCT=0.502 GOR=   178.40  SM3/SM3 WGR=   0.0056  SM3/SM3   
+ STEP  290 TIME=    766.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-FEB-2002)       
+  PAV=   257.5  BARSA  WCT=0.504 GOR=   178.31  SM3/SM3 WGR=   0.0057  SM3/SM3   
+ STEP  291 TIME=    771.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (10-FEB-2002)      
+  PAV=   257.6  BARSA  WCT=0.508 GOR=   178.24  SM3/SM3 WGR=   0.0058  SM3/SM3   
+ STEP  292 TIME=    776.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (15-FEB-2002)      
+  PAV=   257.6  BARSA  WCT=0.511 GOR=   178.21  SM3/SM3 WGR=   0.0059  SM3/SM3   
+ STEP  293 TIME=    781.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-FEB-2002)      
+  PAV=   257.7  BARSA  WCT=0.515 GOR=   178.22  SM3/SM3 WGR=   0.0060  SM3/SM3   
+ STEP  294 TIME=    785.50  DAYS (    +4.5  DAYS HALF  2 ITS) (24-FEB-2002)      
+  PAV=   257.7  BARSA  WCT=0.518 GOR=   178.23  SM3/SM3 WGR=   0.0060  SM3/SM3   
+ STEP  295 TIME=    790.00  DAYS (    +4.5  DAYS REPT  2 ITS) (1-MAR-2002)       
+  PAV=   257.8  BARSA  WCT=0.522 GOR=   178.25  SM3/SM3 WGR=   0.0061  SM3/SM3   
+
+ @--MESSAGE  AT TIME      790.0   DAYS    ( 1-MAR-2002):
+ @           RESTART FILE WRITTEN   REPORT    26                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   325 READING WCONHIST
+   326 READING WCONINJH
+   327 READING DATES   
+ STEP  296 TIME=    791.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-MAR-2002)       
+  PAV=   257.8  BARSA  WCT=0.521 GOR=   178.31  SM3/SM3 WGR=   0.0061  SM3/SM3   
+ STEP  297 TIME=    794.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-MAR-2002)       
+  PAV=   257.8  BARSA  WCT=0.523 GOR=   178.23  SM3/SM3 WGR=   0.0062  SM3/SM3   
+ STEP  298 TIME=    799.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-MAR-2002)      
+  PAV=   257.9  BARSA  WCT=0.527 GOR=   178.20  SM3/SM3 WGR=   0.0063  SM3/SM3   
+ STEP  299 TIME=    804.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-MAR-2002)      
+  PAV=   257.9  BARSA  WCT=0.531 GOR=   178.20  SM3/SM3 WGR=   0.0063  SM3/SM3   
+ STEP  300 TIME=    809.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-MAR-2002)      
+  PAV=   258.0  BARSA  WCT=0.535 GOR=   178.22  SM3/SM3 WGR=   0.0064  SM3/SM3   
+ STEP  301 TIME=    814.00  DAYS (    +5.0  DAYS MAXS  3 ITS) (25-MAR-2002)      
+  PAV=   258.1  BARSA  WCT=0.538 GOR=   178.24  SM3/SM3 WGR=   0.0065  SM3/SM3   
+ STEP  302 TIME=    817.50  DAYS (    +3.5  DAYS HALF  2 ITS) (28-MAR-2002)      
+  PAV=   258.1  BARSA  WCT=0.541 GOR=   178.26  SM3/SM3 WGR=   0.0066  SM3/SM3   
+ STEP  303 TIME=    821.00  DAYS (    +3.5  DAYS REPT  2 ITS) (1-APR-2002)       
+  PAV=   258.1  BARSA  WCT=0.544 GOR=   178.27  SM3/SM3 WGR=   0.0067  SM3/SM3   
+
+ @--MESSAGE  AT TIME      821.0   DAYS    ( 1-APR-2002):
+ @           RESTART FILE WRITTEN   REPORT    27                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   328 READING WCONHIST
+   329 READING WCONINJH
+   330 READING DATES   
+ STEP  304 TIME=    822.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-APR-2002)       
+  PAV=   258.2  BARSA  WCT=0.543 GOR=   178.35  SM3/SM3 WGR=   0.0067  SM3/SM3   
+ STEP  305 TIME=    825.00  DAYS (    +3.0  DAYS MAXF  1 ITS) (5-APR-2002)       
+  PAV=   258.2  BARSA  WCT=0.545 GOR=   178.28  SM3/SM3 WGR=   0.0067  SM3/SM3   
+ STEP  306 TIME=    830.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-APR-2002)      
+  PAV=   258.2  BARSA  WCT=0.549 GOR=   178.24  SM3/SM3 WGR=   0.0068  SM3/SM3   
+ STEP  307 TIME=    835.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-APR-2002)      
+  PAV=   258.3  BARSA  WCT=0.553 GOR=   178.26  SM3/SM3 WGR=   0.0069  SM3/SM3   
+ STEP  308 TIME=    840.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-APR-2002)      
+  PAV=   258.4  BARSA  WCT=0.557 GOR=   178.39  SM3/SM3 WGR=   0.0070  SM3/SM3   
+ STEP  309 TIME=    845.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-APR-2002)      
+  PAV=   258.4  BARSA  WCT=0.560 GOR=   178.50  SM3/SM3 WGR=   0.0071  SM3/SM3   
+ STEP  310 TIME=    848.00  DAYS (    +3.0  DAYS HALF  1 ITS) (28-APR-2002)      
+  PAV=   258.4  BARSA  WCT=0.563 GOR=   178.56  SM3/SM3 WGR=   0.0072  SM3/SM3   
+ STEP  311 TIME=    851.00  DAYS (    +3.0  DAYS REPT  2 ITS) (1-MAY-2002)       
+  PAV=   258.5  BARSA  WCT=0.565 GOR=   178.61  SM3/SM3 WGR=   0.0073  SM3/SM3   
+
+ @--MESSAGE  AT TIME      851.0   DAYS    ( 1-MAY-2002):
+ @           RESTART FILE WRITTEN   REPORT    28                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   331 READING WCONHIST
+   332 READING WCONINJH
+   333 READING DATES   
+ STEP  312 TIME=    852.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-MAY-2002)       
+  PAV=   258.5  BARSA  WCT=0.564 GOR=   178.73  SM3/SM3 WGR=   0.0073  SM3/SM3   
+ STEP  313 TIME=    855.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-MAY-2002)       
+  PAV=   258.5  BARSA  WCT=0.567 GOR=   178.70  SM3/SM3 WGR=   0.0073  SM3/SM3   
+ STEP  314 TIME=    860.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-MAY-2002)      
+  PAV=   258.6  BARSA  WCT=0.570 GOR=   178.84  SM3/SM3 WGR=   0.0074  SM3/SM3   
+ STEP  315 TIME=    865.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-MAY-2002)      
+  PAV=   258.6  BARSA  WCT=0.573 GOR=   178.99  SM3/SM3 WGR=   0.0075  SM3/SM3   
+ STEP  316 TIME=    870.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-MAY-2002)      
+  PAV=   258.7  BARSA  WCT=0.576 GOR=   179.07  SM3/SM3 WGR=   0.0076  SM3/SM3   
+ STEP  317 TIME=    875.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (25-MAY-2002)      
+  PAV=   258.7  BARSA  WCT=0.580 GOR=   179.13  SM3/SM3 WGR=   0.0077  SM3/SM3   
+ STEP  318 TIME=    878.50  DAYS (    +3.5  DAYS HALF  2 ITS) (28-MAY-2002)      
+  PAV=   258.8  BARSA  WCT=0.582 GOR=   179.17  SM3/SM3 WGR=   0.0078  SM3/SM3   
+ STEP  319 TIME=    882.00  DAYS (    +3.5  DAYS REPT  1 ITS) (1-JUN-2002)       
+  PAV=   258.8  BARSA  WCT=0.584 GOR=   179.20  SM3/SM3 WGR=   0.0078  SM3/SM3   
+
+ @--MESSAGE  AT TIME      882.0   DAYS    ( 1-JUN-2002):
+ @           RESTART FILE WRITTEN   REPORT    29                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   334 READING WCONHIST
+   335 READING WCONINJH
+   336 READING DATES   
+ STEP  320 TIME=    883.00  DAYS (    +1.0  DAYS MAXW  3 ITS) (2-JUN-2002)       
+  PAV=   258.8  BARSA  WCT=0.584 GOR=   179.34  SM3/SM3 WGR=   0.0078  SM3/SM3   
+ STEP  321 TIME=    886.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-JUN-2002)       
+  PAV=   258.8  BARSA  WCT=0.586 GOR=   179.32  SM3/SM3 WGR=   0.0079  SM3/SM3   
+ STEP  322 TIME=    891.00  DAYS (    +5.0  DAYS MAXS  1 ITS) (10-JUN-2002)      
+  PAV=   258.9  BARSA  WCT=0.589 GOR=   179.32  SM3/SM3 WGR=   0.0080  SM3/SM3   
+ STEP  323 TIME=    896.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-JUN-2002)      
+  PAV=   258.9  BARSA  WCT=0.592 GOR=   179.35  SM3/SM3 WGR=   0.0081  SM3/SM3   
+ STEP  324 TIME=    901.00  DAYS (    +5.0  DAYS MAXS  4 ITS) (20-JUN-2002)      
+  PAV=   259.0  BARSA  WCT=0.595 GOR=   179.40  SM3/SM3 WGR=   0.0082  SM3/SM3   
+ STEP  325 TIME=    906.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-JUN-2002)      
+  PAV=   259.1  BARSA  WCT=0.598 GOR=   179.47  SM3/SM3 WGR=   0.0083  SM3/SM3   
+ STEP  326 TIME=    909.00  DAYS (    +3.0  DAYS HALF  2 ITS) (28-JUN-2002)      
+  PAV=   259.1  BARSA  WCT=0.600 GOR=   179.51  SM3/SM3 WGR=   0.0084  SM3/SM3   
+ STEP  327 TIME=    912.00  DAYS (    +3.0  DAYS REPT  1 ITS) (1-JLY-2002)       
+  PAV=   259.1  BARSA  WCT=0.602 GOR=   179.56  SM3/SM3 WGR=   0.0084  SM3/SM3   
+
+ @--MESSAGE  AT TIME      912.0   DAYS    ( 1-JLY-2002):
+ @           RESTART FILE WRITTEN   REPORT    30                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   337 READING WCONHIST
+   338 READING WCONINJH
+   339 READING DATES   
+ STEP  328 TIME=    913.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-JLY-2002)       
+  PAV=   259.1  BARSA  WCT=0.602 GOR=   179.71  SM3/SM3 WGR=   0.0084  SM3/SM3   
+ STEP  329 TIME=    916.00  DAYS (    +3.0  DAYS MAXF  1 ITS) (5-JLY-2002)       
+  PAV=   259.2  BARSA  WCT=0.603 GOR=   179.70  SM3/SM3 WGR=   0.0085  SM3/SM3   
+ STEP  330 TIME=    921.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-JLY-2002)      
+  PAV=   259.2  BARSA  WCT=0.606 GOR=   179.75  SM3/SM3 WGR=   0.0086  SM3/SM3   
+ STEP  331 TIME=    926.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-JLY-2002)      
+  PAV=   259.2  BARSA  WCT=0.609 GOR=   179.84  SM3/SM3 WGR=   0.0087  SM3/SM3   
+ STEP  332 TIME=    931.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-JLY-2002)      
+  PAV=   259.3  BARSA  WCT=0.612 GOR=   179.94  SM3/SM3 WGR=   0.0088  SM3/SM3   
+ STEP  333 TIME=    936.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-JLY-2002)      
+  PAV=   259.3  BARSA  WCT=0.615 GOR=   180.04  SM3/SM3 WGR=   0.0089  SM3/SM3   
+ STEP  334 TIME=    939.50  DAYS (    +3.5  DAYS HALF  1 ITS) (28-JLY-2002)      
+  PAV=   259.4  BARSA  WCT=0.617 GOR=   180.11  SM3/SM3 WGR=   0.0090  SM3/SM3   
+ STEP  335 TIME=    943.00  DAYS (    +3.5  DAYS REPT  1 ITS) (1-AUG-2002)       
+  PAV=   259.4  BARSA  WCT=0.619 GOR=   180.19  SM3/SM3 WGR=   0.0090  SM3/SM3   
+
+ @--MESSAGE  AT TIME      943.0   DAYS    ( 1-AUG-2002):
+ @           RESTART FILE WRITTEN   REPORT    31                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   340 READING WCONHIST
+   341 READING WCONINJH
+   342 READING DATES   
+ STEP  336 TIME=    944.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-AUG-2002)       
+  PAV=   259.4  BARSA  WCT=0.619 GOR=   180.35  SM3/SM3 WGR=   0.0090  SM3/SM3   
+ STEP  337 TIME=    947.00  DAYS (    +3.0  DAYS MAXF  1 ITS) (5-AUG-2002)       
+  PAV=   259.5  BARSA  WCT=0.621 GOR=   180.44  SM3/SM3 WGR=   0.0091  SM3/SM3   
+ STEP  338 TIME=    952.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-AUG-2002)      
+  PAV=   259.5  BARSA  WCT=0.624 GOR=   180.55  SM3/SM3 WGR=   0.0092  SM3/SM3   
+ STEP  339 TIME=    957.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-AUG-2002)      
+  PAV=   259.5  BARSA  WCT=0.627 GOR=   180.66  SM3/SM3 WGR=   0.0093  SM3/SM3   
+ STEP  340 TIME=    962.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-AUG-2002)      
+  PAV=   259.6  BARSA  WCT=0.630 GOR=   180.75  SM3/SM3 WGR=   0.0094  SM3/SM3   
+ STEP  341 TIME=    967.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-AUG-2002)      
+  PAV=   259.6  BARSA  WCT=0.633 GOR=   180.83  SM3/SM3 WGR=   0.0095  SM3/SM3   
+
+ @--MESSAGE  AT TIME      967.0   DAYS    (25-AUG-2002):
+ @           ******************************************                      
+ @           * WELL OP_5     HAS CHANGED TO           *                      
+ @           * CONTROL BY BOTTOM HOLE PRESSURE        *                      
+ @           * FROM TIME    967.00   DAYS  .          *                      
+ @           ******************************************                      
+ STEP  342 TIME=    970.50  DAYS (    +3.5  DAYS HALF  1 ITS) (28-AUG-2002)      
+  PAV=   259.7  BARSA  WCT=0.635 GOR=   180.92  SM3/SM3 WGR=   0.0096  SM3/SM3   
+ STEP  343 TIME=    974.00  DAYS (    +3.5  DAYS REPT  1 ITS) (1-SEP-2002)       
+  PAV=   259.7  BARSA  WCT=0.638 GOR=   180.58  SM3/SM3 WGR=   0.0098  SM3/SM3   
+
+ @--MESSAGE  AT TIME      974.0   DAYS    ( 1-SEP-2002):
+ @           RESTART FILE WRITTEN   REPORT    32                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   343 READING WCONHIST
+   344 READING WCONINJH
+   345 READING DATES   
+
+ @--MESSAGE  AT TIME      974.0   DAYS    ( 1-SEP-2002):
+ @           ******************************************                      
+ @           * WELL OP_5     HAS CHANGED TO           *                      
+ @           * CONTROL BY BOTTOM HOLE PRESSURE        *                      
+ @           * FROM TIME    974.00   DAYS  .          *                      
+ @           ******************************************                      
+ STEP  344 TIME=    975.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-SEP-2002)       
+  PAV=   259.7  BARSA  WCT=0.639 GOR=   180.25  SM3/SM3 WGR=   0.0098  SM3/SM3   
+ STEP  345 TIME=    978.00  DAYS (    +3.0  DAYS MAXF  1 ITS) (5-SEP-2002)       
+  PAV=   259.7  BARSA  WCT=0.641 GOR=   180.22  SM3/SM3 WGR=   0.0099  SM3/SM3   
+ STEP  346 TIME=    983.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-SEP-2002)      
+  PAV=   259.8  BARSA  WCT=0.645 GOR=   179.85  SM3/SM3 WGR=   0.0101  SM3/SM3   
+ STEP  347 TIME=    988.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-SEP-2002)      
+  PAV=   259.9  BARSA  WCT=0.649 GOR=   179.54  SM3/SM3 WGR=   0.0103  SM3/SM3   
+ STEP  348 TIME=    993.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-SEP-2002)      
+  PAV=   259.9  BARSA  WCT=0.653 GOR=   179.26  SM3/SM3 WGR=   0.0105  SM3/SM3   
+ STEP  349 TIME=    998.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-SEP-2002)      
+  PAV=   260.0  BARSA  WCT=0.658 GOR=   179.00  SM3/SM3 WGR=   0.0107  SM3/SM3   
+ STEP  350 TIME=   1001.00  DAYS (    +3.0  DAYS HALF  1 ITS) (28-SEP-2002)      
+  PAV=   260.1  BARSA  WCT=0.660 GOR=   178.85  SM3/SM3 WGR=   0.0109  SM3/SM3   
+ STEP  351 TIME=   1004.00  DAYS (    +3.0  DAYS REPT  1 ITS) (1-OCT-2002)       
+  PAV=   260.1  BARSA  WCT=0.663 GOR=   178.72  SM3/SM3 WGR=   0.0110  SM3/SM3   
+
+ @--MESSAGE  AT TIME     1004.0   DAYS    ( 1-OCT-2002):
+ @           RESTART FILE WRITTEN   REPORT    33                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   346 READING WCONHIST
+   347 READING WCONINJH
+   348 READING DATES   
+
+ @--MESSAGE  AT TIME     1004.0   DAYS    ( 1-OCT-2002):
+ @           ******************************************                      
+ @           * WELL OP_5     HAS CHANGED TO           *                      
+ @           * CONTROL BY BOTTOM HOLE PRESSURE        *                      
+ @           * FROM TIME   1004.00   DAYS  .          *                      
+ @           ******************************************                      
+ STEP  352 TIME=   1005.00  DAYS (    +1.0  DAYS MAXW  2 ITS) (2-OCT-2002)       
+  PAV=   260.1  BARSA  WCT=0.664 GOR=   178.50  SM3/SM3 WGR=   0.0111  SM3/SM3   
+ STEP  353 TIME=   1008.00  DAYS (    +3.0  DAYS MAXF  2 ITS) (5-OCT-2002)       
+  PAV=   260.2  BARSA  WCT=0.666 GOR=   178.60  SM3/SM3 WGR=   0.0112  SM3/SM3   
+ STEP  354 TIME=   1013.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-OCT-2002)      
+  PAV=   260.3  BARSA  WCT=0.671 GOR=   178.53  SM3/SM3 WGR=   0.0114  SM3/SM3   
+ STEP  355 TIME=   1018.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-OCT-2002)      
+  PAV=   260.4  BARSA  WCT=0.675 GOR=   178.51  SM3/SM3 WGR=   0.0116  SM3/SM3   
+ STEP  356 TIME=   1023.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-OCT-2002)      
+  PAV=   260.4  BARSA  WCT=0.679 GOR=   178.55  SM3/SM3 WGR=   0.0119  SM3/SM3   
+ STEP  357 TIME=   1028.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (25-OCT-2002)      
+  PAV=   260.5  BARSA  WCT=0.683 GOR=   178.57  SM3/SM3 WGR=   0.0121  SM3/SM3   
+ STEP  358 TIME=   1031.50  DAYS (    +3.5  DAYS HALF  1 ITS) (28-OCT-2002)      
+  PAV=   260.6  BARSA  WCT=0.686 GOR=   178.61  SM3/SM3 WGR=   0.0122  SM3/SM3   
+ STEP  359 TIME=   1035.00  DAYS (    +3.5  DAYS REPT  3 ITS) (1-NOV-2002)       
+  PAV=   260.7  BARSA  WCT=0.688 GOR=   178.64  SM3/SM3 WGR=   0.0124  SM3/SM3   
+
+ @--MESSAGE  AT TIME     1035.0   DAYS    ( 1-NOV-2002):
+ @           RESTART FILE WRITTEN   REPORT    34                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   349 READING WCONHIST
+   350 READING WCONINJH
+   351 READING DATES   
+
+ @--MESSAGE  AT TIME     1035.0   DAYS    ( 1-NOV-2002):
+ @           ******************************************                      
+ @           * WELL OP_5     HAS CHANGED TO           *                      
+ @           * CONTROL BY BOTTOM HOLE PRESSURE        *                      
+ @           * FROM TIME   1035.00   DAYS  .          *                      
+ @           ******************************************                      
+ STEP  360 TIME=   1036.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-NOV-2002)       
+  PAV=   260.7  BARSA  WCT=0.689 GOR=   178.55  SM3/SM3 WGR=   0.0124  SM3/SM3   
+ STEP  361 TIME=   1039.00  DAYS (    +3.0  DAYS MAXF  3 ITS) (5-NOV-2002)       
+  PAV=   260.8  BARSA  WCT=0.691 GOR=   178.65  SM3/SM3 WGR=   0.0125  SM3/SM3   
+ STEP  362 TIME=   1044.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (10-NOV-2002)      
+  PAV=   260.9  BARSA  WCT=0.695 GOR=   178.71  SM3/SM3 WGR=   0.0127  SM3/SM3   
+ STEP  363 TIME=   1049.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (15-NOV-2002)      
+  PAV=   261.0  BARSA  WCT=0.698 GOR=   178.79  SM3/SM3 WGR=   0.0129  SM3/SM3   
+ STEP  364 TIME=   1054.00  DAYS (    +5.0  DAYS MAXS  8 ITS) (20-NOV-2002)      
+  PAV=   261.1  BARSA  WCT=0.701 GOR=   178.88  SM3/SM3 WGR=   0.0131  SM3/SM3   
+ STEP  365 TIME=   1059.00  DAYS (    +5.0  DAYS MAXS  5 ITS) (25-NOV-2002)      
+  PAV=   261.2  BARSA  WCT=0.704 GOR=   178.98  SM3/SM3 WGR=   0.0133  SM3/SM3   
+ STEP  366 TIME=   1062.00  DAYS (    +3.0  DAYS HALF  2 ITS) (28-NOV-2002)      
+  PAV=   261.2  BARSA  WCT=0.706 GOR=   179.06  SM3/SM3 WGR=   0.0134  SM3/SM3   
+ STEP  367 TIME=   1065.00  DAYS (    +3.0  DAYS REPT  1 ITS) (1-DEC-2002)       
+  PAV=   261.3  BARSA  WCT=0.708 GOR=   179.15  SM3/SM3 WGR=   0.0135  SM3/SM3   
+
+ @--MESSAGE  AT TIME     1065.0   DAYS    ( 1-DEC-2002):
+ @           RESTART FILE WRITTEN   REPORT    35                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+   352 READING WCONHIST
+   353 READING WCONINJH
+   354 READING DATES   
+
+ @--MESSAGE  AT TIME     1065.0   DAYS    ( 1-DEC-2002):
+ @           ******************************************                      
+ @           * WELL OP_5     HAS CHANGED TO           *                      
+ @           * CONTROL BY BOTTOM HOLE PRESSURE        *                      
+ @           * FROM TIME   1065.00   DAYS  .          *                      
+ @           ******************************************                      
+ STEP  368 TIME=   1066.00  DAYS (    +1.0  DAYS MAXW  1 ITS) (2-DEC-2002)       
+  PAV=   261.3  BARSA  WCT=0.709 GOR=   179.07  SM3/SM3 WGR=   0.0136  SM3/SM3   
+ STEP  369 TIME=   1069.00  DAYS (    +3.0  DAYS MAXF  1 ITS) (5-DEC-2002)       
+  PAV=   261.4  BARSA  WCT=0.710 GOR=   179.24  SM3/SM3 WGR=   0.0137  SM3/SM3   
+ STEP  370 TIME=   1074.00  DAYS (    +5.0  DAYS MAXS  1 ITS) (10-DEC-2002)      
+  PAV=   261.5  BARSA  WCT=0.713 GOR=   179.39  SM3/SM3 WGR=   0.0139  SM3/SM3   
+ STEP  371 TIME=   1079.00  DAYS (    +5.0  DAYS MAXS  1 ITS) (15-DEC-2002)      
+  PAV=   261.6  BARSA  WCT=0.716 GOR=   179.53  SM3/SM3 WGR=   0.0140  SM3/SM3   
+ STEP  372 TIME=   1084.00  DAYS (    +5.0  DAYS MAXS  2 ITS) (20-DEC-2002)      
+  PAV=   261.7  BARSA  WCT=0.719 GOR=   179.69  SM3/SM3 WGR=   0.0142  SM3/SM3   
+ STEP  373 TIME=   1089.00  DAYS (    +5.0  DAYS MAXS  1 ITS) (25-DEC-2002)      
+  PAV=   261.8  BARSA  WCT=0.721 GOR=   179.84  SM3/SM3 WGR=   0.0144  SM3/SM3   
+ STEP  374 TIME=   1092.00  DAYS (    +3.0  DAYS HALF  4 ITS) (28-DEC-2002)      
+  PAV=   261.9  BARSA  WCT=0.723 GOR=   179.94  SM3/SM3 WGR=   0.0145  SM3/SM3   
+ STEP  375 TIME=   1095.00  DAYS (    +3.0  DAYS REPT  4 ITS) (31-DEC-2002)      
+  PAV=   261.9  BARSA  WCT=0.724 GOR=   180.03  SM3/SM3 WGR=   0.0146  SM3/SM3   
+   355 READING DATES   
+ STEP  376 TIME=   1096.00  DAYS (    +1.0  DAYS REPT  1 ITS) (1-JAN-2003)       
+  PAV=   261.9  BARSA  WCT=0.725 GOR=   180.06  SM3/SM3 WGR=   0.0146  SM3/SM3   
+
+ @--MESSAGE  AT TIME     1096.0   DAYS    ( 1-JAN-2003):
+ @           RESTART FILE WRITTEN   REPORT    37                             
+ @           RESTART INCLUDES INTERBLOCK FLOWS                               
+ @                            FLUIDS IN PLACE                                
+               END OF INCLUDE FILE 
+   356 READING SAVE    
+   357 READING TSTEP   
+
+ @--MESSAGE  AT TIME     1096.0   DAYS    ( 1-JAN-2003):
+ @           SAVE TYPE RESTART FILE WRITTEN   REPORT    37                   
+ STEP  377 TIME=   1097.00  DAYS (    +1.0  DAYS REPT  2 ITS) (2-JAN-2003)       
+  PAV=   262.0  BARSA  WCT=0.725 GOR=   180.09  SM3/SM3 WGR=   0.0147  SM3/SM3   
+   358 READING END     
+          591 Mbytes of storage required                         
+  16.9015     KB/active cell                                     
+          674 Mbytes (image size)                                
+
+ Error summary 
+ Comments               2
+ Warnings               7
+ Problems              19
+ Errors                 0
+ Bugs                   0
+ Final cpu     137.73 elapsed     139.27
+ Total number of time steps forced to be accepted          0
+Requesting explicit heartbeat: on

@@ -9,12 +9,12 @@ Inspired by https://github.com/equinor/libecl/blob/master/python/docs/examples/c
 """
 from __future__ import print_function
 
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
+import os
 import argparse
 import pandas as pd
-import numpy as np
-import datetime
+
+from ecl.eclfile import EclFile
+from ecl.grid import EclGrid
 
 
 def data2eclfiles(eclbase):
@@ -28,27 +28,32 @@ def data2eclfiles(eclbase):
             and EclFile from INIT.
     """
     eclbase = eclbase.replace(".DATA", "")  # TODO: Make this robust
-    return (
-        EclFile(eclbase + ".EGRID"),
-        EclGrid(eclbase + ".EGRID"),
-        EclFile(eclbase + ".INIT"),
-    )
+
+    egridfilename = eclbase + ".EGRID"
+    initfilename = eclbase + ".INIT"
+
+    if not os.path.exists(egridfilename):
+        raise IOError(egridfilename + " not found")
+    if not os.path.exists(initfilename):
+        raise IOError(initfilename + " not found")
+
+    return (EclFile(egridfilename), EclGrid(egridfilename), EclFile(initfilename))
 
 
 def nnc2df(eclfiles):
     """Produce a Pandas Dataframe with NNC information
-    
+
     A NNC is a pair of cells that are not next to each other
-    in the index space (I, J, K), and are associated to a 
+    in the index space (I, J, K), and are associated to a
     non-zero transmissibility.
 
     Columns: I1, J1, K1 (first cell in cell pair)
     I2, J2, K2 (second cell in cell pair), TRAN (transmissibility
     between the two cells)
-        
+
     Args:
         eclfiles: tuple with EclFile (EGRID), EclGrid (EGRID) and EclFile (INIT)
-    
+
     Returns:
         pd.DataFrame. Empty if no NNC information found.
     """
@@ -81,21 +86,26 @@ def nnc2df(eclfiles):
 
 # Remaining functions are for the command line interface
 
+
 def parse_args():
+    """Parse sys.argv using argparse"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("DATAFILE",
-                    help="Name of Eclipse DATA file. " +\
-                     "INIT and EGRID file must lie alongside.")
-    parser.add_argument("-o", "--output", type=str,
-                     help="name of output csv file.",
-                     default="nnc.csv")
+    parser.add_argument(
+        "DATAFILE",
+        help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
+    )
+    parser.add_argument(
+        "-o", "--output", type=str, help="name of output csv file.", default="nnc.csv"
+    )
     # args.add_argument("--augment", action='store_true',
     #    (TODO)       help="Add extra data for the cells in the cell pair")
     return parser.parse_args()
 
+
 def main():
+    """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = data2eclfiles(args.DATAFILE)
-    df = nnc2df(eclfiles)
-    df.to_csv(args.output, index=False)
+    nncdf = nnc2df(eclfiles)
+    nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

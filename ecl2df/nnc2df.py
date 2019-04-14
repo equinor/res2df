@@ -27,7 +27,12 @@ def data2eclfiles(eclbase):
         tuple with EclFile from EGRID, EclGrid from EGRID
             and EclFile from INIT.
     """
-    eclbase = eclbase.replace(".DATA", "")  # TODO: Make this robust
+
+    def rreplace(pat, sub, string):
+        return string[0 : -len(pat)] + sub if string.endswith(pat) else string
+
+    eclbase = rreplace(".DATA", "", eclbase)
+    eclbase = rreplace(".", "", eclbase)
 
     egridfilename = eclbase + ".EGRID"
     initfilename = eclbase + ".INIT"

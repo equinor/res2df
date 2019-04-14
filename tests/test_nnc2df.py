@@ -32,6 +32,16 @@ def test_data2eclfiles():
         result = nnc2df.data2eclfiles("NOT-EXISTING-FILE")
 
 
+def test_robusteclbase():
+    """Test that we can use some shortcuts on the Eclipse DATA file"""
+    result = nnc2df.data2eclfiles(DATAFILE.replace(".DATA", ""))
+    assert isinstance(result[1], EclGrid)
+
+    # The dot at the end is often present due to bash completion
+    result = nnc2df.data2eclfiles(DATAFILE.replace(".DATA", "."))
+    assert isinstance(result[1], EclGrid)
+
+
 def test_nnc2df():
     """Test that dataframes are produced"""
     eclfiles = nnc2df.data2eclfiles(DATAFILE)

@@ -17,7 +17,6 @@ import pandas as pd
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
-
 def data2eclfiles(eclbase):
     """Loads INIT and GRID files from the supplied eclbase
 
@@ -28,6 +27,8 @@ def data2eclfiles(eclbase):
  
     If RST file is present, a EclFile is returned in the fourth
     argument, if not, the fourth element is None.
+
+    Non-unified restart format is not supported.
 
     Returns:
         tuple with EclFile from EGRID, EclGrid from EGRID
@@ -56,10 +57,15 @@ def data2eclfiles(eclbase):
             EclFile(egridfilename),
             EclGrid(egridfilename),
             EclFile(initfilename),
-            EclFile(rstfilename),
+            EclFile(rstfilename), rstfilename
         )
 
     return (EclFile(egridfilename), EclGrid(egridfilename), EclFile(initfilename), None)
+
+def rstdates(rstfile, rstfilename):
+    """Return a list of datetime objects for the available dates in the RST file"""
+    report_indices = EclFile.file_report_list(rstfilename)
+    return [rstfile.iget_restart_sim_time(index) for index in report_indices]
 
 
 def gridgeometry2df(eclfiles):
@@ -129,13 +135,9 @@ def init2df(init, active_cells):
     return init_df
 
 
-# Remaining functions are for the command line interface
-
-
 def merge_gridframes(grid_df, init_df, rst_dfs=None):
     """Merge dataframes with grid data"""
     return pd.concat([grid_df, init_df], axis=1, sort=False)
-
 
 def parse_args():
     """Parse sys.argv using argparse"""

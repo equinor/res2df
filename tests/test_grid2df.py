@@ -82,3 +82,14 @@ def test_main():
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
     os.remove(tmpcsvfile)
+
+def test_rstdates():
+    eclfiles = grid2df.data2eclfiles(DATAFILE)
+    rstfile = eclfiles[3]
+    rstfilename = eclfiles[4]
+    assert rstfile
+
+    # assert isinstance(rstfile, EclFile)
+    dates = grid2df.rstdates(rstfile, rstfilename)
+    assert isinstance(dates, list)
+    print(dates)

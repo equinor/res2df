@@ -8,6 +8,8 @@ NNC = Non Neighbour Connection
 Inspired by https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_n    nc.py
 """
 from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
 
 import os
 import argparse

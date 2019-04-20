@@ -1,4 +1,4 @@
-#_ -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Test module for grid2df"""
 
 from __future__ import absolute_import
@@ -7,9 +7,10 @@ from __future__ import print_function
 
 import os
 import sys
-import pytest
-
+import datetime
 import pandas as pd
+
+import pytest
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
@@ -83,6 +84,7 @@ def test_main():
     assert not disk_df.empty
     os.remove(tmpcsvfile)
 
+
 def test_rstdates():
     eclfiles = grid2df.data2eclfiles(DATAFILE)
     rstfile = eclfiles[3]
@@ -92,4 +94,16 @@ def test_rstdates():
     # assert isinstance(rstfile, EclFile)
     dates = grid2df.rstdates(rstfile, rstfilename)
     assert isinstance(dates, list)
-    print(dates)
+
+
+def test_rst2df():
+    eclfiles = grid2df.data2eclfiles(DATAFILE)
+    rstfile = eclfiles[3]
+    rstfilename = eclfiles[4]
+    cells = eclfiles[1].getNumActive()
+    cells = 35838
+    print(grid2df.rst2df(rstfile, rstfilename, cells, "first"))
+    print(grid2df.rst2df(rstfile, rstfilename, cells, "all"))
+    grid2df.rst2df(rstfile, rstfilename, cells, "last")
+    grid2df.rst2df(rstfile, rstfilename, cells, datetime.date(2000, 1, 1))
+    grid2df.rst2df(rstfile, rstfilename, cells, "2001-01-01")

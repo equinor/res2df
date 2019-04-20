@@ -4,6 +4,11 @@
 Extract grid information from Eclipse output files as Dataframes.
 
 Each cell in the grid correspond to one row.
+
+For grid cells, x, y, z for cell centre and volume is available as
+geometric information. Static data (properties) can be merged from 
+the INIT file, and dynamic data can be merged from the Restart (UNRST)
+file.
 """
 from __future__ import print_function
 from __future__ import division
@@ -11,11 +16,15 @@ from __future__ import absolute_import
 
 import os
 import argparse
+import datetime
+import dateutil.parser
 import numpy as np
 import pandas as pd
 
+
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
+
 
 def data2eclfiles(eclbase):
     """Loads INIT and GRID files from the supplied eclbase
@@ -57,15 +66,127 @@ def data2eclfiles(eclbase):
             EclFile(egridfilename),
             EclGrid(egridfilename),
             EclFile(initfilename),
-            EclFile(rstfilename), rstfilename
+            EclFile(rstfilename),
+            rstfilename,
         )
 
     return (EclFile(egridfilename), EclGrid(egridfilename), EclFile(initfilename), None)
 
+
 def rstdates(rstfile, rstfilename):
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(rstfilename)
-    return [rstfile.iget_restart_sim_time(index) for index in report_indices]
+    return [rstfile.iget_restart_sim_time(index).date() for index in report_indices]
+
+
+def rst2df(rstfile, rstfilename, activecells, date, dateinheaders=False):
+    """Return a dataframe with dynamic data from the restart file
+    for each cell, at a particular date. 
+
+    Args:
+        rstfile: EclFile object for the UNRST file
+        rstfilename: str with UNRST filename
+        activecells: int with the number of active cells, 
+            typically taken from EclGrid.getNumActive().
+            Only vectors with this lengths can be added
+            to the grid dataframe.
+        date: datetime.date or list of datetime.date, must
+            correspond to an existing date. If list, it
+            forces dateinheaders to be True.
+            Can also be string, then the mnenomics
+            'first', 'last', 'all', are supported, or ISO
+            date formats.
+        dateinheaders: boolean on whether the date should
+            be added to the column headers. Instead of 
+            SGAS as a column header, you get SGAS@YYYY-MM-DD.
+    """
+    # First task is to determine the restart index to extract
+    # data for:
+    dates = rstdates(rstfile, rstfilename)
+
+    supportedmnemonics = ["first", "last", "all"]
+
+    # After this control block, chosendates is a list of dates
+    # we should extract, and which exists in UNRST.
+    if isinstance(date, str):
+        if date not in supportedmnemonics:
+            # Try to parse as ISO date:
+            try:
+                isodate = dateutil.parser.isoparse(date).date()
+                if isodate not in dates:
+                    raise ValueError("date " + isodate + " not found in UNRST file")
+                else:
+                    chosendates = [isodate]
+            except ValueError:
+                raise ValueError("date " + date + " not understood")
+        else:
+            if date == "first":
+                chosendates = [dates[0]]
+            elif date == "last":
+                chosendates = [dates[-1]]
+            elif date == "all":
+                chosendates = dates
+    elif isinstance(date, datetime.date):
+        chosendates = [date]
+    elif isinstance(date, datetime.datetime):
+        chosendates = [date.date()]
+    elif isinstance(date, list):
+        chosendates = [x for x in date if x in dates]
+        if not chosendates:
+            raise ValueError("None of the requested dates were found")
+        elif len(chosendates) < len(dates):
+            print("Warning: Not all dates found in UNRST\n")
+    else:
+        raise ValueError("date " + str(date) + " not understood")
+
+    rstindices = [dates.index(x) for x in chosendates]
+
+    # Determine the available restart vectors, we only include
+    # those with correct length, meaning that they are defined
+    # for all active cells:
+    rstvectors = []
+    for vec in rstfile.headers:
+        if vec[1] == activecells:
+            rstvectors.append(vec[0])
+    rstvectors = list(set(rstvectors))  # Make unique list
+    # Note that all of these might not exist at all timesteps.
+    print(rstvectors)
+
+    rst_dfs = []
+    for rstindex in rstindices:
+        # Filter the rst vectors once more, all of them
+        # might not be available at all timesteps:
+        present_rstvectors = []
+        for vec in rstvectors:
+            if rstfile.iget_named_kw(vec, rstindex):
+                present_rstvectors.append(vec)
+
+        if not present_rstvectors:
+            continue
+
+        # Make the dataframe
+        rst_df = pd.DataFrame(
+            columns=rstvectors,
+            data=np.hstack(
+                [
+                    rstfile.iget_named_kw(vec, rstindex).numpyView().reshape(-1, 1)
+                    for vec in present_rstvectors
+                ]
+            ),
+        )
+
+        # Tag the column names if requested, or if multiple rst indices
+        # are asked for
+        if dateinheaders or len(rstindices) > 1:
+            datestr = "@" + chosendates[rstindices.index(rstindex)].isoformat()
+            rst_df.columns = [colname + datestr for colname in rst_df.columns]
+
+        rst_dfs.append(rst_df)
+
+    if not rst_dfs:
+        return pd.DataFrame()
+
+    return pd.concat(rst_dfs, axis=1)
 
 
 def gridgeometry2df(eclfiles):
@@ -138,6 +259,7 @@ def init2df(init, active_cells):
 def merge_gridframes(grid_df, init_df, rst_dfs=None):
     """Merge dataframes with grid data"""
     return pd.concat([grid_df, init_df], axis=1, sort=False)
+
 
 def parse_args():
     """Parse sys.argv using argparse"""

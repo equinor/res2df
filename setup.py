@@ -14,6 +14,7 @@ setup(
         "console_scripts": [
             "nnc2csv=ecl2df.nnc2df:main",
             "eclgrid2csv=ecl2df.grid2df:main",
+            "grid2csv=ecl2df.grid2df:main",
         ]
     },
 )

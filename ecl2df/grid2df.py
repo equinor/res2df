@@ -25,61 +25,19 @@ import pandas as pd
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
-
-def data2eclfiles(eclbase):
-    """Loads INIT and GRID files from the supplied eclbase
-
-    The eclbase should be the path to the Eclipse DATA file,
-    with or without the .DATA extension
-
-    Fails if EGRID or INIT is not present.
- 
-    If RST file is present, a EclFile is returned in the fourth
-    argument, if not, the fourth element is None.
-
-    Non-unified restart format is not supported.
-
-    Returns:
-        tuple with EclFile from EGRID, EclGrid from EGRID
-           and EclFile from INIT. Fourth element is None, or
-           EclFile from UNRST
-    """
-
-    def rreplace(pat, sub, string):
-        """Variant of str.replace() that only replaces at the end of the string"""
-        return string[0 : -len(pat)] + sub if string.endswith(pat) else string
-
-    eclbase = rreplace(".DATA", "", eclbase)
-    eclbase = rreplace(".", "", eclbase)
-
-    egridfilename = eclbase + ".EGRID"
-    initfilename = eclbase + ".INIT"
-    rstfilename = eclbase + ".UNRST"
-
-    if not os.path.exists(egridfilename):
-        raise IOError(egridfilename + " not found")
-    if not os.path.exists(initfilename):
-        raise IOError(initfilename + " not found")
-
-    if os.path.exists(rstfilename):
-        return (
-            EclFile(egridfilename),
-            EclGrid(egridfilename),
-            EclFile(initfilename),
-            EclFile(rstfilename),
-            rstfilename,
-        )
-
-    return (EclFile(egridfilename), EclGrid(egridfilename), EclFile(initfilename), None)
+from .eclfiles import EclFiles
 
 
-def rstdates(rstfile, rstfilename):
+def rstdates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
-    report_indices = EclFile.file_report_list(rstfilename)
-    return [rstfile.iget_restart_sim_time(index).date() for index in report_indices]
+    report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
+    return [
+        eclfiles.get_rstfile().iget_restart_sim_time(index).date()
+        for index in report_indices
+    ]
 
 
-def rst2df(rstfile, rstfilename, activecells, date, dateinheaders=False):
+def rst2df(eclfiles, date, dateinheaders=False):
     """Return a dataframe with dynamic data from the restart file
     for each cell, at a particular date. 
 
@@ -102,7 +60,7 @@ def rst2df(rstfile, rstfilename, activecells, date, dateinheaders=False):
     """
     # First task is to determine the restart index to extract
     # data for:
-    dates = rstdates(rstfile, rstfilename)
+    dates = rstdates(eclfiles)
 
     supportedmnemonics = ["first", "last", "all"]
 
@@ -144,8 +102,9 @@ def rst2df(rstfile, rstfilename, activecells, date, dateinheaders=False):
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
     # for all active cells:
+    activecells = eclfiles.get_egrid().getNumActive()
     rstvectors = []
-    for vec in rstfile.headers:
+    for vec in eclfiles.get_rstfile().headers:
         if vec[1] == activecells:
             rstvectors.append(vec[0])
     rstvectors = list(set(rstvectors))  # Make unique list
@@ -158,7 +117,7 @@ def rst2df(rstfile, rstfilename, activecells, date, dateinheaders=False):
         # might not be available at all timesteps:
         present_rstvectors = []
         for vec in rstvectors:
-            if rstfile.iget_named_kw(vec, rstindex):
+            if eclfiles.get_rstfile().iget_named_kw(vec, rstindex):
                 present_rstvectors.append(vec)
 
         if not present_rstvectors:
@@ -169,7 +128,10 @@ def rst2df(rstfile, rstfilename, activecells, date, dateinheaders=False):
             columns=rstvectors,
             data=np.hstack(
                 [
-                    rstfile.iget_named_kw(vec, rstindex).numpyView().reshape(-1, 1)
+                    eclfiles.get_rstfile()
+                    .iget_named_kw(vec, rstindex)
+                    .numpyView()
+                    .reshape(-1, 1)
                     for vec in present_rstvectors
                 ]
             ),
@@ -196,16 +158,15 @@ def gridgeometry2df(eclfiles):
     when merging with other dataframes with cell-data.
 
     Args:
-        eclfiles: tuple with EclFile (EGRID), EclGrid (EGRID). Tuple may contain
-            extra elements, which will be ignored.
+        eclfiles: EclFiles object
 
     Returns:
         pd.DataFrame.
     """
     if not eclfiles:
         raise ValueError
-    egrid_file = eclfiles[0]
-    grid = eclfiles[1]
+    egrid_file = eclfiles.get_egridfile()
+    grid = eclfiles.get_egrid()
 
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
@@ -281,9 +242,9 @@ def parse_args():
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
-    eclfiles = data2eclfiles(args.DATAFILE)
+    eclfiles = EclFiles(args.DATAFILE)
     gridgeom = gridgeometry2df(eclfiles)
-    initdf = init2df(eclfiles[2], eclfiles[1].getNumActive())
+    initdf = init2df(eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive())
     grid_df = merge_gridframes(gridgeom, initdf)
     grid_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

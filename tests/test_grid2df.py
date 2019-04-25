@@ -16,26 +16,14 @@ from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
 from ecl2df import grid2df
+from ecl2df.eclfiles import EclFiles
 
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 
 
-def test_data2eclfiles():
-    """Test that we can make EclGrid/Init objects from files"""
-    result = grid2df.data2eclfiles(DATAFILE)
-
-    assert isinstance(result, tuple)
-    assert isinstance(result[0], EclFile)
-    assert isinstance(result[1], EclGrid)
-    assert isinstance(result[2], EclFile)
-
-    with pytest.raises(IOError):
-        result = grid2df.data2eclfiles("NOT-EXISTING-FILE")
-
-
 def test_gridgeometry2df():
     """Test that dataframes are produced"""
-    eclfiles = grid2df.data2eclfiles(DATAFILE)
+    eclfiles = EclFiles(DATAFILE)
     grid_geom = grid2df.gridgeometry2df(eclfiles)
 
     assert isinstance(grid_geom, pd.DataFrame)
@@ -52,8 +40,10 @@ def test_gridgeometry2df():
 
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
-    eclfiles = grid2df.data2eclfiles(DATAFILE)
-    init_df = grid2df.init2df(eclfiles[2], eclfiles[1].getNumActive())
+    eclfiles = EclFiles(DATAFILE)
+    init_df = grid2df.init2df(
+        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive()
+    )
 
     assert isinstance(init_df, pd.DataFrame)
     assert not init_df.empty
@@ -63,8 +53,10 @@ def test_init2df():
 
 def test_mergegridframes():
     """Test that we can merge together data for the grid"""
-    eclfiles = grid2df.data2eclfiles(DATAFILE)
-    init_df = grid2df.init2df(eclfiles[2], eclfiles[1].getNumActive())
+    eclfiles = EclFiles(DATAFILE)
+    init_df = grid2df.init2df(
+        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive()
+    )
     grid_geom = grid2df.gridgeometry2df(eclfiles)
 
     assert len(init_df) == len(grid_geom)
@@ -86,24 +78,21 @@ def test_main():
 
 
 def test_rstdates():
-    eclfiles = grid2df.data2eclfiles(DATAFILE)
-    rstfile = eclfiles[3]
-    rstfilename = eclfiles[4]
+    eclfiles = EclFiles(DATAFILE)
+    rstfile = eclfiles.get_rstfile()
     assert rstfile
 
-    # assert isinstance(rstfile, EclFile)
-    dates = grid2df.rstdates(rstfile, rstfilename)
+    dates = grid2df.rstdates(eclfiles)
     assert isinstance(dates, list)
 
 
 def test_rst2df():
-    eclfiles = grid2df.data2eclfiles(DATAFILE)
-    rstfile = eclfiles[3]
-    rstfilename = eclfiles[4]
-    cells = eclfiles[1].getNumActive()
+    eclfiles = EclFiles(DATAFILE)
+    rstfile = eclfiles.get_rstfile()
+    cells = eclfiles.get_egrid().getNumActive()
     cells = 35838
-    print(grid2df.rst2df(rstfile, rstfilename, cells, "first"))
-    print(grid2df.rst2df(rstfile, rstfilename, cells, "all"))
-    grid2df.rst2df(rstfile, rstfilename, cells, "last")
-    grid2df.rst2df(rstfile, rstfilename, cells, datetime.date(2000, 1, 1))
-    grid2df.rst2df(rstfile, rstfilename, cells, "2001-01-01")
+    print(grid2df.rst2df(eclfiles, "first"))
+    print(grid2df.rst2df(eclfiles, "all"))
+    grid2df.rst2df(eclfiles, "last")
+    grid2df.rst2df(eclfiles, datetime.date(2000, 1, 1))
+    grid2df.rst2df(eclfiles, "2001-01-01")

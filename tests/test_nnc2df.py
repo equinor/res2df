@@ -15,36 +15,14 @@ from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
 from ecl2df import nnc2df
+from ecl2df.eclfiles import EclFiles
 
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 
 
-def test_data2eclfiles():
-    """Test that we can make EclGrid/Init objects from files"""
-    result = nnc2df.data2eclfiles(DATAFILE)
-
-    assert isinstance(result, tuple)
-    assert isinstance(result[0], EclFile)
-    assert isinstance(result[1], EclGrid)
-    assert isinstance(result[2], EclFile)
-
-    with pytest.raises(IOError):
-        result = nnc2df.data2eclfiles("NOT-EXISTING-FILE")
-
-
-def test_robusteclbase():
-    """Test that we can use some shortcuts on the Eclipse DATA file"""
-    result = nnc2df.data2eclfiles(DATAFILE.replace(".DATA", ""))
-    assert isinstance(result[1], EclGrid)
-
-    # The dot at the end is often present due to bash completion
-    result = nnc2df.data2eclfiles(DATAFILE.replace(".DATA", "."))
-    assert isinstance(result[1], EclGrid)
-
-
 def test_nnc2df():
     """Test that dataframes are produced"""
-    eclfiles = nnc2df.data2eclfiles(DATAFILE)
+    eclfiles = EclFiles(DATAFILE)
     nncdf = nnc2df.nnc2df(eclfiles)
 
     assert not nncdf.empty

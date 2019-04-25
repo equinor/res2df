@@ -18,34 +18,7 @@ import pandas as pd
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
-
-def data2eclfiles(eclbase):
-    """Loads INIT and GRID files from the supplied eclbase
-
-    The eclbase should be the path to the Eclipse DATA file,
-    with or without the .DATA extension
-
-    Returns:
-        tuple with EclFile from EGRID, EclGrid from EGRID
-            and EclFile from INIT.
-    """
-
-    def rreplace(pat, sub, string):
-        """Variant of str.replace() that only replaces at the end of the string"""
-        return string[0 : -len(pat)] + sub if string.endswith(pat) else string
-
-    eclbase = rreplace(".DATA", "", eclbase)
-    eclbase = rreplace(".", "", eclbase)
-
-    egridfilename = eclbase + ".EGRID"
-    initfilename = eclbase + ".INIT"
-
-    if not os.path.exists(egridfilename):
-        raise IOError(egridfilename + " not found")
-    if not os.path.exists(initfilename):
-        raise IOError(initfilename + " not found")
-
-    return (EclFile(egridfilename), EclGrid(egridfilename), EclFile(initfilename))
+from .eclfiles import EclFiles
 
 
 def nnc2df(eclfiles):
@@ -60,14 +33,14 @@ def nnc2df(eclfiles):
     between the two cells)
 
     Args:
-        eclfiles: tuple with EclFile (EGRID), EclGrid (EGRID) and EclFile (INIT)
+        eclfiles: EclFiles object that can serve EclFile and EclGrid on demand 
 
     Returns:
         pd.DataFrame. Empty if no NNC information found.
     """
-    egrid_file = eclfiles[0]
-    egrid_grid = eclfiles[1]
-    init_file = eclfiles[2]
+    egrid_file = eclfiles.get_egridfile()
+    egrid_grid = eclfiles.get_egrid()
+    init_file = eclfiles.get_initfile()
 
     if not ("NNC1" in egrid_file and "NNC2" in egrid_file):
         print("No NNC data in EGRID")
@@ -113,7 +86,7 @@ def parse_args():
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
-    eclfiles = data2eclfiles(args.DATAFILE)
+    eclfiles = EclFiles(args.DATAFILE)
     nncdf = nnc2df(eclfiles)
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

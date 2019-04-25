@@ -83,16 +83,14 @@ def test_rstdates():
     assert rstfile
 
     dates = grid2df.rstdates(eclfiles)
+    print(dates)
     assert isinstance(dates, list)
 
 
 def test_rst2df():
     eclfiles = EclFiles(DATAFILE)
-    rstfile = eclfiles.get_rstfile()
-    cells = eclfiles.get_egrid().getNumActive()
-    cells = 35838
-    print(grid2df.rst2df(eclfiles, "first"))
-    print(grid2df.rst2df(eclfiles, "all"))
+    print(grid2df.rst2df(eclfiles, "first").head())
+    print(grid2df.rst2df(eclfiles, "all").head())
     grid2df.rst2df(eclfiles, "last")
     grid2df.rst2df(eclfiles, datetime.date(2000, 1, 1))
     grid2df.rst2df(eclfiles, "2001-01-01")

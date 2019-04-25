@@ -33,7 +33,7 @@ def rstdates(eclfiles):
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
     return [
         eclfiles.get_rstfile().iget_restart_sim_time(index).date()
-        for index in report_indices
+        for index in range(0, len(report_indices))
     ]
 
 
@@ -42,12 +42,7 @@ def rst2df(eclfiles, date, dateinheaders=False):
     for each cell, at a particular date. 
 
     Args:
-        rstfile: EclFile object for the UNRST file
-        rstfilename: str with UNRST filename
-        activecells: int with the number of active cells, 
-            typically taken from EclGrid.getNumActive().
-            Only vectors with this lengths can be added
-            to the grid dataframe.
+        eclfiles: EclFiles object
         date: datetime.date or list of datetime.date, must
             correspond to an existing date. If list, it
             forces dateinheaders to be True.
@@ -103,6 +98,7 @@ def rst2df(eclfiles, date, dateinheaders=False):
     # those with correct length, meaning that they are defined
     # for all active cells:
     activecells = eclfiles.get_egrid().getNumActive()
+    activecells = 35838  # DELETE THIS LINE
     rstvectors = []
     for vec in eclfiles.get_rstfile().headers:
         if vec[1] == activecells:

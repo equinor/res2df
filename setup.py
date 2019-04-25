@@ -10,5 +10,10 @@ setup(
     license="None",
     packages=["ecl2df"],
     zip_safe=False,
-    entry_points={"console_scripts": ["nnc2csv=ecl2df.nnc2df:main"]},
+    entry_points={
+        "console_scripts": [
+            "nnc2csv=ecl2df.nnc2df:main",
+            "eclgrid2csv=ecl2df.grid2df:main",
+        ]
+    },
 )

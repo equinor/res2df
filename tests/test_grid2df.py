@@ -93,4 +93,4 @@ def test_rst2df():
     print(grid2df.rst2df(eclfiles, "all").head())
     grid2df.rst2df(eclfiles, "last")
     grid2df.rst2df(eclfiles, datetime.date(2000, 1, 1))
-    grid2df.rst2df(eclfiles, "2001-01-01")
+    grid2df.rst2df(eclfiles, "2000-01-01")

@@ -66,12 +66,13 @@ def rst2df(eclfiles, date, dateinheaders=False):
             # Try to parse as ISO date:
             try:
                 isodate = dateutil.parser.isoparse(date).date()
-                if isodate not in dates:
-                    raise ValueError("date " + isodate + " not found in UNRST file")
-                else:
-                    chosendates = [isodate]
             except ValueError:
-                raise ValueError("date " + date + " not understood")
+                raise ValueError("date " + str(date) + " not understood")
+            if isodate not in dates:
+                raise ValueError("date " + str(isodate) +
+                                 " not found in UNRST file")
+            else:
+                chosendates = [isodate]
         else:
             if date == "first":
                 chosendates = [dates[0]]

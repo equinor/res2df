@@ -35,6 +35,7 @@ class EclFiles(object):
         self._egrid = None  # Should be EclGrid
 
         self._rstfile = None  # EclFile
+        self._rftfile = None  # EclFile
 
     def get_egrid(self):
         """Return EGRID file as EclGrid"""
@@ -75,6 +76,15 @@ class EclFiles(object):
                 return None
             self._initfile = EclFile(initfilename)
         return self._initfile
+
+    def get_rftfile(self):
+        if not self._rftfile:
+             rftfilename = self._eclbase + ".RFT"
+             if not os.path.exists(rftfilename):
+                  # Log warnign..
+                  return None
+             self._rftfile = EclFile(rftfilename)
+        return self._rftfile
 
     def get_rstfile(self):
         if not self._rstfile:

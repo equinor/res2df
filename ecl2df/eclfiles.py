@@ -16,6 +16,8 @@ from __future__ import division
 
 import os
 
+import sunbeam
+
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
@@ -36,6 +38,16 @@ class EclFiles(object):
 
         self._rstfile = None  # EclFile
         self._rftfile = None  # EclFile
+
+        self._deck = None
+
+    def get_ecldeck(self):
+        if not self._deck:         
+            es = sunbeam.parse(self._eclbase + ".DATA",
+                               recovery=[("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
+                                         ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore)])
+            self._deck = es.deck
+        return self._deck
 
     def get_egrid(self):
         """Return EGRID file as EclGrid"""
@@ -81,7 +93,7 @@ class EclFiles(object):
         if not self._rftfile:
              rftfilename = self._eclbase + ".RFT"
              if not os.path.exists(rftfilename):
-                  # Log warnign..
+                  print("File " + rftfilename + " not found")
                   return None
              self._rftfile = EclFile(rftfilename)
         return self._rftfile

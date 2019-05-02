@@ -2,7 +2,7 @@
 """
 Class for holding an Eclipse deck with result files
 
-Exists only for convenience, so that loading of 
+Exists only for convenience, so that loading of
 EclFile/EclSum objects is easy for users, and with
 caching if wanted.
 
@@ -18,7 +18,7 @@ import os
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
-
+from ecl.summary import EclSum
 
 class EclFiles(object):
     def __init__(self, eclbase):
@@ -30,6 +30,7 @@ class EclFiles(object):
         # Set class variables to None
         self._egridfile = None  # Should be EclFile
         self._initfile = None  # Should be EclFile
+        self._eclsum = None  # Should be EclSum
 
         self._egrid = None  # Should be EclGrid
 
@@ -53,6 +54,18 @@ class EclFiles(object):
                 return None
             self._egridfile = EclFile(egridfilename)
         return self._egridfile
+
+    def get_eclsum(self):
+        print(self._eclsum)
+        if not self._eclsum:
+            smryfilename = self._eclbase + ".UNSMRY"
+            print(smryfilename)
+            if not os.path.exists(smryfilename):
+                # Log warning
+                return None
+            print("Loading eclsum from " + smryfilename)
+            self._eclsum = EclSum(smryfilename)
+        return self._eclsum
 
     def get_initfile(self):
         if not self._initfile:

@@ -29,18 +29,24 @@ import datetime
 
 from .eclfiles import EclFiles
 
+
 def rftrecords2df(eclfiles):
     """Pandas dataframe used to navigate in the RFT records in the file (not the data itself):"""
     rftfile = eclfiles.get_rftfile()
     rftrecords = pd.DataFrame(rftfile.headers)
-    rftrecords.columns = ['recordname', 'recordlength', 'recordtype']
-    rftrecords['timeindex'] = np.nan
+    rftrecords.columns = ["recordname", "recordlength", "recordtype"]
+    rftrecords["timeindex"] = np.nan
     # the TIME record signifies that the forthcoming records belong to
     # this TIME value, and we make a new column in the header data that
     # tells us the row number for the associated TIME record
-    rftrecords.loc[rftrecords.recordname=='TIME', 'timeindex'] = rftrecords[rftrecords.recordname=='TIME'].index
-    rftrecords.fillna(method='ffill', inplace=True) # forward fill (because any record is associated to the previous TIME record)
+    rftrecords.loc[rftrecords.recordname == "TIME", "timeindex"] = rftrecords[
+        rftrecords.recordname == "TIME"
+    ].index
+    rftrecords.fillna(
+        method="ffill", inplace=True
+    )  # forward fill (because any record is associated to the previous TIME record)
     return rftrecords
+
 
 def rft2df(eclfiles):
     rftrecords = rftrecords2df(eclfiles)
@@ -53,34 +59,35 @@ def rft2df(eclfiles):
     for timerecordidx in rftrecords.timeindex.astype(int).unique():
 
         # Pick out the headers (with row indices) for the data relevant to this TIME record:
-        headers = rftrecords[rftrecords['timeindex']==timerecordidx]
+        headers = rftrecords[rftrecords["timeindex"] == timerecordidx]
 
-        dateidx = int(headers[headers.recordname=='DATE'].index.values)
-        welletcidx = int(headers[headers.recordname=='WELLETC'].index.values)
+        dateidx = int(headers[headers.recordname == "DATE"].index.values)
+        welletcidx = int(headers[headers.recordname == "WELLETC"].index.values)
 
-        date = datetime.date(rftfile[dateidx][2], rftfile[dateidx][1], rftfile[dateidx][0])
+        date = datetime.date(
+            rftfile[dateidx][2], rftfile[dateidx][1], rftfile[dateidx][0]
+        )
         well = rftfile[welletcidx][1].strip()
         wellmodel = rftfile[welletcidx][6].strip()  # MULTISEG or STANDARD
 
-        #print "Extracting", wellmodel, "well", str(well).ljust(8) + " at " +  str(date), "record index:", timerecordidx,
-
+        # print "Extracting", wellmodel, "well", str(well).ljust(8) + " at " +  str(date), "record index:", timerecordidx,
 
         # Collect all the headers that have the same length as 'DEPTH' (we could pick most others as well)
         # This will be the number of cells that have data associated and we use this to safeguard
         # that we do not make a non-rectangular dataset (by picking some datatype that does not refer
         # to connections)
 
-        numberofrows = headers[headers.recordname=='DEPTH']['recordlength']
+        numberofrows = headers[headers.recordname == "DEPTH"]["recordlength"]
         if len(numberofrows):
             numberofrows = int(numberofrows)
-            #print # just a newline to finish the print statememt above.
+            # print # just a newline to finish the print statememt above.
         else:
             # This can happen if the well is actually shut or stopped at this date.
-            #print "(empty)"
+            # print "(empty)"
             continue
 
         # These datatypes now align nicely into a matrix of numbers, so we extract them into a pandas DataFrame
-        CONheaders = headers[headers.recordlength==numberofrows].recordname
+        CONheaders = headers[headers.recordlength == numberofrows].recordname
 
         # Temporary dataset for this (date, wellname) record, identified by timerecordidx
         CONdata = pd.DataFrame()
@@ -89,7 +96,7 @@ def rft2df(eclfiles):
             # Extract CON-data and put it into the CONdata
             CONdata[recordname] = list(rftfile[rftidx])
 
-        CONdata['CONIDX'] = CONdata.index + 1  # Add an index that starts with 1
+        CONdata["CONIDX"] = CONdata.index + 1  # Add an index that starts with 1
 
         # Set branch count to 1. If it is a multisegment well, this variable might get updated.
         numberofbranches = 1
@@ -97,19 +104,24 @@ def rft2df(eclfiles):
         # Process multisegment data (not necessarily the same number of rows as the connection data)
         # Currently data for segments that are not associated with a connection will not be included.
 
-
         # Ignore if wellmodel says MULTISEG but we cannot find any SEGxxxxx data in the record.
-        if wellmodel=='MULTISEG' and len(headers[headers.recordname.str.startswith('SEG')]):
-            numberofrows = int(headers[headers.recordname=='SEGDEPTH']['recordlength'])
-            SEGheaders = headers[(headers.recordname.str.startswith('SEG')) & (headers.recordlength==numberofrows)].recordname
+        if wellmodel == "MULTISEG" and len(
+            headers[headers.recordname.str.startswith("SEG")]
+        ):
+            numberofrows = int(
+                headers[headers.recordname == "SEGDEPTH"]["recordlength"]
+            )
+            SEGheaders = headers[
+                (headers.recordname.str.startswith("SEG"))
+                & (headers.recordlength == numberofrows)
+            ].recordname
 
             SEGdata = pd.DataFrame()
             # Loop over SEGheaders:
             for rftidx, recordname in SEGheaders.iteritems():
                 SEGdata[recordname] = list(rftfile[rftidx])
 
-            SEGdata['SEGIDX'] = SEGdata.index + 1 # Add an index that starts with 1
-
+            SEGdata["SEGIDX"] = SEGdata.index + 1  # Add an index that starts with 1
 
             # Determine well topology:
             # The way ICDs are modelled complexifies this, as each ICD device must be put on a branch
@@ -118,14 +130,18 @@ def rft2df(eclfiles):
 
             # Leaf segments are those segments with no upstream segment
             # Merge SEGIDX and SEGNXT, leaf segments now have NaN for SEGIDX_y after the merge:
-            mergedSEGdata = pd.merge(SEGdata, SEGdata, how='outer', left_on='SEGIDX', right_on='SEGNXT')
-            leafsegments = mergedSEGdata[mergedSEGdata['SEGIDX_y']==numpy.nan]
+            mergedSEGdata = pd.merge(
+                SEGdata, SEGdata, how="outer", left_on="SEGIDX", right_on="SEGNXT"
+            )
+            leafsegments = mergedSEGdata[mergedSEGdata["SEGIDX_y"] == numpy.nan]
 
             # After having removed leaf segments, we can claim that the maximum value of SEGBRNO determines the
             # number of well branches. This will fail if ICD segments are connected in a series, if you
             # have such a setup, you are on your own (it will probably just be recognized as an extra branch)
 
-            numberofbranches = int(mergedSEGdata[~mergedSEGdata['SEGIDX_y'].isnull()].SEGBRNO_x.max())
+            numberofbranches = int(
+                mergedSEGdata[~mergedSEGdata["SEGIDX_y"].isnull()].SEGBRNO_x.max()
+            )
 
             # After-note:
             # An equivalent implementation could be to do such a filter: SEGDATA.groupby('SEGBRNO').count() == 1
@@ -133,7 +149,7 @@ def rft2df(eclfiles):
             # Now we can test if we have any ICD segments, that is the
             # case if we have any segments that have SEGBRNO higher than
             # the branch count
-            icd_present = (SEGdata.SEGBRNO.max() > numberofbranches)
+            icd_present = SEGdata.SEGBRNO.max() > numberofbranches
 
             if icd_present:
                 icd_SEGdata = SEGdata[SEGdata.SEGBRNO > numberofbranches]
@@ -154,48 +170,60 @@ def rft2df(eclfiles):
                 # setup is a bug, with partially unknown effects when simulated in Eclipse
                 # Should we warn the user??
 
-                CONicd_data = pd.merge(CONdata, icd_SEGdata, right_on='ICD_SEGBRNO', left_on='CONBRNO')
+                CONicd_data = pd.merge(
+                    CONdata, icd_SEGdata, right_on="ICD_SEGBRNO", left_on="CONBRNO"
+                )
 
                 # Merge SEGxxxxx to icd_conf_data
-                CONSEG_data = pd.merge(CONicd_data, SEGdata, left_on='ICD_SEGNXT', right_on='SEGIDX')
+                CONSEG_data = pd.merge(
+                    CONicd_data, SEGdata, left_on="ICD_SEGNXT", right_on="SEGIDX"
+                )
 
                 # Add more data:
-                CONSEG_data['CompletionDP'] = 0
+                CONSEG_data["CompletionDP"] = 0
                 nonzeroPRES = (CONSEG_data.CONPRES > 0) & (CONSEG_data.SEGPRES > 0)
-                CONSEG_data.loc[nonzeroPRES, 'CompletionDP'] = CONSEG_data[nonzeroPRES]['CONPRES'] - CONSEG_data[nonzeroPRES]['SEGPRES']
+                CONSEG_data.loc[nonzeroPRES, "CompletionDP"] = (
+                    CONSEG_data[nonzeroPRES]["CONPRES"]
+                    - CONSEG_data[nonzeroPRES]["SEGPRES"]
+                )
 
             if not icd_present:
 
                 # Merge SEGxxxxx to CONxxxxx data if we can find data that match them
-                if 'CONSEGNO' in CONdata and 'SEGIDX' in SEGdata:
-                    CONSEG_data = pd.merge(CONdata, SEGdata, left_on='CONSEGNO', right_on='SEGIDX')
+                if "CONSEGNO" in CONdata and "SEGIDX" in SEGdata:
+                    CONSEG_data = pd.merge(
+                        CONdata, SEGdata, left_on="CONSEGNO", right_on="SEGIDX"
+                    )
                 else:
                     # Give up, you will get to distinct blocks in your CSV file when we
                     CONSEG_data = pd.concat([CONdata, SEGdata], sort=True)
 
             # Overwrite the CONdata structure with the augmented data structure including segments and potential ICD.
             CONdata = CONSEG_data
-        CONdata['DRAWDOWN'] = 0 # Set a default so that the column always exists
-        if 'CONPRES' in CONdata.columns: # Only try to calculate this if CONPRES is actually nonzero.
-            CONdata.loc[CONdata.CONPRES > 0, 'DRAWDOWN'] = CONdata[CONdata.CONPRES > 0]['PRESSURE'] - CONdata[CONdata.CONPRES > 0]['CONPRES']
+        CONdata["DRAWDOWN"] = 0  # Set a default so that the column always exists
+        if (
+            "CONPRES" in CONdata.columns
+        ):  # Only try to calculate this if CONPRES is actually nonzero.
+            CONdata.loc[CONdata.CONPRES > 0, "DRAWDOWN"] = (
+                CONdata[CONdata.CONPRES > 0]["PRESSURE"]
+                - CONdata[CONdata.CONPRES > 0]["CONPRES"]
+            )
 
-        CONdata['DATE'] = str(date)
-        CONdata['WELL'] = well
-        CONdata['WELLMODEL'] = wellmodel
+        CONdata["DATE"] = str(date)
+        CONdata["WELL"] = well
+        CONdata["WELLMODEL"] = wellmodel
 
         # Replicate S3Graf calculated data:
-        if 'PRESSURE' in CONdata.columns:
-            CONdata['CONBPRES'] = CONdata['PRESSURE'] # Just an alias
-        if 'CONLENEN' in CONdata.columns and 'CONLENST' in CONdata.columns:
-            CONdata['CONMD'] = 0.5 * (CONdata.CONLENST+CONdata.CONLENEN)
-            CONdata['CONLENTH'] = CONdata.CONLENEN - CONdata.CONLENST
+        if "PRESSURE" in CONdata.columns:
+            CONdata["CONBPRES"] = CONdata["PRESSURE"]  # Just an alias
+        if "CONLENEN" in CONdata.columns and "CONLENST" in CONdata.columns:
+            CONdata["CONMD"] = 0.5 * (CONdata.CONLENST + CONdata.CONLENEN)
+            CONdata["CONLENTH"] = CONdata.CONLENEN - CONdata.CONLENST
 
-        if 'CONORAT' in CONdata.columns and 'CONLENTH' in CONdata.columns:
-            CONdata['CONORATS'] = CONdata.CONORAT / CONdata.CONLENTH
-            CONdata['CONWRATS'] = CONdata.CONWRAT / CONdata.CONLENTH
-            CONdata['CONGRATS'] = CONdata.CONGRAT / CONdata.CONLENTH
-
-
+        if "CONORAT" in CONdata.columns and "CONLENTH" in CONdata.columns:
+            CONdata["CONORATS"] = CONdata.CONORAT / CONdata.CONLENTH
+            CONdata["CONWRATS"] = CONdata.CONWRAT / CONdata.CONLENTH
+            CONdata["CONGRATS"] = CONdata.CONGRAT / CONdata.CONLENTH
 
         rftdata = rftdata.append(CONdata, ignore_index=True)
 
@@ -204,14 +232,16 @@ def rft2df(eclfiles):
     rftdata.fillna(0, inplace=True)
 
     # The HOSTGRID data seems often to be empty, check if it is and delete if so:
-    if 'HOSTGRID' in rftdata.columns:
+    if "HOSTGRID" in rftdata.columns:
         if len(rftdata.HOSTGRID.unique()) == 1:
-            if rftdata.HOSTGRID.unique()[0].strip() == '':
-                del rftdata['HOSTGRID']
+            if rftdata.HOSTGRID.unique()[0].strip() == "":
+                del rftdata["HOSTGRID"]
 
     return rftdata
 
+
 # Remaining functions are for the command line interface
+
 
 def parse_args():
     """Parse sys.argv using argparse"""

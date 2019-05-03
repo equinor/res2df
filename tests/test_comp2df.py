@@ -19,6 +19,7 @@ from ecl2df.eclfiles import EclFiles
 
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 
+
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -27,13 +28,14 @@ def test_comp2df():
     assert not compdf.empty
     assert len(compdf.columns)
 
+
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-rft.csv"
     sys.argv = ["rft2csv", DATAFILE, "-o", tmpcsvfile]
-    #rft2df.main()
+    # rft2df.main()
 
-    #assert os.path.exists(tmpcsvfile)
-    #disk_df = pd.read_csv(tmpcsvfile)
-    #assert not disk_df.empty
-    #os.remove(tmpcsvfile)
+    # assert os.path.exists(tmpcsvfile)
+    # disk_df = pd.read_csv(tmpcsvfile)
+    # assert not disk_df.empty
+    # os.remove(tmpcsvfile)

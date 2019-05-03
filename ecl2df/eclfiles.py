@@ -22,6 +22,7 @@ from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
 
+
 class EclFiles(object):
     def __init__(self, eclbase):
         # Strip .DATA or . at end of eclbase:
@@ -42,10 +43,14 @@ class EclFiles(object):
         self._deck = None
 
     def get_ecldeck(self):
-        if not self._deck:         
-            es = sunbeam.parse(self._eclbase + ".DATA",
-                               recovery=[("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
-                                         ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore)])
+        if not self._deck:
+            es = sunbeam.parse(
+                self._eclbase + ".DATA",
+                recovery=[
+                    ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
+                    ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
+                ],
+            )
             self._deck = es.deck
         return self._deck
 
@@ -91,11 +96,11 @@ class EclFiles(object):
 
     def get_rftfile(self):
         if not self._rftfile:
-             rftfilename = self._eclbase + ".RFT"
-             if not os.path.exists(rftfilename):
-                  print("File " + rftfilename + " not found")
-                  return None
-             self._rftfile = EclFile(rftfilename)
+            rftfilename = self._eclbase + ".RFT"
+            if not os.path.exists(rftfilename):
+                print("File " + rftfilename + " not found")
+                return None
+            self._rftfile = EclFile(rftfilename)
         return self._rftfile
 
     def get_rstfile(self):

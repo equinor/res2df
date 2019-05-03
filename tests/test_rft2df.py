@@ -28,6 +28,7 @@ def test_rft2df():
     assert not rftdf.empty
     assert len(rftdf.columns)
 
+
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-rft.csv"

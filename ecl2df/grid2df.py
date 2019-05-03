@@ -69,8 +69,7 @@ def rst2df(eclfiles, date, dateinheaders=False):
             except ValueError:
                 raise ValueError("date " + str(date) + " not understood")
             if isodate not in dates:
-                raise ValueError("date " + str(isodate) +
-                                 " not found in UNRST file")
+                raise ValueError("date " + str(isodate) + " not found in UNRST file")
             else:
                 chosendates = [isodate]
         else:

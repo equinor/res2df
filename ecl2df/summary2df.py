@@ -20,19 +20,20 @@ from ecl.summary import EclSum
 from .eclfiles import EclFiles
 from fmu.ensemble import ScratchEnsemble
 
-def get_smry(eclfiles, time_index=None, column_keys=None,
-             start_date=None, end_date=None):
+
+def get_smry(
+    eclfiles, time_index=None, column_keys=None, start_date=None, end_date=None
+):
     if not isinstance(column_keys, list):
-         column_keys = [column_keys]
-    if isinstance(time_index, str) and time_index == 'raw':
-         time_index_arg = None
+        column_keys = [column_keys]
+    if isinstance(time_index, str) and time_index == "raw":
+        time_index_arg = None
     elif isinstance(time_index, str):
-         time_index_arg = ScratchEnsemble._get_smry_dates([eclfiles.get_eclsum().dates],
-                                                          time_index, True,
-                                                          start_date,
-                                                          end_date)
+        time_index_arg = ScratchEnsemble._get_smry_dates(
+            [eclfiles.get_eclsum().dates], time_index, True, start_date, end_date
+        )
     else:
-         time_index_arg = time_index
+        time_index_arg = time_index
 
     df = eclfiles.get_eclsum().pandas_frame(time_index_arg, column_keys)
     df.index.name = "DATE"
@@ -40,6 +41,7 @@ def get_smry(eclfiles, time_index=None, column_keys=None,
 
 
 # Remaining functions are for the command line interface
+
 
 def parse_args():
     """Parse sys.argv using argparse"""
@@ -51,13 +53,17 @@ def parse_args():
     parser.add_argument(
         "--time_index",
         type=str,
-        help="Time resolution mnemonic, raw, daily, monthly, yearly")
+        help="Time resolution mnemonic, raw, daily, monthly, yearly",
+    )
     parser.add_argument(
-        "--column_keys",
-        nargs="+",
-        help="Summary column vector wildcards")
+        "--column_keys", nargs="+", help="Summary column vector wildcards"
+    )
     parser.add_argument(
-        "-o", "--output", type=str, help="name of output csv file.", default="summary.csv"
+        "-o",
+        "--output",
+        type=str,
+        help="name of output csv file.",
+        default="summary.csv",
     )
     return parser.parse_args()
 
@@ -66,6 +72,8 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    sum_df = get_smry(eclfiles, time_index=args.time_index, column_keys=args.column_keys)
+    sum_df = get_smry(
+        eclfiles, time_index=args.time_index, column_keys=args.column_keys
+    )
     sum_df.to_csv(args.output, index=True)
     print("Wrote to " + args.output)

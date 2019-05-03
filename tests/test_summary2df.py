@@ -28,7 +28,8 @@ def test_summary2df():
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
     assert len(sumdf.columns)
-    assert 'FOPT' in sumdf.columns
+    assert "FOPT" in sumdf.columns
+
 
 def test_main():
     """Test command line interface"""

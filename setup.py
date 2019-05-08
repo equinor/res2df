@@ -17,6 +17,7 @@ setup(
             "grid2csv=ecl2df.grid2df:main",
             "summary2csv=ecl2df.summary2df:main",
             "rft2csv=ecl2df.rft2df:main",
+            "compdat2csv=ecl2df.compdat2df:main",
         ]
     },
 )

@@ -8,6 +8,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import argparse
 import datetime
 import pandas as pd
 
@@ -39,14 +40,89 @@ def unrollcompdatdf(compdat_df):
     This is unwanted when exported to file, unroll these intervals
     into multiple rows where K1 == K2 (duplicating the rest of the data)
     """
-    return compdat_df
+    k1eqk2bools = compdat_df["K1"] == compdat_df["K2"]
+    unrolled = compdat_df[k1eqk2bools]
+    list_unrolled = []
+    if (~k1eqk2bools).any():
+        for rangerow in compdat_df[~k1eqk2bools]:
+            print(rangerow)
+            for k in range(int(rangerow["K1"]), int(rangerow["K2"])):
+                rangerow["K1"] = k
+                rangerow["K2"] = k
+                list_unrolled.append(rangerow)
+    if list_unrolled:
+        unrolled = pd.concat(unrolled, pd.DataFrame(list_unrolled))
+    return unrolled
+
+
+# Sunbeam terms:
+COMPDATKEYS = [
+    "WELL",
+    "I",
+    "J",
+    "K1",
+    "K2",
+    "STATE",
+    "SAT_TABLE",
+    "CONNECTION_TRANSMISSIBILITY_FACTOR",
+    "DIAMETER",
+    "Kh",
+    "SKIN",
+    "D_FACTOR",
+    "DIR",
+    "PR",
+]
+
+COMPSEGSKEYS = [
+    "I",
+    "J",
+    "K",
+    "BRANCH",
+    "DISTANCE_START",
+    "DISTANCE_END",
+    "DIRECTION",
+    "END_IJK",
+    "CENTER_DEPTH",
+    "THERMAL_LENGTH",
+    "SEGMENT_NUMBER",
+]
+
+WELSEGSKEYS = [
+    "WELL",
+    "DEPTH",
+    "LENGTH",
+    "WELLBORE_VOLUME",
+    "INFO_TYPE",
+    "PRESSURE_COMPONENTS",
+    "FLOW_MODEL",
+    "TOP_X",
+    "TOP_Y",  # END OF FIRST RECORD
+    "SEGMENT",  # THIS REPEATS FOR MORE RECORDS
+    "BRANCH",
+    "JOIN_SEGMENT",
+    "SEGMENT_LENGTH",
+    "DEPTH_CHANGE",
+    "DIAMETER",
+    "ROUGHNESS",
+    "AREA",
+    "VOLUME",
+    "LENGTH_X",
+    "LENGTH_Y",
+]
 
 
 def sunbeam2rmsterm(reckey):
-    """Sunbeam authors and Roxar RMS authors have interpreted the Eclipse documentation
-    ever so slightly different when naming the data.
+    """Sunbeam authors and Roxar RMS authors have interpreted the Eclipse
+    documentation ever so slightly different when naming the data.
 
-    For Dataframe columnnames, we prefer the RMS terms due to the one very long one, and mixed-case in sunbeam"""
+    For Dataframe columnnames, we prefer the RMS terms due to the
+    one very long one, and mixed-case in sunbeam
+    
+    Returns:
+        str with translated term, or of no translation available
+        the term is returned unchanged.
+    """
+
     thedict = {
         "WELL": "WELL",
         "I": "I",
@@ -63,143 +139,57 @@ def sunbeam2rmsterm(reckey):
         "DIR": "DIR",
         "PR": "PEQVR",
     }
-    return thedict[reckey]
+    return thedict.get(reckey, reckey)
 
 
-compsegs_df = pd.DataFrame(
-    columns=["date", "well", "i", "j", "k", "branch", "distance_start", "distance_end"]
-)
-# , 'direction','end_ijk', 'center_depth', 'thermal_length', 'segment_number'])
-
-welsegs_df = pd.DataFrame(
-    columns=[
-        "date",
-        "well",
-        "depth",
-        "length",
-        "wellbore_volume",
-        "info_type",
-        "pressure_components",
-        "flow_model",
-        "top_x",
-        "top_y",
-        "segment",
-        "branch",
-        "join_segment",
-        "segment_length",
-        "depth_change",
-        "diameter",
-        "roughness",
-    ]
-)
-# , 'area', 'volume', 'length_x', 'length_y'])
-
-
-# print "Date,Well,i,j,k,state,sat_table,connectiontrans,diameter,kh,skin,d_factor,dir,pr"
 def deck2compdatsegsdfs(eclfiles):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
-    This will not work for TSTEP!!
+
+    Return:
+        tuple with 3 dataframes, compdat, compsegs, welsegs.
+    TODO: Support TSTEP
     """
     deck = eclfiles.get_ecldeck()
-    compdat_df = pd.DataFrame(
-        columns=[
-            "date",
-            "well",
-            "i",
-            "j",
-            "k",
-            "state",
-            "sat_table",
-            "connectiontrans",
-            "diam",
-            "kh",
-            "skin",
-            "d_factor",
-            "direction",
-            "pr",
-        ]
-    )
-    compsegs_df = pd.DataFrame(
-        columns=[
-            "date",
-            "well",
-            "i",
-            "j",
-            "k",
-            "branch",
-            "distance_start",
-            "distance_end",
-        ]
-    )
-    # , 'direction','end_ijk', 'center_depth', 'thermal_length', 'segment_number'])
 
-    welsegs_df = pd.DataFrame(
-        columns=[
-            "date",
-            "well",
-            "depth",
-            "length",
-            "wellbore_volume",
-            "info_type",
-            "pressure_components",
-            "flow_model",
-            "top_x",
-            "top_y",
-            "segment",
-            "branch",
-            "join_segment",
-            "segment_length",
-            "depth_change",
-            "diameter",
-            "roughness",
-        ]
-    )
-    # , 'area', 'volume', 'length_x', 'length_y'])
-
+    compdatrecords = []  # List of dicts of every line in input file
+    compsegsrecords = []
+    welsegsrecords = []
     for kw in deck:
         if kw.name == "DATES":
             for rec in kw:
                 day = rec["DAY"][0]
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
-                # Make datetime.date instead:
-                datestr = str(year) + "-" + str(parse_ecl_month(month)) + "-" + str(day)
+                date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
+                print("Parsing at date " + str(date))
         elif kw.name == "COMPDAT":
-            for rec in kw:
-                for layer in range(int(rec["K1"][0]), int(rec["K2"][0]) + 1):
-                    compdat_df.loc[len(compdat_df)] = [
-                        datestr,
-                        rec["WELL"][0],
-                        rec["I"][0],
-                        rec["J"][0],
-                        str(layer),
-                        rec["STATE"][0],
-                        rec["SAT_TABLE"][0],
-                        rec["CONNECTION_TRANSMISSIBILITY_FACTOR"][0],
-                        rec["DIAMETER"][0],
-                        rec["Kh"][0],
-                        rec["SKIN"][0],
-                        0,  # D_FACTOR is defaulted..
-                        # rec['D_FACTOR'][0],
-                        rec["DIR"][0],
-                        rec["PR"][0],
-                    ]
+            for rec in kw:  # Loop over the lines inside COMPDAT record
+                rec_data = {}
+                rec_data["DATE"] = date
+                for rec_key in COMPDATKEYS:
+                    try:
+                        if rec[rec_key]:
+                            rec_data[sunbeam2rmsterm(rec_key)] = rec[rec_key][0]
+                        # "rec_key in rec" does not work..
+                    except ValueError:
+                        pass
+                compdatrecords.append(rec_data)
         elif kw.name == "COMPSEGS":
             well = kw[0][0][0]
             for recidx in range(1, len(kw)):
+                rec_data = {}
+                rec_data["WELL"] = well
+                rec_data["DATE"] = date
                 rec = kw[recidx]
-                compsegs_df.loc[len(compsegs_df)] = [
-                    datestr,
-                    well,
-                    str(int(rec["I"][0])),
-                    str(int(rec["J"][0])),
-                    str(int(rec["K"][0])),
-                    str(int(rec["BRANCH"][0])),
-                    rec["DISTANCE_START"][0],
-                    rec["DISTANCE_END"][0],
-                ]  # q, rec['DIRECTION'][0], rec['END_IJK'][0], rec['CENTER_DEPTH'][0], rec['THERMAL_LENGTH'][0], rec['SEGMENT_NUMBER'][0]]
+                for rec_key in COMPSEGSKEYS:
+                    try:
+                        if rec[rec_key]:
+                            rec_data[rec_key] = rec[rec_key][0]
+                    except ValueError:
+                        pass
+                compsegsrecords.append(rec_data)
         elif kw.name == "WELSEGS":
             well = kw[0][0][0]
             depth = kw[0][1][0]
@@ -232,30 +222,15 @@ def deck2compdatsegsdfs(eclfiles):
                     rec["DIAMETER"][0],
                     rec["ROUGHNESS"][0],
                 ]
+        elif kw.name == "TSTEP":
+            print("WARNING: Possible premature stop at first TSTEP")
+            break
 
-    striptables = True
-    if striptables:
-        compdat_df.drop(
-            ["state", "sat_table", "diam", "skin", "d_factor", "direction", "pr"],
-            inplace=True,
-            axis=1,
-        )
-        welsegs_df.drop(
-            [
-                "wellbore_volume",
-                "info_type",
-                "pressure_components",
-                "flow_model",
-                "top_x",
-                "top_y",
-                "diameter",
-                "roughness",
-            ],
-            inplace=True,
-            axis=1,
-        )
+    compdat_df = pd.DataFrame(compdatrecords)
+    compsegs_df = pd.DataFrame(compsegsrecords)
+    welsegs_df = pd.DataFrame()
 
-    return compdat_df
+    return (compdat_df, compsegs_df, welsegs_df)
 
 
 def postprocess():
@@ -287,3 +262,27 @@ def postprocess():
     alldata_icd = pd.merge(
         compdatsegwel_icd_df, welsegs_df, on=["date", "well", "segment"]
     )
+
+
+def parse_args():
+    """Parse sys.argv using argparse"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help="Name of output csv file.",
+        default="compdat.csv",
+    )
+    return parser.parse_args()
+
+
+def main():
+    """Entry-point for module, for command line utility"""
+    args = parse_args()
+    eclfiles = EclFiles(args.DATAFILE)
+    (compdat_df, compsegs_df, welsegs_df) = deck2compdatsegsdfs(eclfiles)
+    compdat_df = unrollcompdatdf(compdat_df)
+    compdat_df.to_csv(args.output, index=False)
+    print("Wrote to " + args.output)

@@ -61,7 +61,7 @@ def test_mergegridframes():
 
     assert len(init_df) == len(grid_geom)
 
-    merged = grid2df.merge_gridframes(grid_geom, init_df)
+    merged = grid2df.merge_gridframes(grid_geom, init_df, pd.DataFrame())
     assert isinstance(merged, pd.DataFrame)
     assert len(merged) == len(grid_geom)
 
@@ -76,21 +76,50 @@ def test_main():
     assert not disk_df.empty
     os.remove(tmpcsvfile)
 
+    # Do again with also restarts:
+    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--rstdate", "first"]
+    grid2df.main()
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+    # Do again with also restarts:
+    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--rstdate", "2001-02-01"]
+    grid2df.main()
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
 
 def test_rstdates():
     eclfiles = EclFiles(DATAFILE)
     rstfile = eclfiles.get_rstfile()
-    assert rstfile
+
+    alldates = grid2df.rstdates(eclfiles)
+    assert len(alldates) == 4
+
+    didx = grid2df.dates2rstindices(eclfiles, "all")
+    assert len(didx[0]) == len(alldates)
+    assert len(didx[1]) == len(alldates)
+    assert isinstance(didx[0][0], int)
+    assert isinstance(didx[1][0], datetime.date)
+    assert didx[1][0] == alldates[0]
+    assert didx[1][-1] == alldates[-1]
+
+    first = grid2df.dates2rstindices(eclfiles, "first")
+    assert first[1][0] == alldates[0]
+
+    last = grid2df.dates2rstindices(eclfiles, "last")
+    assert last[1][0] == alldates[-1]
 
     dates = grid2df.rstdates(eclfiles)
-    print(dates)
     assert isinstance(dates, list)
 
 
 def test_rst2df():
     eclfiles = EclFiles(DATAFILE)
-    print(grid2df.rst2df(eclfiles, "first").head())
-    print(grid2df.rst2df(eclfiles, "all").head())
-    grid2df.rst2df(eclfiles, "last")
-    grid2df.rst2df(eclfiles, datetime.date(2000, 1, 1))
-    grid2df.rst2df(eclfiles, "2000-01-01")
+    assert grid2df.rst2df(eclfiles, "first").shape == (35817, 22)
+    assert grid2df.rst2df(eclfiles, "last").shape == (35817, 22)
+    assert grid2df.rst2df(eclfiles, "all").shape == (35817, 22 * 4)

@@ -6,7 +6,7 @@ Extract grid information from Eclipse output files as Dataframes.
 Each cell in the grid correspond to one row.
 
 For grid cells, x, y, z for cell centre and volume is available as
-geometric information. Static data (properties) can be merged from 
+geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
@@ -37,9 +37,67 @@ def rstdates(eclfiles):
     ]
 
 
+def dates2rstindices(eclfiles, dates):
+    """Return the restart index/indices for a given datetime or list of datetimes
+
+      date: datetime.date or list of datetime.date, must
+            correspond to an existing date. If list, it
+            forces dateinheaders to be True.
+            Can also be string, then the mnenomics
+            'first', 'last', 'all', are supported, or ISO
+            date formats.
+
+
+    Raises exception no dates are not found.
+
+    Return: tuple, first element is
+        list of integers, corresponding to restart indices. Length 1 or more.
+        second element is list of corresponding datetime.date objecs.
+    """
+    availabledates = rstdates(eclfiles)
+
+    supportedmnemonics = ["first", "last", "all"]
+
+    # After this control block, chosendates is a list of dates
+    # we should extract, and which exists in UNRST.
+    if isinstance(dates, str):
+        if dates not in supportedmnemonics:
+            # Try to parse as ISO date:
+            try:
+                isodate = dateutil.parser.isoparse(dates).date()
+            except ValueError:
+                raise ValueError("date " + str(dates) + " not understood")
+            if isodate not in availabledates:
+                raise ValueError("date " + str(isodate) + " not found in UNRST file")
+            else:
+                chosendates = [isodate]
+        else:
+            if dates == "first":
+                chosendates = [availabledates[0]]
+            elif dates == "last":
+                chosendates = [availabledates[-1]]
+            elif dates == "all":
+                chosendates = availabledates
+    elif isinstance(dates, datetime.date):
+        chosendates = [dates]
+    elif isinstance(dates, datetime.datetime):
+        chosendates = [dates.date()]
+    elif isinstance(dates, list):
+        chosendates = [x for x in dates if x in availabledates]
+        if not chosendates:
+            raise ValueError("None of the requested dates were found")
+        elif len(chosendates) < len(availabledate):
+            print("Warning: Not all dates found in UNRST\n")
+    else:
+        raise ValueError("date " + str(dates) + " not understood")
+
+    rstindices = [availabledates.index(x) for x in chosendates]
+    return (rstindices, chosendates)
+
+
 def rst2df(eclfiles, date, dateinheaders=False):
     """Return a dataframe with dynamic data from the restart file
-    for each cell, at a particular date. 
+    for each cell, at a particular date.
 
     Args:
         eclfiles: EclFiles object
@@ -50,62 +108,23 @@ def rst2df(eclfiles, date, dateinheaders=False):
             'first', 'last', 'all', are supported, or ISO
             date formats.
         dateinheaders: boolean on whether the date should
-            be added to the column headers. Instead of 
+            be added to the column headers. Instead of
             SGAS as a column header, you get SGAS@YYYY-MM-DD.
     """
     # First task is to determine the restart index to extract
     # data for:
-    dates = rstdates(eclfiles)
-
-    supportedmnemonics = ["first", "last", "all"]
-
-    # After this control block, chosendates is a list of dates
-    # we should extract, and which exists in UNRST.
-    if isinstance(date, str):
-        if date not in supportedmnemonics:
-            # Try to parse as ISO date:
-            try:
-                isodate = dateutil.parser.isoparse(date).date()
-            except ValueError:
-                raise ValueError("date " + str(date) + " not understood")
-            if isodate not in dates:
-                raise ValueError("date " + str(isodate) + " not found in UNRST file")
-            else:
-                chosendates = [isodate]
-        else:
-            if date == "first":
-                chosendates = [dates[0]]
-            elif date == "last":
-                chosendates = [dates[-1]]
-            elif date == "all":
-                chosendates = dates
-    elif isinstance(date, datetime.date):
-        chosendates = [date]
-    elif isinstance(date, datetime.datetime):
-        chosendates = [date.date()]
-    elif isinstance(date, list):
-        chosendates = [x for x in date if x in dates]
-        if not chosendates:
-            raise ValueError("None of the requested dates were found")
-        elif len(chosendates) < len(dates):
-            print("Warning: Not all dates found in UNRST\n")
-    else:
-        raise ValueError("date " + str(date) + " not understood")
-
-    rstindices = [dates.index(x) for x in chosendates]
+    (rstindices, chosendates) = dates2rstindices(eclfiles, date)
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
     # for all active cells:
     activecells = eclfiles.get_egrid().getNumActive()
-    activecells = 35838  # DELETE THIS LINE
     rstvectors = []
     for vec in eclfiles.get_rstfile().headers:
         if vec[1] == activecells:
             rstvectors.append(vec[0])
     rstvectors = list(set(rstvectors))  # Make unique list
     # Note that all of these might not exist at all timesteps.
-    print(rstvectors)
 
     rst_dfs = []
     for rstindex in rstindices:
@@ -213,9 +232,10 @@ def init2df(init, active_cells):
     return init_df
 
 
-def merge_gridframes(grid_df, init_df, rst_dfs=None):
+def merge_gridframes(grid_df, init_df, rst_df):
     """Merge dataframes with grid data"""
-    return pd.concat([grid_df, init_df], axis=1, sort=False)
+    merged = pd.concat([grid_df, init_df, rst_df], axis=1, sort=False)
+    return merged
 
 
 def parse_args():
@@ -224,6 +244,14 @@ def parse_args():
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
+    )
+    parser.add_argument(
+        "--rstdate",
+        type=str,
+        help="Point in time to grab restart data from, "
+        + "either 'first' or 'last', or a date in "
+        + "YYYY-MM-DD format",
+        default="",
     )
     parser.add_argument(
         "-o",
@@ -241,6 +269,10 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     gridgeom = gridgeometry2df(eclfiles)
     initdf = init2df(eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive())
-    grid_df = merge_gridframes(gridgeom, initdf)
+    if args.rstdate and len(args.rstdate):
+        rst_df = rst2df(eclfiles, args.rstdate)
+    else:
+        rst_df = pd.DataFrame()
+    grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     grid_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

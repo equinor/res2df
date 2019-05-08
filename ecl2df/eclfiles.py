@@ -44,14 +44,21 @@ class EclFiles(object):
 
     def get_ecldeck(self):
         if not self._deck:
+            if os.path.exists(self._eclbase + ".DATA"):
+                deckfile = self._eclbase + ".DATA"
+            else:
+                deckfile = self._eclbase  # Will be any filename
             es = sunbeam.parse(
-                self._eclbase + ".DATA",
+                deckfile,
                 recovery=[
                     ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
                     ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
+                    ("PARSE_RANDOM_SLASH", sunbeam.action.ignore),
+                    ("UNSUPPORTED_*", sunbeam.action.ignore),
+                    ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
+                    ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
                 ],
             )
-            self._deck = es.deck
         return self._deck
 
     def get_egrid(self):

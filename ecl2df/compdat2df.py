@@ -194,15 +194,15 @@ def deck2compdatsegsdfs(eclfiles):
             # First record contains meta-information for well
             # (sunbeam deck returns default values for unspecified items.)
             welsegsdict = {}
-            welsegsdict['WELL'] = well = kw[0][0][0]
-            welsegsdict['DEPTH'] = kw[0][1][0]
-            welsegsdict['LENGTH'] = kw[0][2][0]
-            welsegsdict['WBOREVOL'] = kw[0][3][0]
-            welsegsdict['INFO'] = kw[0][4][0]
-            welsegsdict['PRES_COMP'] = kw[0][5][0]
-            welsegsdict['FLOWMODEL'] = kw[0][6][0]
-            welsegsdict['TOP_X'] = kw[0][7][0]
-            welsegsdict['TOP_Y'] = kw[0][8][0]
+            welsegsdict["WELL"] = well = kw[0][0][0]
+            welsegsdict["DEPTH"] = kw[0][1][0]
+            welsegsdict["LENGTH"] = kw[0][2][0]
+            welsegsdict["WBOREVOL"] = kw[0][3][0]
+            welsegsdict["INFO"] = kw[0][4][0]
+            welsegsdict["PRES_COMP"] = kw[0][5][0]
+            welsegsdict["FLOWMODEL"] = kw[0][6][0]
+            welsegsdict["TOP_X"] = kw[0][7][0]
+            welsegsdict["TOP_Y"] = kw[0][8][0]
             # Loop over all subsequent records.
             for recidx in range(1, len(kw)):
                 rec = kw[recidx]
@@ -279,9 +279,9 @@ def main():
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
     (compdat_df, compsegs_df, welsegs_df) = deck2compdatsegsdfs(eclfiles)
-    compdat_df.to_csv('compdat.csv', index=False)
-    compsegs_df.to_csv('compsegs.csv', index=False)
-    welsegs_df.to_csv('welsegs.csv', index=False)
+    compdat_df.to_csv("compdat.csv", index=False)
+    compsegs_df.to_csv("compsegs.csv", index=False)
+    welsegs_df.to_csv("welsegs.csv", index=False)
     compdat_df = unrollcompdatdf(compdat_df)
     compdat_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

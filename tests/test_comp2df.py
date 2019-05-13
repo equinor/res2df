@@ -26,6 +26,8 @@ def test_comp2df():
     compdfs = compdat2df.deck2compdatsegsdfs(eclfiles)
 
     assert not compdfs[0].empty
+    assert compdfs[1].empty  # REEK demo does not include multisegment wells
+    assert compdfs[2].empty
     assert len(compdfs[0].columns)
 
 
@@ -35,7 +37,7 @@ def test_main():
     sys.argv = ["compdat2csv", DATAFILE, "-o", tmpcsvfile]
     compdat2df.main()
 
-    # assert os.path.exists(tmpcsvfile)
-    # disk_df = pd.read_csv(tmpcsvfile)
-    # assert not disk_df.empty
-    # os.remove(tmpcsvfile)
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)

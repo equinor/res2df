@@ -16,7 +16,7 @@ from __future__ import division
 
 import os
 
-import sunbeam
+import sunbeam.deck
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
@@ -48,7 +48,7 @@ class EclFiles(object):
                 deckfile = self._eclbase + ".DATA"
             else:
                 deckfile = self._eclbase  # Will be any filename
-            es = sunbeam.parse(
+            deck = sunbeam.deck.parse(
                 deckfile,
                 recovery=[
                     ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
@@ -59,7 +59,7 @@ class EclFiles(object):
                     ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
                 ],
             )
-            self._deck = es.deck
+            self._deck = deck
         return self._deck
 
     def get_egrid(self):

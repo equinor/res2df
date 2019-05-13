@@ -117,7 +117,7 @@ def sunbeam2rmsterm(reckey):
 
     For Dataframe columnnames, we prefer the RMS terms due to the
     one very long one, and mixed-case in sunbeam
-    
+
     Returns:
         str with translated term, or of no translation available
         the term is returned unchanged.
@@ -157,7 +157,7 @@ def deck2compdatsegsdfs(eclfiles):
     compsegsrecords = []
     welsegsrecords = []
     for kw in deck:
-        if kw.name == "DATES":
+        if kw.name == "DATES" or kw.name == "START":
             for rec in kw:
                 day = rec["DAY"][0]
                 month = rec["MONTH"][0]
@@ -191,44 +191,39 @@ def deck2compdatsegsdfs(eclfiles):
                         pass
                 compsegsrecords.append(rec_data)
         elif kw.name == "WELSEGS":
-            well = kw[0][0][0]
-            depth = kw[0][1][0]
-            length = kw[0][2][0]
-            wellbore_volume = kw[0][3][0]
-            info_type = kw[0][4][0]
-            pressure_components = kw[0][5][0]
-            flow_model = kw[0][6][0]
-            top_x = kw[0][7][0]
-            top_y = kw[0][8][0]
+            # First record contains meta-information for well
+            # (sunbeam deck returns default values for unspecified items.)
+            welsegsdict = {}
+            welsegsdict['WELL'] = well = kw[0][0][0]
+            welsegsdict['DEPTH'] = kw[0][1][0]
+            welsegsdict['LENGTH'] = kw[0][2][0]
+            welsegsdict['WBOREVOL'] = kw[0][3][0]
+            welsegsdict['INFO'] = kw[0][4][0]
+            welsegsdict['PRES_COMP'] = kw[0][5][0]
+            welsegsdict['FLOWMODEL'] = kw[0][6][0]
+            welsegsdict['TOP_X'] = kw[0][7][0]
+            welsegsdict['TOP_Y'] = kw[0][8][0]
+            # Loop over all subsequent records.
             for recidx in range(1, len(kw)):
                 rec = kw[recidx]
-                # WARNING: We assume that SEGMENT1 === SEGMENT2 (!!!) (if not, we need to loop over a range just as for layer in compdat)
-                welsegs_df.loc[len(welsegs_df)] = [
-                    datestr,
-                    well,
-                    depth,
-                    length,
-                    wellbore_volume,
-                    info_type,
-                    pressure_components,
-                    flow_model,
-                    top_x,
-                    top_y,
-                    rec["SEGMENT1"][0],
-                    rec["BRANCH"][0],
-                    rec["JOIN_SEGMENT"][0],
-                    rec["SEGMENT_LENGTH"][0],
-                    rec["DEPTH_CHANGE"][0],
-                    rec["DIAMETER"][0],
-                    rec["ROUGHNESS"][0],
-                ]
+                # WARNING: We assume that SEGMENT1 === SEGMENT2 (!!!) (if not,
+                # we need to loop over a range just as for layer in compdat)
+                rec_data = welsegsdict.copy()
+                for rec_key in WELSEGSKEYS:
+                    try:
+                        if rec[rec_key]:
+                            rec_data[rec_key] = rec[rec_key][0]
+                    except ValueError:
+                        print(rec_key)
+                        pass
+                welsegsrecords.append(rec_data)
         elif kw.name == "TSTEP":
             print("WARNING: Possible premature stop at first TSTEP")
             break
 
     compdat_df = pd.DataFrame(compdatrecords)
     compsegs_df = pd.DataFrame(compsegsrecords)
-    welsegs_df = pd.DataFrame()
+    welsegs_df = pd.DataFrame(welsegsrecords)
 
     return (compdat_df, compsegs_df, welsegs_df)
 
@@ -251,6 +246,7 @@ def postprocess():
     # 2. Then we are ready.. compsegs contains the correct branch number
 
     compdatsegs = pd.merge(compdat_df, compsegs_df, on=["date", "well", "i", "j", "k"])
+    # WARNING: Only correct for dual-branch wells, not triple-branach wells with ICD..
     compsegs_icd_df = compsegs_df[compsegs_df.branch > 2]
     icd_wells = compsegs_icd_df.well.unique()
     compdatsegwel_icd_df = pd.merge(
@@ -283,6 +279,9 @@ def main():
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
     (compdat_df, compsegs_df, welsegs_df) = deck2compdatsegsdfs(eclfiles)
+    compdat_df.to_csv('compdat.csv', index=False)
+    compsegs_df.to_csv('compsegs.csv', index=False)
+    welsegs_df.to_csv('welsegs.csv', index=False)
     compdat_df = unrollcompdatdf(compdat_df)
     compdat_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

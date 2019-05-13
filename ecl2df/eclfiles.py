@@ -59,6 +59,7 @@ class EclFiles(object):
                     ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
                 ],
             )
+            self._deck = es.deck
         return self._deck
 
     def get_egrid(self):

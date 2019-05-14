@@ -23,7 +23,7 @@ DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    compdfs = compdat2df.deck2compdatsegsdfs(eclfiles)
+    compdfs = compdat2df.deck2compdatsegsdfs(eclfiles.get_ecldeck())
 
     assert not compdfs[0].empty
     assert compdfs[1].empty  # REEK demo does not include multisegment wells

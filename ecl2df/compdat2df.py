@@ -142,17 +142,16 @@ def sunbeam2rmsterm(reckey):
     return thedict.get(reckey, reckey)
 
 
-def deck2compdatsegsdfs(eclfiles):
+def deck2compdatsegsdfs(deck):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
 
     Return:
         tuple with 3 dataframes, compdat, compsegs, welsegs.
+
     TODO: Support TSTEP
     """
-    deck = eclfiles.get_ecldeck()
-
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
     welsegsrecords = []
@@ -278,7 +277,9 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    (compdat_df, compsegs_df, welsegs_df) = deck2compdatsegsdfs(eclfiles)
+    if eclfiles:
+        deck = eclfiles.get_ecldeck()
+    (compdat_df, compsegs_df, welsegs_df) = deck2compdatsegsdfs(deck)
     compdat_df.to_csv("compdat.csv", index=False)
     compsegs_df.to_csv("compsegs.csv", index=False)
     welsegs_df.to_csv("welsegs.csv", index=False)

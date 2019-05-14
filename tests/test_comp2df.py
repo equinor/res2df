@@ -20,6 +20,7 @@ from ecl2df.eclfiles import EclFiles
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 SCHFILE = "./data/reek/eclipse/include/schedule/reek_history.sch"
 
+
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -68,6 +69,20 @@ WSEGVALV
     print(compdfs[1])
     print(compdfs[2])
 
+
+def test_unrollcompdatk1k2():
+    schstr = """
+COMPDAT
+  -- K1 to K2 is a range of 11 layers, should be automatically
+  -- unrolled to 11 rows.
+  'OP1' 33 44 10 20  /
+/
+"""
+    df = compdat2df.deck2compdatsegsdfs(EclFiles.str2deck(schstr))[0]
+    assert df['I'].unique() == 33
+    assert df['J'].unique() == 44
+    assert (df['K1'].values == range(10, 20 + 1)).all()
+    assert (df['K2'].values == range(10, 20 + 1)).all()
 
 def test_main():
     """Test command line interface"""

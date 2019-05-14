@@ -44,14 +44,13 @@ def unrollcompdatdf(compdat_df):
     unrolled = compdat_df[k1eqk2bools]
     list_unrolled = []
     if (~k1eqk2bools).any():
-        for rangerow in compdat_df[~k1eqk2bools]:
-            print(rangerow)
-            for k in range(int(rangerow["K1"]), int(rangerow["K2"])):
+        for _, rangerow in compdat_df[~k1eqk2bools].iterrows():
+            for k in range(int(rangerow["K1"]), int(rangerow["K2"]) + 1):
                 rangerow["K1"] = k
                 rangerow["K2"] = k
-                list_unrolled.append(rangerow)
+                list_unrolled.append(rangerow.copy())
     if list_unrolled:
-        unrolled = pd.concat(unrolled, pd.DataFrame(list_unrolled))
+        unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)
     return unrolled
 
 
@@ -223,6 +222,7 @@ def deck2compdatsegsdfs(deck):
             break
 
     compdat_df = pd.DataFrame(compdatrecords)
+    compdat_df = unrollcompdatdf(compdat_df)
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
 

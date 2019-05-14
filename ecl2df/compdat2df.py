@@ -155,6 +155,7 @@ def deck2compdatsegsdfs(deck):
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
     welsegsrecords = []
+    date = None  # DATE columns will always be there, but can contain NaN
     for kw in deck:
         if kw.name == "DATES" or kw.name == "START":
             for rec in kw:
@@ -208,6 +209,7 @@ def deck2compdatsegsdfs(deck):
                 # WARNING: We assume that SEGMENT1 === SEGMENT2 (!!!) (if not,
                 # we need to loop over a range just as for layer in compdat)
                 rec_data = welsegsdict.copy()
+                rec_data["DATE"] = date
                 for rec_key in WELSEGSKEYS:
                     try:
                         if rec[rec_key]:

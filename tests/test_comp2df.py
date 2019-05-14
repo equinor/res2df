@@ -39,6 +39,36 @@ def test_schfile2df():
     assert not compdfs[0].empty
 
 
+def test_str2df():
+    schstr = """
+WELSPECS
+ 'OP1' 'OPWEST' 41 125 1759.74 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+/
+
+COMPDAT
+ 'OP1' 33 110 31 31 'OPEN' 0 6467.31299 0.216 506642.25  0.0 0.0 'Y' 7.18 /
+/
+
+WELSEGS
+  'OP1' 1689 1923 1.0E-5 'ABS' 'HFA' 'HO' /
+   2 2 1 1 1923.9 1689.000 0.1172 0.000015  /
+/
+
+COMPSEGS
+  'OP1' /
+  41 125 29  5 2577.0 2616.298 / icd on branch 1 in segment 17
+/
+WSEGVALV
+  'OP1'   166   1   7.4294683E-06  0 / icd on segment 17, cell 41 125 29
+/
+"""
+    deck = EclFiles.str2deck(schstr)
+    compdfs = compdat2df.deck2compdatsegsdfs(deck)
+    print(compdfs[0])
+    print(compdfs[1])
+    print(compdfs[2])
+
+
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-compdat.csv"

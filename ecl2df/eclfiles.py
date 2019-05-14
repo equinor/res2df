@@ -22,6 +22,15 @@ from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
 
+# Default parse option to Sunbeam for a very permissive parsing
+SUNBEAM_RECOVERY = [
+                    ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
+                    ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
+                    ("PARSE_RANDOM_SLASH", sunbeam.action.ignore),
+                    ("UNSUPPORTED_*", sunbeam.action.ignore),
+                    ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
+                    ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
+                ]
 
 class EclFiles(object):
     def __init__(self, eclbase):
@@ -48,19 +57,16 @@ class EclFiles(object):
                 deckfile = self._eclbase + ".DATA"
             else:
                 deckfile = self._eclbase  # Will be any filename
-            deck = sunbeam.deck.parse(
-                deckfile,
-                recovery=[
-                    ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
-                    ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
-                    ("PARSE_RANDOM_SLASH", sunbeam.action.ignore),
-                    ("UNSUPPORTED_*", sunbeam.action.ignore),
-                    ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
-                    ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
-                ],
-            )
+            deck = sunbeam.deck.parse(deckfile, recovery=SUNBEAM_RECOVERY)
             self._deck = deck
         return self._deck
+
+    @staticmethod
+    def file2deck(file):
+        """Try to convert standalone files into Sunbeam Deck objects"""
+        with open(file) as f:
+            filestring = "".join(f.readlines())
+            return sunbeam.deck.parse_string(filestring, recovery=SUNBEAM_RECOVERY)
 
     def get_egrid(self):
         """Return EGRID file as EclGrid"""

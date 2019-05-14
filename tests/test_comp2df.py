@@ -18,7 +18,7 @@ from ecl2df import compdat2df
 from ecl2df.eclfiles import EclFiles
 
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
-
+SCHFILE = "./data/reek/eclipse/include/schedule/reek_history.sch"
 
 def test_comp2df():
     """Test that dataframes are produced"""
@@ -29,6 +29,14 @@ def test_comp2df():
     assert compdfs[1].empty  # REEK demo does not include multisegment wells
     assert compdfs[2].empty
     assert len(compdfs[0].columns)
+
+
+def test_schfile2df():
+    """Test that we can process individual files"""
+    deck = EclFiles.file2deck(SCHFILE)
+    compdfs = compdat2df.deck2compdatsegsdfs(deck)
+    assert len(compdfs[0].columns)
+    assert not compdfs[0].empty
 
 
 def test_main():

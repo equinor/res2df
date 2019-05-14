@@ -24,13 +24,14 @@ from ecl.summary import EclSum
 
 # Default parse option to Sunbeam for a very permissive parsing
 SUNBEAM_RECOVERY = [
-                    ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
-                    ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
-                    ("PARSE_RANDOM_SLASH", sunbeam.action.ignore),
-                    ("UNSUPPORTED_*", sunbeam.action.ignore),
-                    ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
-                    ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
-                ]
+    ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
+    ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
+    ("PARSE_RANDOM_SLASH", sunbeam.action.ignore),
+    ("UNSUPPORTED_*", sunbeam.action.ignore),
+    ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
+    ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
+]
+
 
 class EclFiles(object):
     def __init__(self, eclbase):

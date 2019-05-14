@@ -79,10 +79,11 @@ COMPDAT
 /
 """
     df = compdat2df.deck2compdatsegsdfs(EclFiles.str2deck(schstr))[0]
-    assert df['I'].unique() == 33
-    assert df['J'].unique() == 44
-    assert (df['K1'].values == range(10, 20 + 1)).all()
-    assert (df['K2'].values == range(10, 20 + 1)).all()
+    assert df["I"].unique() == 33
+    assert df["J"].unique() == 44
+    assert (df["K1"].values == range(10, 20 + 1)).all()
+    assert (df["K2"].values == range(10, 20 + 1)).all()
+
 
 def test_main():
     """Test command line interface"""

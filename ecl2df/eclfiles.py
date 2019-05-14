@@ -62,11 +62,15 @@ class EclFiles(object):
         return self._deck
 
     @staticmethod
+    def str2deck(string):
+        return sunbeam.deck.parse_string(string, recovery=SUNBEAM_RECOVERY)
+
+    @staticmethod
     def file2deck(file):
         """Try to convert standalone files into Sunbeam Deck objects"""
         with open(file) as f:
             filestring = "".join(f.readlines())
-            return sunbeam.deck.parse_string(filestring, recovery=SUNBEAM_RECOVERY)
+            return EclFiles.str2deck(filestring)
 
     def get_egrid(self):
         """Return EGRID file as EclGrid"""

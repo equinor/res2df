@@ -87,16 +87,16 @@ COMPSEGSKEYS = [
 ]
 
 WELSEGSKEYS = [
-    "WELL",
-    "DEPTH",
-    "LENGTH",
-    "WELLBORE_VOLUME",
-    "INFO_TYPE",
-    "PRESSURE_COMPONENTS",
+    "WELL",  # "Name of the well"
+    "DEPTH",  # "Depth of the nodal point of the top segment"
+    "LENGTH", # Length down tubing to nodal point of top segment"
+    "WELLBORE_VOLUME",  # Effective wellbore volume of the top segment
+    "INFO_TYPE",  # Type of tubing length and depth information, INC or ABS
+    "PRESSURE_COMPONENTS",  # How to calculate pressure drop in each segment
     "FLOW_MODEL",
     "TOP_X",
-    "TOP_Y",  # END OF FIRST RECORD
-    "SEGMENT",  # THIS REPEATS FOR MORE RECORDS
+    "TOP_Y",  # END OF FIRST RECORD FOR E100. E300 has some more.
+    "SEGMENT",  # For each subseqent record
     "BRANCH",
     "JOIN_SEGMENT",
     "SEGMENT_LENGTH",

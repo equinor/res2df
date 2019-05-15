@@ -51,6 +51,41 @@ def test_init2df():
     assert "PORO" in init_df
 
 
+def test_subvectors():
+    """Test that we can ask for a few vectors only"""
+    eclfiles = EclFiles(DATAFILE)
+    init_df = grid2df.init2df(
+        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), "PORO"
+    )
+    assert "PORO" in init_df
+    assert "PERMX" not in init_df
+
+    init_df = grid2df.init2df(
+        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), "P*"
+    )
+    assert "PORO" in init_df
+    assert "PERMX" in init_df
+    assert "PVTNUM" in init_df
+    assert "SATNUM" not in init_df
+
+    init_df = grid2df.init2df(
+        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), ["P*"]
+    )
+    assert "PORO" in init_df
+    assert "PERMX" in init_df
+    assert "PVTNUM" in init_df
+    assert "SATNUM" not in init_df
+
+    init_df = grid2df.init2df(
+        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), ["P*", "*NUM"]
+    )
+    assert "PORO" in init_df
+    assert "PERMX" in init_df
+    assert "PVTNUM" in init_df
+    assert "SATNUM" in init_df
+    assert "MULTZ" not in init_df
+
+
 def test_mergegridframes():
     """Test that we can merge together data for the grid"""
     eclfiles = EclFiles(DATAFILE)
@@ -69,7 +104,7 @@ def test_mergegridframes():
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-eclgrid.csv"
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile]
+    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--init", "PORO"]
     grid2df.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
@@ -77,7 +112,16 @@ def test_main():
     os.remove(tmpcsvfile)
 
     # Do again with also restarts:
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--rstdate", "first"]
+    sys.argv = [
+        "eclgrid2csv",
+        DATAFILE,
+        "-o",
+        tmpcsvfile,
+        "--rstdate",
+        "first",
+        "--init",
+        "PORO",
+    ]
     grid2df.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
@@ -85,7 +129,16 @@ def test_main():
     os.remove(tmpcsvfile)
 
     # Do again with also restarts:
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--rstdate", "2001-02-01"]
+    sys.argv = [
+        "eclgrid2csv",
+        DATAFILE,
+        "-o",
+        tmpcsvfile,
+        "--rstdate",
+        "2001-02-01",
+        "--init",
+        "PORO",
+    ]
     grid2df.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

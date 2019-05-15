@@ -15,8 +15,10 @@ from __future__ import division
 from __future__ import absolute_import
 
 import argparse
+import fnmatch
 import datetime
 import dateutil.parser
+
 import numpy as np
 import pandas as pd
 
@@ -203,7 +205,7 @@ def gridgeometry2df(eclfiles):
     return grid_df
 
 
-def init2df(init, active_cells):
+def init2df(init, active_cells, vectors=None):
     """Extract information from INIT file with cell data
 
     Order is significant, as index is used for merging
@@ -212,17 +214,28 @@ def init2df(init, active_cells):
         init_file: EclFile for the INIT object
         active_cells: int, The number of active cells each vector is required to have
             Other vectors will be dropped.
+        vectors: List of vectors to include, glob-style wildcards supported
     """
+    if not vectors:
+        vectors = "*"  # This will include everything
+    if not isinstance(vectors, list):
+        vectors = [vectors]
+
     # Build list of vector names to include:
-    vectors = []
-    for vector in init.headers:
-        if vector[1] == active_cells:
-            vectors.append(vector[0])
+    usevectors = []
+    for vec in init.headers:
+        if vec[1] == active_cells and any(
+            [fnmatch.fnmatch(vec[0], key) for key in vectors]
+        ):
+            usevectors.append(vec[0])
 
     init_df = pd.DataFrame(
-        columns=vectors,
+        columns=usevectors,
         data=np.hstack(
-            [init.iget_named_kw(vec, 0).numpyView().reshape(-1, 1) for vec in vectors]
+            [
+                init.iget_named_kw(vec, 0).numpyView().reshape(-1, 1)
+                for vec in usevectors
+            ]
         ),
     )
     return init_df
@@ -240,6 +253,12 @@ def parse_args():
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
+    )
+    parser.add_argument(
+        "--initkeys",
+        nargs="+",
+        help="INIT vector wildcards for vectors to include",
+        default="*",
     )
     parser.add_argument(
         "--rstdate",
@@ -264,7 +283,11 @@ def main():
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
     gridgeom = gridgeometry2df(eclfiles)
-    initdf = init2df(eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive())
+    initdf = init2df(
+        eclfiles.get_initfile(),
+        eclfiles.get_egrid().getNumActive(),
+        vectors=args.initkeys,
+    )
     if args.rstdate:
         rst_df = rst2df(eclfiles, args.rstdate)
     else:

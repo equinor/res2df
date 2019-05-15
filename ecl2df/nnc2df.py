@@ -11,12 +11,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import os
 import argparse
 import pandas as pd
-
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
 
 from .eclfiles import EclFiles
 
@@ -33,7 +29,8 @@ def nnc2df(eclfiles):
     between the two cells)
 
     Args:
-        eclfiles: EclFiles object that can serve EclFile and EclGrid on demand 
+        eclfiles: EclFiles object that can serve EclFile and EclGrid
+            on demand
 
     Returns:
         pd.DataFrame. Empty if no NNC information found.

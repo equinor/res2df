@@ -14,17 +14,13 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-import os
 import argparse
 import datetime
 import dateutil.parser
 import numpy as np
 import pandas as pd
 
-
 from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
-
 from .eclfiles import EclFiles
 
 
@@ -86,7 +82,7 @@ def dates2rstindices(eclfiles, dates):
         chosendates = [x for x in dates if x in availabledates]
         if not chosendates:
             raise ValueError("None of the requested dates were found")
-        elif len(chosendates) < len(availabledate):
+        elif len(chosendates) < len(availabledates):
             print("Warning: Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")
@@ -269,7 +265,7 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     gridgeom = gridgeometry2df(eclfiles)
     initdf = init2df(eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive())
-    if args.rstdate and len(args.rstdate):
+    if args.rstdate:
         rst_df = rst2df(eclfiles, args.rstdate)
     else:
         rst_df = pd.DataFrame()

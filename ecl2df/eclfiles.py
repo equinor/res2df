@@ -1,15 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Class for holding an Eclipse deck with result files
 
-Exists only for convenience, so that loading of
-EclFile/EclSum objects is easy for users, and with
-caching if wanted.
-
-Various functions that needs some of the Eclipse output
-(or input file) should be able to ask this class, and
-it should be loaded or served from cache.
-"""
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
@@ -34,6 +24,18 @@ SUNBEAM_RECOVERY = [
 
 
 class EclFiles(object):
+    """
+    Class for holding an Eclipse deck with result files
+
+    Exists only for convenience, so that loading of
+    EclFile/EclSum objects is easy for users, and with
+    caching if wanted.
+
+    Various functions that needs some of the Eclipse output
+    (or input file) should be able to ask this class, and
+    it should be loaded or served from cache.
+    """
+
     def __init__(self, eclbase):
         # Strip .DATA or . at end of eclbase:
         eclbase = rreplace(".DATA", "", eclbase)
@@ -53,6 +55,7 @@ class EclFiles(object):
         self._deck = None
 
     def get_ecldeck(self):
+        """Return a sunbeam deck of the DATA file"""
         if not self._deck:
             if os.path.exists(self._eclbase + ".DATA"):
                 deckfile = self._eclbase + ".DATA"
@@ -64,17 +67,19 @@ class EclFiles(object):
 
     @staticmethod
     def str2deck(string):
+        """Produce a sunbeam deck from a string, using permissive
+        parsing"""
         return sunbeam.deck.parse_string(string, recovery=SUNBEAM_RECOVERY)
 
     @staticmethod
-    def file2deck(file):
+    def file2deck(filename):
         """Try to convert standalone files into Sunbeam Deck objects"""
-        with open(file) as f:
-            filestring = "".join(f.readlines())
+        with open(filename) as fhandle:
+            filestring = "".join(fhandle.readlines())
             return EclFiles.str2deck(filestring)
 
     def get_egrid(self):
-        """Return EGRID file as EclGrid"""
+        """Find and return EGRID file as an EclGrid object"""
         if not self._egrid:
             egridfilename = self._eclbase + ".EGRID"
             if not os.path.exists(egridfilename):
@@ -84,6 +89,7 @@ class EclFiles(object):
         return self._egrid
 
     def get_egridfile(self):
+        """Find and return the EGRID file as a EclFile object"""
         if not self._egridfile:
             egridfilename = self._eclbase + ".EGRID"
             if not os.path.exists(egridfilename):
@@ -93,6 +99,8 @@ class EclFiles(object):
         return self._egridfile
 
     def get_eclsum(self):
+        """Find and return the summary file and
+        return as EclSum object"""
         print(self._eclsum)
         if not self._eclsum:
             smryfilename = self._eclbase + ".UNSMRY"
@@ -105,6 +113,7 @@ class EclFiles(object):
         return self._eclsum
 
     def get_initfile(self):
+        """Find and return the INIT file as an EclFile object"""
         if not self._initfile:
             initfilename = self._eclbase + ".INIT"
             if not os.path.exists(initfilename):
@@ -114,6 +123,7 @@ class EclFiles(object):
         return self._initfile
 
     def get_rftfile(self):
+        """Find and return the RFT file as an EclFile object"""
         if not self._rftfile:
             rftfilename = self._eclbase + ".RFT"
             if not os.path.exists(rftfilename):
@@ -123,6 +133,7 @@ class EclFiles(object):
         return self._rftfile
 
     def get_rstfile(self):
+        """Find and return the UNRST file as an EclFile object"""
         if not self._rstfile:
             rstfilename = self._eclbase + ".UNRST"
             if not os.path.exists(rstfilename):
@@ -132,10 +143,10 @@ class EclFiles(object):
         return self._rstfile
 
     def get_rstfilename(self):
+        """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
 
 
-# Static method
 def rreplace(pat, sub, string):
     """Variant of str.replace() that only replaces at the end of the string"""
     return string[0 : -len(pat)] + sub if string.endswith(pat) else string

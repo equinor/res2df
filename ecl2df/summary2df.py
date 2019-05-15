@@ -60,16 +60,12 @@ def normalize_dates(start_date, end_date, freq):
     return (start_date, end_date)
 
 
-def _get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
-    """Internal static method to be used by ScratchEnsemble and
-    ScratchRealization.
-
-    If called from ScratchRealization, the list of eclsums passed
-    in will have length 1, if not, it can be larger.
-
+def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
+    """
+    Compute available dates at requested frequency, possibly
+    normalized and cropped for a UNSMRY file
     """
     import dateutil.parser
-    from .realization import normalize_dates
 
     if not eclsumsdates:
         return []
@@ -158,7 +154,7 @@ def get_smry(
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = None
     elif isinstance(time_index, str):
-        time_index_arg = ScratchEnsemble._get_smry_dates(
+        time_index_arg = get_smry_dates(
             [eclfiles.get_eclsum().dates], time_index, True, start_date, end_date
         )
     else:

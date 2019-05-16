@@ -28,8 +28,9 @@ import pandas as pd
 from .eclfiles import EclFiles
 
 
-def rftrecords2df(eclfiles):
-    """Pandas dataframe used to navigate in the RFT records in the file (not the data itself):"""
+def _rftrecords2df(eclfiles):
+    """Construct a dataframe just for navigation on the RFT records.
+    """
     rftfile = eclfiles.get_rftfile()
     rftrecords = pd.DataFrame(rftfile.headers)
     rftrecords.columns = ["recordname", "recordlength", "recordtype"]
@@ -37,8 +38,8 @@ def rftrecords2df(eclfiles):
     # the TIME record signifies that the forthcoming records belong to
     # this TIME value, and we make a new column in the header data that
     # tells us the row number for the associated TIME record
-    rftrecords.loc[rftrecords.recordname == "TIME", "timeindex"] = rftrecords[
-        rftrecords.recordname == "TIME"
+    rftrecords.loc[rftrecords["recordname"] == "TIME", "timeindex"] = rftrecords[
+        rftrecords["recordname"] == "TIME"
     ].index
     rftrecords.fillna(
         method="ffill", inplace=True
@@ -47,7 +48,7 @@ def rftrecords2df(eclfiles):
 
 
 def rft2df(eclfiles):
-    rftrecords = rftrecords2df(eclfiles)
+    rftrecords = _rftrecords2df(eclfiles)
     rftfile = eclfiles.get_rftfile()
     # This will be our end-product, all CONxxxxx data and SEGxxxxx data merged appropriately together.
     # Index will be (date, wellname, connection index) rolled out.

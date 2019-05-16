@@ -11,6 +11,7 @@ import pytest
 
 import pandas as pd
 import numpy as np
+import logging
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
@@ -20,6 +21,8 @@ from ecl2df.eclfiles import EclFiles
 
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 
+logger = logging.getLogger('')
+logger.setLevel(logging.DEBUG)
 
 def test_rftrecords2df():
     eclfiles = EclFiles(DATAFILE)

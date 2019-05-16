@@ -21,11 +21,14 @@ from __future__ import division
 
 import datetime
 import argparse
+import logging
 
 import numpy as np
 import pandas as pd
 
 from .eclfiles import EclFiles
+
+# logging.basicConfig(level=logging.DEBUG)
 
 
 def _rftrecords2df(eclfiles):
@@ -45,6 +48,11 @@ def _rftrecords2df(eclfiles):
         method="ffill", inplace=True
     )  # forward fill (because any record is associated to the previous TIME record)
     rftrecords["timeindex"] = rftrecords["timeindex"].astype(int)
+    logging.info(
+        "Located {} RFT records at {} distinct dates".format(
+            len(rftrecords), len(rftrecords["timeindex"].unique())
+        )
+    )
     return rftrecords
 
 
@@ -71,7 +79,11 @@ def rft2df(eclfiles):
         well = rftfile[welletcidx][1].strip()
         wellmodel = rftfile[welletcidx][6].strip()  # MULTISEG or STANDARD
 
-        # print "Extracting", wellmodel, "well", str(well).ljust(8) + " at " +  str(date), "record index:", timerecordidx,
+        logging.info(
+            "Extracting {} well {:>8} at {}, record index: {}".format(
+                wellmodel, well, date, timerecordidx
+            )
+        )
 
         # Collect all the headers that have the same length as 'DEPTH' (we could pick most others as well)
         # This will be the number of cells that have data associated and we use this to safeguard
@@ -81,13 +93,12 @@ def rft2df(eclfiles):
         numberofrows = headers[headers.recordname == "DEPTH"]["recordlength"]
         if len(numberofrows):
             numberofrows = int(numberofrows)
-            # print # just a newline to finish the print statememt above.
         else:
-            # This can happen if the well is actually shut or stopped at this date.
-            # print "(empty)"
+            logging.debug("Well {} has no data to extract at {}".format(well, date))
             continue
 
-        # These datatypes now align nicely into a matrix of numbers, so we extract them into a pandas DataFrame
+        # These datatypes now align nicely into a matrix of numbers,
+        # so we extract them into a pandas DataFrame
         CONheaders = headers[headers.recordlength == numberofrows].recordname
 
         # Temporary dataset for this (date, wellname) record, identified by timerecordidx
@@ -107,14 +118,15 @@ def rft2df(eclfiles):
 
         # Ignore if wellmodel says MULTISEG but we cannot find any SEGxxxxx data in the record.
         if wellmodel == "MULTISEG" and len(
-            headers[headers.recordname.str.startswith("SEG")]
+            headers[headers["recordname"].str.startswith("SEG")]
         ):
+            logging.debug("Well {} is MULTISEG but has no SEG data".format(well))
             numberofrows = int(
-                headers[headers.recordname == "SEGDEPTH"]["recordlength"]
+                headers[headers["recordname"] == "SEGDEPTH"]["recordlength"]
             )
             SEGheaders = headers[
-                (headers.recordname.str.startswith("SEG"))
-                & (headers.recordlength == numberofrows)
+                (headers["recordname"].str.startswith("SEG"))
+                & (headers["recordlength"] == numberofrows)
             ].recordname
 
             SEGdata = pd.DataFrame()
@@ -145,17 +157,18 @@ def rft2df(eclfiles):
             )
 
             # After-note:
-            # An equivalent implementation could be to do such a filter: SEGDATA.groupby('SEGBRNO').count() == 1
+            # An equivalent implementation could be to do such
+            # a filter: SEGDATA.groupby('SEGBRNO').count() == 1
 
             # Now we can test if we have any ICD segments, that is the
             # case if we have any segments that have SEGBRNO higher than
             # the branch count
-            icd_present = SEGdata.SEGBRNO.max() > numberofbranches
+            icd_present = SEGdata["SEGBRNO"].max() > numberofbranches
 
             if icd_present:
-                icd_SEGdata = SEGdata[SEGdata.SEGBRNO > numberofbranches]
+                icd_SEGdata = SEGdata[SEGdata["SEGBRNO"] > numberofbranches]
                 # Chop away the icd's from the SEGdata dataframe:
-                SEGdata = SEGdata[SEGdata.SEGBRNO <= numberofbranches]
+                SEGdata = SEGdata[SEGdata["SEGBRNO"] <= numberofbranches]
 
                 # Rename columns in icd dataset:
                 icd_SEGdata.columns = ["ICD_" + x for x in icd_SEGdata.columns]
@@ -182,7 +195,9 @@ def rft2df(eclfiles):
 
                 # Add more data:
                 CONSEG_data["CompletionDP"] = 0
-                nonzeroPRES = (CONSEG_data.CONPRES > 0) & (CONSEG_data.SEGPRES > 0)
+                nonzeroPRES = (CONSEG_data["CONPRES"] > 0) & (
+                    CONSEG_data["SEGPRES"] > 0
+                )
                 CONSEG_data.loc[nonzeroPRES, "CompletionDP"] = (
                     CONSEG_data[nonzeroPRES]["CONPRES"]
                     - CONSEG_data[nonzeroPRES]["SEGPRES"]

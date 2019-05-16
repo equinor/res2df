@@ -10,6 +10,7 @@ import sys
 import pytest
 
 import pandas as pd
+import numpy as np
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
@@ -18,6 +19,17 @@ from ecl2df import rft2df
 from ecl2df.eclfiles import EclFiles
 
 DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
+
+
+def test_rftrecords2df():
+    eclfiles = EclFiles(DATAFILE)
+
+    rftrecs = rft2df._rftrecords2df(eclfiles)
+    assert len(rftrecs[rftrecs["recordname"] == "TIME"]) == len(
+        rftrecs["timeindex"].unique()
+    )
+    assert set(rftrecs["recordtype"].unique()) == set(["REAL", "INTE", "CHAR"])
+    assert rftrecs["timeindex"].dtype == np.int
 
 
 def test_rft2df():

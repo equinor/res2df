@@ -44,18 +44,20 @@ def _rftrecords2df(eclfiles):
     rftrecords.fillna(
         method="ffill", inplace=True
     )  # forward fill (because any record is associated to the previous TIME record)
+    rftrecords["timeindex"] = rftrecords["timeindex"].astype(int)
     return rftrecords
 
 
 def rft2df(eclfiles):
     rftrecords = _rftrecords2df(eclfiles)
     rftfile = eclfiles.get_rftfile()
+
     # This will be our end-product, all CONxxxxx data and SEGxxxxx data merged appropriately together.
     # Index will be (date, wellname, connection index) rolled out.
     rftdata = pd.DataFrame()
 
-    # Now loop over the TIME records and its associated data:
-    for timerecordidx in rftrecords.timeindex.astype(int).unique():
+    # Loop over the TIME records and its associated data:
+    for timerecordidx in rftrecords["timeindex"].unique():
 
         # Pick out the headers (with row indices) for the data relevant to this TIME record:
         headers = rftrecords[rftrecords["timeindex"] == timerecordidx]

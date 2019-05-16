@@ -7,7 +7,7 @@ setup(
     url="http://github.com/equinor/ecl2df",
     author="Håvard Berland",
     author_email="havb@equinor.com",
-    license="None",
+    license="LGPLv3",
     packages=["ecl2df"],
     zip_safe=False,
     entry_points={

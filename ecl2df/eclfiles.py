@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import os
+import errno
 
 import sunbeam.deck
 
@@ -22,6 +23,11 @@ SUNBEAM_RECOVERY = [
     ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
 ]
 
+# For Python2 compatibility:
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
 
 class EclFiles(object):
     """
@@ -86,8 +92,8 @@ class EclFiles(object):
         if not self._egrid:
             egridfilename = self._eclbase + ".EGRID"
             if not os.path.exists(egridfilename):
-                # Log warning to user
-                return None
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), egridfilename)
             self._egrid = EclGrid(egridfilename)
         return self._egrid
 
@@ -96,8 +102,8 @@ class EclFiles(object):
         if not self._egridfile:
             egridfilename = self._eclbase + ".EGRID"
             if not os.path.exists(egridfilename):
-                # Log warning to user
-                return None
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), egridfilename)
             self._egridfile = EclFile(egridfilename)
         return self._egridfile
 
@@ -109,8 +115,8 @@ class EclFiles(object):
             smryfilename = self._eclbase + ".UNSMRY"
             print(smryfilename)
             if not os.path.exists(smryfilename):
-                # Log warning
-                return None
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), smryfilename)
             print("Loading eclsum from " + smryfilename)
             self._eclsum = EclSum(smryfilename)
         return self._eclsum
@@ -120,8 +126,8 @@ class EclFiles(object):
         if not self._initfile:
             initfilename = self._eclbase + ".INIT"
             if not os.path.exists(initfilename):
-                # Log warning
-                return None
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), initfilename)
             self._initfile = EclFile(initfilename)
         return self._initfile
 
@@ -130,8 +136,8 @@ class EclFiles(object):
         if not self._rftfile:
             rftfilename = self._eclbase + ".RFT"
             if not os.path.exists(rftfilename):
-                print("File " + rftfilename + " not found")
-                return None
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), rftfilename)
             self._rftfile = EclFile(rftfilename)
         return self._rftfile
 
@@ -140,8 +146,8 @@ class EclFiles(object):
         if not self._rstfile:
             rstfilename = self._eclbase + ".UNRST"
             if not os.path.exists(rstfilename):
-                # Log warning
-                return None
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), rstfilename)
             self._rstfile = EclFile(rstfilename)
         return self._rstfile
 

@@ -40,6 +40,19 @@ def test_gridgeometry2df():
     assert "VOLUME" in grid_geom
 
 
+def test_wrongfile():
+    try:
+        FileNotFoundError
+    except NameError:
+        FileNotFoundError = IOError
+
+    # We can initalize this object with bogus:
+    eclfiles = EclFiles("FOO.DATA")
+    # but when we try to use it, things should fail:
+    with pytest.raises(FileNotFoundError):
+        grid2df.init2df(eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive())
+
+
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
     eclfiles = EclFiles(DATAFILE)

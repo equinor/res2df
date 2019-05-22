@@ -23,6 +23,7 @@ setup(
             "summary2csv=ecl2df.summary2df:main",
             "rft2csv=ecl2df.rft2df:main",
             "compdat2csv=ecl2df.compdat2df:main",
+            "equil2csv=ecl2df.equil2df:main",
         ]
     },
 )

@@ -19,7 +19,9 @@ from ecl.grid import EclGrid
 from ecl2df import rft2df
 from ecl2df.eclfiles import EclFiles
 
-DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
+TESTDIR = os.path.dirname(os.path.abspath(__file__))
+DATAFILE = os.path.join(TESTDIR,
+                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 logger = logging.getLogger('')
 logger.setLevel(logging.DEBUG)

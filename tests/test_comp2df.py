@@ -17,8 +17,12 @@ from ecl.grid import EclGrid
 from ecl2df import compdat2df
 from ecl2df.eclfiles import EclFiles
 
-DATAFILE = "data/reek/eclipse/model/2_R001_REEK-0.DATA"
-SCHFILE = "./data/reek/eclipse/include/schedule/reek_history.sch"
+TESTDIR = os.path.dirname(os.path.abspath(__file__))
+DATAFILE = os.path.join(TESTDIR,
+                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+
+SCHFILE = os.path.join(TESTDIR,
+                       "./data/reek/eclipse/include/schedule/reek_history.sch")
 
 
 def test_comp2df():

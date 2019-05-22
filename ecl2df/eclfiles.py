@@ -37,6 +37,9 @@ class EclFiles(object):
     """
 
     def __init__(self, eclbase):
+        # eclbase might be a a Posix path object
+        eclbase = str(eclbase)
+
         # Strip .DATA or . at end of eclbase:
         eclbase = rreplace(".DATA", "", eclbase)
         eclbase = rreplace(".", "", eclbase)

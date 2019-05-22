@@ -14,6 +14,7 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+import sys
 import argparse
 import fnmatch
 import datetime
@@ -328,5 +329,11 @@ def main():
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     if args.dropconstants:
         grid_df = dropconstants(grid_df)
-    grid_df.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)
+    if args.output == '-':
+        # Ignore pipe errors when writing to stdout.
+        from signal import signal, SIGPIPE, SIG_DFL
+        signal(SIGPIPE, SIG_DFL)
+        grid_df.to_csv(sys.stdout, index=False)
+    else:
+        grid_df.to_csv(args.output, index=False)
+        print("Wrote to " + args.output)

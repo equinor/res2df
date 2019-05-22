@@ -86,6 +86,15 @@ def test_subvectors():
     assert "MULTZ" not in init_df
 
 
+def test_dropconstants():
+    df = pd.DataFrame(columns=["A", "B"],
+                      data=[[1, 1], [2, 1]])
+    assert 'B' not in grid2df.dropconstants(df)
+    assert 'A' in grid2df.dropconstants(df)
+    assert 'B' in grid2df.dropconstants(df, alwayskeep='B')
+    assert 'B' in grid2df.dropconstants(df, alwayskeep=['B'])
+
+
 def test_mergegridframes():
     """Test that we can merge together data for the grid"""
     eclfiles = EclFiles(DATAFILE)
@@ -142,6 +151,23 @@ def test_main():
     grid2df.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+    # Test with constants dropping
+    sys.argv = [
+        "eclgrid2csv",
+        DATAFILE,
+        "-o",
+        tmpcsvfile,
+        "--dropconstants",
+    ]
+    grid2df.main()
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    # That PVTNUM is constant is a particular feature
+    # of the test dataset.
+    assert 'PVTNUM' not in disk_df
     assert not disk_df.empty
     os.remove(tmpcsvfile)
 

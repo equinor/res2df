@@ -275,7 +275,40 @@ def parse_args():
         help="Name of output csv file.",
         default="eclgrid.csv",
     )
+    parser.add_argument(
+        "--dropconstants",
+        action='store_true',
+        help="Drop constant columns from the dataset"
+    )
     return parser.parse_args()
+
+
+def dropconstants(df, alwayskeep=None):
+    """Drop/delete constant columns from a dataframe.
+
+    Args:
+        df: pd.DataFrame
+        alwayskeep: string or list of strings of columns to keep
+           anyway.
+    Returns:
+        pd.DataFrame with equal or less columns.
+   """
+    if not alwayskeep:
+        alwayskeep = []
+    if isinstance(alwayskeep, str):
+        alwayskeep = [alwayskeep]
+    if not isinstance(alwayskeep, list):
+        raise TypeError("alwayskeep must be a list")
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("dropconstants() needs a dataframe")
+    if df.empty:
+        return df
+
+    columnstodelete = []
+    for col in set(df.columns) - set(alwayskeep):
+        if len(df[col].unique()) == 1:
+            columnstodelete.append(col)
+    return df.drop(columnstodelete, axis=1)
 
 
 def main():
@@ -293,5 +326,7 @@ def main():
     else:
         rst_df = pd.DataFrame()
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
+    if args.dropconstants:
+        grid_df = dropconstants(grid_df)
     grid_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

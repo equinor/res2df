@@ -10,7 +10,7 @@ setup(
     url="http://github.com/equinor/ecl2df",
     author="Håvard Berland",
     author_email="havb@equinor.com",
-    license="LGPLv3",
+    license="GPLv3",
     packages=["ecl2df"],
     setup_requires=["pytest-runner"],
     test_requirements=["pytest"],

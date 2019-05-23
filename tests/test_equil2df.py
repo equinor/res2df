@@ -30,7 +30,7 @@ def test_equil2df():
     assert not equildf.empty
 
 
-def test_deck1():
+def test_decks():
     deckstr = """
 OIL
 WATER
@@ -42,6 +42,50 @@ EQUIL
     deck = EclFiles.str2deck(deckstr)
     df = equil2df.deck2equildf(deck)
     assert df['OWC'].values == 2200
+    assert len(df) == 1
+    assert 'IGNORE1' not in df
+
+    deckstr = """
+OIL
+WATER
+
+EQUIL
+ 2000 200 2200 /
+"""
+    deck = EclFiles.str2deck(deckstr)
+    df = equil2df.deck2equildf(deck)
+    assert df['OWC'].values == 2200
+    assert len(df) == 1
+    assert 'IGNORE1' not in df
+
+    deckstr = """
+GAS
+WATER
+
+EQUIL
+ 2000 200 2200 /
+"""
+    deck = EclFiles.str2deck(deckstr)
+    df = equil2df.deck2equildf(deck)
+    assert df['GWC'].values == 2200
+    assert 'OWC' not in df
+    assert len(df) == 1
+    assert 'IGNORE2' not in df
+
+    deckstr = """
+GAS
+OIL
+
+EQUIL
+ 2000 200 2200 1 2100 3 /
+"""
+    deck = EclFiles.str2deck(deckstr)
+    df = equil2df.deck2equildf(deck)
+    assert df['GOC'].values == 2100
+    assert 'GWC' not in df
+    assert 'OWC' not in df
+    assert len(df) == 1
+    assert 'IGNORE2' not in df
 
 
 def test_main():

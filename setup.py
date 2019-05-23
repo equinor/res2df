@@ -24,6 +24,7 @@ setup(
             "rft2csv=ecl2df.rft2df:main",
             "compdat2csv=ecl2df.compdat2df:main",
             "equil2csv=ecl2df.equil2df:main",
+            "gruptree2csv=ecl2df.gruptree2df:main",
         ]
     },
 )

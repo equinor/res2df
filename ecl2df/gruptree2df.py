@@ -15,26 +15,7 @@ import argparse
 import pandas as pd
 
 from .eclfiles import EclFiles
-
-
-def parse_ecl_month(eclmonth):
-    eclmonth2num = {
-        "JAN": 1,
-        "FEB": 2,
-        "MAR": 3,
-        "APR": 4,
-        "MAY": 5,
-        "JUN": 6,
-        "JUL": 7,
-        "JLY": 7,
-        "AUG": 8,
-        "SEP": 9,
-        "OCT": 10,
-        "NOV": 11,
-        "DEC": 12,
-    }
-    return eclmonth2num[eclmonth]
-
+from .common import parse_ecl_month
 
 def gruptree2df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck

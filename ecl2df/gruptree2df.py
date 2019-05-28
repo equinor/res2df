@@ -17,6 +17,7 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
+
 def gruptree2df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.
@@ -32,7 +33,10 @@ def gruptree2df(deck, startdate=None, welspecs=True):
     startdate is only relevant when START is not in the deck.
     """
 
-    date = None
+    if startdate is not None:
+        date = startdate
+    else:
+        date = None
     dflist = []  # list of list of rows.
     currentedges = dict()  # Indexed by tuple of two strings. Value is type.
     found_gruptree = False  # Flags which will tell when a new GRUPTREE or
@@ -40,6 +44,8 @@ def gruptree2df(deck, startdate=None, welspecs=True):
     for kw in deck:
         if kw.name == "DATES" or kw.name == "START":
             if len(currentedges) and (found_gruptree or found_welspecs):
+                if date is None:
+                    print("WARNING: No date parsed, maybe you should pass 'startdate'")
                 # Store all edges in dataframe at the previous date.
                 for edgename, value in currentedges.iteritems():
                     dflist.append([date, edgename[0], edgename[1], value])
@@ -62,6 +68,11 @@ def gruptree2df(deck, startdate=None, welspecs=True):
                 wellname = wellrec[0][0]
                 group = wellrec[1][0]
                 currentedges[(wellname, group)] = "WELSPECS"
+
+    # Ensure we also store any tree information found after the last DATE statement
+    if found_gruptree or found_welspecs:
+        for edgename, value in currentedges.iteritems():
+            dflist.append([date, edgename[0], edgename[1], value])
 
     df = pd.DataFrame(columns=["DATE", "CHILD", "PARENT", "TYPE"], data=dflist)
     df["DATE"] = pd.to_datetime(df["DATE"])

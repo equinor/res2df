@@ -2,3 +2,4 @@ libecl
 sunbeam
 pandas
 fmu_ensemble
+treelib

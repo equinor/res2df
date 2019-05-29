@@ -13,6 +13,8 @@ import datetime
 import dateutil
 import argparse
 import pandas as pd
+import treelib
+import collections
 
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
@@ -88,7 +90,11 @@ def gruptree2dict(deck, date="END", welspecs=True):
      'OP': ['OP_2', 'OP_3', 'OP_4', 'OP_5', 'OP_1'],
      'WI': ['WI_1', 'WI_2', 'WI_3']}
 
-    Returns an empty dict if there is no GRUPTREE in the deck."""
+    Returns an empty dict if there is no GRUPTREE in the deck.
+
+    This function might get deprecated in favour of the nested dictionary
+    version.
+    """
 
     df = gruptree2df(deck, welspecs).set_index("DATE")
     if isinstance(date, str):
@@ -109,9 +115,49 @@ def gruptree2dict(deck, date="END", welspecs=True):
 
 
 def gruptreedf2dict(df):
-    tree = {}
-    for _, edge in df.iterrows():
-        tree.setdefault(edge["PARENT"], []).append(edge["CHILD"])
+    """Convert list of edges into a
+    nested dictionary (tree), example:
+
+    {'FIELD': {'OP': {'OP_1': {},
+     'OP_2': {},
+     'OP_3': {},
+     'OP_4': {},
+     'OP_5': {}},
+     'WI': {'WI_1': {}, 'WI_2': {}, 'WI_3': {}}}}
+
+    Leaf nodes have empty dictionaries.
+
+    Asserts a single root in the edge list, slice
+    on individual dates.
+    """
+    subtrees = collections.defaultdict(dict)
+    edges = []  # List of tuples
+    for _, row in df.iterrows():
+        edges.append((row["CHILD"], row["PARENT"]))
+    for child, parent in edges:
+        subtrees[parent][child] = subtrees[child]
+
+    children, parents = zip(*edges)
+    roots = set(parents).difference(children)
+    assert len(roots) == 1
+    root = list(roots)[0]
+    return {root: subtrees[root] for root in roots}
+
+
+def dict2treelib(name, d):
+    """Convert a nested dictonary to a treelib Tree
+    object. This function is recursive
+
+    Args:
+        name: name of root node
+        d: nested dictonary of the children at the root.
+    Return:
+        treelib.Tree
+    """
+    tree = treelib.Tree()
+    tree.create_node(name, name)
+    for child in d.keys():
+        tree.paste(name, dict2treelib(child, d[child]))
     return tree
 
 
@@ -123,8 +169,15 @@ def parse_args():
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="gruptree.csv",
+        help="Name of output csv file. No CSV dump if empty",
+        default="",
+    )
+    parser.add_argument(
+        "-p",
+        "--prettyprint",
+        #      type=bool,
+        action="store_true",
+        help="Pretty-print the tree structure",
     )
     return parser.parse_args()
 
@@ -133,13 +186,20 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    gruptree_df = gruptree2df(eclfiles.get_ecldeck())
+    df = gruptree2df(eclfiles.get_ecldeck())
+    if args.prettyprint:
+        for date in df["DATE"].unique():
+            print("Date: " + str(date.astype("M8[D]")))
+            nd = gruptreedf2dict(df[df["DATE"] == date])
+            rootname = nd.keys()[0]
+            print(dict2treelib(rootname, nd[rootname]))
+            print("")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL
 
         signal(SIGPIPE, SIG_DFL)
-        gruptree_df.to_csv(sys.stdout, index=False)
-    else:
-        gruptree_df.to_csv(args.output, index=False)
+        df.to_csv(sys.stdout, index=False)
+    elif args.output:
+        df.to_csv(args.output, index=False)
         print("Wrote to " + args.output)

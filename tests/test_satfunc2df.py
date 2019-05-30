@@ -14,59 +14,49 @@ import pandas as pd
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
-from ecl2df import gruptree2df
+from ecl2df import satfunc2df
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
-def test_gruptree2df():
+def test_satfunc2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    grupdf = gruptree2df.gruptree2df(eclfiles.get_ecldeck())
+    satdf = satfunc2df.deck2satfuncdf(eclfiles.get_ecldeck())
 
-    assert not grupdf.empty
-    assert len(grupdf["DATE"].unique()) == 5
-    assert len(grupdf["CHILD"].unique()) == 10
-    assert len(grupdf["PARENT"].unique()) == 3
-    assert set(grupdf["TYPE"].unique()) == set(["GRUPTREE", "WELSPECS"])
+    assert not satdf.empty
+    assert 'KEYWORD' in satdf  # for all data
+    assert 'SATNUM' in satdf  # for all data
 
-    grupdfnowells = gruptree2df.gruptree2df(eclfiles.get_ecldeck(), welspecs=False)
-
-    assert len(grupdfnowells["TYPE"].unique()) == 1
-    assert grupdf["PARENT"].unique()[0] == "FIELD"
-    assert grupdf["TYPE"].unique()[0] == "GRUPTREE"
-
+    assert 'SWOF' in satdf['KEYWORD'].unique()
+    assert 'SGOF' in satdf['KEYWORD'].unique()
+    assert 'SW' in satdf
+    assert 'KRW' in satdf
+    assert 'KROW' in satdf
+    assert 'SG' in satdf
+    assert 'KROG' in satdf
+    assert satdf['SATNUM'].unique() == [1]
 
 def test_str2df():
-    schstr = """
-GRUPTREE
- 'OPWEST' 'OP' /
- 'OP' 'FIELD' /
- 'FIELD' 'AREA' /
- 'AREA' 'NORTHSEA' /
-/
-
-WELSPECS
- 'OP1' 'OPWEST' 41 125 1759.74 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
-/
-
+    swofstr = """
+SWOF
+ 0 0 1 1
+ 1 1 0 0
+ /
 """
-    deck = EclFiles.str2deck(schstr)
-    grupdf = gruptree2df.gruptree2df(deck)
-    assert grupdf.dropna().empty  # the DATE is empty
+    deck = EclFiles.str2deck(swofstr)
+    satdf = satfunc2df.deck2satfuncdf(deck)
+    assert len(satdf) == 2
 
-    withstart = gruptree2df.gruptree2df(deck, startdate="2019-01-01")
-    assert not withstart.dropna().empty
-    assert len(withstart) == 5
 
 
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-gruptree.csv"
-    sys.argv = ["gruptree2csv", DATAFILE, "-o", tmpcsvfile]
-    gruptree2df.main()
+    sys.argv = ["satfunc2csv", DATAFILE, "-o", tmpcsvfile]
+    satfunc2df.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

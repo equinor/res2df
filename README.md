@@ -40,6 +40,11 @@ For multisegment wells, the well topology is calculated and data
 is merged accordingly, for example when ICD segments are used, enabling
 easy calculations of the pressure drop over an ICD valve.
 
+### `satfunc2df`
+
+Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
+into one DataFrame.
+
 ### `equil2df`
 
 Extracts the information in the `EQUIL` table in the input deck.

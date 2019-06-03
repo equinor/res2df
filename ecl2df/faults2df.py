@@ -26,8 +26,9 @@ def deck2faultsdf(deck):
     # It is allowed in Eclipse to use the keyword FAULTS
     # as many times as needed. Thus we need to loop in some way:
     for keyword in deck:
-        if keyword == "FAULTS":
-            data.append([x[0] for x in deck[keyword]])
+        if keyword.name == "FAULTS":
+            for record in keyword:
+                data.append([x[0] for x in record])
     return pd.DataFrame(columns=COLUMNS, data=data)
 
 def parse_args():

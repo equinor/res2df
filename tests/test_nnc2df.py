@@ -14,12 +14,11 @@ import pandas as pd
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
-from ecl2df import nnc2df
+from ecl2df import nnc2df, faults2df
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR,
-                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_nnc2df():
@@ -35,6 +34,30 @@ def test_nnc2df():
     assert "J2" in nncdf
     assert "K2" in nncdf
     assert "TRAN" in nncdf
+
+
+def test_nnc2df_faultnames():
+    """Add faultnames from FAULTS keyword to connections"""
+    eclfiles = EclFiles(DATAFILE)
+    nncdf = nnc2df.nnc2df(eclfiles)
+    faultsdf = faults2df.deck2faultsdf(eclfiles.get_ecldeck())
+
+    merged = pd.merge(
+        nncdf,
+        faultsdf,
+        how="left",
+        left_on=["I1", "J1", "K1"],
+        right_on=["I", "J", "K"],
+    )
+    merged = pd.merge(
+        merged,
+        faultsdf,
+        how="left",
+        left_on=["I2", "J2", "K2"],
+        right_on=["I", "J", "K"],
+    )
+    # Fix columnnames so that we don't get FACE_x and FACE_y etc.
+    # Remove I_x, J_x, K_x (and _y) which is not needed
 
 
 def test_main():

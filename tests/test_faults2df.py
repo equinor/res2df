@@ -60,11 +60,12 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults2df.deck2faultsdf(deck).set_index('NAME')
+    faultsdf = faults2df.deck2faultsdf(deck).set_index("NAME")
 
     assert len(faultsdf) == 23
-    assert len(faultsdf.loc[['D']]) == 1  # Pass lists to .loc for single row
-    assert len(faultsdf.loc['C']) == 6
+    assert len(faultsdf.loc[["D"]]) == 1  # Pass lists to .loc for single row
+    assert len(faultsdf.loc["C"]) == 6
+
 
 def test_main():
     """Test command line interface"""

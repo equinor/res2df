@@ -20,8 +20,7 @@ from ecl2df import summary2df
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR,
-                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_summary2df():
@@ -47,6 +46,7 @@ def test_main():
     assert "FOPT" in disk_df
     os.remove(tmpcsvfile)
 
+
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
@@ -55,25 +55,28 @@ def test_datenormalization():
     start = date(1997, 11, 5)
     end = date(2020, 3, 2)
 
-    assert normalize_dates(start, end, 'monthly') == \
-        (date(1997, 11, 1), date(2020, 4, 1))
-    assert normalize_dates(start, end, 'yearly') == \
-        (date(1997, 1, 1), date(2021, 1, 1))
+    assert normalize_dates(start, end, "monthly") == (
+        date(1997, 11, 1),
+        date(2020, 4, 1),
+    )
+    assert normalize_dates(start, end, "yearly") == (date(1997, 1, 1), date(2021, 1, 1))
 
     # Check it does not touch already aligned dates
-    assert normalize_dates(date(1997, 11, 1),
-                           date(2020, 4, 1), 'monthly') == \
-        (date(1997, 11, 1), date(2020, 4, 1))
-    assert normalize_dates(date(1997, 1, 1),
-                           date(2021, 1, 1), 'yearly') == \
-        (date(1997, 1, 1), date(2021, 1, 1))
+    assert normalize_dates(date(1997, 11, 1), date(2020, 4, 1), "monthly") == (
+        date(1997, 11, 1),
+        date(2020, 4, 1),
+    )
+    assert normalize_dates(date(1997, 1, 1), date(2021, 1, 1), "yearly") == (
+        date(1997, 1, 1),
+        date(2021, 1, 1),
+    )
 
     # Check that we normalize correctly with get_smry():
     # realization-0 here has its last summary date at 2003-01-02
     eclfiles = EclFiles(DATAFILE)
-    daily = summary2df.get_smry(eclfiles, column_keys='FOPT', time_index='daily')
-    assert str(daily.index[-1]) == '2003-01-02'
-    monthly = summary2df.get_smry(eclfiles, column_keys='FOPT', time_index='monthly')
-    assert str(monthly.index[-1]) == '2003-02-01'
-    yearly = summary2df.get_smry(eclfiles, column_keys='FOPT', time_index='yearly')
-    assert str(yearly.index[-1]) == '2004-01-01'
+    daily = summary2df.get_smry(eclfiles, column_keys="FOPT", time_index="daily")
+    assert str(daily.index[-1]) == "2003-01-02"
+    monthly = summary2df.get_smry(eclfiles, column_keys="FOPT", time_index="monthly")
+    assert str(monthly.index[-1]) == "2003-02-01"
+    yearly = summary2df.get_smry(eclfiles, column_keys="FOPT", time_index="yearly")
+    assert str(yearly.index[-1]) == "2004-01-01"

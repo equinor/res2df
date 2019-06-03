@@ -27,17 +27,18 @@ def test_satfunc2df():
     satdf = satfunc2df.deck2satfuncdf(eclfiles.get_ecldeck())
 
     assert not satdf.empty
-    assert 'KEYWORD' in satdf  # for all data
-    assert 'SATNUM' in satdf  # for all data
+    assert "KEYWORD" in satdf  # for all data
+    assert "SATNUM" in satdf  # for all data
 
-    assert 'SWOF' in satdf['KEYWORD'].unique()
-    assert 'SGOF' in satdf['KEYWORD'].unique()
-    assert 'SW' in satdf
-    assert 'KRW' in satdf
-    assert 'KROW' in satdf
-    assert 'SG' in satdf
-    assert 'KROG' in satdf
-    assert satdf['SATNUM'].unique() == [1]
+    assert "SWOF" in satdf["KEYWORD"].unique()
+    assert "SGOF" in satdf["KEYWORD"].unique()
+    assert "SW" in satdf
+    assert "KRW" in satdf
+    assert "KROW" in satdf
+    assert "SG" in satdf
+    assert "KROG" in satdf
+    assert satdf["SATNUM"].unique() == [1]
+
 
 def test_str2df():
     swofstr = """
@@ -49,7 +50,6 @@ SWOF
     deck = EclFiles.str2deck(swofstr)
     satdf = satfunc2df.deck2satfuncdf(deck)
     assert len(satdf) == 2
-
 
 
 def test_main():

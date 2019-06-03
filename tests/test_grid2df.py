@@ -19,10 +19,11 @@ from ecl2df import grid2df
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR,
-                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 print(DATAFILE)
+
+
 def test_gridgeometry2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -102,12 +103,11 @@ def test_subvectors():
 
 
 def test_dropconstants():
-    df = pd.DataFrame(columns=["A", "B"],
-                      data=[[1, 1], [2, 1]])
-    assert 'B' not in grid2df.dropconstants(df)
-    assert 'A' in grid2df.dropconstants(df)
-    assert 'B' in grid2df.dropconstants(df, alwayskeep='B')
-    assert 'B' in grid2df.dropconstants(df, alwayskeep=['B'])
+    df = pd.DataFrame(columns=["A", "B"], data=[[1, 1], [2, 1]])
+    assert "B" not in grid2df.dropconstants(df)
+    assert "A" in grid2df.dropconstants(df)
+    assert "B" in grid2df.dropconstants(df, alwayskeep="B")
+    assert "B" in grid2df.dropconstants(df, alwayskeep=["B"])
 
 
 def test_mergegridframes():
@@ -170,19 +170,13 @@ def test_main():
     os.remove(tmpcsvfile)
 
     # Test with constants dropping
-    sys.argv = [
-        "eclgrid2csv",
-        DATAFILE,
-        "-o",
-        tmpcsvfile,
-        "--dropconstants",
-    ]
+    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--dropconstants"]
     grid2df.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     # That PVTNUM is constant is a particular feature
     # of the test dataset.
-    assert 'PVTNUM' not in disk_df
+    assert "PVTNUM" not in disk_df
     assert not disk_df.empty
     os.remove(tmpcsvfile)
 

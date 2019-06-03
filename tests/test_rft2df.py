@@ -20,11 +20,11 @@ from ecl2df import rft2df
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR,
-                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
-logger = logging.getLogger('')
+logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
+
 
 def test_rftrecords2df():
     eclfiles = EclFiles(DATAFILE)

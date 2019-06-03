@@ -18,8 +18,7 @@ from ecl2df import equil2df
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR,
-                        "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_equil2df():
@@ -41,9 +40,9 @@ EQUIL
 """
     deck = EclFiles.str2deck(deckstr)
     df = equil2df.deck2equildf(deck)
-    assert df['OWC'].values == 2200
+    assert df["OWC"].values == 2200
     assert len(df) == 1
-    assert 'IGNORE1' not in df
+    assert "IGNORE1" not in df
 
     deckstr = """
 OIL
@@ -54,9 +53,9 @@ EQUIL
 """
     deck = EclFiles.str2deck(deckstr)
     df = equil2df.deck2equildf(deck)
-    assert df['OWC'].values == 2200
+    assert df["OWC"].values == 2200
     assert len(df) == 1
-    assert 'IGNORE1' not in df
+    assert "IGNORE1" not in df
 
     deckstr = """
 GAS
@@ -67,10 +66,10 @@ EQUIL
 """
     deck = EclFiles.str2deck(deckstr)
     df = equil2df.deck2equildf(deck)
-    assert df['GWC'].values == 2200
-    assert 'OWC' not in df
+    assert df["GWC"].values == 2200
+    assert "OWC" not in df
     assert len(df) == 1
-    assert 'IGNORE2' not in df
+    assert "IGNORE2" not in df
 
     deckstr = """
 GAS
@@ -81,11 +80,11 @@ EQUIL
 """
     deck = EclFiles.str2deck(deckstr)
     df = equil2df.deck2equildf(deck)
-    assert df['GOC'].values == 2100
-    assert 'GWC' not in df
-    assert 'OWC' not in df
+    assert df["GOC"].values == 2100
+    assert "GWC" not in df
+    assert "OWC" not in df
     assert len(df) == 1
-    assert 'IGNORE2' not in df
+    assert "IGNORE2" not in df
 
 
 def test_main():

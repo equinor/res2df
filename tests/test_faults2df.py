@@ -27,7 +27,9 @@ def test_faults2df():
     faultsdf = faults2df.deck2faultsdf(eclfiles.get_ecldeck())
 
     assert "NAME" in faultsdf
-    assert "IX1" in faultsdf
+    assert "I" in faultsdf
+    assert "J" in faultsdf
+    assert "K" in faultsdf
     assert "FACE" in faultsdf
 
     assert not faultsdf.empty
@@ -42,7 +44,8 @@ FAULTS
 """
     deck = EclFiles.str2deck(deckstr)
     faultsdf = faults2df.deck2faultsdf(deck)
-    assert len(faultsdf) == 2
+
+    assert len(faultsdf) == 16
 
 
 def test_multiplestr2df():
@@ -52,19 +55,20 @@ FAULTS
   'B' 2 3 4 5 6 7 'J' /
 /
 FAULTS
-  'C' 1 2 3 40 50 60 'I' /
-  'D' 2 3 4 50 60 70 'J' /
+  'C' 1 1 3 3 10 15 'I' /
+  'D' 2 2 4 4 10 10 'J' /
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults2df.deck2faultsdf(deck)
-    assert len(faultsdf) == 4
-    assert len(faultsdf["NAME"].unique()) == 4
+    faultsdf = faults2df.deck2faultsdf(deck).set_index('NAME')
 
+    assert len(faultsdf) == 23
+    assert len(faultsdf.loc[['D']]) == 1  # Pass lists to .loc for single row
+    assert len(faultsdf.loc['C']) == 6
 
 def test_main():
     """Test command line interface"""
-    tmpcsvfile = ".TMP-gruptree.csv"
+    tmpcsvfile = ".TMP-faultsdf.csv"
     sys.argv = ["faults2csv", DATAFILE, "-o", tmpcsvfile]
     faults2df.main()
 

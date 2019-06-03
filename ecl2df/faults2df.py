@@ -15,7 +15,8 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 
-COLUMNS = ['NAME', 'IX1', 'IX2', 'IY1', 'IY2', 'IZ1', 'IZ2', 'FACE']
+RECORD_COLUMNS = ['NAME', 'IX1', 'IX2', 'IY1', 'IY2', 'IZ1', 'IZ2', 'FACE']
+COLUMNS = ['NAME', 'I', 'J', 'K', 'FACE']
 ALLOWED_FACES = ['X', 'Y', 'Z', 'I', 'J', 'K', 'X-', 'Y-', 'Z-', 'I-', 'J-', 'K-']
 
 
@@ -27,8 +28,15 @@ def deck2faultsdf(deck):
     # as many times as needed. Thus we need to loop in some way:
     for keyword in deck:
         if keyword.name == "FAULTS":
-            for record in keyword:
-                data.append([x[0] for x in record])
+            for rec in keyword:
+                # Each record now has a range potentially in three
+                # dimensions for the fault, unroll this:
+                faultname = rec[0][0]
+                faultface = rec[7][0]
+                for i_idx in range(rec[1][0], rec[2][0] + 1):
+                    for j_idx in range(rec[3][0], rec[4][0] + 1):
+                        for k_idx in range(rec[5][0], rec[6][0] + 1):
+                            data.append([faultname, i_idx, j_idx, k_idx, faultface])
     return pd.DataFrame(columns=COLUMNS, data=data)
 
 def parse_args():

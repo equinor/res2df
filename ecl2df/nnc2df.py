@@ -45,15 +45,20 @@ def nnc2df(eclfiles):
 
     # Grid indices for first cell in cell pairs:
     nnc1 = egrid_file["NNC1"][0].numpy_view().reshape(-1, 1)
+    idx_cols1 = ["I1", "J1", "K1"]
     nnc1_df = pd.DataFrame(
-        columns=["I1", "J1", "K1"], data=[egrid_grid.get_ijk(x) for x in nnc1]
+        columns=idx_cols1, data=[egrid_grid.get_ijk(x) for x in nnc1]
     )
+    # libecl is zero-based, convert to 1-based indices
+    nnc1_df[idx_cols1] = nnc1_df[idx_cols1] + 1
 
     # Grid indices for second cell in cell pairs
     nnc2 = egrid_file["NNC2"][0].numpy_view().reshape(-1, 1)
+    idx_cols2 = ["I2", "J2", "K2"]
     nnc2_df = pd.DataFrame(
-        columns=["I2", "J2", "K2"], data=[egrid_grid.get_ijk(x) for x in nnc2]
+        columns=idx_cols2, data=[egrid_grid.get_ijk(x) for x in nnc2]
     )
+    nnc2_df[idx_cols2] = nnc2_df[idx_cols2] + 1
 
     # Obtain transmissibility values, corresponding to the cell pairs above.
     tran = init_file["TRANNNC"][0].numpy_view().reshape(-1, 1)

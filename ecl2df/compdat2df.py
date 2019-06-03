@@ -71,7 +71,7 @@ COMPSEGSKEYS = [
 WELSEGSKEYS = [
     "WELL",  # "Name of the well"
     "DEPTH",  # "Depth of the nodal point of the top segment"
-    "LENGTH", # Length down tubing to nodal point of top segment"
+    "LENGTH",  # Length down tubing to nodal point of top segment"
     "WELLBORE_VOLUME",  # Effective wellbore volume of the top segment
     "INFO_TYPE",  # Type of tubing length and depth information, INC or ABS
     "PRESSURE_COMPONENTS",  # How to calculate pressure drop in each segment

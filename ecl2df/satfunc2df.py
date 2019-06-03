@@ -52,15 +52,18 @@ def deck2satfuncdf(deck):
                     print("ERROR: Inconsistent data length or bug")
                     return
                 satpoints = int(len(data) / column_count)
-                df = pd.DataFrame(columns=KEYWORD_COLUMNS[keyword],
-                        data=data.reshape(satpoints, column_count))
+                df = pd.DataFrame(
+                    columns=KEYWORD_COLUMNS[keyword],
+                    data=data.reshape(satpoints, column_count),
+                )
                 df["SATNUM"] = satnum
                 df["KEYWORD"] = keyword
-                df = df[['KEYWORD', 'SATNUM'] + KEYWORD_COLUMNS[keyword]]
+                df = df[["KEYWORD", "SATNUM"] + KEYWORD_COLUMNS[keyword]]
                 satnum += 1
                 frames.append(df)
 
     return pd.concat(frames, axis=0, sort=False)
+
 
 def parse_args():
     """Parse sys.argv using argparse"""

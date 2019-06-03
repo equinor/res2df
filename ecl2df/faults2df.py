@@ -15,9 +15,9 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 
-RECORD_COLUMNS = ['NAME', 'IX1', 'IX2', 'IY1', 'IY2', 'IZ1', 'IZ2', 'FACE']
-COLUMNS = ['NAME', 'I', 'J', 'K', 'FACE']
-ALLOWED_FACES = ['X', 'Y', 'Z', 'I', 'J', 'K', 'X-', 'Y-', 'Z-', 'I-', 'J-', 'K-']
+RECORD_COLUMNS = ["NAME", "IX1", "IX2", "IY1", "IY2", "IZ1", "IZ2", "FACE"]
+COLUMNS = ["NAME", "I", "J", "K", "FACE"]
+ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
 
 
 def deck2faultsdf(deck):
@@ -38,6 +38,7 @@ def deck2faultsdf(deck):
                         for k_idx in range(rec[5][0], rec[6][0] + 1):
                             data.append([faultname, i_idx, j_idx, k_idx, faultface])
     return pd.DataFrame(columns=COLUMNS, data=data)
+
 
 def parse_args():
     """Parse sys.argv using argparse"""

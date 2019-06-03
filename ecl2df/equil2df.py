@@ -26,9 +26,7 @@ def deck2equildf(deck):
     Return:
         pd.DataFrame
     """
-    phasecount = sum(['OIL' in deck,
-                      'GAS' in deck,
-                      'WATER' in deck])
+    phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     if "OIL" in deck and "GAS" in deck and "WATER" in deck:
         # oil-water-gas
         columnnames = [
@@ -82,9 +80,7 @@ def deck2equildf(deck):
             "ACCURACY",
         ]
     if phasecount == 1:
-        columnnames = [
-            "DATUM",
-            "PRESSURE"]
+        columnnames = ["DATUM", "PRESSURE"]
     if not columnnames:
         raise ValueError("Unsupported phase configuration")
 
@@ -106,7 +102,7 @@ def deck2equildf(deck):
 
     # The column handling can be made prettier..
     for col in df.columns:
-        if 'IGNORE' in col:
+        if "IGNORE" in col:
             del df[col]
 
     return df

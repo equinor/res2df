@@ -32,6 +32,7 @@ try:
 except NameError:
     FileNotFoundError = IOError
 
+
 class EclFiles(object):
     """
     Class for holding an Eclipse deck with result files
@@ -96,7 +97,8 @@ class EclFiles(object):
             egridfilename = self._eclbase + ".EGRID"
             if not os.path.exists(egridfilename):
                 raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), egridfilename)
+                    errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
+                )
             self._egrid = EclGrid(egridfilename)
         return self._egrid
 
@@ -106,7 +108,8 @@ class EclFiles(object):
             egridfilename = self._eclbase + ".EGRID"
             if not os.path.exists(egridfilename):
                 raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), egridfilename)
+                    errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
+                )
             self._egridfile = EclFile(egridfilename)
         return self._egridfile
 
@@ -119,7 +122,8 @@ class EclFiles(object):
             print(smryfilename)
             if not os.path.exists(smryfilename):
                 raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), smryfilename)
+                    errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
+                )
             print("Loading eclsum from " + smryfilename)
             self._eclsum = EclSum(smryfilename)
         return self._eclsum
@@ -130,7 +134,8 @@ class EclFiles(object):
             initfilename = self._eclbase + ".INIT"
             if not os.path.exists(initfilename):
                 raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), initfilename)
+                    errno.ENOENT, os.strerror(errno.ENOENT), initfilename
+                )
             self._initfile = EclFile(initfilename)
         return self._initfile
 
@@ -140,7 +145,8 @@ class EclFiles(object):
             rftfilename = self._eclbase + ".RFT"
             if not os.path.exists(rftfilename):
                 raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), rftfilename)
+                    errno.ENOENT, os.strerror(errno.ENOENT), rftfilename
+                )
             self._rftfile = EclFile(rftfilename)
         return self._rftfile
 
@@ -150,7 +156,8 @@ class EclFiles(object):
             rstfilename = self._eclbase + ".UNRST"
             if not os.path.exists(rstfilename):
                 raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), rstfilename)
+                    errno.ENOENT, os.strerror(errno.ENOENT), rstfilename
+                )
             self._rstfile = EclFile(rstfilename)
         return self._rstfile
 

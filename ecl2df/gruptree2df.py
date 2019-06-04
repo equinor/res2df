@@ -129,8 +129,8 @@ def gruptreedf2dict(df):
 
     Leaf nodes have empty dictionaries.
 
-    Asserts a single root in the edge list, slice
-    on individual dates.
+    Returns a list of nested dictionary, as we sometimes
+    have more than one root
     """
     if df.empty:
         return {}
@@ -143,9 +143,10 @@ def gruptreedf2dict(df):
 
     children, parents = zip(*edges)
     roots = set(parents).difference(children)
-    assert len(roots) == 1
-    root = list(roots)[0]
-    return {root: subtrees[root] for root in roots}
+    trees = []
+    for root in list(roots):
+        trees.append({root: subtrees[root] for root in roots})
+    return trees
 
 
 def dict2treelib(name, d):
@@ -200,9 +201,10 @@ def main():
     if args.prettyprint:
         for date in df["DATE"].dropna().unique():
             print("Date: " + str(date.astype("M8[D]")))
-            nd = gruptreedf2dict(df[df["DATE"] == date])
-            rootname = nd.keys()[0]
-            print(dict2treelib(rootname, nd[rootname]))
+            trees = gruptreedf2dict(df[df["DATE"] == date])
+            for tree in trees:
+                rootname = tree.keys()[0]
+                print(dict2treelib(rootname, tree[rootname]))
             print("")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.

@@ -47,7 +47,9 @@ def gruptree2df(deck, startdate=None, welspecs=True):
         if kw.name == "DATES" or kw.name == "START":
             if len(currentedges) and (found_gruptree or found_welspecs):
                 if date is None:
-                    print("WARNING: No date parsed, maybe you should pass 'startdate'")
+                    print("WARNING: No date parsed, maybe you should pass --startdate")
+                    print("         Using 1900-01-01")
+                    date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
                 for edgename, value in currentedges.iteritems():
                     dflist.append([date, edgename[0], edgename[1], value])
@@ -130,6 +132,8 @@ def gruptreedf2dict(df):
     Asserts a single root in the edge list, slice
     on individual dates.
     """
+    if df.empty:
+        return {}
     subtrees = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in df.iterrows():
@@ -179,6 +183,12 @@ def parse_args():
         action="store_true",
         help="Pretty-print the tree structure",
     )
+    parser.add_argument(
+        "--startdate",
+        type=str,
+        help="First schedule date if not defined in input file, YYYY-MM-DD",
+        default=None,
+    )
     return parser.parse_args()
 
 
@@ -186,9 +196,9 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    df = gruptree2df(eclfiles.get_ecldeck())
+    df = gruptree2df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
-        for date in df["DATE"].unique():
+        for date in df["DATE"].dropna().unique():
             print("Date: " + str(date.astype("M8[D]")))
             nd = gruptreedf2dict(df[df["DATE"] == date])
             rootname = nd.keys()[0]

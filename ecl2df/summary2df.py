@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import os
+import sys
 import argparse
 import datetime
 
@@ -200,5 +201,11 @@ def main():
     sum_df = get_smry(
         eclfiles, time_index=args.time_index, column_keys=args.column_keys
     )
-    sum_df.to_csv(args.output, index=True)
-    print("Wrote to " + args.output)
+    if args.output == "-":
+        # Ignore pipe errors wen writing to stdout.
+        from signal import signal, SIGPIPE, SIG_DFL
+        signal(SIGPIPE, SIG_DFL)
+        sum_df.to_csv(sys.stdout, index=True)
+    else:
+        sum_df.to_csv(args.output, index=True)
+        print("Wrote to " + args.output)

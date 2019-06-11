@@ -205,6 +205,11 @@ def test_rstdates():
     dates = grid2df.rstdates(eclfiles)
     assert isinstance(dates, list)
 
+    # Test with missing RST file:
+    eclfiles = EclFiles("BOGUS.DATA")
+    with pytest.raises(IOError):
+        eclfiles.get_rstfile()
+
 
 def test_rst2df():
     eclfiles = EclFiles(DATAFILE)

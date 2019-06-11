@@ -171,7 +171,7 @@ def get_smry(
 
 def parse_args():
     """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "UNSMRY file must lie alongside.",
@@ -179,16 +179,24 @@ def parse_args():
     parser.add_argument(
         "--time_index",
         type=str,
-        help="Time resolution mnemonic, raw, daily, monthly, yearly",
+        help="""Time resolution mnemonic; raw, daily, monthly or yearly.
+            Data at a given point in time applies until the next point in time.
+            If not raw, data will be interpolated. Use interpolated rate vectors with care.
+            Default is raw, which will include clock times.
+            """,
+        default="raw",
     )
     parser.add_argument(
-        "--column_keys", nargs="+", help="Summary column vector wildcards"
+        "--column_keys",
+        nargs="+",
+        help="""Summary column vector wildcards, space-separated.
+        Default is to include all summary vectors available.""",
     )
     parser.add_argument(
         "-o",
         "--output",
         type=str,
-        help="name of output csv file.",
+        help="Name of output csv file. Use '-' to write to stdout. Default 'summary.csv'",
         default="summary.csv",
     )
     return parser.parse_args()
@@ -202,7 +210,7 @@ def main():
         eclfiles, time_index=args.time_index, column_keys=args.column_keys
     )
     if args.output == "-":
-        # Ignore pipe errors wen writing to stdout.
+        # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL
         signal(SIGPIPE, SIG_DFL)
         sum_df.to_csv(sys.stdout, index=True)

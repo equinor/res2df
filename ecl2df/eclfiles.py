@@ -116,15 +116,12 @@ class EclFiles(object):
     def get_eclsum(self):
         """Find and return the summary file and
         return as EclSum object"""
-        print(self._eclsum)
         if not self._eclsum:
             smryfilename = self._eclbase + ".UNSMRY"
-            print(smryfilename)
             if not os.path.exists(smryfilename):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
-            print("Loading eclsum from " + smryfilename)
             self._eclsum = EclSum(smryfilename)
         return self._eclsum
 

@@ -148,7 +148,12 @@ def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
 
 
 def get_smry(
-    eclfiles, time_index=None, column_keys=None, start_date=None, end_date=None
+    eclfiles,
+    time_index=None,
+    column_keys=None,
+    start_date=None,
+    end_date=None,
+    include_restart=True,
 ):
     """Extract data from UNSMRY as Pandas dataframes.
 
@@ -188,7 +193,9 @@ def get_smry(
     else:
         time_index_arg = time_index
 
-    df = eclfiles.get_eclsum().pandas_frame(time_index_arg, column_keys)
+    df = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
+        time_index_arg, column_keys
+    )
     df.index.name = "DATE"
     return df
 
@@ -239,6 +246,7 @@ def main():
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL
+
         signal(SIGPIPE, SIG_DFL)
         sum_df.to_csv(sys.stdout, index=True)
     else:

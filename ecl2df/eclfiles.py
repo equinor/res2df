@@ -113,7 +113,7 @@ class EclFiles(object):
             self._egridfile = EclFile(egridfilename)
         return self._egridfile
 
-    def get_eclsum(self):
+    def get_eclsum(self, include_restart=True):
         """Find and return the summary file and
         return as EclSum object"""
         if not self._eclsum:
@@ -122,7 +122,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
-            self._eclsum = EclSum(smryfilename)
+            self._eclsum = EclSum(smryfilename, include_restart=include_restart)
         return self._eclsum
 
     def get_initfile(self):

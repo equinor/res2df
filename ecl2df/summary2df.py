@@ -57,7 +57,7 @@ def normalize_dates(start_date, end_date, freq):
         # This we don't need to normalize, but we should not give any warnings
         pass
     else:
-        print("Unrecognized frequency for date normalization")
+        raise ValueError("Unrecognized frequency for date normalization")
     return (start_date, end_date)
 
 
@@ -150,6 +150,33 @@ def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
 def get_smry(
     eclfiles, time_index=None, column_keys=None, start_date=None, end_date=None
 ):
+    """Extract data from UNSMRY as Pandas dataframes.
+
+    This is a thin wrapper for EclSum.pandas_frame, by adding
+    support for string mnenomics for the time index.
+
+    Arguments:
+        eclfiles: EclFiles object representing the Eclipse deck.
+        time_index: string indicating a resampling frequency,
+           'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
+           return the simulated report steps (also default).
+           If a list of DateTime is supplied, data will be resampled
+           to these.
+        column_keys: list of column key wildcards. None means everything.
+        start_date: str or date with first date to include.
+            Dates prior to this date will be dropped, supplied
+            start_date will always be included.
+        end_date: str or date with last date to be included.
+            Dates past this date will be dropped, supplied
+            end_date will always be included. Overriden if time_index
+            is 'last'.
+        include_restart: boolean sent to libecl for wheter restarts
+            files should be traversed
+
+    Returns empty dataframe if there is no summary file, or if the
+    column_keys are not existing.
+    """
+
     if not isinstance(column_keys, list):
         column_keys = [column_keys]
     if isinstance(time_index, str) and time_index == "raw":

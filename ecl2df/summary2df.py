@@ -61,9 +61,9 @@ def normalize_dates(start_date, end_date, freq):
     return (start_date, end_date)
 
 
-def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
+def resample_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
     """
-    Process a list of date(time)s to a new datelist according to options.
+    Resample (optionally) a list of date(time)s to a new datelist according to options.
 
     Based on the dates as input, a new list at a finer or coarser time density
     can be returned, on the same date range. Incoming dates can also be cropped.
@@ -173,7 +173,7 @@ def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
         return datetimes
 
 
-def get_smry(
+def smry2df(
     eclfiles,
     time_index=None,
     column_keys=None,
@@ -213,7 +213,7 @@ def get_smry(
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = None
     elif isinstance(time_index, str):
-        time_index_arg = get_smry_dates(
+        time_index_arg = resample_smry_dates(
             [eclfiles.get_eclsum().dates], time_index, True, start_date, end_date
         )
     else:
@@ -266,7 +266,7 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    sum_df = get_smry(
+    sum_df = smry2df(
         eclfiles, time_index=args.time_index, column_keys=args.column_keys
     )
     if args.output == "-":

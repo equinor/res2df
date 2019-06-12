@@ -26,7 +26,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_summary2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    sumdf = summary2df.get_smry(eclfiles)
+    sumdf = summary2df.smry2df(eclfiles)
 
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
@@ -74,9 +74,12 @@ def test_datenormalization():
     # Check that we normalize correctly with get_smry():
     # realization-0 here has its last summary date at 2003-01-02
     eclfiles = EclFiles(DATAFILE)
-    daily = summary2df.get_smry(eclfiles, column_keys="FOPT", time_index="daily")
+    daily = summary2df.smry2df(eclfiles, column_keys="FOPT", time_index="daily")
     assert str(daily.index[-1]) == "2003-01-02"
-    monthly = summary2df.get_smry(eclfiles, column_keys="FOPT", time_index="monthly")
+    monthly = summary2df.smry2df(eclfiles, column_keys="FOPT", time_index="monthly")
     assert str(monthly.index[-1]) == "2003-02-01"
-    yearly = summary2df.get_smry(eclfiles, column_keys="FOPT", time_index="yearly")
+    yearly = summary2df.smry2df(eclfiles, column_keys="FOPT", time_index="yearly")
     assert str(yearly.index[-1]) == "2004-01-01"
+
+def test_resample_smry_dates():
+    pass

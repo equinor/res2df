@@ -63,8 +63,34 @@ def normalize_dates(start_date, end_date, freq):
 
 def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
     """
-    Compute available dates at requested frequency, possibly
-    normalized and cropped for a UNSMRY file
+    Process a list of date(time)s to a new datelist according to options.
+
+    Based on the dates as input, a new list at a finer or coarser time density
+    can be returned, on the same date range. Incoming dates can also be cropped.
+
+    Args:
+        eclsumsdates: list of datetimes, typically coming from EclSum.dates
+        freq: string denoting requested frequency for
+            the returned list of datetime. 'raw' will
+            return the input datetimes (no resampling).
+            Options for timeresampling are
+            'daily', 'monthly' and 'yearly'.
+            'last' will give out the last date (maximum),
+            as a list with one element.
+        normalize: Whether to normalize backwards at the start
+            and forwards at the end to ensure the raw
+            date range is covered when resampling time.
+        start_date: str or date with first date to include
+            Dates prior to this date will be dropped, supplied
+            start_date will always be included. Overrides
+            normalized dates.
+        end_date: str or date with last date to be included.
+            Dates past this date will be dropped, supplied
+            end_date will always be included. Overrides
+            normalized dates. Overriden if freq is 'last'.
+    Returns:
+        list of datetimes.
+
     """
     import dateutil.parser
 
@@ -87,7 +113,7 @@ def get_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
         else:
             raise TypeError("end_date had unknown type")
 
-    if freq == "report" or freq == "raw":
+    if freq == "raw":
         datetimes = set()
         for eclsumdatelist in eclsumsdates:
             datetimes = datetimes.union(eclsumdatelist)

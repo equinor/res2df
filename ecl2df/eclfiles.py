@@ -115,7 +115,14 @@ class EclFiles(object):
 
     def get_eclsum(self, include_restart=True):
         """Find and return the summary file and
-        return as EclSum object"""
+        return as EclSum object
+
+        Args:
+            include_restart: boolean sent to libecl for whether restart files
+                should be traversed.
+        Returns:
+            ecl.summary.EclSum
+        """
         if not self._eclsum:
             smryfilename = self._eclbase + ".UNSMRY"
             if not os.path.exists(smryfilename):

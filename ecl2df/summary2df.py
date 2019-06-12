@@ -61,7 +61,9 @@ def normalize_dates(start_date, end_date, freq):
     return (start_date, end_date)
 
 
-def resample_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
+def resample_smry_dates(
+    eclsumsdates, freq="raw", normalize=True, start_date=None, end_date=None
+):
     """
     Resample (optionally) a list of date(time)s to a new datelist according to options.
 
@@ -114,28 +116,27 @@ def resample_smry_dates(eclsumsdates, freq, normalize, start_date, end_date):
             raise TypeError("end_date had unknown type")
 
     if freq == "raw":
-        datetimes = set()
-        for eclsumdatelist in eclsumsdates:
-            datetimes = datetimes.union(eclsumdatelist)
-        datetimes = list(datetimes)
+        datetimes = eclsumsdates
         datetimes.sort()
         if start_date:
             # Convert to datetime (at 00:00:00)
-            start_date = datetime.combine(start_date, datetime.min.time())
+            start_date = datetime.datetime.combine(
+                start_date, datetime.datetime.min.time()
+            )
             datetimes = [x for x in datetimes if x > start_date]
             datetimes = [start_date] + datetimes
         if end_date:
-            end_date = datetime.combine(end_date, datetime.min.time())
+            end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
         return datetimes
     elif freq == "last":
-        end_date = max([max(x) for x in eclsumsdates]).date()
+        end_date = max(eclsumsdates).date()
         return [end_date]
     else:
         # These are datetime.datetime, not datetime.date
-        start_smry = min([min(x) for x in eclsumsdates])
-        end_smry = max([max(x) for x in eclsumsdates])
+        start_smry = min(eclsumsdates)
+        end_smry = max(eclsumsdates)
 
         pd_freq_mnenomics = {"monthly": "MS", "yearly": "YS", "daily": "D"}
 
@@ -214,7 +215,7 @@ def smry2df(
         time_index_arg = None
     elif isinstance(time_index, str):
         time_index_arg = resample_smry_dates(
-            [eclfiles.get_eclsum().dates], time_index, True, start_date, end_date
+            eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
         )
     else:
         time_index_arg = time_index
@@ -266,9 +267,7 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    sum_df = smry2df(
-        eclfiles, time_index=args.time_index, column_keys=args.column_keys
-    )
+    sum_df = smry2df(eclfiles, time_index=args.time_index, column_keys=args.column_keys)
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

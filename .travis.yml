@@ -37,8 +37,8 @@ before_install:
 install:
   - pushd ..
   - git clone https://github.com/equinor/libecl.git
-  - git clone https://github.com/OPM/opm-common.git
-  - git clone https://github.com/equinor/sunbeam.git
+  - git clone --recursive https://github.com/OPM/opm-common.git
+  - git clone --recursive https://github.com/equinor/sunbeam.git
   - mkdir libecl/build
   - pushd libecl/build
   - cmake -DENABLE_PYTHON=OFF -DBUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT ..

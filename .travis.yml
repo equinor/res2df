@@ -33,6 +33,8 @@ matrix:
 
 before_install:
   - export CXX="g++-4.9" CC="gcc-4.9"
+  - export PYTHONPATH=$INSTALL_ROOT/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
+
 
 install:
   - pushd ..

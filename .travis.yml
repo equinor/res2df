@@ -41,10 +41,15 @@ install:
   - git clone https://github.com/equinor/libecl.git
   - git clone --recursive https://github.com/OPM/opm-common.git
   - git clone --recursive https://github.com/equinor/sunbeam.git
+  - pushd libecl
+  - pip install -r requirements.txt
+  - popd
   - mkdir libecl/build
   - pushd libecl/build
-  - cmake -DENABLE_PYTHON=OFF -DBUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT ..
-  - make -j 4 install
+  - cmake .. -DENABLE_PYTHON=ON 
+             -DBUILD_TESTS=OFF 
+             -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT ..
+  - make -j4 install
   - popd
   - mkdir opm-common/build
   - pushd opm-common/build
@@ -53,7 +58,7 @@ install:
              -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT
              -DBUILD_TESTING=OFF
              -DBUILD_SHARED_LIBS=ON
-  - make -j 4 install
+  - make -j4 install
   - popd
   - mkdir sunbeam/build
   - pushd sunbeam/build

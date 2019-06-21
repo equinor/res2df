@@ -42,7 +42,7 @@ install:
   - mkdir libecl/build
   - pushd libecl/build
   - cmake -DENABLE_PYTHON=OFF -DBUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT ..
-  - make install
+  - make -j 4 install
   - popd
   - mkdir opm-common/build
   - pushd opm-common/build
@@ -51,7 +51,7 @@ install:
              -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT
              -DBUILD_TESTING=OFF
              -DBUILD_SHARED_LIBS=ON
-  - make install
+  - make -j 4 install
   - popd
   - mkdir sunbeam/build
   - pushd sunbeam/build
@@ -59,7 +59,7 @@ install:
              -DUSE_RPATH=ON
              -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT
              -DPYTHON_EXECUTABLE=`which python`
-  - make install
+  - make -j 4 install
   - popd
   - popd
   - pip install -r requirements.txt

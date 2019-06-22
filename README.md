@@ -1,4 +1,5 @@
-# ecl2df
+# ecl2df [![Build Status](https://travis-ci.com/equinor/ecl2df.svg?branch=master)](https://travis-ci.com/equinor/ecl2df)
+
 
 ecl2df is a Pandas DataFrame wrapper around libecl and sunbeam, which
 are used to access binary files outputted by the reservoir simulator

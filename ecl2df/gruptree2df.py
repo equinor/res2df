@@ -51,7 +51,7 @@ def gruptree2df(deck, startdate=None, welspecs=True):
                     print("         Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
-                for edgename, value in currentedges.iteritems():
+                for edgename, value in currentedges.items():
                     dflist.append([date, edgename[0], edgename[1], value])
                 found_gruptree = False
                 found_welspecs = False
@@ -75,7 +75,7 @@ def gruptree2df(deck, startdate=None, welspecs=True):
 
     # Ensure we also store any tree information found after the last DATE statement
     if found_gruptree or found_welspecs:
-        for edgename, value in currentedges.iteritems():
+        for edgename, value in currentedges.items():
             dflist.append([date, edgename[0], edgename[1], value])
 
     df = pd.DataFrame(columns=["DATE", "CHILD", "PARENT", "TYPE"], data=dflist)

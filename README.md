@@ -1,6 +1,5 @@
 # ecl2df [![Build Status](https://travis-ci.com/equinor/ecl2df.svg?branch=master)](https://travis-ci.com/equinor/ecl2df) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fceedc1ee9c946aa85bf60f39ec8962a)](https://www.codacy.com/app/berland/ecl2df?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=equinor/ecl2df&amp;utm_campaign=Badge_Grade)
 
-
 ecl2df is a Pandas DataFrame wrapper around libecl and sunbeam, which
 are used to access binary files outputted by the reservoir simulator
 Eclipse, or its input files --- or any other tool outputting to the same
@@ -11,7 +10,7 @@ files (.UNSMRY), for which there is a command line utility for converting
 to CSV, as well as some more functionality if the Python API is used
 directly.
 
-## Overview:
+## Overview
 
 Module overview
 
@@ -73,11 +72,11 @@ unfinished Eclipse decks and runs. The class EclFiles can cache binary
 files that are recently read, and is able to locate the various output
 files based on the basename or the `.DATA` filename.
 
-# License
+## License
 
 This library is released under GPLv3.
 
-# Copyright
+## Copyright
 
 The code is Copyright Equinor ASA 2019.
 

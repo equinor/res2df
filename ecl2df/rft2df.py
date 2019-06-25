@@ -146,7 +146,8 @@ def rft2df(eclfiles):
             mergedSEGdata = pd.merge(
                 SEGdata, SEGdata, how="outer", left_on="SEGIDX", right_on="SEGNXT"
             )
-            leafsegments = mergedSEGdata[mergedSEGdata["SEGIDX_y"] == numpy.nan]
+            # We may compute leafsegments like this:
+            # leafsegments = mergedSEGdata[mergedSEGdata["SEGIDX_y"] == numpy.nan]
 
             # After having removed leaf segments, we can claim that the maximum value of SEGBRNO determines the
             # number of well branches. This will fail if ICD segments are connected in a series, if you

@@ -106,7 +106,7 @@ def gruptree2dict(deck, date="END", welspecs=True):
             date = df.index[-1]
         else:
             try:
-                isodate = dateutil.parser.isoparse(dates).date()
+                dateutil.parser.isoparse(dates).date()
             except ValueError:
                 raise ValueError("date " + str(dates) + " not understood")
 

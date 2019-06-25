@@ -7,14 +7,10 @@ from __future__ import print_function
 
 import os
 import sys
-import pytest
 
 import pandas as pd
 import numpy as np
 import logging
-
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
 
 from ecl2df import rft2df
 from ecl2df.eclfiles import EclFiles

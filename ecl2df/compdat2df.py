@@ -197,7 +197,6 @@ def deck2compdatsegsdfs(deck):
                             rec_data[rec_key] = rec[rec_key][0]
                     except ValueError:
                         print(rec_key)
-                        pass
                 welsegsrecords.append(rec_data)
         elif kw.name == "TSTEP":
             print("WARNING: Possible premature stop at first TSTEP")
@@ -236,7 +235,7 @@ def postprocess():
     # WARNING: Only correct for dual-branch wells,
     # not triple-branach wells with ICD..
     compsegs_icd_df = compsegs_df[compsegs_df.branch > 2]
-    icd_wells = compsegs_icd_df.well.unique()
+    # icd_wells = compsegs_icd_df.well.unique()
     compdatsegwel_icd_df = pd.merge(
         compsegs_icd_df, welsegs_df, on=["date", "well", "branch"]
     )

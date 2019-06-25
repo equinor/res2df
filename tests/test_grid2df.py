@@ -12,9 +12,6 @@ import pandas as pd
 
 import pytest
 
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
-
 from ecl2df import grid2df
 from ecl2df.eclfiles import EclFiles
 
@@ -183,7 +180,7 @@ def test_main():
 
 def test_rstdates():
     eclfiles = EclFiles(DATAFILE)
-    rstfile = eclfiles.get_rstfile()
+    # rstfile = eclfiles.get_rstfile()
 
     alldates = grid2df.rstdates(eclfiles)
     assert len(alldates) == 4

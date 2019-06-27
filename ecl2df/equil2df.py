@@ -8,6 +8,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import logging
 import argparse
 import pandas as pd
 
@@ -92,8 +93,8 @@ def deck2equildf(deck):
         rowlist = [x[0] for x in rec]
         if len(rowlist) > len(columnnames):
             rowlist = rowlist[: len(columnnames)]
-            print(
-                "WARNING: Something wrong with columnnames "
+            logger.warning(
+                "Something wrong with columnnames "
                 + "or EQUIL-data, data is chopped!"
             )
         records.append(rowlist)

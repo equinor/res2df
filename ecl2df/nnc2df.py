@@ -11,6 +11,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import logging
 import argparse
 import pandas as pd
 
@@ -40,7 +41,7 @@ def nnc2df(eclfiles):
     init_file = eclfiles.get_initfile()
 
     if not ("NNC1" in egrid_file and "NNC2" in egrid_file):
-        print("No NNC data in EGRID")
+        logging.warning("No NNC data in EGRID")
         return pd.DataFrame()
 
     # Grid indices for first cell in cell pairs:

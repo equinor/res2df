@@ -9,6 +9,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
+import logging
 import datetime
 import dateutil
 import argparse
@@ -47,8 +48,8 @@ def gruptree2df(deck, startdate=None, welspecs=True):
         if kw.name == "DATES" or kw.name == "START":
             if len(currentedges) and (found_gruptree or found_welspecs):
                 if date is None:
-                    print("WARNING: No date parsed, maybe you should pass --startdate")
-                    print("         Using 1900-01-01")
+                    logger.warning("WARNING: No date parsed, maybe you should pass --startdate")
+                    logger.warning("         Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
                 for edgename, value in currentedges.items():

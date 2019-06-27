@@ -10,6 +10,7 @@ from __future__ import division
 
 import argparse
 import datetime
+import logging
 import pandas as pd
 
 from .eclfiles import EclFiles
@@ -144,7 +145,7 @@ def deck2compdatsegsdfs(deck):
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
-                print("Parsing at date " + str(date))
+                logging.info("Parsing at date " + str(date))
         elif kw.name == "COMPDAT":
             for rec in kw:  # Loop over the lines inside COMPDAT record
                 rec_data = {}
@@ -196,10 +197,10 @@ def deck2compdatsegsdfs(deck):
                         if rec[rec_key]:
                             rec_data[rec_key] = rec[rec_key][0]
                     except ValueError:
-                        print(rec_key)
+                        logging.warning(rec_key)
                 welsegsrecords.append(rec_data)
         elif kw.name == "TSTEP":
-            print("WARNING: Possible premature stop at first TSTEP")
+            logging.warning("Possible premature stop at first TSTEP")
             break
 
     compdat_df = pd.DataFrame(compdatrecords)

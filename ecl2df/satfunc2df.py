@@ -9,6 +9,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import logging
 import argparse
 import numpy as np
 import pandas as pd
@@ -49,7 +50,7 @@ def deck2satfuncdf(deck):
                 # Split up into the correct number of columns
                 column_count = len(KEYWORD_COLUMNS[keyword])
                 if len(data) % column_count:
-                    print("ERROR: Inconsistent data length or bug")
+                    logging.error("Inconsistent data length or bug")
                     return
                 satpoints = int(len(data) / column_count)
                 df = pd.DataFrame(

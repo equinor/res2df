@@ -9,6 +9,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import argparse
+import logging
 import datetime
 import pandas as pd
 
@@ -115,7 +116,7 @@ def deck2wcondf(deck):
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
-                print("Parsing at date " + str(date))
+                logging.info("Parsing at date " + str(date))
         elif kw.name in RECORD_KEYS:
             for rec in kw:  # Loop over the lines inside WCON* record
                 rec_data = {}
@@ -130,7 +131,7 @@ def deck2wcondf(deck):
                 wconrecords.append(rec_data)
 
         elif kw.name == "TSTEP":
-            print("WARNING: Possible premature stop at first TSTEP")
+            logging.warning("WARNING: Possible premature stop at first TSTEP")
             break
 
     wcon_df = pd.DataFrame(wconrecords)

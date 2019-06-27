@@ -15,6 +15,7 @@ from __future__ import division
 from __future__ import absolute_import
 
 import sys
+import logging
 import argparse
 import fnmatch
 import datetime
@@ -86,7 +87,7 @@ def dates2rstindices(eclfiles, dates):
         if not chosendates:
             raise ValueError("None of the requested dates were found")
         elif len(chosendates) < len(availabledates):
-            print("Warning: Not all dates found in UNRST\n")
+            logger.warning("Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")
 

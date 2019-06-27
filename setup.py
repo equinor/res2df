@@ -27,6 +27,7 @@ setup(
             "gruptree2csv=ecl2df.gruptree2df:main",
             "satfunc2csv=ecl2df.satfunc2df:main",
             "faults2csv=ecl2df.faults2df:main",
+            "wcon2csv=ecl2df.wcon2df:main",
         ]
     },
 )

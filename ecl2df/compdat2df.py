@@ -197,7 +197,7 @@ def deck2compdatsegsdfs(deck):
                         if rec[rec_key]:
                             rec_data[rec_key] = rec[rec_key][0]
                     except ValueError:
-                        logging.warning(rec_key)
+                        pass
                 welsegsrecords.append(rec_data)
         elif kw.name == "TSTEP":
             logging.warning("Possible premature stop at first TSTEP")

@@ -68,7 +68,7 @@ WSEGVALV
     compdfs = compdat2df.deck2compdatsegsdfs(deck)
     compdat = compdfs["COMPDAT"]
     welsegs = compdfs["WELSEGS"]
-    compsegs = compdfs["WELSEGS"]
+    compsegs = compdfs["COMPSEGS"]
     assert "WELL" in compdat
     assert len(compdat) == 1
     assert compdat["WELL"].unique()[0] == "OP1"
@@ -94,7 +94,7 @@ WSEGVALV
     assert len(compsegs) == 1
     assert "WELL" in compsegs
     assert compsegs["WELL"].unique()[0] == "OP1"
-
+    assert len(compsegs.iloc[0]) == 9
 
 def test_unrollcompdatk1k2():
     schstr = """

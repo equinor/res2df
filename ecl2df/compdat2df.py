@@ -82,7 +82,7 @@ WELSEGSKEYS = [
     "SEGMENT",  # For each subseqent record
     "BRANCH",
     "JOIN_SEGMENT",
-    "SEGMENT_LENGTH",
+    "SEGMENT_LENGTH",  # Copied to SEGMENT_MD, as it can be both, depending on INFO_TYPE
     "DEPTH_CHANGE",
     "DIAMETER",
     "ROUGHNESS",
@@ -179,10 +179,10 @@ def deck2compdatsegsdfs(deck):
             welsegsdict["WELL"] = well = kw[0][0][0]
             welsegsdict["DEPTH"] = kw[0][1][0]
             welsegsdict["LENGTH"] = kw[0][2][0]
-            welsegsdict["WBOREVOL"] = kw[0][3][0]
-            welsegsdict["INFO"] = kw[0][4][0]
-            welsegsdict["PRES_COMP"] = kw[0][5][0]
-            welsegsdict["FLOWMODEL"] = kw[0][6][0]
+            welsegsdict["WELLBORE_VOLUME"] = kw[0][3][0]
+            welsegsdict["INFO_TYPE"] = kw[0][4][0]
+            welsegsdict["PRESSURE_COMPONENTS"] = kw[0][5][0]
+            welsegsdict["FLOW_MODEL"] = kw[0][6][0]
             welsegsdict["TOP_X"] = kw[0][7][0]
             welsegsdict["TOP_Y"] = kw[0][8][0]
             # Loop over all subsequent records.
@@ -198,6 +198,8 @@ def deck2compdatsegsdfs(deck):
                             rec_data[rec_key] = rec[rec_key][0]
                     except ValueError:
                         pass
+                if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
+                    rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
                 welsegsrecords.append(rec_data)
         elif kw.name == "TSTEP":
             logging.warning("Possible premature stop at first TSTEP")

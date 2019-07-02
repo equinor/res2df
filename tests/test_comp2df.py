@@ -45,26 +45,55 @@ WELSPECS
 
 COMPDAT
  'OP1' 33 110 31 31 'OPEN' 0 6467.31299 0.216 506642.25  0.0 0.0 'Y' 7.18 /
+-- comments.
 /
 
 WELSEGS
-  'OP1' 1689 1923 1.0E-5 'ABS' 'HFA' 'HO' /
+  'OP1' 1689 1923 1.0E-5 'ABS' 'HFA' 'HO' / comment without -- identifier
+-- foo bar
    2 2 1 1 1923.9 1689.000 0.1172 0.000015  /
 /
 
 COMPSEGS
-  'OP1' /
+  'OP1' / -- Yet a comment
+  -- comment
   41 125 29  5 2577.0 2616.298 / icd on branch 1 in segment 17
 /
+-- (WSEGVALS is not processed)
 WSEGVALV
   'OP1'   166   1   7.4294683E-06  0 / icd on segment 17, cell 41 125 29
 /
 """
     deck = EclFiles.str2deck(schstr)
     compdfs = compdat2df.deck2compdatsegsdfs(deck)
-    print(compdfs["COMPDAT"])
-    print(compdfs["WELSEGS"])
-    print(compdfs["COMPSEGS"])
+    compdat = compdfs["COMPDAT"]
+    welsegs = compdfs["WELSEGS"]
+    compsegs = compdfs["WELSEGS"]
+    assert "WELL" in compdat
+    assert len(compdat) == 1
+    assert compdat["WELL"].unique()[0] == "OP1"
+
+    # Check that we have not used the very long sunbeam term here:
+    assert "CONNECTION_TRANSMISSIBILITY_FACTOR" not in compdat
+    assert "TRAN" in compdat
+
+    assert "Kh" not in compdat  # Mixed-case should not be used.
+    assert "KH" in compdat
+
+    # Make sure the ' are ignored:
+    assert compdat["OP/SH"].unique()[0] == "OPEN"
+
+    # Continue to WELSEGS
+    assert len(welsegs) == 1  # First record is appended to every row.
+
+    # Since we have 'ABS' in WELSEGS, there should be an extra column called 'SEGMENT_MD'
+    assert "SEGMENT_MD" in welsegs
+    assert welsegs["SEGMENT_MD"].max() == 1923.9
+
+    # Test COMPSEGS
+    assert len(compsegs) == 1
+    assert "WELL" in compsegs
+    assert compsegs["WELL"].unique()[0] == "OP1"
 
 
 def test_unrollcompdatk1k2():

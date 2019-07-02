@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-"""Test module for nnc2df"""
+# -*- coding: utf-8 -*- """Test module for nnc2df"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -24,18 +23,18 @@ def test_comp2df():
     eclfiles = EclFiles(DATAFILE)
     compdfs = compdat2df.deck2compdatsegsdfs(eclfiles.get_ecldeck())
 
-    assert not compdfs[0].empty
-    assert compdfs[1].empty  # REEK demo does not include multisegment wells
-    assert compdfs[2].empty
-    assert len(compdfs[0].columns)
+    assert not compdfs["COMPDAT"].empty
+    assert compdfs["WELSEGS"].empty  # REEK demo does not include multisegment wells
+    assert compdfs["COMPSEGS"].empty
+    assert len(compdfs["COMPDAT"].columns)
 
 
 def test_schfile2df():
     """Test that we can process individual files"""
     deck = EclFiles.file2deck(SCHFILE)
     compdfs = compdat2df.deck2compdatsegsdfs(deck)
-    assert len(compdfs[0].columns)
-    assert not compdfs[0].empty
+    assert len(compdfs["COMPDAT"].columns)
+    assert not compdfs["COMPDAT"].empty
 
 
 def test_str2df():
@@ -63,9 +62,9 @@ WSEGVALV
 """
     deck = EclFiles.str2deck(schstr)
     compdfs = compdat2df.deck2compdatsegsdfs(deck)
-    print(compdfs[0])
-    print(compdfs[1])
-    print(compdfs[2])
+    print(compdfs["COMPDAT"])
+    print(compdfs["WELSEGS"])
+    print(compdfs["COMPSEGS"])
 
 
 def test_unrollcompdatk1k2():
@@ -76,7 +75,7 @@ COMPDAT
   'OP1' 33 44 10 20  /
 /
 """
-    df = compdat2df.deck2compdatsegsdfs(EclFiles.str2deck(schstr))[0]
+    df = compdat2df.deck2compdatsegsdfs(EclFiles.str2deck(schstr))["COMPDAT"]
     assert df["I"].unique() == 33
     assert df["J"].unique() == 44
     assert (df["K1"].values == range(10, 20 + 1)).all()

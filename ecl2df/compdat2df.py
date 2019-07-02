@@ -130,7 +130,7 @@ def deck2compdatsegsdfs(deck):
     The loop over the deck is a state machine, as it has to pick up dates
 
     Return:
-        tuple with 3 dataframes, compdat, compsegs, welsegs.
+        dict with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.
 
     TODO: Support TSTEP
     """
@@ -208,7 +208,7 @@ def deck2compdatsegsdfs(deck):
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
 
-    return (compdat_df, compsegs_df, welsegs_df)
+    return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df)
 
 
 def postprocess():
@@ -268,10 +268,9 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    (compdat_df, compsegs_df, welsegs_df) = deck2compdatsegsdfs(deck)
-    compdat_df.to_csv("compdat.csv", index=False)
-    compsegs_df.to_csv("compsegs.csv", index=False)
-    welsegs_df.to_csv("welsegs.csv", index=False)
-    compdat_df = unrollcompdatdf(compdat_df)
-    compdat_df.to_csv(args.output, index=False)
+    dfs = deck2compdatsegsdfs(deck)
+    dfs["COMPDAT"].to_csv("compdat.csv", index=False)
+    dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
+    dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
+    unrollcompdatdf(dfs["COMPDAT"]).to_csv(args.output, index=False)
     print("Wrote to " + args.output)

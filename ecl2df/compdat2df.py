@@ -17,17 +17,17 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
 
-def unrollcompdatdf(compdat_df):
+def unrollcompdatdf(df):
     """COMPDAT to Eclipse support K1, K2 intervals for multiple cells
 
     This is unwanted when exported to file, unroll these intervals
     into multiple rows where K1 == K2 (duplicating the rest of the data)
     """
-    k1eqk2bools = compdat_df["K1"] == compdat_df["K2"]
-    unrolled = compdat_df[k1eqk2bools]
+    k1eqk2bools = df["K1"] == df["K2"]
+    unrolled = df[k1eqk2bools]
     list_unrolled = []
     if (~k1eqk2bools).any():
-        for _, rangerow in compdat_df[~k1eqk2bools].iterrows():
+        for _, rangerow in df[~k1eqk2bools].iterrows():
             for k in range(int(rangerow["K1"]), int(rangerow["K2"]) + 1):
                 rangerow["K1"] = k
                 rangerow["K2"] = k
@@ -69,6 +69,7 @@ COMPSEGSKEYS = [
     "SEGMENT_NUMBER",
 ]
 
+# Based on https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS
 WELSEGSKEYS = [
     "WELL",  # "Name of the well"
     "DEPTH",  # "Depth of the nodal point of the top segment"
@@ -79,7 +80,8 @@ WELSEGSKEYS = [
     "FLOW_MODEL",
     "TOP_X",
     "TOP_Y",  # END OF FIRST RECORD FOR E100. E300 has some more.
-    "SEGMENT",  # For each subseqent record
+    "SEGMENT1",  # For each subseqent record
+    "SEGMENT2",
     "BRANCH",
     "JOIN_SEGMENT",
     "SEGMENT_LENGTH",  # Copied to SEGMENT_MD, as it can be both, depending on INFO_TYPE

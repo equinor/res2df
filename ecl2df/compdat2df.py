@@ -158,7 +158,7 @@ def deck2compdatsegsdfs(deck, start_date=None):
     return deck2dfs(deck, start_date)
 
 
-def deck2dfs(deck, start_date=None):
+def deck2dfs(deck, start_date=None, unroll=True):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
@@ -169,6 +169,8 @@ def deck2dfs(deck, start_date=None):
         start_date (datetime.date or str): The default date to use for
             events where the DATE or START keyword is not found in advance.
             Default: None
+        unroll (bool): Whether to unroll rows that cover a range,
+            like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.
 
     Returns:
         Dictionary with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.
@@ -246,8 +248,11 @@ def deck2dfs(deck, start_date=None):
             logging.warning("Possible premature stop at first TSTEP")
             break
 
-    compdat_df = pd.DataFrame(compdatrecords)
-    compdat_df = unrolldf(compdat_df)
+    if unroll:
+        compdat_df = unrolldf(pd.DataFrame(compdatrecords), "K1", "K2")
+    else:
+        compdat_df = unrolldf(compdat_df)
+
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
 

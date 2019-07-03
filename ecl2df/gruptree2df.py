@@ -20,6 +20,17 @@ import collections
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
+# From: https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET
+GRUPNETKEYS = [
+    "NAME",
+    "TERMINAL_PRESSURE",
+    "VFP_TABLE",
+    "ALQ",
+    "SUB_SEA_MANIFOLD",
+    "LIFT_GAS_FLOW_THROUGH",
+    "ALQ_SURFACE_EQV",
+]
+
 
 def gruptree2df(deck, startdate=None, welspecs=True):
     logging.warning("Deprecated function name, gruptree2df")
@@ -45,7 +56,9 @@ def deck2df(deck, startdate=None, welspecs=True):
         date = startdate
     else:
         date = None
-    dflist = []  # list of list of rows.
+
+    gruptreerecords = []  # list of dict of rows containing an edge.
+    grupnetrecords = []
 
     # In order for the GRUPTREE keywords to accumulate, we
     # store the edges as a dictionary indexed by the edge
@@ -53,8 +66,11 @@ def deck2df(deck, startdate=None, welspecs=True):
     # The value of the dictionary is GRUPTREE or WELSPECS
     currentedges = dict()
 
+    grupnet_df = pd.DataFrame()
+
     found_gruptree = False  # Flags which will tell when a new GRUPTREE or
     found_welspecs = False  # WELSPECS have been encountered.
+    found_grupnet = False  # GRUPNET has been encountered
     for kw in deck:
 
         if kw.name == "DATES" or kw.name == "START" or kw.name == "TSTEP":
@@ -63,7 +79,7 @@ def deck2df(deck, startdate=None, welspecs=True):
             # have occured since the last date, so this is the chance
             # to dump the parsed data. Also we dump the *entire* tree
             # at every date with a change, not only the newfound edges.
-            if len(currentedges) and (found_gruptree or found_welspecs):
+            if len(currentedges) and (found_gruptree or found_welspecs or found_grupnet):
                 if date is None:
                     logging.warning(
                         "WARNING: No date parsed, maybe you should pass --startdate"
@@ -72,9 +88,18 @@ def deck2df(deck, startdate=None, welspecs=True):
                     date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
                 for edgename, value in currentedges.items():
-                    dflist.append([date, edgename[0], edgename[1], value])
+                    rec_dict = {
+                        "DATE": date,
+                        "CHILD": edgename[0],
+                        "PARENT": edgename[1],
+                        "TYPE": value,
+                    }
+                    if edgename[0] in grupnet_df.index:
+                        rec_dict.update(grupnet_df.loc[edgename[0]])
+                    gruptreerecords.append(rec_dict)
                 found_gruptree = False
                 found_welspecs = False
+                found_grupnet = False
             # Done dumping the data for the previous date, parse the fresh
             # date:
             if kw.name == "DATES" or kw.name == "START":
@@ -116,14 +141,39 @@ def deck2df(deck, startdate=None, welspecs=True):
                 wellname = wellrec[0][0]
                 group = wellrec[1][0]
                 currentedges[(wellname, group)] = "WELSPECS"
+        if kw.name == "GRUPNET":
+            found_grupnet = True
+            for rec in kw:
+                grupnet_data = {}
+                for rec_key in GRUPNETKEYS:
+                    try:
+                        if rec[rec_key]:
+                            grupnet_data[rec_key] = rec[rec_key][0]
+                    except ValueError:
+                        pass
+                grupnetrecords.append(grupnet_data)
+            grupnet_df = (
+                pd.DataFrame(grupnetrecords)
+                .drop_duplicates(subset="NAME", keep="last")
+                .set_index("NAME")
+            )
 
     # Ensure we also store any tree information found after the last DATE statement
     if found_gruptree or found_welspecs:
         for edgename, value in currentedges.items():
-            dflist.append([date, edgename[0], edgename[1], value])
+            rec_dict = {
+                    "DATE": date,
+                    "CHILD": edgename[0],
+                    "PARENT": edgename[1],
+                    "TYPE": value,
+                }
+            if edgename[0] in grupnet_df.index:
+                rec_dict.update(grupnet_df.loc[edgename[0]])
+            gruptreerecords.append(rec_dict)
 
-    df = pd.DataFrame(columns=["DATE", "CHILD", "PARENT", "TYPE"], data=dflist)
-    df["DATE"] = pd.to_datetime(df["DATE"])
+    df = pd.DataFrame(gruptreerecords)
+    if "DATE" in df:
+        df["DATE"] = pd.to_datetime(df["DATE"])
     return df
 
 

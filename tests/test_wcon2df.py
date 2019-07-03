@@ -66,6 +66,7 @@ WCONPROD
     wcondf = wcon2df.deck2df(deck)
     assert len(wcondf) == 1
 
+
 def test_tstep():
     schstr = """
 DATES

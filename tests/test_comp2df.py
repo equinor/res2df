@@ -124,6 +124,7 @@ COMPDAT
     df_noroll = compdat2df.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["COMPDAT"]
     assert len(df_noroll) == 1
 
+
 def test_unrollwelsegs():
     schstr = """
 WELSEGS
@@ -138,6 +139,17 @@ WELSEGS
 
     df = compdat2df.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["WELSEGS"]
     assert len(df) == 1
+
+
+def test_unrollbogus():
+    # Giving in empty dataframe, should not crash.
+    assert compdat2df.unrolldf(pd.DataFrame).empty
+
+    bogusdf = pd.DataFrame([0, 1, 4], [0, 2, 5])
+    unrolled = compdat2df.unrolldf(pd.DataFrame([0, 1, 4], [0, 2, 5]), "FOO", "bar")
+    # (warning should be issued)
+    assert (unrolled == bogusdf).all().all()
+
 
 def test_main():
     """Test command line interface"""

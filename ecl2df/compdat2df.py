@@ -50,6 +50,15 @@ def unrolldf(df, start_column="K1", end_column="K2"):
         pd.Dataframe: Unrolled version. Identical to input if none of
             rows had any ranges.
     """
+    if df.empty:
+        return df
+    if start_column not in df and end_column not in df:
+        logging.warning(
+            "Cannot unroll on non-existing columns {} and {}".format(
+                start_column, end_column
+            )
+        )
+        return df
     start_eq_end_bools = df[start_column] == df[end_column]
     unrolled = df[start_eq_end_bools]
     list_unrolled = []

@@ -46,10 +46,17 @@ def deck2df(deck, startdate=None, welspecs=True):
     else:
         date = None
     dflist = []  # list of list of rows.
-    currentedges = dict()  # Indexed by tuple of two strings. Value is type.
+
+    # In order for the GRUPTREE keywords to accumulate, we
+    # store the edges as a dictionary indexed by the edge
+    # (which is a tuple of child and parent).
+    # The value of the dictionary is GRUPTREE or WELSPECS
+    currentedges = dict()
+
     found_gruptree = False  # Flags which will tell when a new GRUPTREE or
     found_welspecs = False  # WELSPECS have been encountered.
     for kw in deck:
+
         if kw.name == "DATES" or kw.name == "START":
             if len(currentedges) and (found_gruptree or found_welspecs):
                 if date is None:

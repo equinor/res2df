@@ -22,6 +22,11 @@ from .common import parse_ecl_month
 
 
 def gruptree2df(deck, startdate=None, welspecs=True):
+    logging.warning("Deprecated function name, gruptree2df")
+    return deck2df(deck, startdate, welspecs)
+
+
+def deck2df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.
 
@@ -48,7 +53,9 @@ def gruptree2df(deck, startdate=None, welspecs=True):
         if kw.name == "DATES" or kw.name == "START":
             if len(currentedges) and (found_gruptree or found_welspecs):
                 if date is None:
-                    logger.warning("WARNING: No date parsed, maybe you should pass --startdate")
+                    logger.warning(
+                        "WARNING: No date parsed, maybe you should pass --startdate"
+                    )
                     logger.warning("         Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
@@ -198,7 +205,7 @@ def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
     eclfiles = EclFiles(args.DATAFILE)
-    df = gruptree2df(eclfiles.get_ecldeck(), startdate=args.startdate)
+    df = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
         for date in df["DATE"].dropna().unique():
             print("Date: " + str(date.astype("M8[D]")))

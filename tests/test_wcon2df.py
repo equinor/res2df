@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_wcon2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    wcondf = wcon2df.deck2wcondf(eclfiles.get_ecldeck())
+    wcondf = wcon2df.deck2df(eclfiles.get_ecldeck())
 
     assert not wcondf.empty
     assert "DATE" in wcondf  # for all data
@@ -36,7 +36,7 @@ WCONHIST
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon2df.deck2wcondf(deck)
+    wcondf = wcon2df.deck2df(deck)
     assert len(wcondf) == 1
 
     wconstr = """
@@ -45,7 +45,7 @@ WCONINJH
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon2df.deck2wcondf(deck)
+    wcondf = wcon2df.deck2df(deck)
     assert len(wcondf) == 1
 
     wconstr = """
@@ -54,7 +54,7 @@ WCONINJE
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon2df.deck2wcondf(deck)
+    wcondf = wcon2df.deck2df(deck)
     assert len(wcondf) == 1
 
     wconstr = """
@@ -63,10 +63,8 @@ WCONPROD
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon2df.deck2wcondf(deck)
+    wcondf = wcon2df.deck2df(deck)
     assert len(wcondf) == 1
-
-
 
 
 def test_main():
@@ -78,4 +76,4 @@ def test_main():
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
-    #os.remove(tmpcsvfile)
+    # os.remove(tmpcsvfile)

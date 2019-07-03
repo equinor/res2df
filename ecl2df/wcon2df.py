@@ -17,7 +17,6 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
 
-
 # The record keys are all taken from the OPM source code:
 # https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WCONHIST etc.
 
@@ -100,6 +99,11 @@ COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
 
 
 def deck2wcondf(deck):
+    logging.warning("Deprecated function name, deck2wcondf")
+    return deck2df(deck)
+
+
+def deck2df(deck):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
@@ -157,6 +161,6 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    wcon_df = deck2wcondf(deck)
+    wcon_df = deck2df(deck)
     wcon_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_equil2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    equildf = equil2df.deck2equildf(eclfiles.get_ecldeck())
+    equildf = equil2df.deck2df(eclfiles.get_ecldeck())
 
     assert not equildf.empty
 
@@ -35,7 +35,7 @@ EQUIL
  2000 200 2200 /
 """
     deck = EclFiles.str2deck(deckstr)
-    df = equil2df.deck2equildf(deck)
+    df = equil2df.deck2df(deck)
     assert df["OWC"].values == 2200
     assert len(df) == 1
     assert "IGNORE1" not in df
@@ -48,7 +48,7 @@ EQUIL
  2000 200 2200 /
 """
     deck = EclFiles.str2deck(deckstr)
-    df = equil2df.deck2equildf(deck)
+    df = equil2df.deck2df(deck)
     assert df["OWC"].values == 2200
     assert len(df) == 1
     assert "IGNORE1" not in df
@@ -61,7 +61,7 @@ EQUIL
  2000 200 2200 /
 """
     deck = EclFiles.str2deck(deckstr)
-    df = equil2df.deck2equildf(deck)
+    df = equil2df.deck2df(deck)
     assert df["GWC"].values == 2200
     assert "OWC" not in df
     assert len(df) == 1
@@ -75,7 +75,7 @@ EQUIL
  2000 200 2200 1 2100 3 /
 """
     deck = EclFiles.str2deck(deckstr)
-    df = equil2df.deck2equildf(deck)
+    df = equil2df.deck2df(deck)
     assert df["GOC"].values == 2100
     assert "GWC" not in df
     assert "OWC" not in df

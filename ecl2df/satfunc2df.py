@@ -28,6 +28,11 @@ KEYWORD_COLUMNS = {
 
 
 def deck2satfuncdf(deck):
+    logging.warning("Deprecated function name, deck2satfuncdf")
+    return deck2df(deck)
+
+
+def deck2df(deck):
     """Extract the data in the saturation function keywords as a Pandas
     DataFrame.
 
@@ -86,6 +91,6 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    satfunc_df = deck2satfuncdf(deck)
+    satfunc_df = deck2df(deck)
     satfunc_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

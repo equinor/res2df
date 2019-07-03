@@ -16,6 +16,11 @@ from .eclfiles import EclFiles
 
 
 def deck2equildf(deck):
+    logging.warning("Deprecated function name, deck2equildf")
+    return deck2df(deck)
+
+
+def deck2df(deck):
     """Extract the data in the EQUIL keyword as a Pandas
     DataFrame.
 
@@ -94,8 +99,7 @@ def deck2equildf(deck):
         if len(rowlist) > len(columnnames):
             rowlist = rowlist[: len(columnnames)]
             logger.warning(
-                "Something wrong with columnnames "
-                + "or EQUIL-data, data is chopped!"
+                "Something wrong with columnnames " + "or EQUIL-data, data is chopped!"
             )
         records.append(rowlist)
 
@@ -125,6 +129,6 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    equil_df = deck2equildf(deck)
+    equil_df = deck2df(deck)
     equil_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

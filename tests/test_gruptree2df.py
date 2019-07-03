@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_gruptree2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    grupdf = gruptree2df.gruptree2df(eclfiles.get_ecldeck())
+    grupdf = gruptree2df.deck2df(eclfiles.get_ecldeck())
 
     assert not grupdf.empty
     assert len(grupdf["DATE"].unique()) == 5
@@ -28,7 +28,7 @@ def test_gruptree2df():
     assert len(grupdf["PARENT"].unique()) == 3
     assert set(grupdf["TYPE"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
-    grupdfnowells = gruptree2df.gruptree2df(eclfiles.get_ecldeck(), welspecs=False)
+    grupdfnowells = gruptree2df.deck2df(eclfiles.get_ecldeck(), welspecs=False)
 
     assert len(grupdfnowells["TYPE"].unique()) == 1
     assert grupdf["PARENT"].unique()[0] == "FIELD"
@@ -50,7 +50,7 @@ WELSPECS
 
 """
     deck = EclFiles.str2deck(schstr)
-    grupdf = gruptree2df.gruptree2df(deck)
+    grupdf = gruptree2df.deck2df(deck)
     assert grupdf.dropna().empty  # the DATE is empty
 
     withstart = gruptree2df.gruptree2df(deck, startdate="2019-01-01")

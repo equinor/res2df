@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_faults2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    faultsdf = faults2df.deck2faultsdf(eclfiles.get_ecldeck())
+    faultsdf = faults2df.deck2df(eclfiles.get_ecldeck())
 
     assert "NAME" in faultsdf
     assert "I" in faultsdf
@@ -39,7 +39,7 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults2df.deck2faultsdf(deck)
+    faultsdf = faults2df.deck2df(deck)
 
     assert len(faultsdf) == 16
 
@@ -56,7 +56,7 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults2df.deck2faultsdf(deck).set_index("NAME")
+    faultsdf = faults2df.deck2df(deck).set_index("NAME")
 
     assert len(faultsdf) == 23
     assert len(faultsdf.loc[["D"]]) == 1  # Pass lists to .loc for single row

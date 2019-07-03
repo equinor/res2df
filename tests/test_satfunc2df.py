@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_satfunc2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    satdf = satfunc2df.deck2satfuncdf(eclfiles.get_ecldeck())
+    satdf = satfunc2df.deck2df(eclfiles.get_ecldeck())
 
     assert not satdf.empty
     assert "KEYWORD" in satdf  # for all data
@@ -44,7 +44,7 @@ SWOF
  /
 """
     deck = EclFiles.str2deck(swofstr)
-    satdf = satfunc2df.deck2satfuncdf(deck)
+    satdf = satfunc2df.deck2df(deck)
     assert len(satdf) == 2
 
 

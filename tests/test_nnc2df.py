@@ -36,7 +36,7 @@ def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
     eclfiles = EclFiles(DATAFILE)
     nncdf = nnc2df.nnc2df(eclfiles)
-    faultsdf = faults2df.deck2faultsdf(eclfiles.get_ecldeck())
+    faultsdf = faults2df.deck2df(eclfiles.get_ecldeck())
 
     merged = pd.merge(
         nncdf,

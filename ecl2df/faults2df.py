@@ -9,6 +9,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import logging
 import argparse
 import pandas as pd
 
@@ -20,6 +21,11 @@ ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-
 
 
 def deck2faultsdf(deck):
+    logging.warning("Deprecated function name deck2faultsdf")
+    return deck2df(deck)
+
+
+def deck2df(deck):
     # In[91]: list(deck['FAULTS'][0])
     # Out[91]: [[u'F1'], [36], [36], [41], [42], [1], [14], [u'I']]
     data = []
@@ -59,6 +65,6 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    faults_df = deck2faultsdf(deck)
+    faults_df = deck2df(deck)
     faults_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

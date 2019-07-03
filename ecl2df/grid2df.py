@@ -115,6 +115,8 @@ def rst2df(eclfiles, date, dateinheaders=False):
     # data for:
     (rstindices, chosendates) = dates2rstindices(eclfiles, date)
 
+    logging.info("Extracting restart information at dates {}".format(str(chosendates)))
+
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
     # for all active cells:
@@ -136,6 +138,7 @@ def rst2df(eclfiles, date, dateinheaders=False):
                 present_rstvectors.append(vec)
 
         if not present_rstvectors:
+            logging.warning("No restart vectors available at index {}".format(rstindex))
             continue
 
         # Make the dataframe
@@ -186,6 +189,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
+    logging.info("Extracting grid geometry from {}".format(egrid_file))
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 
@@ -222,6 +226,7 @@ def init2df(init, active_cells, vectors=None):
         vectors = "*"  # This will include everything
     if not isinstance(vectors, list):
         vectors = [vectors]
+    logging.info("Extracting vectors {} from INIT file".format(str(vectors)))
 
     # Build list of vector names to include:
     usevectors = []
@@ -310,6 +315,8 @@ def dropconstants(df, alwayskeep=None):
     for col in set(df.columns) - set(alwayskeep):
         if len(df[col].unique()) == 1:
             columnstodelete.append(col)
+    if columnstodelete:
+        logging.info("Deleting constant columns {}".format(str(columnstodelete)))
     return df.drop(columnstodelete, axis=1)
 
 

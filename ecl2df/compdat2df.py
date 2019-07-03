@@ -17,20 +17,47 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
 
-def unrollcompdatdf(df):
-    """COMPDAT to Eclipse support K1, K2 intervals for multiple cells
+def unrollcompdatdf(df, start_column="K1", end_column="K2"):
+    """Unroll dataframes, where some column pairs indicate
+    a range where data applies.
 
-    This is unwanted when exported to file, unroll these intervals
-    into multiple rows where K1 == K2 (duplicating the rest of the data)
+    After unrolling, column pairs with ranges are transformed
+    into multiple rows, with no ranges.
+
+    Example: COMPDAT supports K1, K2 intervals for multiple cells,
+
+    COMPDAT
+      'OP1' 33 44 10 11 /
+    /
+
+    is transformed/unrolled so it would be equal to
+
+    COMPDAT
+      'OP1' 33 44 10 10 /
+      'OP1' 33 44 11 11 /
+    /
+
+    The latter is easier to work with in Pandas dataframes
+
+    Args:
+        df (pd.DataFrame): Dataframe to be unrolled
+        start_column (str): Column name that contains the start of
+            a range.
+        end_column (str): Column name that contains the corresponding
+            end of the range.
+
+    Returns:
+        pd.Dataframe: Unrolled version. Identical to input if none of
+            rows had any ranges.
     """
-    k1eqk2bools = df["K1"] == df["K2"]
+    k1eqk2bools = df[start_column] == df[end_column]
     unrolled = df[k1eqk2bools]
     list_unrolled = []
     if (~k1eqk2bools).any():
         for _, rangerow in df[~k1eqk2bools].iterrows():
-            for k in range(int(rangerow["K1"]), int(rangerow["K2"]) + 1):
-                rangerow["K1"] = k
-                rangerow["K2"] = k
+            for k in range(int(rangerow[start_column]), int(rangerow[end_column]) + 1):
+                rangerow[start_column] = k
+                rangerow[end_column] = k
                 list_unrolled.append(rangerow.copy())
     if list_unrolled:
         unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)

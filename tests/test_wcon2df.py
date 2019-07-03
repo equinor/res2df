@@ -66,6 +66,38 @@ WCONPROD
     wcondf = wcon2df.deck2df(deck)
     assert len(wcondf) == 1
 
+def test_tstep():
+    schstr = """
+DATES
+   1 MAY 2001 /
+/
+
+WCONHIST
+ 'OP1' 1000  /
+/
+
+TSTEP
+  1 /
+
+WCONHIST
+ 'OP1' 2000 /
+/
+
+TSTEP
+  2 3 /
+
+WCONHIST
+  'OP1' 3000 /
+/
+"""
+    deck = EclFiles.str2deck(schstr)
+    wcondf = wcon2df.deck2df(deck)
+    dates = [str(x) for x in wcondf["DATE"].unique()]
+    assert len(dates) == 3
+    assert "2001-05-01" in dates
+    assert "2001-05-02" in dates
+    assert "2001-05-07" in dates
+
 
 def test_main():
     """Test command line interface"""

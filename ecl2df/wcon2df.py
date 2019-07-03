@@ -121,6 +121,18 @@ def deck2df(deck):
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
                 logging.info("Parsing at date " + str(date))
+        elif kw.name == "TSTEP":
+            if not date:
+                logging.critical("Can't use TSTEP when there is no start_date")
+                return
+            for rec in kw:
+                steplist = rec[0]
+                # Assuming not LAB units, then the unit is days.
+                days = sum(steplist)
+                date += datetime.timedelta(days=days)
+                logging.info(
+                    "Advancing {} days to {} through TSTEP".format(str(days), str(date))
+                )
         elif kw.name in RECORD_KEYS:
             for rec in kw:  # Loop over the lines inside WCON* record
                 rec_data = {}

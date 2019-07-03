@@ -257,12 +257,15 @@ def parse_args():
         help="Name of output csv file. Use '-' to write to stdout. Default 'summary.csv'",
         default="summary.csv",
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser.parse_args()
 
 
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     sum_df = smry2df(eclfiles, time_index=args.time_index, column_keys=args.column_keys)
     if args.output == "-":

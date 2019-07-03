@@ -81,6 +81,7 @@ def parse_args():
     parser.add_argument(
         "-o", "--output", type=str, help="name of output csv file.", default="nnc.csv"
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     # args.add_argument("--augment", action='store_true',
     #    (TODO)       help="Add extra data for the cells in the cell pair")
     return parser.parse_args()
@@ -89,6 +90,8 @@ def parse_args():
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = nnc2df(eclfiles)
     nncdf.to_csv(args.output, index=False)

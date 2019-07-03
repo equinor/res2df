@@ -329,12 +329,15 @@ def parse_args():
         help="Name of output csv file.",
         default="compdat.csv",
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser.parse_args()
 
 
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()

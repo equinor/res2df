@@ -234,12 +234,15 @@ def parse_args():
         help="First schedule date if not defined in input file, YYYY-MM-DD",
         default=None,
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser.parse_args()
 
 
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     df = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:

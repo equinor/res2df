@@ -270,12 +270,15 @@ def parse_args():
     parser.add_argument(
         "-o", "--output", type=str, help="name of output csv file.", default="rft.csv"
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser.parse_args()
 
 
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     rft_df = rft2df(eclfiles)
     rft_df.to_csv(args.output, index=False)

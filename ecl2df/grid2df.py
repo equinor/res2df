@@ -287,6 +287,7 @@ def parse_args():
         action="store_true",
         help="Drop constant columns from the dataset",
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser.parse_args()
 
 
@@ -323,6 +324,8 @@ def dropconstants(df, alwayskeep=None):
 def main():
     """Entry-point for module, for command line utility"""
     args = parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     gridgeom = gridgeometry2df(eclfiles)
     initdf = init2df(

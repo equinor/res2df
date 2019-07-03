@@ -120,6 +120,24 @@ COMPDAT
     assert (df["K1"].values == range(10, 20 + 1)).all()
     assert (df["K2"].values == range(10, 20 + 1)).all()
 
+    # Check that we can read withoug unrolling:
+    df_noroll = compdat2df.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["COMPDAT"]
+    assert len(df_noroll) == 1
+
+def test_unrollwelsegs():
+    schstr = """
+WELSEGS
+  -- seg_start to seg_end (two first items in second record) is a range of
+  -- 2 segments, should be automatically unrolled to 2 rows.
+  'OP1' 1689 1923 1.0E-5 'ABS' 'HFA' 'HO' / comment without -- identifier
+   2 3 1 1 1923.9 1689.000 0.1172 0.000015  /
+/
+"""
+    df = compdat2df.deck2dfs(EclFiles.str2deck(schstr))["WELSEGS"]
+    assert len(df) == 2
+
+    df = compdat2df.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["WELSEGS"]
+    assert len(df) == 1
 
 def test_main():
     """Test command line interface"""

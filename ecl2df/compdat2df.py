@@ -248,13 +248,16 @@ def deck2dfs(deck, start_date=None, unroll=True):
             logging.warning("Possible premature stop at first TSTEP")
             break
 
-    if unroll:
-        compdat_df = unrolldf(pd.DataFrame(compdatrecords), "K1", "K2")
-    else:
-        compdat_df = unrolldf(compdat_df)
+    compdat_df = pd.DataFrame(compdatrecords)
+
+    if unroll and len(compdat_df):
+        compdat_df = unrolldf(compdat_df, "K1", "K2")
 
     compsegs_df = pd.DataFrame(compsegsrecords)
+
     welsegs_df = pd.DataFrame(welsegsrecords)
+    if unroll and len(welsegs_df):
+        welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
 
     return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df)
 

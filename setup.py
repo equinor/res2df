@@ -13,7 +13,6 @@ setup(
     license="GPLv3",
     packages=["ecl2df"],
     setup_requires=["pytest-runner"],
-    test_requirements=["pytest"],
     zip_safe=False,
     entry_points={
         "console_scripts": [

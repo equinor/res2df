@@ -140,7 +140,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
                 logging.info("Parsing at date " + str(date))
-        if kw.name == "TSTEP":
+        elif kw.name == "TSTEP":
             if not date:
                 logging.critical("Can't use TSTEP when there is no start_date")
                 return

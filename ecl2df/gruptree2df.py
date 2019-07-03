@@ -57,24 +57,53 @@ def deck2df(deck, startdate=None, welspecs=True):
     found_welspecs = False  # WELSPECS have been encountered.
     for kw in deck:
 
-        if kw.name == "DATES" or kw.name == "START":
+        if kw.name == "DATES" or kw.name == "START" or kw.name == "TSTEP":
+            # Whenever we encounter a new DATES, it means that
+            # we have processed all the GRUPTREE and WELSPECS that
+            # have occured since the last date, so this is the chance
+            # to dump the parsed data. Also we dump the *entire* tree
+            # at every date with a change, not only the newfound edges.
             if len(currentedges) and (found_gruptree or found_welspecs):
                 if date is None:
-                    logger.warning(
+                    logging.warning(
                         "WARNING: No date parsed, maybe you should pass --startdate"
                     )
-                    logger.warning("         Using 1900-01-01")
+                    logging.warning("         Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
                 for edgename, value in currentedges.items():
                     dflist.append([date, edgename[0], edgename[1], value])
                 found_gruptree = False
                 found_welspecs = False
-            for rec in kw:
-                day = rec["DAY"][0]
-                month = rec["MONTH"][0]
-                year = rec["YEAR"][0]
-                date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
+            # Done dumping the data for the previous date, parse the fresh
+            # date:
+            if kw.name == "DATES" or kw.name == "START":
+                for rec in kw:
+                    day = rec["DAY"][0]
+                    month = rec["MONTH"][0]
+                    year = rec["YEAR"][0]
+                    date = datetime.date(
+                        year=year, month=parse_ecl_month(month), day=day
+                    )
+            elif kw.name == "TSTEP":
+                for rec in kw:
+                    steplist = rec[0]
+                    # Assuming not LAB units, then the unit is days.
+                    days = sum(steplist)
+                    if days <= 0:
+                        logging.critical(
+                            "Invalid TSTEP, summed to {} days".format(str(days))
+                        )
+                        return
+                    date += datetime.timedelta(days=days)
+                    logging.info(
+                        "Advancing {} days to {} through TSTEP".format(
+                            str(days), str(date)
+                        )
+                    )
+            else:
+                logging.critical("BUG: Should not get here")
+                return
         if kw.name == "GRUPTREE":
             found_gruptree = True
             for edgerec in kw:

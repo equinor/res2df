@@ -58,6 +58,29 @@ WELSPECS
     assert len(withstart) == 5
 
 
+def test_tstep():
+    schstr = """
+GRUPTREE
+ 'OPWEST' 'OP' /
+ 'OP' 'FIELD' /
+ 'FIELD' 'AREA' /
+ 'AREA' 'NORTHSEA' /
+/
+
+TSTEP
+  1 /
+
+WELSPECS
+ 'OP1' 'OPWEST' 41 125 1759.74 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+/
+
+"""
+    deck = EclFiles.str2deck(schstr)
+    grupdf = gruptree2df.deck2df(deck)
+    assert len(grupdf["DATE"].unique()) == 2
+    print(grupdf)
+
+
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-gruptree.csv"

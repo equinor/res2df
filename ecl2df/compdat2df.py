@@ -124,20 +124,27 @@ def sunbeam2rmsterm(reckey):
     return thedict.get(reckey, reckey)
 
 
-def deck2compdatsegsdfs(deck):
+def deck2compdatsegsdfs(deck, start_date=None):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
 
-    Return:
-        dict with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.
+    Args:
+        deck (sunbeam.libsunbeam.Deck): A deck representing the schedule
+            Does not have to be a full Eclipse deck, an include file is sufficient
+        start_date (datetime.date or str): The default date to use for
+            events where the DATE or START keyword is not found in advance.
+            Default: None
+
+    Returns:
+        Dictionary with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.
 
     TODO: Support TSTEP
     """
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
     welsegsrecords = []
-    date = None  # DATE columns will always be there, but can contain NaN
+    date = start_date  # DATE column will always be there, but can contain NaN/None
     for kw in deck:
         if kw.name == "DATES" or kw.name == "START":
             for rec in kw:

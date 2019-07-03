@@ -96,6 +96,18 @@ WSEGVALV
     assert compsegs["WELL"].unique()[0] == "OP1"
     assert len(compsegs.iloc[0]) == 9
 
+    # Check date handling
+    assert "DATE" in compdat
+    assert not all(compdat["DATE"].notna())
+    compdat_date = compdat2df.deck2compdatsegsdfs(deck, start_date="2000-01-01")[
+        "COMPDAT"
+    ]
+    assert "DATE" in compdat_date
+    assert all(compdat_date["DATE"].notna())
+    assert len(compdat_date["DATE"].unique()) == 1
+    assert str(compdat_date["DATE"].unique()[0]) == "2000-01-01"
+
+
 def test_unrollcompdatk1k2():
     schstr = """
 COMPDAT

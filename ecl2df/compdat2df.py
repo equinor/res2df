@@ -17,62 +17,6 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
 
-def unrolldf(df, start_column="K1", end_column="K2"):
-    """Unroll dataframes, where some column pairs indicate
-    a range where data applies.
-
-    After unrolling, column pairs with ranges are transformed
-    into multiple rows, with no ranges.
-
-    Example: COMPDAT supports K1, K2 intervals for multiple cells,
-
-    COMPDAT
-      'OP1' 33 44 10 11 /
-    /
-
-    is transformed/unrolled so it would be equal to
-
-    COMPDAT
-      'OP1' 33 44 10 10 /
-      'OP1' 33 44 11 11 /
-    /
-
-    The latter is easier to work with in Pandas dataframes
-
-    Args:
-        df (pd.DataFrame): Dataframe to be unrolled
-        start_column (str): Column name that contains the start of
-            a range.
-        end_column (str): Column name that contains the corresponding
-            end of the range.
-
-    Returns:
-        pd.Dataframe: Unrolled version. Identical to input if none of
-            rows had any ranges.
-    """
-    if df.empty:
-        return df
-    if start_column not in df and end_column not in df:
-        logging.warning(
-            "Cannot unroll on non-existing columns {} and {}".format(
-                start_column, end_column
-            )
-        )
-        return df
-    start_eq_end_bools = df[start_column] == df[end_column]
-    unrolled = df[start_eq_end_bools]
-    list_unrolled = []
-    if (~start_eq_end_bools).any():
-        for _, rangerow in df[~start_eq_end_bools].iterrows():
-            for k in range(int(rangerow[start_column]), int(rangerow[end_column]) + 1):
-                rangerow[start_column] = k
-                rangerow[end_column] = k
-                list_unrolled.append(rangerow.copy())
-    if list_unrolled:
-        unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)
-    return unrolled
-
-
 # Sunbeam terms:
 COMPDATKEYS = [
     "WELL",
@@ -306,6 +250,62 @@ def postprocess():
     alldata_icd = pd.merge(
         compdatsegwel_icd_df, welsegs_df, on=["date", "well", "segment"]
     )
+
+
+def unrolldf(df, start_column="K1", end_column="K2"):
+    """Unroll dataframes, where some column pairs indicate
+    a range where data applies.
+
+    After unrolling, column pairs with ranges are transformed
+    into multiple rows, with no ranges.
+
+    Example: COMPDAT supports K1, K2 intervals for multiple cells,
+
+    COMPDAT
+      'OP1' 33 44 10 11 /
+    /
+
+    is transformed/unrolled so it would be equal to
+
+    COMPDAT
+      'OP1' 33 44 10 10 /
+      'OP1' 33 44 11 11 /
+    /
+
+    The latter is easier to work with in Pandas dataframes
+
+    Args:
+        df (pd.DataFrame): Dataframe to be unrolled
+        start_column (str): Column name that contains the start of
+            a range.
+        end_column (str): Column name that contains the corresponding
+            end of the range.
+
+    Returns:
+        pd.Dataframe: Unrolled version. Identical to input if none of
+            rows had any ranges.
+    """
+    if df.empty:
+        return df
+    if start_column not in df and end_column not in df:
+        logging.warning(
+            "Cannot unroll on non-existing columns {} and {}".format(
+                start_column, end_column
+            )
+        )
+        return df
+    start_eq_end_bools = df[start_column] == df[end_column]
+    unrolled = df[start_eq_end_bools]
+    list_unrolled = []
+    if (~start_eq_end_bools).any():
+        for _, rangerow in df[~start_eq_end_bools].iterrows():
+            for k in range(int(rangerow[start_column]), int(rangerow[end_column]) + 1):
+                rangerow[start_column] = k
+                rangerow[end_column] = k
+                list_unrolled.append(rangerow.copy())
+    if list_unrolled:
+        unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)
+    return unrolled
 
 
 def parse_args():

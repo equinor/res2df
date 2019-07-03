@@ -79,7 +79,7 @@ def sunbeam2rmsterm(reckey):
     """Sunbeam authors and Roxar RMS authors have interpreted the Eclipse
     documentation ever so slightly different when naming the data.
 
-    For Dataframe columnnames, we prefer the RMS terms due to the
+    For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
     one very long one, and mixed-case in sunbeam
 
     Returns:
@@ -127,8 +127,6 @@ def deck2dfs(deck, start_date=None, unroll=True):
 
     Returns:
         Dictionary with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.
-
-    TODO: Support TSTEP
     """
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
@@ -142,6 +140,18 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
                 logging.info("Parsing at date " + str(date))
+        if kw.name == "TSTEP":
+            if not date:
+                logging.critical("Can't use TSTEP when there is no start_date")
+                return
+            for rec in kw:
+                steplist = rec[0]
+                # Assuming not LAB units, then the unit is days.
+                days = sum(steplist)
+                date += datetime.timedelta(days=days)
+                logging.info(
+                    "Advancing {} days to {} through TSTEP".format(str(days), str(date))
+                )
         elif kw.name == "COMPDAT":
             for rec in kw:  # Loop over the lines inside COMPDAT record
                 rec_data = {}

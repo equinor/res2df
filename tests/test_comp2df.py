@@ -106,6 +106,39 @@ WSEGVALV
     assert str(compdat_date["DATE"].unique()[0]) == "2000-01-01"
 
 
+def test_tstep():
+    schstr = """
+DATES
+   1 MAY 2001 /
+/
+
+COMPDAT
+ 'OP1' 33 110 31 31 'OPEN'  /
+/
+
+TSTEP
+  1 /
+
+COMPDAT
+ 'OP1' 34 111 32 32 'OPEN' /
+/
+
+TSTEP
+  2 3 /
+
+COMPDAT
+  'OP1' 35 111 33 33 'SHUT' /
+/
+"""
+    deck = EclFiles.str2deck(schstr)
+    compdf = compdat2df.deck2dfs(deck)["COMPDAT"]
+    dates = [str(x) for x in compdf["DATE"].unique()]
+    assert len(dates) == 3
+    assert "2001-05-01" in dates
+    assert "2001-05-02" in dates
+    assert "2001-05-07" in dates
+
+
 def test_unrollcompdatk1k2():
     schstr = """
 COMPDAT

@@ -17,7 +17,7 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
 
-def unrollcompdatdf(df, start_column="K1", end_column="K2"):
+def unrolldf(df, start_column="K1", end_column="K2"):
     """Unroll dataframes, where some column pairs indicate
     a range where data applies.
 
@@ -50,11 +50,11 @@ def unrollcompdatdf(df, start_column="K1", end_column="K2"):
         pd.Dataframe: Unrolled version. Identical to input if none of
             rows had any ranges.
     """
-    k1eqk2bools = df[start_column] == df[end_column]
-    unrolled = df[k1eqk2bools]
+    start_eq_end_bools = df[start_column] == df[end_column]
+    unrolled = df[start_eq_end_bools]
     list_unrolled = []
-    if (~k1eqk2bools).any():
-        for _, rangerow in df[~k1eqk2bools].iterrows():
+    if (~start_eq_end_bools).any():
+        for _, rangerow in df[~start_eq_end_bools].iterrows():
             for k in range(int(rangerow[start_column]), int(rangerow[end_column]) + 1):
                 rangerow[start_column] = k
                 rangerow[end_column] = k
@@ -242,7 +242,7 @@ def deck2compdatsegsdfs(deck, start_date=None):
             break
 
     compdat_df = pd.DataFrame(compdatrecords)
-    compdat_df = unrollcompdatdf(compdat_df)
+    compdat_df = unrolldf(compdat_df)
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
 
@@ -310,5 +310,5 @@ def main():
     dfs["COMPDAT"].to_csv("compdat.csv", index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
-    unrollcompdatdf(dfs["COMPDAT"]).to_csv(args.output, index=False)
+    unrolldf(dfs["COMPDAT"]).to_csv(args.output, index=False)
     print("Wrote to " + args.output)

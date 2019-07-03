@@ -21,7 +21,7 @@ SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_histo
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    compdfs = compdat2df.deck2compdatsegsdfs(eclfiles.get_ecldeck())
+    compdfs = compdat2df.deck2dfs(eclfiles.get_ecldeck())
 
     assert not compdfs["COMPDAT"].empty
     assert compdfs["WELSEGS"].empty  # REEK demo does not include multisegment wells
@@ -32,7 +32,7 @@ def test_comp2df():
 def test_schfile2df():
     """Test that we can process individual files"""
     deck = EclFiles.file2deck(SCHFILE)
-    compdfs = compdat2df.deck2compdatsegsdfs(deck)
+    compdfs = compdat2df.deck2dfs(deck)
     assert len(compdfs["COMPDAT"].columns)
     assert not compdfs["COMPDAT"].empty
 
@@ -65,7 +65,7 @@ WSEGVALV
 /
 """
     deck = EclFiles.str2deck(schstr)
-    compdfs = compdat2df.deck2compdatsegsdfs(deck)
+    compdfs = compdat2df.deck2dfs(deck)
     compdat = compdfs["COMPDAT"]
     welsegs = compdfs["WELSEGS"]
     compsegs = compdfs["COMPSEGS"]
@@ -99,9 +99,7 @@ WSEGVALV
     # Check date handling
     assert "DATE" in compdat
     assert not all(compdat["DATE"].notna())
-    compdat_date = compdat2df.deck2compdatsegsdfs(deck, start_date="2000-01-01")[
-        "COMPDAT"
-    ]
+    compdat_date = compdat2df.deck2dfs(deck, start_date="2000-01-01")["COMPDAT"]
     assert "DATE" in compdat_date
     assert all(compdat_date["DATE"].notna())
     assert len(compdat_date["DATE"].unique()) == 1
@@ -116,7 +114,7 @@ COMPDAT
   'OP1' 33 44 10 20  /
 /
 """
-    df = compdat2df.deck2compdatsegsdfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    df = compdat2df.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
     assert df["I"].unique() == 33
     assert df["J"].unique() == 44
     assert (df["K1"].values == range(10, 20 + 1)).all()

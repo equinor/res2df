@@ -154,6 +154,11 @@ def sunbeam2rmsterm(reckey):
 
 
 def deck2compdatsegsdfs(deck, start_date=None):
+    logging.warning("Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()")
+    return deck2dfs(deck, start_date)
+
+
+def deck2dfs(deck, start_date=None):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
@@ -306,7 +311,7 @@ def main():
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    dfs = deck2compdatsegsdfs(deck)
+    dfs = deck2dfs(deck)
     dfs["COMPDAT"].to_csv("compdat.csv", index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)

@@ -71,9 +71,12 @@ def nnc2df(eclfiles):
 # Remaining functions are for the command line interface
 
 
-def parse_args():
-    """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser()
+def fill_parser(parser):
+    """Set up sys.argv parser
+
+    Arguments:
+        parser: argparse.ArgumentParser or argparse.subparser
+    """
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
@@ -84,12 +87,22 @@ def parse_args():
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     # args.add_argument("--augment", action='store_true',
     #    (TODO)       help="Add extra data for the cells in the cell pair")
-    return parser.parse_args()
+    return parser
 
 
 def main():
-    """Entry-point for module, for command line utility"""
-    args = parse_args()
+    """Entry-point for module, for command line utility
+    
+    It may become deprecated to have a main() function
+    and command line utility for each module in ecl2df
+    """
+    parser = argparse.ArgumentParser()
+    fill_parser(parser)
+    args = parser.parse_args()
+    nnc2df_main(args)
+
+
+def nnc2df_main(args):
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

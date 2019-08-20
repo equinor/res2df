@@ -13,6 +13,7 @@ import pandas as pd
 import pytest
 
 from ecl2df import grid2df
+from ecl2df import ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -132,9 +133,10 @@ def test_main():
     assert not disk_df.empty
     os.remove(tmpcsvfile)
 
-    # Do again with also restarts:
+    # Do again with also restarts, and using subparsers:
     sys.argv = [
-        "eclgrid2csv",
+        "ecl2csv",
+        "grid",
         DATAFILE,
         "-o",
         tmpcsvfile,
@@ -143,7 +145,7 @@ def test_main():
         "--init",
         "PORO",
     ]
-    grid2df.main()
+    ecl2csv.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty

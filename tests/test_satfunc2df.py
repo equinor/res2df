@@ -49,6 +49,13 @@ SWOF
 
 
     swofstr2 = """
+-- RUNSPEC -- (this line is optional)
+
+TABDIMS
+  2 /
+
+-- PROPS -- (optional)
+
 SWOF
  0 0 1 1
  1 1 0 0
@@ -60,10 +67,9 @@ SWOF
 """
     deck2 = EclFiles.str2deck(swofstr2)
     satdf2 = satfunc2df.deck2df(deck2)
-    print(satdf2)
     assert 'SATNUM' in satdf
-    assert len(satdf['SATNUM'].unique()) == 2
-    assert len(satdf) == 2
+    assert len(satdf2['SATNUM'].unique()) == 2
+    assert len(satdf2) == 5
 
 
 def test_main():

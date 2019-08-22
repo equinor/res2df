@@ -11,7 +11,7 @@ from __future__ import division
 
 import argparse
 
-from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df
+from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df, rft2df
 
 
 def main():
@@ -31,6 +31,10 @@ def main():
     faults_parser = subparsers.add_parser("faults", help="Extract faults data")
     faults2df.fill_parser(faults_parser)
     faults_parser.set_defaults(func=faults2df.faults2df_main)
+
+    rft_parser = subparsers.add_parser("rft", help="Extract RFT data")
+    rft2df.fill_parser(rft_parser)
+    rft_parser.set_defaults(func=rft2df.rft2df_main)
 
     # Eclipse input files:
     equil_parser = subparsers.add_parser("equil", help="Extract EQUIL data")

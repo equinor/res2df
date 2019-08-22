@@ -92,7 +92,7 @@ def fill_parser(parser):
 
 def main():
     """Entry-point for module, for command line utility
-    
+
     It may become deprecated to have a main() function
     and command line utility for each module in ecl2df
     """

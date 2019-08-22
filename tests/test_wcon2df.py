@@ -112,7 +112,7 @@ def test_main():
     # os.remove(tmpcsvfile)
 
 
-def test_main():
+def test_main_subparsers():
     """Test command line interface"""
     tmpcsvfile = ".TMP-wcondf.csv"
     sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", tmpcsvfile]

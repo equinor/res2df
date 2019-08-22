@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import equil2df
+from ecl2df import equil2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -88,6 +88,18 @@ def test_main():
     tmpcsvfile = ".TMP-equil.csv"
     sys.argv = ["equil2csv", DATAFILE, "-o", tmpcsvfile]
     equil2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+
+def test_main_subparser():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-equil.csv"
+    sys.argv = ["ecl2csv", "equil", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

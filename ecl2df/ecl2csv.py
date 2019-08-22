@@ -11,7 +11,7 @@ from __future__ import division
 
 import argparse
 
-from ecl2df import grid2df, nnc2df, faults2df
+from ecl2df import grid2df, nnc2df, faults2df, equil2df
 
 
 def main():
@@ -30,6 +30,11 @@ def main():
     faults_parser = subparsers.add_parser("faults", help="Extract faults data")
     faults2df.fill_parser(faults_parser)
     faults_parser.set_defaults(func=faults2df.faults2df_main)
+
+    equil_parser = subparsers.add_parser("equil", help="Extract EQUIL data")
+    equil2df.fill_parser(equil_parser)
+    equil_parser.set_defaults(func=equil2df.equil2df_main)
+
 
     args = parser.parse_args()
     args.func(args)

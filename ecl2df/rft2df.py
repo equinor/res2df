@@ -279,6 +279,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
+    logging.warning("rft2csv is deprecated, use 'ecl2csv rft <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()

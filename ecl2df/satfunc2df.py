@@ -92,6 +92,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
+    logging.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()

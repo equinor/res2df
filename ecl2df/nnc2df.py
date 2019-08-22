@@ -96,6 +96,7 @@ def main():
     It may become deprecated to have a main() function
     and command line utility for each module in ecl2df
     """
+    logging.warning("nnc2csv is deprecated, use 'ecl2csv nnc <args>' instead")
     parser = argparse.ArgumentParser()
     fill_parser(parser)
     args = parser.parse_args()

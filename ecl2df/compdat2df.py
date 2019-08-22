@@ -339,6 +339,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
+    logging.warning("compdat2csv is deprecated, use 'ecl2csv compdat <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()

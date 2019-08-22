@@ -326,10 +326,8 @@ def dropconstants(df, alwayskeep=None):
 
 def main():
     """Entry-point for module, for command line utility.
-
-    It may become deprecated to have a main() function
-    and command line utility for each module in ecl2df.
     """
+    logging.warning("grid2csv is deprecated, use 'ecl2csv grid <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()

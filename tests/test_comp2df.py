@@ -9,7 +9,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import compdat2df
+from ecl2df import compdat2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -189,6 +189,18 @@ def test_main():
     tmpcsvfile = ".TMP-compdat.csv"
     sys.argv = ["compdat2csv", DATAFILE, "-o", tmpcsvfile]
     compdat2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+
+def test_main_subparsers():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-compdat.csv"
+    sys.argv = ["ecl2csv", "compdat", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

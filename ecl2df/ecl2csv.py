@@ -11,7 +11,18 @@ from __future__ import division
 
 import argparse
 
-from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df, rft2df, satfunc2df, summary2df, wcon2df
+from ecl2df import (
+    grid2df,
+    nnc2df,
+    faults2df,
+    equil2df,
+    gruptree2df,
+    rft2df,
+    satfunc2df,
+    summary2df,
+    wcon2df,
+    compdat2df,
+)
 
 
 def main():
@@ -44,6 +55,12 @@ def main():
     satfunc_parser = subparsers.add_parser("satfunc", help="Extract SWOF/SGOF/etc data")
     satfunc2df.fill_parser(satfunc_parser)
     satfunc_parser.set_defaults(func=satfunc2df.satfunc2df_main)
+
+    compdat_parser = subparsers.add_parser(
+        "compdat", help="Extract COMPDAT/COMPSEGS/etc data"
+    )
+    compdat2df.fill_parser(compdat_parser)
+    compdat_parser.set_defaults(func=compdat2df.compdat2df_main)
 
     equil_parser = subparsers.add_parser("equil", help="Extract EQUIL data")
     equil2df.fill_parser(equil_parser)

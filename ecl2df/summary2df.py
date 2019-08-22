@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
+import logging
 import argparse
 import datetime
 
@@ -227,9 +228,12 @@ def smry2df(
 # Remaining functions are for the command line interface
 
 
-def parse_args():
-    """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
+def fill_parser(parser):
+    """Set up sys.argv parsers.
+
+    Arguments:
+        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
+    """
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "UNSMRY file must lie alongside.",
@@ -258,12 +262,21 @@ def parse_args():
         default="summary.csv",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    return parser.parse_args()
+    return parser
 
 
 def main():
-    """Entry-point for module, for command line utility"""
-    args = parse_args()
+    """Entry-point for module, for command line utility
+    """
+    logging.warning("summary2csv is deprecated, use 'ecl2csv smry <args>' instead")
+    parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
+    parser = fill_parser(parser)
+    args = parser.parse_args()
+    summary2df_main(args)
+
+
+def summary2df_main(args):
+    """Read from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

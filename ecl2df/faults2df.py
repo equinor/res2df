@@ -45,9 +45,12 @@ def deck2df(deck):
     return pd.DataFrame(columns=COLUMNS, data=data)
 
 
-def parse_args():
-    """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser()
+def fill_parser(parser):
+    """Set up sys.argv parsers.
+
+    Arguments:
+        parser: argparse.ArgumentParser or argparse.subparser
+    """
     parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
     parser.add_argument(
         "-o",
@@ -57,12 +60,21 @@ def parse_args():
         default="faults.csv",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    return parser.parse_args()
+    return parser
 
 
 def main():
-    """Entry-point for module, for command line utility"""
-    args = parse_args()
+    """Entry-point for module, for command line utility
+    """
+    logging.warning("faults2csv is deprecated, use 'ecl2csv faults <args>' instead")
+    parser = argparse.ArgumentParser()
+    parser = fill_parser(parser)
+    args = parser.parse_args()
+    faults2df_main(args)
+
+
+def faults2df_main(args):
+    """Read from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

@@ -16,6 +16,7 @@ setup(
     zip_safe=False,
     entry_points={
         "console_scripts": [
+            "ecl2csv=ecl2df.ecl2csv:main",
             "nnc2csv=ecl2df.nnc2df:main",
             "eclgrid2csv=ecl2df.grid2df:main",
             "grid2csv=ecl2df.grid2df:main",

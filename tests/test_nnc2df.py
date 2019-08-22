@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import nnc2df, faults2df
+from ecl2df import nnc2df, faults2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -59,8 +59,8 @@ def test_nnc2df_faultnames():
 def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-nnc.csv"
-    sys.argv = ["nnc2df", DATAFILE, "-o", tmpcsvfile]
-    nnc2df.main()
+    sys.argv = ["ecl2csv", "nnc", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

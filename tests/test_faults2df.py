@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import faults2df
+from ecl2df import faults2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -61,6 +61,18 @@ FAULTS
     assert len(faultsdf) == 23
     assert len(faultsdf.loc[["D"]]) == 1  # Pass lists to .loc for single row
     assert len(faultsdf.loc["C"]) == 6
+
+
+def test_main_subparser():
+    """Test command line interface with subparsers"""
+    tmpcsvfile = ".TMP-faultsdf.csv"
+    sys.argv = ["ecl2csv", "faults", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
 
 
 def test_main():

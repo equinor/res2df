@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import gruptree2df
+from ecl2df import gruptree2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -111,6 +111,18 @@ def test_main():
     tmpcsvfile = ".TMP-gruptree.csv"
     sys.argv = ["gruptree2csv", DATAFILE, "-o", tmpcsvfile]
     gruptree2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+
+def test_main_subparser():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-gruptree.csv"
+    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

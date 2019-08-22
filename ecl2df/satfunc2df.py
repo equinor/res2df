@@ -71,9 +71,12 @@ def deck2df(deck):
     return pd.concat(frames, axis=0, sort=False)
 
 
-def parse_args():
-    """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser()
+def fill_parser(parser):
+    """Set up sys.argv parsers.
+
+    Arguments:
+        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
+    """
     parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
     parser.add_argument(
         "-o",
@@ -83,12 +86,21 @@ def parse_args():
         default="satfuncs.csv",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    return parser.parse_args()
+    return parser
 
 
 def main():
+    """Entry-point for module, for command line utility
+    """
+    logging.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
+    parser = argparse.ArgumentParser()
+    parser = fill_parser(parser)
+    args = parser.parse_args()
+    satfunc2df_main(args)
+
+
+def satfunc2df_main(args):
     """Entry-point for module, for command line utility"""
-    args = parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

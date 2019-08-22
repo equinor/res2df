@@ -254,9 +254,12 @@ def merge_gridframes(grid_df, init_df, rst_df):
     return merged
 
 
-def parse_args():
-    """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser()
+def fill_parser(parser):
+    """Set up sys.argv parser.
+
+    Arguments:
+        parser: argparse.ArgumentParser or argparse.subparser
+    """
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
@@ -288,7 +291,7 @@ def parse_args():
         help="Drop constant columns from the dataset",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    return parser.parse_args()
+    return parser
 
 
 def dropconstants(df, alwayskeep=None):
@@ -322,8 +325,16 @@ def dropconstants(df, alwayskeep=None):
 
 
 def main():
-    """Entry-point for module, for command line utility"""
-    args = parse_args()
+    """Entry-point for module, for command line utility.
+    """
+    logging.warning("grid2csv is deprecated, use 'ecl2csv grid <args>' instead")
+    parser = argparse.ArgumentParser()
+    parser = fill_parser(parser)
+    args = parser.parse_args()
+    grid2df_main(args)
+
+
+def grid2df_main(args):
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

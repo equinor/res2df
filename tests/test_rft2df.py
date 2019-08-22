@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import logging
 
-from ecl2df import rft2df
+from ecl2df import rft2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -47,6 +47,18 @@ def test_main():
     tmpcsvfile = ".TMP-rft.csv"
     sys.argv = ["rft2csv", DATAFILE, "-o", tmpcsvfile]
     rft2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+
+def test_main_subparsers():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-rft.csv"
+    sys.argv = ["ecl2csv", "rft", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

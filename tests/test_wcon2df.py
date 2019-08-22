@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import wcon2df
+from ecl2df import wcon2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -105,6 +105,18 @@ def test_main():
     tmpcsvfile = ".TMP-wcondf.csv"
     sys.argv = ["wcon2csv", DATAFILE, "-o", tmpcsvfile]
     wcon2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    # os.remove(tmpcsvfile)
+
+
+def test_main_subparsers():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-wcondf.csv"
+    sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

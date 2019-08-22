@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import satfunc2df
+from ecl2df import satfunc2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -50,9 +50,21 @@ SWOF
 
 def test_main():
     """Test command line interface"""
-    tmpcsvfile = ".TMP-gruptree.csv"
+    tmpcsvfile = ".TMP-satfunc.csv"
     sys.argv = ["satfunc2csv", DATAFILE, "-o", tmpcsvfile]
     satfunc2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)
+
+
+def test_main_subparsers():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-satfunc.csv"
+    sys.argv = ["ecl2csv", "satfunc", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

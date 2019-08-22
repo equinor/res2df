@@ -155,9 +155,12 @@ def deck2df(deck):
     return wcon_df
 
 
-def parse_args():
-    """Parse sys.argv using argparse"""
-    parser = argparse.ArgumentParser()
+def fill_parser(parser):
+    """Set up sys.argv parsers.
+
+    Arguments:
+        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
+    """
     parser.add_argument(
         "DATAFILE", help="Name of Eclipse DATA file or Eclipse include file."
     )
@@ -165,12 +168,20 @@ def parse_args():
         "-o", "--output", type=str, help="Name of output csv file.", default="wcon.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    return parser.parse_args()
+    return parser
 
 
 def main():
-    """Entry-point for module, for command line utility"""
-    args = parse_args()
+    """Entry-point for module, for command line utility
+    """
+    parser = argparse.ArgumentParser()
+    parser = fill_parser(parser)
+    args = parser.parse_args()
+    wcon2df_main(args)
+
+
+def wcon2df_main(args):
+    """Read from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

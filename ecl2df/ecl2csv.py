@@ -11,7 +11,7 @@ from __future__ import division
 
 import argparse
 
-from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df, rft2df, satfunc2df, summary2df
+from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df, rft2df, satfunc2df, summary2df, wcon2df
 
 
 def main():
@@ -52,6 +52,10 @@ def main():
     gruptree_parser = subparsers.add_parser("gruptree", help="Extract GRUPTREE data")
     gruptree2df.fill_parser(gruptree_parser)
     gruptree_parser.set_defaults(func=gruptree2df.gruptree2df_main)
+
+    wcon_parser = subparsers.add_parser("wcon", help="Extract well control data")
+    wcon2df.fill_parser(wcon_parser)
+    wcon_parser.set_defaults(func=wcon2df.wcon2df_main)
 
     args = parser.parse_args()
     args.func(args)

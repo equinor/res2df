@@ -11,18 +11,22 @@ from __future__ import division
 
 import argparse
 
-from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df, rft2df, satfunc2df
+from ecl2df import grid2df, nnc2df, faults2df, equil2df, gruptree2df, rft2df, satfunc2df, summary2df
 
 
 def main():
     """Entry-point"""
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
 
     # Eclipse output files:
     grid_parser = subparsers.add_parser("grid", help="Extract grid data")
     grid2df.fill_parser(grid_parser)
     grid_parser.set_defaults(func=grid2df.grid2df_main)
+
+    summary_parser = subparsers.add_parser("smry", help="Extract summary data")
+    summary2df.fill_parser(summary_parser)
+    summary_parser.set_defaults(func=summary2df.summary2df_main)
 
     nnc_parser = subparsers.add_parser("nnc", help="Extract nnc data")
     nnc2df.fill_parser(nnc_parser)

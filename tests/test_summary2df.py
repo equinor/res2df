@@ -12,7 +12,7 @@ import pandas as pd
 
 import datetime
 
-from ecl2df import summary2df
+from ecl2df import summary2df, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -35,6 +35,19 @@ def test_main():
     tmpcsvfile = ".TMP-sum.csv"
     sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile]
     summary2df.main()
+
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    assert "FOPT" in disk_df
+    os.remove(tmpcsvfile)
+
+
+def test_main_subparser():
+    """Test command line interface"""
+    tmpcsvfile = ".TMP-sum.csv"
+    sys.argv = ["ecl2csv", "smry", DATAFILE, "-o", tmpcsvfile]
+    ecl2csv.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

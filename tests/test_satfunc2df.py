@@ -47,7 +47,6 @@ SWOF
     satdf = satfunc2df.deck2df(deck)
     assert len(satdf) == 2
 
-
     swofstr2 = """
 -- RUNSPEC -- (this line is optional)
 
@@ -67,9 +66,43 @@ SWOF
 """
     deck2 = EclFiles.str2deck(swofstr2)
     satdf2 = satfunc2df.deck2df(deck2)
-    assert 'SATNUM' in satdf
-    assert len(satdf2['SATNUM'].unique()) == 2
+    assert "SATNUM" in satdf
+    assert len(satdf2["SATNUM"].unique()) == 2
     assert len(satdf2) == 5
+    sgofstr = """
+          SGOF
+             0 0 1 1
+                    1 1 0 0
+                           /
+       0 0 1 1
+                    0.5 0.5 0.5 0.5
+                 1 1 0 0
+      /
+                 0 0 1 0
+   0.1 0.1 0.1 0.1
+          1 1 0 0
+               /
+           """
+    sgofdf = satfunc2df.deck2df(EclFiles.str2deck(sgofstr))
+    assert 'SATNUM' in sgofdf
+    assert len(sgofdf["SATNUM"].unique()) == 3
+    assert len(sgofdf) == 8
+
+
+def test_injectsatnumcount():
+    """Test that we always get out a string with TABDIMS"""
+    assert "TABDIMS" in satfunc2df.inject_satnumcount("", 0)
+    assert "TABDIMS" in satfunc2df.inject_satnumcount("", 1)
+    assert "TABDIMS" in satfunc2df.inject_satnumcount("TABDIMS", 1)
+    assert "99" in satfunc2df.inject_satnumcount("", 99)
+
+
+def test_guess_satnumcount():
+    # We always require a newline after a "/" in the Eclipse syntax
+    assert satfunc2df.guess_satnumcount("SWOF\n0/\n0/\n") == 2
+    assert satfunc2df.guess_satnumcount("SWOF\n0/\n0/ \n0/\n") == 3
+    assert satfunc2df.guess_satnumcount("SWFN\n0/\n\n0/\n") == 2
+    assert satfunc2df.guess_satnumcount("SGOF\n0/\n") == 1
 
 
 def test_main():

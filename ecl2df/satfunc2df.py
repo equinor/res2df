@@ -14,6 +14,8 @@ import argparse
 import numpy as np
 import pandas as pd
 
+import sunbeam
+
 from .eclfiles import EclFiles
 
 KEYWORD_COLUMNS = {
@@ -32,7 +34,42 @@ def deck2satfuncdf(deck):
     return deck2df(deck)
 
 
-def deck2df(deck):
+def inject_satnumcount(deckstr, satnumcount):
+    """Insert a TABDIMS with NTSFUN into a deck"""
+    if "TABDIMS" in deckstr:
+        logging.warning("Not touching a deck where TABDIMS exists")
+        return deckstr
+    return "TABDIMS\n " + str(satnumcount) + "/\n\n" + deckstr
+
+
+def guess_satnumcount(deck):
+    # Assert that TABDIMS is not present, we do not support the situation
+    # where it is present and wrong.
+
+    sunbeam_recovery = [
+        ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
+        ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
+        ("UNSUPPORTED_*", sunbeam.action.ignore),
+        ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
+        ("PARSE_RANDOM_TEXT", sunbeam.action.ignore),
+        ("PARSE_MISSING_INCLUDE", sunbeam.action.ignore),
+    ]
+
+    for satnumcountguess in range(1, 100):
+        deck_candidate = inject_satnumcount(str(deck), satnumcountguess)
+        try:
+            deck = EclFiles.str2deck(deck_candidate, recovery=sunbeam_recovery)
+            # If we succeed, then the satnumcountguess was correct
+            break
+        except:
+            continue
+            # If we get here, try another satnumcount
+    if satnumcountguess == 99:
+        logging.warning("Unable to guess satnums or larger than 100")
+    return satnumcountguess
+
+
+def deck2df(deck, satnumcount=None):
     """Extract the data in the saturation function keywords as a Pandas
     DataFrame.
 
@@ -42,9 +79,26 @@ def deck2df(deck):
     onwards. Then follows the data for each individual keyword that
     is found in the deck.
 
+    Arguments:
+        deck (sunbeam.deck): Incoming data deck
+        satnumcount (int): Number of SATNUMs defined in the deck, only
+            needed if TABDIMS with NTSFUN is not found in the deck.
+            If not supplied (or None) and NTSFUN is not defined,
+            it will be attempted inferred.
+
     Return:
         pd.DataFrame, columns 'SW', 'KRW', 'KROW', 'PC', ..
     """
+    if "TABDIMS" not in deck:  # Don't check if NTSFUN is really there though..
+        if not satnumcount:
+            logging.warning(
+                "TABDIMS+NTSFUN or satnumcount not supplied. Will be guessed."
+            )
+            strdeck = inject_satnumcount(str(deck), guess_satnumcount(deck))
+        else:
+            strdeck = inject_satnumcount(str(deck), satnumcount)
+        deck = EclFiles.str2deck(strdeck)
+
     frames = []
     for keyword in KEYWORD_COLUMNS.keys():
         if keyword in deck:

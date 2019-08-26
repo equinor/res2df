@@ -185,7 +185,11 @@ def deck2df(deck, satnumcount=None):
                 satnum += 1
                 frames.append(df)
 
-    return pd.concat(frames, axis=0, sort=False)
+    nonempty_frames = [frame for frame in frames if not frame.empty]
+    if nonempty_frames:
+        return pd.concat(nonempty_frames, axis=0, sort=False)
+    logging.warning("No saturation data found in deck")
+    return pd.DataFrame()
 
 
 def fill_parser(parser):
@@ -235,10 +239,11 @@ def satfunc2df_main(args):
         # more error-prone:
         stringdeck = "".join(open(args.DATAFILE).readlines())
         satfunc_df = deck2df(stringdeck)
-    logging.info(
-        "Unique satnums: %d, saturation keywords: %s",
-        satfunc_df["SATNUM"].unique(),
-        satfunc_df["KEYWORD"].unique(),
-    )
-    satfunc_df.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)
+    if not satfunc_df.empty:
+        logging.info(
+            "Unique satnums: %d, saturation keywords: %s",
+            len(satfunc_df["SATNUM"].unique()),
+            str(satfunc_df["KEYWORD"].unique()),
+        )
+        satfunc_df.to_csv(args.output, index=False)
+        print("Wrote to " + args.output)

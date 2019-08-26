@@ -75,6 +75,17 @@ SWOF
     # (warnings should be issued)
     assert bogusdf.empty
 
+    # Test with bogus E100 keywords:
+    tricky = satfunc2df.deck2df("FOO\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
+    assert not tricky.empty
+    assert len(tricky["SATNUM"].unique()) == 1
+
+    # Test with unsupported (for OPM) E100 keywords (trickier than bogus..)
+    # # tricky = satfunc2df.deck2df("CARFIN\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
+    # # assert not tricky.empty
+    # # assert len(tricky["SATNUM"].unique()) == 1
+    # ### It remains unsolved how to avoid an error here!
+
 
 def test_sgof_satnuminferrer():
     sgofstr = """

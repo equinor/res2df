@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Test module for nnc2df"""
+"""Test module for satfunc2df"""
 
 from __future__ import absolute_import
 from __future__ import division

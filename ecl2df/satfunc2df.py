@@ -2,7 +2,16 @@
 # -*- coding: utf-8 -*-
 """
 Extract saturation function data (SWOF, SGOF, SWFN, ...)
-from an Eclipse deck as Pandas DataFrame
+from an Eclipse deck as Pandas DataFrame.
+
+Data can be extracted from a full Eclipse deck (*.DATA)
+or from individual files.
+
+Note that when parsing from individual files, it is
+undefined in the syntax how many saturation functions (SATNUMs) are
+present. For convenience, it is possible to estimate the count of
+SATNUMs, but whenever this is known, it is recommended to either supply
+TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
 from __future__ import print_function
@@ -18,6 +27,9 @@ import sunbeam
 
 from .eclfiles import EclFiles
 
+# Dictionary of Eclipse keywords that holds saturation data, with
+# lists of which datatypes they contain. The datatypes/names will
+# be used as column headers in returned dataframes.
 KEYWORD_COLUMNS = {
     "SWOF": ["SW", "KRW", "KROW", "PCOW"],
     "SGOF": ["SG", "KRG", "KROG", "PCOG"],

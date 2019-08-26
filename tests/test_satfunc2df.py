@@ -102,7 +102,7 @@ SGOF
   1 1 0 0
 /
 """
-    assert satfunc2df.guess_satnumcount(sgofstr) == 3
+    assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
     sgofdf = satfunc2df.deck2df(sgofstr)
     assert "SATNUM" in sgofdf
     assert len(sgofdf["SATNUM"].unique()) == 3

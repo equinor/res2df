@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import satfunc2df, ecl2csv
+from ecl2df import satfunc2df, ecl2csv, inferdims
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -122,32 +122,6 @@ SGOF
     ecl2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
-
-
-def test_injectsatnumcount():
-    """Test that we always get out a string with TABDIMS"""
-    assert "TABDIMS" in satfunc2df.inject_satnumcount("", 0)
-    assert "TABDIMS" in satfunc2df.inject_satnumcount("", 1)
-    assert "TABDIMS" in satfunc2df.inject_satnumcount("TABDIMS", 1)
-    assert "99" in satfunc2df.inject_satnumcount("", 99)
-
-
-def test_guess_satnumcount():
-    # We always require a newline after a "/" in the Eclipse syntax
-    # (anything between a / and \n is ignored)
-    assert satfunc2df.guess_satnumcount("SWOF\n0/\n0/\n") == 2
-    assert satfunc2df.guess_satnumcount("SWOF\n0/\n0/ \n0/\n") == 3
-    assert satfunc2df.guess_satnumcount("SWFN\n0/\n\n0/\n") == 2
-    assert satfunc2df.guess_satnumcount("SGOF\n0/\n") == 1
-    assert satfunc2df.guess_satnumcount("SGOF\n0/\n0/\n") == 2
-    assert satfunc2df.guess_satnumcount("SGOF\n0/\n0/\n0/\n") == 3
-    assert satfunc2df.guess_satnumcount("SGOF\n0 0 0 0/\n0 0 0 0/\n0 0 0 0/\n") == 3
-    assert (
-        satfunc2df.guess_satnumcount(
-            "SGOF\n0 0 0 0 1 1 1 1/\n0 0 0 0 1 1 1 1/\n0 0 0 0 1 1 1/\n"
-        )
-        == 3
-    )
 
 
 def test_main():

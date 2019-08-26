@@ -25,6 +25,7 @@ import pandas as pd
 
 import sunbeam
 
+from ecl2df import inferdims
 from .eclfiles import EclFiles
 
 # Dictionary of Eclipse keywords that holds saturation data, with
@@ -100,7 +101,9 @@ def guess_satnumcount(deckstring):
 
     max_guess = 640  # This ought to be enough for everybody
     for satnumcountguess in range(1, max_guess + 1):
-        deck_candidate = inject_satnumcount(deckstring, satnumcountguess)
+        deck_candidate = inferdims.inject_dimcount(
+            deckstring, "TABDIMS", 0, satnumcountguess
+        )
         try:
             EclFiles.str2deck(
                 deck_candidate, recovery=sunbeam_recovery_fail_extra_records
@@ -165,12 +168,16 @@ def deck2df(deck, satnumcount=None):
                 "TABDIMS+NTSFUN or satnumcount not supplied. Will be guessed."
             )
             ntsfun_estimate = guess_satnumcount(deck)
-            augmented_strdeck = inject_satnumcount(str(deck), ntsfun_estimate)
+            augmented_strdeck = inferdims.inject_dimcount(
+                str(deck), "TABDIMS", 0, ntsfun_estimate
+            )
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)
 
         else:
-            augmented_strdeck = inject_satnumcount(str(deck), satnumcount)
+            augmented_strdeck = inferdims.inject_dimcount(
+                str(deck), "TABDIMS", 0, satnumcount
+            )
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)
 

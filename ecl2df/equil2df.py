@@ -12,6 +12,7 @@ import logging
 import argparse
 import pandas as pd
 
+from ecl2df import inferdims
 from .eclfiles import EclFiles
 
 
@@ -20,7 +21,7 @@ def deck2equildf(deck):
     return deck2df(deck)
 
 
-def deck2df(deck):
+def deck2df(deck, ntequl=None):
     """Extract the data in the EQUIL keyword as a Pandas
     DataFrame.
 
@@ -29,9 +30,47 @@ def deck2df(deck):
     that we need more than the EQUIL section alone to determine the
     dataframe.
 
+    If ntequil is not supplied and EQLDIMS is not in the deck, the
+    equil data is not well defined in terms of sunbeam. This means
+    that we have to infer the correct number of EQUIL lines from what
+    gives us successful parsing from sunbeam. In those cases, the
+    deck must be supplied as a string, if not, extra EQUIL lines
+    are possibly already removed by the sunbeam parser in eclfiles.str2deck().
+
+    Arguments:
+        deck (sunbeam.deck or str): Eclipse deck or string with deck. If
+           not string, EQLDIMS must be present in the deck.
+        ntequil (int): If not None, should state the NTEQUL in EQLDIMS. If
+            None and EQLDIMS is not present, it will be inferred.
+
     Return:
         pd.DataFrame
     """
+    if "EQLDIMS" not in deck:
+        if not isinstance(deck, str):
+            logging.critical(
+                "Will not be able to guess NTEQUL from a parsed deck without EQLDIMS."
+            )
+            logging.critical(
+                (
+                    "Only data for the first EQUIL will be returned. "
+                    "Instead, supply string to deck2df()"
+                )
+            )
+            ntequl = 1
+        if not ntequl:
+            logging.warning("EQLDIMS+NTEQUL or ntequl not supplied. Will be guessed")
+            ntequl_estimate = inferdims.guess_dim(deck, "EQLDIMS", 0)
+            augmented_strdeck = inferdims.inject_dimcount(
+                deck, "EQLDIMS", 0, ntequl_estimate
+            )
+            deck = EclFiles.str2deck(augmented_strdeck)
+        else:
+            augmented_strdeck = inferdims.inject_dimcount(deck, "EQLDIMS", 0, ntequl)
+            deck = EclFiles.str2deck(augmented_strdeck)
+
+    if isinstance(deck, str):
+        deck = EclFiles.str2deck(deck)
     phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     if "OIL" in deck and "GAS" in deck and "WATER" in deck:
         # oil-water-gas
@@ -98,7 +137,7 @@ def deck2df(deck):
         rowlist = [x[0] for x in rec]
         if len(rowlist) > len(columnnames):
             rowlist = rowlist[: len(columnnames)]
-            logger.warning(
+            logging.warning(
                 "Something wrong with columnnames " + "or EQUIL-data, data is chopped!"
             )
         records.append(rowlist)

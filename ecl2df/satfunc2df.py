@@ -128,13 +128,16 @@ def deck2df(deck, satnumcount=None):
     Return:
         pd.DataFrame, columns 'SW', 'KRW', 'KROW', 'PC', ..
     """
-    if not "TABDIMS" in deck:
+    if "TABDIMS" not in deck:
         if not isinstance(deck, str):
             logging.critical(
                 "Will not be able to guess NTSFUN from a parsed deck without TABDIMS."
             )
             logging.critical(
-                "Only data for first SATNUM will be returned. Instead, supply string to deck2df()"
+                (
+                    "Only data for first SATNUM will be returned."
+                    "Instead, supply string to deck2df()"
+                )
             )
             satnumcount = 1
         # If TABDIMS is in the deck, NTSFUN always has a value. It will
@@ -184,7 +187,7 @@ def fill_parser(parser):
     """Set up sys.argv parsers.
 
     Arguments:
-        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
+        parser (ArgumentParser or subparser): parser to fill with arguments
     """
     parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
     parser.add_argument(

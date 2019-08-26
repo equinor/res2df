@@ -30,6 +30,7 @@ KEYWORD_COLUMNS = {
 
 
 def deck2satfuncdf(deck):
+    """Deprecated function, to be removed"""
     logging.warning("Deprecated function name, deck2satfuncdf")
     return deck2df(deck)
 
@@ -37,7 +38,8 @@ def deck2satfuncdf(deck):
 def inject_satnumcount(deckstr, satnumcount):
     """Insert a TABDIMS with NTSFUN into a deck
 
-    This is simple string manipulation.
+    This is simple string manipulation, not sunbeam
+    deck manipulation (which might be possible to do).
 
     Arguments:
         deckstr (str): A string containing a partial deck (f.ex only
@@ -48,23 +50,26 @@ def inject_satnumcount(deckstr, satnumcount):
         str: New deck with TABDIMS prepended.
     """
     if "TABDIMS" in deckstr:
-        logging.warning("Not touching a deck where TABDIMS exists")
+        logging.warning("Not inserting TABDIMS in a deck where already exists")
         return deckstr
-    return "TABDIMS\n " + str(satnumcount) + " /\n\n" + deckstr
+    return "TABDIMS\n " + str(satnumcount) + " /\n\n" + str(deckstr)
 
 
-def guess_satnumcount(deck):
-    """Guess the SATNUM count for an incoming deck
+def guess_satnumcount(deckstring):
+    """Guess the SATNUM count for an incoming deck (string) without TABDIMS
 
-    The incoming deck must have been parsed permissively, so that it is
-    queriable. This function will inject TABDIMS into it and reparse
-    it stricter, to detect the correct number of SATNUMs present
+    The incoming deck must in string form, if not, extra data is most
+    likely already removed by the sunbeam parser.
+
+    This function will inject TABDIMS into it and reparse it in a
+    stricter mode, to detect the correct number of SATNUMs present
 
     Arguments:
-        deck (sunbeam.deck or str): Permissively parsed deck
+        deck (str): String containing an Eclipse deck or only a few Eclipse keywords
 
     Returns:
         int: Inferred number of SATNUMs present
+
     """
     # Assert that TABDIMS is not present, we do not support the situation
     # where it is present and wrong.
@@ -81,10 +86,11 @@ def guess_satnumcount(deck):
         ("PARSE_MISSING_INCLUDE", sunbeam.action.ignore),
     ]
 
-    for satnumcountguess in range(1, 100):
-        deck_candidate = inject_satnumcount(str(deck), satnumcountguess)
+    max_guess = 640  # This ought to be enough for everybody
+    for satnumcountguess in range(1, max_guess + 1):
+        deck_candidate = inject_satnumcount(deckstring, satnumcountguess)
         try:
-            deck = EclFiles.str2deck(
+            EclFiles.str2deck(
                 deck_candidate, recovery=sunbeam_recovery_fail_extra_records
             )
             # If we succeed, then the satnumcountguess was correct
@@ -94,8 +100,8 @@ def guess_satnumcount(deck):
             # high enough satnumcount
             continue
             # If we get here, try another satnumcount
-    if satnumcountguess == 99:
-        logging.warning("Unable to guess satnums or larger than 100")
+    if satnumcountguess == max_guess:
+        logging.warning("Unable to guess satnums or larger than %d", max_guess)
     logging.info("Guessed satnumcount to %d", satnumcountguess)
     return satnumcountguess
 
@@ -147,7 +153,6 @@ def deck2df(deck, satnumcount=None):
                 "TABDIMS+NTSFUN or satnumcount not supplied. Will be guessed."
             )
             ntsfun_estimate = guess_satnumcount(deck)
-            logging.warning("NTSFUN estimated to %d", ntsfun_estimate)
             augmented_strdeck = inject_satnumcount(str(deck), ntsfun_estimate)
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)
@@ -189,7 +194,9 @@ def fill_parser(parser):
     Arguments:
         parser (ArgumentParser or subparser): parser to fill with arguments
     """
-    parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
+    parser.add_argument(
+        "DATAFILE", help="Name of Eclipse DATA file or file with saturation functions."
+    )
     parser.add_argument(
         "-o",
         "--output",
@@ -219,9 +226,19 @@ def satfunc2df_main(args):
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     if "TABDIMS" in deck:
+        # Things are easier when a full deck with correct TABDIMS
+        # is supplied:
         satfunc_df = deck2df(deck)
     else:
+        # When TABDIMS is not present, the code will try to infer
+        # the number of saturation functions, this is necessarily
+        # more error-prone:
         stringdeck = "".join(open(args.DATAFILE).readlines())
         satfunc_df = deck2df(stringdeck)
+    logging.info(
+        "Unique satnums: %d, saturation keywords: %s",
+        satfunc_df["SATNUM"].unique(),
+        satfunc_df["KEYWORD"].unique(),
+    )
     satfunc_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

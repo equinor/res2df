@@ -79,9 +79,11 @@ class EclFiles(object):
         return self._deck
 
     @staticmethod
-    def str2deck(string, recovery=SUNBEAM_RECOVERY):
+    def str2deck(string, recovery=None):
         """Produce a sunbeam deck from a string, using permissive
         parsing by default"""
+        if not recovery:
+            recovery = SUNBEAM_RECOVERY
         return sunbeam.deck.parse_string(string, recovery=recovery)
 
     @staticmethod

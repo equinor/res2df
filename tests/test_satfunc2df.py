@@ -70,6 +70,11 @@ SWOF
     assert len(satdf2["SATNUM"].unique()) == 2
     assert len(satdf2) == 5
 
+    # Try empty/bogus data:
+    bogusdf = satfunc2df.deck2df("SWRF\n 0 /\n")
+    # (warnings should be issued)
+    assert bogusdf.empty
+
 
 def test_sgof_satnuminferrer():
     sgofstr = """

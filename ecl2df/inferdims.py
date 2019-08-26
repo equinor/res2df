@@ -100,7 +100,7 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
         if dimitem not in [0, 1]:
             raise ValueError("Only support item 0 and 1 in TABDIMS")
     if dimkeyword == "EQLDIMS":
-        if item not in [0]:
+        if dimitem not in [0]:
             raise ValueError("Only item 0 in EQLDIMS can be estimated")
 
     if dimkeyword in deckstr:

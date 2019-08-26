@@ -15,6 +15,21 @@ def test_injectsatnumcount():
     assert "TABDIMS" in inferdims.inject_dimcount("TABDIMS", "TABDIMS", 0, 1)
     assert "99" in inferdims.inject_dimcount("", "TABDIMS", 0, 99)
 
+    assert " 1* " in inferdims.inject_dimcount("", "TABDIMS", 1, 99)
+    assert "*" not in inferdims.inject_dimcount("", "TABDIMS", 0, 99)
+
+    assert "EQLDIMS" in inferdims.inject_dimcount("", "EQLDIMS", 0, 0)
+    assert "EQLDIMS" in inferdims.inject_dimcount("", "EQLDIMS", 0, 1)
+    assert "EQLDIMS" in inferdims.inject_dimcount("EQLDIMS", "EQLDIMS", 0, 1)
+    assert "99" in inferdims.inject_dimcount("", "TABDIMS", 0, 99)
+
+
+def test_guess_ntequil():
+    """Test inferring the correct NTEQUIL"""
+    assert inferdims.guess_dim("EQUIL\n200 2000/\n2000 2000/\n", "EQLDIMS", 0) == 2
+    assert inferdims.guess_dim("EQUIL\n200 2000/\n", "EQLDIMS", 0) == 1
+    assert inferdims.guess_dim("EQUIL\n200 2000 333/\n0 0/\n1 1/\n", "EQLDIMS", 0) == 3
+
 
 def test_guess_satnumcount():
     # We always require a newline after a "/" in the Eclipse syntax

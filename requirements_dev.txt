@@ -1,3 +1,7 @@
+pandas
+treelib
+pytest
+pytest-runner
+versioneer
 sphinx
-recommonmark
-sphinx-argparse
+sphinx_rtd_theme

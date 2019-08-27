@@ -1,0 +1,4 @@
+exclude_paths:
+  # These files stem from a different project.
+  - versioneer.py
+  - ecl2df/_version.py

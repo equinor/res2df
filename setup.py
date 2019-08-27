@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
-
+import versioneer
 
 
 setup(
     name="ecl2df",
-    version="0.0.1",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description="Convert Eclipse 100 input and output to DataFrames",
     url="http://github.com/equinor/ecl2df",
     author="Håvard Berland",

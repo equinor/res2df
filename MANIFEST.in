@@ -1,0 +1,2 @@
+include versioneer.py
+include ecl2df/_version.py

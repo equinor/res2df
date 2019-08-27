@@ -25,6 +25,7 @@ import pandas as pd
 
 import sunbeam
 
+from ecl2df import inferdims
 from .eclfiles import EclFiles
 
 # Dictionary of Eclipse keywords that holds saturation data, with
@@ -65,57 +66,6 @@ def inject_satnumcount(deckstr, satnumcount):
         logging.warning("Not inserting TABDIMS in a deck where already exists")
         return deckstr
     return "TABDIMS\n " + str(satnumcount) + " /\n\n" + str(deckstr)
-
-
-def guess_satnumcount(deckstring):
-    """Guess the SATNUM count for an incoming deck (string) without TABDIMS
-
-    The incoming deck must in string form, if not, extra data is most
-    likely already removed by the sunbeam parser.
-
-    This function will inject TABDIMS into it and reparse it in a
-    stricter mode, to detect the correct number of SATNUMs present
-
-    Arguments:
-        deck (str): String containing an Eclipse deck or only a few Eclipse keywords
-
-    Returns:
-        int: Inferred number of SATNUMs present
-
-    """
-    # Assert that TABDIMS is not present, we do not support the situation
-    # where it is present and wrong.
-
-    # A less than ecl2df-standard permissive sunbeam, when using
-    # this one sunbeam will fail if there are extra records
-    # in tables (if NTSFUN in TABDIMS is wrong f.ex):
-    sunbeam_recovery_fail_extra_records = [
-        ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
-        ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
-        ("UNSUPPORTED_*", sunbeam.action.ignore),
-        ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
-        ("PARSE_RANDOM_TEXT", sunbeam.action.ignore),
-        ("PARSE_MISSING_INCLUDE", sunbeam.action.ignore),
-    ]
-
-    max_guess = 640  # This ought to be enough for everybody
-    for satnumcountguess in range(1, max_guess + 1):
-        deck_candidate = inject_satnumcount(deckstring, satnumcountguess)
-        try:
-            EclFiles.str2deck(
-                deck_candidate, recovery=sunbeam_recovery_fail_extra_records
-            )
-            # If we succeed, then the satnumcountguess was correct
-            break
-        except ValueError:
-            # Typically we get the error PARSE_EXTRA_RECORDS because we did not guess
-            # high enough satnumcount
-            continue
-            # If we get here, try another satnumcount
-    if satnumcountguess == max_guess:
-        logging.warning("Unable to guess satnums or larger than %d", max_guess)
-    logging.info("Guessed satnumcount to %d", satnumcountguess)
-    return satnumcountguess
 
 
 def deck2df(deck, satnumcount=None):
@@ -164,13 +114,17 @@ def deck2df(deck, satnumcount=None):
             logging.warning(
                 "TABDIMS+NTSFUN or satnumcount not supplied. Will be guessed."
             )
-            ntsfun_estimate = guess_satnumcount(deck)
-            augmented_strdeck = inject_satnumcount(str(deck), ntsfun_estimate)
+            ntsfun_estimate = inferdims.guess_dim(deck, "TABDIMS", 0)
+            augmented_strdeck = inferdims.inject_dimcount(
+                str(deck), "TABDIMS", 0, ntsfun_estimate
+            )
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)
 
         else:
-            augmented_strdeck = inject_satnumcount(str(deck), satnumcount)
+            augmented_strdeck = inferdims.inject_dimcount(
+                str(deck), "TABDIMS", 0, satnumcount
+            )
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)
 

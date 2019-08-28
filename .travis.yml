@@ -42,7 +42,7 @@ install:
   - git clone --recursive https://github.com/OPM/opm-common.git
   - git clone --recursive https://github.com/equinor/sunbeam.git
   - pushd libecl
-  - pip install -r requirements_dev.txt
+  - pip install -r requirements.txt
   - popd
   - mkdir libecl/build
   - pushd libecl/build
@@ -69,7 +69,7 @@ install:
   - make -j 4 install
   - popd
   - popd
-  - pip install -r requirements.txt
+  - pip install -r requirements_dev.txt
   - pip install .
 
 script:

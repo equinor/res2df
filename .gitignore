@@ -1,0 +1,8 @@
+.cache
+.coverage
+ecl2df.egg-info
+.tox
+*.swp
+*.csv
+*.pyc
+*~

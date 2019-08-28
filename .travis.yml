@@ -46,8 +46,8 @@ install:
   - popd
   - mkdir libecl/build
   - pushd libecl/build
-  - cmake .. -DENABLE_PYTHON=ON 
-             -DBUILD_TESTS=OFF 
+  - cmake .. -DENABLE_PYTHON=ON
+             -DBUILD_TESTS=OFF
              -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT ..
   - make -j4 install
   - popd
@@ -73,4 +73,14 @@ install:
   - pip install .
 
 script:
-  - pytest 
+  - pytest
+  - make docsrun
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    local_dir: ./docs/_build/html
+    github_token:
+      secure: xxxx
+    on:
+      branch: docdeploy

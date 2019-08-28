@@ -10,6 +10,8 @@ files (.UNSMRY), for which there is a command line utility for converting
 to CSV, as well as some more functionality if the Python API is used
 directly.
 
+For documentation, see https://equinor.github.io/ecl2df
+
 ## Overview
 
 Module overview

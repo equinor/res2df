@@ -81,6 +81,8 @@ deploy:
     skip_cleanup: true
     local_dir: ./docs/_build/html
     github_token:
-      secure: xxxx
+      secure: "IMfU+2qMvtSkN63mQ7W1/Ggdk0iDJERB8O8qAT6M2s9cKWGPjX1+atX2XBlGUFl3USLP+AqtOWdA8XcP0kHRTDRLITL4fin6gprPO4AVVIzNKfUrU3RtS3/IqKvQEd3QIsc9G5bIweWvjcTddytJrLbAZC2H4GzHusvp68321Owa50OfShka0qyZT/UyRVY09gz9XstNAvlh/9HQLn/uiuFeoKIzLmR9GgkkfwqLLX6NVp5q1zzL8iMM2ZVS9/VTBDyFUbqfzpRu7a1VsORaCbSvLSI96pm+SAdD6vuRjMNIEBB875TY/ZdnuRpSckTrpiN5ks9BoFRLBMJTNIEdl5zPRVKPZwIeu609w+Q1pKXzyeUc0j7zmjoBDAnhzpTxZd92XhW4oLcT3w3ZP6OMZqgYcxrOLj2Fj/4kIHhDq3iFMtWRio4mxZR5R1YkQMnIArmgiNEB/+XQGCxdwIyJvLc/mLv24e4pmFxArSCV4lIupIaZc2FqEi6RwMFkCw3q+YJ6a1Se0vaxx73h7+VuUDZxzhnO1PU9bQYmSmLbP7oGyD5KBKlOcMX/NC6eEXULhn3eVF3bEiwiVz9JYC834U+NWOyLzNBOrInEo98r9SFPb2Rp489bEHpEtinBqWfXQEjBaBknnMEp9NJrsWwppwwVKb06R+7OHWzWhscs7rQ="      
+    keep_history: true
     on:
       branch: docdeploy
+      python: "3.6"

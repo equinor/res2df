@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ecl2df.equil2df &mdash; ecl2df 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ecl2df.equil2df</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ecl2df.equil2df</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extract EQUIL from an Eclipse deck as Pandas DataFrame</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="k">import</span> <span class="n">inferdims</span>
+<span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
+
+
+<div class="viewcode-block" id="deck2equildf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.deck2equildf">[docs]</a><span class="k">def</span> <span class="nf">deck2equildf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2equildf&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract the data in the EQUIL keyword as a Pandas</span>
+<span class="sd">    DataFrame.</span>
+
+<span class="sd">    How each data value in the EQUIL records are to be interpreted</span>
+<span class="sd">    depends on the phase configuration in the deck, which means</span>
+<span class="sd">    that we need more than the EQUIL section alone to determine the</span>
+<span class="sd">    dataframe.</span>
+
+<span class="sd">    If ntequil is not supplied and EQLDIMS is not in the deck, the</span>
+<span class="sd">    equil data is not well defined in terms of sunbeam. This means</span>
+<span class="sd">    that we have to infer the correct number of EQUIL lines from what</span>
+<span class="sd">    gives us successful parsing from sunbeam. In those cases, the</span>
+<span class="sd">    deck must be supplied as a string, if not, extra EQUIL lines</span>
+<span class="sd">    are possibly already removed by the sunbeam parser in eclfiles.str2deck().</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        deck (sunbeam.deck or str): Eclipse deck or string with deck. If</span>
+<span class="sd">           not string, EQLDIMS must be present in the deck.</span>
+<span class="sd">        ntequil (int): If not None, should state the NTEQUL in EQLDIMS. If</span>
+<span class="sd">            None and EQLDIMS is not present, it will be inferred.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="s2">&quot;Will not be able to guess NTEQUL from a parsed deck without EQLDIMS.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Only data for the first EQUIL will be returned. &quot;</span>
+                    <span class="s2">&quot;Instead, supply string to deck2df()&quot;</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">ntequl</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ntequl</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;EQLDIMS+NTEQUL or ntequl not supplied. Will be guessed&quot;</span><span class="p">)</span>
+            <span class="n">ntequl_estimate</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">guess_dim</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span>
+                <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ntequl_estimate</span>
+            <span class="p">)</span>
+            <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+            <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="n">phasecount</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="c1"># oil-water-gas</span>
+        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;INITRS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;INITRV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="c1"># gas-water</span>
+        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PCGWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="c1"># oil-water</span>
+        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="c1"># oil-gas</span>
+        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">if</span> <span class="n">phasecount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">columnnames</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported phase configuration&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;EQUIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">]:</span>
+        <span class="n">rowlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rec</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnnames</span><span class="p">):</span>
+            <span class="n">rowlist</span> <span class="o">=</span> <span class="n">rowlist</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnnames</span><span class="p">)]</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Something wrong with columnnames &quot;</span> <span class="o">+</span> <span class="s2">&quot;or EQUIL-data, data is chopped!&quot;</span>
+            <span class="p">)</span>
+        <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rowlist</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columnnames</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">)</span>
+
+    <span class="c1"># The column handling can be made prettier..</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;IGNORE&quot;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;equil.csv&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;equil2csv is deprecated, use &#39;ecl2csv equil &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">equil2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="equil2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.equil2df_main">[docs]</a><span class="k">def</span> <span class="nf">equil2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
+    <span class="n">equil_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="n">equil_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

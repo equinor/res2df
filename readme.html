@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; ecl2df 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Welcome to ecl2df’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/readme.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p># ecl2df [![Build Status](<a class="reference external" href="https://travis-ci.com/equinor/ecl2df.svg?branch=master)](https://travis-ci.com/equinor/ecl2df">https://travis-ci.com/equinor/ecl2df.svg?branch=master)](https://travis-ci.com/equinor/ecl2df</a>) [![Codacy Badge](<a class="reference external" href="https://api.codacy.com/project/badge/Grade/fceedc1ee9c946aa85bf60f39ec8962a)](https://www.codacy.com/app/berland/ecl2df?utm_source=github.com&amp;amp;utm_medium=referral&amp;amp;utm_content=equinor/ecl2df&amp;amp;utm_campaign=Badge_Grade">https://api.codacy.com/project/badge/Grade/fceedc1ee9c946aa85bf60f39ec8962a)](https://www.codacy.com/app/berland/ecl2df?utm_source=github.com&amp;amp;utm_medium=referral&amp;amp;utm_content=equinor/ecl2df&amp;amp;utm_campaign=Badge_Grade</a>)</p>
+<p>ecl2df is a Pandas DataFrame wrapper around libecl and sunbeam, which
+are used to access binary files outputted by the reservoir simulator
+Eclipse, or its input files — or any other tool outputting to the same
+data format.</p>
+<p>The package consists of a module pr. datatype, e.g. one module for summary
+files (.UNSMRY), for which there is a command line utility for converting
+to CSV, as well as some more functionality if the Python API is used
+directly.</p>
+<p>For documentation, see <a class="reference external" href="https://equinor.github.io/ecl2df">https://equinor.github.io/ecl2df</a></p>
+<p>## Overview</p>
+<p>Module overview</p>
+<p>### <cite>summary2df</cite></p>
+<p>Extracts summary data from UNSMRY files, at requested time sampling and
+for requested vectors. Associated <cite>summary2csv</cite> endpoint available from
+the command line.</p>
+<p>### <cite>grid2df</cite></p>
+<p>Extracts grid data from <cite>.INIT</cite> and <cite>.EGRID</cite> and <cite>.UNRST</cite> files. Restart files are optional to extract, and dates must be picked (or all). Data is
+merged into one DataFrame by the <cite>i</cite>, <cite>j</cite> and <cite>k</cite> indices. Bulk cell
+volume is included.</p>
+<p>### <cite>nnc2df</cite></p>
+<p>Extracts the non-neighbour connections in the grid, as pairs of
+<cite>ijk</cite>-indices and the associated transmissiblity.</p>
+<p>### <cite>rft2df</cite></p>
+<p>Reads the <cite>.RFT</cite> files which are outputted by the simulator when
+the <cite>WRFTPLT</cite> keyword is used, with details along wellbores.</p>
+<p>For multisegment wells, the well topology is calculated and data
+is merged accordingly, for example when ICD segments are used, enabling
+easy calculations of the pressure drop over an ICD valve.</p>
+<p>### <cite>satfunc2df</cite></p>
+<p>Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
+into one DataFrame.</p>
+<p>### <cite>equil2df</cite></p>
+<p>Extracts the information in the <cite>EQUIL</cite> table in the input deck.</p>
+<p>### <cite>compdat2df</cite></p>
+<p>Extracts well connection data from the <cite>COMPDAT</cite> keyword in the input deck.
+For multi-segment wells, <cite>WELSEGS</cite> and <cite>COMPSEGS</cite> is also parsed. The
+data is available as three different dataframes, which can be merged.</p>
+<p>It is also possible to parse individual “include” files, not only a
+finished working deck.</p>
+<p>### <cite>gruptree2df</cite></p>
+<p>Extracts the information from the <cite>GRUPTREE</cite> and <cite>WELSPECS</cite> keyword, at
+all timesteps, from the input deck. The tree structure at each relevant
+date can be returned as a dataframe of the edges, as a nested dictionary
+or as a <cite>treelib</cite> tree.</p>
+<p>### <cite>eclfiles</cite></p>
+<p>This is an internal helper module in order to represent finished or
+unfinished Eclipse decks and runs. The class EclFiles can cache binary
+files that are recently read, and is able to locate the various output
+files based on the basename or the <cite>.DATA</cite> filename.</p>
+<p>## License</p>
+<p>This library is released under GPLv3.</p>
+<p>## Copyright</p>
+<p>The code is Copyright Equinor ASA 2019.</p>
+<p>Contributions without copyright transfer are welcome.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to ecl2df’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -1,0 +1,570 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ecl2df.compdat2df &mdash; ecl2df 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ecl2df.compdat2df</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ecl2df.compdat2df</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">parse_ecl_month</span>
+
+
+<span class="c1"># Sunbeam terms:</span>
+<span class="n">COMPDATKEYS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;J&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;STATE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SAT_TABLE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CONNECTION_TRANSMISSIBILITY_FACTOR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIAMETER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Kh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SKIN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;D_FACTOR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PR&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">COMPSEGSKEYS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;J&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BRANCH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DISTANCE_START&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DISTANCE_END&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIRECTION&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;END_IJK&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CENTER_DEPTH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;THERMAL_LENGTH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SEGMENT_NUMBER&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Based on https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS</span>
+<span class="n">WELSEGSKEYS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Name of the well&quot;</span>
+    <span class="s2">&quot;DEPTH&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Depth of the nodal point of the top segment&quot;</span>
+    <span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>  <span class="c1"># Length down tubing to nodal point of top segment&quot;</span>
+    <span class="s2">&quot;WELLBORE_VOLUME&quot;</span><span class="p">,</span>  <span class="c1"># Effective wellbore volume of the top segment</span>
+    <span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">,</span>  <span class="c1"># Type of tubing length and depth information, INC or ABS</span>
+    <span class="s2">&quot;PRESSURE_COMPONENTS&quot;</span><span class="p">,</span>  <span class="c1"># How to calculate pressure drop in each segment</span>
+    <span class="s2">&quot;FLOW_MODEL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TOP_X&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TOP_Y&quot;</span><span class="p">,</span>  <span class="c1"># END OF FIRST RECORD FOR E100. E300 has some more.</span>
+    <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span>  <span class="c1"># For each subseqent record</span>
+    <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BRANCH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;JOIN_SEGMENT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">,</span>  <span class="c1"># Copied to SEGMENT_MD, as it can be both, depending on INFO_TYPE</span>
+    <span class="s2">&quot;DEPTH_CHANGE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIAMETER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ROUGHNESS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AREA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;VOLUME&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LENGTH_X&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LENGTH_Y&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="sunbeam2rmsterm"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.sunbeam2rmsterm">[docs]</a><span class="k">def</span> <span class="nf">sunbeam2rmsterm</span><span class="p">(</span><span class="n">reckey</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sunbeam authors and Roxar RMS authors have interpreted the Eclipse</span>
+<span class="sd">    documentation ever so slightly different when naming the data.</span>
+
+<span class="sd">    For COMPDAT dataframe columnnames, we prefer the RMS terms due to the</span>
+<span class="sd">    one very long one, and mixed-case in sunbeam</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str with translated term, or of no translation available</span>
+<span class="sd">        the term is returned unchanged.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">thedict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;WELL&quot;</span><span class="p">:</span> <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;J&quot;</span><span class="p">:</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;K1&quot;</span><span class="p">:</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;K2&quot;</span><span class="p">:</span> <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;STATE&quot;</span><span class="p">:</span> <span class="s2">&quot;OP/SH&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SAT_TABLE&quot;</span><span class="p">:</span> <span class="s2">&quot;SATN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CONNECTION_TRANSMISSIBILITY_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;TRAN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DIAMETER&quot;</span><span class="p">:</span> <span class="s2">&quot;WBDIA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Kh&quot;</span><span class="p">:</span> <span class="s2">&quot;KH&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SKIN&quot;</span><span class="p">:</span> <span class="s2">&quot;SKIN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;D_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;DFACT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;DIR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PR&quot;</span><span class="p">:</span> <span class="s2">&quot;PEQVR&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">thedict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reckey</span><span class="p">,</span> <span class="n">reckey</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unroll</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
+
+<span class="sd">    The loop over the deck is a state machine, as it has to pick up dates</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck (sunbeam.libsunbeam.Deck): A deck representing the schedule</span>
+<span class="sd">            Does not have to be a full Eclipse deck, an include file is sufficient</span>
+<span class="sd">        start_date (datetime.date or str): The default date to use for</span>
+<span class="sd">            events where the DATE or START keyword is not found in advance.</span>
+<span class="sd">            Default: None</span>
+<span class="sd">        unroll (bool): Whether to unroll rows that cover a range,</span>
+<span class="sd">            like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">compdatrecords</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of dicts of every line in input file</span>
+    <span class="n">compsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">welsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">start_date</span>  <span class="c1"># DATE column will always be there, but can contain NaN/None</span>
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+                <span class="n">day</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;DAY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">date</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use TSTEP when there is no start_date&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+                <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1"># Assuming not LAB units, then the unit is days.</span>
+                <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
+                <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;Advancing </span><span class="si">{}</span><span class="s2"> days to </span><span class="si">{}</span><span class="s2"> through TSTEP&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside COMPDAT record</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">COMPDATKEYS</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
+                            <span class="n">rec_data</span><span class="p">[</span><span class="n">sunbeam2rmsterm</span><span class="p">(</span><span class="n">rec_key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="c1"># &quot;rec_key in rec&quot; does not work..</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="n">compdatrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">:</span>
+            <span class="n">well</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">)):</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="n">rec</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">COMPSEGSKEYS</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
+                            <span class="n">rec_data</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="n">compsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
+            <span class="c1"># First record contains meta-information for well</span>
+            <span class="c1"># (sunbeam deck returns default values for unspecified items.)</span>
+            <span class="n">welsegsdict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELLBORE_VOLUME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;PRESSURE_COMPONENTS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;FLOW_MODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">7</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">8</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Loop over all subsequent records.</span>
+            <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">)):</span>
+                <span class="n">rec</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
+                <span class="c1"># WARNING: We assume that SEGMENT1 === SEGMENT2 (!!!) (if not,</span>
+                <span class="c1"># we need to loop over a range just as for layer in compdat)</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">welsegsdict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">WELSEGSKEYS</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
+                            <span class="n">rec_data</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="k">if</span> <span class="s2">&quot;INFO_TYPE&quot;</span> <span class="ow">in</span> <span class="n">rec_data</span> <span class="ow">and</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ABS&quot;</span><span class="p">:</span>
+                    <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_MD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">]</span>
+                <span class="n">welsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Possible premature stop at first TSTEP&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compdatrecords</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">):</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">)</span>
+
+    <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compsegsrecords</span><span class="p">)</span>
+
+    <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">welsegsrecords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">welsegs_df</span><span class="p">):</span>
+        <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">welsegs_df</span><span class="p">,</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span> <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="postprocess"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.postprocess">[docs]</a><span class="k">def</span> <span class="nf">postprocess</span><span class="p">():</span>
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compdat.csv&quot;</span><span class="p">)</span>
+    <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compsegs.csv&quot;</span><span class="p">)</span>
+    <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">)</span>
+
+    <span class="c1">#  We need different handling of ICD&#39;s and non-ICD wells due</span>
+    <span class="c1">#  to the complex WELSEGS structure:</span>
+    <span class="c1">#</span>
+    <span class="c1"># ICD wells:</span>
+    <span class="c1"># 1. First compdata is merged with compsegs (non-ICD</span>
+    <span class="c1">#    should be stripped away).</span>
+    <span class="c1"># 2. Then that product is merged with welsegs on &#39;branch&#39;</span>
+    <span class="c1"># 3. Then that product is merged again with welsegs, where</span>
+    <span class="c1">#    we join on &#39;join_segment&#39; and &#39;segment&#39;</span>
+    <span class="c1"># 4. Then we finally have the mapping between completed</span>
+    <span class="c1">#    cells and branch number</span>
+    <span class="c1">#</span>
+    <span class="c1"># Non-ICD wells:</span>
+    <span class="c1"># 1. Merge compdata and compsegs</span>
+    <span class="c1"># 2. Then we are ready.. compsegs contains the correct branch number</span>
+
+    <span class="n">compdatsegs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">compsegs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;j&quot;</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">])</span>
+    <span class="c1"># WARNING: Only correct for dual-branch wells,</span>
+    <span class="c1"># not triple-branach wells with ICD..</span>
+    <span class="n">compsegs_icd_df</span> <span class="o">=</span> <span class="n">compsegs_df</span><span class="p">[</span><span class="n">compsegs_df</span><span class="o">.</span><span class="n">branch</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># icd_wells = compsegs_icd_df.well.unique()</span>
+    <span class="n">compdatsegwel_icd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">compsegs_icd_df</span><span class="p">,</span> <span class="n">welsegs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span> <span class="s2">&quot;branch&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">del</span> <span class="n">compdatsegwel_icd_df</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span>  <span class="c1"># we don&#39;t need this</span>
+    <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;branch&quot;</span><span class="p">:</span> <span class="s2">&quot;icd_branch&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;join_segment&quot;</span><span class="p">:</span> <span class="s2">&quot;segment&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">alldata_icd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">compdatsegwel_icd_df</span><span class="p">,</span> <span class="n">welsegs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span> <span class="s2">&quot;segment&quot;</span><span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="s2">&quot;K2&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
+<span class="sd">    a range where data applies.</span>
+
+<span class="sd">    After unrolling, column pairs with ranges are transformed</span>
+<span class="sd">    into multiple rows, with no ranges.</span>
+
+<span class="sd">    Example: COMPDAT supports K1, K2 intervals for multiple cells,</span>
+
+<span class="sd">    COMPDAT</span>
+<span class="sd">      &#39;OP1&#39; 33 44 10 11 /</span>
+<span class="sd">    /</span>
+
+<span class="sd">    is transformed/unrolled so it would be equal to</span>
+
+<span class="sd">    COMPDAT</span>
+<span class="sd">      &#39;OP1&#39; 33 44 10 10 /</span>
+<span class="sd">      &#39;OP1&#39; 33 44 11 11 /</span>
+<span class="sd">    /</span>
+
+<span class="sd">    The latter is easier to work with in Pandas dataframes</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): Dataframe to be unrolled</span>
+<span class="sd">        start_column (str): Column name that contains the start of</span>
+<span class="sd">            a range.</span>
+<span class="sd">        end_column (str): Column name that contains the corresponding</span>
+<span class="sd">            end of the range.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.Dataframe: Unrolled version. Identical to input if none of</span>
+<span class="sd">            rows had any ranges.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">if</span> <span class="n">start_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span> <span class="ow">and</span> <span class="n">end_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;Cannot unroll on non-existing columns </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">start_column</span><span class="p">,</span> <span class="n">end_column</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="n">start_eq_end_bools</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">start_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="n">end_column</span><span class="p">]</span>
+    <span class="n">unrolled</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">start_eq_end_bools</span><span class="p">]</span>
+    <span class="n">list_unrolled</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">~</span><span class="n">start_eq_end_bools</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">rangerow</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">start_eq_end_bools</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">rangerow</span><span class="p">[</span><span class="n">start_column</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">rangerow</span><span class="p">[</span><span class="n">end_column</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">rangerow</span><span class="p">[</span><span class="n">start_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="n">rangerow</span><span class="p">[</span><span class="n">end_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="n">list_unrolled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rangerow</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">list_unrolled</span><span class="p">:</span>
+        <span class="n">unrolled</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">unrolled</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">list_unrolled</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">unrolled</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;compdat.csv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;compdat2csv is deprecated, use &#39;ecl2csv compdat &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">compdat2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compdat2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.compdat2df_main">[docs]</a><span class="k">def</span> <span class="nf">compdat2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
+    <span class="n">dfs</span> <span class="o">=</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;compdat.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPSEGS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;compsegs.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;WELSEGS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">unrolldf</span><span class="p">(</span><span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ecl2df.grid2df &mdash; ecl2df 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ecl2df.grid2df</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ecl2df.grid2df</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extract grid information from Eclipse output files as Dataframes.</span>
+
+<span class="sd">Each cell in the grid correspond to one row.</span>
+
+<span class="sd">For grid cells, x, y, z for cell centre and volume is available as</span>
+<span class="sd">geometric information. Static data (properties) can be merged from</span>
+<span class="sd">the INIT file, and dynamic data can be merged from the Restart (UNRST)</span>
+<span class="sd">file.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">dateutil.parser</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="k">import</span> <span class="n">EclFile</span>
+<span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
+
+
+<div class="viewcode-block" id="rstdates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.rstdates">[docs]</a><span class="k">def</span> <span class="nf">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
+    <span class="n">report_indices</span> <span class="o">=</span> <span class="n">EclFile</span><span class="o">.</span><span class="n">file_report_list</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfilename</span><span class="p">())</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">iget_restart_sim_time</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">report_indices</span><span class="p">))</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="dates2rstindices"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.dates2rstindices">[docs]</a><span class="k">def</span> <span class="nf">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">dates</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the restart index/indices for a given datetime or list of datetimes</span>
+
+<span class="sd">      date: datetime.date or list of datetime.date, must</span>
+<span class="sd">            correspond to an existing date. If list, it</span>
+<span class="sd">            forces dateinheaders to be True.</span>
+<span class="sd">            Can also be string, then the mnenomics</span>
+<span class="sd">            &#39;first&#39;, &#39;last&#39;, &#39;all&#39;, are supported, or ISO</span>
+<span class="sd">            date formats.</span>
+
+
+<span class="sd">    Raises exception no dates are not found.</span>
+
+<span class="sd">    Return: tuple, first element is</span>
+<span class="sd">        list of integers, corresponding to restart indices. Length 1 or more.</span>
+<span class="sd">        second element is list of corresponding datetime.date objecs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">availabledates</span> <span class="o">=</span> <span class="n">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+
+    <span class="n">supportedmnemonics</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;last&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">]</span>
+
+    <span class="c1"># After this control block, chosendates is a list of dates</span>
+    <span class="c1"># we should extract, and which exists in UNRST.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dates</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supportedmnemonics</span><span class="p">:</span>
+            <span class="c1"># Try to parse as ISO date:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">isodate</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">isoparse</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not understood&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">isodate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">availabledates</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">isodate</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not found in UNRST file&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">isodate</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dates</span> <span class="o">==</span> <span class="s2">&quot;first&quot;</span><span class="p">:</span>
+                <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">availabledates</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="n">dates</span> <span class="o">==</span> <span class="s2">&quot;last&quot;</span><span class="p">:</span>
+                <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">availabledates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="n">dates</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+                <span class="n">chosendates</span> <span class="o">=</span> <span class="n">availabledates</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+        <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dates</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+        <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dates</span><span class="o">.</span><span class="n">date</span><span class="p">()]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dates</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">availabledates</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">chosendates</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;None of the requested dates were found&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">chosendates</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">availabledates</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not all dates found in UNRST</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not understood&quot;</span><span class="p">)</span>
+
+    <span class="n">rstindices</span> <span class="o">=</span> <span class="p">[</span><span class="n">availabledates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chosendates</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
+<span class="sd">    for each cell, at a particular date.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        eclfiles: EclFiles object</span>
+<span class="sd">        date: datetime.date or list of datetime.date, must</span>
+<span class="sd">            correspond to an existing date. If list, it</span>
+<span class="sd">            forces dateinheaders to be True.</span>
+<span class="sd">            Can also be string, then the mnenomics</span>
+<span class="sd">            &#39;first&#39;, &#39;last&#39;, &#39;all&#39;, are supported, or ISO</span>
+<span class="sd">            date formats.</span>
+<span class="sd">        dateinheaders: boolean on whether the date should</span>
+<span class="sd">            be added to the column headers. Instead of</span>
+<span class="sd">            SGAS as a column header, you get SGAS@YYYY-MM-DD.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># First task is to determine the restart index to extract</span>
+    <span class="c1"># data for:</span>
+    <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span> <span class="o">=</span> <span class="n">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting restart information at dates </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">chosendates</span><span class="p">)))</span>
+
+    <span class="c1"># Determine the available restart vectors, we only include</span>
+    <span class="c1"># those with correct length, meaning that they are defined</span>
+    <span class="c1"># for all active cells:</span>
+    <span class="n">activecells</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">()</span>
+    <span class="n">rstvectors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">activecells</span><span class="p">:</span>
+            <span class="n">rstvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">rstvectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rstvectors</span><span class="p">))</span>  <span class="c1"># Make unique list</span>
+    <span class="c1"># Note that all of these might not exist at all timesteps.</span>
+
+    <span class="n">rst_dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rstindex</span> <span class="ow">in</span> <span class="n">rstindices</span><span class="p">:</span>
+        <span class="c1"># Filter the rst vectors once more, all of them</span>
+        <span class="c1"># might not be available at all timesteps:</span>
+        <span class="n">present_rstvectors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">rstvectors</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">rstindex</span><span class="p">):</span>
+                <span class="n">present_rstvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">present_rstvectors</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No restart vectors available at index </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rstindex</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Make the dataframe</span>
+        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">rstvectors</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">rstindex</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">numpyView</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">present_rstvectors</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Tag the column names if requested, or if multiple rst indices</span>
+        <span class="c1"># are asked for</span>
+        <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">datestr</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">chosendates</span><span class="p">[</span><span class="n">rstindices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rstindex</span><span class="p">)]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">colname</span> <span class="o">+</span> <span class="n">datestr</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+        <span class="n">rst_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rst_df</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rst_dfs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with Eclipse gridgeometry</span>
+
+<span class="sd">    Order is significant, and is determined by the order from libecl, and used</span>
+<span class="sd">    when merging with other dataframes with cell-data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        eclfiles: EclFiles object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">eclfiles</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span>
+    <span class="n">egrid_file</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egridfile</span><span class="p">()</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">egrid_file</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No EGRID file supplied&quot;</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting grid geometry from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">egrid_file</span><span class="p">))</span>
+    <span class="n">index_frame</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">export_index</span><span class="p">(</span><span class="n">active_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ijk</span> <span class="o">=</span> <span class="n">index_frame</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># ijk from ecl.grid is off by one</span>
+
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">export_position</span><span class="p">(</span><span class="n">index_frame</span><span class="p">)</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">export_volume</span><span class="p">(</span><span class="n">index_frame</span><span class="p">)</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">index_frame</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;j&quot;</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">],</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">ijk</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">vol</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span>
+    <span class="p">)</span>
+    <span class="c1"># Type conversion, hstack maybe ruined the datatypes..</span>
+    <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;j&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Column names should be uppercase</span>
+    <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">grid_df</span></div>
+
+
+<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">active_cells</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
+
+<span class="sd">    Order is significant, as index is used for merging</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        init_file: EclFile for the INIT object</span>
+<span class="sd">        active_cells: int, The number of active cells each vector is required to have</span>
+<span class="sd">            Other vectors will be dropped.</span>
+<span class="sd">        vectors: List of vectors to include, glob-style wildcards supported</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">vectors</span><span class="p">:</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>  <span class="c1"># This will include everything</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectors</span><span class="p">]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting vectors </span><span class="si">{}</span><span class="s2"> from INIT file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">vectors</span><span class="p">)))</span>
+
+    <span class="c1"># Build list of vector names to include:</span>
+    <span class="n">usevectors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">active_cells</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">usevectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">usevectors</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">init</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpyView</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">usevectors</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">init_df</span></div>
+
+
+<div class="viewcode-block" id="merge_gridframes"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.merge_gridframes">[docs]</a><span class="k">def</span> <span class="nf">merge_gridframes</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Merge dataframes with grid data&quot;&quot;&quot;</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">merged</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser: argparse.ArgumentParser or argparse.subparser</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file. &quot;</span> <span class="o">+</span> <span class="s2">&quot;INIT and EGRID file must lie alongside.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--initkeys&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;INIT vector wildcards for vectors to include&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--rstdate&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Point in time to grab restart data from, &quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;either &#39;first&#39; or &#39;last&#39;, or a date in &quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;YYYY-MM-DD format&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;eclgrid.csv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--dropconstants&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Drop constant columns from the dataset&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="dropconstants"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.dropconstants">[docs]</a><span class="k">def</span> <span class="nf">dropconstants</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Drop/delete constant columns from a dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: pd.DataFrame</span>
+<span class="sd">        alwayskeep: string or list of strings of columns to keep</span>
+<span class="sd">           anyway.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame with equal or less columns.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">alwayskeep</span><span class="p">:</span>
+        <span class="n">alwayskeep</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alwayskeep</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">alwayskeep</span> <span class="o">=</span> <span class="p">[</span><span class="n">alwayskeep</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alwayskeep</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;alwayskeep must be a list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dropconstants() needs a dataframe&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="n">columnstodelete</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">alwayskeep</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">columnstodelete</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">columnstodelete</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting constant columns </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">columnstodelete</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columnstodelete</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;grid2csv is deprecated, use &#39;ecl2csv grid &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="grid2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.grid2df_main">[docs]</a><span class="k">def</span> <span class="nf">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+    <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span>
+        <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_initfile</span><span class="p">(),</span>
+        <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">(),</span>
+        <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initkeys</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">:</span>
+        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dropconstants</span><span class="p">:</span>
+        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">dropconstants</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+        <span class="c1"># Ignore pipe errors when writing to stdout.</span>
+        <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
+
+        <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
+        <span class="n">grid_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">grid_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

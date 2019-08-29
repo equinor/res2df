@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ecl2df.satfunc2df &mdash; ecl2df 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ecl2df.satfunc2df</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ecl2df.satfunc2df</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extract saturation function data (SWOF, SGOF, SWFN, ...)</span>
+<span class="sd">from an Eclipse deck as Pandas DataFrame.</span>
+
+<span class="sd">Data can be extracted from a full Eclipse deck (*.DATA)</span>
+<span class="sd">or from individual files.</span>
+
+<span class="sd">Note that when parsing from individual files, it is</span>
+<span class="sd">undefined in the syntax how many saturation functions (SATNUMs) are</span>
+<span class="sd">present. For convenience, it is possible to estimate the count of</span>
+<span class="sd">SATNUMs, but whenever this is known, it is recommended to either supply</span>
+<span class="sd">TABDIMS or to supply the satnumcount directly to avoid possible bugs.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">sunbeam</span>
+
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="k">import</span> <span class="n">inferdims</span>
+<span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
+
+<span class="c1"># Dictionary of Eclipse keywords that holds saturation data, with</span>
+<span class="c1"># lists of which datatypes they contain. The datatypes/names will</span>
+<span class="c1"># be used as column headers in returned dataframes.</span>
+<span class="n">KEYWORD_COLUMNS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;SWOF&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;KROW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOW&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;SGOF&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;SWFN&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOW&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;SOFN&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;KRO&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;SGFN&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;SOF3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SO&quot;</span><span class="p">,</span> <span class="s2">&quot;KROW&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;SLGOF&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SL&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="deck2satfuncdf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.deck2satfuncdf">[docs]</a><span class="k">def</span> <span class="nf">deck2satfuncdf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deprecated function, to be removed&quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2satfuncdf&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inject_satnumcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.inject_satnumcount">[docs]</a><span class="k">def</span> <span class="nf">inject_satnumcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">,</span> <span class="n">satnumcount</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
+
+<span class="sd">    This is simple string manipulation, not sunbeam</span>
+<span class="sd">    deck manipulation (which might be possible to do).</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        deckstr (str): A string containing a partial deck (f.ex only</span>
+<span class="sd">            the SWOF keyword).</span>
+<span class="sd">        satnumcount (int): The NTSFUN number to use in TABDIMS</span>
+<span class="sd">            (this function does not care if it is correct or not)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: New deck with TABDIMS prepended.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deckstr</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not inserting TABDIMS in a deck where already exists&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deckstr</span>
+    <span class="k">return</span> <span class="s2">&quot;TABDIMS</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">satnumcount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; /</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">deckstr</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">satnumcount</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract the data in the saturation function keywords as a Pandas</span>
+<span class="sd">    DataFrame.</span>
+
+<span class="sd">    Data for all saturation functions are merged into one dataframe.</span>
+<span class="sd">    The two first columns in the dataframe are &#39;KEYWORD&#39; (which can be</span>
+<span class="sd">    SWOF, SGOF, etc.), and then SATNUM which is an index counter from 1 and</span>
+<span class="sd">    onwards. Then follows the data for each individual keyword that</span>
+<span class="sd">    is found in the deck.</span>
+
+<span class="sd">    SATNUM data can only be parsed correctly if TABDIMS is present</span>
+<span class="sd">    and stating how many saturation functions there should be.</span>
+<span class="sd">    If you have a string with TABDIMS missing, you must supply</span>
+<span class="sd">    this as a string to this function, and not a parsed deck, as</span>
+<span class="sd">    the default parser in EclFiles is very permissive (and only</span>
+<span class="sd">    returning the first function by default).</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        deck (sunbeam.deck or str): Incoming data deck. Always</span>
+<span class="sd">            supply as a string if you don&#39;t know TABDIMS-NTSFUN.</span>
+<span class="sd">        satnumcount (int): Number of SATNUMs defined in the deck, only</span>
+<span class="sd">            needed if TABDIMS with NTSFUN is not found in the deck.</span>
+<span class="sd">            If not supplied (or None) and NTSFUN is not defined,</span>
+<span class="sd">            it will be attempted inferred.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        pd.DataFrame, columns &#39;SW&#39;, &#39;KRW&#39;, &#39;KROW&#39;, &#39;PC&#39;, ..</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="s2">&quot;Will not be able to guess NTSFUN from a parsed deck without TABDIMS.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Only data for first SATNUM will be returned.&quot;</span>
+                    <span class="s2">&quot;Instead, supply string to deck2df()&quot;</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">satnumcount</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># If TABDIMS is in the deck, NTSFUN always has a value. It will</span>
+        <span class="c1"># be set to 1 if defaulted.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">satnumcount</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;TABDIMS+NTSFUN or satnumcount not supplied. Will be guessed.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ntsfun_estimate</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">guess_dim</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">),</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ntsfun_estimate</span>
+            <span class="p">)</span>
+            <span class="c1"># Re-parse the modified deck:</span>
+            <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">),</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">satnumcount</span>
+            <span class="p">)</span>
+            <span class="c1"># Re-parse the modified deck:</span>
+            <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
+
+    <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">KEYWORD_COLUMNS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+            <span class="n">satnum</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">deckrecord</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="n">keyword</span><span class="p">]:</span>
+                <span class="c1"># All data for an entire SATNUM is returned in one list</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="c1"># Split up into the correct number of columns</span>
+                <span class="n">column_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="n">column_count</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Inconsistent data length or bug&quot;</span><span class="p">)</span>
+                    <span class="k">return</span>
+                <span class="n">satpoints</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">column_count</span><span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">satpoints</span><span class="p">,</span> <span class="n">column_count</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">satnum</span>
+                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keyword</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">,</span> <span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">]]</span>
+                <span class="n">satnum</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="n">nonempty_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">nonempty_frames</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">nonempty_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No saturation data found in deck&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file or file with saturation functions.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;satfuncs.csv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;satfunc2csv is deprecated, use &#39;ecl2csv satfunc &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">satfunc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="satfunc2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.satfunc2df_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="c1"># Things are easier when a full deck with correct TABDIMS</span>
+        <span class="c1"># is supplied:</span>
+        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># When TABDIMS is not present, the code will try to infer</span>
+        <span class="c1"># the number of saturation functions, this is necessarily</span>
+        <span class="c1"># more error-prone:</span>
+        <span class="n">stringdeck</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">stringdeck</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">satfunc_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Unique satnums: </span><span class="si">%d</span><span class="s2">, saturation keywords: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+        <span class="p">)</span>
+        <span class="n">satfunc_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+ecl2df package
+==============
+
+Submodules
+----------
+
+ecl2df.common module
+--------------------
+
+.. automodule:: ecl2df.common
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.compdat2df module
+------------------------
+
+.. automodule:: ecl2df.compdat2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.ecl2csv module
+---------------------
+
+.. automodule:: ecl2df.ecl2csv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.eclfiles module
+----------------------
+
+.. automodule:: ecl2df.eclfiles
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.equil2df module
+----------------------
+
+.. automodule:: ecl2df.equil2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.faults2df module
+-----------------------
+
+.. automodule:: ecl2df.faults2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.grid2df module
+---------------------
+
+.. automodule:: ecl2df.grid2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.gruptree2df module
+-------------------------
+
+.. automodule:: ecl2df.gruptree2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.inferdims module
+-----------------------
+
+.. automodule:: ecl2df.inferdims
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.nnc2df module
+--------------------
+
+.. automodule:: ecl2df.nnc2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.rft2df module
+--------------------
+
+.. automodule:: ecl2df.rft2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.satfunc2df module
+------------------------
+
+.. automodule:: ecl2df.satfunc2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.summary2df module
+------------------------
+
+.. automodule:: ecl2df.summary2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.wcon2df module
+---------------------
+
+.. automodule:: ecl2df.wcon2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ecl2df
+   :members:
+   :undoc-members:
+   :show-inheritance:

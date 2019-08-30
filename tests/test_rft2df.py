@@ -64,3 +64,11 @@ def test_main_subparsers():
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
     os.remove(tmpcsvfile)
+
+    # Test with RFT file as argument:
+    sys.argv = ["ecl2cvsv", "rft", DATAFILE.replace(".DATA", ".RFT"), "-o", tmpcsvfile]
+    ecl2csv.main()
+    assert os.path.exists(tmpcsvfile)
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert not disk_df.empty
+    os.remove(tmpcsvfile)

@@ -289,8 +289,13 @@ def main():
 def rft2df_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
-    eclfiles = EclFiles(args.DATAFILE)
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.INFO)
+    if args.DATAFILE.endswith(".RFT"):
+        # Support the RFT file as an argument also:
+        eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")
+    else:
+        eclfiles = EclFiles(args.DATAFILE)
     rft_df = rft2df(eclfiles)
     rft_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

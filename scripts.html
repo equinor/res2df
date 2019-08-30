@@ -1,0 +1,609 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Command line utility: ecl2csv &mdash; ecl2df 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API for pyscal" href="modules.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command line utility: ecl2csv</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Sub-commands:">Sub-commands:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grid">grid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#smry">smry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat1">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat1">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#nnc">nnc</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat2">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat2">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#faults">faults</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat3">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat3">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rft">rft</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat4">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat4">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat5">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat5">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#compdat">compdat</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat6">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat6">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat7">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat7">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gruptree">gruptree</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat8">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat8">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat9">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat9">Named Arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API for pyscal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Command line utility: ecl2csv</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/scripts.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="command-line-utility-ecl2csv">
+<h1>Command line utility: ecl2csv<a class="headerlink" href="#command-line-utility-ecl2csv" title="Permalink to this headline">¶</a></h1>
+<p id="ecl2csv">From the command line there is a utility for dumping the
+data of interest to CSV files.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
+               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">smry</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
+               <span class="o">...</span>
+</pre></div>
+</div>
+<div class="section" id="Sub-commands:">
+<h2>Sub-commands:<a class="headerlink" href="#Sub-commands:" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="grid">
+<h3>grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h3>
+<p>Extract grid data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">grid</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">initkeys</span> <span class="n">INITKEYS</span> <span class="p">[</span><span class="n">INITKEYS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">rstdate</span> <span class="n">RSTDATE</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dropconstants</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+             <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>--initkeys</kbd></dt>
+<dd><p>INIT vector wildcards for vectors to include</p>
+<p>Default: “*”</p>
+</dd>
+<dt><kbd>--rstdate</kbd></dt>
+<dd><p>Point in time to grab restart data from, either ‘first’ or ‘last’, or a date in YYYY-MM-DD format</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “eclgrid.csv”</p>
+</dd>
+<dt><kbd>--dropconstants</kbd></dt>
+<dd><p>Drop constant columns from the dataset</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="smry">
+<h3>smry<a class="headerlink" href="#smry" title="Permalink to this headline">¶</a></h3>
+<p>Extract summary data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">smry</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+             <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat1">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file. UNSMRY file must lie alongside.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat1">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>--time_index</kbd></dt>
+<dd><dl class="simple">
+<dt>Time resolution mnemonic; raw, daily, monthly or yearly.</dt><dd><p>Data at a given point in time applies until the next point in time.
+If not raw, data will be interpolated. Use interpolated rate vectors with care.
+Default is raw, which will include clock times.</p>
+</dd>
+</dl>
+<p>Default: “raw”</p>
+</dd>
+<dt><kbd>--column_keys</kbd></dt>
+<dd><dl class="simple">
+<dt>Summary column vector wildcards, space-separated.</dt><dd><p>Default is to include all summary vectors available.</p>
+</dd>
+</dl>
+</dd>
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file. Use ‘-‘ to write to stdout. Default ‘summary.csv’</p>
+<p>Default: “summary.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="nnc">
+<h3>nnc<a class="headerlink" href="#nnc" title="Permalink to this headline">¶</a></h3>
+<p>Extract nnc data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">nnc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat2">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat2">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>name of output csv file.</p>
+<p>Default: “nnc.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="faults">
+<h3>faults<a class="headerlink" href="#faults" title="Permalink to this headline">¶</a></h3>
+<p>Extract faults data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">faults</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat3">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat3" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat3">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat3" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “faults.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="rft">
+<h3>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
+<p>Extract RFT data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat4">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file. RFT file must lie alongside.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat4">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>name of output csv file.</p>
+<p>Default: “rft.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="satfunc">
+<h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
+<p>Extract SWOF/SGOF/etc data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat5">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file or file with saturation functions.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat5">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “satfuncs.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="compdat">
+<h3>compdat<a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h3>
+<p>Extract COMPDAT/COMPSEGS/etc data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">compdat</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat6">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat6">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “compdat.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="equil">
+<h3>equil<a class="headerlink" href="#equil" title="Permalink to this headline">¶</a></h3>
+<p>Extract EQUIL data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat7">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat7">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “equil.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="gruptree">
+<h3>gruptree<a class="headerlink" href="#gruptree" title="Permalink to this headline">¶</a></h3>
+<p>Extract GRUPTREE data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">gruptree</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">startdate</span> <span class="n">STARTDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat8">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat8">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file. No CSV dump if empty</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>-p, --prettyprint</kbd></dt>
+<dd><p>Pretty-print the tree structure</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--startdate</kbd></dt>
+<dd><p>First schedule date if not defined in input file, YYYY-MM-DD</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="wcon">
+<h3>wcon<a class="headerlink" href="#wcon" title="Permalink to this headline">¶</a></h3>
+<p>Extract well control data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wcon</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat9">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file or Eclipse include file.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat9">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “wcon.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="API for pyscal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

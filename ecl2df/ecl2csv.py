@@ -25,8 +25,8 @@ from ecl2df import (
 )
 
 
-def main():
-    """Entry-point"""
+def get_parser():
+    """Make parser"""
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
 
@@ -74,6 +74,12 @@ def main():
     wcon2df.fill_parser(wcon_parser)
     wcon_parser.set_defaults(func=wcon2df.wcon2df_main)
 
+    return parser
+
+
+def main():
+    """Entry point"""
+    parser = get_parser()
     args = parser.parse_args()
     args.func(args)
 

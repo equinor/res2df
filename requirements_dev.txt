@@ -5,3 +5,4 @@ pytest-runner
 versioneer
 sphinx
 sphinx_rtd_theme
+sphinx-argparse

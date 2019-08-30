@@ -1,13 +1,13 @@
 Welcome to ecl2df's documentation!
 ========================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
    readme
    installation
+   scripts
+   modules
    authors
    history
 

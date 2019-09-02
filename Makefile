@@ -122,7 +122,7 @@ docsrun: clean ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/${APPLICATIONROOT}*.rst
 	rm -f docs/modules.rst
 	rm -fr docs/_build
-	sphinx-apidoc -H "API for pyscal" -o docs ${TOPSRCAPPLICATION}
+	sphinx-apidoc -H "API for ecl2df" -o docs ${TOPSRCAPPLICATION}
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	touch docs/_build/html/.nojekyll

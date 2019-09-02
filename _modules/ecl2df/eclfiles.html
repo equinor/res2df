@@ -163,6 +163,7 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">sunbeam.deck</span>
 
@@ -231,6 +232,7 @@
                 <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span>  <span class="c1"># Will be any filename</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing deck file </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">deckfile</span><span class="p">)</span>
             <span class="n">deck</span> <span class="o">=</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">deckfile</span><span class="p">,</span> <span class="n">recovery</span><span class="o">=</span><span class="n">SUNBEAM_RECOVERY</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span> <span class="o">=</span> <span class="n">deck</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span></div>
@@ -258,17 +260,21 @@
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">egridfilename</span>
                 <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening grid data from EGRID file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="n">EclGrid</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span></div>
 
 <div class="viewcode-block" id="EclFiles.get_egridfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_egridfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a EclFile object&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a EclFile object</span>
+
+<span class="sd">        This gives access to data vectors defined on the grid.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span><span class="p">:</span>
             <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.EGRID&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">egridfilename</span>
                 <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening data vectors from EGRID file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span></div>
 
@@ -288,6 +294,7 @@
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">smryfilename</span>
                 <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening UNSMRY file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">smryfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="n">EclSum</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span></div>
 
@@ -299,6 +306,7 @@
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">initfilename</span>
                 <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening INIT file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">initfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">initfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span></div>
 
@@ -310,6 +318,7 @@
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">rftfilename</span>
                 <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening RFT file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rftfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span></div>
 
@@ -321,6 +330,7 @@
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">rstfilename</span>
                 <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening RST file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rstfilename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span></div>
 

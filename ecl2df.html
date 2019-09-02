@@ -373,6 +373,7 @@ parsing by default</p>
 <dt id="ecl2df.eclfiles.EclFiles.get_egridfile">
 <code class="sig-name descname">get_egridfile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_egridfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_egridfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find and return the EGRID file as a EclFile object</p>
+<p>This gives access to data vectors defined on the grid.</p>
 </dd></dl>
 
 <dl class="method">
@@ -822,7 +823,8 @@ the SWOF keyword).</p></li>
 <span id="ecl2df-nnc2df-module"></span><h2>ecl2df.nnc2df module<a class="headerlink" href="#module-ecl2df.nnc2df" title="Permalink to this headline">¶</a></h2>
 <p>Extract NNC information from Eclipse output files.</p>
 <p>NNC = Non Neighbour Connection</p>
-<p>Inspired by <a class="reference external" href="https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_n">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_n</a>    nc.py</p>
+<p>Inspired by
+<a class="reference external" href="https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py</a></p>
 <dl class="function">
 <dt id="ecl2df.nnc2df.nnc2df">
 <code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df" title="Permalink to this definition">¶</a></dt>
@@ -866,7 +868,8 @@ and command line utility for each module in ecl2df</p>
 <dl class="function">
 <dt id="ecl2df.nnc2df.nnc2df_main">
 <code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df_main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Command line access point from main() or from ecl2csv via subparser</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-ecl2df.rft2df">

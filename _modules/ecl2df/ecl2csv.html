@@ -196,7 +196,16 @@
     <span class="n">summary2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
     <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary2df</span><span class="o">.</span><span class="n">summary2df_main</span><span class="p">)</span>
 
-    <span class="n">nnc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;nnc&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract nnc data&quot;</span><span class="p">)</span>
+    <span class="n">nnc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;nnc&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract NNC data from EGRID file&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract NNC (Non-Neighbour Connection) data from the EGRID file. &quot;</span>
+            <span class="s2">&quot;Each row is one connection, with the columns I1, J1, K1 for the first cell &quot;</span>
+            <span class="s2">&quot;in the cell pair, and I2, J2, K2 for the second. The transmissibility &quot;</span>
+            <span class="s2">&quot;for the cell pair is in the TRAN column.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
     <span class="n">nnc2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">nnc_parser</span><span class="p">)</span>
     <span class="n">nnc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">nnc2df</span><span class="o">.</span><span class="n">nnc2df_main</span><span class="p">)</span>
 

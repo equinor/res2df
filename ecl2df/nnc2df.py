@@ -84,7 +84,7 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="name of output csv file.", default="nnc.csv"
+        "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     # args.add_argument("--augment", action='store_true',

@@ -47,7 +47,19 @@ def get_parser():
     faults2df.fill_parser(faults_parser)
     faults_parser.set_defaults(func=faults2df.faults2df_main)
 
-    rft_parser = subparsers.add_parser("rft", help="Extract RFT data")
+    rft_parser = subparsers.add_parser(
+        "rft",
+        help=("Extract RFT data from Eclipse binary output files."),
+        description=(
+            "Extract RFT data from Eclipse binary output files to CSV. "
+            "Each row in the resulting table represents one point in a "
+            "particular well at a particular time. "
+            "If multisegment wells are found, associated data "
+            "to a connection is merged onto the same row as additional columns. "
+            "You need the Eclipse keyword WRFTPLT present in your DATA-file to get "
+            "the data outputted."
+        ),
+    )
     rft2df.fill_parser(rft_parser)
     rft_parser.set_defaults(func=rft2df.rft2df_main)
 

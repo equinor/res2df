@@ -267,10 +267,15 @@ def fill_parser(parser):
         parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
     """
     parser.add_argument(
-        "DATAFILE", help="Name of Eclipse DATA file. " + "RFT file must lie alongside."
+        "DATAFILE",
+        help=(
+            "Name of Eclipse DATA file or RFT file. "
+            "If DATA file is provided, it will look for"
+            " the associated DATA file"
+        ),
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="name of output csv file.", default="rft.csv"
+        "-o", "--output", type=str, help="Name of output CSV file.", default="rft.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -301,7 +306,6 @@ def rft2df_main(args):
     print("Wrote to " + args.output)
 
 
-# Interesting documentation from S3GRAF
 ## Vector	Description
 ## CONDEPTH	Depth at the centre of each connection in the well
 ## CONLENST	Length down the tubing from the BH reference point to the start of the connection

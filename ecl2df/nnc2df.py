@@ -1,11 +1,11 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Extract NNC information from Eclipse output files.
 
 NNC = Non Neighbour Connection
 
-Inspired by https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_n    nc.py
+Inspired by
+https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py
 """
 from __future__ import print_function
 from __future__ import absolute_import
@@ -44,25 +44,46 @@ def nnc2df(eclfiles):
         logging.warning("No NNC data in EGRID")
         return pd.DataFrame()
 
-    # Grid indices for first cell in cell pairs:
+    # Grid indices for first cell in cell pairs, into a vertical
+    # vector. The indices are "global" in libecl terms, and are
+    # 1-based (FORTRAN). Convert to zero-based before sending to get_ijk()
     nnc1 = egrid_file["NNC1"][0].numpy_view().reshape(-1, 1)
+    logging.info(
+        "NNC1: len: %d, min: %d, max: %d (global indices)",
+        len(nnc1),
+        min(nnc1),
+        max(nnc1),
+    )
     idx_cols1 = ["I1", "J1", "K1"]
     nnc1_df = pd.DataFrame(
-        columns=idx_cols1, data=[egrid_grid.get_ijk(x) for x in nnc1]
+        columns=idx_cols1, data=[egrid_grid.get_ijk(global_index=x - 1) for x in nnc1]
     )
-    # libecl is zero-based, convert to 1-based indices
+    # Returned indices from get_ijk are zero-based, convert to 1-based indices
     nnc1_df[idx_cols1] = nnc1_df[idx_cols1] + 1
 
     # Grid indices for second cell in cell pairs
     nnc2 = egrid_file["NNC2"][0].numpy_view().reshape(-1, 1)
+    logging.info(
+        "NNC2: len: %d, min: %d, max: %d (global indices)",
+        len(nnc2),
+        min(nnc2),
+        max(nnc2),
+    )
     idx_cols2 = ["I2", "J2", "K2"]
     nnc2_df = pd.DataFrame(
-        columns=idx_cols2, data=[egrid_grid.get_ijk(x) for x in nnc2]
+        columns=idx_cols2, data=[egrid_grid.get_ijk(global_index=x - 1) for x in nnc2]
     )
     nnc2_df[idx_cols2] = nnc2_df[idx_cols2] + 1
 
     # Obtain transmissibility values, corresponding to the cell pairs above.
     tran = init_file["TRANNNC"][0].numpy_view().reshape(-1, 1)
+    logging.info(
+        "TRANNNC: len: %d, min: %f, max: %f, mean=%f",
+        len(tran),
+        min(tran),
+        max(tran),
+        tran.mean(),
+    )
     tran_df = pd.DataFrame(columns=["TRAN"], data=tran)
 
     return pd.concat([nnc1_df, nnc2_df, tran_df], axis=1)
@@ -82,7 +103,7 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="name of output csv file.", default="nnc.csv"
+        "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     # args.add_argument("--augment", action='store_true',
@@ -104,8 +125,11 @@ def main():
 
 
 def nnc2df_main(args):
+    """Command line access point from main() or from ecl2csv via subparser"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = nnc2df(eclfiles)
     nncdf.to_csv(args.output, index=False)

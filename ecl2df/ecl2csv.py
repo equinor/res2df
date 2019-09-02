@@ -39,7 +39,16 @@ def get_parser():
     summary2df.fill_parser(summary_parser)
     summary_parser.set_defaults(func=summary2df.summary2df_main)
 
-    nnc_parser = subparsers.add_parser("nnc", help="Extract nnc data")
+    nnc_parser = subparsers.add_parser(
+        "nnc",
+        help="Extract NNC data from EGRID file",
+        description=(
+            "Extract NNC (Non-Neighbour Connection) data from the EGRID file. "
+            "Each row is one connection, with the columns I1, J1, K1 for the first cell "
+            "in the cell pair, and I2, J2, K2 for the second. The transmissibility "
+            "for the cell pair is in the TRAN column."
+        ),
+    )
     nnc2df.fill_parser(nnc_parser)
     nnc_parser.set_defaults(func=nnc2df.nnc2df_main)
 

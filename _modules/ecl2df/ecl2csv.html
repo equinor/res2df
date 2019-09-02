@@ -89,7 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for pyscal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
 </ul>
@@ -204,7 +204,19 @@
     <span class="n">faults2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">faults_parser</span><span class="p">)</span>
     <span class="n">faults_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">faults2df</span><span class="o">.</span><span class="n">faults2df_main</span><span class="p">)</span>
 
-    <span class="n">rft_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;rft&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract RFT data&quot;</span><span class="p">)</span>
+    <span class="n">rft_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;rft&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract RFT data from Eclipse binary output files.&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract RFT data from Eclipse binary output files to CSV. &quot;</span>
+            <span class="s2">&quot;Each row in the resulting table represents one point in a &quot;</span>
+            <span class="s2">&quot;particular well at a particular time. &quot;</span>
+            <span class="s2">&quot;If multisegment wells are found, associated data &quot;</span>
+            <span class="s2">&quot;to a connection is merged onto the same row as additional columns. &quot;</span>
+            <span class="s2">&quot;You need the Eclipse keyword WRFTPLT present in your DATA-file to get &quot;</span>
+            <span class="s2">&quot;the data outputted.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
     <span class="n">rft2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">rft_parser</span><span class="p">)</span>
     <span class="n">rft_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rft2df</span><span class="o">.</span><span class="n">rft2df_main</span><span class="p">)</span>
 

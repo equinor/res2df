@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API for pyscal" href="modules.html" />
+    <link rel="next" title="API for ecl2df" href="modules.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -146,7 +146,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">API for pyscal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
 </ul>
@@ -369,7 +369,7 @@ Default is raw, which will include clock times.</p>
 </div>
 <div class="section" id="rft">
 <h3>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
-<p>Extract RFT data</p>
+<p>Extract RFT data from Eclipse binary output files to CSV. Each row in the resulting table represents one point in a particular well at a particular time. If multisegment wells are found, associated data to a connection is merged onto the same row as additional columns. You need the Eclipse keyword WRFTPLT present in your DATA-file to get the data outputted.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -377,7 +377,7 @@ Default is raw, which will include clock times.</p>
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
-<dd><p>Name of Eclipse DATA file. RFT file must lie alongside.</p>
+<dd><p>Name of Eclipse DATA file or RFT file. If DATA file is provided, it will look for the associated DATA file</p>
 </dd>
 </dl>
 </div>
@@ -385,7 +385,7 @@ Default is raw, which will include clock times.</p>
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>name of output csv file.</p>
+<dd><p>Name of output CSV file.</p>
 <p>Default: “rft.csv”</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
@@ -553,7 +553,7 @@ Default is raw, which will include clock times.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="modules.html" class="btn btn-neutral float-right" title="API for pyscal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="API for ecl2df" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -89,6 +89,23 @@ def nnc2df(eclfiles):
     return pd.concat([nnc1_df, nnc2_df, tran_df], axis=1)
 
 
+def filter_vertical(nncdf):
+    """Filter to vertical connections
+
+    Incoming dataframe will be modified in-place and returned.
+    """
+    prelen = len(nncdf)
+    nncdf = nncdf[nncdf["I1"] == nncdf["I2"]]
+    nncdf = nncdf[nncdf["J1"] == nncdf["J2"]]
+    postlen = len(nncdf)
+    logging.info(
+        "Filtered to vertical connections, %d removed, %d connections kept",
+        prelen - postlen,
+        postlen,
+    )
+    return nncdf
+
+
 # Remaining functions are for the command line interface
 
 
@@ -101,6 +118,11 @@ def fill_parser(parser):
     parser.add_argument(
         "DATAFILE",
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
+    )
+    parser.add_argument(
+        "--vertical",
+        action="store_true",
+        help="Only dump vertical (along pillars) connections",
     )
     parser.add_argument(
         "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
@@ -132,5 +154,7 @@ def nnc2df_main(args):
     logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = nnc2df(eclfiles)
+    if args.vertical:
+        nncdf = filter_vertical(nncdf)
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

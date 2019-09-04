@@ -175,7 +175,7 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 
 
-<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with NNC information</span>
 
 <span class="sd">    A NNC is a pair of cells that are not next to each other</span>
@@ -187,8 +187,10 @@
 <span class="sd">    between the two cells)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eclfiles: EclFiles object that can serve EclFile and EclGrid</span>
+<span class="sd">        eclfiles (EclFiles): object that can serve EclFile and EclGrid</span>
 <span class="sd">            on demand</span>
+<span class="sd">        pillars (boolean): Set to True if you want to filter to vertical</span>
+<span class="sd">            (along pillars) connections only.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame. Empty if no NNC information found.</span>
@@ -243,7 +245,32 @@
     <span class="p">)</span>
     <span class="n">tran_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TRAN&quot;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="n">tran</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">nnc1_df</span><span class="p">,</span> <span class="n">nnc2_df</span><span class="p">,</span> <span class="n">tran_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">nnc1_df</span><span class="p">,</span> <span class="n">nnc2_df</span><span class="p">,</span> <span class="n">tran_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pillars</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nncdf</span></div>
+
+
+<div class="viewcode-block" id="filter_vertical"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.filter_vertical">[docs]</a><span class="k">def</span> <span class="nf">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter to vertical connections</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        nncdf (DataFrame): A dataframe with the columns</span>
+<span class="sd">            I1, J1, K1, I2, J2, K2.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Filtered copy of incoming dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prelen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nncdf</span><span class="p">)</span>
+    <span class="n">vnncdf</span> <span class="o">=</span> <span class="n">nncdf</span><span class="p">[</span><span class="n">nncdf</span><span class="p">[</span><span class="s2">&quot;I1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nncdf</span><span class="p">[</span><span class="s2">&quot;I2&quot;</span><span class="p">]]</span>
+    <span class="n">vnncdf</span> <span class="o">=</span> <span class="n">vnncdf</span><span class="p">[</span><span class="n">vnncdf</span><span class="p">[</span><span class="s2">&quot;J1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">vnncdf</span><span class="p">[</span><span class="s2">&quot;J2&quot;</span><span class="p">]]</span>
+    <span class="n">postlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vnncdf</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Filtered to vertical connections, </span><span class="si">%d</span><span class="s2"> removed, </span><span class="si">%d</span><span class="s2"> connections kept&quot;</span><span class="p">,</span>
+        <span class="n">prelen</span> <span class="o">-</span> <span class="n">postlen</span><span class="p">,</span>
+        <span class="n">postlen</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">vnncdf</span></div>
 
 
 <span class="c1"># Remaining functions are for the command line interface</span>
@@ -258,6 +285,13 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file. &quot;</span> <span class="o">+</span> <span class="s2">&quot;INIT and EGRID file must lie alongside.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--pillars&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--vertical&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only dump vertical (along pillars) connections&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;nnc.csv&quot;</span>
@@ -288,7 +322,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;nnc2df&quot;</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
     <span class="n">nncdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>

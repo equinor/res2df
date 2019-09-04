@@ -827,7 +827,7 @@ the SWOF keyword).</p></li>
 <a class="reference external" href="https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py</a></p>
 <dl class="function">
 <dt id="ecl2df.nnc2df.nnc2df">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a Pandas Dataframe with NNC information</p>
 <p>A NNC is a pair of cells that are not next to each other
 in the index space (I, J, K), and are associated to a
@@ -837,11 +837,30 @@ I2, J2, K2 (second cell in cell pair), TRAN (transmissibility
 between the two cells)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>eclfiles</strong> – EclFiles object that can serve EclFile and EclGrid
-on demand</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – object that can serve EclFile and EclGrid
+on demand</p></li>
+<li><p><strong>pillars</strong> (<em>boolean</em>) – Set to True if you want to filter to vertical
+(along pillars) connections only.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.DataFrame. Empty if no NNC information found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.nnc2df.filter_vertical">
+<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">filter_vertical</code><span class="sig-paren">(</span><em class="sig-param">nncdf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#filter_vertical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.filter_vertical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter to vertical connections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nncdf</strong> (<em>DataFrame</em>) – A dataframe with the columns
+I1, J1, K1, I2, J2, K2.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Filtered copy of incoming dataframe.</p>
 </dd>
 </dl>
 </dd></dl>

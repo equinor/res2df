@@ -314,7 +314,7 @@ Default is raw, which will include clock times.</p>
 <div class="section" id="nnc">
 <h3>nnc<a class="headerlink" href="#nnc" title="Permalink to this headline">¶</a></h3>
 <p>Extract NNC (Non-Neighbour Connection) data from the EGRID file. Each row is one connection, with the columns I1, J1, K1 for the first cell in the cell pair, and I2, J2, K2 for the second. The transmissibility for the cell pair is in the TRAN column.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">nnc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">nnc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments_repeat2">
@@ -328,6 +328,10 @@ Default is raw, which will include clock times.</p>
 <div class="section" id="Named Arguments_repeat2">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
+<dt><kbd>-p, --pillars, --vertical</kbd></dt>
+<dd><p>Only dump vertical (along pillars) connections</p>
+<p>Default: False</p>
+</dd>
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
 <p>Default: “nnc.csv”</p>

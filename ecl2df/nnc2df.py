@@ -130,7 +130,9 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
-        "-p", "--pillars", "--vertical",
+        "-p",
+        "--pillars",
+        "--vertical",
         action="store_true",
         help="Only dump vertical (along pillars) connections",
     )

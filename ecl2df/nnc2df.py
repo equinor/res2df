@@ -97,18 +97,19 @@ def nnc2df(eclfiles, pillars=False):
 def filter_vertical(nncdf):
     """Filter to vertical connections
 
-    Incoming dataframe will be modified in-place and returned.
+    Returns:
+        Filtered copy of incoming dataframe.
     """
     prelen = len(nncdf)
-    nncdf = nncdf[nncdf["I1"] == nncdf["I2"]]
-    nncdf = nncdf[nncdf["J1"] == nncdf["J2"]]
-    postlen = len(nncdf)
+    vnncdf = nncdf[nncdf["I1"] == nncdf["I2"]]
+    vnncdf = vnncdf[vnncdf["J1"] == vnncdf["J2"]]
+    postlen = len(vnncdf)
     logging.info(
         "Filtered to vertical connections, %d removed, %d connections kept",
         prelen - postlen,
         postlen,
     )
-    return nncdf
+    return vnncdf
 
 
 # Remaining functions are for the command line interface

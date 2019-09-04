@@ -97,6 +97,10 @@ def nnc2df(eclfiles, pillars=False):
 def filter_vertical(nncdf):
     """Filter to vertical connections
 
+    Arguments:
+        nncdf (DataFrame): A dataframe with the columns
+            I1, J1, K1, I2, J2, K2.
+
     Returns:
         Filtered copy of incoming dataframe.
     """

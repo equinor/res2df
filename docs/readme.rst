@@ -30,8 +30,10 @@ volume is included.
 ``nnc2df``
 ^^^^^^^^^^
 
-Extracts the non-neighbour connections in the grid, as pairs of
-`ijk`-indices and the associated transmissiblity.
+Extracts the non-neighbour connections in the grid (from the binary
+output data in EGRID, not the NNC input keyword), as pairs of
+`ijk`-indices and the associated transmissiblity. Optional filtering
+to vertical connections (along pillars).
 
 ``rft2df``
 ^^^^^^^^^^

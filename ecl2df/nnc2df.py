@@ -120,7 +120,7 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
-        "--vertical",
+        "-p", "--pillars", "--vertical",
         action="store_true",
         help="Only dump vertical (along pillars) connections",
     )
@@ -154,7 +154,7 @@ def nnc2df_main(args):
     logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = nnc2df(eclfiles)
-    if args.vertical:
+    if args.pillars:
         nncdf = filter_vertical(nncdf)
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

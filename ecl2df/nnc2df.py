@@ -18,7 +18,7 @@ import pandas as pd
 from .eclfiles import EclFiles
 
 
-def nnc2df(eclfiles):
+def nnc2df(eclfiles, pillars=False):
     """Produce a Pandas Dataframe with NNC information
 
     A NNC is a pair of cells that are not next to each other
@@ -30,8 +30,10 @@ def nnc2df(eclfiles):
     between the two cells)
 
     Args:
-        eclfiles: EclFiles object that can serve EclFile and EclGrid
+        eclfiles (EclFiles): object that can serve EclFile and EclGrid
             on demand
+        pillars (boolean): Set to True if you want to filter to vertical
+            (along pillars) connections only.
 
     Returns:
         pd.DataFrame. Empty if no NNC information found.
@@ -86,10 +88,13 @@ def nnc2df(eclfiles):
     )
     tran_df = pd.DataFrame(columns=["TRAN"], data=tran)
 
-    return pd.concat([nnc1_df, nnc2_df, tran_df], axis=1)
+    nncdf = pd.concat([nnc1_df, nnc2_df, tran_df], axis=1)
+    if pillars:
+        return _filter_vertical(nncdf)
+    return nncdf
 
 
-def filter_vertical(nncdf):
+def _filter_vertical(nncdf):
     """Filter to vertical connections
 
     Incoming dataframe will be modified in-place and returned.
@@ -153,8 +158,6 @@ def nnc2df_main(args):
         logging.getLogger().setLevel(logging.INFO)
     logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
-    nncdf = nnc2df(eclfiles)
-    if args.pillars:
-        nncdf = filter_vertical(nncdf)
+    nncdf = nnc2df(eclfiles, pillars=args.pillars)
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

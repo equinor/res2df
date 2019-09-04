@@ -90,11 +90,11 @@ def nnc2df(eclfiles, pillars=False):
 
     nncdf = pd.concat([nnc1_df, nnc2_df, tran_df], axis=1)
     if pillars:
-        return _filter_vertical(nncdf)
+        return filter_vertical(nncdf)
     return nncdf
 
 
-def _filter_vertical(nncdf):
+def filter_vertical(nncdf):
     """Filter to vertical connections
 
     Incoming dataframe will be modified in-place and returned.

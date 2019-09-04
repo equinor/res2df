@@ -33,6 +33,8 @@ def test_nnc2df():
 
     prelen = len(nncdf)
     nncdf = nnc2df.filter_vertical(nncdf)
+    assert (nncdf["I1"] == nncdf["I2"]).all()
+    assert (nncdf["J1"] == nncdf["J2"]).all()
     assert len(nncdf) < prelen
 
 

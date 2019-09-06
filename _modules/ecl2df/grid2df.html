@@ -333,10 +333,10 @@
 <span class="sd">    when merging with other dataframes with cell-data.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eclfiles: EclFiles object</span>
+<span class="sd">        eclfiles (EclFiles): object holding the Eclipse output files.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.DataFrame.</span>
+<span class="sd">        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span>

@@ -173,9 +173,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
+<span class="kn">from</span> <span class="nn">.grid2df</span> <span class="k">import</span> <span class="n">gridgeometry2df</span>
 
 
-<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with NNC information</span>
 
 <span class="sd">    A NNC is a pair of cells that are not next to each other</span>
@@ -189,6 +190,9 @@
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles (EclFiles): object that can serve EclFile and EclGrid</span>
 <span class="sd">            on demand</span>
+<span class="sd">        coords (boolean): Set to True if you want the midpoint of the two</span>
+<span class="sd">            connected cells to be computed and added to the columns</span>
+<span class="sd">            X, Y and Z.</span>
 <span class="sd">        pillars (boolean): Set to True if you want to filter to vertical</span>
 <span class="sd">            (along pillars) connections only.</span>
 
@@ -234,7 +238,7 @@
     <span class="p">)</span>
     <span class="n">nnc2_df</span><span class="p">[</span><span class="n">idx_cols2</span><span class="p">]</span> <span class="o">=</span> <span class="n">nnc2_df</span><span class="p">[</span><span class="n">idx_cols2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="c1"># Obtain transmissibility values, corresponding to the cell pairs above.</span>
+    <span class="c1"># Obtain transmissibility value, corresponding to the cell pairs above.</span>
     <span class="n">tran</span> <span class="o">=</span> <span class="n">init_file</span><span class="p">[</span><span class="s2">&quot;TRANNNC&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy_view</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;TRANNNC: len: </span><span class="si">%d</span><span class="s2">, min: </span><span class="si">%f</span><span class="s2">, max: </span><span class="si">%f</span><span class="s2">, mean=</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -247,8 +251,50 @@
 
     <span class="n">nncdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">nnc1_df</span><span class="p">,</span> <span class="n">nnc2_df</span><span class="p">,</span> <span class="n">tran_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pillars</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">)</span>
+        <span class="n">nncdf</span> <span class="o">=</span> <span class="n">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coords</span><span class="p">:</span>
+        <span class="n">nncdf</span> <span class="o">=</span> <span class="n">add_nnc_coords</span><span class="p">(</span><span class="n">nncdf</span><span class="p">,</span> <span class="n">eclfiles</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nncdf</span></div>
+
+
+<div class="viewcode-block" id="add_nnc_coords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.add_nnc_coords">[docs]</a><span class="k">def</span> <span class="nf">add_nnc_coords</span><span class="p">(</span><span class="n">nncdf</span><span class="p">,</span> <span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add columns X, Y and Z for the connection midpoint</span>
+
+<span class="sd">    This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)</span>
+<span class="sd">    and computes the average in each direction.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        nncdf (DataFrame): With grid index columns (I1, J1, K1, I2, J2, K2)</span>
+<span class="sd">        eclfiles (EclFiles): Object used to fetch grid data from EGRID.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: Incoming dataframe augmented with the columns X, Y and Z.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gridgeometry</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+    <span class="n">gnncdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">nncdf</span><span class="p">,</span>
+        <span class="n">gridgeometry</span><span class="p">,</span>
+        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I1&quot;</span><span class="p">,</span> <span class="s2">&quot;J1&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">],</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">gnncdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">gnncdf</span><span class="p">,</span>
+        <span class="n">gridgeometry</span><span class="p">,</span>
+        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I2&quot;</span><span class="p">,</span> <span class="s2">&quot;J2&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">],</span>
+        <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;_2&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="c1"># Use pd.DataFrame.mean for averaging, since it can ignore</span>
+    <span class="c1"># NaN&#39;s. In case only one coordinate is NaN, we then get the other one.</span>
+    <span class="c1"># (NaN coordinates are potentially from zero-volume cells?)</span>
+    <span class="n">gnncdf</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gnncdf</span><span class="p">[[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;X_2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">gnncdf</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gnncdf</span><span class="p">[[</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Y_2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">gnncdf</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gnncdf</span><span class="p">[[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;Z_2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Let go of the temporary columns we have in gnncdf</span>
+    <span class="k">return</span> <span class="n">gnncdf</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">nncdf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]]</span></div>
 
 
 <div class="viewcode-block" id="filter_vertical"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.filter_vertical">[docs]</a><span class="k">def</span> <span class="nf">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">):</span>
@@ -287,6 +333,12 @@
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file. &quot;</span> <span class="o">+</span> <span class="s2">&quot;INIT and EGRID file must lie alongside.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--coords&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Add xyz coords of connection midpoint&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
         <span class="s2">&quot;--pillars&quot;</span><span class="p">,</span>
         <span class="s2">&quot;--vertical&quot;</span><span class="p">,</span>
@@ -297,8 +349,6 @@
         <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;nnc.csv&quot;</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
-    <span class="c1"># args.add_argument(&quot;--augment&quot;, action=&#39;store_true&#39;,</span>
-    <span class="c1">#    (TODO)       help=&quot;Add extra data for the cells in the cell pair&quot;)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -322,7 +372,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;nnc2df&quot;</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
+    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
     <span class="n">nncdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>

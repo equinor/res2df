@@ -592,10 +592,13 @@ SGAS as a column header, you get <a class="reference external" href="mailto:SGAS
 when merging with other dataframes with cell-data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>eclfiles</strong> – EclFiles object</p>
+<dd class="field-odd"><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – object holding the Eclipse output files.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame.</p>
+<dd class="field-even"><p>With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -827,7 +830,7 @@ the SWOF keyword).</p></li>
 <a class="reference external" href="https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py</a></p>
 <dl class="function">
 <dt id="ecl2df.nnc2df.nnc2df">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a Pandas Dataframe with NNC information</p>
 <p>A NNC is a pair of cells that are not next to each other
 in the index space (I, J, K), and are associated to a
@@ -840,12 +843,37 @@ between the two cells)</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – object that can serve EclFile and EclGrid
 on demand</p></li>
+<li><p><strong>coords</strong> (<em>boolean</em>) – Set to True if you want the midpoint of the two
+connected cells to be computed and added to the columns
+X, Y and Z.</p></li>
 <li><p><strong>pillars</strong> (<em>boolean</em>) – Set to True if you want to filter to vertical
 (along pillars) connections only.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.DataFrame. Empty if no NNC information found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.nnc2df.add_nnc_coords">
+<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">add_nnc_coords</code><span class="sig-paren">(</span><em class="sig-param">nncdf</em>, <em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#add_nnc_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.add_nnc_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add columns X, Y and Z for the connection midpoint</p>
+<p>This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
+and computes the average in each direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nncdf</strong> (<em>DataFrame</em>) – With grid index columns (I1, J1, K1, I2, J2, K2)</p></li>
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Object used to fetch grid data from EGRID.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Incoming dataframe augmented with the columns X, Y and Z.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

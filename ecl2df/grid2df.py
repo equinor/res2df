@@ -218,7 +218,8 @@ def init2df(eclfiles, vectors=None):
 
     Args:
         eclfiles (EclFiles): Object that can serve the EGRID and INIT files
-        vectors: List of vectors to include, glob-style wildcards supported
+        vectors (str or list): List of vectors to include,
+            glob-style wildcards supported
     """
     if not vectors:
         vectors = "*"  # This will include everything
@@ -335,6 +336,26 @@ def dropconstants(df, alwayskeep=None):
     if columnstodelete:
         logging.info("Deleting constant columns {}".format(str(columnstodelete)))
     return df.drop(columnstodelete, axis=1)
+
+
+def grid2df(eclfiles, vectors="*"):
+    """Produce a grid dataframe from EclFiles
+
+    Given a set of Eclipse files (an EclFiles object), this
+    function will return a dataframe with a row for each cell
+    including cell coordinates and volume and any requested data
+    for the cell
+
+    Arguments:
+        eclfiles (EclFiles): Object holding the set of Eclipse output files
+        vectors (str or list): List of vectors to include,
+            glob-style wildcards supported
+
+    Returns:
+        pandas.DataFrame
+    """
+
+    return merge_gridframes(gridgeometry2df(eclfiles), init2df(eclfiles, vectors), None)
 
 
 def main():

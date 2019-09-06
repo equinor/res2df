@@ -62,6 +62,25 @@ def test_init2df():
     assert "PORV" in init_df
 
 
+def test_grid2df():
+    """Test that dataframe with INIT vectors and coordinates can be produced"""
+    eclfiles = EclFiles(DATAFILE)
+    grid_df = grid2df.grid2df(eclfiles)
+
+    assert isinstance(grid_df, pd.DataFrame)
+    assert not grid_df.empty
+    assert "PERMX" in grid_df
+    assert "PORO" in grid_df
+    assert "PORV" in grid_df
+    assert "I" in grid_df
+    assert "J" in grid_df
+    assert "K" in grid_df
+    assert "X" in grid_df
+    assert "Y" in grid_df
+    assert "Z" in grid_df
+    assert "VOLUME" in grid_df
+
+
 def test_subvectors():
     """Test that we can ask for a few vectors only"""
     eclfiles = EclFiles(DATAFILE)

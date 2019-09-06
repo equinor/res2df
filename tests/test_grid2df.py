@@ -19,8 +19,6 @@ from ecl2df.eclfiles import EclFiles
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
-print(DATAFILE)
-
 
 def test_gridgeometry2df():
     """Test that dataframes are produced"""

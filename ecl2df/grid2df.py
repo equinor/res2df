@@ -211,16 +211,15 @@ def gridgeometry2df(eclfiles):
     return grid_df
 
 
-def init2df(init, active_cells, vectors=None):
+def init2df(eclfiles, vectors=None):
     """Extract information from INIT file with cell data
 
     Order is significant, as index is used for merging
 
     Args:
-        init_file: EclFile for the INIT object
-        active_cells: int, The number of active cells each vector is required to have
-            Other vectors will be dropped.
-        vectors: List of vectors to include, glob-style wildcards supported
+        eclfiles (EclFiles): Object that can serve the EGRID and INIT files
+        vectors (str or list): List of vectors to include,
+            glob-style wildcards supported
     """
     if not vectors:
         vectors = "*"  # This will include everything
@@ -228,13 +227,19 @@ def init2df(init, active_cells, vectors=None):
         vectors = [vectors]
     logging.info("Extracting vectors {} from INIT file".format(str(vectors)))
 
+    init = eclfiles.get_initfile()
+    egrid = eclfiles.get_egrid()
+
     # Build list of vector names to include:
     usevectors = []
+    include_porv = False
     for vec in init.headers:
-        if vec[1] == active_cells and any(
+        if vec[1] == egrid.getNumActive() and any(
             [fnmatch.fnmatch(vec[0], key) for key in vectors]
         ):
             usevectors.append(vec[0])
+        if vec[0] == "PORV" and any([fnmatch.fnmatch("PORV", key) for key in vectors]):
+            include_porv = True
 
     init_df = pd.DataFrame(
         columns=usevectors,
@@ -245,6 +250,15 @@ def init2df(init, active_cells, vectors=None):
             ]
         ),
     )
+
+    # PORV is indexed by active_index, not global, needs special treatment:
+    if include_porv:
+        porv_numpy = init.iget_named_kw("PORV", 0).numpyView()
+        glob_idxs = [
+            egrid.get_global_index(active_index=ix)
+            for ix in range(egrid.getNumActive())
+        ]
+        init_df["PORV"] = porv_numpy[glob_idxs].reshape(-1, 1)
     return init_df
 
 
@@ -324,6 +338,26 @@ def dropconstants(df, alwayskeep=None):
     return df.drop(columnstodelete, axis=1)
 
 
+def grid2df(eclfiles, vectors="*"):
+    """Produce a grid dataframe from EclFiles
+
+    Given a set of Eclipse files (an EclFiles object), this
+    function will return a dataframe with a row for each cell
+    including cell coordinates and volume and any requested data
+    for the cell
+
+    Arguments:
+        eclfiles (EclFiles): Object holding the set of Eclipse output files
+        vectors (str or list): List of vectors to include,
+            glob-style wildcards supported
+
+    Returns:
+        pandas.DataFrame
+    """
+
+    return merge_gridframes(gridgeometry2df(eclfiles), init2df(eclfiles, vectors), None)
+
+
 def main():
     """Entry-point for module, for command line utility.
     """
@@ -339,11 +373,7 @@ def grid2df_main(args):
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     gridgeom = gridgeometry2df(eclfiles)
-    initdf = init2df(
-        eclfiles.get_initfile(),
-        eclfiles.get_egrid().getNumActive(),
-        vectors=args.initkeys,
-    )
+    initdf = init2df(eclfiles, vectors=args.initkeys)
     if args.rstdate:
         rst_df = rst2df(eclfiles, args.rstdate)
     else:

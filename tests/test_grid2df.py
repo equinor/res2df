@@ -19,8 +19,6 @@ from ecl2df.eclfiles import EclFiles
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
-print(DATAFILE)
-
 
 def test_gridgeometry2df():
     """Test that dataframes are produced"""
@@ -49,50 +47,61 @@ def test_wrongfile():
     eclfiles = EclFiles("FOO.DATA")
     # but when we try to use it, things should fail:
     with pytest.raises(FileNotFoundError):
-        grid2df.init2df(eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive())
+        grid2df.init2df(eclfiles)
 
 
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
     eclfiles = EclFiles(DATAFILE)
-    init_df = grid2df.init2df(
-        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive()
-    )
+    init_df = grid2df.init2df(eclfiles)
 
     assert isinstance(init_df, pd.DataFrame)
     assert not init_df.empty
     assert "PERMX" in init_df
     assert "PORO" in init_df
+    assert "PORV" in init_df
+
+
+def test_grid2df():
+    """Test that dataframe with INIT vectors and coordinates can be produced"""
+    eclfiles = EclFiles(DATAFILE)
+    grid_df = grid2df.grid2df(eclfiles)
+
+    assert isinstance(grid_df, pd.DataFrame)
+    assert not grid_df.empty
+    assert "PERMX" in grid_df
+    assert "PORO" in grid_df
+    assert "PORV" in grid_df
+    assert "I" in grid_df
+    assert "J" in grid_df
+    assert "K" in grid_df
+    assert "X" in grid_df
+    assert "Y" in grid_df
+    assert "Z" in grid_df
+    assert "VOLUME" in grid_df
 
 
 def test_subvectors():
     """Test that we can ask for a few vectors only"""
     eclfiles = EclFiles(DATAFILE)
-    init_df = grid2df.init2df(
-        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), "PORO"
-    )
+    init_df = grid2df.init2df(eclfiles, "PORO")
     assert "PORO" in init_df
     assert "PERMX" not in init_df
+    assert "PORV" not in init_df
 
-    init_df = grid2df.init2df(
-        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), "P*"
-    )
+    init_df = grid2df.init2df(eclfiles, "P*")
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
     assert "SATNUM" not in init_df
 
-    init_df = grid2df.init2df(
-        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), ["P*"]
-    )
+    init_df = grid2df.init2df(eclfiles, ["P*"])
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
     assert "SATNUM" not in init_df
 
-    init_df = grid2df.init2df(
-        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive(), ["P*", "*NUM"]
-    )
+    init_df = grid2df.init2df(eclfiles, ["P*", "*NUM"])
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
@@ -111,9 +120,7 @@ def test_dropconstants():
 def test_mergegridframes():
     """Test that we can merge together data for the grid"""
     eclfiles = EclFiles(DATAFILE)
-    init_df = grid2df.init2df(
-        eclfiles.get_initfile(), eclfiles.get_egrid().getNumActive()
-    )
+    init_df = grid2df.init2df(eclfiles)
     grid_geom = grid2df.gridgeometry2df(eclfiles)
 
     assert len(init_df) == len(grid_geom)
@@ -121,6 +128,13 @@ def test_mergegridframes():
     merged = grid2df.merge_gridframes(grid_geom, init_df, pd.DataFrame())
     assert isinstance(merged, pd.DataFrame)
     assert len(merged) == len(grid_geom)
+
+    # Check that PORV is sensible
+    assert (
+        abs(sum(merged["PORO"] * merged["VOLUME"] - merged["PORV"]))
+        / sum(merged["PORV"])
+        < 0.00001
+    )
 
 
 def test_main():

@@ -368,16 +368,15 @@
     <span class="k">return</span> <span class="n">grid_df</span></div>
 
 
-<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">active_cells</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
 
 <span class="sd">    Order is significant, as index is used for merging</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        init_file: EclFile for the INIT object</span>
-<span class="sd">        active_cells: int, The number of active cells each vector is required to have</span>
-<span class="sd">            Other vectors will be dropped.</span>
-<span class="sd">        vectors: List of vectors to include, glob-style wildcards supported</span>
+<span class="sd">        eclfiles (EclFiles): Object that can serve the EGRID and INIT files</span>
+<span class="sd">        vectors (str or list): List of vectors to include,</span>
+<span class="sd">            glob-style wildcards supported</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vectors</span><span class="p">:</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>  <span class="c1"># This will include everything</span>
@@ -385,13 +384,19 @@
         <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectors</span><span class="p">]</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting vectors </span><span class="si">{}</span><span class="s2"> from INIT file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">vectors</span><span class="p">)))</span>
 
+    <span class="n">init</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_initfile</span><span class="p">()</span>
+    <span class="n">egrid</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span>
+
     <span class="c1"># Build list of vector names to include:</span>
     <span class="n">usevectors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">include_porv</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">active_cells</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">egrid</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
             <span class="p">[</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]</span>
         <span class="p">):</span>
             <span class="n">usevectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PORV&quot;</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;PORV&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]):</span>
+            <span class="n">include_porv</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
         <span class="n">columns</span><span class="o">=</span><span class="n">usevectors</span><span class="p">,</span>
@@ -402,6 +407,15 @@
             <span class="p">]</span>
         <span class="p">),</span>
     <span class="p">)</span>
+
+    <span class="c1"># PORV is indexed by active_index, not global, needs special treatment:</span>
+    <span class="k">if</span> <span class="n">include_porv</span><span class="p">:</span>
+        <span class="n">porv_numpy</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="s2">&quot;PORV&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpyView</span><span class="p">()</span>
+        <span class="n">glob_idxs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">egrid</span><span class="o">.</span><span class="n">get_global_index</span><span class="p">(</span><span class="n">active_index</span><span class="o">=</span><span class="n">ix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">egrid</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">())</span>
+        <span class="p">]</span>
+        <span class="n">init_df</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">porv_numpy</span><span class="p">[</span><span class="n">glob_idxs</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">init_df</span></div>
 
 
@@ -481,6 +495,26 @@
     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columnstodelete</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="grid2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.grid2df">[docs]</a><span class="k">def</span> <span class="nf">grid2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produce a grid dataframe from EclFiles</span>
+
+<span class="sd">    Given a set of Eclipse files (an EclFiles object), this</span>
+<span class="sd">    function will return a dataframe with a row for each cell</span>
+<span class="sd">    including cell coordinates and volume and any requested data</span>
+<span class="sd">    for the cell</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        eclfiles (EclFiles): Object holding the set of Eclipse output files</span>
+<span class="sd">        vectors (str or list): List of vectors to include,</span>
+<span class="sd">            glob-style wildcards supported</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">),</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -496,11 +530,7 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
-    <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span>
-        <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_initfile</span><span class="p">(),</span>
-        <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">(),</span>
-        <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initkeys</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initkeys</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">:</span>
         <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

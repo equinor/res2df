@@ -605,16 +605,15 @@ when merging with other dataframes with cell-data.</p>
 
 <dl class="function">
 <dt id="ecl2df.grid2df.init2df">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">init2df</code><span class="sig-paren">(</span><em class="sig-param">init</em>, <em class="sig-param">active_cells</em>, <em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#init2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.init2df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">init2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#init2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.init2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract information from INIT file with cell data</p>
 <p>Order is significant, as index is used for merging</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>init_file</strong> – EclFile for the INIT object</p></li>
-<li><p><strong>active_cells</strong> – int, The number of active cells each vector is required to have
-Other vectors will be dropped.</p></li>
-<li><p><strong>vectors</strong> – List of vectors to include, glob-style wildcards supported</p></li>
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Object that can serve the EGRID and INIT files</p></li>
+<li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – List of vectors to include,
+glob-style wildcards supported</p></li>
 </ul>
 </dd>
 </dl>
@@ -651,6 +650,28 @@ anyway.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.DataFrame with equal or less columns.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.grid2df.grid2df">
+<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">grid2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors='*'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#grid2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.grid2df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a grid dataframe from EclFiles</p>
+<p>Given a set of Eclipse files (an EclFiles object), this
+function will return a dataframe with a row for each cell
+including cell coordinates and volume and any requested data
+for the cell</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Object holding the set of Eclipse output files</p></li>
+<li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – List of vectors to include,
+glob-style wildcards supported</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

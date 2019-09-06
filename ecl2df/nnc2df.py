@@ -16,9 +16,10 @@ import argparse
 import pandas as pd
 
 from .eclfiles import EclFiles
+from .grid2df import gridgeometry2df
 
 
-def nnc2df(eclfiles, pillars=False):
+def nnc2df(eclfiles, coords=False, pillars=False):
     """Produce a Pandas Dataframe with NNC information
 
     A NNC is a pair of cells that are not next to each other
@@ -32,6 +33,9 @@ def nnc2df(eclfiles, pillars=False):
     Args:
         eclfiles (EclFiles): object that can serve EclFile and EclGrid
             on demand
+        coords (boolean): Set to True if you want the midpoint of the two
+            connected cells to be computed and added to the columns
+            X, Y and Z.
         pillars (boolean): Set to True if you want to filter to vertical
             (along pillars) connections only.
 
@@ -77,7 +81,7 @@ def nnc2df(eclfiles, pillars=False):
     )
     nnc2_df[idx_cols2] = nnc2_df[idx_cols2] + 1
 
-    # Obtain transmissibility values, corresponding to the cell pairs above.
+    # Obtain transmissibility value, corresponding to the cell pairs above.
     tran = init_file["TRANNNC"][0].numpy_view().reshape(-1, 1)
     logging.info(
         "TRANNNC: len: %d, min: %f, max: %f, mean=%f",
@@ -90,8 +94,50 @@ def nnc2df(eclfiles, pillars=False):
 
     nncdf = pd.concat([nnc1_df, nnc2_df, tran_df], axis=1)
     if pillars:
-        return filter_vertical(nncdf)
+        nncdf = filter_vertical(nncdf)
+    if coords:
+        nncdf = add_nnc_coords(nncdf, eclfiles)
     return nncdf
+
+
+def add_nnc_coords(nncdf, eclfiles):
+    """Add columns X, Y and Z for the connection midpoint
+
+    This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
+    and computes the average in each direction.
+
+    Arguments:
+        nncdf (DataFrame): With grid index columns (I1, J1, K1, I2, J2, K2)
+        eclfiles (EclFiles): Object used to fetch grid data from EGRID.
+
+    Returns:
+        DataFrame: Incoming dataframe augmented with the columns X, Y and Z.
+    """
+    gridgeometry = gridgeometry2df(eclfiles)
+    gnncdf = pd.merge(
+        nncdf,
+        gridgeometry,
+        how="left",
+        left_on=["I1", "J1", "K1"],
+        right_on=["I", "J", "K"],
+    )
+    gnncdf = pd.merge(
+        gnncdf,
+        gridgeometry,
+        how="left",
+        left_on=["I2", "J2", "K2"],
+        right_on=["I", "J", "K"],
+        suffixes=("", "_2"),
+    )
+    # Use pd.DataFrame.mean for averaging, since it can ignore
+    # NaN's. In case only one coordinate is NaN, we then get the other one.
+    # (NaN coordinates are potentially from zero-volume cells?)
+    gnncdf["X"] = gnncdf[["X", "X_2"]].mean(axis=1)
+    gnncdf["Y"] = gnncdf[["Y", "Y_2"]].mean(axis=1)
+    gnncdf["Z"] = gnncdf[["Z", "Z_2"]].mean(axis=1)
+
+    # Let go of the temporary columns we have in gnncdf
+    return gnncdf[list(nncdf.columns) + ["X", "Y", "Z"]]
 
 
 def filter_vertical(nncdf):
@@ -130,6 +176,12 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
+        "-c",
+        "--coords",
+        action="store_true",
+        help="Add xyz coords of connection midpoint",
+    )
+    parser.add_argument(
         "-p",
         "--pillars",
         "--vertical",
@@ -140,8 +192,6 @@ def fill_parser(parser):
         "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    # args.add_argument("--augment", action='store_true',
-    #    (TODO)       help="Add extra data for the cells in the cell pair")
     return parser
 
 
@@ -165,6 +215,6 @@ def nnc2df_main(args):
         logging.getLogger().setLevel(logging.INFO)
     logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
-    nncdf = nnc2df(eclfiles, pillars=args.pillars)
+    nncdf = nnc2df(eclfiles, coords=args.coords, pillars=args.pillars)
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

@@ -176,10 +176,10 @@ def gridgeometry2df(eclfiles):
     when merging with other dataframes with cell-data.
 
     Args:
-        eclfiles: EclFiles object
+        eclfiles (EclFiles): object holding the Eclipse output files.
 
     Returns:
-        pd.DataFrame.
+        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell.
     """
     if not eclfiles:
         raise ValueError

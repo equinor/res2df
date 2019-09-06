@@ -38,6 +38,16 @@ def test_nnc2df():
     assert len(nncdf) < prelen
 
 
+def test_nnc2df_coords():
+    """Test that we are able to add coordinates"""
+    eclfiles = EclFiles(DATAFILE)
+    gnncdf = nnc2df.nnc2df(eclfiles, coords=True)
+    assert not gnncdf.empty
+    assert "X" in gnncdf
+    assert "Y" in gnncdf
+    assert "Z" in gnncdf
+
+
 def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
     eclfiles = EclFiles(DATAFILE)

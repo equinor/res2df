@@ -24,6 +24,7 @@ from ecl2df import (
     gruptree,
     nnc,
     pillars,
+    pvt,
     rft,
     satfunc,
     summary,
@@ -138,6 +139,24 @@ def get_parser():
     )
     pillars.fill_parser(pillars_parser)
     pillars_parser.set_defaults(func=pillars.pillarstats_main)
+
+    pvt_parser = subparsers.add_parser(
+        "pvt",
+        help="Extract PVT data",
+        description=(
+            "Extract data for the PVT keywords in an Eclipse deck "
+            "and merge all data into a single dataframe. "
+            "Supported keywords are PVTO, PVDO, PVTG, PVDG, PVTW, "
+            "ROCK and DENSITY. Gas phase pressure and oil phase "
+            "pressure are both called PRESSURE in the resulting "
+            "dataframe, similar for volume factors and viscosity. "
+            "Deduce meaning for column names from the Eclipse manual. "
+            "The column KEYWORD denotes which PVT keyword a particular "
+            "data row stems from. "
+        ),
+    )
+    pvt.fill_parser(pvt_parser)
+    pvt_parser.set_defaults(func=pvt.pvt_main)
 
     rft_parser = subparsers.add_parser(
         "rft",

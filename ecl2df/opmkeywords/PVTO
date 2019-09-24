@@ -1,0 +1,27 @@
+{
+  "name": "PVTO",
+  "sections": [
+    "PROPS"
+  ],
+  "size": {
+    "keyword": "TABDIMS",
+    "item": "NTPVT"
+  },
+  "items": [
+    {
+      "name": "RS",
+      "value_type": "DOUBLE",
+      "dimension": "GasDissolutionFactor"
+    },
+    {
+      "name": "DATA",
+      "value_type": "DOUBLE",
+      "size_type": "ALL",
+      "dimension": [
+        "Pressure",
+        "1",
+        "Viscosity"
+      ]
+    }
+  ]
+}

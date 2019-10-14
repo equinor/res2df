@@ -69,6 +69,10 @@ class EclFiles(object):
 
         self._deck = None
 
+    def get_path(self):
+        """Return the full path to the directory with the DATA file"""
+        return os.path.dirname(os.path.abspath(self._eclbase))
+
     def get_ecldeck(self):
         """Return a sunbeam deck of the DATA file"""
         if not self._deck:

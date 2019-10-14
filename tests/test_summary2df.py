@@ -8,6 +8,7 @@ from __future__ import print_function
 import os
 import sys
 
+import yaml
 import pandas as pd
 
 import datetime
@@ -40,6 +41,45 @@ def test_main():
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
     assert "FOPT" in disk_df
+    os.remove(tmpcsvfile)
+
+
+def test_paramsupport():
+    """Test that we can merge in parameters.txt"""
+    tmpcsvfile = ".TMP-sum.csv"
+    eclfiles = EclFiles(DATAFILE)
+
+    parameterstxt = os.path.join(eclfiles.get_path(), "parameters.txt")
+    if os.path.exists(parameterstxt):
+        os.remove(parameterstxt)
+    with open(parameterstxt, "w") as pfile:
+        pfile.write("FOO 1\nBAR 3")
+    sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile, "-p"]
+    summary2df.main()
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert "FOPT" in disk_df
+    assert "FOO" in disk_df
+    assert "BAR" in disk_df
+    assert disk_df["BAR"].unique()[0] == 3
+    os.remove(parameterstxt)
+    os.remove(tmpcsvfile)
+
+    parametersyml = os.path.join(eclfiles.get_path(), "parameters.yml")
+    if os.path.exists(parametersyml):
+        os.remove(parametersyml)
+    with open(parametersyml, "w") as pfile:
+        pfile.write(yaml.dump({"FOO": 1, "BAR": 3}))
+    sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile, "-p"]
+    summary2df.main()
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert "FOPT" in disk_df
+    assert "FOO" in disk_df
+    assert len(disk_df["FOO"].unique()) == 1
+    assert disk_df["FOO"].unique()[0] == 1
+    assert "BAR" in disk_df
+    assert len(disk_df["BAR"].unique()) == 1
+    assert disk_df["BAR"].unique()[0] == 3
+    os.remove(parametersyml)
     os.remove(tmpcsvfile)
 
 

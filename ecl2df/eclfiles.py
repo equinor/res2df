@@ -25,6 +25,7 @@ SUNBEAM_RECOVERY = [
     ("PARSE_RANDOM_TEXT", sunbeam.action.ignore),
     ("PARSE_MISSING_INCLUDE", sunbeam.action.ignore),
     ("PARSE_EXTRA_RECORDS", sunbeam.action.ignore),
+    ("PARSE_EXTRA_DATA", sunbeam.action.ignore),
 ]
 
 # For Python2 compatibility:

@@ -307,6 +307,9 @@ def gruptree2df_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
+    if not args.output and not args.prettyprint:
+        print("Nothing to do. Set --output or --prettyprint")
+        sys.exit(0)
     eclfiles = EclFiles(args.DATAFILE)
     df = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:

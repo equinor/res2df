@@ -307,15 +307,14 @@ def summary2df_main(args):
             param_dict = parameters.load_all(param_files)
         else:
             if not os.path.isabs(args.paramfile):
-                print("was not absolute path " + args.paramfile)
                 param_file = parameters.find_parameter_files(
                     eclfiles, filebase=args.paramfile
                 )
+                logging.info("Loading parameters from file: " + str(param_file))
+                param_dict = parameters.load(param_file)
             else:
-                print("as absolute")
-                param_file = args.paramfile
-            logging.info("Loading parameter from file: " + str(args.paramfile))
-            param_dict = parameters.load(args.paramfile)
+                logging.info("Loading parameter from file: " + str(args.paramfile))
+                param_dict = parameters.load(args.paramfile)
         logging.info("Loaded %d parameters", len(param_dict))
         for key in param_dict:
             sum_df[key] = param_dict[key]

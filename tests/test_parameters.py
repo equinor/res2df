@@ -9,7 +9,7 @@ import os
 import yaml
 import json
 
-from ecl2df.parameters import load_parameterstxt, load, load_all, find_parameter_files
+from ecl2df.parameters import load, load_all, find_parameter_files
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))

@@ -113,7 +113,7 @@ def load(filename):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
     except Exception as yaml_error:
-        pass
+        logging.debug("{} was not parseable with yaml, trying json.".format(filename))
 
     json_error = ""
     if not params_dict:
@@ -121,7 +121,9 @@ def load(filename):
             params_dict = json.load(open(filename))
             assert isinstance(params_dict, dict)
         except Exception as json_error:
-            pass
+            logging.debug(
+                "{} was not parseable with json, trying txt.".format(filename)
+            )
 
     txt_error = ""
     if not params_dict:
@@ -129,7 +131,9 @@ def load(filename):
             params_dict = load_parameterstxt(filename)
             assert isinstance(params_dict, dict)
         except Exception as txt_error:
-            pass
+            logging.debug(
+                "{} wat not parseable as txt, no more options".format(filename)
+            )
 
     if not params_dict:
         logging.warning("%s could not be parsed as yaml, json or txt", filename)

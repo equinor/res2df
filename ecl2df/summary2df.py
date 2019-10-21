@@ -218,8 +218,22 @@ def smry2df(
     else:
         time_index_arg = time_index
 
+    if not column_keys:
+        column_keys_str = "*"
+    else:
+        column_keys_str = ",".join(column_keys)
+    logging.info(
+        "Requesting columns_keys: %s at time_index: %s",
+        column_keys_str,
+        str(time_index_arg or "raw"),
+    )
     df = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
         time_index_arg, column_keys
+    )
+    logging.info(
+        "Dataframe with smry data ready, %d columns and %d rows",
+        len(df.columns),
+        len(df),
     )
     df.index.name = "DATE"
     return df
@@ -232,7 +246,8 @@ def fill_parser(parser):
     """Set up sys.argv parsers.
 
     Arguments:
-        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
+        parser (argparse.ArgumentParser or argparse.subparser): parser to fill
+            with arguments
     """
     parser.add_argument(
         "DATAFILE",
@@ -243,8 +258,8 @@ def fill_parser(parser):
         type=str,
         help="""Time resolution mnemonic; raw, daily, monthly or yearly.
             Data at a given point in time applies until the next point in time.
-            If not raw, data will be interpolated. Use interpolated rate vectors with care.
-            Default is raw, which will include clock times.
+            If not raw, data will be interpolated. Use interpolated rate vectors
+            with care. Default is raw, which will include clock times.
             """,
         default="raw",
     )
@@ -258,7 +273,10 @@ def fill_parser(parser):
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. Use '-' to write to stdout. Default 'summary.csv'",
+        help=(
+            "Name of output csv file. Use '-' to write to stdout. "
+            "Default 'summary.csv'"
+        ),
         default="summary.csv",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
@@ -288,5 +306,6 @@ def summary2df_main(args):
         signal(SIGPIPE, SIG_DFL)
         sum_df.to_csv(sys.stdout, index=True)
     else:
+        logging.info("Writing to file {}".format(args.output))
         sum_df.to_csv(args.output, index=True)
         print("Wrote to " + args.output)

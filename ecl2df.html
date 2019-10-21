@@ -104,6 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.gruptree2df">ecl2df.gruptree2df module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.inferdims">ecl2df.inferdims module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.nnc2df">ecl2df.nnc2df module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.parameters">ecl2df.parameters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.rft2df">ecl2df.rft2df module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc2df">ecl2df.satfunc2df module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.summary2df">ecl2df.summary2df module</a></li>
@@ -344,6 +345,12 @@ caching if wanted.</p>
 <p>Various functions that needs some of the Eclipse output
 (or input file) should be able to ask this class, and
 it should be loaded or served from cache.</p>
+<dl class="method">
+<dt id="ecl2df.eclfiles.EclFiles.get_path">
+<code class="sig-name descname">get_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the full path to the directory with the DATA file</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="ecl2df.eclfiles.EclFiles.get_ecldeck">
 <code class="sig-name descname">get_ecldeck</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_ecldeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_ecldeck" title="Permalink to this definition">¶</a></dt>
@@ -940,6 +947,88 @@ and command line utility for each module in ecl2df</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-ecl2df.parameters">
+<span id="ecl2df-parameters-module"></span><h2>ecl2df.parameters module<a class="headerlink" href="#module-ecl2df.parameters" title="Permalink to this headline">¶</a></h2>
+<p>Support module for extra files with key-value information
+related to Eclipse runs</p>
+<dl class="function">
+<dt id="ecl2df.parameters.find_parameter_files">
+<code class="sig-prename descclassname">ecl2df.parameters.</code><code class="sig-name descname">find_parameter_files</code><span class="sig-paren">(</span><em class="sig-param">ecldeck_or_eclpath</em>, <em class="sig-param">filebase='parameters'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/parameters.html#find_parameter_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.parameters.find_parameter_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locate a default prioritized list of files to try to read as key-value</p>
+<p>File extensions .yml, .json and .txt are recognized and will be found in
+current dir, one directory up, and two directories up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ecldeck_or_eclpath</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a><em> or </em><em>string</em>) – Either an EclFiles object of
+an Eclipse output set (only the corresponding path will be used),
+or path to a file or directory, that will be used as a starting
+point for locating parameter files</p></li>
+<li><p><strong>filebase</strong> – the base of filenames to look for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>list of strings with absolute paths to filenames. Empty list if nothing</dt><dd><p>found</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.parameters.load_parameterstxt">
+<code class="sig-prename descclassname">ecl2df.parameters.</code><code class="sig-name descname">load_parameterstxt</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/parameters.html#load_parameterstxt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.parameters.load_parameterstxt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read parameters.txt into a dictionary</p>
+<p>Lines starting with a hash will be ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – file containing one key-value pair pr. line,
+separated by whitespace</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.parameters.load_all">
+<code class="sig-prename descclassname">ecl2df.parameters.</code><code class="sig-name descname">load_all</code><span class="sig-paren">(</span><em class="sig-param">filenames</em>, <em class="sig-param">warnduplicates=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/parameters.html#load_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.parameters.load_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of parameter filenames</p>
+<p>Dictionaries for all files will be merged into one.</p>
+<p>Keys must be unique over all filenames, if not
+only the first occurence will be used (based on
+the order of filenames).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filenames</strong> (<em>list</em>) – list of filenames, order matters.</p></li>
+<li><p><strong>warnduplicates</strong> (<em>bool</em>) – If True (default), overlapping keys will be
+warned.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.parameters.load">
+<code class="sig-prename descclassname">ecl2df.parameters.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/parameters.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.parameters.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a parameter file as txt, yaml or json</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>dict() with parameter names as keys. Empty dictionary if</dt><dd><p>no parameters in the file.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p>Raises ValueError or IOError if no files are readable</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-ecl2df.rft2df">
 <span id="ecl2df-rft2df-module"></span><h2>ecl2df.rft2df module<a class="headerlink" href="#module-ecl2df.rft2df" title="Permalink to this headline">¶</a></h2>
 <p>Converter module for Eclipse RFT output files to Pandas Dataframes</p>
@@ -1196,7 +1285,7 @@ with arguments</p>
 <dl class="function">
 <dt id="ecl2df.summary2df.summary2df_main">
 <code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">summary2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#summary2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.summary2df_main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read from disk and write CSV back to disk</p>
+<dd><p>Read summary data from disk and write CSV back to disk</p>
 </dd></dl>
 
 </div>

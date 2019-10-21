@@ -270,7 +270,8 @@ data of interest to CSV files.</p>
 <h3>smry<a class="headerlink" href="#smry" title="Permalink to this headline">¶</a></h3>
 <p>Extract summary data</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">smry</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
-             <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">paramfile</span> <span class="n">PARAMFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
              <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -299,6 +300,13 @@ with care. Default is raw, which will include clock times.</p>
 <dt>Summary column vector wildcards, space-separated.</dt><dd><p>Default is to include all summary vectors available.</p>
 </dd>
 </dl>
+</dd>
+<dt><kbd>-p, --params</kbd></dt>
+<dd><p>Merge key-value data from parameter file into each row</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--paramfile</kbd></dt>
+<dd><p>Filename of key-value parameter file to look for if -p is set, relative to Eclipse DATA file or an absolute filename If not supplied, parameters.{json,yml,txt} in {., .. and ../..} will be merged in.</p>
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file. Use ‘-‘ to write to stdout. Default ‘summary.csv’</p>

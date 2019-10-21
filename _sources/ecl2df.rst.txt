@@ -84,6 +84,14 @@ ecl2df.nnc2df module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.parameters module
+------------------------
+
+.. automodule:: ecl2df.parameters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.rft2df module
 --------------------
 

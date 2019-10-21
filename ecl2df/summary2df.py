@@ -218,7 +218,7 @@ def smry2df(
     else:
         time_index_arg = time_index
 
-    if not column_keys:
+    if not column_keys or not column_keys[0]:
         column_keys_str = "*"
     else:
         column_keys_str = ",".join(column_keys)

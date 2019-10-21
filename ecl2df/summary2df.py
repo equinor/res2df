@@ -9,6 +9,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import os
 import sys
 import logging
 import argparse
@@ -17,6 +18,7 @@ import datetime
 import pandas as pd
 
 from .eclfiles import EclFiles
+from . import parameters
 
 
 def normalize_dates(start_date, end_date, freq):
@@ -270,6 +272,23 @@ def fill_parser(parser):
         Default is to include all summary vectors available.""",
     )
     parser.add_argument(
+        "-p",
+        "--params",
+        action="store_true",
+        help="Merge key-value data from parameter file into each row",
+    )
+    parser.add_argument(
+        "--paramfile",
+        type=str,
+        help=(
+            "Filename of key-value parameter file to look for if -p is set, "
+            "relative to Eclipse DATA file or an absolute filename "
+            "If not supplied, parameters.{json,yml,txt} in "
+            "{., .. and ../..} will be merged in."
+        ),
+        default=None,
+    )
+    parser.add_argument(
         "-o",
         "--output",
         type=str,
@@ -294,11 +313,29 @@ def main():
 
 
 def summary2df_main(args):
-    """Read from disk and write CSV back to disk"""
+    """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     sum_df = smry2df(eclfiles, time_index=args.time_index, column_keys=args.column_keys)
+    if args.params:
+        if not args.paramfile:
+            param_files = parameters.find_parameter_files(eclfiles)
+            logging.info("Loading parameters from files: " + str(param_files))
+            param_dict = parameters.load_all(param_files)
+        else:
+            if not os.path.isabs(args.paramfile):
+                param_file = parameters.find_parameter_files(
+                    eclfiles, filebase=args.paramfile
+                )
+                logging.info("Loading parameters from file: " + str(param_file))
+                param_dict = parameters.load(param_file)
+            else:
+                logging.info("Loading parameter from file: " + str(args.paramfile))
+                param_dict = parameters.load(args.paramfile)
+        logging.info("Loaded %d parameters", len(param_dict))
+        for key in param_dict:
+            sum_df[key] = param_dict[key]
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

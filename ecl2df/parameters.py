@@ -90,7 +90,7 @@ def load_all(filenames, warnduplicates=True):
         if warnduplicates and keyvalues:
             duplicates = set(keyvalues.keys()).intersection(set(new_params.keys()))
             if duplicates:
-                logging.warning("Duplicates keys %s", str(duplicates))
+                logging.debug("Duplicates keys %s", str(duplicates))
         new_params.update(keyvalues)
         keyvalues = new_params
     return keyvalues
@@ -108,7 +108,9 @@ def load(filename):
     params_dict = None
     yaml_error = ""
     try:
+        logging.debug("Trying to parse %s with yaml.safe_load()", filename)
         params_dict = yaml.safe_load(open(filename))
+        logging.debug(" - ok, parsed as yaml")
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
@@ -118,8 +120,10 @@ def load(filename):
     json_error = ""
     if not params_dict:
         try:
+            logging.debug("Trying to parse %s with json.load()", filename)
             params_dict = json.load(open(filename))
             assert isinstance(params_dict, dict)
+            logging.debug(" - ok, parsed as yaml")
         except Exception as json_error:
             logging.debug(
                 "{} was not parseable with json, trying txt.".format(filename)
@@ -128,8 +132,10 @@ def load(filename):
     txt_error = ""
     if not params_dict:
         try:
+            logging.debug("Trying to parse %s as txt with pd.read_csv()", filename)
             params_dict = load_parameterstxt(filename)
             assert isinstance(params_dict, dict)
+            logging.debug(" - ok, parsed as txt")
         except Exception as txt_error:
             logging.debug(
                 "{} wat not parseable as txt, no more options".format(filename)
@@ -140,4 +146,11 @@ def load(filename):
         logging.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
         raise ValueError("Could not parse {}".format(filename))
     else:
+        # Filter to values that are NOT dict's. We can have dict as value when "grouped"
+        # keys are present in the json files, both as "group:key value" and in a dict called group
+        params_dict = {
+            key: value
+            for (key, value) in params_dict.items()
+            if not isinstance(value, dict)
+        }
         return params_dict

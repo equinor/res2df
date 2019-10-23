@@ -335,7 +335,11 @@ def summary2df_main(args):
                 param_dict = parameters.load(args.paramfile)
         logging.info("Loaded %d parameters", len(param_dict))
         for key in param_dict:
-            sum_df[key] = param_dict[key]
+            # By converting to str we are more robust with respect to what objects are
+            # read from the parameters.json/txt/yml. Since we are only going
+            # to dump to csv, it should not cause side-effects that floats end up
+            # as strings in the dataframe.
+            sum_df[key] = str(param_dict[key])
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

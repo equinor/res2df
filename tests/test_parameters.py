@@ -39,16 +39,21 @@ def test_parameters():
     if os.path.exists(parameterstxt):
         os.unlink(parameterstxt)
     with open(parameterstxt, "w") as pfile:
-        pfile.write("FOO 1\nBAR 3")
+        pfile.write("FOO 1\nBAR 3\n")
+        pfile.write("CONTACT:BARF 2700")
     assert os.path.exists(parameterstxt)
     param_dict = load(parameterstxt)
     assert "FOO" in param_dict
     assert "BAR" in param_dict
     assert param_dict["BAR"] == 3
+    assert param_dict["CONTACT:BARF"] == 2700
     assert len(find_parameter_files(eclfiles)) == 1
     os.unlink(parameterstxt)
 
-    dump_me = {"FOO": 1, "BAR": "com"}
+    # Typical parameters.json structure: The group "CONTACT" is assumed having
+    # duplicate information, and is to be ignored
+    dump_me = {"FOO": 1, "BAR": "com", "CONTACT:BARF": 2700, "CONTACT": {"BARF": 2700}}
+
     parametersyml = os.path.join(eclfiles.get_path(), "parameters.yml")
     if os.path.exists(parametersyml):
         os.unlink(parametersyml)

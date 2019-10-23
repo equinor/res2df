@@ -247,7 +247,7 @@
         <span class="k">if</span> <span class="n">warnduplicates</span> <span class="ow">and</span> <span class="n">keyvalues</span><span class="p">:</span>
             <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keyvalues</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_params</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
             <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Duplicates keys </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">duplicates</span><span class="p">))</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Duplicates keys </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">duplicates</span><span class="p">))</span>
         <span class="n">new_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">)</span>
         <span class="n">keyvalues</span> <span class="o">=</span> <span class="n">new_params</span>
     <span class="k">return</span> <span class="n">keyvalues</span></div>
@@ -265,7 +265,9 @@
     <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">yaml_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with yaml.safe_load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="c1"># yaml happily parses txt files into a single line, don&#39;t want that.</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
@@ -275,8 +277,10 @@
     <span class="n">json_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with json.load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">json_error</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -285,8 +289,10 @@
     <span class="n">txt_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> as txt with pd.read_csv()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as txt&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">txt_error</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> wat not parseable as txt, no more options&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -297,6 +303,13 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">yaml_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_error</span><span class="p">))</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not parse </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Filter to values that are NOT dict&#39;s. We can have dict as value when &quot;grouped&quot;</span>
+        <span class="c1"># keys are present in the json files, both as &quot;group:key value&quot; and in a dict called group</span>
+        <span class="n">params_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">value</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="p">}</span>
         <span class="k">return</span> <span class="n">params_dict</span></div>
 </pre></div>
 

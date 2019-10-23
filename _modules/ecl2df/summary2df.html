@@ -492,7 +492,11 @@
                 <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">paramfile</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> parameters&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="p">:</span>
-            <span class="n">sum_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="c1"># By converting to str we are more robust with respect to what objects are</span>
+            <span class="c1"># read from the parameters.json/txt/yml. Since we are only going</span>
+            <span class="c1"># to dump to csv, it should not cause side-effects that floats end up</span>
+            <span class="c1"># as strings in the dataframe.</span>
+            <span class="n">sum_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
         <span class="c1"># Ignore pipe errors when writing to stdout.</span>
         <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>

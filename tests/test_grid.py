@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Test module for grid2df"""
+"""Test module for ecl2df.grid"""
 
 from __future__ import absolute_import
 from __future__ import division

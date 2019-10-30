@@ -12,7 +12,7 @@ import pandas as pd
 
 import pytest
 
-from ecl2df import grid2df
+from ecl2df import grid
 from ecl2df import ecl2csv
 from ecl2df.eclfiles import EclFiles
 
@@ -23,7 +23,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_gridgeometry2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    grid_geom = grid2df.gridgeometry2df(eclfiles)
+    grid_geom = grid.gridgeometry2df(eclfiles)
 
     assert isinstance(grid_geom, pd.DataFrame)
     assert not grid_geom.empty
@@ -47,13 +47,13 @@ def test_wrongfile():
     eclfiles = EclFiles("FOO.DATA")
     # but when we try to use it, things should fail:
     with pytest.raises(FileNotFoundError):
-        grid2df.init2df(eclfiles)
+        grid.init2df(eclfiles)
 
 
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
     eclfiles = EclFiles(DATAFILE)
-    init_df = grid2df.init2df(eclfiles)
+    init_df = grid.init2df(eclfiles)
 
     assert isinstance(init_df, pd.DataFrame)
     assert not init_df.empty
@@ -65,7 +65,7 @@ def test_init2df():
 def test_grid2df():
     """Test that dataframe with INIT vectors and coordinates can be produced"""
     eclfiles = EclFiles(DATAFILE)
-    grid_df = grid2df.grid2df(eclfiles)
+    grid_df = grid.grid2df(eclfiles)
 
     assert isinstance(grid_df, pd.DataFrame)
     assert not grid_df.empty
@@ -84,24 +84,24 @@ def test_grid2df():
 def test_subvectors():
     """Test that we can ask for a few vectors only"""
     eclfiles = EclFiles(DATAFILE)
-    init_df = grid2df.init2df(eclfiles, "PORO")
+    init_df = grid.init2df(eclfiles, "PORO")
     assert "PORO" in init_df
     assert "PERMX" not in init_df
     assert "PORV" not in init_df
 
-    init_df = grid2df.init2df(eclfiles, "P*")
+    init_df = grid.init2df(eclfiles, "P*")
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
     assert "SATNUM" not in init_df
 
-    init_df = grid2df.init2df(eclfiles, ["P*"])
+    init_df = grid.init2df(eclfiles, ["P*"])
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
     assert "SATNUM" not in init_df
 
-    init_df = grid2df.init2df(eclfiles, ["P*", "*NUM"])
+    init_df = grid.init2df(eclfiles, ["P*", "*NUM"])
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
@@ -111,21 +111,21 @@ def test_subvectors():
 
 def test_dropconstants():
     df = pd.DataFrame(columns=["A", "B"], data=[[1, 1], [2, 1]])
-    assert "B" not in grid2df.dropconstants(df)
-    assert "A" in grid2df.dropconstants(df)
-    assert "B" in grid2df.dropconstants(df, alwayskeep="B")
-    assert "B" in grid2df.dropconstants(df, alwayskeep=["B"])
+    assert "B" not in grid.dropconstants(df)
+    assert "A" in grid.dropconstants(df)
+    assert "B" in grid.dropconstants(df, alwayskeep="B")
+    assert "B" in grid.dropconstants(df, alwayskeep=["B"])
 
 
 def test_mergegridframes():
     """Test that we can merge together data for the grid"""
     eclfiles = EclFiles(DATAFILE)
-    init_df = grid2df.init2df(eclfiles)
-    grid_geom = grid2df.gridgeometry2df(eclfiles)
+    init_df = grid.init2df(eclfiles)
+    grid_geom = grid.gridgeometry2df(eclfiles)
 
     assert len(init_df) == len(grid_geom)
 
-    merged = grid2df.merge_gridframes(grid_geom, init_df, pd.DataFrame())
+    merged = grid.merge_gridframes(grid_geom, init_df, pd.DataFrame())
     assert isinstance(merged, pd.DataFrame)
     assert len(merged) == len(grid_geom)
 
@@ -141,7 +141,7 @@ def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-eclgrid.csv"
     sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--init", "PORO"]
-    grid2df.main()
+    grid.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
@@ -176,7 +176,7 @@ def test_main():
         "--init",
         "PORO",
     ]
-    grid2df.main()
+    grid.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
@@ -184,7 +184,7 @@ def test_main():
 
     # Test with constants dropping
     sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--dropconstants"]
-    grid2df.main()
+    grid.main()
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     # That PVTNUM is constant is a particular feature
@@ -198,10 +198,10 @@ def test_rstdates():
     eclfiles = EclFiles(DATAFILE)
     # rstfile = eclfiles.get_rstfile()
 
-    alldates = grid2df.rstdates(eclfiles)
+    alldates = grid.rstdates(eclfiles)
     assert len(alldates) == 4
 
-    didx = grid2df.dates2rstindices(eclfiles, "all")
+    didx = grid.dates2rstindices(eclfiles, "all")
     assert len(didx[0]) == len(alldates)
     assert len(didx[1]) == len(alldates)
     assert isinstance(didx[0][0], int)
@@ -209,13 +209,13 @@ def test_rstdates():
     assert didx[1][0] == alldates[0]
     assert didx[1][-1] == alldates[-1]
 
-    first = grid2df.dates2rstindices(eclfiles, "first")
+    first = grid.dates2rstindices(eclfiles, "first")
     assert first[1][0] == alldates[0]
 
-    last = grid2df.dates2rstindices(eclfiles, "last")
+    last = grid.dates2rstindices(eclfiles, "last")
     assert last[1][0] == alldates[-1]
 
-    dates = grid2df.rstdates(eclfiles)
+    dates = grid.rstdates(eclfiles)
     assert isinstance(dates, list)
 
     # Test with missing RST file:
@@ -226,6 +226,6 @@ def test_rstdates():
 
 def test_rst2df():
     eclfiles = EclFiles(DATAFILE)
-    assert grid2df.rst2df(eclfiles, "first").shape == (35817, 22)
-    assert grid2df.rst2df(eclfiles, "last").shape == (35817, 22)
-    assert grid2df.rst2df(eclfiles, "all").shape == (35817, 22 * 4)
+    assert grid.rst2df(eclfiles, "first").shape == (35817, 23)
+    assert grid.rst2df(eclfiles, "last").shape == (35817, 23)
+    assert grid.rst2df(eclfiles, "all").shape == (35817, 23 * 4)

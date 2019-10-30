@@ -359,3 +359,9 @@ def compdat2df_main(args):
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
     unrolldf(dfs["COMPDAT"]).to_csv(args.output, index=False)
     print("Wrote to " + args.output)
+
+
+def df(eclfiles):
+    """Main function for Python API users"""
+    compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
+    return unrolldf(compdat_df)

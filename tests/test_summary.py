@@ -13,7 +13,7 @@ import pandas as pd
 
 import datetime
 
-from ecl2df import summary2df, ecl2csv
+from ecl2df import summary, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +23,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_summary2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    sumdf = summary2df.smry2df(eclfiles)
+    sumdf = summary.smry2df(eclfiles)
 
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
@@ -35,7 +35,7 @@ def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-sum.csv"
     sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile]
-    summary2df.main()
+    summary.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
@@ -55,7 +55,7 @@ def test_paramsupport():
     with open(parameterstxt, "w") as pfile:
         pfile.write("FOO 1\nBAR 3")
     sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile, "-p"]
-    summary2df.main()
+    summary.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -70,7 +70,7 @@ def test_paramsupport():
     with open(parametersyml, "w") as pfile:
         pfile.write(yaml.dump({"FOO": 1, "BAR": 3}))
     sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile, "-p"]
-    summary2df.main()
+    summary.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -99,7 +99,7 @@ def test_main_subparser():
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
-    from ecl2df.summary2df import normalize_dates
+    from ecl2df.summary import normalize_dates
 
     start = datetime.date(1997, 11, 5)
     end = datetime.date(2020, 3, 2)
@@ -124,16 +124,16 @@ def test_datenormalization():
     # Check that we normalize correctly with get_smry():
     # realization-0 here has its last summary date at 2003-01-02
     eclfiles = EclFiles(DATAFILE)
-    daily = summary2df.smry2df(eclfiles, column_keys="FOPT", time_index="daily")
+    daily = summary.smry2df(eclfiles, column_keys="FOPT", time_index="daily")
     assert str(daily.index[-1]) == "2003-01-02"
-    monthly = summary2df.smry2df(eclfiles, column_keys="FOPT", time_index="monthly")
+    monthly = summary.smry2df(eclfiles, column_keys="FOPT", time_index="monthly")
     assert str(monthly.index[-1]) == "2003-02-01"
-    yearly = summary2df.smry2df(eclfiles, column_keys="FOPT", time_index="yearly")
+    yearly = summary.smry2df(eclfiles, column_keys="FOPT", time_index="yearly")
     assert str(yearly.index[-1]) == "2004-01-01"
 
 
 def test_resample_smry_dates():
-    from ecl2df.summary2df import resample_smry_dates
+    from ecl2df.summary import resample_smry_dates
 
     eclfiles = EclFiles(DATAFILE)
 

@@ -317,9 +317,30 @@ def summary2df_main(args):
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
-    sum_df = smry2df(eclfiles, time_index=args.time_index, column_keys=args.column_keys)
-    if args.params:
-        if not args.paramfile:
+    sum_df = df(
+        eclfiles,
+        time_index=args.time_index,
+        column_keys=args.column_keys,
+        params=args.params,
+        paramfile=args.paramfile,
+    )
+    if args.output == "-":
+        # Ignore pipe errors when writing to stdout.
+        from signal import signal, SIGPIPE, SIG_DFL
+
+        signal(SIGPIPE, SIG_DFL)
+        sum_df.to_csv(sys.stdout, index=True)
+    else:
+        logging.info("Writing to file {}".format(args.output))
+        sum_df.to_csv(args.output, index=True)
+        print("Wrote to " + args.output)
+
+
+def df(eclfiles, time_index=None, column_keys=None, params=False, paramfile=None):
+    """Main function for Python API users"""
+    sum_df = smry2df(eclfiles, time_index=time_index, column_keys=column_keys)
+    if params:
+        if not paramfile:
             param_files = parameters.find_parameter_files(eclfiles)
             logging.info("Loading parameters from files: " + str(param_files))
             param_dict = parameters.load_all(param_files)
@@ -340,13 +361,4 @@ def summary2df_main(args):
             # to dump to csv, it should not cause side-effects that floats end up
             # as strings in the dataframe.
             sum_df[key] = str(param_dict[key])
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        sum_df.to_csv(sys.stdout, index=True)
-    else:
-        logging.info("Writing to file {}".format(args.output))
-        sum_df.to_csv(args.output, index=True)
-        print("Wrote to " + args.output)
+    return sum_df

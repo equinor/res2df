@@ -19,17 +19,22 @@ def test_userapi():
     to illustrate how a user could work, and ensure that it works.
 
     To the user reading the source: Skip all 'assert' lines, read the rest.
- 
+
     """
     ef = ecl2df.EclFiles(DATAFILE)
 
     grid_df = ecl2df.grid.df(ef)
+    grst_df = ecl2df.grid.df(ef, rstdates="last")
+    nnc = ecl2df.nnc.df(ef)
+    rft = ecl2df.rft.df(ef)
+    smry = ecl2df.summary.df(ef)
+    wcon = ecl2df.wcon.df(ef)
+    compdatdf = ecl2df.compdat.df(ef)
+    equil = ecl2df.equil.df(ef)
+    gruptree = ecl2df.gruptree.df(ef)
+
     assert "PORV" in grid_df
     assert "SOIL" not in grid_df
-
-    # Load the entire grid, with the UNRST data from the last timestep:
-    grst_df = ecl2df.grid.df(ef, rstdates="last")
-
     assert "SOIL" in grst_df
     assert "PORV" in grst_df
 
@@ -43,3 +48,11 @@ def test_userapi():
     # Print the HCPV table by FIPNUM:
     print()
     print((hcpv_table / 1e6).round(2))
+
+    assert not nnc.empty
+    assert not rft.empty
+    assert not wcon.empty
+    assert not smry.empty
+    assert not compdatdf.empty
+    assert not equil.empty
+    assert not gruptree.empty

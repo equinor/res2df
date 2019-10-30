@@ -24,6 +24,7 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 
+import ecl2df
 from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
 
@@ -277,7 +278,8 @@ def df(eclfiles, vectors="*", dropconstants=False, rstdates=None):
         rst_df = rst2df(eclfiles, rstdates)
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     if dropconstants:
-        grid_df = dropconstants(grid_df)
+        # Note: Ambigous object names, bool vs function
+        grid_df = ecl2df.grid.dropconstants(grid_df)
     return grid_df
 
 

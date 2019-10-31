@@ -24,6 +24,7 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 
+import ecl2df
 from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
 
@@ -155,6 +156,10 @@ def rst2df(eclfiles, date, dateinheaders=False):
             ),
         )
 
+        # For users convenience:
+        if "SWAT" in rst_df and "SGAS" in rst_df and "SOIL" not in rst_df:
+            rst_df["SOIL"] = 1 - rst_df["SWAT"] - rst_df["SGAS"]
+
         # Tag the column names if requested, or if multiple rst indices
         # are asked for
         if dateinheaders or len(rstindices) > 1:
@@ -262,6 +267,22 @@ def init2df(eclfiles, vectors=None):
     return init_df
 
 
+def df(eclfiles, vectors="*", dropconstants=False, rstdates=None):
+    """Produce a dataframe with grid information
+
+    This is the "main" function for Python API users"""
+    gridgeom = gridgeometry2df(eclfiles)
+    initdf = init2df(eclfiles, vectors=vectors)
+    rst_df = None
+    if rstdates:
+        rst_df = rst2df(eclfiles, rstdates)
+    grid_df = merge_gridframes(gridgeom, initdf, rst_df)
+    if dropconstants:
+        # Note: Ambigous object names, bool vs function
+        grid_df = ecl2df.grid.dropconstants(grid_df)
+    return grid_df
+
+
 def merge_gridframes(grid_df, init_df, rst_df):
     """Merge dataframes with grid data"""
     merged = pd.concat([grid_df, init_df, rst_df], axis=1, sort=False)
@@ -359,7 +380,7 @@ def grid2df(eclfiles, vectors="*"):
 
 
 def main():
-    """Entry-point for module, for command line utility.
+    """Entry-point for module, for command line utility. Deprecated to use
     """
     logging.warning("grid2csv is deprecated, use 'ecl2csv grid <args>' instead")
     parser = argparse.ArgumentParser()
@@ -369,18 +390,16 @@ def main():
 
 
 def grid2df_main(args):
+    """This is the command line API"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
-    gridgeom = gridgeometry2df(eclfiles)
-    initdf = init2df(eclfiles, vectors=args.initkeys)
-    if args.rstdate:
-        rst_df = rst2df(eclfiles, args.rstdate)
-    else:
-        rst_df = pd.DataFrame()
-    grid_df = merge_gridframes(gridgeom, initdf, rst_df)
-    if args.dropconstants:
-        grid_df = dropconstants(grid_df)
+    grid_df = df(
+        eclfiles,
+        vectors=args.initkeys,
+        rstdates=args.rstdate,
+        dropconstants=args.dropconstants,
+    )
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

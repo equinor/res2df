@@ -16,7 +16,7 @@ import argparse
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .grid2df import gridgeometry2df
+from .grid import gridgeometry2df
 
 
 def nnc2df(eclfiles, coords=False, pillars=False):
@@ -218,3 +218,8 @@ def nnc2df_main(args):
     nncdf = nnc2df(eclfiles, coords=args.coords, pillars=args.pillars)
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
+
+
+def df(eclfiles, coords=False, pillars=False):
+    """Main function for Python API users"""
+    return nnc2df(eclfiles, coords=coords, pillars=pillars)

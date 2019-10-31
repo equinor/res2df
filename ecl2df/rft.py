@@ -306,6 +306,11 @@ def rft2df_main(args):
     print("Wrote to " + args.output)
 
 
+def df(eclfiles):
+    """Main function for Python API users"""
+    return rft2df(eclfiles)
+
+
 ## Vector	Description
 ## CONDEPTH	Depth at the centre of each connection in the well
 ## CONLENST	Length down the tubing from the BH reference point to the start of the connection

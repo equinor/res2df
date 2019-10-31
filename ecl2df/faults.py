@@ -83,3 +83,8 @@ def faults2df_main(args):
     faults_df = deck2df(deck)
     faults_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
+
+
+def df(eclfiles):
+    """Main function for Python API users"""
+    return deck2df(eclfiles.get_ecldeck())

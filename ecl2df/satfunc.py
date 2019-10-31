@@ -23,8 +23,6 @@ import argparse
 import numpy as np
 import pandas as pd
 
-import sunbeam
-
 from ecl2df import inferdims
 from .eclfiles import EclFiles
 
@@ -213,3 +211,8 @@ def satfunc2df_main(args):
         )
         satfunc_df.to_csv(args.output, index=False)
         print("Wrote to " + args.output)
+
+
+def df(eclfiles):
+    """Main function for Python API users"""
+    return deck2df(eclfiles.get_ecldeck())

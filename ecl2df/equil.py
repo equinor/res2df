@@ -186,3 +186,8 @@ def equil2df_main(args):
     equil_df = deck2df(deck)
     equil_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
+
+
+def df(eclfiles):
+    """The "main" method for Python API users"""
+    return deck2df(eclfiles.get_ecldeck())

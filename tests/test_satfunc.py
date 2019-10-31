@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import satfunc2df, ecl2csv, inferdims
+from ecl2df import satfunc, ecl2csv, inferdims
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_satfunc2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    satdf = satfunc2df.deck2df(eclfiles.get_ecldeck())
+    satdf = satfunc.deck2df(eclfiles.get_ecldeck())
 
     assert not satdf.empty
     assert "KEYWORD" in satdf  # for all data
@@ -44,7 +44,7 @@ SWOF
  /
 """
     deck = EclFiles.str2deck(swofstr)
-    satdf = satfunc2df.deck2df(deck)
+    satdf = satfunc.deck2df(deck)
     assert len(satdf) == 2
 
     swofstr2 = """
@@ -65,23 +65,23 @@ SWOF
 /
 """
     deck2 = EclFiles.str2deck(swofstr2)
-    satdf2 = satfunc2df.deck2df(deck2)
+    satdf2 = satfunc.deck2df(deck2)
     assert "SATNUM" in satdf
     assert len(satdf2["SATNUM"].unique()) == 2
     assert len(satdf2) == 5
 
     # Try empty/bogus data:
-    bogusdf = satfunc2df.deck2df("SWRF\n 0 /\n")
+    bogusdf = satfunc.deck2df("SWRF\n 0 /\n")
     # (warnings should be issued)
     assert bogusdf.empty
 
     # Test with bogus E100 keywords:
-    tricky = satfunc2df.deck2df("FOO\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
+    tricky = satfunc.deck2df("FOO\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
     assert not tricky.empty
     assert len(tricky["SATNUM"].unique()) == 1
 
     # Test with unsupported (for OPM) E100 keywords (trickier than bogus..)
-    # # tricky = satfunc2df.deck2df("CARFIN\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
+    # # tricky = satfunc.deck2df("CARFIN\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
     # # assert not tricky.empty
     # # assert len(tricky["SATNUM"].unique()) == 1
     # ### It remains unsolved how to avoid an error here!
@@ -103,14 +103,14 @@ SGOF
 /
 """
     assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
-    sgofdf = satfunc2df.deck2df(sgofstr)
+    sgofdf = satfunc.deck2df(sgofstr)
     assert "SATNUM" in sgofdf
     assert len(sgofdf["SATNUM"].unique()) == 3
     assert len(sgofdf) == 8
 
     # This illustrates how we cannot do it, CRITICAL
     # logging errors will be displayed:
-    sgofdf = satfunc2df.deck2df(EclFiles.str2deck(sgofstr))
+    sgofdf = satfunc.deck2df(EclFiles.str2deck(sgofstr))
     assert len(sgofdf["SATNUM"].unique()) == 1
 
     # Write to file and try to parse it with command line:
@@ -128,7 +128,7 @@ def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-satfunc.csv"
     sys.argv = ["satfunc2csv", DATAFILE, "-o", tmpcsvfile]
-    satfunc2df.main()
+    satfunc.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

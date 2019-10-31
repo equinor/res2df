@@ -10,7 +10,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import faults2df, ecl2csv
+from ecl2df import faults, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_faults2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    faultsdf = faults2df.deck2df(eclfiles.get_ecldeck())
+    faultsdf = faults.deck2df(eclfiles.get_ecldeck())
 
     assert "NAME" in faultsdf
     assert "I" in faultsdf
@@ -39,7 +39,7 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults2df.deck2df(deck)
+    faultsdf = faults.deck2df(deck)
 
     assert len(faultsdf) == 16
 
@@ -56,7 +56,7 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults2df.deck2df(deck).set_index("NAME")
+    faultsdf = faults.deck2df(deck).set_index("NAME")
 
     assert len(faultsdf) == 23
     assert len(faultsdf.loc[["D"]]) == 1  # Pass lists to .loc for single row
@@ -79,7 +79,7 @@ def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-faultsdf.csv"
     sys.argv = ["faults2csv", DATAFILE, "-o", tmpcsvfile]
-    faults2df.main()
+    faults.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

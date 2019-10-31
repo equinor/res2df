@@ -9,8 +9,8 @@ import sys
 
 import pandas as pd
 
-from ecl2df import compdat2df, ecl2csv
-from ecl2df.eclfiles import EclFiles
+from ecl2df import compdat, ecl2csv
+from ecl2df import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -21,7 +21,7 @@ SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_histo
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    compdfs = compdat2df.deck2dfs(eclfiles.get_ecldeck())
+    compdfs = compdat.deck2dfs(eclfiles.get_ecldeck())
 
     assert not compdfs["COMPDAT"].empty
     assert compdfs["WELSEGS"].empty  # REEK demo does not include multisegment wells
@@ -32,7 +32,7 @@ def test_comp2df():
 def test_schfile2df():
     """Test that we can process individual files"""
     deck = EclFiles.file2deck(SCHFILE)
-    compdfs = compdat2df.deck2dfs(deck)
+    compdfs = compdat.deck2dfs(deck)
     assert len(compdfs["COMPDAT"].columns)
     assert not compdfs["COMPDAT"].empty
 
@@ -65,23 +65,23 @@ WSEGVALV
 /
 """
     deck = EclFiles.str2deck(schstr)
-    compdfs = compdat2df.deck2dfs(deck)
-    compdat = compdfs["COMPDAT"]
+    compdfs = compdat.deck2dfs(deck)
+    compdat_df = compdfs["COMPDAT"]
     welsegs = compdfs["WELSEGS"]
     compsegs = compdfs["COMPSEGS"]
-    assert "WELL" in compdat
-    assert len(compdat) == 1
-    assert compdat["WELL"].unique()[0] == "OP1"
+    assert "WELL" in compdat_df
+    assert len(compdat_df) == 1
+    assert compdat_df["WELL"].unique()[0] == "OP1"
 
     # Check that we have not used the very long sunbeam term here:
-    assert "CONNECTION_TRANSMISSIBILITY_FACTOR" not in compdat
-    assert "TRAN" in compdat
+    assert "CONNECTION_TRANSMISSIBILITY_FACTOR" not in compdat_df
+    assert "TRAN" in compdat_df
 
-    assert "Kh" not in compdat  # Mixed-case should not be used.
-    assert "KH" in compdat
+    assert "Kh" not in compdat_df  # Mixed-case should not be used.
+    assert "KH" in compdat_df
 
     # Make sure the ' are ignored:
-    assert compdat["OP/SH"].unique()[0] == "OPEN"
+    assert compdat_df["OP/SH"].unique()[0] == "OPEN"
 
     # Continue to WELSEGS
     assert len(welsegs) == 1  # First record is appended to every row.
@@ -97,9 +97,9 @@ WSEGVALV
     assert len(compsegs.iloc[0]) == 9
 
     # Check date handling
-    assert "DATE" in compdat
-    assert not all(compdat["DATE"].notna())
-    compdat_date = compdat2df.deck2dfs(deck, start_date="2000-01-01")["COMPDAT"]
+    assert "DATE" in compdat_df
+    assert not all(compdat_df["DATE"].notna())
+    compdat_date = compdat.deck2dfs(deck, start_date="2000-01-01")["COMPDAT"]
     assert "DATE" in compdat_date
     assert all(compdat_date["DATE"].notna())
     assert len(compdat_date["DATE"].unique()) == 1
@@ -131,7 +131,7 @@ COMPDAT
 /
 """
     deck = EclFiles.str2deck(schstr)
-    compdf = compdat2df.deck2dfs(deck)["COMPDAT"]
+    compdf = compdat.deck2dfs(deck)["COMPDAT"]
     dates = [str(x) for x in compdf["DATE"].unique()]
     assert len(dates) == 3
     assert "2001-05-01" in dates
@@ -147,14 +147,14 @@ COMPDAT
   'OP1' 33 44 10 20  /
 /
 """
-    df = compdat2df.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
     assert df["I"].unique() == 33
     assert df["J"].unique() == 44
     assert (df["K1"].values == range(10, 20 + 1)).all()
     assert (df["K2"].values == range(10, 20 + 1)).all()
 
     # Check that we can read withoug unrolling:
-    df_noroll = compdat2df.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["COMPDAT"]
+    df_noroll = compdat.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["COMPDAT"]
     assert len(df_noroll) == 1
 
 
@@ -167,19 +167,19 @@ WELSEGS
    2 3 1 1 1923.9 1689.000 0.1172 0.000015  /
 /
 """
-    df = compdat2df.deck2dfs(EclFiles.str2deck(schstr))["WELSEGS"]
+    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["WELSEGS"]
     assert len(df) == 2
 
-    df = compdat2df.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["WELSEGS"]
+    df = compdat.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["WELSEGS"]
     assert len(df) == 1
 
 
 def test_unrollbogus():
     # Giving in empty dataframe, should not crash.
-    assert compdat2df.unrolldf(pd.DataFrame).empty
+    assert compdat.unrolldf(pd.DataFrame).empty
 
     bogusdf = pd.DataFrame([0, 1, 4], [0, 2, 5])
-    unrolled = compdat2df.unrolldf(pd.DataFrame([0, 1, 4], [0, 2, 5]), "FOO", "bar")
+    unrolled = compdat.unrolldf(pd.DataFrame([0, 1, 4], [0, 2, 5]), "FOO", "bar")
     # (warning should be issued)
     assert (unrolled == bogusdf).all().all()
 
@@ -188,7 +188,7 @@ def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-compdat.csv"
     sys.argv = ["compdat2csv", DATAFILE, "-o", tmpcsvfile]
-    compdat2df.main()
+    compdat.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

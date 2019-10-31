@@ -329,3 +329,8 @@ def gruptree2df_main(args):
     elif args.output:
         df.to_csv(args.output, index=False)
         print("Wrote to " + args.output)
+
+
+def df(eclfiles, startdate=None):
+    """Main function for Python API users"""
+    return deck2df(eclfiles.get_ecldeck(), startdate=startdate)

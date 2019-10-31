@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import logging
 
-from ecl2df import rft2df, ecl2csv
+from ecl2df import rft, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +25,7 @@ logger.setLevel(logging.DEBUG)
 def test_rftrecords2df():
     eclfiles = EclFiles(DATAFILE)
 
-    rftrecs = rft2df._rftrecords2df(eclfiles)
+    rftrecs = rft._rftrecords2df(eclfiles)
     assert len(rftrecs[rftrecs["recordname"] == "TIME"]) == len(
         rftrecs["timeindex"].unique()
     )
@@ -36,7 +36,7 @@ def test_rftrecords2df():
 def test_rft2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    rftdf = rft2df.rft2df(eclfiles)
+    rftdf = rft.rft2df(eclfiles)
 
     assert not rftdf.empty
     assert len(rftdf.columns)
@@ -46,7 +46,7 @@ def test_main():
     """Test command line interface"""
     tmpcsvfile = ".TMP-rft.csv"
     sys.argv = ["rft2csv", DATAFILE, "-o", tmpcsvfile]
-    rft2df.main()
+    rft.main()
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)

@@ -18,17 +18,17 @@ setup(
     entry_points={
         "console_scripts": [
             "ecl2csv=ecl2df.ecl2csv:main",
-            "nnc2csv=ecl2df.nnc2df:main",
-            "eclgrid2csv=ecl2df.grid2df:main",
-            "grid2csv=ecl2df.grid2df:main",
-            "summary2csv=ecl2df.summary2df:main",
-            "rft2csv=ecl2df.rft2df:main",
-            "compdat2csv=ecl2df.compdat2df:main",
-            "equil2csv=ecl2df.equil2df:main",
-            "gruptree2csv=ecl2df.gruptree2df:main",
-            "satfunc2csv=ecl2df.satfunc2df:main",
-            "faults2csv=ecl2df.faults2df:main",
-            "wcon2csv=ecl2df.wcon2df:main",
+            "nnc2csv=ecl2df.nnc:main",
+            "eclgrid2csv=ecl2df.grid:main",
+            "grid2csv=ecl2df.grid:main",
+            "summary2csv=ecl2df.summary:main",
+            "rft2csv=ecl2df.rft:main",
+            "compdat2csv=ecl2df.compdat:main",
+            "equil2csv=ecl2df.equil:main",
+            "gruptree2csv=ecl2df.gruptree:main",
+            "satfunc2csv=ecl2df.satfunc:main",
+            "faults2csv=ecl2df.faults:main",
+            "wcon2csv=ecl2df.wcon:main",
         ]
     },
 )

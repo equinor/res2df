@@ -191,3 +191,8 @@ def wcon2df_main(args):
     wcon_df = deck2df(deck)
     wcon_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
+
+
+def df(eclfiles):
+    """Main function for Python API users"""
+    return deck2df(eclfiles.get_ecldeck())

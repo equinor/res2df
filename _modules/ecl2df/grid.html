@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.grid2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.grid2df</li>
+      <li>ecl2df.grid</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.grid2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.grid</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -181,11 +181,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="kn">import</span> <span class="nn">ecl2df</span>
 <span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="k">import</span> <span class="n">EclFile</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 
 
-<div class="viewcode-block" id="rstdates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.rstdates">[docs]</a><span class="k">def</span> <span class="nf">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="rstdates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rstdates">[docs]</a><span class="k">def</span> <span class="nf">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
     <span class="n">report_indices</span> <span class="o">=</span> <span class="n">EclFile</span><span class="o">.</span><span class="n">file_report_list</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfilename</span><span class="p">())</span>
     <span class="k">return</span> <span class="p">[</span>
@@ -194,7 +195,7 @@
     <span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="dates2rstindices"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.dates2rstindices">[docs]</a><span class="k">def</span> <span class="nf">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">dates</span><span class="p">):</span>
+<div class="viewcode-block" id="dates2rstindices"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.dates2rstindices">[docs]</a><span class="k">def</span> <span class="nf">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">dates</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the restart index/indices for a given datetime or list of datetimes</span>
 
 <span class="sd">      date: datetime.date or list of datetime.date, must</span>
@@ -252,7 +253,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
 <span class="sd">    for each cell, at a particular date.</span>
 
@@ -312,6 +313,10 @@
             <span class="p">),</span>
         <span class="p">)</span>
 
+        <span class="c1"># For users convenience:</span>
+        <span class="k">if</span> <span class="s2">&quot;SWAT&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span> <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span> <span class="ow">and</span> <span class="s2">&quot;SOIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="p">:</span>
+            <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SOIL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SWAT&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SGAS&quot;</span><span class="p">]</span>
+
         <span class="c1"># Tag the column names if requested, or if multiple rst indices</span>
         <span class="c1"># are asked for</span>
         <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -326,7 +331,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with Eclipse gridgeometry</span>
 
 <span class="sd">    Order is significant, and is determined by the order from libecl, and used</span>
@@ -368,7 +373,7 @@
     <span class="k">return</span> <span class="n">grid_df</span></div>
 
 
-<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
 
 <span class="sd">    Order is significant, as index is used for merging</span>
@@ -419,13 +424,29 @@
     <span class="k">return</span> <span class="n">init_df</span></div>
 
 
-<div class="viewcode-block" id="merge_gridframes"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.merge_gridframes">[docs]</a><span class="k">def</span> <span class="nf">merge_gridframes</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">dropconstants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
+
+<span class="sd">    This is the &quot;main&quot; function for Python API users&quot;&quot;&quot;</span>
+    <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+    <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">)</span>
+    <span class="n">rst_df</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">rstdates</span><span class="p">:</span>
+        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">)</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dropconstants</span><span class="p">:</span>
+        <span class="c1"># Note: Ambigous object names, bool vs function</span>
+        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">dropconstants</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">grid_df</span></div>
+
+
+<div class="viewcode-block" id="merge_gridframes"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.merge_gridframes">[docs]</a><span class="k">def</span> <span class="nf">merge_gridframes</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Merge dataframes with grid data&quot;&quot;&quot;</span>
     <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">merged</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
 
 <span class="sd">    Arguments:</span>
@@ -465,7 +486,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="dropconstants"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.dropconstants">[docs]</a><span class="k">def</span> <span class="nf">dropconstants</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="dropconstants"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.dropconstants">[docs]</a><span class="k">def</span> <span class="nf">dropconstants</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Drop/delete constant columns from a dataframe.</span>
 
 <span class="sd">    Args:</span>
@@ -495,7 +516,7 @@
     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columnstodelete</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="grid2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.grid2df">[docs]</a><span class="k">def</span> <span class="nf">grid2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="grid2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.grid2df">[docs]</a><span class="k">def</span> <span class="nf">grid2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a grid dataframe from EclFiles</span>
 
 <span class="sd">    Given a set of Eclipse files (an EclFiles object), this</span>
@@ -515,8 +536,8 @@
     <span class="k">return</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">),</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility. Deprecated to use</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;grid2csv is deprecated, use &#39;ecl2csv grid &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
@@ -525,19 +546,17 @@
     <span class="n">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="grid2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid2df.grid2df_main">[docs]</a><span class="k">def</span> <span class="nf">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="grid2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.grid2df_main">[docs]</a><span class="k">def</span> <span class="nf">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
-    <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initkeys</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">:</span>
-        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dropconstants</span><span class="p">:</span>
-        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">dropconstants</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
+        <span class="n">eclfiles</span><span class="p">,</span>
+        <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initkeys</span><span class="p">,</span>
+        <span class="n">rstdates</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">,</span>
+        <span class="n">dropconstants</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dropconstants</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
         <span class="c1"># Ignore pipe errors when writing to stdout.</span>
         <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>

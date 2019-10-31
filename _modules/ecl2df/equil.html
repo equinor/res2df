@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.equil2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.equil2df</li>
+      <li>ecl2df.equil</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.equil2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.equil</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -173,12 +173,12 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 
 
-<div class="viewcode-block" id="deck2equildf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.deck2equildf">[docs]</a><span class="k">def</span> <span class="nf">deck2equildf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2equildf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.deck2equildf">[docs]</a><span class="k">def</span> <span class="nf">deck2equildf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2equildf&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract the data in the EQUIL keyword as a Pandas</span>
 <span class="sd">    DataFrame.</span>
 
@@ -309,7 +309,7 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -323,7 +323,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;equil2csv is deprecated, use &#39;ecl2csv equil &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
@@ -333,7 +333,7 @@
     <span class="n">equil2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="equil2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil2df.equil2df_main">[docs]</a><span class="k">def</span> <span class="nf">equil2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="equil2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.equil2df_main">[docs]</a><span class="k">def</span> <span class="nf">equil2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -343,6 +343,11 @@
     <span class="n">equil_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="n">equil_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The &quot;main&quot; method for Python API users&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">())</span></div>
 </pre></div>
 
            </div>

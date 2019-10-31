@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.satfunc2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.satfunc2df</li>
+      <li>ecl2df.satfunc</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.satfunc2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.satfunc</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -180,8 +180,6 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">sunbeam</span>
-
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="k">import</span> <span class="n">inferdims</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 
@@ -199,13 +197,13 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="deck2satfuncdf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.deck2satfuncdf">[docs]</a><span class="k">def</span> <span class="nf">deck2satfuncdf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2satfuncdf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.deck2satfuncdf">[docs]</a><span class="k">def</span> <span class="nf">deck2satfuncdf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Deprecated function, to be removed&quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2satfuncdf&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inject_satnumcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.inject_satnumcount">[docs]</a><span class="k">def</span> <span class="nf">inject_satnumcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">,</span> <span class="n">satnumcount</span><span class="p">):</span>
+<div class="viewcode-block" id="inject_satnumcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.inject_satnumcount">[docs]</a><span class="k">def</span> <span class="nf">inject_satnumcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">,</span> <span class="n">satnumcount</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
 
 <span class="sd">    This is simple string manipulation, not sunbeam</span>
@@ -225,7 +223,7 @@
     <span class="k">return</span> <span class="s2">&quot;TABDIMS</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">satnumcount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; /</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">deckstr</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">satnumcount</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">satnumcount</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract the data in the saturation function keywords as a Pandas</span>
 <span class="sd">    DataFrame.</span>
 
@@ -315,7 +313,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -335,7 +333,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;satfunc2csv is deprecated, use &#39;ecl2csv satfunc &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
@@ -345,7 +343,7 @@
     <span class="n">satfunc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="satfunc2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc2df.satfunc2df_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="satfunc2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.satfunc2df_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -370,6 +368,11 @@
         <span class="p">)</span>
         <span class="n">satfunc_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">())</span></div>
 </pre></div>
 
            </div>

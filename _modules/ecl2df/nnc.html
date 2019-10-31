@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.nnc2df</li>
+      <li>ecl2df.nnc</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.nnc2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.nnc</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract NNC information from Eclipse output files.</span>
@@ -173,10 +173,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.grid2df</span> <span class="k">import</span> <span class="n">gridgeometry2df</span>
+<span class="kn">from</span> <span class="nn">.grid</span> <span class="k">import</span> <span class="n">gridgeometry2df</span>
 
 
-<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with NNC information</span>
 
 <span class="sd">    A NNC is a pair of cells that are not next to each other</span>
@@ -257,7 +257,7 @@
     <span class="k">return</span> <span class="n">nncdf</span></div>
 
 
-<div class="viewcode-block" id="add_nnc_coords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.add_nnc_coords">[docs]</a><span class="k">def</span> <span class="nf">add_nnc_coords</span><span class="p">(</span><span class="n">nncdf</span><span class="p">,</span> <span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="add_nnc_coords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.add_nnc_coords">[docs]</a><span class="k">def</span> <span class="nf">add_nnc_coords</span><span class="p">(</span><span class="n">nncdf</span><span class="p">,</span> <span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add columns X, Y and Z for the connection midpoint</span>
 
 <span class="sd">    This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)</span>
@@ -297,7 +297,7 @@
     <span class="k">return</span> <span class="n">gnncdf</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">nncdf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]]</span></div>
 
 
-<div class="viewcode-block" id="filter_vertical"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.filter_vertical">[docs]</a><span class="k">def</span> <span class="nf">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_vertical"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.filter_vertical">[docs]</a><span class="k">def</span> <span class="nf">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter to vertical connections</span>
 
 <span class="sd">    Arguments:</span>
@@ -322,7 +322,7 @@
 <span class="c1"># Remaining functions are for the command line interface</span>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parser</span>
 
 <span class="sd">    Arguments:</span>
@@ -352,7 +352,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 
 <span class="sd">    It may become deprecated to have a main() function</span>
@@ -365,7 +365,7 @@
     <span class="n">nnc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="nnc2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc2df.nnc2df_main">[docs]</a><span class="k">def</span> <span class="nf">nnc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="nnc2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.nnc2df_main">[docs]</a><span class="k">def</span> <span class="nf">nnc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Command line access point from main() or from ecl2csv via subparser&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
@@ -375,6 +375,11 @@
     <span class="n">nncdf</span> <span class="o">=</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
     <span class="n">nncdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">pillars</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

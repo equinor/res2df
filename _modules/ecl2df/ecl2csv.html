@@ -169,16 +169,16 @@
 <span class="kn">import</span> <span class="nn">argparse</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">grid2df</span><span class="p">,</span>
-    <span class="n">nnc2df</span><span class="p">,</span>
-    <span class="n">faults2df</span><span class="p">,</span>
-    <span class="n">equil2df</span><span class="p">,</span>
-    <span class="n">gruptree2df</span><span class="p">,</span>
-    <span class="n">rft2df</span><span class="p">,</span>
-    <span class="n">satfunc2df</span><span class="p">,</span>
-    <span class="n">summary2df</span><span class="p">,</span>
-    <span class="n">wcon2df</span><span class="p">,</span>
-    <span class="n">compdat2df</span><span class="p">,</span>
+    <span class="n">grid</span><span class="p">,</span>
+    <span class="n">nnc</span><span class="p">,</span>
+    <span class="n">faults</span><span class="p">,</span>
+    <span class="n">equil</span><span class="p">,</span>
+    <span class="n">gruptree</span><span class="p">,</span>
+    <span class="n">rft</span><span class="p">,</span>
+    <span class="n">satfunc</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">,</span>
+    <span class="n">wcon</span><span class="p">,</span>
+    <span class="n">compdat</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -189,12 +189,12 @@
 
     <span class="c1"># Eclipse output files:</span>
     <span class="n">grid_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract grid data&quot;</span><span class="p">)</span>
-    <span class="n">grid2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">grid_parser</span><span class="p">)</span>
-    <span class="n">grid_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">grid2df</span><span class="o">.</span><span class="n">grid2df_main</span><span class="p">)</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">grid_parser</span><span class="p">)</span>
+    <span class="n">grid_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">grid2df_main</span><span class="p">)</span>
 
     <span class="n">summary_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;smry&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract summary data&quot;</span><span class="p">)</span>
-    <span class="n">summary2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
-    <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary2df</span><span class="o">.</span><span class="n">summary2df_main</span><span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
+    <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary</span><span class="o">.</span><span class="n">summary2df_main</span><span class="p">)</span>
 
     <span class="n">nnc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;nnc&quot;</span><span class="p">,</span>
@@ -206,12 +206,12 @@
             <span class="s2">&quot;for the cell pair is in the TRAN column.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">nnc2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">nnc_parser</span><span class="p">)</span>
-    <span class="n">nnc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">nnc2df</span><span class="o">.</span><span class="n">nnc2df_main</span><span class="p">)</span>
+    <span class="n">nnc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">nnc_parser</span><span class="p">)</span>
+    <span class="n">nnc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">nnc</span><span class="o">.</span><span class="n">nnc2df_main</span><span class="p">)</span>
 
     <span class="n">faults_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;faults&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract faults data&quot;</span><span class="p">)</span>
-    <span class="n">faults2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">faults_parser</span><span class="p">)</span>
-    <span class="n">faults_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">faults2df</span><span class="o">.</span><span class="n">faults2df_main</span><span class="p">)</span>
+    <span class="n">faults</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">faults_parser</span><span class="p">)</span>
+    <span class="n">faults_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">faults</span><span class="o">.</span><span class="n">faults2df_main</span><span class="p">)</span>
 
     <span class="n">rft_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;rft&quot;</span><span class="p">,</span>
@@ -226,31 +226,31 @@
             <span class="s2">&quot;the data outputted.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">rft2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">rft_parser</span><span class="p">)</span>
-    <span class="n">rft_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rft2df</span><span class="o">.</span><span class="n">rft2df_main</span><span class="p">)</span>
+    <span class="n">rft</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">rft_parser</span><span class="p">)</span>
+    <span class="n">rft_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rft</span><span class="o">.</span><span class="n">rft2df_main</span><span class="p">)</span>
 
     <span class="c1"># Eclipse input files:</span>
     <span class="n">satfunc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;satfunc&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract SWOF/SGOF/etc data&quot;</span><span class="p">)</span>
-    <span class="n">satfunc2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
-    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc2df</span><span class="o">.</span><span class="n">satfunc2df_main</span><span class="p">)</span>
+    <span class="n">satfunc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
+    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc</span><span class="o">.</span><span class="n">satfunc2df_main</span><span class="p">)</span>
 
     <span class="n">compdat_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;compdat&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT/COMPSEGS/etc data&quot;</span>
     <span class="p">)</span>
-    <span class="n">compdat2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">compdat_parser</span><span class="p">)</span>
-    <span class="n">compdat_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">compdat2df</span><span class="o">.</span><span class="n">compdat2df_main</span><span class="p">)</span>
+    <span class="n">compdat</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">compdat_parser</span><span class="p">)</span>
+    <span class="n">compdat_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">compdat</span><span class="o">.</span><span class="n">compdat2df_main</span><span class="p">)</span>
 
     <span class="n">equil_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;equil&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract EQUIL data&quot;</span><span class="p">)</span>
-    <span class="n">equil2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
-    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil2df</span><span class="o">.</span><span class="n">equil2df_main</span><span class="p">)</span>
+    <span class="n">equil</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
+    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil</span><span class="o">.</span><span class="n">equil2df_main</span><span class="p">)</span>
 
     <span class="n">gruptree_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;gruptree&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract GRUPTREE data&quot;</span><span class="p">)</span>
-    <span class="n">gruptree2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">gruptree_parser</span><span class="p">)</span>
-    <span class="n">gruptree_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">gruptree2df</span><span class="o">.</span><span class="n">gruptree2df_main</span><span class="p">)</span>
+    <span class="n">gruptree</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">gruptree_parser</span><span class="p">)</span>
+    <span class="n">gruptree_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">gruptree</span><span class="o">.</span><span class="n">gruptree2df_main</span><span class="p">)</span>
 
     <span class="n">wcon_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;wcon&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well control data&quot;</span><span class="p">)</span>
-    <span class="n">wcon2df</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">wcon_parser</span><span class="p">)</span>
-    <span class="n">wcon_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">wcon2df</span><span class="o">.</span><span class="n">wcon2df_main</span><span class="p">)</span>
+    <span class="n">wcon</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">wcon_parser</span><span class="p">)</span>
+    <span class="n">wcon_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">wcon</span><span class="o">.</span><span class="n">wcon2df_main</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
 

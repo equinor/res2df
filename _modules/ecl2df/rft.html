@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.rft2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.rft2df</li>
+      <li>ecl2df.rft</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.rft2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.rft</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Converter module for Eclipse RFT output files to Pandas Dataframes</span>
@@ -213,7 +213,7 @@
     <span class="k">return</span> <span class="n">rftrecords</span>
 
 
-<div class="viewcode-block" id="rft2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft2df.rft2df">[docs]</a><span class="k">def</span> <span class="nf">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="rft2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df">[docs]</a><span class="k">def</span> <span class="nf">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="n">rftrecords</span> <span class="o">=</span> <span class="n">_rftrecords2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">rftfile</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rftfile</span><span class="p">()</span>
 
@@ -417,7 +417,7 @@
 <span class="c1"># Remaining functions are for the command line interface</span>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -438,7 +438,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;rft2csv is deprecated, use &#39;ecl2csv rft &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
@@ -448,7 +448,7 @@
     <span class="n">rft2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rft2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft2df.rft2df_main">[docs]</a><span class="k">def</span> <span class="nf">rft2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="rft2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df_main">[docs]</a><span class="k">def</span> <span class="nf">rft2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
@@ -461,6 +461,11 @@
     <span class="n">rft_df</span> <span class="o">=</span> <span class="n">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">rft_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span></div>
 
 
 <span class="c1">## Vector	Description</span>

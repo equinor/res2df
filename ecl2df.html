@@ -95,20 +95,20 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">ecl2df package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.common">ecl2df.common module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.compdat2df">ecl2df.compdat2df module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.compdat">ecl2df.compdat module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.ecl2csv">ecl2df.ecl2csv module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.eclfiles">ecl2df.eclfiles module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.equil2df">ecl2df.equil2df module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.faults2df">ecl2df.faults2df module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.grid2df">ecl2df.grid2df module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.gruptree2df">ecl2df.gruptree2df module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.equil">ecl2df.equil module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.faults">ecl2df.faults module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.grid">ecl2df.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.gruptree">ecl2df.gruptree module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.inferdims">ecl2df.inferdims module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.nnc2df">ecl2df.nnc2df module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.nnc">ecl2df.nnc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.parameters">ecl2df.parameters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.rft2df">ecl2df.rft2df module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc2df">ecl2df.satfunc2df module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.summary2df">ecl2df.summary2df module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.wcon2df">ecl2df.wcon2df module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.rft">ecl2df.rft module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc">ecl2df.satfunc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.summary">ecl2df.summary module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.wcon">ecl2df.wcon module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df">Module contents</a></li>
 </ul>
 </li>
@@ -196,12 +196,12 @@
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-ecl2df.compdat2df">
-<span id="ecl2df-compdat2df-module"></span><h2>ecl2df.compdat2df module<a class="headerlink" href="#module-ecl2df.compdat2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.compdat">
+<span id="ecl2df-compdat-module"></span><h2>ecl2df.compdat module<a class="headerlink" href="#module-ecl2df.compdat" title="Permalink to this headline">¶</a></h2>
 <p>Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck</p>
 <dl class="function">
-<dt id="ecl2df.compdat2df.sunbeam2rmsterm">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">sunbeam2rmsterm</code><span class="sig-paren">(</span><em class="sig-param">reckey</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#sunbeam2rmsterm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.sunbeam2rmsterm" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.sunbeam2rmsterm">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">sunbeam2rmsterm</code><span class="sig-paren">(</span><em class="sig-param">reckey</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#sunbeam2rmsterm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.sunbeam2rmsterm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sunbeam authors and Roxar RMS authors have interpreted the Eclipse
 documentation ever so slightly different when naming the data.</p>
 <p>For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
@@ -215,13 +215,13 @@ the term is returned unchanged.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.deck2compdatsegsdfs">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">deck2compdatsegsdfs</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">start_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#deck2compdatsegsdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.deck2compdatsegsdfs" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.deck2compdatsegsdfs">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">deck2compdatsegsdfs</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">start_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#deck2compdatsegsdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.deck2compdatsegsdfs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.deck2dfs">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">deck2dfs</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">unroll=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#deck2dfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.deck2dfs" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.deck2dfs">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">deck2dfs</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">unroll=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#deck2dfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.deck2dfs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loop through the deck and pick up information found</p>
 <p>The loop over the deck is a state machine, as it has to pick up dates</p>
 <dl class="field-list simple">
@@ -243,13 +243,13 @@ like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.postprocess">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#postprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.postprocess" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.postprocess">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#postprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.unrolldf">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">unrolldf</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">start_column='K1'</em>, <em class="sig-param">end_column='K2'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#unrolldf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.unrolldf" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.unrolldf">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">unrolldf</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">start_column='K1'</em>, <em class="sig-param">end_column='K2'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#unrolldf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.unrolldf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unroll dataframes, where some column pairs indicate
 a range where data applies.</p>
 <p>After unrolling, column pairs with ranges are transformed
@@ -292,8 +292,8 @@ end of the range.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.fill_parser">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -303,15 +303,21 @@ end of the range.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.main">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.main">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.compdat2df.compdat2df_main">
-<code class="sig-prename descclassname">ecl2df.compdat2df.</code><code class="sig-name descname">compdat2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat2df.html#compdat2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat2df.compdat2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.compdat.compdat2df_main">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">compdat2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#compdat2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.compdat2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.compdat.df">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>
@@ -432,17 +438,17 @@ should be traversed.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ecl2df.equil2df">
-<span id="ecl2df-equil2df-module"></span><h2>ecl2df.equil2df module<a class="headerlink" href="#module-ecl2df.equil2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.equil">
+<span id="ecl2df-equil-module"></span><h2>ecl2df.equil module<a class="headerlink" href="#module-ecl2df.equil" title="Permalink to this headline">¶</a></h2>
 <p>Extract EQUIL from an Eclipse deck as Pandas DataFrame</p>
 <dl class="function">
-<dt id="ecl2df.equil2df.deck2equildf">
-<code class="sig-prename descclassname">ecl2df.equil2df.</code><code class="sig-name descname">deck2equildf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil2df.html#deck2equildf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil2df.deck2equildf" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.equil.deck2equildf">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">deck2equildf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#deck2equildf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.deck2equildf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.equil2df.deck2df">
-<code class="sig-prename descclassname">ecl2df.equil2df.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntequl=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil2df.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil2df.deck2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.equil.deck2df">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntequl=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.deck2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the data in the EQUIL keyword as a Pandas
 DataFrame.</p>
 <p>How each data value in the EQUIL records are to be interpreted
@@ -471,8 +477,8 @@ None and EQLDIMS is not present, it will be inferred.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.equil2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.equil2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.equil.fill_parser">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -482,35 +488,41 @@ None and EQLDIMS is not present, it will be inferred.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.equil2df.main">
-<code class="sig-prename descclassname">ecl2df.equil2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.equil.main">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.equil2df.equil2df_main">
-<code class="sig-prename descclassname">ecl2df.equil2df.</code><code class="sig-name descname">equil2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil2df.html#equil2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil2df.equil2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.equil.equil2df_main">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">equil2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#equil2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.equil2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from disk and write CSV back to disk</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="ecl2df.equil.df">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>The “main” method for Python API users</p>
+</dd></dl>
+
 </div>
-<div class="section" id="module-ecl2df.faults2df">
-<span id="ecl2df-faults2df-module"></span><h2>ecl2df.faults2df module<a class="headerlink" href="#module-ecl2df.faults2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.faults">
+<span id="ecl2df-faults-module"></span><h2>ecl2df.faults module<a class="headerlink" href="#module-ecl2df.faults" title="Permalink to this headline">¶</a></h2>
 <p>Extract the contents of the FAULTS keyword into
 a DataFrame</p>
 <dl class="function">
-<dt id="ecl2df.faults2df.deck2faultsdf">
-<code class="sig-prename descclassname">ecl2df.faults2df.</code><code class="sig-name descname">deck2faultsdf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults2df.html#deck2faultsdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults2df.deck2faultsdf" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.faults.deck2faultsdf">
+<code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">deck2faultsdf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#deck2faultsdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.deck2faultsdf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.faults2df.deck2df">
-<code class="sig-prename descclassname">ecl2df.faults2df.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults2df.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults2df.deck2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.faults.deck2df">
+<code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.deck2df" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.faults2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.faults2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.faults.fill_parser">
+<code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -520,20 +532,26 @@ a DataFrame</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.faults2df.main">
-<code class="sig-prename descclassname">ecl2df.faults2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.faults.main">
+<code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.faults2df.faults2df_main">
-<code class="sig-prename descclassname">ecl2df.faults2df.</code><code class="sig-name descname">faults2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults2df.html#faults2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults2df.faults2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.faults.faults2df_main">
+<code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">faults2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#faults2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.faults2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from disk and write CSV back to disk</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="ecl2df.faults.df">
+<code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
+</dd></dl>
+
 </div>
-<div class="section" id="module-ecl2df.grid2df">
-<span id="ecl2df-grid2df-module"></span><h2>ecl2df.grid2df module<a class="headerlink" href="#module-ecl2df.grid2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.grid">
+<span id="ecl2df-grid-module"></span><h2>ecl2df.grid module<a class="headerlink" href="#module-ecl2df.grid" title="Permalink to this headline">¶</a></h2>
 <p>Extract grid information from Eclipse output files as Dataframes.</p>
 <p>Each cell in the grid correspond to one row.</p>
 <p>For grid cells, x, y, z for cell centre and volume is available as
@@ -541,14 +559,14 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.</p>
 <dl class="function">
-<dt id="ecl2df.grid2df.rstdates">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">rstdates</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#rstdates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.rstdates" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.rstdates">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">rstdates</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#rstdates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.rstdates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of datetime objects for the available dates in the RST file</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.dates2rstindices">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">dates2rstindices</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">dates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#dates2rstindices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.dates2rstindices" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.dates2rstindices">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">dates2rstindices</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">dates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#dates2rstindices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.dates2rstindices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the restart index/indices for a given datetime or list of datetimes</p>
 <blockquote>
 <div><dl class="simple">
@@ -569,8 +587,8 @@ second element is list of corresponding datetime.date objecs.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.rst2df">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">rst2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">date</em>, <em class="sig-param">dateinheaders=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#rst2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.rst2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.rst2df">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">rst2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">date</em>, <em class="sig-param">dateinheaders=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#rst2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.rst2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dataframe with dynamic data from the restart file
 for each cell, at a particular date.</p>
 <dl class="field-list simple">
@@ -592,8 +610,8 @@ SGAS as a column header, you get <a class="reference external" href="mailto:SGAS
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.gridgeometry2df">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">gridgeometry2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#gridgeometry2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.gridgeometry2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.gridgeometry2df">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">gridgeometry2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#gridgeometry2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.gridgeometry2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a Pandas Dataframe with Eclipse gridgeometry</p>
 <p>Order is significant, and is determined by the order from libecl, and used
 when merging with other dataframes with cell-data.</p>
@@ -611,8 +629,8 @@ when merging with other dataframes with cell-data.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.init2df">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">init2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#init2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.init2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.init2df">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">init2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#init2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.init2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract information from INIT file with cell data</p>
 <p>Order is significant, as index is used for merging</p>
 <dl class="field-list simple">
@@ -627,14 +645,21 @@ glob-style wildcards supported</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.merge_gridframes">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">merge_gridframes</code><span class="sig-paren">(</span><em class="sig-param">grid_df</em>, <em class="sig-param">init_df</em>, <em class="sig-param">rst_df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#merge_gridframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.merge_gridframes" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.df">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors='*'</em>, <em class="sig-param">dropconstants=False</em>, <em class="sig-param">rstdates=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a dataframe with grid information</p>
+<p>This is the “main” function for Python API users</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.grid.merge_gridframes">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">merge_gridframes</code><span class="sig-paren">(</span><em class="sig-param">grid_df</em>, <em class="sig-param">init_df</em>, <em class="sig-param">rst_df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#merge_gridframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.merge_gridframes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge dataframes with grid data</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.fill_parser">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -644,8 +669,8 @@ glob-style wildcards supported</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.dropconstants">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">dropconstants</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">alwayskeep=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#dropconstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.dropconstants" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.dropconstants">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">dropconstants</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">alwayskeep=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#dropconstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.dropconstants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop/delete constant columns from a dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -662,8 +687,8 @@ anyway.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.grid2df">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">grid2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors='*'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#grid2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.grid2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.grid.grid2df">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">grid2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors='*'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#grid2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.grid2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a grid dataframe from EclFiles</p>
 <p>Given a set of Eclipse files (an EclFiles object), this
 function will return a dataframe with a row for each cell
@@ -684,28 +709,29 @@ glob-style wildcards supported</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.main">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entry-point for module, for command line utility.</p>
+<dt id="ecl2df.grid.main">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry-point for module, for command line utility. Deprecated to use</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.grid2df.grid2df_main">
-<code class="sig-prename descclassname">ecl2df.grid2df.</code><code class="sig-name descname">grid2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid2df.html#grid2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid2df.grid2df_main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="ecl2df.grid.grid2df_main">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">grid2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#grid2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.grid2df_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the command line API</p>
+</dd></dl>
 
 </div>
-<div class="section" id="module-ecl2df.gruptree2df">
-<span id="ecl2df-gruptree2df-module"></span><h2>ecl2df.gruptree2df module<a class="headerlink" href="#module-ecl2df.gruptree2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.gruptree">
+<span id="ecl2df-gruptree-module"></span><h2>ecl2df.gruptree module<a class="headerlink" href="#module-ecl2df.gruptree" title="Permalink to this headline">¶</a></h2>
 <p>Extract GRUPTREE information from an Eclipse deck</p>
 <dl class="function">
-<dt id="ecl2df.gruptree2df.gruptree2df">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">gruptree2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">startdate=None</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#gruptree2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.gruptree2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.gruptree2df">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">startdate=None</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree2df" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.deck2df">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">startdate=None</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.deck2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.deck2df">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">startdate=None</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.deck2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all group information from a deck
 and present as a Pandas Dataframe of all edges.</p>
 <p>The gruptree is a time dependent property,
@@ -718,8 +744,8 @@ with the new date.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.gruptree2dict">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">gruptree2dict</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">date='END'</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#gruptree2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.gruptree2dict" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.gruptree2dict">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree2dict</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">date='END'</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree2dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the GRUPTREE information as a tree structure
 in a dict.</p>
 <p>Example result:
@@ -734,8 +760,8 @@ version.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.gruptreedf2dict">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">gruptreedf2dict</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#gruptreedf2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.gruptreedf2dict" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.gruptreedf2dict">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptreedf2dict</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptreedf2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptreedf2dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert list of edges into a
 nested dictionary (tree), example:</p>
 <dl class="simple">
@@ -752,8 +778,8 @@ have more than one root</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.dict2treelib">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">dict2treelib</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#dict2treelib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.dict2treelib" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.dict2treelib">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">dict2treelib</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#dict2treelib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.dict2treelib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a nested dictonary to a treelib Tree
 object. This function is recursive</p>
 <dl class="field-list simple">
@@ -770,8 +796,8 @@ object. This function is recursive</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.fill_parser">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -781,15 +807,21 @@ object. This function is recursive</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.main">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.main">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.gruptree2df.gruptree2df_main">
-<code class="sig-prename descclassname">ecl2df.gruptree2df.</code><code class="sig-name descname">gruptree2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree2df.html#gruptree2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree2df.gruptree2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.gruptree.gruptree2df_main">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.gruptree.df">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">startdate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>
@@ -850,15 +882,15 @@ the SWOF keyword).</p></li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ecl2df.nnc2df">
-<span id="ecl2df-nnc2df-module"></span><h2>ecl2df.nnc2df module<a class="headerlink" href="#module-ecl2df.nnc2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.nnc">
+<span id="ecl2df-nnc-module"></span><h2>ecl2df.nnc module<a class="headerlink" href="#module-ecl2df.nnc" title="Permalink to this headline">¶</a></h2>
 <p>Extract NNC information from Eclipse output files.</p>
 <p>NNC = Non Neighbour Connection</p>
 <p>Inspired by
 <a class="reference external" href="https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py</a></p>
 <dl class="function">
-<dt id="ecl2df.nnc2df.nnc2df">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.nnc2df">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.nnc2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a Pandas Dataframe with NNC information</p>
 <p>A NNC is a pair of cells that are not next to each other
 in the index space (I, J, K), and are associated to a
@@ -885,8 +917,8 @@ X, Y and Z.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.nnc2df.add_nnc_coords">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">add_nnc_coords</code><span class="sig-paren">(</span><em class="sig-param">nncdf</em>, <em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#add_nnc_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.add_nnc_coords" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.add_nnc_coords">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">add_nnc_coords</code><span class="sig-paren">(</span><em class="sig-param">nncdf</em>, <em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#add_nnc_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.add_nnc_coords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add columns X, Y and Z for the connection midpoint</p>
 <p>This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
 and computes the average in each direction.</p>
@@ -907,8 +939,8 @@ and computes the average in each direction.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.nnc2df.filter_vertical">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">filter_vertical</code><span class="sig-paren">(</span><em class="sig-param">nncdf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#filter_vertical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.filter_vertical" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.filter_vertical">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">filter_vertical</code><span class="sig-paren">(</span><em class="sig-param">nncdf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#filter_vertical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.filter_vertical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter to vertical connections</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -922,8 +954,8 @@ I1, J1, K1, I2, J2, K2.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.nnc2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.fill_parser">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -933,17 +965,23 @@ I1, J1, K1, I2, J2, K2.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.nnc2df.main">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.main">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 <p>It may become deprecated to have a main() function
 and command line utility for each module in ecl2df</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.nnc2df.nnc2df_main">
-<code class="sig-prename descclassname">ecl2df.nnc2df.</code><code class="sig-name descname">nnc2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc2df.html#nnc2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc2df.nnc2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.nnc2df_main">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">nnc2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#nnc2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.nnc2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command line access point from main() or from ecl2csv via subparser</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.nnc.df">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>
@@ -1029,8 +1067,8 @@ warned.</p></li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ecl2df.rft2df">
-<span id="ecl2df-rft2df-module"></span><h2>ecl2df.rft2df module<a class="headerlink" href="#module-ecl2df.rft2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.rft">
+<span id="ecl2df-rft-module"></span><h2>ecl2df.rft module<a class="headerlink" href="#module-ecl2df.rft" title="Permalink to this headline">¶</a></h2>
 <p>Converter module for Eclipse RFT output files to Pandas Dataframes</p>
 <p>If MULTISEG wells are found, the segment data associated to
 a connection is merged onto the same row as additional columns,
@@ -1042,13 +1080,13 @@ already contains connection data (CONxxxxx) and its segment data
 <p>The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix ‘<a href="#id3"><span class="problematic" id="id4">ICD_</span></a>’</p>
 <dl class="function">
-<dt id="ecl2df.rft2df.rft2df">
-<code class="sig-prename descclassname">ecl2df.rft2df.</code><code class="sig-name descname">rft2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft2df.html#rft2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft2df.rft2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.rft.rft2df">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">rft2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#rft2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.rft2df" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.rft2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.rft2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.rft.fill_parser">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1058,20 +1096,26 @@ by adding the prefix ‘<a href="#id3"><span class="problematic" id="id4">ICD_</
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.rft2df.main">
-<code class="sig-prename descclassname">ecl2df.rft2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.rft.main">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.rft2df.rft2df_main">
-<code class="sig-prename descclassname">ecl2df.rft2df.</code><code class="sig-name descname">rft2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft2df.html#rft2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft2df.rft2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.rft.rft2df_main">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">rft2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#rft2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.rft2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="ecl2df.rft.df">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
+</dd></dl>
+
 </div>
-<div class="section" id="module-ecl2df.satfunc2df">
-<span id="ecl2df-satfunc2df-module"></span><h2>ecl2df.satfunc2df module<a class="headerlink" href="#module-ecl2df.satfunc2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.satfunc">
+<span id="ecl2df-satfunc-module"></span><h2>ecl2df.satfunc module<a class="headerlink" href="#module-ecl2df.satfunc" title="Permalink to this headline">¶</a></h2>
 <p>Extract saturation function data (SWOF, SGOF, SWFN, …)
 from an Eclipse deck as Pandas DataFrame.</p>
 <p>Data can be extracted from a full Eclipse deck (<a href="#id1"><span class="problematic" id="id2">*</span></a>.DATA)
@@ -1082,14 +1126,14 @@ present. For convenience, it is possible to estimate the count of
 SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.</p>
 <dl class="function">
-<dt id="ecl2df.satfunc2df.deck2satfuncdf">
-<code class="sig-prename descclassname">ecl2df.satfunc2df.</code><code class="sig-name descname">deck2satfuncdf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc2df.html#deck2satfuncdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc2df.deck2satfuncdf" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.satfunc.deck2satfuncdf">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">deck2satfuncdf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#deck2satfuncdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.deck2satfuncdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated function, to be removed</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.satfunc2df.inject_satnumcount">
-<code class="sig-prename descclassname">ecl2df.satfunc2df.</code><code class="sig-name descname">inject_satnumcount</code><span class="sig-paren">(</span><em class="sig-param">deckstr</em>, <em class="sig-param">satnumcount</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc2df.html#inject_satnumcount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc2df.inject_satnumcount" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.satfunc.inject_satnumcount">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">inject_satnumcount</code><span class="sig-paren">(</span><em class="sig-param">deckstr</em>, <em class="sig-param">satnumcount</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#inject_satnumcount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.inject_satnumcount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a TABDIMS with NTSFUN into a deck</p>
 <p>This is simple string manipulation, not sunbeam
 deck manipulation (which might be possible to do).</p>
@@ -1112,8 +1156,8 @@ the SWOF keyword).</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.satfunc2df.deck2df">
-<code class="sig-prename descclassname">ecl2df.satfunc2df.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">satnumcount=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc2df.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc2df.deck2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.satfunc.deck2df">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">satnumcount=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.deck2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the data in the saturation function keywords as a Pandas
 DataFrame.</p>
 <p>Data for all saturation functions are merged into one dataframe.
@@ -1145,8 +1189,8 @@ it will be attempted inferred.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.satfunc2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.satfunc2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.satfunc.fill_parser">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1156,25 +1200,31 @@ it will be attempted inferred.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.satfunc2df.main">
-<code class="sig-prename descclassname">ecl2df.satfunc2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.satfunc.main">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.satfunc2df.satfunc2df_main">
-<code class="sig-prename descclassname">ecl2df.satfunc2df.</code><code class="sig-name descname">satfunc2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc2df.html#satfunc2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc2df.satfunc2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.satfunc.satfunc2df_main">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">satfunc2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#satfunc2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.satfunc2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.satfunc.df">
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ecl2df.summary2df">
-<span id="ecl2df-summary2df-module"></span><h2>ecl2df.summary2df module<a class="headerlink" href="#module-ecl2df.summary2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.summary">
+<span id="ecl2df-summary-module"></span><h2>ecl2df.summary module<a class="headerlink" href="#module-ecl2df.summary" title="Permalink to this headline">¶</a></h2>
 <p>Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)</p>
 <p>Code taken from fmu.ensemble.ScratchRealization</p>
 <dl class="function">
-<dt id="ecl2df.summary2df.normalize_dates">
-<code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">normalize_dates</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">freq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#normalize_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.normalize_dates" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.normalize_dates">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">normalize_dates</code><span class="sig-paren">(</span><em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">freq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#normalize_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.normalize_dates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize start and end date according to frequency
 by extending the time range.</p>
 <p>So for [1997-11-05, 2020-03-02] and monthly frequency
@@ -1197,8 +1247,8 @@ Anything else will return the input as is</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.summary2df.resample_smry_dates">
-<code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">resample_smry_dates</code><span class="sig-paren">(</span><em class="sig-param">eclsumsdates</em>, <em class="sig-param">freq='raw'</em>, <em class="sig-param">normalize=True</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">end_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#resample_smry_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.resample_smry_dates" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.resample_smry_dates">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">resample_smry_dates</code><span class="sig-paren">(</span><em class="sig-param">eclsumsdates</em>, <em class="sig-param">freq='raw'</em>, <em class="sig-param">normalize=True</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">end_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#resample_smry_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.resample_smry_dates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resample (optionally) a list of date(time)s to a new datelist according to options.</p>
 <p>Based on the dates as input, a new list at a finer or coarser time density
 can be returned, on the same date range. Incoming dates can also be cropped.</p>
@@ -1233,8 +1283,8 @@ normalized dates. Overriden if freq is ‘last’.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.summary2df.smry2df">
-<code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">smry2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">end_date=None</em>, <em class="sig-param">include_restart=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#smry2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.smry2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.smry2df">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">smry2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">end_date=None</em>, <em class="sig-param">include_restart=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#smry2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.smry2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
 <p>This is a thin wrapper for EclSum.pandas_frame, by adding
 support for string mnenomics for the time index.</p>
@@ -1265,8 +1315,8 @@ column_keys are not existing.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.summary2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.fill_parser">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1277,29 +1327,35 @@ with arguments</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.summary2df.main">
-<code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.main">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.summary2df.summary2df_main">
-<code class="sig-prename descclassname">ecl2df.summary2df.</code><code class="sig-name descname">summary2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary2df.html#summary2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary2df.summary2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.summary2df_main">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">summary2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#summary2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.summary2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read summary data from disk and write CSV back to disk</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="ecl2df.summary.df">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">params=False</em>, <em class="sig-param">paramfile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
+</dd></dl>
+
 </div>
-<div class="section" id="module-ecl2df.wcon2df">
-<span id="ecl2df-wcon2df-module"></span><h2>ecl2df.wcon2df module<a class="headerlink" href="#module-ecl2df.wcon2df" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ecl2df.wcon">
+<span id="ecl2df-wcon-module"></span><h2>ecl2df.wcon module<a class="headerlink" href="#module-ecl2df.wcon" title="Permalink to this headline">¶</a></h2>
 <p>Extract WCON* from an Eclipse deck</p>
 <dl class="function">
-<dt id="ecl2df.wcon2df.deck2wcondf">
-<code class="sig-prename descclassname">ecl2df.wcon2df.</code><code class="sig-name descname">deck2wcondf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon2df.html#deck2wcondf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon2df.deck2wcondf" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.wcon.deck2wcondf">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">deck2wcondf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#deck2wcondf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.deck2wcondf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.wcon2df.deck2df">
-<code class="sig-prename descclassname">ecl2df.wcon2df.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon2df.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon2df.deck2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.wcon.deck2df">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.deck2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loop through the deck and pick up information found</p>
 <p>The loop over the deck is a state machine, as it has to pick up dates</p>
 <dl class="field-list simple">
@@ -1310,8 +1366,8 @@ with arguments</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.wcon2df.fill_parser">
-<code class="sig-prename descclassname">ecl2df.wcon2df.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon2df.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon2df.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.wcon.fill_parser">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1321,15 +1377,21 @@ with arguments</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.wcon2df.main">
-<code class="sig-prename descclassname">ecl2df.wcon2df.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon2df.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon2df.main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.wcon.main">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.wcon2df.wcon2df_main">
-<code class="sig-prename descclassname">ecl2df.wcon2df.</code><code class="sig-name descname">wcon2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon2df.html#wcon2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon2df.wcon2df_main" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.wcon.wcon2df_main">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">wcon2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#wcon2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.wcon2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read from disk and write CSV back to disk</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.wcon.df">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>

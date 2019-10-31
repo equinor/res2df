@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.summary2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.summary2df</li>
+      <li>ecl2df.summary</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.summary2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.summary</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -178,7 +178,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">parameters</span>
 
 
-<div class="viewcode-block" id="normalize_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary2df.normalize_dates">[docs]</a><span class="k">def</span> <span class="nf">normalize_dates</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+<div class="viewcode-block" id="normalize_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.normalize_dates">[docs]</a><span class="k">def</span> <span class="nf">normalize_dates</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Normalize start and end date according to frequency</span>
 <span class="sd">    by extending the time range.</span>
@@ -218,7 +218,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="resample_smry_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary2df.resample_smry_dates">[docs]</a><span class="k">def</span> <span class="nf">resample_smry_dates</span><span class="p">(</span>
+<div class="viewcode-block" id="resample_smry_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.resample_smry_dates">[docs]</a><span class="k">def</span> <span class="nf">resample_smry_dates</span><span class="p">(</span>
     <span class="n">eclsumsdates</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -331,7 +331,7 @@
         <span class="k">return</span> <span class="n">datetimes</span></div>
 
 
-<div class="viewcode-block" id="smry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary2df.smry2df">[docs]</a><span class="k">def</span> <span class="nf">smry2df</span><span class="p">(</span>
+<div class="viewcode-block" id="smry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.smry2df">[docs]</a><span class="k">def</span> <span class="nf">smry2df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">,</span>
     <span class="n">time_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">column_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -401,7 +401,7 @@
 <span class="c1"># Remaining functions are for the command line interface</span>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -459,7 +459,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;summary2csv is deprecated, use &#39;ecl2csv smry &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
@@ -469,14 +469,35 @@
     <span class="n">summary2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="summary2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary2df.summary2df_main">[docs]</a><span class="k">def</span> <span class="nf">summary2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="summary2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.summary2df_main">[docs]</a><span class="k">def</span> <span class="nf">summary2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="n">sum_df</span> <span class="o">=</span> <span class="n">smry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">time_index</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">column_keys</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">paramfile</span><span class="p">:</span>
+    <span class="n">sum_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
+        <span class="n">eclfiles</span><span class="p">,</span>
+        <span class="n">time_index</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">time_index</span><span class="p">,</span>
+        <span class="n">column_keys</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">column_keys</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">paramfile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">paramfile</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+        <span class="c1"># Ignore pipe errors when writing to stdout.</span>
+        <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
+
+        <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
+        <span class="n">sum_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing to file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+        <span class="n">sum_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">paramfile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="n">sum_df</span> <span class="o">=</span> <span class="n">smry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="n">time_index</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="n">column_keys</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">paramfile</span><span class="p">:</span>
             <span class="n">param_files</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">find_parameter_files</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from files: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_files</span><span class="p">))</span>
             <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load_all</span><span class="p">(</span><span class="n">param_files</span><span class="p">)</span>
@@ -497,16 +518,7 @@
             <span class="c1"># to dump to csv, it should not cause side-effects that floats end up</span>
             <span class="c1"># as strings in the dataframe.</span>
             <span class="n">sum_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
-        <span class="c1"># Ignore pipe errors when writing to stdout.</span>
-        <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
-
-        <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
-        <span class="n">sum_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing to file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
-        <span class="n">sum_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">sum_df</span></div>
 </pre></div>
 
            </div>

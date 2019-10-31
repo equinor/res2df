@@ -12,10 +12,10 @@ ecl2df.common module
    :undoc-members:
    :show-inheritance:
 
-ecl2df.compdat2df module
-------------------------
+ecl2df.compdat module
+---------------------
 
-.. automodule:: ecl2df.compdat2df
+.. automodule:: ecl2df.compdat
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,34 +36,34 @@ ecl2df.eclfiles module
    :undoc-members:
    :show-inheritance:
 
-ecl2df.equil2df module
+ecl2df.equil module
+-------------------
+
+.. automodule:: ecl2df.equil
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.faults module
+--------------------
+
+.. automodule:: ecl2df.faults
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.grid module
+------------------
+
+.. automodule:: ecl2df.grid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.gruptree module
 ----------------------
 
-.. automodule:: ecl2df.equil2df
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.faults2df module
------------------------
-
-.. automodule:: ecl2df.faults2df
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.grid2df module
----------------------
-
-.. automodule:: ecl2df.grid2df
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.gruptree2df module
--------------------------
-
-.. automodule:: ecl2df.gruptree2df
+.. automodule:: ecl2df.gruptree
    :members:
    :undoc-members:
    :show-inheritance:
@@ -76,10 +76,10 @@ ecl2df.inferdims module
    :undoc-members:
    :show-inheritance:
 
-ecl2df.nnc2df module
---------------------
+ecl2df.nnc module
+-----------------
 
-.. automodule:: ecl2df.nnc2df
+.. automodule:: ecl2df.nnc
    :members:
    :undoc-members:
    :show-inheritance:
@@ -92,34 +92,34 @@ ecl2df.parameters module
    :undoc-members:
    :show-inheritance:
 
-ecl2df.rft2df module
---------------------
+ecl2df.rft module
+-----------------
 
-.. automodule:: ecl2df.rft2df
+.. automodule:: ecl2df.rft
    :members:
    :undoc-members:
    :show-inheritance:
 
-ecl2df.satfunc2df module
-------------------------
-
-.. automodule:: ecl2df.satfunc2df
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.summary2df module
-------------------------
-
-.. automodule:: ecl2df.summary2df
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.wcon2df module
+ecl2df.satfunc module
 ---------------------
 
-.. automodule:: ecl2df.wcon2df
+.. automodule:: ecl2df.satfunc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.summary module
+---------------------
+
+.. automodule:: ecl2df.summary
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.wcon module
+------------------
+
+.. automodule:: ecl2df.wcon
    :members:
    :undoc-members:
    :show-inheritance:

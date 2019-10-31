@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat2df &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.0.1 documentation</title>
   
 
   
@@ -139,7 +139,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>ecl2df.compdat2df</li>
+      <li>ecl2df.compdat</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,7 +154,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ecl2df.compdat2df</h1><div class="highlight"><pre>
+  <h1>Source code for ecl2df.compdat</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -232,7 +232,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="sunbeam2rmsterm"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.sunbeam2rmsterm">[docs]</a><span class="k">def</span> <span class="nf">sunbeam2rmsterm</span><span class="p">(</span><span class="n">reckey</span><span class="p">):</span>
+<div class="viewcode-block" id="sunbeam2rmsterm"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.sunbeam2rmsterm">[docs]</a><span class="k">def</span> <span class="nf">sunbeam2rmsterm</span><span class="p">(</span><span class="n">reckey</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Sunbeam authors and Roxar RMS authors have interpreted the Eclipse</span>
 <span class="sd">    documentation ever so slightly different when naming the data.</span>
 
@@ -263,12 +263,12 @@
     <span class="k">return</span> <span class="n">thedict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reckey</span><span class="p">,</span> <span class="n">reckey</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unroll</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unroll</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
 
 <span class="sd">    The loop over the deck is a state machine, as it has to pick up dates</span>
@@ -382,7 +382,7 @@
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span> <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="postprocess"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.postprocess">[docs]</a><span class="k">def</span> <span class="nf">postprocess</span><span class="p">():</span>
+<div class="viewcode-block" id="postprocess"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.postprocess">[docs]</a><span class="k">def</span> <span class="nf">postprocess</span><span class="p">():</span>
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compdat.csv&quot;</span><span class="p">)</span>
     <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compsegs.csv&quot;</span><span class="p">)</span>
     <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">)</span>
@@ -419,7 +419,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="s2">&quot;K2&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="s2">&quot;K2&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
 <span class="sd">    a range where data applies.</span>
 
@@ -475,7 +475,7 @@
     <span class="k">return</span> <span class="n">unrolled</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -493,7 +493,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;compdat2csv is deprecated, use &#39;ecl2csv compdat &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
@@ -503,7 +503,7 @@
     <span class="n">compdat2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="compdat2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat2df.compdat2df_main">[docs]</a><span class="k">def</span> <span class="nf">compdat2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="compdat2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.compdat2df_main">[docs]</a><span class="k">def</span> <span class="nf">compdat2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -516,6 +516,12 @@
     <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;WELSEGS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">unrolldf</span><span class="p">(</span><span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">())[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

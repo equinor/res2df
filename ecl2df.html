@@ -588,22 +588,31 @@ second element is list of corresponding datetime.date objecs.</p>
 
 <dl class="function">
 <dt id="ecl2df.grid.rst2df">
-<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">rst2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">date</em>, <em class="sig-param">dateinheaders=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#rst2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.rst2df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">rst2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">date</em>, <em class="sig-param">vectors=None</em>, <em class="sig-param">dateinheaders=False</em>, <em class="sig-param">datestacked=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#rst2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.rst2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dataframe with dynamic data from the restart file
 for each cell, at a particular date.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eclfiles</strong> – EclFiles object</p></li>
-<li><p><strong>date</strong> – datetime.date or list of datetime.date, must
-correspond to an existing date. If list, it
+<li><p><strong>date</strong> – <dl class="simple">
+<dt>datetime.date or list of datetime.date, must</dt><dd><p>correspond to an existing date. If list, it
 forces dateinheaders to be True.
 Can also be string, then the mnenomics
 ‘first’, ‘last’, ‘all’, are supported, or ISO
-date formats.</p></li>
-<li><p><strong>dateinheaders</strong> – boolean on whether the date should
-be added to the column headers. Instead of
-SGAS as a column header, you get <a class="reference external" href="mailto:SGAS&#37;&#52;&#48;YYYY-MM-DD">SGAS<span>&#64;</span>YYYY-MM-DD</a>.</p></li>
+date formats.</p>
+</dd>
+<dt>vectors (str or list): List of vectors to include,</dt><dd><p>glob-style wildcards supported</p>
+</dd>
+<dt>dateinheaders: boolean on whether the date should</dt><dd><p>be added to the column headers. Instead of
+SGAS as a column header, you get <a class="reference external" href="mailto:SGAS&#37;&#52;&#48;YYYY-MM-DD">SGAS<span>&#64;</span>YYYY-MM-DD</a>.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>datestacked</strong> (<em>bool</em>) – Default is false. If true, a column
+called DATE will be added and data for all restart
+dates will be added in a stacked manner. Implies
+dateinheaders False.</p></li>
 </ul>
 </dd>
 </dl>

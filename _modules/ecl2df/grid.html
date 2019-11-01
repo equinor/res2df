@@ -253,22 +253,35 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">datestacked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
 <span class="sd">    for each cell, at a particular date.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles: EclFiles object</span>
+
 <span class="sd">        date: datetime.date or list of datetime.date, must</span>
 <span class="sd">            correspond to an existing date. If list, it</span>
 <span class="sd">            forces dateinheaders to be True.</span>
 <span class="sd">            Can also be string, then the mnenomics</span>
 <span class="sd">            &#39;first&#39;, &#39;last&#39;, &#39;all&#39;, are supported, or ISO</span>
 <span class="sd">            date formats.</span>
-<span class="sd">        dateinheaders: boolean on whether the date should</span>
+<span class="sd">         vectors (str or list): List of vectors to include,</span>
+<span class="sd">            glob-style wildcards supported</span>
+<span class="sd">         dateinheaders: boolean on whether the date should</span>
 <span class="sd">            be added to the column headers. Instead of</span>
 <span class="sd">            SGAS as a column header, you get SGAS@YYYY-MM-DD.</span>
+<span class="sd">        datestacked (bool): Default is false. If true, a column</span>
+<span class="sd">            called DATE will be added and data for all restart</span>
+<span class="sd">            dates will be added in a stacked manner. Implies</span>
+<span class="sd">            dateinheaders False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">vectors</span><span class="p">:</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>  <span class="c1"># This will include everything</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectors</span><span class="p">]</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting vectors </span><span class="si">{}</span><span class="s2"> from RST file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">vectors</span><span class="p">)))</span>
+
     <span class="c1"># First task is to determine the restart index to extract</span>
     <span class="c1"># data for:</span>
     <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span> <span class="o">=</span> <span class="n">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
@@ -281,12 +294,18 @@
     <span class="n">activecells</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">()</span>
     <span class="n">rstvectors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">activecells</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">activecells</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]</span>
+        <span class="p">):</span>
             <span class="n">rstvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">rstvectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rstvectors</span><span class="p">))</span>  <span class="c1"># Make unique list</span>
     <span class="c1"># Note that all of these might not exist at all timesteps.</span>
 
-    <span class="n">rst_dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">datestacked</span> <span class="ow">and</span> <span class="n">dateinheaders</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Will not put date in headers when datestacked=True&quot;</span><span class="p">)</span>
+        <span class="n">dateinheaders</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">rst_dfs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">rstindex</span> <span class="ow">in</span> <span class="n">rstindices</span><span class="p">:</span>
         <span class="c1"># Filter the rst vectors once more, all of them</span>
         <span class="c1"># might not be available at all timesteps:</span>
@@ -314,21 +333,32 @@
         <span class="p">)</span>
 
         <span class="c1"># For users convenience:</span>
-        <span class="k">if</span> <span class="s2">&quot;SWAT&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span> <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span> <span class="ow">and</span> <span class="s2">&quot;SOIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="s2">&quot;SWAT&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span>
+            <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span>
+            <span class="ow">and</span> <span class="s2">&quot;SOIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rst_df</span>
+            <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;SOIL&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">])</span>
+        <span class="p">):</span>
             <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SOIL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SWAT&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SGAS&quot;</span><span class="p">]</span>
 
         <span class="c1"># Tag the column names if requested, or if multiple rst indices</span>
         <span class="c1"># are asked for</span>
-        <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">datestr</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">chosendates</span><span class="p">[</span><span class="n">rstindices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rstindex</span><span class="p">)]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-            <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">colname</span> <span class="o">+</span> <span class="n">datestr</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">datestr</span> <span class="o">=</span> <span class="n">chosendates</span><span class="p">[</span><span class="n">rstindices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rstindex</span><span class="p">)]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datestacked</span><span class="p">:</span>
+            <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">colname</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">datestr</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
-        <span class="n">rst_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rst_df</span><span class="p">)</span>
+        <span class="n">rst_dfs</span><span class="p">[</span><span class="n">datestr</span><span class="p">]</span> <span class="o">=</span> <span class="n">rst_df</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">rst_dfs</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">datestacked</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rststack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">rststack</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;level_0&quot;</span><span class="p">:</span> <span class="s2">&quot;DATE&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">rststack</span><span class="p">[</span><span class="s2">&quot;level_1&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">rststack</span></div>
 
 
 <div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>

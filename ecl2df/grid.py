@@ -96,7 +96,7 @@ def dates2rstindices(eclfiles, dates):
     return (rstindices, chosendates)
 
 
-def rst2df(eclfiles, date, dateinheaders=False):
+def rst2df(eclfiles, date, dateinheaders=False, datestacked=False):
     """Return a dataframe with dynamic data from the restart file
     for each cell, at a particular date.
 
@@ -111,6 +111,10 @@ def rst2df(eclfiles, date, dateinheaders=False):
         dateinheaders: boolean on whether the date should
             be added to the column headers. Instead of
             SGAS as a column header, you get SGAS@YYYY-MM-DD.
+        datestacked (bool): Default is false. If true, a column
+            called DATE will be added and data for all restart
+            dates will be added in a stacked manner. Implies
+            dateinheaders False.
     """
     # First task is to determine the restart index to extract
     # data for:
@@ -129,7 +133,11 @@ def rst2df(eclfiles, date, dateinheaders=False):
     rstvectors = list(set(rstvectors))  # Make unique list
     # Note that all of these might not exist at all timesteps.
 
-    rst_dfs = []
+    if datestacked and dateinheaders:
+        logging.warning("Will not put date in headers when datestacked=True")
+        dateinheaders = False
+
+    rst_dfs = {}
     for rstindex in rstindices:
         # Filter the rst vectors once more, all of them
         # might not be available at all timesteps:
@@ -162,16 +170,22 @@ def rst2df(eclfiles, date, dateinheaders=False):
 
         # Tag the column names if requested, or if multiple rst indices
         # are asked for
+        datestr = chosendates[rstindices.index(rstindex)].isoformat()
         if dateinheaders or len(rstindices) > 1:
-            datestr = "@" + chosendates[rstindices.index(rstindex)].isoformat()
-            rst_df.columns = [colname + datestr for colname in rst_df.columns]
+            rst_df.columns = [colname + "@" + datestr for colname in rst_df.columns]
 
-        rst_dfs.append(rst_df)
+        rst_dfs[datestr] = rst_df
 
     if not rst_dfs:
         return pd.DataFrame()
 
-    return pd.concat(rst_dfs, axis=1)
+    if not datestacked:
+        return pd.concat(rst_dfs.values(), axis=1)
+    else:
+        rststack = pd.concat(rst_dfs, sort=False).reset_index()
+        rststack.rename(columns={"level_0": "DATE"}, inplace=True)
+        del rststack["level_1"]
+        return rststack
 
 
 def gridgeometry2df(eclfiles):

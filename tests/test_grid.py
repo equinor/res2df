@@ -229,3 +229,36 @@ def test_rst2df():
     assert grid.rst2df(eclfiles, "first").shape == (35817, 23)
     assert grid.rst2df(eclfiles, "last").shape == (35817, 23)
     assert grid.rst2df(eclfiles, "all").shape == (35817, 23 * 4)
+
+    assert "SOIL" in grid.rst2df(eclfiles, date="first", dateinheaders=False)
+    assert (
+        "SOIL@2000-01-01" in grid.rst2df(eclfiles, "first", dateinheaders=True).columns
+    )
+
+    rst_df = grid.rst2df(eclfiles, "first", datestacked=True)
+    assert "DATE" in rst_df
+    assert rst_df["DATE"].unique()[0] == "2000-01-01"
+    rst_df = grid.rst2df(eclfiles, "all", datestacked=True)
+    assert len(rst_df["DATE"].unique()) == len(grid.rstdates(eclfiles))
+    assert rst_df.shape == (4 * 35817, 23 + 1)  # "DATE" is now the extra column
+
+    # Check vector slicing:
+    rst_df = grid.rst2df(eclfiles, "first", vectors="S???")
+    assert rst_df.shape == (35817, 3)
+    assert "SGAS" in rst_df
+    assert "SWAT" in rst_df
+    assert "SOIL" in rst_df  # This is actually computed
+    assert "FIPWAT" not in rst_df
+
+    # Test more vectors:
+    rst_df = grid.rst2df(eclfiles, "first", vectors=["PRESSURE", "SWAT"])
+    assert "PRESSURE" in rst_df
+    assert "SWAT" in rst_df
+    assert "SGAS" not in rst_df
+    assert "SOIL" not in rst_df
+
+    # Check that we can avoid getting SOIL if we are explicit:
+    rst_df = grid.rst2df(eclfiles, "first", vectors=["SGAS", "SWAT"])
+    assert "SOIL" not in rst_df
+    assert "SGAS" in rst_df
+    assert "SWAT" in rst_df

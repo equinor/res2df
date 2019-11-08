@@ -7,6 +7,7 @@ from __future__ import division
 import os
 import errno
 import logging
+import shlex
 
 import sunbeam.deck
 
@@ -185,6 +186,61 @@ class EclFiles(object):
     def get_rstfilename(self):
         """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
+
+    def get_layermap(self, filename=None):
+        """Return a dictionary from (int) K layers in the simgrid to strings
+
+        Typical usage is to map from grid layer to zone names.
+
+        The layer filename must currently follow format
+
+          'ZoneA' 1-4
+          'ZoneB' 5-10
+
+        where the single quotes are optional for zones without spaces.
+        Write single layer zones as 11-11. NB: ResInsight requires single
+        quotes always.
+
+        Args:
+            filename (str): Name of file. If relative path, relative to DATA
+                file location. If nonexisting file, an empty dict will be
+                returned and a warning issued.
+
+        Returns:
+            dict, integer keys which are the K layers. Every layer mentioned
+                in the interval in the input file is present. Can be empty.
+        """
+        if not filename:
+            filename_defaulted = True
+            filename = "layers.lyr"
+        else:
+            filename_defaulted = False
+        assert isinstance(filename, str)
+        if not os.path.isabs(filename):
+            fullpath = os.path.join(self.get_path(), filename)
+        else:
+            fullpath = filename
+        if not os.path.exists(fullpath):
+            if filename_defaulted:
+                # No warnings when the default filename is not there.
+                return {}
+            else:
+                logging.warning("Layerfile %s not found, ignoring", fullpath)
+                return {}
+
+        layerlines = open(fullpath).readlines()
+        layerlines = [line.strip() for line in layerlines]
+        layerlines = [line for line in layerlines if not line.startswith("--")]
+        layerlines = [line for line in layerlines if not line.startswith("#")]
+        layerlines = filter(len, layerlines)
+
+        layermap = {}
+        for line in layerlines:
+            (layername, interval) = shlex.split(line)
+            (k0, k1) = interval.strip().split("-")
+            for k in range(int(k0), int(k1) + 1):
+                layermap[k] = layername
+        return layermap
 
 
 def rreplace(pat, sub, string):

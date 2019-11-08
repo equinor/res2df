@@ -186,6 +186,44 @@ class EclFiles(object):
         """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
 
+    def get_layermap(self, filename="layers.lyr"):
+        """Return a dictionary from (int) K layers in the simgrid to strings
+
+        Typical usage is to map from grid layer to zone names.
+
+        The layer filename must currently follow the ResInsight format
+
+          'ZoneA' 1-4
+          'ZoneB' 5-10
+
+        where the single quotes are mandatory. Write single layer zones as 11-11
+
+        Args:
+            filename (str): Name of file. If relative path, relative to DATA file location
+        Returns:
+            dict, integer keys which are the K layers. Every layer mentioned in the
+                interval in the input file is present. Can be empty.
+        """
+        assert isinstance(filename, str)
+        if not os.path.isabs(filename):
+            fullpath = os.path.join(self.get_path(), filename)
+        else:
+            fullpath = filename
+
+        layerlines = open(fullpath).readlines()
+        layerlines = [line.strip() for line in layerlines]
+        layerlines = [line for line in layerlines if not line.startswith("--")]
+        layerlines = [line for line in layerlines if not line.startswith("#")]
+        layerlines = filter(len, layerlines)
+
+        layermap = {}
+        for line in layerlines:
+            (_, layername, interval) = line.split("'")
+            (k0, k1) = interval.strip().split("-")
+            for k in range(int(k0), int(k1) + 1):
+                layermap[k] = layername
+        return layermap
+
 
 def rreplace(pat, sub, string):
     """Variant of str.replace() that only replaces at the end of the string"""

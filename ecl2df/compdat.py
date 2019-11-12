@@ -389,10 +389,10 @@ def compdat2df_main(args):
         deck = eclfiles.get_ecldeck()
     dfs = deck2dfs(deck)
     compdat_df = dfs["COMPDAT"]
-    layermap = eclfiles.get_layermap()
-    if layermap:
+    zonemap = eclfiles.get_zonemap()
+    if zonemap:
         print("Merging zones")
-        compdat_df = merge_zones(compdat_df, layermap)
+        compdat_df = merge_zones(compdat_df, zonemap)
     print(compdat_df.columns)
     compdat_df.to_csv(args.output, index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
@@ -405,8 +405,9 @@ def df(eclfiles):
     compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 
-    layermap = eclfiles.get_layermap()
-    if layermap:
-        compdat_df = merge_zones(compdat_df, layermap)
+    zonemap = eclfiles.get_zonemap()
+    if zonemap:
+        logging.info("Merging zonemap into compdat")
+        compdat_df = merge_zones(compdat_df, zonemap)
 
     return compdat_df

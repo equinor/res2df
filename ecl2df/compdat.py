@@ -14,7 +14,7 @@ import logging
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month
+from .common import parse_ecl_month, merge_zones
 
 
 # Sunbeam terms:
@@ -316,40 +316,6 @@ def unrolldf(df, start_column="K1", end_column="K2"):
     if list_unrolled:
         unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)
     return unrolled
-
-
-def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
-    """Merge in a column with zone names, from a dictionary mapping
-    k-index to zone name
-
-    Args:
-        df (pd.DataFrame): Dataframe where we should augment a column
-        zonedict (dict): Dictionary with integer keys pointing to strings
-            with zone names.
-        zoneheader (str): Name of the result column merged in,
-            default: ZONE
-        kname (str): Column header in your dataframe that maps to dictionary keys.
-            default K1
-    """
-    assert isinstance(zonedict, dict)
-    assert isinstance(zoneheader, str)
-    assert isinstance(kname, str)
-    assert isinstance(df, pd.DataFrame)
-    if not zonedict:
-        logging.warning("Can't merge in empty zone information")
-        return df
-    if zoneheader in df:
-        logging.error(
-            "Column name %s already exists, refusing to merge in any more", zoneheader
-        )
-        return df
-    if kname not in df:
-        logging.error("Can't merge on non-existing column %s", kname)
-        return df
-    zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
-    zone_df.index.name = "K"
-    zone_df.reset_index(inplace=True)
-    return pd.merge(df, zone_df, left_on=kname, right_on="K")
 
 
 def fill_parser(parser):

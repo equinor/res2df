@@ -23,11 +23,11 @@ def test_stdzoneslyr():
     assert zonemap[10] == "MidReek"
     assert zonemap[11] == "LowerReek"
     with pytest.raises(KeyError):
-        zonemap[0]
+        assert zonemap[0]
     with pytest.raises(KeyError):
-        zonemap["foo"]
+        assert zonemap["foo"]
     with pytest.raises(KeyError):
-        zonemap[-10]
+        assert zonemap[-10]
     assert len(zonemap) == 15
 
 

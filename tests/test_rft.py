@@ -37,7 +37,7 @@ def test_rft2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
     rftdf = rft.rft2df(eclfiles)
-
+    assert "ZONE" in rftdf
     assert not rftdf.empty
     assert len(rftdf.columns)
 

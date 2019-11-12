@@ -357,9 +357,8 @@ def compdat2df_main(args):
     compdat_df = dfs["COMPDAT"]
     zonemap = eclfiles.get_zonemap()
     if zonemap:
-        print("Merging zones")
+        logging.info("Merging zones")
         compdat_df = merge_zones(compdat_df, zonemap)
-    print(compdat_df.columns)
     compdat_df.to_csv(args.output, index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)

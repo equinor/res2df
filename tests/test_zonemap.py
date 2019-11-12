@@ -14,40 +14,40 @@ TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
-def test_stdlayerslyr():
+def test_stdzoneslyr():
     ef = ecl2df.EclFiles(DATAFILE)
 
-    layersmap = ef.get_layermap()
-    assert isinstance(layersmap, dict)
-    assert layersmap[3] == "UpperReek"
-    assert layersmap[10] == "MidReek"
-    assert layersmap[11] == "LowerReek"
+    zonemap = ef.get_zonemap()
+    assert isinstance(zonemap, dict)
+    assert zonemap[3] == "UpperReek"
+    assert zonemap[10] == "MidReek"
+    assert zonemap[11] == "LowerReek"
     with pytest.raises(KeyError):
-        layersmap[0]
+        zonemap[0]
     with pytest.raises(KeyError):
-        layersmap["foo"]
+        zonemap["foo"]
     with pytest.raises(KeyError):
-        layersmap[-10]
-    assert len(layersmap) == 15
+        zonemap[-10]
+    assert len(zonemap) == 15
 
 
-def test_nonstandardlayers(tmpdir):
-    layerfile = tmpdir / "formations.lyr"
-    layerfilecontent = """
+def test_nonstandardzones(tmpdir):
+    zonefile = tmpdir / "formations.lyr"
+    zonefilecontent = """
 -- foo
 # foo
 'Eiriksson'  1-10
 Raude    20-30
 # Difficult quote parsing above, might not run in ResInsight.
 """
-    layerfile.write(layerfilecontent)
+    zonefile.write(zonefilecontent)
     ef = ecl2df.EclFiles(DATAFILE)
-    layersmap = ef.get_layermap(str(layerfile))
-    assert layersmap[1] == "Eiriksson"
+    zonemap = ef.get_zonemap(str(zonefile))
+    assert zonemap[1] == "Eiriksson"
 
 
-def test_nonexistinglayers():
+def test_nonexistingzones():
     ef = ecl2df.EclFiles(DATAFILE)
-    layersmap = ef.get_layermap("foobar")
+    zonemap = ef.get_zonemap("foobar")
     # (we got a warning and an empty dict)
-    assert not layersmap
+    assert not zonemap

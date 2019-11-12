@@ -187,7 +187,7 @@ class EclFiles(object):
         """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
 
-    def get_layermap(self, filename=None):
+    def get_zonemap(self, filename=None):
         """Return a dictionary from (int) K layers in the simgrid to strings
 
         Typical usage is to map from grid layer to zone names.
@@ -212,7 +212,7 @@ class EclFiles(object):
         """
         if not filename:
             filename_defaulted = True
-            filename = "layers.lyr"
+            filename = "zones.lyr"
         else:
             filename_defaulted = False
         assert isinstance(filename, str)
@@ -225,22 +225,22 @@ class EclFiles(object):
                 # No warnings when the default filename is not there.
                 return {}
             else:
-                logging.warning("Layerfile %s not found, ignoring", fullpath)
+                logging.warning("Zonefile %s not found, ignoring", fullpath)
                 return {}
 
-        layerlines = open(fullpath).readlines()
-        layerlines = [line.strip() for line in layerlines]
-        layerlines = [line for line in layerlines if not line.startswith("--")]
-        layerlines = [line for line in layerlines if not line.startswith("#")]
-        layerlines = filter(len, layerlines)
+        zonelines = open(fullpath).readlines()
+        zonelines = [line.strip() for line in zonelines]
+        zonelines = [line for line in zonelines if not line.startswith("--")]
+        zonelines = [line for line in zonelines if not line.startswith("#")]
+        zonelines = filter(len, zonelines)
 
-        layermap = {}
-        for line in layerlines:
+        zonemap = {}
+        for line in zonelines:
             (layername, interval) = shlex.split(line)
             (k0, k1) = interval.strip().split("-")
             for k in range(int(k0), int(k1) + 1):
-                layermap[k] = layername
-        return layermap
+                zonemap[k] = layername
+        return zonemap
 
 
 def rreplace(pat, sub, string):

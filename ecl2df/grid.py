@@ -28,6 +28,8 @@ import ecl2df
 from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
 
+from .common import merge_zones
+
 
 def rstdates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
@@ -242,6 +244,11 @@ def gridgeometry2df(eclfiles):
 
     # Column names should be uppercase
     grid_df.columns = [x.upper() for x in grid_df.columns]
+
+    zonemap = eclfiles.get_zonemap()
+    if zonemap:
+        logging.info("Merging zonemap into grid")
+        grid_df = merge_zones(grid_df, zonemap, kname="K")
 
     return grid_df
 

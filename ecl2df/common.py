@@ -2,6 +2,7 @@
 Common functions for ecl2df modules
 """
 
+import logging
 import pandas as pd
 
 

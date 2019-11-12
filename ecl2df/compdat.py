@@ -318,6 +318,40 @@ def unrolldf(df, start_column="K1", end_column="K2"):
     return unrolled
 
 
+def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
+    """Merge in a column with zone names, from a dictionary mapping
+    k-index to zone name
+
+    Args:
+        df (pd.DataFrame): Dataframe where we should augment a column
+        zonedict (dict): Dictionary with integer keys pointing to strings
+            with zone names.
+        zoneheader (str): Name of the result column merged in,
+            default: ZONE
+        kname (str): Column header in your dataframe that maps to dictionary keys.
+            default K1
+    """
+    assert isinstance(zonedict, dict)
+    assert isinstance(zoneheader, str)
+    assert isinstance(kname, str)
+    assert isinstance(df, pd.DataFrame)
+    if not zonedict:
+        logging.warning("Can't merge in empty zone information")
+        return df
+    if zoneheader in df:
+        logging.error(
+            "Column name %s already exists, refusing to merge in any more", zoneheader
+        )
+        return df
+    if kname not in df:
+        logging.error("Can't merge on non-existing column %s", kname)
+        return df
+    zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
+    zone_df.index.name = "K"
+    zone_df.reset_index(inplace=True)
+    return pd.merge(df, zone_df, left_on=kname, right_on="K")
+
+
 def fill_parser(parser):
     """Set up sys.argv parsers.
 
@@ -354,14 +388,25 @@ def compdat2df_main(args):
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     dfs = deck2dfs(deck)
-    dfs["COMPDAT"].to_csv("compdat.csv", index=False)
+    compdat_df = dfs["COMPDAT"]
+    layermap = eclfiles.get_layermap()
+    if layermap:
+        print("Merging zones")
+        compdat_df = merge_zones(compdat_df, layermap)
+    print(compdat_df.columns)
+    compdat_df.to_csv(args.output, index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
-    unrolldf(dfs["COMPDAT"]).to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 
 
 def df(eclfiles):
     """Main function for Python API users"""
     compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
-    return unrolldf(compdat_df)
+    compdat_df = unrolldf(compdat_df)
+
+    layermap = eclfiles.get_layermap()
+    if layermap:
+        compdat_df = merge_zones(compdat_df, layermap)
+
+    return compdat_df

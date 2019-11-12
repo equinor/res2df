@@ -18,6 +18,14 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
 
 
+def test_df():
+    eclfiles = EclFiles(DATAFILE)
+    compdat_df = compdat.df(eclfiles)
+    assert "ZONE" in compdat_df
+    assert "K1" in compdat_df
+    assert "WELL" in compdat_df
+
+
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -204,5 +212,6 @@ def test_main_subparsers():
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
+    assert "ZONE" in disk_df
     assert not disk_df.empty
     os.remove(tmpcsvfile)

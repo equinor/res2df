@@ -88,6 +88,20 @@ def test_transmissibilities():
     assert "TRAN" in trans_df
     assert trans_df["TRAN"].sum() > 0
 
+    # Try including some vectors:
+    trans_df = grid.transdf(eclfiles, vectors="FIPNUM")
+    assert "FIPNUM" not in trans_df
+    assert "FIPNUM1" in trans_df
+    assert "EQLNUM2" not in trans_df
+
+    trans_df = grid.transdf(eclfiles, vectors=["FIPNUM", "EQLNUM"])
+    assert "FIPNUM1" in trans_df
+    assert "EQLNUM2" in trans_df
+
+    trans_df = grid.transdf(eclfiles, vectors="BOGUS")
+    assert "BOGUS1" not in trans_df
+    assert "TRAN" in trans_df  # (we should have gotten a warning only)
+
 
 def test_subvectors():
     """Test that we can ask for a few vectors only"""

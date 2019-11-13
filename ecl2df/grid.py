@@ -204,50 +204,94 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
         return rststack
 
 
-def transdf(eclfiles):
-    """Make a dataframe of the neighbour transmissibilities"""
-    grid_df = df(eclfiles)
-    transrows = []
-    for _, row in grid_df.iterrows():
-        if row["TRANX"] > 0:
-            transrows.append(
-                [
-                    int(row["I"]),
-                    int(row["J"]),
-                    int(row["K"]),
-                    int(row["I"] + 1),
-                    int(row["J"]),
-                    int(row["K"]),
-                    row["TRANX"],
-                ]
-            )
-        if row["TRANY"] > 0:
-            transrows.append(
-                [
-                    int(row["I"]),
-                    int(row["J"]),
-                    int(row["K"]),
-                    int(row["I"]),
-                    int(row["J"] + 1),
-                    int(row["K"]),
-                    row["TRANY"],
-                ]
-            )
-        if row["TRANZ"] > 0:
-            transrows.append(
-                [
-                    int(row["I"]),
-                    int(row["J"]),
-                    int(row["K"]),
-                    int(row["I"]),
-                    int(row["J"]),
-                    int(row["K"] + 1),
-                    row["TRANZ"],
-                ]
-            )
+def transdf(eclfiles, vectors=None):
+    """Make a dataframe of the neighbour transmissibilities.
 
+    The TRANX, TRANY and TRANZ (whenever nonzero) will be used
+    to produce a row representing a cell-pair where there is
+    transmissibility.
+
+    You will get a dataframe with the columns
+        I1, J1, K1, I2, J2, K2, TRAN
+    similar to what you get from non-neighbour connection export.
+
+    If you ask for additional vectors, like FIPNUM, then
+    you will get a corresponding FIPNUM1 and FIPNUM2 added.
+    """
+    if not vectors:
+        vectors = []
+    if not isinstance(vectors, list):
+        vectors = [vectors]
+    grid_df = df(eclfiles).set_index(["I", "J", "K"])
+    existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
+    if len(existing_vectors) < len(vectors):
+        logging.warning(
+            "Vectors %s not found, skipping", str(set(vectors) - set(existing_vectors))
+        )
+    vectors = existing_vectors
+    transrows = []
+    for ijk, row in grid_df.iterrows():
+        if abs(row["TRANX"]) > 0:
+            transrow = [
+                int(ijk[0]),
+                int(ijk[1]),
+                int(ijk[2]),
+                int(ijk[0] + 1),
+                int(ijk[1]),
+                int(ijk[2]),
+                row["TRANX"],
+            ]
+            transrows.append(transrow)
+        if abs(row["TRANY"]) > 0:
+            transrow = [
+                int(ijk[0]),
+                int(ijk[1]),
+                int(ijk[2]),
+                int(ijk[0]),
+                int(ijk[1] + 1),
+                int(ijk[2]),
+                row["TRANY"],
+            ]
+            transrows.append(transrow)
+        if abs(row["TRANZ"]) > 0:
+            transrow = [
+                int(ijk[0]),
+                int(ijk[1]),
+                int(ijk[2]),
+                int(ijk[0]),
+                int(ijk[1]),
+                int(ijk[2] + 1),
+                row["TRANZ"],
+            ]
+            transrows.append(transrow)
     trans_df = pd.DataFrame(data=transrows)
-    trans_df.columns = ["I1", "J1", "K1", "I2", "J2", "K2", "TRAN"]
+    columnnames = ["I1", "J1", "K1", "I2", "J2", "K2", "TRAN"]
+    trans_df.columns = columnnames
+    # If we have additional vectors we want, merge them in:
+    if vectors:
+        grid_df = grid_df.reset_index()
+        trans_df = pd.merge(
+            trans_df,
+            grid_df[["I", "J", "K"] + vectors],
+            left_on=["I1", "J1", "K1"],
+            right_on=["I", "J", "K"],
+        )
+        del trans_df["I"]
+        del trans_df["J"]
+        del trans_df["K"]
+        trans_df = pd.merge(
+            trans_df,
+            grid_df[["I", "J", "K"] + vectors],
+            left_on=["I2", "J2", "K2"],
+            right_on=["I", "J", "K"],
+            suffixes=("1", "2"),
+        )
+        del trans_df["I"]
+        del trans_df["J"]
+        del trans_df["K"]
+    for vec in vectors:
+        columnnames.append(vec + "1")
+        columnnames.append(vec + "2")
     return trans_df
 
 

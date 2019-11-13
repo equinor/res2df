@@ -86,6 +86,8 @@ def test_transmissibilities():
     eclfiles = EclFiles(DATAFILE)
     trans_df = grid.transdf(eclfiles)
     assert "TRAN" in trans_df
+    assert "DIR" in trans_df
+    assert set(trans_df["DIR"].unique()) == set(["I", "J", "K"])
     assert trans_df["TRAN"].sum() > 0
 
     # Try including some vectors:
@@ -101,6 +103,16 @@ def test_transmissibilities():
     trans_df = grid.transdf(eclfiles, vectors="BOGUS")
     assert "BOGUS1" not in trans_df
     assert "TRAN" in trans_df  # (we should have gotten a warning only)
+
+    # Example filtering to horizontal connections between
+    # different FIPNUMS:
+    trans_df = grid.transdf(eclfiles, vectors=["X", "Y", "Z", "FIPNUM"])
+    filt_trans_df = trans_df[
+        (trans_df["FIPNUM1"] != trans_df["FIPNUM2"]) & (trans_df["DIR"] != "K")
+    ]
+    assert len(filt_trans_df) < len(trans_df)
+    assert set(filt_trans_df["DIR"].unique()) == set(["I", "J"])
+    # filt_trans_df.to_csv("fipnumtrans.csv", index=False)
 
 
 def test_subvectors():

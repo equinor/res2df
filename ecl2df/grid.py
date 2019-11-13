@@ -212,8 +212,11 @@ def transdf(eclfiles, vectors=None):
     transmissibility.
 
     You will get a dataframe with the columns
-        I1, J1, K1, I2, J2, K2, TRAN
+        I1, J1, K1, I2, J2, K2, DIR, TRAN
     similar to what you get from non-neighbour connection export.
+
+    The DIR column indicates the direction, and can take the
+    string values I, J or K.
 
     If you ask for additional vectors, like FIPNUM, then
     you will get a corresponding FIPNUM1 and FIPNUM2 added.
@@ -239,6 +242,7 @@ def transdf(eclfiles, vectors=None):
                 int(ijk[0] + 1),
                 int(ijk[1]),
                 int(ijk[2]),
+                "I",
                 row["TRANX"],
             ]
             transrows.append(transrow)
@@ -250,6 +254,7 @@ def transdf(eclfiles, vectors=None):
                 int(ijk[0]),
                 int(ijk[1] + 1),
                 int(ijk[2]),
+                "J",
                 row["TRANY"],
             ]
             transrows.append(transrow)
@@ -261,11 +266,12 @@ def transdf(eclfiles, vectors=None):
                 int(ijk[0]),
                 int(ijk[1]),
                 int(ijk[2] + 1),
+                "K",
                 row["TRANZ"],
             ]
             transrows.append(transrow)
     trans_df = pd.DataFrame(data=transrows)
-    columnnames = ["I1", "J1", "K1", "I2", "J2", "K2", "TRAN"]
+    columnnames = ["I1", "J1", "K1", "I2", "J2", "K2", "DIR", "TRAN"]
     trans_df.columns = columnnames
     # If we have additional vectors we want, merge them in:
     if vectors:

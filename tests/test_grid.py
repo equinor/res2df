@@ -81,6 +81,14 @@ def test_grid2df():
     assert "VOLUME" in grid_df
 
 
+def test_transmissibilities():
+    """Test that we can build a dataframe of transmissibilities"""
+    eclfiles = EclFiles(DATAFILE)
+    trans_df = grid.transdf(eclfiles)
+    assert "TRAN" in trans_df
+    assert trans_df["TRAN"].sum() > 0
+
+
 def test_subvectors():
     """Test that we can ask for a few vectors only"""
     eclfiles = EclFiles(DATAFILE)

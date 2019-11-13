@@ -204,6 +204,53 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
         return rststack
 
 
+def transdf(eclfiles):
+    """Make a dataframe of the neighbour transmissibilities"""
+    grid_df = df(eclfiles)
+    transrows = []
+    for _, row in grid_df.iterrows():
+        if row["TRANX"] > 0:
+            transrows.append(
+                [
+                    int(row["I"]),
+                    int(row["J"]),
+                    int(row["K"]),
+                    int(row["I"] + 1),
+                    int(row["J"]),
+                    int(row["K"]),
+                    row["TRANX"],
+                ]
+            )
+        if row["TRANY"] > 0:
+            transrows.append(
+                [
+                    int(row["I"]),
+                    int(row["J"]),
+                    int(row["K"]),
+                    int(row["I"]),
+                    int(row["J"] + 1),
+                    int(row["K"]),
+                    row["TRANY"],
+                ]
+            )
+        if row["TRANZ"] > 0:
+            transrows.append(
+                [
+                    int(row["I"]),
+                    int(row["J"]),
+                    int(row["K"]),
+                    int(row["I"]),
+                    int(row["J"]),
+                    int(row["K"] + 1),
+                    row["TRANZ"],
+                ]
+            )
+
+    trans_df = pd.DataFrame(data=transrows)
+    trans_df.columns = ["I1", "J1", "K1", "I2", "J2", "K2", "TRAN"]
+    return trans_df
+
+
 def gridgeometry2df(eclfiles):
     """Produce a Pandas Dataframe with Eclipse gridgeometry
 

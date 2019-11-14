@@ -128,25 +128,23 @@ EQUIL
     assert len(df) == 2
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-equil.csv"
-    sys.argv = ["equil2csv", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-equil.csv")
+    sys.argv = ["equil2csv", DATAFILE, "-o", str(tmpcsvfile)]
     equil.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
 
-def test_main_subparser():
+def test_main_subparser(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-equil.csv"
-    sys.argv = ["ecl2csv", "equil", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-equil.csv")
+    sys.argv = ["ecl2csv", "equil", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)

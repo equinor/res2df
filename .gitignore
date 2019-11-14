@@ -6,3 +6,7 @@ ecl2df.egg-info
 *.csv
 *.pyc
 *~
+docs/modules.rst
+docs/ecl2df.rst
+\#*
+.\#*

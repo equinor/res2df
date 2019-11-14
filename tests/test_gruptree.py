@@ -107,25 +107,23 @@ WELSPECS
     print(grupdf)
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-gruptree.csv"
-    sys.argv = ["gruptree2csv", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-gruptree.csv")
+    sys.argv = ["gruptree2csv", DATAFILE, "-o", str(tmpcsvfile)]
     gruptree.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
 
-def test_main_subparser():
+def test_main_subparser(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-gruptree.csv"
-    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-gruptree.csv")
+    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)

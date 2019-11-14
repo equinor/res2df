@@ -197,26 +197,24 @@ def test_unrollbogus():
     assert (unrolled == bogusdf).all().all()
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-compdat.csv"
-    sys.argv = ["compdat2csv", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
+    sys.argv = ["compdat2csv", DATAFILE, "-o", str(tmpcsvfile)]
     compdat.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
 
-def test_main_subparsers():
+def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-compdat.csv"
-    sys.argv = ["ecl2csv", "compdat", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
+    sys.argv = ["ecl2csv", "compdat", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert "ZONE" in disk_df
     assert not disk_df.empty
-    os.remove(tmpcsvfile)

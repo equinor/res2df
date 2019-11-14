@@ -13,7 +13,7 @@ import logging
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month
+from .common import parse_ecl_month, merge_zones
 
 
 # Sunbeam terms:
@@ -358,14 +358,25 @@ def compdat2df_main(args):
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     dfs = deck2dfs(deck)
-    dfs["COMPDAT"].to_csv("compdat.csv", index=False)
+    compdat_df = dfs["COMPDAT"]
+    zonemap = eclfiles.get_zonemap()
+    if zonemap:
+        logging.info("Merging zones")
+        compdat_df = merge_zones(compdat_df, zonemap)
+    compdat_df.to_csv(args.output, index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
-    unrolldf(dfs["COMPDAT"]).to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 
 
 def df(eclfiles):
     """Main function for Python API users"""
     compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
-    return unrolldf(compdat_df)
+    compdat_df = unrolldf(compdat_df)
+
+    zonemap = eclfiles.get_zonemap()
+    if zonemap:
+        logging.info("Merging zonemap into compdat")
+        compdat_df = merge_zones(compdat_df, zonemap)
+
+    return compdat_df

@@ -27,6 +27,7 @@ import numpy as np
 import pandas as pd
 
 from .eclfiles import EclFiles
+from .common import merge_zones
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -275,6 +276,14 @@ def rft2df(eclfiles):
         if len(rftdata.HOSTGRID.unique()) == 1:
             if rftdata.HOSTGRID.unique()[0].strip() == "":
                 del rftdata["HOSTGRID"]
+
+    zonemap = eclfiles.get_zonemap()
+    if zonemap:
+        if "K" in rftdata:
+            kname = "K"
+        else:
+            kname = "CONKPOS"
+        rftdata = merge_zones(rftdata, zonemap, kname=kname)
 
     return rftdata
 

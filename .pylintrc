@@ -1,3 +1,6 @@
 [MASTER]
-# Remove satfunc2df.py when the file is deleted from the repo in a later version: ~0.3.0/0.4.0
+# Remove *2df.py when the files are deleted from the repo in a later version: ~0.4.0
 ignore=satfunc2df.py,compdat2df.py
+
+[BASIC]
+good-names=df

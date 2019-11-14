@@ -17,6 +17,7 @@ from .eclfiles import EclFiles
 
 
 def deck2equildf(deck):
+    """Deprecated function name"""
     logging.warning("Deprecated function name, deck2equildf")
     return deck2df(deck)
 
@@ -142,14 +143,14 @@ def deck2df(deck, ntequl=None):
             )
         records.append(rowlist)
 
-    df = pd.DataFrame(columns=columnnames, data=records)
+    dataframe = pd.DataFrame(columns=columnnames, data=records)
 
     # The column handling can be made prettier..
-    for col in df.columns:
+    for col in dataframe.columns:
         if "IGNORE" in col:
-            del df[col]
+            del dataframe[col]
 
-    return df
+    return dataframe
 
 
 def fill_parser(parser):

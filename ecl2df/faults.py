@@ -21,11 +21,13 @@ ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-
 
 
 def deck2faultsdf(deck):
+    """Deprecated function name"""
     logging.warning("Deprecated function name deck2faultsdf")
     return deck2df(deck)
 
 
 def deck2df(deck):
+    """Produce a dataframe of fault data from a deck"""
     # In[91]: list(deck['FAULTS'][0])
     # Out[91]: [[u'F1'], [36], [36], [41], [42], [1], [14], [u'I']]
     data = []

@@ -88,7 +88,7 @@ def dates2rstindices(eclfiles, dates):
         if not chosendates:
             raise ValueError("None of the requested dates were found")
         elif len(chosendates) < len(availabledates):
-            logger.warning("Not all dates found in UNRST\n")
+            logging.warning("Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")
 
@@ -123,13 +123,13 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
         vectors = "*"  # This will include everything
     if not isinstance(vectors, list):
         vectors = [vectors]
-    logging.info("Extracting vectors {} from RST file".format(str(vectors)))
+    logging.info("Extracting vectors %s from RST file", str(vectors))
 
     # First task is to determine the restart index to extract
     # data for:
     (rstindices, chosendates) = dates2rstindices(eclfiles, date)
 
-    logging.info("Extracting restart information at dates {}".format(str(chosendates)))
+    logging.info("Extracting restart information at dates %s", str(chosendates))
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
@@ -158,7 +158,7 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
                 present_rstvectors.append(vec)
 
         if not present_rstvectors:
-            logging.warning("No restart vectors available at index {}".format(rstindex))
+            logging.warning("No restart vectors available at index %s", str(rstindex))
             continue
 
         # Make the dataframe
@@ -197,11 +197,10 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
 
     if not datestacked:
         return pd.concat(rst_dfs.values(), axis=1)
-    else:
-        rststack = pd.concat(rst_dfs, sort=False).reset_index()
-        rststack.rename(columns={"level_0": "DATE"}, inplace=True)
-        del rststack["level_1"]
-        return rststack
+    rststack = pd.concat(rst_dfs, sort=False).reset_index()
+    rststack.rename(columns={"level_0": "DATE"}, inplace=True)
+    del rststack["level_1"]
+    return rststack
 
 
 def gridgeometry2df(eclfiles):
@@ -224,7 +223,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logging.info("Extracting grid geometry from {}".format(egrid_file))
+    logging.info("Extracting grid geometry from %s", egrid_file)
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 
@@ -260,7 +259,7 @@ def init2df(eclfiles, vectors=None):
         vectors = "*"  # This will include everything
     if not isinstance(vectors, list):
         vectors = [vectors]
-    logging.info("Extracting vectors {} from INIT file".format(str(vectors)))
+    logging.info("Extracting vectors %s from INIT file", str(vectors))
 
     init = eclfiles.get_initfile()
     egrid = eclfiles.get_egrid()
@@ -359,11 +358,11 @@ def fill_parser(parser):
     return parser
 
 
-def dropconstants(df, alwayskeep=None):
+def dropconstants(dframe, alwayskeep=None):
     """Drop/delete constant columns from a dataframe.
 
     Args:
-        df: pd.DataFrame
+        dframe: pd.DataFrame
         alwayskeep: string or list of strings of columns to keep
            anyway.
     Returns:
@@ -375,18 +374,18 @@ def dropconstants(df, alwayskeep=None):
         alwayskeep = [alwayskeep]
     if not isinstance(alwayskeep, list):
         raise TypeError("alwayskeep must be a list")
-    if not isinstance(df, pd.DataFrame):
+    if not isinstance(dframe, pd.DataFrame):
         raise TypeError("dropconstants() needs a dataframe")
-    if df.empty:
-        return df
+    if dframe.empty:
+        return dframe
 
     columnstodelete = []
-    for col in set(df.columns) - set(alwayskeep):
-        if len(df[col].unique()) == 1:
+    for col in set(dframe.columns) - set(alwayskeep):
+        if len(dframe[col].unique()) == 1:
             columnstodelete.append(col)
     if columnstodelete:
-        logging.info("Deleting constant columns {}".format(str(columnstodelete)))
-    return df.drop(columnstodelete, axis=1)
+        logging.info("Deleting constant columns %s", str(columnstodelete))
+    return dframe.drop(columnstodelete, axis=1)
 
 
 def grid2df(eclfiles, vectors="*"):

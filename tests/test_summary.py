@@ -27,7 +27,7 @@ def test_summary2df():
 
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
-    assert len(sumdf.columns)
+    assert not sumdf.columns.empty
     assert "FOPT" in sumdf.columns
 
 

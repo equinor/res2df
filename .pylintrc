@@ -1,3 +1,11 @@
+[GENERAL]
+disable=E0401,C0330
+# E0401: import-error, these will be caught by automated tests anyhow
+# C0330: wrong hanging indentation, pylint disagrees with black here
+
 [MASTER]
-# Remove satfunc2df.py when the file is deleted from the repo in a later version: ~0.3.0/0.4.0
-ignore=satfunc2df.py,compdat2df.py
+# Remove *2df.py when the files are deleted from the repo in a later version: ~0.4.0
+ignore=__init__.py,conf.py,satfunc2df.py,compdat2df.py
+
+[BASIC]
+good-names=df

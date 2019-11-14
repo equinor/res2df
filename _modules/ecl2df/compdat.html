@@ -155,8 +155,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ecl2df.compdat</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck</span>
 
@@ -206,7 +205,8 @@
     <span class="s2">&quot;SEGMENT_NUMBER&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="c1"># Based on https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS</span>
+<span class="c1"># Based on https://github.com/OPM/opm-common/blob/master/</span>
+<span class="c1">#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS</span>
 <span class="n">WELSEGSKEYS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Name of the well&quot;</span>
     <span class="s2">&quot;DEPTH&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Depth of the nodal point of the top segment&quot;</span>
@@ -264,6 +264,7 @@
 
 
 <div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span></div>
 
@@ -289,28 +290,28 @@
     <span class="n">compsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">welsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">start_date</span>  <span class="c1"># DATE column will always be there, but can contain NaN/None</span>
-    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">day</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;DAY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">date</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use TSTEP when there is no start_date&quot;</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                 <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
                 <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="s2">&quot;Advancing </span><span class="si">{}</span><span class="s2"> days to </span><span class="si">{}</span><span class="s2"> through TSTEP&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                    <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
                 <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside COMPDAT record</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside COMPDAT record</span>
                 <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">COMPDATKEYS</span><span class="p">:</span>
@@ -321,13 +322,13 @@
                     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                         <span class="k">pass</span>
                 <span class="n">compdatrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">:</span>
-            <span class="n">well</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">:</span>
+            <span class="n">well</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kword</span><span class="p">)):</span>
                 <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
-                <span class="n">rec</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
+                <span class="n">rec</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">COMPSEGSKEYS</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
@@ -335,22 +336,22 @@
                     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                         <span class="k">pass</span>
                 <span class="n">compsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
             <span class="c1"># First record contains meta-information for well</span>
             <span class="c1"># (sunbeam deck returns default values for unspecified items.)</span>
             <span class="n">welsegsdict</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELLBORE_VOLUME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;PRESSURE_COMPONENTS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;FLOW_MODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">7</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">8</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELLBORE_VOLUME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;PRESSURE_COMPONENTS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;FLOW_MODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">7</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">8</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># Loop over all subsequent records.</span>
-            <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">)):</span>
-                <span class="n">rec</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kword</span><span class="p">)):</span>
+                <span class="n">rec</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
                 <span class="c1"># WARNING: We assume that SEGMENT1 === SEGMENT2 (!!!) (if not,</span>
                 <span class="c1"># we need to loop over a range just as for layer in compdat)</span>
                 <span class="n">rec_data</span> <span class="o">=</span> <span class="n">welsegsdict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -364,26 +365,29 @@
                 <span class="k">if</span> <span class="s2">&quot;INFO_TYPE&quot;</span> <span class="ow">in</span> <span class="n">rec_data</span> <span class="ow">and</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ABS&quot;</span><span class="p">:</span>
                     <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_MD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">]</span>
                 <span class="n">welsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Possible premature stop at first TSTEP&quot;</span><span class="p">)</span>
             <span class="k">break</span>
 
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compdatrecords</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">)</span>
 
     <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compsegsrecords</span><span class="p">)</span>
 
     <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">welsegsrecords</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">welsegs_df</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">welsegs_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">welsegs_df</span><span class="p">,</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span> <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="postprocess"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.postprocess">[docs]</a><span class="k">def</span> <span class="nf">postprocess</span><span class="p">():</span>
-    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compdat.csv&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Postprocessing of the compdat data, merging.</span>
+
+<span class="sd">    This function is NOT FINISHED&quot;&quot;&quot;</span>
+    <span class="c1"># compdat_df = pd.read_csv(&quot;compdat.csv&quot;)</span>
     <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compsegs.csv&quot;</span><span class="p">)</span>
     <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">)</span>
 
@@ -403,7 +407,7 @@
     <span class="c1"># 1. Merge compdata and compsegs</span>
     <span class="c1"># 2. Then we are ready.. compsegs contains the correct branch number</span>
 
-    <span class="n">compdatsegs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">compsegs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;j&quot;</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">])</span>
+    <span class="c1"># compdatsegs = pd.merge(compdat_df, compsegs_df, on=[&quot;date&quot;, &quot;well&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;])</span>
     <span class="c1"># WARNING: Only correct for dual-branch wells,</span>
     <span class="c1"># not triple-branach wells with ICD..</span>
     <span class="n">compsegs_icd_df</span> <span class="o">=</span> <span class="n">compsegs_df</span><span class="p">[</span><span class="n">compsegs_df</span><span class="o">.</span><span class="n">branch</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
@@ -413,13 +417,13 @@
     <span class="p">)</span>
     <span class="k">del</span> <span class="n">compdatsegwel_icd_df</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span>  <span class="c1"># we don&#39;t need this</span>
     <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;branch&quot;</span><span class="p">:</span> <span class="s2">&quot;icd_branch&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;join_segment&quot;</span><span class="p">:</span> <span class="s2">&quot;segment&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">alldata_icd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">compdatsegwel_icd_df</span><span class="p">,</span> <span class="n">welsegs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span> <span class="s2">&quot;segment&quot;</span><span class="p">]</span>
-    <span class="p">)</span></div>
+    <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;join_segment&quot;</span><span class="p">:</span> <span class="s2">&quot;segment&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="c1"># alldata_icd = pd.merge(</span>
+    <span class="c1">#     compdatsegwel_icd_df, welsegs_df, on=[&quot;date&quot;, &quot;well&quot;, &quot;segment&quot;]</span>
+    <span class="c1"># )</span>
 
 
-<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="s2">&quot;K2&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="s2">&quot;K2&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
 <span class="sd">    a range where data applies.</span>
 
@@ -442,7 +446,7 @@
 <span class="sd">    The latter is easier to work with in Pandas dataframes</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        df (pd.DataFrame): Dataframe to be unrolled</span>
+<span class="sd">        dframe (pd.DataFrame): Dataframe to be unrolled</span>
 <span class="sd">        start_column (str): Column name that contains the start of</span>
 <span class="sd">            a range.</span>
 <span class="sd">        end_column (str): Column name that contains the corresponding</span>
@@ -452,23 +456,23 @@
 <span class="sd">        pd.Dataframe: Unrolled version. Identical to input if none of</span>
 <span class="sd">            rows had any ranges.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">df</span>
-    <span class="k">if</span> <span class="n">start_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span> <span class="ow">and</span> <span class="n">end_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dframe</span>
+    <span class="k">if</span> <span class="n">start_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="n">end_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Cannot unroll on non-existing columns </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">start_column</span><span class="p">,</span> <span class="n">end_column</span>
-            <span class="p">)</span>
+            <span class="s2">&quot;Cannot unroll on non-existing columns </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">start_column</span><span class="p">,</span> <span class="n">end_column</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">df</span>
-    <span class="n">start_eq_end_bools</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">start_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="n">end_column</span><span class="p">]</span>
-    <span class="n">unrolled</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">start_eq_end_bools</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dframe</span>
+    <span class="n">start_eq_end_bools</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">start_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">dframe</span><span class="p">[</span><span class="n">end_column</span><span class="p">]</span>
+    <span class="n">unrolled</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">start_eq_end_bools</span><span class="p">]</span>
     <span class="n">list_unrolled</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">~</span><span class="n">start_eq_end_bools</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">rangerow</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">start_eq_end_bools</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">rangerow</span><span class="p">[</span><span class="n">start_column</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">rangerow</span><span class="p">[</span><span class="n">end_column</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">rangerow</span><span class="p">[</span><span class="n">start_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
-                <span class="n">rangerow</span><span class="p">[</span><span class="n">end_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">rangerow</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="o">~</span><span class="n">start_eq_end_bools</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">k_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">rangerow</span><span class="p">[</span><span class="n">start_column</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">rangerow</span><span class="p">[</span><span class="n">end_column</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">):</span>
+                <span class="n">rangerow</span><span class="p">[</span><span class="n">start_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_idx</span>
+                <span class="n">rangerow</span><span class="p">[</span><span class="n">end_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_idx</span>
                 <span class="n">list_unrolled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rangerow</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
     <span class="k">if</span> <span class="n">list_unrolled</span><span class="p">:</span>
         <span class="n">unrolled</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">unrolled</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">list_unrolled</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

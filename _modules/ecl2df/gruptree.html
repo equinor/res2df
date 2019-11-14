@@ -168,16 +168,17 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">dateutil</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">dateutil</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">treelib</span>
-<span class="kn">import</span> <span class="nn">collections</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">parse_ecl_month</span>
 
-<span class="c1"># From: https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET</span>
+<span class="c1"># From: https://github.com/OPM/opm-common/blob/master/</span>
+<span class="c1">#       src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET</span>
 <span class="n">GRUPNETKEYS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;NAME&quot;</span><span class="p">,</span>
     <span class="s2">&quot;TERMINAL_PRESSURE&quot;</span><span class="p">,</span>
@@ -190,6 +191,7 @@
 
 
 <div class="viewcode-block" id="gruptree2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptree2df">[docs]</a><span class="k">def</span> <span class="nf">gruptree2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">startdate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">welspecs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, gruptree2df&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">startdate</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">)</span></div>
 
@@ -228,17 +230,14 @@
     <span class="n">found_gruptree</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Flags which will tell when a new GRUPTREE or</span>
     <span class="n">found_welspecs</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># WELSPECS have been encountered.</span>
     <span class="n">found_grupnet</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># GRUPNET has been encountered</span>
-    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-
-        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span> <span class="ow">or</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
             <span class="c1"># Whenever we encounter a new DATES, it means that</span>
             <span class="c1"># we have processed all the GRUPTREE and WELSPECS that</span>
             <span class="c1"># have occured since the last date, so this is the chance</span>
             <span class="c1"># to dump the parsed data. Also we dump the *entire* tree</span>
             <span class="c1"># at every date with a change, not only the newfound edges.</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">currentedges</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
-                <span class="n">found_gruptree</span> <span class="ow">or</span> <span class="n">found_welspecs</span> <span class="ow">or</span> <span class="n">found_grupnet</span>
-            <span class="p">):</span>
+            <span class="k">if</span> <span class="n">currentedges</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_gruptree</span> <span class="ow">or</span> <span class="n">found_welspecs</span> <span class="ow">or</span> <span class="n">found_grupnet</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                         <span class="s2">&quot;WARNING: No date parsed, maybe you should pass --startdate&quot;</span>
@@ -261,48 +260,44 @@
                 <span class="n">found_grupnet</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="c1"># Done dumping the data for the previous date, parse the fresh</span>
             <span class="c1"># date:</span>
-            <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                     <span class="n">day</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;DAY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span>
                         <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span>
                     <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                     <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                     <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">days</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
-                            <span class="s2">&quot;Invalid TSTEP, summed to </span><span class="si">{}</span><span class="s2"> days&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">))</span>
-                        <span class="p">)</span>
-                        <span class="k">return</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Invalid TSTEP, summed to </span><span class="si">%s</span><span class="s2"> days&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">))</span>
+                        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
                     <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
                     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="s2">&quot;Advancing </span><span class="si">{}</span><span class="s2"> days to </span><span class="si">{}</span><span class="s2"> through TSTEP&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
-                        <span class="p">)</span>
+                        <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
                     <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;BUG: Should not get here&quot;</span><span class="p">)</span>
-                <span class="k">return</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span>
             <span class="n">found_gruptree</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">for</span> <span class="n">edgerec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">edgerec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">child</span> <span class="o">=</span> <span class="n">edgerec</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">parent</span> <span class="o">=</span> <span class="n">edgerec</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">currentedges</span><span class="p">[(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;GRUPTREE&quot;</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSPECS&quot;</span> <span class="ow">and</span> <span class="n">welspecs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSPECS&quot;</span> <span class="ow">and</span> <span class="n">welspecs</span><span class="p">:</span>
             <span class="n">found_welspecs</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">for</span> <span class="n">wellrec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">wellrec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">wellname</span> <span class="o">=</span> <span class="n">wellrec</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">group</span> <span class="o">=</span> <span class="n">wellrec</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">currentedges</span><span class="p">[(</span><span class="n">wellname</span><span class="p">,</span> <span class="n">group</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;WELSPECS&quot;</span>
-        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">:</span>
             <span class="n">found_grupnet</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">grupnet_data</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">GRUPNETKEYS</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
@@ -330,10 +325,10 @@
                 <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
             <span class="n">gruptreerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">gruptreerecords</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">df</span></div>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">gruptreerecords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">dframe</span></div>
 
 
 <div class="viewcode-block" id="gruptree2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptree2dict">[docs]</a><span class="k">def</span> <span class="nf">gruptree2dict</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="s2">&quot;END&quot;</span><span class="p">,</span> <span class="n">welspecs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -351,25 +346,24 @@
 <span class="sd">    version.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">gruptree2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">gruptree2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">date</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">date</span> <span class="o">==</span> <span class="s2">&quot;END&quot;</span><span class="p">:</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">isoparse</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">isoparse</span><span class="p">(</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not understood&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not understood&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">date</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">date</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">date</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">date</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="gruptreedf2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptreedf2dict">[docs]</a><span class="k">def</span> <span class="nf">gruptreedf2dict</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<div class="viewcode-block" id="gruptreedf2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptreedf2dict">[docs]</a><span class="k">def</span> <span class="nf">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert list of edges into a</span>
 <span class="sd">    nested dictionary (tree), example:</span>
 
@@ -385,11 +379,11 @@
 <span class="sd">    Returns a list of nested dictionary, as we sometimes</span>
 <span class="sd">    have more than one root</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{}</span>
     <span class="n">subtrees</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
-    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;CHILD&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]))</span>
     <span class="k">for</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
         <span class="n">subtrees</span><span class="p">[</span><span class="n">parent</span><span class="p">][</span><span class="n">child</span><span class="p">]</span> <span class="o">=</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">child</span><span class="p">]</span>
@@ -402,20 +396,20 @@
     <span class="k">return</span> <span class="n">trees</span></div>
 
 
-<div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert a nested dictonary to a treelib Tree</span>
 <span class="sd">    object. This function is recursive</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        name: name of root node</span>
-<span class="sd">        d: nested dictonary of the children at the root.</span>
+<span class="sd">        nested_dict: nested dictonary of the children at the root.</span>
 <span class="sd">    Return:</span>
 <span class="sd">        treelib.Tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">tree</span> <span class="o">=</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">()</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">tree</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dict2treelib</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">child</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dict2treelib</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">[</span><span class="n">child</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">tree</span></div>
 
 
@@ -468,11 +462,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nothing to do. Set --output or --prettyprint&quot;</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">(),</span> <span class="n">startdate</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">startdate</span><span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">(),</span> <span class="n">startdate</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">startdate</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Date: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;M8[D]&quot;</span><span class="p">)))</span>
-            <span class="n">trees</span> <span class="o">=</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
+            <span class="n">trees</span> <span class="o">=</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
                 <span class="n">rootname</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">dict2treelib</span><span class="p">(</span><span class="n">rootname</span><span class="p">,</span> <span class="n">tree</span><span class="p">[</span><span class="n">rootname</span><span class="p">]))</span>
@@ -482,9 +476,9 @@
         <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
 
         <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 

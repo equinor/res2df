@@ -156,20 +156,20 @@
             
   <h1>Source code for ecl2df.rft</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Converter module for Eclipse RFT output files to Pandas Dataframes</span>
+<span class="sd">&quot;&quot;&quot;Converter module for Eclipse RFT output files to Pandas Dataframes</span>
 
 <span class="sd">If MULTISEG wells are found, the segment data associated to</span>
 <span class="sd">a connection is merged onto the same row as additional columns,</span>
 <span class="sd">assuming connections do not point to more than one segment.</span>
 
-<span class="sd">If ICD segments are detected (recognized as branches only</span>
-<span class="sd">containing one segment), they are merged into the same row that</span>
-<span class="sd">already contains connection data (CONxxxxx) and its segment data</span>
-<span class="sd">(now giving information for the conditions in the tubing).</span>
+<span class="sd">If ICD segments are detected (recognized as branches only containing</span>
+<span class="sd">one segment), they are merged into the same row that already contains</span>
+<span class="sd">connection data (CONxxxxx) and its segment data (now giving</span>
+<span class="sd">information for the conditions in the tubing).</span>
 
 <span class="sd">The columns representing SEGxxxxx data on ICD segments are renamed</span>
 <span class="sd">by adding the prefix &#39;ICD_&#39;</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
@@ -206,25 +206,28 @@
     <span class="p">)</span>  <span class="c1"># forward fill (because any record is associated to the previous TIME record)</span>
     <span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;Located </span><span class="si">{}</span><span class="s2"> RFT records at </span><span class="si">{}</span><span class="s2"> distinct dates&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">rftrecords</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
-        <span class="p">)</span>
+        <span class="s2">&quot;Located </span><span class="si">%s</span><span class="s2"> RFT records at </span><span class="si">%s</span><span class="s2"> distinct dates&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rftrecords</span><span class="p">)),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())),</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">rftrecords</span>
 
 
 <div class="viewcode-block" id="rft2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df">[docs]</a><span class="k">def</span> <span class="nf">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Construct the final dataframe of RFT data&quot;&quot;&quot;</span>
     <span class="n">rftrecords</span> <span class="o">=</span> <span class="n">_rftrecords2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">rftfile</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rftfile</span><span class="p">()</span>
 
-    <span class="c1"># This will be our end-product, all CONxxxxx data and SEGxxxxx data merged appropriately together.</span>
-    <span class="c1"># Index will be (date, wellname, connection index) rolled out.</span>
+    <span class="c1"># This will be our end-product, all CONxxxxx data and SEGxxxxx</span>
+    <span class="c1"># data merged appropriately together.  Index will be (date,</span>
+    <span class="c1"># wellname, connection index) rolled out.</span>
     <span class="n">rftdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="c1"># Loop over the TIME records and its associated data:</span>
     <span class="k">for</span> <span class="n">timerecordidx</span> <span class="ow">in</span> <span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
 
-        <span class="c1"># Pick out the headers (with row indices) for the data relevant to this TIME record:</span>
+        <span class="c1"># Pick out the headers (with row indices) for the data</span>
+        <span class="c1"># relevant to this TIME record:</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="n">rftrecords</span><span class="p">[</span><span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">timerecordidx</span><span class="p">]</span>
 
         <span class="n">dateidx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="o">.</span><span class="n">recordname</span> <span class="o">==</span> <span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -242,76 +245,90 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="c1"># Collect all the headers that have the same length as &#39;DEPTH&#39; (we could pick most others as well)</span>
-        <span class="c1"># This will be the number of cells that have data associated and we use this to safeguard</span>
-        <span class="c1"># that we do not make a non-rectangular dataset (by picking some datatype that does not refer</span>
-        <span class="c1"># to connections)</span>
+        <span class="c1"># Collect all the headers that have the same length as &#39;DEPTH&#39;</span>
+        <span class="c1"># (we could pick most others as well) This will be the number</span>
+        <span class="c1"># of cells that have data associated and we use this to</span>
+        <span class="c1"># safeguard that we do not make a non-rectangular dataset (by</span>
+        <span class="c1"># picking some datatype that does not refer to connections)</span>
 
         <span class="n">numberofrows</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="o">.</span><span class="n">recordname</span> <span class="o">==</span> <span class="s2">&quot;DEPTH&quot;</span><span class="p">][</span><span class="s2">&quot;recordlength&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numberofrows</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numberofrows</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="n">numberofrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numberofrows</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">{}</span><span class="s2"> has no data to extract at </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">well</span><span class="p">,</span> <span class="n">date</span><span class="p">))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> has no data to extract at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">well</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
             <span class="k">continue</span>
 
         <span class="c1"># These datatypes now align nicely into a matrix of numbers,</span>
         <span class="c1"># so we extract them into a pandas DataFrame</span>
-        <span class="n">CONheaders</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="o">.</span><span class="n">recordlength</span> <span class="o">==</span> <span class="n">numberofrows</span><span class="p">]</span><span class="o">.</span><span class="n">recordname</span>
+        <span class="n">con_headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="o">.</span><span class="n">recordlength</span> <span class="o">==</span> <span class="n">numberofrows</span><span class="p">]</span><span class="o">.</span><span class="n">recordname</span>
 
-        <span class="c1"># Temporary dataset for this (date, wellname) record, identified by timerecordidx</span>
-        <span class="n">CONdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-        <span class="c1"># Loop over the CONheaders:</span>
-        <span class="k">for</span> <span class="n">rftidx</span><span class="p">,</span> <span class="n">recordname</span> <span class="ow">in</span> <span class="n">CONheaders</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-            <span class="c1"># Extract CON-data and put it into the CONdata</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="n">recordname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rftfile</span><span class="p">[</span><span class="n">rftidx</span><span class="p">])</span>
+        <span class="c1"># Temporary dataset for this (date, wellname) record,</span>
+        <span class="c1"># identified by timerecordidx</span>
+        <span class="n">con_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="c1"># Loop over the con_headers:</span>
+        <span class="k">for</span> <span class="n">rftidx</span><span class="p">,</span> <span class="n">recordname</span> <span class="ow">in</span> <span class="n">con_headers</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="c1"># Extract CON-data and put it into the con_data</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="n">recordname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rftfile</span><span class="p">[</span><span class="n">rftidx</span><span class="p">])</span>
 
-        <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONIDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
+        <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONIDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
 
-        <span class="c1"># Set branch count to 1. If it is a multisegment well, this variable might get updated.</span>
+        <span class="c1"># Set branch count to 1. If it is a multisegment well, this</span>
+        <span class="c1"># variable might get updated.</span>
         <span class="n">numberofbranches</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="c1"># Process multisegment data (not necessarily the same number of rows as the connection data)</span>
-        <span class="c1"># Currently data for segments that are not associated with a connection will not be included.</span>
+        <span class="c1"># Process multisegment data (not necessarily the same number</span>
+        <span class="c1"># of rows as the connection data) Currently data for segments</span>
+        <span class="c1"># that are not associated with a connection will not be</span>
+        <span class="c1"># included.</span>
 
-        <span class="c1"># Ignore if wellmodel says MULTISEG but we cannot find any SEGxxxxx data in the record.</span>
-        <span class="k">if</span> <span class="n">wellmodel</span> <span class="o">==</span> <span class="s2">&quot;MULTISEG&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
-            <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">)]</span>
+        <span class="c1"># Ignore if wellmodel says MULTISEG but we cannot find any</span>
+        <span class="c1"># SEGxxxxx data in the record.</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">wellmodel</span> <span class="o">==</span> <span class="s2">&quot;MULTISEG&quot;</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">empty</span>
         <span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">{}</span><span class="s2"> is MULTISEG but has no SEG data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">well</span><span class="p">))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> is MULTISEG but has no SEG data&quot;</span><span class="p">,</span> <span class="n">well</span><span class="p">)</span>
             <span class="n">numberofrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
                 <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SEGDEPTH&quot;</span><span class="p">][</span><span class="s2">&quot;recordlength&quot;</span><span class="p">]</span>
             <span class="p">)</span>
-            <span class="n">SEGheaders</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span>
+            <span class="n">seg_headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span>
                 <span class="p">(</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">))</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordlength&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">numberofrows</span><span class="p">)</span>
             <span class="p">]</span><span class="o">.</span><span class="n">recordname</span>
 
-            <span class="n">SEGdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="n">seg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
             <span class="c1"># Loop over SEGheaders:</span>
-            <span class="k">for</span> <span class="n">rftidx</span><span class="p">,</span> <span class="n">recordname</span> <span class="ow">in</span> <span class="n">SEGheaders</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-                <span class="n">SEGdata</span><span class="p">[</span><span class="n">recordname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rftfile</span><span class="p">[</span><span class="n">rftidx</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">rftidx</span><span class="p">,</span> <span class="n">recordname</span> <span class="ow">in</span> <span class="n">seg_headers</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">seg_data</span><span class="p">[</span><span class="n">recordname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rftfile</span><span class="p">[</span><span class="n">rftidx</span><span class="p">])</span>
 
-            <span class="n">SEGdata</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SEGdata</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
+            <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
 
-            <span class="c1"># Determine well topology:</span>
-            <span class="c1"># The way ICDs are modelled complexifies this, as each ICD device must be put on a branch</span>
-            <span class="c1"># SEGNXT must be used for this, it points to the next segment downstream</span>
-            <span class="c1"># The next segment upsteam is not well defined (it can point to many segments)</span>
+            <span class="c1"># Determine well topology: The way ICDs are modelled</span>
+            <span class="c1"># complexifies this, as each ICD device must be put on a</span>
+            <span class="c1"># branch SEGNXT must be used for this, it points to the</span>
+            <span class="c1"># next segment downstream.  The next segment upsteam is</span>
+            <span class="c1"># not well defined (it can point to many segments)</span>
 
-            <span class="c1"># Leaf segments are those segments with no upstream segment</span>
-            <span class="c1"># Merge SEGIDX and SEGNXT, leaf segments now have NaN for SEGIDX_y after the merge:</span>
-            <span class="n">mergedSEGdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                <span class="n">SEGdata</span><span class="p">,</span> <span class="n">SEGdata</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGNXT&quot;</span>
+            <span class="c1"># Leaf segments are those segments with no upstream</span>
+            <span class="c1"># segment Merge SEGIDX and SEGNXT, leaf segments now have</span>
+            <span class="c1"># NaN for SEGIDX_y after the merge:</span>
+            <span class="n">merged_seg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">seg_data</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGNXT&quot;</span>
             <span class="p">)</span>
             <span class="c1"># We may compute leafsegments like this:</span>
-            <span class="c1"># leafsegments = mergedSEGdata[mergedSEGdata[&quot;SEGIDX_y&quot;] == numpy.nan]</span>
+            <span class="c1"># leafsegments = merged_seg_ata[merged_seg_data[&quot;SEGIDX_y&quot;] == numpy.nan]</span>
 
-            <span class="c1"># After having removed leaf segments, we can claim that the maximum value of SEGBRNO determines the</span>
-            <span class="c1"># number of well branches. This will fail if ICD segments are connected in a series, if you</span>
-            <span class="c1"># have such a setup, you are on your own (it will probably just be recognized as an extra branch)</span>
+            <span class="c1"># After having removed leaf segments, we can claim that</span>
+            <span class="c1"># the maximum value of SEGBRNO determines the number of</span>
+            <span class="c1"># well branches. This will fail if ICD segments are</span>
+            <span class="c1"># connected in a series, if you have such a setup, you are</span>
+            <span class="c1"># on your own (it will probably just be recognized as an</span>
+            <span class="c1"># extra branch)</span>
 
             <span class="n">numberofbranches</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
-                <span class="n">mergedSEGdata</span><span class="p">[</span><span class="o">~</span><span class="n">mergedSEGdata</span><span class="p">[</span><span class="s2">&quot;SEGIDX_y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span><span class="o">.</span><span class="n">SEGBRNO_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">merged_seg_data</span><span class="p">[</span><span class="o">~</span><span class="n">merged_seg_data</span><span class="p">[</span><span class="s2">&quot;SEGIDX_y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()][</span>
+                    <span class="s2">&quot;SEGBRNO_x&quot;</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
             <span class="p">)</span>
 
             <span class="c1"># After-note:</span>
@@ -321,88 +338,93 @@
             <span class="c1"># Now we can test if we have any ICD segments, that is the</span>
             <span class="c1"># case if we have any segments that have SEGBRNO higher than</span>
             <span class="c1"># the branch count</span>
-            <span class="n">icd_present</span> <span class="o">=</span> <span class="n">SEGdata</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">numberofbranches</span>
+            <span class="n">icd_present</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">numberofbranches</span>
 
             <span class="k">if</span> <span class="n">icd_present</span><span class="p">:</span>
-                <span class="n">icd_SEGdata</span> <span class="o">=</span> <span class="n">SEGdata</span><span class="p">[</span><span class="n">SEGdata</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">numberofbranches</span><span class="p">]</span>
-                <span class="c1"># Chop away the icd&#39;s from the SEGdata dataframe:</span>
-                <span class="n">SEGdata</span> <span class="o">=</span> <span class="n">SEGdata</span><span class="p">[</span><span class="n">SEGdata</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">numberofbranches</span><span class="p">]</span>
+                <span class="n">icd_seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">numberofbranches</span><span class="p">]</span>
+                <span class="c1"># Chop away the icd&#39;s from the seg_data dataframe:</span>
+                <span class="n">seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGBRNO&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">numberofbranches</span><span class="p">]</span>
 
                 <span class="c1"># Rename columns in icd dataset:</span>
-                <span class="n">icd_SEGdata</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ICD_&quot;</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">icd_SEGdata</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+                <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ICD_&quot;</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
                 <span class="c1"># Merge ICD segments to the CONxxxxx data. We will be</span>
-                <span class="c1"># connection-centric in the outputted rows, that is one</span>
-                <span class="c1"># row pr. connection. If the setup is with more than one</span>
-                <span class="c1"># segment pr. connection (e.g. reservoir cell), then we</span>
-                <span class="c1"># would have to be smarter. Either averaging the</span>
-                <span class="c1"># properties, or be segment-centric in the output.</span>
+                <span class="c1"># connection-centric in the outputted rows, that is</span>
+                <span class="c1"># one row pr. connection. If the setup is with more</span>
+                <span class="c1"># than one segment pr. connection (e.g. reservoir</span>
+                <span class="c1"># cell), then we would have to be smarter. Either</span>
+                <span class="c1"># averaging the properties, or be segment-centric in</span>
+                <span class="c1"># the output.</span>
                 <span class="c1">#</span>
-                <span class="c1"># Petrel happily puts many ICD segments to the same connection. This</span>
-                <span class="c1"># setup is a bug, with partially unknown effects when simulated in Eclipse</span>
-                <span class="c1"># Should we warn the user??</span>
+                <span class="c1"># Petrel happily puts many ICD segments to the same</span>
+                <span class="c1"># connection. This setup is a bug, with partially</span>
+                <span class="c1"># unknown effects when simulated in Eclipse Should we</span>
+                <span class="c1"># warn the user??</span>
 
-                <span class="n">CONicd_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                    <span class="n">CONdata</span><span class="p">,</span> <span class="n">icd_SEGdata</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGBRNO&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONBRNO&quot;</span>
+                <span class="n">con_icd_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                    <span class="n">con_data</span><span class="p">,</span> <span class="n">icd_seg_data</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGBRNO&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONBRNO&quot;</span>
                 <span class="p">)</span>
 
                 <span class="c1"># Merge SEGxxxxx to icd_conf_data</span>
-                <span class="n">CONSEG_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                    <span class="n">CONicd_data</span><span class="p">,</span> <span class="n">SEGdata</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGNXT&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span>
+                <span class="n">conseg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                    <span class="n">con_icd_data</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGNXT&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span>
                 <span class="p">)</span>
 
                 <span class="c1"># Add more data:</span>
-                <span class="n">CONSEG_data</span><span class="p">[</span><span class="s2">&quot;CompletionDP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">nonzeroPRES</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONSEG_data</span><span class="p">[</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
-                    <span class="n">CONSEG_data</span><span class="p">[</span><span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">conseg_data</span><span class="p">[</span><span class="s2">&quot;CompletionDP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">nonzero_pres</span> <span class="o">=</span> <span class="p">(</span><span class="n">conseg_data</span><span class="p">[</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>
+                    <span class="n">conseg_data</span><span class="p">[</span><span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
                 <span class="p">)</span>
-                <span class="n">CONSEG_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzeroPRES</span><span class="p">,</span> <span class="s2">&quot;CompletionDP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">CONSEG_data</span><span class="p">[</span><span class="n">nonzeroPRES</span><span class="p">][</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span>
-                    <span class="o">-</span> <span class="n">CONSEG_data</span><span class="p">[</span><span class="n">nonzeroPRES</span><span class="p">][</span><span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span>
+                <span class="n">conseg_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">&quot;CompletionDP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">conseg_data</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">][</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span>
+                    <span class="o">-</span> <span class="n">conseg_data</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">][</span><span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">icd_present</span><span class="p">:</span>
 
                 <span class="c1"># Merge SEGxxxxx to CONxxxxx data if we can find data that match them</span>
-                <span class="k">if</span> <span class="s2">&quot;CONSEGNO&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span> <span class="ow">and</span> <span class="s2">&quot;SEGIDX&quot;</span> <span class="ow">in</span> <span class="n">SEGdata</span><span class="p">:</span>
-                    <span class="n">CONSEG_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                        <span class="n">CONdata</span><span class="p">,</span> <span class="n">SEGdata</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span>
+                <span class="k">if</span> <span class="s2">&quot;CONSEGNO&quot;</span> <span class="ow">in</span> <span class="n">con_data</span> <span class="ow">and</span> <span class="s2">&quot;SEGIDX&quot;</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
+                    <span class="n">conseg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                        <span class="n">con_data</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Give up, you will get to distinct blocks in your CSV file when we</span>
-                    <span class="n">CONSEG_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">CONdata</span><span class="p">,</span> <span class="n">SEGdata</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">conseg_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">con_data</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="c1"># Overwrite the CONdata structure with the augmented data structure including segments and potential ICD.</span>
-            <span class="n">CONdata</span> <span class="o">=</span> <span class="n">CONSEG_data</span>
-        <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Set a default so that the column always exists</span>
+            <span class="c1"># Overwrite the con_data structure with the augmented data</span>
+            <span class="c1"># structure including segments and potential ICD.</span>
+            <span class="n">con_data</span> <span class="o">=</span> <span class="n">conseg_data</span>
+        <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Set a default so that the column always exists</span>
         <span class="k">if</span> <span class="p">(</span>
-            <span class="s2">&quot;CONPRES&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">columns</span>
+            <span class="s2">&quot;CONPRES&quot;</span> <span class="ow">in</span> <span class="n">con_data</span><span class="o">.</span><span class="n">columns</span>
         <span class="p">):</span>  <span class="c1"># Only try to calculate this if CONPRES is actually nonzero.</span>
-            <span class="n">CONdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">CONdata</span><span class="o">.</span><span class="n">CONPRES</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">CONdata</span><span class="p">[</span><span class="n">CONdata</span><span class="o">.</span><span class="n">CONPRES</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>
-                <span class="o">-</span> <span class="n">CONdata</span><span class="p">[</span><span class="n">CONdata</span><span class="o">.</span><span class="n">CONPRES</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span>
+            <span class="n">con_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">con_data</span><span class="o">.</span><span class="n">CONPRES</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">con_data</span><span class="p">[</span><span class="n">con_data</span><span class="o">.</span><span class="n">CONPRES</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>
+                <span class="o">-</span> <span class="n">con_data</span><span class="p">[</span><span class="n">con_data</span><span class="o">.</span><span class="n">CONPRES</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span>
             <span class="p">)</span>
 
-        <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
-        <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span>
-        <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;WELLMODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wellmodel</span>
+        <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span>
+        <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;WELLMODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wellmodel</span>
 
         <span class="c1"># Replicate S3Graf calculated data:</span>
-        <span class="k">if</span> <span class="s2">&quot;PRESSURE&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONBPRES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>  <span class="c1"># Just an alias</span>
-        <span class="k">if</span> <span class="s2">&quot;CONLENEN&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;CONLENST&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONMD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENST</span> <span class="o">+</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENEN</span><span class="p">)</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONLENTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENEN</span> <span class="o">-</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENST</span>
+        <span class="k">if</span> <span class="s2">&quot;PRESSURE&quot;</span> <span class="ow">in</span> <span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONBPRES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>  <span class="c1"># Just an alias</span>
+        <span class="k">if</span> <span class="s2">&quot;CONLENEN&quot;</span> <span class="ow">in</span> <span class="n">con_data</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;CONLENST&quot;</span> <span class="ow">in</span> <span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONMD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">con_data</span><span class="o">.</span><span class="n">CONLENST</span> <span class="o">+</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONLENEN</span><span class="p">)</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONLENTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONLENEN</span> <span class="o">-</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONLENST</span>
 
-        <span class="k">if</span> <span class="s2">&quot;CONORAT&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;CONLENTH&quot;</span> <span class="ow">in</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONORATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONORAT</span> <span class="o">/</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENTH</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONWRATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONWRAT</span> <span class="o">/</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENTH</span>
-            <span class="n">CONdata</span><span class="p">[</span><span class="s2">&quot;CONGRATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONGRAT</span> <span class="o">/</span> <span class="n">CONdata</span><span class="o">.</span><span class="n">CONLENTH</span>
+        <span class="k">if</span> <span class="s2">&quot;CONORAT&quot;</span> <span class="ow">in</span> <span class="n">con_data</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;CONLENTH&quot;</span> <span class="ow">in</span> <span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONORATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONORAT</span> <span class="o">/</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONLENTH</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONWRATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONWRAT</span> <span class="o">/</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONLENTH</span>
+            <span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONGRATS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONGRAT</span> <span class="o">/</span> <span class="n">con_data</span><span class="o">.</span><span class="n">CONLENTH</span>
 
-        <span class="n">rftdata</span> <span class="o">=</span> <span class="n">rftdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CONdata</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">rftdata</span> <span class="o">=</span> <span class="n">rftdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">con_data</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="c1"># Fill empty cells with zeros. This is to avoid Spotfire interpreting columns with numbers as strings. An alternative solution</span>
-    <span class="c1"># that keeps NaN would be to add a second row in the output containing the datatype</span>
+    <span class="c1"># Fill empty cells with zeros. This is to avoid Spotfire</span>
+    <span class="c1"># interpreting columns with numbers as strings. An alternative</span>
+    <span class="c1"># solution that keeps NaN would be to add a second row in the</span>
+    <span class="c1"># output containing the datatype</span>
     <span class="n">rftdata</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># The HOSTGRID data seems often to be empty, check if it is and delete if so:</span>
@@ -470,15 +492,20 @@
 
 <span class="c1">## Vector	Description</span>
 <span class="c1">## CONDEPTH	Depth at the centre of each connection in the well</span>
-<span class="c1">## CONLENST	Length down the tubing from the BH reference point to the start of the connection</span>
-<span class="c1">## CONLENEN	Length down the tubing from the BH reference point to the far end of the connection</span>
+<span class="c1">## CONLENST	Length down the tubing from the BH reference</span>
+<span class="c1">##              point to the start of the connection</span>
+<span class="c1">## CONLENEN	Length down the tubing from the BH reference point to the</span>
+<span class="c1">##              far end of the connection</span>
 <span class="c1">## CONPRES	Pressure in the wellbore at the connection</span>
 <span class="c1">## CONORAT	Oil production rate of the connection at surface conditions</span>
 <span class="c1">## CONWRAT	Water production rate of the connection at surface conditions</span>
 <span class="c1">## CONGRAT	Gas production rate of the connection at surface conditions</span>
-<span class="c1">## CONOTUB	Oil flow rate through the tubing at the start of the connection at surface conditions</span>
-<span class="c1">## CONWTUB	Water flow rate through the tubing at the start of the connection at surface conditions</span>
-<span class="c1">## CONGTUB	Gas flow rate through the tubing at the start of the connection at surface conditions</span>
+<span class="c1">## CONOTUB	Oil flow rate through the tubing at the start of the</span>
+<span class="c1">##              connection at surface conditions</span>
+<span class="c1">## CONWTUB	Water flow rate through the tubing at the start of the</span>
+<span class="c1">##              connection at surface conditions</span>
+<span class="c1">## CONGTUB	Gas flow rate through the tubing at the start of the</span>
+<span class="c1">##              connection at surface conditions</span>
 <span class="c1">## CONVTUB	Volumetric flow rate of the mixture at the start of the connection</span>
 <span class="c1">## CONFAC	Connection transmissibility factor</span>
 <span class="c1">## CONKH	Connection Kh value</span>
@@ -489,7 +516,8 @@
 <span class="c1">## CONJPOS	J location of the connection</span>
 <span class="c1">## CONKPOS	K location of the connection</span>
 <span class="c1">## CONBDEPH	Depth of the grid block of the connection</span>
-<span class="c1">## CONBPRES	Pressure of the grid block of the connection (Copy of the PRESSURE data)</span>
+<span class="c1">## CONBPRES	Pressure of the grid block of the connection</span>
+<span class="c1">##              (Copy of the PRESSURE data)</span>
 <span class="c1">## CONBSWAT	Water saturation of the grid block of the connection</span>
 <span class="c1">## CONBSGAS	Gas saturation of the grid block of the connection</span>
 <span class="c1">## CONBSOIL	Oil saturation of the grid block of the connection</span>
@@ -507,10 +535,14 @@
 <span class="c1">##</span>
 <span class="c1">## Vector	Description</span>
 <span class="c1">## SEGDEPTH	Depth at the far end of each segment</span>
-<span class="c1">## SEGLENST	Length down the tubing from the zero tubing length reference point to the start of the segment</span>
-<span class="c1">## SEGLELEN	Length down the tubing from the zero tubing length reference point to the far end of the segment</span>
-<span class="c1">## SEGXCORD	X-coordinate at the far end of the segment (as entered by the 11th item of the WELSEGS record)</span>
-<span class="c1">## SEGXCORD	Y-coordinate at the far end of the segment (as entered by the 12th item of the WELSEGS record)</span>
+<span class="c1">## SEGLENST	Length down the tubing from the zero tubing length</span>
+<span class="c1">##              reference point to the start of the segment</span>
+<span class="c1">## SEGLELEN	Length down the tubing from the zero tubing length</span>
+<span class="c1">##              reference point to the far end of the segment</span>
+<span class="c1">## SEGXCORD	X-coordinate at the far end of the segment</span>
+<span class="c1">##              (as entered by the 11th item of the WELSEGS record)</span>
+<span class="c1">## SEGXCORD	Y-coordinate at the far end of the segment</span>
+<span class="c1">##              (as entered by the 12th item of the WELSEGS record)</span>
 <span class="c1">## SEGPRES	Pressure in the wellbore at the far end of the segment</span>
 <span class="c1">## SEGORAT	Oil flow rate through the segment through its near end</span>
 <span class="c1">## SEGWRAT	Water flow rate through the segment through its near end</span>

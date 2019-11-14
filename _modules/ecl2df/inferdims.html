@@ -212,6 +212,7 @@
     <span class="p">]</span>
 
     <span class="n">max_guess</span> <span class="o">=</span> <span class="mi">640</span>  <span class="c1"># This ought to be enough for everybody</span>
+    <span class="n">dimcountguess</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">dimcountguess</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_guess</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">deck_candidate</span> <span class="o">=</span> <span class="n">inject_dimcount</span><span class="p">(</span><span class="n">deckstring</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">,</span> <span class="n">dimcountguess</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>

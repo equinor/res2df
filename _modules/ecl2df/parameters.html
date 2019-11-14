@@ -159,12 +159,12 @@
 <span class="sd">related to Eclipse runs&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 
@@ -272,7 +272,7 @@
             <span class="c1"># yaml happily parses txt files into a single line, don&#39;t want that.</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">yaml_error</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> was not parseable with yaml, trying json.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with yaml, trying json.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="n">json_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
@@ -282,9 +282,7 @@
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">json_error</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="n">txt_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
@@ -294,9 +292,7 @@
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as txt&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">txt_error</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> wat not parseable as txt, no more options&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> wat not parseable as txt, no more options&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> could not be parsed as yaml, json or txt&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>

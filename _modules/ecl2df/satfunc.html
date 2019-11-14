@@ -284,7 +284,7 @@
             <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
 
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">KEYWORD_COLUMNS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">KEYWORD_COLUMNS</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
             <span class="n">satnum</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">for</span> <span class="n">deckrecord</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="n">keyword</span><span class="p">]:</span>
@@ -294,17 +294,17 @@
                 <span class="n">column_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">])</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="n">column_count</span><span class="p">:</span>
                     <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Inconsistent data length or bug&quot;</span><span class="p">)</span>
-                    <span class="k">return</span>
+                    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
                 <span class="n">satpoints</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">column_count</span><span class="p">)</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
                     <span class="n">columns</span><span class="o">=</span><span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span>
                     <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">satpoints</span><span class="p">,</span> <span class="n">column_count</span><span class="p">),</span>
                 <span class="p">)</span>
-                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">satnum</span>
-                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keyword</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">,</span> <span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">]]</span>
+                <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">satnum</span>
+                <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keyword</span>
+                <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">,</span> <span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">]]</span>
                 <span class="n">satnum</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
 
     <span class="n">nonempty_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">nonempty_frames</span><span class="p">:</span>

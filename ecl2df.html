@@ -194,7 +194,8 @@
 <dl class="function">
 <dt id="ecl2df.common.parse_ecl_month">
 <code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">parse_ecl_month</code><span class="sig-paren">(</span><em class="sig-param">eclmonth</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_ecl_month"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.parse_ecl_month" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Translate Eclipse month strings to integer months</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-ecl2df.compdat">
@@ -218,7 +219,8 @@ the term is returned unchanged.</p>
 <dl class="function">
 <dt id="ecl2df.compdat.deck2compdatsegsdfs">
 <code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">deck2compdatsegsdfs</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">start_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#deck2compdatsegsdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.deck2compdatsegsdfs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated function name</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.compdat.deck2dfs">
@@ -246,11 +248,13 @@ like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</p></li>
 <dl class="function">
 <dt id="ecl2df.compdat.postprocess">
 <code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#postprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.postprocess" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Postprocessing of the compdat data, merging.</p>
+<p>This function is NOT FINISHED</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.compdat.unrolldf">
-<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">unrolldf</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">start_column='K1'</em>, <em class="sig-param">end_column='K2'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#unrolldf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.unrolldf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">unrolldf</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">start_column='K1'</em>, <em class="sig-param">end_column='K2'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#unrolldf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.unrolldf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unroll dataframes, where some column pairs indicate
 a range where data applies.</p>
 <p>After unrolling, column pairs with ranges are transformed
@@ -272,7 +276,7 @@ into multiple rows, with no ranges.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Dataframe to be unrolled</p></li>
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Dataframe to be unrolled</p></li>
 <li><p><strong>start_column</strong> (<em>str</em>) – Column name that contains the start of
 a range.</p></li>
 <li><p><strong>end_column</strong> (<em>str</em>) – Column name that contains the corresponding
@@ -341,6 +345,7 @@ in ecl2df</p>
 </div>
 <div class="section" id="module-ecl2df.eclfiles">
 <span id="ecl2df-eclfiles-module"></span><h2>ecl2df.eclfiles module<a class="headerlink" href="#module-ecl2df.eclfiles" title="Permalink to this headline">¶</a></h2>
+<p>Module to hold Eclipse input and output filenames</p>
 <dl class="class">
 <dt id="ecl2df.eclfiles.EclFiles">
 <em class="property">class </em><code class="sig-prename descclassname">ecl2df.eclfiles.</code><code class="sig-name descname">EclFiles</code><span class="sig-paren">(</span><em class="sig-param">eclbase</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles" title="Permalink to this definition">¶</a></dt>
@@ -445,7 +450,8 @@ should be traversed.</p>
 <dl class="function">
 <dt id="ecl2df.equil.deck2equildf">
 <code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">deck2equildf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#deck2equildf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.deck2equildf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated function name</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.equil.deck2df">
@@ -514,12 +520,14 @@ a DataFrame</p>
 <dl class="function">
 <dt id="ecl2df.faults.deck2faultsdf">
 <code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">deck2faultsdf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#deck2faultsdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.deck2faultsdf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated function name</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.faults.deck2df">
 <code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">deck2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#deck2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.deck2df" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Produce a dataframe of fault data from a deck</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.faults.fill_parser">
@@ -680,12 +688,12 @@ glob-style wildcards supported</p></li>
 
 <dl class="function">
 <dt id="ecl2df.grid.dropconstants">
-<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">dropconstants</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">alwayskeep=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#dropconstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.dropconstants" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">dropconstants</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">alwayskeep=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#dropconstants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.dropconstants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop/delete constant columns from a dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – pd.DataFrame</p></li>
+<li><p><strong>dframe</strong> – pd.DataFrame</p></li>
 <li><p><strong>alwayskeep</strong> – string or list of strings of columns to keep
 anyway.</p></li>
 </ul>
@@ -737,7 +745,8 @@ glob-style wildcards supported</p></li>
 <dl class="function">
 <dt id="ecl2df.gruptree.gruptree2df">
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree2df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">startdate=None</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree2df" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated function name</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.gruptree.deck2df">
@@ -771,7 +780,7 @@ version.</p>
 
 <dl class="function">
 <dt id="ecl2df.gruptree.gruptreedf2dict">
-<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptreedf2dict</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptreedf2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptreedf2dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptreedf2dict</code><span class="sig-paren">(</span><em class="sig-param">dframe</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptreedf2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptreedf2dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert list of edges into a
 nested dictionary (tree), example:</p>
 <dl class="simple">
@@ -789,14 +798,14 @@ have more than one root</p>
 
 <dl class="function">
 <dt id="ecl2df.gruptree.dict2treelib">
-<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">dict2treelib</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#dict2treelib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.dict2treelib" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">dict2treelib</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">nested_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#dict2treelib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.dict2treelib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a nested dictonary to a treelib Tree
 object. This function is recursive</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – name of root node</p></li>
-<li><p><strong>d</strong> – nested dictonary of the children at the root.</p></li>
+<li><p><strong>nested_dict</strong> – nested dictonary of the children at the root.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1083,16 +1092,17 @@ warned.</p></li>
 <p>If MULTISEG wells are found, the segment data associated to
 a connection is merged onto the same row as additional columns,
 assuming connections do not point to more than one segment.</p>
-<p>If ICD segments are detected (recognized as branches only
-containing one segment), they are merged into the same row that
-already contains connection data (CONxxxxx) and its segment data
-(now giving information for the conditions in the tubing).</p>
+<p>If ICD segments are detected (recognized as branches only containing
+one segment), they are merged into the same row that already contains
+connection data (CONxxxxx) and its segment data (now giving
+information for the conditions in the tubing).</p>
 <p>The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix ‘<a href="#id3"><span class="problematic" id="id4">ICD_</span></a>’</p>
 <dl class="function">
 <dt id="ecl2df.rft.rft2df">
 <code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">rft2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#rft2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.rft2df" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Construct the final dataframe of RFT data</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.rft.fill_parser">
@@ -1364,7 +1374,8 @@ with arguments</p>
 <dl class="function">
 <dt id="ecl2df.wcon.deck2wcondf">
 <code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">deck2wcondf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#deck2wcondf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.deck2wcondf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated function name</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="ecl2df.wcon.deck2df">

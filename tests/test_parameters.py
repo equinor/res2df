@@ -25,6 +25,8 @@ def test_parameters():
 
     parameterstxt = os.path.join(eclfiles.get_path(), "parameters.txt")
     if os.path.exists(parameterstxt):
+        # If this exists, it is a remnant from test code that has
+        # crashed. It should NOT be in git.
         os.unlink(parameterstxt)
     with open(parameterstxt, "w") as pfile:
         pfile.write("FOO 1\nBAR 3")

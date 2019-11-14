@@ -158,6 +158,15 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Common functions for ecl2df modules</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
 <div class="viewcode-block" id="parse_ecl_month"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_ecl_month">[docs]</a><span class="k">def</span> <span class="nf">parse_ecl_month</span><span class="p">(</span><span class="n">eclmonth</span><span class="p">):</span>
@@ -178,6 +187,40 @@
         <span class="s2">&quot;DEC&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">eclmonth2num</span><span class="p">[</span><span class="n">eclmonth</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="merge_zones"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.merge_zones">[docs]</a><span class="k">def</span> <span class="nf">merge_zones</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zonedict</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;ZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Merge in a column with zone names, from a dictionary mapping</span>
+<span class="sd">    k-index to zone name</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): Dataframe where we should augment a column</span>
+<span class="sd">        zonedict (dict): Dictionary with integer keys pointing to strings</span>
+<span class="sd">            with zone names.</span>
+<span class="sd">        zoneheader (str): Name of the result column merged in,</span>
+<span class="sd">            default: ZONE</span>
+<span class="sd">        kname (str): Column header in your dataframe that maps to dictionary keys.</span>
+<span class="sd">            default K1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zonedict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zoneheader</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">zonedict</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Can&#39;t merge in empty zone information&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">if</span> <span class="n">zoneheader</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Column name </span><span class="si">%s</span><span class="s2"> already exists, refusing to merge in any more&quot;</span><span class="p">,</span> <span class="n">zoneheader</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">if</span> <span class="n">kname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Can&#39;t merge on non-existing column </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="n">zone_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">zonedict</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">zoneheader</span><span class="p">])</span>
+    <span class="n">zone_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span>
+    <span class="n">zone_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zone_df</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">kname</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

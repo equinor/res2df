@@ -170,7 +170,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">parse_ecl_month</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">parse_ecl_month</span><span class="p">,</span> <span class="n">merge_zones</span>
 
 
 <span class="c1"># Sunbeam terms:</span>
@@ -515,17 +515,28 @@
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
     <span class="n">dfs</span> <span class="o">=</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
-    <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;compdat.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">]</span>
+    <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zones&quot;</span><span class="p">)</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">)</span>
+    <span class="n">compdat_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPSEGS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;compsegs.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;WELSEGS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">unrolldf</span><span class="p">(</span><span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">())[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">)</span></div>
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">)</span>
+
+    <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zonemap into compdat&quot;</span><span class="p">)</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">compdat_df</span></div>
 </pre></div>
 
            </div>

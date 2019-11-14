@@ -185,6 +185,8 @@
 <span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="k">import</span> <span class="n">EclFile</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
 
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">merge_zones</span>
+
 
 <div class="viewcode-block" id="rstdates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rstdates">[docs]</a><span class="k">def</span> <span class="nf">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
@@ -398,6 +400,11 @@
 
     <span class="c1"># Column names should be uppercase</span>
     <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+    <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zonemap into grid&quot;</span><span class="p">)</span>
+        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">grid_df</span></div>
 

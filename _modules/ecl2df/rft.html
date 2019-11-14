@@ -184,6 +184,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="k">import</span> <span class="n">EclFiles</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">merge_zones</span>
 
 <span class="c1"># logging.basicConfig(level=logging.DEBUG)</span>
 
@@ -432,6 +433,14 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rftdata</span><span class="o">.</span><span class="n">HOSTGRID</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rftdata</span><span class="o">.</span><span class="n">HOSTGRID</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">rftdata</span><span class="p">[</span><span class="s2">&quot;HOSTGRID&quot;</span><span class="p">]</span>
+
+    <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;K&quot;</span> <span class="ow">in</span> <span class="n">rftdata</span><span class="p">:</span>
+            <span class="n">kname</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kname</span> <span class="o">=</span> <span class="s2">&quot;CONKPOS&quot;</span>
+        <span class="n">rftdata</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">rftdata</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="n">kname</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">rftdata</span></div>
 

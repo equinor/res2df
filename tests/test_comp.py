@@ -19,8 +19,10 @@ SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_histo
 
 
 def test_df():
+    """Test main dataframe API, only testing that something comes out"""
     eclfiles = EclFiles(DATAFILE)
     compdat_df = compdat.df(eclfiles)
+    assert not compdat_df.empty
     assert "ZONE" in compdat_df
     assert "K1" in compdat_df
     assert "WELL" in compdat_df

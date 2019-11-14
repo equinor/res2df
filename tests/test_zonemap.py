@@ -15,9 +15,10 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_stdzoneslyr():
-    ef = ecl2df.EclFiles(DATAFILE)
+    """Test that we can read zones if the zonemap is in a standard location"""
+    eclfiles = ecl2df.EclFiles(DATAFILE)
 
-    zonemap = ef.get_zonemap()
+    zonemap = eclfiles.get_zonemap()
     assert isinstance(zonemap, dict)
     assert zonemap[3] == "UpperReek"
     assert zonemap[10] == "MidReek"
@@ -32,6 +33,7 @@ def test_stdzoneslyr():
 
 
 def test_nonstandardzones(tmpdir):
+    """Test that we can read zones from a specific filename"""
     zonefile = tmpdir / "formations.lyr"
     zonefilecontent = """
 -- foo
@@ -41,13 +43,14 @@ Raude    20-30
 # Difficult quote parsing above, might not run in ResInsight.
 """
     zonefile.write(zonefilecontent)
-    ef = ecl2df.EclFiles(DATAFILE)
-    zonemap = ef.get_zonemap(str(zonefile))
+    eclfiles = ecl2df.EclFiles(DATAFILE)
+    zonemap = eclfiles.get_zonemap(str(zonefile))
     assert zonemap[1] == "Eiriksson"
 
 
 def test_nonexistingzones():
-    ef = ecl2df.EclFiles(DATAFILE)
-    zonemap = ef.get_zonemap("foobar")
+    """Test with non-existing zonemap"""
+    eclfiles = ecl2df.EclFiles(DATAFILE)
+    zonemap = eclfiles.get_zonemap("foobar")
     # (we got a warning and an empty dict)
     assert not zonemap

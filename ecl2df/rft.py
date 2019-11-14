@@ -243,7 +243,7 @@ def rft2df(eclfiles):
             CONdata["CONWRATS"] = CONdata.CONWRAT / CONdata.CONLENTH
             CONdata["CONGRATS"] = CONdata.CONGRAT / CONdata.CONLENTH
 
-        rftdata = rftdata.append(CONdata, ignore_index=True)
+        rftdata = rftdata.append(CONdata, ignore_index=True, sort=False)
 
     # Fill empty cells with zeros. This is to avoid Spotfire interpreting columns with numbers as strings. An alternative solution
     # that keeps NaN would be to add a second row in the output containing the datatype

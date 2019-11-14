@@ -224,9 +224,8 @@ class EclFiles(object):
             if filename_defaulted:
                 # No warnings when the default filename is not there.
                 return {}
-            else:
-                logging.warning("Zonefile %s not found, ignoring", fullpath)
-                return {}
+            logging.warning("Zonefile %s not found, ignoring", fullpath)
+            return {}
 
         zonelines = open(fullpath).readlines()
         zonelines = [line.strip() for line in zonelines]
@@ -237,9 +236,9 @@ class EclFiles(object):
         zonemap = {}
         for line in zonelines:
             (layername, interval) = shlex.split(line)
-            (k0, k1) = interval.strip().split("-")
-            for k in range(int(k0), int(k1) + 1):
-                zonemap[k] = layername
+            (k_0, k_1) = interval.strip().split("-")
+            for k_idx in range(int(k_0), int(k_1) + 1):
+                zonemap[k_idx] = layername
         return zonemap
 
 

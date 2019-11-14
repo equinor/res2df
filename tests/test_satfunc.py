@@ -37,6 +37,7 @@ def test_satfunc2df():
 
 
 def test_str2df():
+    """Test parsing of a direct string"""
     swofstr = """
 SWOF
  0 0 1 1
@@ -88,6 +89,7 @@ SWOF
 
 
 def test_sgof_satnuminferrer():
+    """Test inferring of SATNUMS in SGOF strings"""
     sgofstr = """
 SGOF
   0 0 1 1

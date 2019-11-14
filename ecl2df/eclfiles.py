@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Module to hold Eclipse input and output filenames
+"""
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
@@ -7,6 +9,7 @@ from __future__ import division
 import os
 import errno
 import logging
+import shlex
 
 import sunbeam.deck
 
@@ -185,6 +188,60 @@ class EclFiles(object):
     def get_rstfilename(self):
         """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
+
+    def get_zonemap(self, filename=None):
+        """Return a dictionary from (int) K layers in the simgrid to strings
+
+        Typical usage is to map from grid layer to zone names.
+
+        The layer filename must currently follow format
+
+          'ZoneA' 1-4
+          'ZoneB' 5-10
+
+        where the single quotes are optional for zones without spaces.
+        Write single layer zones as 11-11. NB: ResInsight requires single
+        quotes always.
+
+        Args:
+            filename (str): Name of file. If relative path, relative to DATA
+                file location. If nonexisting file, an empty dict will be
+                returned and a warning issued.
+
+        Returns:
+            dict, integer keys which are the K layers. Every layer mentioned
+                in the interval in the input file is present. Can be empty.
+        """
+        if not filename:
+            filename_defaulted = True
+            filename = "zones.lyr"
+        else:
+            filename_defaulted = False
+        assert isinstance(filename, str)
+        if not os.path.isabs(filename):
+            fullpath = os.path.join(self.get_path(), filename)
+        else:
+            fullpath = filename
+        if not os.path.exists(fullpath):
+            if filename_defaulted:
+                # No warnings when the default filename is not there.
+                return {}
+            logging.warning("Zonefile %s not found, ignoring", fullpath)
+            return {}
+
+        zonelines = open(fullpath).readlines()
+        zonelines = [line.strip() for line in zonelines]
+        zonelines = [line for line in zonelines if not line.startswith("--")]
+        zonelines = [line for line in zonelines if not line.startswith("#")]
+        zonelines = filter(len, zonelines)
+
+        zonemap = {}
+        for line in zonelines:
+            (layername, interval) = shlex.split(line)
+            (k_0, k_1) = interval.strip().split("-")
+            for k_idx in range(int(k_0), int(k_1) + 1):
+                zonemap[k_idx] = layername
+        return zonemap
 
 
 def rreplace(pat, sub, string):

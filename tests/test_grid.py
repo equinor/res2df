@@ -35,7 +35,7 @@ def test_gridgeometry2df():
     assert "Y" in grid_geom
     assert "Z" in grid_geom
     assert "VOLUME" in grid_geom
-
+    assert "ZONE" in grid_geom
 
 def test_wrongfile():
     try:

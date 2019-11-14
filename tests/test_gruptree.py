@@ -36,6 +36,7 @@ def test_gruptree2df():
 
 
 def test_str2df():
+    """Test when we send in a string directly"""
     schstr = """
 GRUPTREE
  'OPWEST' 'OP' /

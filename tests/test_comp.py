@@ -18,6 +18,16 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
 
 
+def test_df():
+    """Test main dataframe API, only testing that something comes out"""
+    eclfiles = EclFiles(DATAFILE)
+    compdat_df = compdat.df(eclfiles)
+    assert not compdat_df.empty
+    assert "ZONE" in compdat_df
+    assert "K1" in compdat_df
+    assert "WELL" in compdat_df
+
+
 def test_comp2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -107,6 +117,7 @@ WSEGVALV
 
 
 def test_tstep():
+    """Test with TSTEP present"""
     schstr = """
 DATES
    1 MAY 2001 /
@@ -140,6 +151,7 @@ COMPDAT
 
 
 def test_unrollcompdatk1k2():
+    """Test unrolling of k1-k2 ranges in COMPDAT"""
     schstr = """
 COMPDAT
   -- K1 to K2 is a range of 11 layers, should be automatically
@@ -159,6 +171,7 @@ COMPDAT
 
 
 def test_unrollwelsegs():
+    """Test unrolling of welsegs."""
     schstr = """
 WELSEGS
   -- seg_start to seg_end (two first items in second record) is a range of
@@ -175,7 +188,7 @@ WELSEGS
 
 
 def test_unrollbogus():
-    # Giving in empty dataframe, should not crash.
+    """Giving in empty dataframe, should not crash."""
     assert compdat.unrolldf(pd.DataFrame).empty
 
     bogusdf = pd.DataFrame([0, 1, 4], [0, 2, 5])
@@ -204,5 +217,6 @@ def test_main_subparsers():
 
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
+    assert "ZONE" in disk_df
     assert not disk_df.empty
     os.remove(tmpcsvfile)

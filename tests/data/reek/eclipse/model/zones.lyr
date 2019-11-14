@@ -1,0 +1,12 @@
+-- Comment
+   -- Comment with whitespace
+-- Next line is intentionally empty:
+
+'UpperReek' 1-5
+'MidReek' 6-10
+'LowerReek' 11-14
+
+-- Need to support zone names with spaces
+'Aquifer Way Down' 15-15
+
+# also support alternative comment character

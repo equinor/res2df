@@ -2,12 +2,12 @@
 related to Eclipse runs"""
 
 import os
+import logging
 
 import json
 import yaml
 import pandas as pd
 
-import logging
 
 from ecl2df.eclfiles import EclFiles
 
@@ -115,7 +115,7 @@ def load(filename):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
     except Exception as yaml_error:
-        logging.debug("{} was not parseable with yaml, trying json.".format(filename))
+        logging.debug("%s was not parseable with yaml, trying json.", filename)
 
     json_error = ""
     if not params_dict:
@@ -125,9 +125,7 @@ def load(filename):
             assert isinstance(params_dict, dict)
             logging.debug(" - ok, parsed as yaml")
         except Exception as json_error:
-            logging.debug(
-                "{} was not parseable with json, trying txt.".format(filename)
-            )
+            logging.debug("%s was not parseable with json, trying txt.", filename)
 
     txt_error = ""
     if not params_dict:
@@ -137,9 +135,7 @@ def load(filename):
             assert isinstance(params_dict, dict)
             logging.debug(" - ok, parsed as txt")
         except Exception as txt_error:
-            logging.debug(
-                "{} wat not parseable as txt, no more options".format(filename)
-            )
+            logging.debug("%s wat not parseable as txt, no more options", filename)
 
     if not params_dict:
         logging.warning("%s could not be parsed as yaml, json or txt", filename)

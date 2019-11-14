@@ -17,6 +17,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_parameters():
+    """Test import of parameters.txt++"""
     eclfiles = EclFiles(DATAFILE)
 
     # NB: This test easily fails due to remnants of other test code..
@@ -84,6 +85,7 @@ def test_parameters():
 
 
 def test_multiple_parameters():
+    """Test what happens when we have duplicate parameter files"""
     eclfiles = EclFiles(DATAFILE)
     parametersjson = os.path.join(eclfiles.get_path(), "parameters.json")
     parameterstxt = os.path.join(eclfiles.get_path(), os.pardir, "parameters.txt")

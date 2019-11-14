@@ -55,6 +55,7 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     ]
 
     max_guess = 640  # This ought to be enough for everybody
+    dimcountguess = 0
     for dimcountguess in range(1, max_guess + 1):
         deck_candidate = inject_dimcount(deckstring, dimkeyword, dimitem, dimcountguess)
         try:

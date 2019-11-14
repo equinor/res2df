@@ -229,16 +229,16 @@ def smry2df(
         column_keys_str,
         str(time_index_arg or "raw"),
     )
-    df = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
+    dframe = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
         time_index_arg, column_keys
     )
     logging.info(
         "Dataframe with smry data ready, %d columns and %d rows",
-        len(df.columns),
-        len(df),
+        len(dframe.columns),
+        len(dframe),
     )
-    df.index.name = "DATE"
-    return df
+    dframe.index.name = "DATE"
+    return dframe
 
 
 # Remaining functions are for the command line interface
@@ -331,7 +331,7 @@ def summary2df_main(args):
         signal(SIGPIPE, SIG_DFL)
         sum_df.to_csv(sys.stdout, index=True)
     else:
-        logging.info("Writing to file {}".format(args.output))
+        logging.info("Writing to file %s", str(args.output))
         sum_df.to_csv(args.output, index=True)
         print("Wrote to " + args.output)
 
@@ -342,18 +342,18 @@ def df(eclfiles, time_index=None, column_keys=None, params=False, paramfile=None
     if params:
         if not paramfile:
             param_files = parameters.find_parameter_files(eclfiles)
-            logging.info("Loading parameters from files: " + str(param_files))
+            logging.info("Loading parameters from files: %s", str(param_files))
             param_dict = parameters.load_all(param_files)
         else:
-            if not os.path.isabs(args.paramfile):
+            if not os.path.isabs(paramfile):
                 param_file = parameters.find_parameter_files(
-                    eclfiles, filebase=args.paramfile
+                    eclfiles, filebase=paramfile
                 )
-                logging.info("Loading parameters from file: " + str(param_file))
+                logging.info("Loading parameters from file: %s", str(param_file))
                 param_dict = parameters.load(param_file)
             else:
-                logging.info("Loading parameter from file: " + str(args.paramfile))
-                param_dict = parameters.load(args.paramfile)
+                logging.info("Loading parameter from file: %s", str(paramfile))
+                param_dict = parameters.load(paramfile)
         logging.info("Loaded %d parameters", len(param_dict))
         for key in param_dict:
             # By converting to str we are more robust with respect to what objects are

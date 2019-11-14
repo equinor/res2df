@@ -18,7 +18,8 @@ from .common import parse_ecl_month
 
 
 # The record keys are all taken from the OPM source code:
-# https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WCONHIST etc.
+# https://github.com/OPM/opm-common/blob/master/
+#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WCONHIST etc.
 
 RECORD_KEYS = {}
 RECORD_KEYS["WCONHIST"] = [
@@ -99,6 +100,7 @@ COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
 
 
 def deck2wcondf(deck):
+    """Deprecated function name"""
     logging.warning("Deprecated function name, deck2wcondf")
     return deck2df(deck)
 
@@ -113,32 +115,32 @@ def deck2df(deck):
     """
     wconrecords = []  # List of dicts of every line in input file
     date = None  # DATE columns will always be there, but can contain NaN
-    for kw in deck:
-        if kw.name == "DATES" or kw.name == "START":
-            for rec in kw:
+    for kword in deck:
+        if kword.name == "DATES" or kword.name == "START":
+            for rec in kword:
                 day = rec["DAY"][0]
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
-                logging.info("Parsing at date " + str(date))
-        elif kw.name == "TSTEP":
+                logging.info("Parsing at date %s", str(date))
+        elif kword.name == "TSTEP":
             if not date:
                 logging.critical("Can't use TSTEP when there is no start_date")
-                return
-            for rec in kw:
+                return pd.DataFrame()
+            for rec in kword:
                 steplist = rec[0]
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
                 logging.info(
-                    "Advancing {} days to {} through TSTEP".format(str(days), str(date))
+                    "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
-        elif kw.name in RECORD_KEYS:
-            for rec in kw:  # Loop over the lines inside WCON* record
+        elif kword.name in RECORD_KEYS:
+            for rec in kword:  # Loop over the lines inside WCON* record
                 rec_data = {}
                 rec_data["DATE"] = date
-                rec_data["KEYWORD"] = kw.name
-                for rec_key in RECORD_KEYS[kw.name]:
+                rec_data["KEYWORD"] = kword.name
+                for rec_key in RECORD_KEYS[kword.name]:
                     try:
                         if rec[rec_key]:
                             rec_data[rec_key.upper()] = rec[rec_key][0]
@@ -146,7 +148,7 @@ def deck2df(deck):
                         pass
                 wconrecords.append(rec_data)
 
-        elif kw.name == "TSTEP":
+        elif kword.name == "TSTEP":
             logging.warning("WARNING: Possible premature stop at first TSTEP")
             break
 

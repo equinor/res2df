@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-"""
-Converter module for Eclipse RFT output files to Pandas Dataframes
+"""Converter module for Eclipse RFT output files to Pandas Dataframes
 
 If MULTISEG wells are found, the segment data associated to
 a connection is merged onto the same row as additional columns,
 assuming connections do not point to more than one segment.
 
-If ICD segments are detected (recognized as branches only
-containing one segment), they are merged into the same row that
-already contains connection data (CONxxxxx) and its segment data
-(now giving information for the conditions in the tubing).
+If ICD segments are detected (recognized as branches only containing
+one segment), they are merged into the same row that already contains
+connection data (CONxxxxx) and its segment data (now giving
+information for the conditions in the tubing).
 
 The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix 'ICD_'
+
 """
 
 from __future__ import print_function
@@ -49,25 +49,28 @@ def _rftrecords2df(eclfiles):
     )  # forward fill (because any record is associated to the previous TIME record)
     rftrecords["timeindex"] = rftrecords["timeindex"].astype(int)
     logging.info(
-        "Located {} RFT records at {} distinct dates".format(
-            len(rftrecords), len(rftrecords["timeindex"].unique())
-        )
+        "Located %s RFT records at %s distinct dates",
+        str(len(rftrecords)),
+        str(len(rftrecords["timeindex"].unique())),
     )
     return rftrecords
 
 
 def rft2df(eclfiles):
+    """Construct the final dataframe of RFT data"""
     rftrecords = _rftrecords2df(eclfiles)
     rftfile = eclfiles.get_rftfile()
 
-    # This will be our end-product, all CONxxxxx data and SEGxxxxx data merged appropriately together.
-    # Index will be (date, wellname, connection index) rolled out.
+    # This will be our end-product, all CONxxxxx data and SEGxxxxx
+    # data merged appropriately together.  Index will be (date,
+    # wellname, connection index) rolled out.
     rftdata = pd.DataFrame()
 
     # Loop over the TIME records and its associated data:
     for timerecordidx in rftrecords["timeindex"].unique():
 
-        # Pick out the headers (with row indices) for the data relevant to this TIME record:
+        # Pick out the headers (with row indices) for the data
+        # relevant to this TIME record:
         headers = rftrecords[rftrecords["timeindex"] == timerecordidx]
 
         dateidx = int(headers[headers.recordname == "DATE"].index.values)
@@ -85,76 +88,90 @@ def rft2df(eclfiles):
             )
         )
 
-        # Collect all the headers that have the same length as 'DEPTH' (we could pick most others as well)
-        # This will be the number of cells that have data associated and we use this to safeguard
-        # that we do not make a non-rectangular dataset (by picking some datatype that does not refer
-        # to connections)
+        # Collect all the headers that have the same length as 'DEPTH'
+        # (we could pick most others as well) This will be the number
+        # of cells that have data associated and we use this to
+        # safeguard that we do not make a non-rectangular dataset (by
+        # picking some datatype that does not refer to connections)
 
         numberofrows = headers[headers.recordname == "DEPTH"]["recordlength"]
-        if len(numberofrows):
+        if not numberofrows.empty:
             numberofrows = int(numberofrows)
         else:
-            logging.debug("Well {} has no data to extract at {}".format(well, date))
+            logging.debug("Well %s has no data to extract at %s", str(well), str(date))
             continue
 
         # These datatypes now align nicely into a matrix of numbers,
         # so we extract them into a pandas DataFrame
-        CONheaders = headers[headers.recordlength == numberofrows].recordname
+        con_headers = headers[headers.recordlength == numberofrows].recordname
 
-        # Temporary dataset for this (date, wellname) record, identified by timerecordidx
-        CONdata = pd.DataFrame()
-        # Loop over the CONheaders:
-        for rftidx, recordname in CONheaders.iteritems():
-            # Extract CON-data and put it into the CONdata
-            CONdata[recordname] = list(rftfile[rftidx])
+        # Temporary dataset for this (date, wellname) record,
+        # identified by timerecordidx
+        con_data = pd.DataFrame()
+        # Loop over the con_headers:
+        for rftidx, recordname in con_headers.iteritems():
+            # Extract CON-data and put it into the con_data
+            con_data[recordname] = list(rftfile[rftidx])
 
-        CONdata["CONIDX"] = CONdata.index + 1  # Add an index that starts with 1
+        con_data["CONIDX"] = con_data.index + 1  # Add an index that starts with 1
 
-        # Set branch count to 1. If it is a multisegment well, this variable might get updated.
+        # Set branch count to 1. If it is a multisegment well, this
+        # variable might get updated.
         numberofbranches = 1
 
-        # Process multisegment data (not necessarily the same number of rows as the connection data)
-        # Currently data for segments that are not associated with a connection will not be included.
+        # Process multisegment data (not necessarily the same number
+        # of rows as the connection data) Currently data for segments
+        # that are not associated with a connection will not be
+        # included.
 
-        # Ignore if wellmodel says MULTISEG but we cannot find any SEGxxxxx data in the record.
-        if wellmodel == "MULTISEG" and len(
-            headers[headers["recordname"].str.startswith("SEG")]
+        # Ignore if wellmodel says MULTISEG but we cannot find any
+        # SEGxxxxx data in the record.
+        if (
+            wellmodel == "MULTISEG"
+            and not headers[headers["recordname"].str.startswith("SEG")].empty
         ):
-            logging.debug("Well {} is MULTISEG but has no SEG data".format(well))
+            logging.debug("Well %s is MULTISEG but has no SEG data", well)
             numberofrows = int(
                 headers[headers["recordname"] == "SEGDEPTH"]["recordlength"]
             )
-            SEGheaders = headers[
+            seg_headers = headers[
                 (headers["recordname"].str.startswith("SEG"))
                 & (headers["recordlength"] == numberofrows)
             ].recordname
 
-            SEGdata = pd.DataFrame()
+            seg_data = pd.DataFrame()
             # Loop over SEGheaders:
-            for rftidx, recordname in SEGheaders.iteritems():
-                SEGdata[recordname] = list(rftfile[rftidx])
+            for rftidx, recordname in seg_headers.iteritems():
+                seg_data[recordname] = list(rftfile[rftidx])
 
-            SEGdata["SEGIDX"] = SEGdata.index + 1  # Add an index that starts with 1
+            seg_data["SEGIDX"] = seg_data.index + 1  # Add an index that starts with 1
 
-            # Determine well topology:
-            # The way ICDs are modelled complexifies this, as each ICD device must be put on a branch
-            # SEGNXT must be used for this, it points to the next segment downstream
-            # The next segment upsteam is not well defined (it can point to many segments)
+            # Determine well topology: The way ICDs are modelled
+            # complexifies this, as each ICD device must be put on a
+            # branch SEGNXT must be used for this, it points to the
+            # next segment downstream.  The next segment upsteam is
+            # not well defined (it can point to many segments)
 
-            # Leaf segments are those segments with no upstream segment
-            # Merge SEGIDX and SEGNXT, leaf segments now have NaN for SEGIDX_y after the merge:
-            mergedSEGdata = pd.merge(
-                SEGdata, SEGdata, how="outer", left_on="SEGIDX", right_on="SEGNXT"
+            # Leaf segments are those segments with no upstream
+            # segment Merge SEGIDX and SEGNXT, leaf segments now have
+            # NaN for SEGIDX_y after the merge:
+            merged_seg_data = pd.merge(
+                seg_data, seg_data, how="outer", left_on="SEGIDX", right_on="SEGNXT"
             )
             # We may compute leafsegments like this:
-            # leafsegments = mergedSEGdata[mergedSEGdata["SEGIDX_y"] == numpy.nan]
+            # leafsegments = merged_seg_ata[merged_seg_data["SEGIDX_y"] == numpy.nan]
 
-            # After having removed leaf segments, we can claim that the maximum value of SEGBRNO determines the
-            # number of well branches. This will fail if ICD segments are connected in a series, if you
-            # have such a setup, you are on your own (it will probably just be recognized as an extra branch)
+            # After having removed leaf segments, we can claim that
+            # the maximum value of SEGBRNO determines the number of
+            # well branches. This will fail if ICD segments are
+            # connected in a series, if you have such a setup, you are
+            # on your own (it will probably just be recognized as an
+            # extra branch)
 
             numberofbranches = int(
-                mergedSEGdata[~mergedSEGdata["SEGIDX_y"].isnull()].SEGBRNO_x.max()
+                merged_seg_data[~merged_seg_data["SEGIDX_y"].isnull()][
+                    "SEGBRNO_x"
+                ].max()
             )
 
             # After-note:
@@ -164,88 +181,93 @@ def rft2df(eclfiles):
             # Now we can test if we have any ICD segments, that is the
             # case if we have any segments that have SEGBRNO higher than
             # the branch count
-            icd_present = SEGdata["SEGBRNO"].max() > numberofbranches
+            icd_present = seg_data["SEGBRNO"].max() > numberofbranches
 
             if icd_present:
-                icd_SEGdata = SEGdata[SEGdata["SEGBRNO"] > numberofbranches]
-                # Chop away the icd's from the SEGdata dataframe:
-                SEGdata = SEGdata[SEGdata["SEGBRNO"] <= numberofbranches]
+                icd_seg_data = seg_data[seg_data["SEGBRNO"] > numberofbranches]
+                # Chop away the icd's from the seg_data dataframe:
+                seg_data = seg_data[seg_data["SEGBRNO"] <= numberofbranches]
 
                 # Rename columns in icd dataset:
-                icd_SEGdata.columns = ["ICD_" + x for x in icd_SEGdata.columns]
+                icd_seg_data.columns = ["ICD_" + x for x in icd_seg_data.columns]
 
                 # Merge ICD segments to the CONxxxxx data. We will be
-                # connection-centric in the outputted rows, that is one
-                # row pr. connection. If the setup is with more than one
-                # segment pr. connection (e.g. reservoir cell), then we
-                # would have to be smarter. Either averaging the
-                # properties, or be segment-centric in the output.
+                # connection-centric in the outputted rows, that is
+                # one row pr. connection. If the setup is with more
+                # than one segment pr. connection (e.g. reservoir
+                # cell), then we would have to be smarter. Either
+                # averaging the properties, or be segment-centric in
+                # the output.
                 #
-                # Petrel happily puts many ICD segments to the same connection. This
-                # setup is a bug, with partially unknown effects when simulated in Eclipse
-                # Should we warn the user??
+                # Petrel happily puts many ICD segments to the same
+                # connection. This setup is a bug, with partially
+                # unknown effects when simulated in Eclipse Should we
+                # warn the user??
 
-                CONicd_data = pd.merge(
-                    CONdata, icd_SEGdata, right_on="ICD_SEGBRNO", left_on="CONBRNO"
+                con_icd_data = pd.merge(
+                    con_data, icd_seg_data, right_on="ICD_SEGBRNO", left_on="CONBRNO"
                 )
 
                 # Merge SEGxxxxx to icd_conf_data
-                CONSEG_data = pd.merge(
-                    CONicd_data, SEGdata, left_on="ICD_SEGNXT", right_on="SEGIDX"
+                conseg_data = pd.merge(
+                    con_icd_data, seg_data, left_on="ICD_SEGNXT", right_on="SEGIDX"
                 )
 
                 # Add more data:
-                CONSEG_data["CompletionDP"] = 0
-                nonzeroPRES = (CONSEG_data["CONPRES"] > 0) & (
-                    CONSEG_data["SEGPRES"] > 0
+                conseg_data["CompletionDP"] = 0
+                nonzero_pres = (conseg_data["CONPRES"] > 0) & (
+                    conseg_data["SEGPRES"] > 0
                 )
-                CONSEG_data.loc[nonzeroPRES, "CompletionDP"] = (
-                    CONSEG_data[nonzeroPRES]["CONPRES"]
-                    - CONSEG_data[nonzeroPRES]["SEGPRES"]
+                conseg_data.loc[nonzero_pres, "CompletionDP"] = (
+                    conseg_data[nonzero_pres]["CONPRES"]
+                    - conseg_data[nonzero_pres]["SEGPRES"]
                 )
 
             if not icd_present:
 
                 # Merge SEGxxxxx to CONxxxxx data if we can find data that match them
-                if "CONSEGNO" in CONdata and "SEGIDX" in SEGdata:
-                    CONSEG_data = pd.merge(
-                        CONdata, SEGdata, left_on="CONSEGNO", right_on="SEGIDX"
+                if "CONSEGNO" in con_data and "SEGIDX" in seg_data:
+                    conseg_data = pd.merge(
+                        con_data, seg_data, left_on="CONSEGNO", right_on="SEGIDX"
                     )
                 else:
                     # Give up, you will get to distinct blocks in your CSV file when we
-                    CONSEG_data = pd.concat([CONdata, SEGdata], sort=True)
+                    conseg_data = pd.concat([con_data, seg_data], sort=True)
 
-            # Overwrite the CONdata structure with the augmented data structure including segments and potential ICD.
-            CONdata = CONSEG_data
-        CONdata["DRAWDOWN"] = 0  # Set a default so that the column always exists
+            # Overwrite the con_data structure with the augmented data
+            # structure including segments and potential ICD.
+            con_data = conseg_data
+        con_data["DRAWDOWN"] = 0  # Set a default so that the column always exists
         if (
-            "CONPRES" in CONdata.columns
+            "CONPRES" in con_data.columns
         ):  # Only try to calculate this if CONPRES is actually nonzero.
-            CONdata.loc[CONdata.CONPRES > 0, "DRAWDOWN"] = (
-                CONdata[CONdata.CONPRES > 0]["PRESSURE"]
-                - CONdata[CONdata.CONPRES > 0]["CONPRES"]
+            con_data.loc[con_data.CONPRES > 0, "DRAWDOWN"] = (
+                con_data[con_data.CONPRES > 0]["PRESSURE"]
+                - con_data[con_data.CONPRES > 0]["CONPRES"]
             )
 
-        CONdata["DATE"] = str(date)
-        CONdata["WELL"] = well
-        CONdata["WELLMODEL"] = wellmodel
+        con_data["DATE"] = str(date)
+        con_data["WELL"] = well
+        con_data["WELLMODEL"] = wellmodel
 
         # Replicate S3Graf calculated data:
-        if "PRESSURE" in CONdata.columns:
-            CONdata["CONBPRES"] = CONdata["PRESSURE"]  # Just an alias
-        if "CONLENEN" in CONdata.columns and "CONLENST" in CONdata.columns:
-            CONdata["CONMD"] = 0.5 * (CONdata.CONLENST + CONdata.CONLENEN)
-            CONdata["CONLENTH"] = CONdata.CONLENEN - CONdata.CONLENST
+        if "PRESSURE" in con_data.columns:
+            con_data["CONBPRES"] = con_data["PRESSURE"]  # Just an alias
+        if "CONLENEN" in con_data.columns and "CONLENST" in con_data.columns:
+            con_data["CONMD"] = 0.5 * (con_data.CONLENST + con_data.CONLENEN)
+            con_data["CONLENTH"] = con_data.CONLENEN - con_data.CONLENST
 
-        if "CONORAT" in CONdata.columns and "CONLENTH" in CONdata.columns:
-            CONdata["CONORATS"] = CONdata.CONORAT / CONdata.CONLENTH
-            CONdata["CONWRATS"] = CONdata.CONWRAT / CONdata.CONLENTH
-            CONdata["CONGRATS"] = CONdata.CONGRAT / CONdata.CONLENTH
+        if "CONORAT" in con_data.columns and "CONLENTH" in con_data.columns:
+            con_data["CONORATS"] = con_data.CONORAT / con_data.CONLENTH
+            con_data["CONWRATS"] = con_data.CONWRAT / con_data.CONLENTH
+            con_data["CONGRATS"] = con_data.CONGRAT / con_data.CONLENTH
 
-        rftdata = rftdata.append(CONdata, ignore_index=True, sort=False)
+        rftdata = rftdata.append(con_data, ignore_index=True, sort=False)
 
-    # Fill empty cells with zeros. This is to avoid Spotfire interpreting columns with numbers as strings. An alternative solution
-    # that keeps NaN would be to add a second row in the output containing the datatype
+    # Fill empty cells with zeros. This is to avoid Spotfire
+    # interpreting columns with numbers as strings. An alternative
+    # solution that keeps NaN would be to add a second row in the
+    # output containing the datatype
     rftdata.fillna(0, inplace=True)
 
     # The HOSTGRID data seems often to be empty, check if it is and delete if so:
@@ -313,15 +335,20 @@ def df(eclfiles):
 
 ## Vector	Description
 ## CONDEPTH	Depth at the centre of each connection in the well
-## CONLENST	Length down the tubing from the BH reference point to the start of the connection
-## CONLENEN	Length down the tubing from the BH reference point to the far end of the connection
+## CONLENST	Length down the tubing from the BH reference
+##              point to the start of the connection
+## CONLENEN	Length down the tubing from the BH reference point to the
+##              far end of the connection
 ## CONPRES	Pressure in the wellbore at the connection
 ## CONORAT	Oil production rate of the connection at surface conditions
 ## CONWRAT	Water production rate of the connection at surface conditions
 ## CONGRAT	Gas production rate of the connection at surface conditions
-## CONOTUB	Oil flow rate through the tubing at the start of the connection at surface conditions
-## CONWTUB	Water flow rate through the tubing at the start of the connection at surface conditions
-## CONGTUB	Gas flow rate through the tubing at the start of the connection at surface conditions
+## CONOTUB	Oil flow rate through the tubing at the start of the
+##              connection at surface conditions
+## CONWTUB	Water flow rate through the tubing at the start of the
+##              connection at surface conditions
+## CONGTUB	Gas flow rate through the tubing at the start of the
+##              connection at surface conditions
 ## CONVTUB	Volumetric flow rate of the mixture at the start of the connection
 ## CONFAC	Connection transmissibility factor
 ## CONKH	Connection Kh value
@@ -332,7 +359,8 @@ def df(eclfiles):
 ## CONJPOS	J location of the connection
 ## CONKPOS	K location of the connection
 ## CONBDEPH	Depth of the grid block of the connection
-## CONBPRES	Pressure of the grid block of the connection (Copy of the PRESSURE data)
+## CONBPRES	Pressure of the grid block of the connection
+##              (Copy of the PRESSURE data)
 ## CONBSWAT	Water saturation of the grid block of the connection
 ## CONBSGAS	Gas saturation of the grid block of the connection
 ## CONBSOIL	Oil saturation of the grid block of the connection
@@ -350,10 +378,14 @@ def df(eclfiles):
 ##
 ## Vector	Description
 ## SEGDEPTH	Depth at the far end of each segment
-## SEGLENST	Length down the tubing from the zero tubing length reference point to the start of the segment
-## SEGLELEN	Length down the tubing from the zero tubing length reference point to the far end of the segment
-## SEGXCORD	X-coordinate at the far end of the segment (as entered by the 11th item of the WELSEGS record)
-## SEGXCORD	Y-coordinate at the far end of the segment (as entered by the 12th item of the WELSEGS record)
+## SEGLENST	Length down the tubing from the zero tubing length
+##              reference point to the start of the segment
+## SEGLELEN	Length down the tubing from the zero tubing length
+##              reference point to the far end of the segment
+## SEGXCORD	X-coordinate at the far end of the segment
+##              (as entered by the 11th item of the WELSEGS record)
+## SEGXCORD	Y-coordinate at the far end of the segment
+##              (as entered by the 12th item of the WELSEGS record)
 ## SEGPRES	Pressure in the wellbore at the far end of the segment
 ## SEGORAT	Oil flow rate through the segment through its near end
 ## SEGWRAT	Water flow rate through the segment through its near end

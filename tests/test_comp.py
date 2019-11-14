@@ -107,6 +107,7 @@ WSEGVALV
 
 
 def test_tstep():
+    """Test with TSTEP present"""
     schstr = """
 DATES
    1 MAY 2001 /
@@ -140,6 +141,7 @@ COMPDAT
 
 
 def test_unrollcompdatk1k2():
+    """Test unrolling of k1-k2 ranges in COMPDAT"""
     schstr = """
 COMPDAT
   -- K1 to K2 is a range of 11 layers, should be automatically
@@ -159,6 +161,7 @@ COMPDAT
 
 
 def test_unrollwelsegs():
+    """Test unrolling of welsegs."""
     schstr = """
 WELSEGS
   -- seg_start to seg_end (two first items in second record) is a range of
@@ -175,7 +178,7 @@ WELSEGS
 
 
 def test_unrollbogus():
-    # Giving in empty dataframe, should not crash.
+    """Giving in empty dataframe, should not crash."""
     assert compdat.unrolldf(pd.DataFrame).empty
 
     bogusdf = pd.DataFrame([0, 1, 4], [0, 2, 5])

@@ -220,6 +220,13 @@ def transdf(eclfiles, vectors=None):
 
     If you ask for additional vectors, like FIPNUM, then
     you will get a corresponding FIPNUM1 and FIPNUM2 added.
+
+    Args:
+        eclfiles (EclFiles): An object representing your Eclipse run
+        vectors (str or list): Eclipse INIT vectors that you want to include
+
+    Returns:
+        pd.DataFrame: with one cell-pair pr. row. Empty dataframe if error.
     """
     if not vectors:
         vectors = []

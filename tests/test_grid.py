@@ -104,12 +104,23 @@ def test_transmissibilities():
     assert "BOGUS1" not in trans_df
     assert "TRAN" in trans_df  # (we should have gotten a warning only)
 
-    # Example filtering to horizontal connections between
-    # different FIPNUMS:
+    # Example creating a column with the FIPNUM pair as a string
+    # (lowest fipnum value first)
     trans_df = grid.transdf(eclfiles, vectors=["X", "Y", "Z", "FIPNUM"])
+    trans_df["FIPNUMPAIR"] = [
+        str(int(min((x[1:3])))) + "-" + str(int(max(x[1:3])))
+        for x in trans_df[["FIPNUM1", "FIPNUM2"]].itertuples()
+    ]
+    # Filter to different FIPNUMS (that means FIPNUM boundaries)
+    # and horizontal connetions:
     filt_trans_df = trans_df[
         (trans_df["FIPNUM1"] != trans_df["FIPNUM2"]) & (trans_df["DIR"] != "K")
     ]
+    unique_pairs = filt_trans_df["FIPNUMPAIR"].unique()
+    assert len(unique_pairs) == 3
+    assert "5-6" in unique_pairs
+    assert "6-5" not in unique_pairs  # because we have sorted them
+
     assert len(filt_trans_df) < len(trans_df)
     assert set(filt_trans_df["DIR"].unique()) == set(["I", "J"])
     # filt_trans_df.to_csv("fipnumtrans.csv", index=False)

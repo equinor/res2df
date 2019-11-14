@@ -11,16 +11,17 @@ from __future__ import division
 import sys
 import logging
 import datetime
-import dateutil
 import argparse
+import collections
+import dateutil
 import pandas as pd
 import treelib
-import collections
 
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
-# From: https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET
+# From: https://github.com/OPM/opm-common/blob/master/
+#       src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET
 GRUPNETKEYS = [
     "NAME",
     "TERMINAL_PRESSURE",
@@ -33,6 +34,7 @@ GRUPNETKEYS = [
 
 
 def gruptree2df(deck, startdate=None, welspecs=True):
+    """Deprecated function name"""
     logging.warning("Deprecated function name, gruptree2df")
     return deck2df(deck, startdate, welspecs)
 
@@ -71,17 +73,14 @@ def deck2df(deck, startdate=None, welspecs=True):
     found_gruptree = False  # Flags which will tell when a new GRUPTREE or
     found_welspecs = False  # WELSPECS have been encountered.
     found_grupnet = False  # GRUPNET has been encountered
-    for kw in deck:
-
-        if kw.name == "DATES" or kw.name == "START" or kw.name == "TSTEP":
+    for kword in deck:
+        if kword.name == "DATES" or kword.name == "START" or kword.name == "TSTEP":
             # Whenever we encounter a new DATES, it means that
             # we have processed all the GRUPTREE and WELSPECS that
             # have occured since the last date, so this is the chance
             # to dump the parsed data. Also we dump the *entire* tree
             # at every date with a change, not only the newfound edges.
-            if len(currentedges) and (
-                found_gruptree or found_welspecs or found_grupnet
-            ):
+            if currentedges and (found_gruptree or found_welspecs or found_grupnet):
                 if date is None:
                     logging.warning(
                         "WARNING: No date parsed, maybe you should pass --startdate"
@@ -104,48 +103,44 @@ def deck2df(deck, startdate=None, welspecs=True):
                 found_grupnet = False
             # Done dumping the data for the previous date, parse the fresh
             # date:
-            if kw.name == "DATES" or kw.name == "START":
-                for rec in kw:
+            if kword.name == "DATES" or kword.name == "START":
+                for rec in kword:
                     day = rec["DAY"][0]
                     month = rec["MONTH"][0]
                     year = rec["YEAR"][0]
                     date = datetime.date(
                         year=year, month=parse_ecl_month(month), day=day
                     )
-            elif kw.name == "TSTEP":
-                for rec in kw:
+            elif kword.name == "TSTEP":
+                for rec in kword:
                     steplist = rec[0]
                     # Assuming not LAB units, then the unit is days.
                     days = sum(steplist)
                     if days <= 0:
-                        logging.critical(
-                            "Invalid TSTEP, summed to {} days".format(str(days))
-                        )
-                        return
+                        logging.critical("Invalid TSTEP, summed to %s days", str(days))
+                        return pd.DataFrame()
                     date += datetime.timedelta(days=days)
                     logging.info(
-                        "Advancing {} days to {} through TSTEP".format(
-                            str(days), str(date)
-                        )
+                        "Advancing %s days to %s through TSTEP", str(days), str(date)
                     )
             else:
                 logging.critical("BUG: Should not get here")
-                return
-        if kw.name == "GRUPTREE":
+                return pd.DataFrame()
+        if kword.name == "GRUPTREE":
             found_gruptree = True
-            for edgerec in kw:
+            for edgerec in kword:
                 child = edgerec[0][0]
                 parent = edgerec[1][0]
                 currentedges[(child, parent)] = "GRUPTREE"
-        if kw.name == "WELSPECS" and welspecs:
+        if kword.name == "WELSPECS" and welspecs:
             found_welspecs = True
-            for wellrec in kw:
+            for wellrec in kword:
                 wellname = wellrec[0][0]
                 group = wellrec[1][0]
                 currentedges[(wellname, group)] = "WELSPECS"
-        if kw.name == "GRUPNET":
+        if kword.name == "GRUPNET":
             found_grupnet = True
-            for rec in kw:
+            for rec in kword:
                 grupnet_data = {}
                 for rec_key in GRUPNETKEYS:
                     try:
@@ -173,10 +168,10 @@ def deck2df(deck, startdate=None, welspecs=True):
                 rec_dict.update(grupnet_df.loc[edgename[0]])
             gruptreerecords.append(rec_dict)
 
-    df = pd.DataFrame(gruptreerecords)
-    if "DATE" in df:
-        df["DATE"] = pd.to_datetime(df["DATE"])
-    return df
+    dframe = pd.DataFrame(gruptreerecords)
+    if "DATE" in dframe:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    return dframe
 
 
 def gruptree2dict(deck, date="END", welspecs=True):
@@ -194,25 +189,24 @@ def gruptree2dict(deck, date="END", welspecs=True):
     version.
     """
 
-    df = gruptree2df(deck, welspecs).set_index("DATE")
+    dframe = gruptree2df(deck, welspecs).set_index("DATE")
     if isinstance(date, str):
         if date == "START":
-            date = df.index[0]
+            date = dframe.index[0]
         if date == "END":
-            date = df.index[-1]
+            date = dframe.index[-1]
         else:
             try:
-                dateutil.parser.isoparse(dates).date()
+                dateutil.parser.isoparse(date).date()
             except ValueError:
-                raise ValueError("date " + str(dates) + " not understood")
+                raise ValueError("date " + str(date) + " not understood")
 
-    if date not in df.index:
+    if date not in dframe.index:
         return {}
-    else:
-        return gruptreedf2dict(df.loc[date])
+    return gruptreedf2dict(dframe.loc[date])
 
 
-def gruptreedf2dict(df):
+def gruptreedf2dict(dframe):
     """Convert list of edges into a
     nested dictionary (tree), example:
 
@@ -228,11 +222,11 @@ def gruptreedf2dict(df):
     Returns a list of nested dictionary, as we sometimes
     have more than one root
     """
-    if df.empty:
+    if dframe.empty:
         return {}
     subtrees = collections.defaultdict(dict)
     edges = []  # List of tuples
-    for _, row in df.iterrows():
+    for _, row in dframe.iterrows():
         edges.append((row["CHILD"], row["PARENT"]))
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
@@ -245,20 +239,20 @@ def gruptreedf2dict(df):
     return trees
 
 
-def dict2treelib(name, d):
+def dict2treelib(name, nested_dict):
     """Convert a nested dictonary to a treelib Tree
     object. This function is recursive
 
     Args:
         name: name of root node
-        d: nested dictonary of the children at the root.
+        nested_dict: nested dictonary of the children at the root.
     Return:
         treelib.Tree
     """
     tree = treelib.Tree()
     tree.create_node(name, name)
-    for child in d.keys():
-        tree.paste(name, dict2treelib(child, d[child]))
+    for child in nested_dict.keys():
+        tree.paste(name, dict2treelib(child, nested_dict[child]))
     return tree
 
 
@@ -311,11 +305,11 @@ def gruptree2df_main(args):
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
     eclfiles = EclFiles(args.DATAFILE)
-    df = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
+    dframe = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
-        for date in df["DATE"].dropna().unique():
+        for date in dframe["DATE"].dropna().unique():
             print("Date: " + str(date.astype("M8[D]")))
-            trees = gruptreedf2dict(df[df["DATE"] == date])
+            trees = gruptreedf2dict(dframe[dframe["DATE"] == date])
             for tree in trees:
                 rootname = tree.keys()[0]
                 print(dict2treelib(rootname, tree[rootname]))
@@ -325,9 +319,9 @@ def gruptree2df_main(args):
         from signal import signal, SIGPIPE, SIG_DFL
 
         signal(SIGPIPE, SIG_DFL)
-        df.to_csv(sys.stdout, index=False)
+        dframe.to_csv(sys.stdout, index=False)
     elif args.output:
-        df.to_csv(args.output, index=False)
+        dframe.to_csv(args.output, index=False)
         print("Wrote to " + args.output)
 
 

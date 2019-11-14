@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Module to hold Eclipse input and output filenames
+"""
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division

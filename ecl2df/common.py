@@ -13,6 +13,7 @@ import pandas as pd
 
 
 def parse_ecl_month(eclmonth):
+    """Translate Eclipse month strings to integer months"""
     eclmonth2num = {
         "JAN": 1,
         "FEB": 2,

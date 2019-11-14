@@ -127,7 +127,7 @@ def deck2df(deck, satnumcount=None):
             deck = EclFiles.str2deck(augmented_strdeck)
 
     frames = []
-    for keyword in KEYWORD_COLUMNS.keys():
+    for keyword in KEYWORD_COLUMNS:
         if keyword in deck:
             satnum = 1
             for deckrecord in deck[keyword]:
@@ -137,17 +137,17 @@ def deck2df(deck, satnumcount=None):
                 column_count = len(KEYWORD_COLUMNS[keyword])
                 if len(data) % column_count:
                     logging.error("Inconsistent data length or bug")
-                    return
+                    return pd.DataFrame()
                 satpoints = int(len(data) / column_count)
-                df = pd.DataFrame(
+                dframe = pd.DataFrame(
                     columns=KEYWORD_COLUMNS[keyword],
                     data=data.reshape(satpoints, column_count),
                 )
-                df["SATNUM"] = satnum
-                df["KEYWORD"] = keyword
-                df = df[["KEYWORD", "SATNUM"] + KEYWORD_COLUMNS[keyword]]
+                dframe["SATNUM"] = satnum
+                dframe["KEYWORD"] = keyword
+                dframe = dframe[["KEYWORD", "SATNUM"] + KEYWORD_COLUMNS[keyword]]
                 satnum += 1
-                frames.append(df)
+                frames.append(dframe)
 
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:

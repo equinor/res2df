@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck
@@ -49,7 +48,8 @@ COMPSEGSKEYS = [
     "SEGMENT_NUMBER",
 ]
 
-# Based on https://github.com/OPM/opm-common/blob/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS
+# Based on https://github.com/OPM/opm-common/blob/master/
+#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS
 WELSEGSKEYS = [
     "WELL",  # "Name of the well"
     "DEPTH",  # "Depth of the nodal point of the top segment"
@@ -107,6 +107,7 @@ def sunbeam2rmsterm(reckey):
 
 
 def deck2compdatsegsdfs(deck, start_date=None):
+    """Deprecated function name"""
     logging.warning("Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()")
     return deck2dfs(deck, start_date)
 
@@ -132,28 +133,28 @@ def deck2dfs(deck, start_date=None, unroll=True):
     compsegsrecords = []
     welsegsrecords = []
     date = start_date  # DATE column will always be there, but can contain NaN/None
-    for kw in deck:
-        if kw.name == "DATES" or kw.name == "START":
-            for rec in kw:
+    for kword in deck:
+        if kword.name == "DATES" or kword.name == "START":
+            for rec in kword:
                 day = rec["DAY"][0]
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
-                logging.info("Parsing at date " + str(date))
-        elif kw.name == "TSTEP":
+                logging.info("Parsing at date %s", str(date))
+        elif kword.name == "TSTEP":
             if not date:
                 logging.critical("Can't use TSTEP when there is no start_date")
-                return
-            for rec in kw:
+                return {}
+            for rec in kword:
                 steplist = rec[0]
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
                 logging.info(
-                    "Advancing {} days to {} through TSTEP".format(str(days), str(date))
+                    "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
-        elif kw.name == "COMPDAT":
-            for rec in kw:  # Loop over the lines inside COMPDAT record
+        elif kword.name == "COMPDAT":
+            for rec in kword:  # Loop over the lines inside COMPDAT record
                 rec_data = {}
                 rec_data["DATE"] = date
                 for rec_key in COMPDATKEYS:
@@ -164,13 +165,13 @@ def deck2dfs(deck, start_date=None, unroll=True):
                     except ValueError:
                         pass
                 compdatrecords.append(rec_data)
-        elif kw.name == "COMPSEGS":
-            well = kw[0][0][0]
-            for recidx in range(1, len(kw)):
+        elif kword.name == "COMPSEGS":
+            well = kword[0][0][0]
+            for recidx in range(1, len(kword)):
                 rec_data = {}
                 rec_data["WELL"] = well
                 rec_data["DATE"] = date
-                rec = kw[recidx]
+                rec = kword[recidx]
                 for rec_key in COMPSEGSKEYS:
                     try:
                         if rec[rec_key]:
@@ -178,22 +179,22 @@ def deck2dfs(deck, start_date=None, unroll=True):
                     except ValueError:
                         pass
                 compsegsrecords.append(rec_data)
-        elif kw.name == "WELSEGS":
+        elif kword.name == "WELSEGS":
             # First record contains meta-information for well
             # (sunbeam deck returns default values for unspecified items.)
             welsegsdict = {}
-            welsegsdict["WELL"] = well = kw[0][0][0]
-            welsegsdict["DEPTH"] = kw[0][1][0]
-            welsegsdict["LENGTH"] = kw[0][2][0]
-            welsegsdict["WELLBORE_VOLUME"] = kw[0][3][0]
-            welsegsdict["INFO_TYPE"] = kw[0][4][0]
-            welsegsdict["PRESSURE_COMPONENTS"] = kw[0][5][0]
-            welsegsdict["FLOW_MODEL"] = kw[0][6][0]
-            welsegsdict["TOP_X"] = kw[0][7][0]
-            welsegsdict["TOP_Y"] = kw[0][8][0]
+            welsegsdict["WELL"] = well = kword[0][0][0]
+            welsegsdict["DEPTH"] = kword[0][1][0]
+            welsegsdict["LENGTH"] = kword[0][2][0]
+            welsegsdict["WELLBORE_VOLUME"] = kword[0][3][0]
+            welsegsdict["INFO_TYPE"] = kword[0][4][0]
+            welsegsdict["PRESSURE_COMPONENTS"] = kword[0][5][0]
+            welsegsdict["FLOW_MODEL"] = kword[0][6][0]
+            welsegsdict["TOP_X"] = kword[0][7][0]
+            welsegsdict["TOP_Y"] = kword[0][8][0]
             # Loop over all subsequent records.
-            for recidx in range(1, len(kw)):
-                rec = kw[recidx]
+            for recidx in range(1, len(kword)):
+                rec = kword[recidx]
                 # WARNING: We assume that SEGMENT1 === SEGMENT2 (!!!) (if not,
                 # we need to loop over a range just as for layer in compdat)
                 rec_data = welsegsdict.copy()
@@ -207,26 +208,29 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
                     rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
                 welsegsrecords.append(rec_data)
-        elif kw.name == "TSTEP":
+        elif kword.name == "TSTEP":
             logging.warning("Possible premature stop at first TSTEP")
             break
 
     compdat_df = pd.DataFrame(compdatrecords)
 
-    if unroll and len(compdat_df):
+    if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
 
     compsegs_df = pd.DataFrame(compsegsrecords)
 
     welsegs_df = pd.DataFrame(welsegsrecords)
-    if unroll and len(welsegs_df):
+    if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
 
     return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df)
 
 
 def postprocess():
-    compdat_df = pd.read_csv("compdat.csv")
+    """Postprocessing of the compdat data, merging.
+
+    This function is NOT FINISHED"""
+    # compdat_df = pd.read_csv("compdat.csv")
     compsegs_df = pd.read_csv("compsegs.csv")
     welsegs_df = pd.read_csv("welsegs.csv")
 
@@ -246,7 +250,7 @@ def postprocess():
     # 1. Merge compdata and compsegs
     # 2. Then we are ready.. compsegs contains the correct branch number
 
-    compdatsegs = pd.merge(compdat_df, compsegs_df, on=["date", "well", "i", "j", "k"])
+    # compdatsegs = pd.merge(compdat_df, compsegs_df, on=["date", "well", "i", "j", "k"])
     # WARNING: Only correct for dual-branch wells,
     # not triple-branach wells with ICD..
     compsegs_icd_df = compsegs_df[compsegs_df.branch > 2]
@@ -257,12 +261,12 @@ def postprocess():
     del compdatsegwel_icd_df["segment"]  # we don't need this
     compdatsegwel_icd_df.rename(columns={"branch": "icd_branch"}, inplace=True)
     compdatsegwel_icd_df.rename(columns={"join_segment": "segment"}, inplace=True)
-    alldata_icd = pd.merge(
-        compdatsegwel_icd_df, welsegs_df, on=["date", "well", "segment"]
-    )
+    # alldata_icd = pd.merge(
+    #     compdatsegwel_icd_df, welsegs_df, on=["date", "well", "segment"]
+    # )
 
 
-def unrolldf(df, start_column="K1", end_column="K2"):
+def unrolldf(dframe, start_column="K1", end_column="K2"):
     """Unroll dataframes, where some column pairs indicate
     a range where data applies.
 
@@ -285,7 +289,7 @@ def unrolldf(df, start_column="K1", end_column="K2"):
     The latter is easier to work with in Pandas dataframes
 
     Args:
-        df (pd.DataFrame): Dataframe to be unrolled
+        dframe (pd.DataFrame): Dataframe to be unrolled
         start_column (str): Column name that contains the start of
             a range.
         end_column (str): Column name that contains the corresponding
@@ -295,23 +299,23 @@ def unrolldf(df, start_column="K1", end_column="K2"):
         pd.Dataframe: Unrolled version. Identical to input if none of
             rows had any ranges.
     """
-    if df.empty:
-        return df
-    if start_column not in df and end_column not in df:
+    if dframe.empty:
+        return dframe
+    if start_column not in dframe and end_column not in dframe:
         logging.warning(
-            "Cannot unroll on non-existing columns {} and {}".format(
-                start_column, end_column
-            )
+            "Cannot unroll on non-existing columns %s and %s", start_column, end_column
         )
-        return df
-    start_eq_end_bools = df[start_column] == df[end_column]
-    unrolled = df[start_eq_end_bools]
+        return dframe
+    start_eq_end_bools = dframe[start_column] == dframe[end_column]
+    unrolled = dframe[start_eq_end_bools]
     list_unrolled = []
     if (~start_eq_end_bools).any():
-        for _, rangerow in df[~start_eq_end_bools].iterrows():
-            for k in range(int(rangerow[start_column]), int(rangerow[end_column]) + 1):
-                rangerow[start_column] = k
-                rangerow[end_column] = k
+        for _, rangerow in dframe[~start_eq_end_bools].iterrows():
+            for k_idx in range(
+                int(rangerow[start_column]), int(rangerow[end_column]) + 1
+            ):
+                rangerow[start_column] = k_idx
+                rangerow[end_column] = k_idx
                 list_unrolled.append(rangerow.copy())
     if list_unrolled:
         unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)

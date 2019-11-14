@@ -108,6 +108,14 @@ ecl2df.satfunc module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.satfunc2df module
+------------------------
+
+.. automodule:: ecl2df.satfunc2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.summary module
 ---------------------
 

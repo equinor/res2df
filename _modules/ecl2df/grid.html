@@ -191,6 +191,11 @@
 <div class="viewcode-block" id="rstdates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rstdates">[docs]</a><span class="k">def</span> <span class="nf">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
     <span class="n">report_indices</span> <span class="o">=</span> <span class="n">EclFile</span><span class="o">.</span><span class="n">file_report_list</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfilename</span><span class="p">())</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Restart report indices (count </span><span class="si">%s</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">report_indices</span><span class="p">)),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">report_indices</span><span class="p">),</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">iget_restart_sim_time</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">report_indices</span><span class="p">))</span>
@@ -251,6 +256,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not understood&quot;</span><span class="p">)</span>
 
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Available dates (count </span><span class="si">%s</span><span class="s2">) in RST: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">availabledates</span><span class="p">)),</span>
+        <span class="nb">str</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">availabledates</span><span class="p">]),</span>
+    <span class="p">)</span>
     <span class="n">rstindices</span> <span class="o">=</span> <span class="p">[</span><span class="n">availabledates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chosendates</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span></div>
 
@@ -288,7 +298,10 @@
     <span class="c1"># data for:</span>
     <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span> <span class="o">=</span> <span class="n">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting restart information at dates </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">chosendates</span><span class="p">))</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Extracting restart information at dates </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chosendates</span><span class="p">]),</span>
+    <span class="p">)</span>
 
     <span class="c1"># Determine the available restart vectors, we only include</span>
     <span class="c1"># those with correct length, meaning that they are defined</span>
@@ -313,16 +326,23 @@
         <span class="c1"># might not be available at all timesteps:</span>
         <span class="n">present_rstvectors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">rstvectors</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">rstindex</span><span class="p">):</span>
-                <span class="n">present_rstvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
-
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">rstindex</span><span class="p">):</span>
+                    <span class="n">present_rstvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Present restart vectors at index </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">rstindex</span><span class="p">),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">present_rstvectors</span><span class="p">),</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">present_rstvectors</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No restart vectors available at index </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rstindex</span><span class="p">))</span>
             <span class="k">continue</span>
 
         <span class="c1"># Make the dataframe</span>
         <span class="n">rst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="n">rstvectors</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">present_rstvectors</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span>
@@ -486,7 +506,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">egrid_file</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">grid</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No EGRID file supplied&quot;</span><span class="p">)</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting grid geometry from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egrid_file</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting grid geometry from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">egrid_file</span><span class="p">))</span>
     <span class="n">index_frame</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">export_index</span><span class="p">(</span><span class="n">active_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ijk</span> <span class="o">=</span> <span class="n">index_frame</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># ijk from ecl.grid is off by one</span>
 
@@ -679,7 +699,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility. Deprecated to use</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;grid2csv is deprecated, use &#39;ecl2csv grid &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;eclgrid2csv is deprecated, use &#39;ecl2csv grid &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>

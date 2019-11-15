@@ -209,8 +209,10 @@ def satfunc2df_main(args):
             len(satfunc_df["SATNUM"].unique()),
             str(satfunc_df["KEYWORD"].unique()),
         )
-        satfunc_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    else:
+        logging.warning("Empty saturation function dataframe being written to disk!")
+    satfunc_df.to_csv(args.output, index=False)
+    print("Wrote to " + args.output)
 
 
 def df(eclfiles):

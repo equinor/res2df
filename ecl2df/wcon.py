@@ -191,6 +191,8 @@ def wcon2df_main(args):
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     wcon_df = deck2df(deck)
+    if wcon_df.empty:
+        logging.warning("Empty wcon dataframe being written to disk!")
     wcon_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

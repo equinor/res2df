@@ -324,6 +324,8 @@ def summary2df_main(args):
         params=args.params,
         paramfile=args.paramfile,
     )
+    if sum_df.empty:
+        logging.warning("Empty summary data being written to disk!")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

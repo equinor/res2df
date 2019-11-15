@@ -216,6 +216,8 @@ def nnc2df_main(args):
     logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = nnc2df(eclfiles, coords=args.coords, pillars=args.pillars)
+    if nncdf.empty:
+        logging.warning("Empty NNC dataframe being written to disk!")
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

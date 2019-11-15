@@ -363,6 +363,8 @@ def compdat2df_main(args):
     if zonemap:
         logging.info("Merging zones")
         compdat_df = merge_zones(compdat_df, zonemap)
+    if compdat_df.empty:
+        logging.warning("Empty COMPDAT data being written to disk!")
     compdat_df.to_csv(args.output, index=False)
     dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
     dfs["WELSEGS"].to_csv("welsegs.csv", index=False)

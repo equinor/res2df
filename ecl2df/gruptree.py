@@ -314,6 +314,8 @@ def gruptree2df_main(args):
                 rootname = tree.keys()[0]
                 print(dict2treelib(rootname, tree[rootname]))
             print("")
+    if dframe.empty:
+        logging.warning("Empty GRUPTREE dataframe being written to disk!")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

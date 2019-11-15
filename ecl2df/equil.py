@@ -185,6 +185,8 @@ def equil2df_main(args):
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     equil_df = deck2df(deck)
+    if equil_df.empty:
+        logging.warning("Empty EQUIL-data being written to disk!")
     equil_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

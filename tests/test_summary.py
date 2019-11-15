@@ -31,22 +31,21 @@ def test_summary2df():
     assert "FOPT" in sumdf.columns
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-sum.csv"
-    sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile)]
     summary.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     assert "FOPT" in disk_df
-    os.remove(tmpcsvfile)
 
 
-def test_paramsupport():
+def test_paramsupport(tmpdir):
     """Test that we can merge in parameters.txt"""
-    tmpcsvfile = ".TMP-sum.csv"
+    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
     eclfiles = EclFiles(DATAFILE)
 
     parameterstxt = os.path.join(eclfiles.get_path(), "parameters.txt")
@@ -54,7 +53,7 @@ def test_paramsupport():
         os.remove(parameterstxt)
     with open(parameterstxt, "w") as pfile:
         pfile.write("FOO 1\nBAR 3")
-    sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile, "-p"]
+    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile), "-p"]
     summary.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
@@ -62,16 +61,16 @@ def test_paramsupport():
     assert "BAR" in disk_df
     assert disk_df["BAR"].unique()[0] == 3
     os.remove(parameterstxt)
-    os.remove(tmpcsvfile)
+    os.remove(str(tmpcsvfile))
 
     parametersyml = os.path.join(eclfiles.get_path(), "parameters.yml")
     if os.path.exists(parametersyml):
         os.remove(parametersyml)
     with open(parametersyml, "w") as pfile:
         pfile.write(yaml.dump({"FOO": 1, "BAR": 3}))
-    sys.argv = ["summary2df", DATAFILE, "-o", tmpcsvfile, "-p"]
+    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile), "-p"]
     summary.main()
-    disk_df = pd.read_csv(tmpcsvfile)
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
     assert len(disk_df["FOO"].unique()) == 1
@@ -80,20 +79,18 @@ def test_paramsupport():
     assert len(disk_df["BAR"].unique()) == 1
     assert disk_df["BAR"].unique()[0] == 3
     os.remove(parametersyml)
-    os.remove(tmpcsvfile)
 
 
-def test_main_subparser():
+def test_main_subparser(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-sum.csv"
-    sys.argv = ["ecl2csv", "smry", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    sys.argv = ["ecl2csv", "smry", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     assert "FOPT" in disk_df
-    os.remove(tmpcsvfile)
 
 
 def test_datenormalization():

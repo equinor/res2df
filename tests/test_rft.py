@@ -42,33 +42,37 @@ def test_rft2df():
     assert len(rftdf.columns)
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-rft.csv"
-    sys.argv = ["rft2csv", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-rft.csv")
+    sys.argv = ["rft2csv", DATAFILE, "-o", str(tmpcsvfile)]
     rft.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
 
-def test_main_subparsers():
+def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-rft.csv"
-    sys.argv = ["ecl2csv", "rft", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-rft.csv")
+    sys.argv = ["ecl2csv", "rft", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
+    tmpcsvfile = tmpdir.join(".TMP-rft2.csv")
     # Test with RFT file as argument:
-    sys.argv = ["ecl2cvsv", "rft", DATAFILE.replace(".DATA", ".RFT"), "-o", tmpcsvfile]
+    sys.argv = [
+        "ecl2cvsv",
+        "rft",
+        DATAFILE.replace(".DATA", ".RFT"),
+        "-o",
+        str(tmpcsvfile),
+    ]
     ecl2csv.main()
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)

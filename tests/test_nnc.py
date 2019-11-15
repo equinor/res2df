@@ -72,15 +72,14 @@ def test_nnc2df_faultnames():
     # Remove I_x, J_x, K_x (and _y) which is not needed
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-nnc.csv"
-    sys.argv = ["ecl2csv", "nnc", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-nnc.csv")
+    sys.argv = ["ecl2csv", "nnc", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     assert "I1" in disk_df
     assert "TRAN" in disk_df
-    os.remove(tmpcsvfile)

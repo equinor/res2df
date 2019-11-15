@@ -8,9 +8,6 @@ from __future__ import division
 import logging
 import pandas as pd
 
-import logging
-import pandas as pd
-
 
 def parse_ecl_month(eclmonth):
     """Translate Eclipse month strings to integer months"""

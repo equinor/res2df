@@ -63,25 +63,23 @@ FAULTS
     assert len(faultsdf.loc["C"]) == 6
 
 
-def test_main_subparser():
+def test_main_subparser(tmpdir):
     """Test command line interface with subparsers"""
-    tmpcsvfile = ".TMP-faultsdf.csv"
-    sys.argv = ["ecl2csv", "faults", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-faultsdf.csv")
+    sys.argv = ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-faultsdf.csv"
-    sys.argv = ["faults2csv", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-faultsdf.csv")
+    sys.argv = ["faults2csv", DATAFILE, "-o", str(tmpcsvfile)]
     faults.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)

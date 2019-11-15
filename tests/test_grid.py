@@ -37,6 +37,7 @@ def test_gridgeometry2df():
     assert "VOLUME" in grid_geom
     assert "ZONE" in grid_geom
 
+
 def test_wrongfile():
     try:
         FileNotFoundError
@@ -182,15 +183,15 @@ def test_mergegridframes():
     )
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-eclgrid.csv"
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--init", "PORO"]
+    tmpcsvfile = tmpdir.join(".TMP-eclgrid.csv")
+    sys.argv = ["eclgrid2csv", DATAFILE, "-o", str(tmpcsvfile), "--init", "PORO"]
     grid.main()
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
+    os.remove(str(tmpcsvfile))
 
     # Do again with also restarts, and using subparsers:
     sys.argv = [
@@ -198,45 +199,44 @@ def test_main():
         "grid",
         DATAFILE,
         "-o",
-        tmpcsvfile,
+        str(tmpcsvfile),
         "--rstdate",
         "first",
         "--init",
         "PORO",
     ]
     ecl2csv.main()
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
+    os.remove(str(tmpcsvfile))
 
     # Do again with also restarts:
     sys.argv = [
         "eclgrid2csv",
         DATAFILE,
         "-o",
-        tmpcsvfile,
+        str(tmpcsvfile),
         "--rstdate",
         "2001-02-01",
         "--init",
         "PORO",
     ]
     grid.main()
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
+    os.remove(str(tmpcsvfile))
 
     # Test with constants dropping
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", tmpcsvfile, "--dropconstants"]
+    sys.argv = ["eclgrid2csv", DATAFILE, "-o", str(tmpcsvfile), "--dropconstants"]
     grid.main()
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     # That PVTNUM is constant is a particular feature
     # of the test dataset.
     assert "PVTNUM" not in disk_df
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
 
 
 def test_rstdates():

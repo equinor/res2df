@@ -88,7 +88,7 @@ SWOF
     # ### It remains unsolved how to avoid an error here!
 
 
-def test_sgof_satnuminferrer():
+def test_sgof_satnuminferrer(tmpdir):
     """Test inferring of SATNUMS in SGOF strings"""
     sgofstr = """
 SGOF
@@ -104,6 +104,7 @@ SGOF
   1 1 0 0
 /
 """
+    tmpdir.chdir()
     assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
     sgofdf = satfunc.deck2df(sgofstr)
     assert "SATNUM" in sgofdf
@@ -126,8 +127,9 @@ SGOF
     assert len(parsed_sgof["SATNUM"].unique()) == 3
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
+    tmpdir.chdir()
     tmpcsvfile = ".TMP-satfunc.csv"
     sys.argv = ["satfunc2csv", DATAFILE, "-o", tmpcsvfile]
     satfunc.main()

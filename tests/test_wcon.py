@@ -100,25 +100,23 @@ WCONHIST
     assert "2001-05-07" in dates
 
 
-def test_main():
+def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-wcondf.csv"
-    sys.argv = ["wcon2csv", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-wcondf.csv")
+    sys.argv = ["wcon2csv", DATAFILE, "-o", str(tmpcsvfile)]
     wcon.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    # os.remove(tmpcsvfile)
 
 
-def test_main_subparsers():
+def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-wcondf.csv"
-    sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-wcondf.csv")
+    sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    # os.remove(tmpcsvfile)

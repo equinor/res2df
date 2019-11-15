@@ -366,8 +366,10 @@
             <span class="nb">len</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
             <span class="nb">str</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
         <span class="p">)</span>
-        <span class="n">satfunc_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty saturation function dataframe being written to disk!&quot;</span><span class="p">)</span>
+    <span class="n">satfunc_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>

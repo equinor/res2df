@@ -240,6 +240,8 @@
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
     <span class="n">faults_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">faults_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty FAULT data being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">faults_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 

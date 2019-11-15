@@ -471,6 +471,8 @@
                 <span class="n">rootname</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">dict2treelib</span><span class="p">(</span><span class="n">rootname</span><span class="p">,</span> <span class="n">tree</span><span class="p">[</span><span class="n">rootname</span><span class="p">]))</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty GRUPTREE dataframe being written to disk!&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
         <span class="c1"># Ignore pipe errors when writing to stdout.</span>
         <span class="kn">from</span> <span class="nn">signal</span> <span class="k">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>

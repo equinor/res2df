@@ -34,6 +34,11 @@ from .common import merge_zones
 def rstdates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
+    logging.info(
+        "Restart report indices (count %s): %s",
+        str(len(report_indices)),
+        str(report_indices),
+    )
     return [
         eclfiles.get_rstfile().iget_restart_sim_time(index).date()
         for index in range(0, len(report_indices))
@@ -94,6 +99,11 @@ def dates2rstindices(eclfiles, dates):
     else:
         raise ValueError("date " + str(dates) + " not understood")
 
+    logging.info(
+        "Available dates (count %s) in RST: %s",
+        str(len(availabledates)),
+        str([x.isoformat() for x in availabledates]),
+    )
     rstindices = [availabledates.index(x) for x in chosendates]
     return (rstindices, chosendates)
 
@@ -131,7 +141,10 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
     # data for:
     (rstindices, chosendates) = dates2rstindices(eclfiles, date)
 
-    logging.info("Extracting restart information at dates %s", str(chosendates))
+    logging.info(
+        "Extracting restart information at dates %s",
+        str([x.isoformat() for x in chosendates]),
+    )
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
@@ -156,16 +169,23 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
         # might not be available at all timesteps:
         present_rstvectors = []
         for vec in rstvectors:
-            if eclfiles.get_rstfile().iget_named_kw(vec, rstindex):
-                present_rstvectors.append(vec)
-
+            try:
+                if eclfiles.get_rstfile().iget_named_kw(vec, rstindex):
+                    present_rstvectors.append(vec)
+            except IndexError:
+                pass
+        logging.info(
+            "Present restart vectors at index %s: %s",
+            str(rstindex),
+            str(present_rstvectors),
+        )
         if not present_rstvectors:
             logging.warning("No restart vectors available at index %s", str(rstindex))
             continue
 
         # Make the dataframe
         rst_df = pd.DataFrame(
-            columns=rstvectors,
+            columns=present_rstvectors,
             data=np.hstack(
                 [
                     eclfiles.get_rstfile()
@@ -329,7 +349,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logging.info("Extracting grid geometry from %s", egrid_file)
+    logging.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 
@@ -522,7 +542,7 @@ def grid2df(eclfiles, vectors="*"):
 def main():
     """Entry-point for module, for command line utility. Deprecated to use
     """
-    logging.warning("grid2csv is deprecated, use 'ecl2csv grid <args>' instead")
+    logging.warning("eclgrid2csv is deprecated, use 'ecl2csv grid <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()

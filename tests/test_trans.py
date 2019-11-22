@@ -8,7 +8,9 @@ from __future__ import print_function
 import os
 import sys
 import datetime
+
 import pandas as pd
+import networkx
 
 import pytest
 
@@ -69,6 +71,17 @@ def test_grouptrans():
     assert (trans_df["FIPNUM1"] < trans_df["FIPNUM2"]).all()
     assert len(trans_df) == 7
     assert "X" in trans_df  # (average X coord for that FIPNUM interface)
+
+
+def test_nx(tmpdir):
+    """Test graph generation"""
+    eclfiles = EclFiles(DATAFILE)
+    network = trans.nx(eclfiles, region="FIPNUM")
+    assert network.number_of_nodes() == 6
+    networkx.write_gexf(
+        network, str(tmpdir.join("reek-fipnum-trans.gxf")), prettyprint=True
+    )
+    assert os.path.exists(str(tmpdir.join("reek-fipnum-trans.gxf")))
 
 
 def test_main(tmpdir):

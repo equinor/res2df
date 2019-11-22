@@ -217,6 +217,24 @@ def df(
     return trans_df
 
 
+def nx(eclfiles, region="FIPNUM"):
+    """Construct a networkx graph for the transmissibilities.
+    """
+    try:
+        import networkx
+    except ImportError:
+        logging.error("Please install networkx for this function to work")
+        return None
+    trans_df = df(eclfiles, vectors=[region], coords=True, group=True)
+    reg1 = region + "1"
+    reg2 = region + "2"
+    graph = networkx.Graph()
+    graph.add_weighted_edges_from(
+        [tuple(row) for row in trans_df[[reg1, reg2, "TRAN"]].values]
+    )
+    return graph
+
+
 def fill_parser(parser):
     """Set up sys.argv parser.
 

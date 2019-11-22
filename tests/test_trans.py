@@ -7,12 +7,9 @@ from __future__ import print_function
 
 import os
 import sys
-import datetime
 
 import pandas as pd
 import networkx
-
-import pytest
 
 from ecl2df import trans
 from ecl2df import ecl2csv
@@ -50,6 +47,9 @@ def test_trans():
     assert "K" not in trans.df(eclfiles, onlyijdir=True)["DIR"]
     assert "I" not in trans.df(eclfiles, onlykdir=True)["DIR"]
 
+    transnnc_df = trans.df(eclfiles, addnnc=True)
+    assert len(transnnc_df) > trans_full_length
+
     trans_df = trans.df(eclfiles, vectors=["FIPNUM", "EQLNUM"], boundaryfilter=True)
     assert trans_df.empty
 
@@ -57,8 +57,8 @@ def test_trans():
     assert len(trans_df) < trans_full_length
 
     trans_df = trans.df(eclfiles, coords=True)
-    assert "X1" in trans_df
-    assert "X2" in trans_df
+    assert "X" in trans_df
+    assert "Y" in trans_df
 
 
 def test_grouptrans():

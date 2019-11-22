@@ -24,6 +24,7 @@ def df(
     coords=False,
     onlykdir=False,
     onlyijdir=False,
+    addnnc=False,
 ):
     """Make a dataframe of the neighbour transmissibilities.
 
@@ -58,6 +59,8 @@ def df(
             K direction
         onlyijdir (bool): Set to true if you only want transmissibilities
             in the IJ-plane
+        addnnc (bool): Set to true if NNC connection should be concatenated to
+            the dataframe
 
     Returns:
         pd.DataFrame: with one cell-pair pr. row. Empty dataframe if error.
@@ -94,6 +97,7 @@ def df(
         )
     vectors = existing_vectors
     transrows = []
+    logging.info("Building transmissibility dataframe")
     for ijk, row in grid_df.iterrows():
         if abs(row["TRANX"]) > 0 and not onlykdir:
             transrow = [
@@ -134,6 +138,13 @@ def df(
     trans_df = pd.DataFrame(data=transrows)
     columnnames = ["I1", "J1", "K1", "I2", "J2", "K2", "DIR", "TRAN"]
     trans_df.columns = columnnames
+
+    if addnnc:
+        logging.info("Adding NNC data")
+        nnc_df = ecl2df.nnc.df(eclfiles, coords=False, pillars=False)
+        nnc_df["DIR"] = "NNC"
+        trans_df = pd.concat([trans_df, nnc_df], sort=False)
+
     # If we have additional vectors we want, merge them in:
     vectorscoords = list(vectors)  # Copy
     if coords:
@@ -145,6 +156,7 @@ def df(
             vectorscoords.append("Z")
 
     if vectorscoords:
+        logging.info("Adding vectors %s", str(vectorscoords))
         grid_df = grid_df.reset_index()
         trans_df = pd.merge(
             trans_df,
@@ -169,7 +181,7 @@ def df(
         trans_df["DX"] = abs(trans_df["X1"] - trans_df["X2"])
         trans_df["DY"] = abs(trans_df["Y1"] - trans_df["Y2"])
         trans_df["DZ"] = abs(trans_df["Z1"] - trans_df["Z2"])
-        trans_df = trans_df.drop(["X1", "X2", "Y1", "Y2", "K1", "K2"], axis=1)
+        trans_df = trans_df.drop(["X1", "X2", "Y1", "Y2", "Z1", "Z2"], axis=1)
 
     for vec in vectors:
         columnnames.append(vec + "1")
@@ -187,6 +199,7 @@ def df(
     if group:
         assert len(vectors) == 1  # This is checked above
         assert boundaryfilter
+        logging.info("Grouping transmissiblity over %s interfaces", str(vectors[0]))
         vec1 = vectors[0] + "1"
         vec2 = vectors[0] + "2"
         pairname = vectors[0] + "PAIR"
@@ -259,13 +272,27 @@ def fill_parser(parser):
     )
     parser.add_argument("--onlyij", action="store_true", help="Filter to only IJ-plane")
     parser.add_argument(
+        "--coords", action="store_true", help="Add coordinates to dataframe"
+    )
+    parser.add_argument(
+        "--group",
+        action="store_true",
+        help=(
+            "Group transmissibilities over region "
+            "interfaces. Specify the region name in --vectors"
+        ),
+    )
+    parser.add_argument(
+        "--nnc", action="store_true", help="Concatenate NNC transmissibilities"
+    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument(
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="eclgrid.csv",
+        help="Name of output csv file. Use '-' for stdout",
+        default="trans.csv",
     )
-    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
 
 
@@ -274,7 +301,16 @@ def trans2df_main(args):
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
-    trans_df = df(eclfiles, vectors=args.vectors,)
+    trans_df = df(
+        eclfiles,
+        vectors=args.vectors,
+        boundaryfilter=args.boundaryfilter,
+        onlykdir=args.onlyk,
+        onlyijdir=args.onlyij,
+        coords=args.coords,
+        group=args.group,
+        addnnc=args.nnc,
+    )
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

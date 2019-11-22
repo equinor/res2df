@@ -29,6 +29,8 @@ def test_trans():
     assert set(trans_df["DIR"].unique()) == set(["I", "J", "K"])
     assert trans_df["TRAN"].sum() > 0
 
+    trans_full_length = len(trans_df)
+
     # Try including some vectors:
     trans_df = trans.df(eclfiles, vectors="FIPNUM")
     assert "FIPNUM" not in trans_df
@@ -43,26 +45,30 @@ def test_trans():
     assert "BOGUS1" not in trans_df
     assert "TRAN" in trans_df  # (we should have gotten a warning only)
 
-    # Example creating a column with the FIPNUM pair as a string
-    # (lowest fipnum value first)
-    trans_df = trans.df(eclfiles, vectors=["X", "Y", "Z", "FIPNUM"])
-    trans_df["FIPNUMPAIR"] = [
-        str(int(min((x[1:3])))) + "-" + str(int(max(x[1:3])))
-        for x in trans_df[["FIPNUM1", "FIPNUM2"]].itertuples()
-    ]
-    # Filter to different FIPNUMS (that means FIPNUM boundaries)
-    # and horizontal connetions:
-    filt_trans_df = trans_df[
-        (trans_df["FIPNUM1"] != trans_df["FIPNUM2"]) & (trans_df["DIR"] != "K")
-    ]
-    unique_pairs = filt_trans_df["FIPNUMPAIR"].unique()
-    assert len(unique_pairs) == 3
-    assert "5-6" in unique_pairs
-    assert "6-5" not in unique_pairs  # because we have sorted them
+    assert "K" not in trans.df(eclfiles, onlyijdir=True)["DIR"]
+    assert "I" not in trans.df(eclfiles, onlykdir=True)["DIR"]
 
-    assert len(filt_trans_df) < len(trans_df)
-    assert set(filt_trans_df["DIR"].unique()) == set(["I", "J"])
-    # filt_trans_df.to_csv("fipnumtrans.csv", index=False)
+    trans_df = trans.df(eclfiles, vectors=["FIPNUM", "EQLNUM"], boundaryfilter=True)
+    assert trans_df.empty
+
+    trans_df = trans.df(eclfiles, vectors="FIPNUM", boundaryfilter=True)
+    assert len(trans_df) < trans_full_length
+
+    trans_df = trans.df(eclfiles, coords=True)
+    assert "X1" in trans_df
+    assert "X2" in trans_df
+
+
+def test_grouptrans():
+    """Test grouping of transmissibilities"""
+    eclfiles = EclFiles(DATAFILE)
+    trans_df = trans.df(eclfiles, vectors="FIPNUM", group=True, coords=True)
+    assert "FIPNUMPAIR" in trans_df
+    assert "FIPNUM1" in trans_df
+    assert "FIPNUM2" in trans_df
+    assert (trans_df["FIPNUM1"] < trans_df["FIPNUM2"]).all()
+    assert len(trans_df) == 7
+    assert "X" in trans_df  # (average X coord for that FIPNUM interface)
 
 
 def test_main(tmpdir):

@@ -9,22 +9,22 @@ from __future__ import absolute_import
 
 import sys
 import logging
-import argparse
-import fnmatch
-import datetime
-import dateutil.parser
 
-import numpy as np
 import pandas as pd
 
 import ecl2df
-from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
 
-from .common import merge_zones
 
-
-def df(eclfiles, vectors=None):
+def df(
+    eclfiles,
+    vectors=None,
+    boundaryfilter=False,
+    group=False,
+    coords=False,
+    onlykdir=False,
+    onlyijdir=False,
+):
     """Make a dataframe of the neighbour transmissibilities.
 
     The TRANX, TRANY and TRANZ (whenever nonzero) will be used
@@ -35,6 +35,9 @@ def df(eclfiles, vectors=None):
         I1, J1, K1, I2, J2, K2, DIR, TRAN
     similar to what you get from non-neighbour connection export.
 
+    If you ask for coordinates, you will also get the distance (DX,
+    DY, DZ) for each connection.
+
     The DIR column indicates the direction, and can take the
     string values I, J or K.
 
@@ -44,6 +47,17 @@ def df(eclfiles, vectors=None):
     Args:
         eclfiles (EclFiles): An object representing your Eclipse run
         vectors (str or list): Eclipse INIT vectors that you want to include
+        boundaryfilter (bool): Set to true if you want to filter where one INIT
+            vector change. Only use for integer INIT vectors.
+        group (bool): Set to true if you want to sum transmissibilities over
+            boundary interfaces. Implies boundaryfilter and requires only one integer
+            INIT vector.
+        coords (bool): Set to true if you want to add coordinates (X1, Y1, Z1,
+            X2, Y2, Z2)
+        onlykdir (bool): Set to true if you only want transmissibilities in
+            K direction
+        onlyijdir (bool): Set to true if you only want transmissibilities
+            in the IJ-plane
 
     Returns:
         pd.DataFrame: with one cell-pair pr. row. Empty dataframe if error.
@@ -52,6 +66,26 @@ def df(eclfiles, vectors=None):
         vectors = []
     if not isinstance(vectors, list):
         vectors = [vectors]
+
+    if group:
+        # grouping implies boundaryfilter
+        boundaryfilter = True
+
+    if boundaryfilter and len(vectors) > 1:
+        logging.error(
+            "Can't filter to boundaries when more than one INIT vector is supplied"
+        )
+        return pd.DataFrame()
+
+    if group and len(vectors) > 1:
+        logging.error("Can't group to more than one INIT vector at a time")
+        return pd.DataFrame()
+
+    if onlykdir and onlyijdir:
+        logging.warning(
+            "Filtering to both k and to ij simultaneously " "results in empty dataframe"
+        )
+
     grid_df = ecl2df.grid.df(eclfiles).set_index(["I", "J", "K"])
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
@@ -61,7 +95,7 @@ def df(eclfiles, vectors=None):
     vectors = existing_vectors
     transrows = []
     for ijk, row in grid_df.iterrows():
-        if abs(row["TRANX"]) > 0:
+        if abs(row["TRANX"]) > 0 and not onlykdir:
             transrow = [
                 int(ijk[0]),
                 int(ijk[1]),
@@ -73,7 +107,7 @@ def df(eclfiles, vectors=None):
                 row["TRANX"],
             ]
             transrows.append(transrow)
-        if abs(row["TRANY"]) > 0:
+        if abs(row["TRANY"]) > 0 and not onlykdir:
             transrow = [
                 int(ijk[0]),
                 int(ijk[1]),
@@ -85,7 +119,7 @@ def df(eclfiles, vectors=None):
                 row["TRANY"],
             ]
             transrows.append(transrow)
-        if abs(row["TRANZ"]) > 0:
+        if abs(row["TRANZ"]) > 0 and not onlyijdir:
             transrow = [
                 int(ijk[0]),
                 int(ijk[1]),
@@ -101,30 +135,85 @@ def df(eclfiles, vectors=None):
     columnnames = ["I1", "J1", "K1", "I2", "J2", "K2", "DIR", "TRAN"]
     trans_df.columns = columnnames
     # If we have additional vectors we want, merge them in:
-    if vectors:
+    vectorscoords = list(vectors)  # Copy
+    if coords:
+        if "X" not in vectorscoords:
+            vectorscoords.append("X")
+        if "Y" not in vectorscoords:
+            vectorscoords.append("Y")
+        if "Z" not in vectorscoords:
+            vectorscoords.append("Z")
+
+    if vectorscoords:
         grid_df = grid_df.reset_index()
         trans_df = pd.merge(
             trans_df,
-            grid_df[["I", "J", "K"] + vectors],
+            grid_df[["I", "J", "K"] + vectorscoords],
             left_on=["I1", "J1", "K1"],
             right_on=["I", "J", "K"],
         )
-        del trans_df["I"]
-        del trans_df["J"]
-        del trans_df["K"]
+        trans_df = trans_df.drop(["I", "J", "K"], axis=1)
         trans_df = pd.merge(
             trans_df,
-            grid_df[["I", "J", "K"] + vectors],
+            grid_df[["I", "J", "K"] + vectorscoords],
             left_on=["I2", "J2", "K2"],
             right_on=["I", "J", "K"],
             suffixes=("1", "2"),
         )
-        del trans_df["I"]
-        del trans_df["J"]
-        del trans_df["K"]
+        trans_df = trans_df.drop(["I", "J", "K"], axis=1)
+
+    if coords:
+        trans_df["X"] = (trans_df["X1"] + trans_df["X2"]) / 2.0
+        trans_df["Y"] = (trans_df["Y1"] + trans_df["Y2"]) / 2.0
+        trans_df["Z"] = (trans_df["Z1"] + trans_df["Z2"]) / 2.0
+        trans_df["DX"] = abs(trans_df["X1"] - trans_df["X2"])
+        trans_df["DY"] = abs(trans_df["Y1"] - trans_df["Y2"])
+        trans_df["DZ"] = abs(trans_df["Z1"] - trans_df["Z2"])
+        trans_df = trans_df.drop(["X1", "X2", "Y1", "Y2", "K1", "K2"], axis=1)
+
     for vec in vectors:
         columnnames.append(vec + "1")
         columnnames.append(vec + "2")
+
+    if boundaryfilter:
+        assert len(vectors) == 1
+        logging.info(
+            "Filtering to transmissibilities crossing different %s values", vectors[0]
+        )
+        vec1 = vectors[0] + "1"
+        vec2 = vectors[0] + "2"
+        trans_df = trans_df[(trans_df[vec1] != trans_df[vec2])]
+
+    if group:
+        assert len(vectors) == 1  # This is checked above
+        assert boundaryfilter
+        vec1 = vectors[0] + "1"
+        vec2 = vectors[0] + "2"
+        pairname = vectors[0] + "PAIR"
+        # Construct a column with values like "3-4" for a pair
+        # where FIPNUM1 is 4 and FIPNUM2 is 3
+        trans_df[pairname] = [
+            str(int(min(x[1:3]))) + "-" + str(int(max(x[1:3])))
+            for x in trans_df[[vec1, vec2]].itertuples()
+        ]
+
+        aggregators = {
+            "X": "mean",
+            "Y": "mean",
+            "Z": "mean",
+            "DX": "mean",
+            "DY": "mean",
+            "DZ": "mean",
+            "TRAN": "sum",
+        }
+        aggregators = {key: aggregators[key] for key in aggregators if key in trans_df}
+        trans_df = trans_df.groupby(pairname).agg(aggregators).reset_index()
+
+        # Reinstate FIPNUM1 and FIPNUM2 (by splitting the pair, to get sorting for free)
+        vectuples = trans_df[pairname].str.split("-")
+        trans_df[vec1] = [tup[0] for tup in vectuples]
+        trans_df[vec2] = [tup[1] for tup in vectuples]
+
     return trans_df
 
 
@@ -139,6 +228,18 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument("--vectors", nargs="+", help="Extra INIT vectors to be added")
+    parser.add_argument(
+        "--boundaryfilter",
+        action="store_true",
+        help=(
+            "Filter to connections where the INIT vector change value. "
+            "Only one INIT vector allowed."
+        ),
+    )
+    parser.add_argument(
+        "--onlyk", action="store_true", help="Filter to only K direction"
+    )
+    parser.add_argument("--onlyij", action="store_true", help="Filter to only IJ-plane")
     parser.add_argument(
         "-o",
         "--output",

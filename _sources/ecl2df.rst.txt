@@ -20,6 +20,14 @@ ecl2df.compdat module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.compdat2df module
+------------------------
+
+.. automodule:: ecl2df.compdat2df
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.ecl2csv module
 ---------------------
 

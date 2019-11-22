@@ -5,8 +5,33 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import os
+import json
 import logging
+import datetime
+
 import pandas as pd
+
+# Parse named JSON files, this exposes a dict of dictionary describing the contents
+# of supported Eclipse keyword data
+opmkeywords = {}
+for keyword in [
+    "COMPDAT",
+    "COMPSEGS",
+    "EQUIL",
+    "FAULTS",
+    "WELSPECS",
+    "WELSEGS",
+    "WCONPROD",
+    "WCONHIST",
+    "WCONINJE",
+    "WCONINJH",
+    "GRUPTREE",
+    "GRUPNET",
+]:
+    opmkeywords[keyword] = json.load(
+        open(os.path.join(os.path.dirname(__file__), "opmkeywords", keyword))
+    )
 
 
 def parse_ecl_month(eclmonth):
@@ -27,6 +52,84 @@ def parse_ecl_month(eclmonth):
         "DEC": 12,
     }
     return eclmonth2num[eclmonth]
+
+
+def parse_opmio_deckrecord(
+    record, keyword, itemlistname="items", recordindex=None, renamer=None
+):
+    """
+    Parse an opm.io.DeckRecord belonging to a certain keyword
+
+    Args:
+        record (opm.libopmcommon_python.DeckRecord): Record be parsed
+        keyword (string): Which Eclipse keyword this belongs to
+        itemlistname (string): The key in the json dict that describes the items, typically 'items' or 'records'
+        recordindex (int): For keywords where itemlistname is 'records', this is a list index to the "record"
+            Beware, there are multiple concepts here for what we call a record.
+        renamer (dict): If supplied, this dictionary will be used to remap
+            the keys in returned dict
+    Returns:
+        dict
+    """
+    if keyword not in opmkeywords:
+        logging.error("Keyword %s not supported by common.py", str(keyword))
+
+    # opm.io deckitem access functions, depending on value_type in json data for item:
+    deckitem_fn = {
+        "STRING": "get_str",
+        "INT": "get_int",
+        "DOUBLE": "get_raw",
+        "UDA": "get_raw",  # Does not work. Is UDA unsupported in opm.io??
+    }
+    rec_dict = {}
+
+    if recordindex is None:  # Beware, 0 is different from None here.
+        itemlist = opmkeywords[keyword][itemlistname]
+    else:
+        itemlist = opmkeywords[keyword][itemlistname][recordindex]
+
+    for item_idx, jsonitem in enumerate(itemlist):
+        item_name = jsonitem["name"]
+        if not record[item_idx].defaulted(0):
+            rec_dict[item_name] = getattr(
+                record[item_idx], deckitem_fn[jsonitem["value_type"]]
+            )(0)
+        else:
+            if "default" in jsonitem:
+                rec_dict[item_name] = jsonitem["default"]
+            else:
+                rec_dict[item_name] = None
+    if renamer:
+        renamed_dict = {}
+        for key in rec_dict:
+            if key in renamer:
+                renamed_dict[renamer[key]] = rec_dict[key]
+            else:
+                renamed_dict[key] = rec_dict[key]
+        return renamed_dict
+    return rec_dict
+
+
+def parse_opmio_date_rec(record):
+    """
+    Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.
+
+    Return:
+        datetime.date
+    """
+    day = record[0].get_int(0)
+    month = record[1].get_str(0)
+    year = record[2].get_int(0)
+    return datetime.date(year=year, month=parse_ecl_month(month), day=day)
+
+
+def parse_opmio_tstep_rec(record):
+    """Parse a record with TSTEP data
+
+    Return:
+        list of floats or ints
+    """
+    return record[0].get_raw_data_list()
 
 
 def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):

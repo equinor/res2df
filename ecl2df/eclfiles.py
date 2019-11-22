@@ -11,24 +11,24 @@ import errno
 import logging
 import shlex
 
-import sunbeam.deck
+import opm.io
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
 
-# Default parse option to Sunbeam for a very permissive parsing
-SUNBEAM_RECOVERY = [
-    ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
-    ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
-    ("PARSE_RANDOM_SLASH", sunbeam.action.ignore),
-    ("UNSUPPORTED_*", sunbeam.action.ignore),
-    ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
-    ("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore),
-    ("PARSE_RANDOM_TEXT", sunbeam.action.ignore),
-    ("PARSE_MISSING_INCLUDE", sunbeam.action.ignore),
-    ("PARSE_EXTRA_RECORDS", sunbeam.action.ignore),
-    ("PARSE_EXTRA_DATA", sunbeam.action.ignore),
+# Default parse option to opm.io for a very permissive parsing
+OPMIOPARSER_RECOVERY = [
+    ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
+    ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
+    ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
+    ("UNSUPPORTED_*", opm.io.action.ignore),
+    ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+    ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
+    ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
+    ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
+    ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
+    ("PARSE_EXTRA_DATA", opm.io.action.ignore),
 ]
 
 # For Python2 compatibility:
@@ -77,24 +77,25 @@ class EclFiles(object):
         return os.path.dirname(os.path.abspath(self._eclbase))
 
     def get_ecldeck(self):
-        """Return a sunbeam deck of the DATA file"""
+        """Return a opm.io deck of the DATA file"""
         if not self._deck:
             if os.path.exists(self._eclbase + ".DATA"):
                 deckfile = self._eclbase + ".DATA"
             else:
                 deckfile = self._eclbase  # Will be any filename
             logging.info("Parsing deck file %s...", deckfile)
-            deck = sunbeam.deck.parse(deckfile, recovery=SUNBEAM_RECOVERY)
+            parsecontext = opm.io.ParseContext(OPMIOPARSER_RECOVERY)
+            deck = opm.io.Parser().parse(deckfile, parsecontext)
             self._deck = deck
         return self._deck
 
     @staticmethod
-    def str2deck(string, recovery=None):
-        """Produce a sunbeam deck from a string, using permissive
+    def str2deck(string, parsecontext=None):
+        """Produce a opm.io deck from a string, using permissive
         parsing by default"""
-        if not recovery:
-            recovery = SUNBEAM_RECOVERY
-        return sunbeam.deck.parse_string(string, recovery=recovery)
+        if not parsecontext:
+            parsecontext = opm.io.ParseContext(OPMIOPARSER_RECOVERY)
+        return opm.io.Parser().parse_string(string, parsecontext)
 
     @staticmethod
     def file2deck(filename):

@@ -9,7 +9,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import logging
-import sunbeam.deck
+import opm.io
 
 from ecl2df import EclFiles
 
@@ -18,7 +18,7 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     """Guess the correct dimension count for an incoming deck (string)
 
     The incoming deck must in string form, if not, extra data is most
-    likely already removed by the sunbeam parser. TABDIMS or EQLDIMS
+    likely already removed by the opm.io parser. TABDIMS or EQLDIMS
     must not be present
 
     This function will inject TABDIMS or EQLDIMS into it and reparse it in a
@@ -29,7 +29,7 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
         dimkeyword (str): Either TABDIMS or EQLDIMS
         dimitem (int): The element number in TABDIMS/EQLDIMS to modify
     Returns:
-        int: The lowest number for which stricter sunbeam parsing succeeds
+        int: The lowest number for which stricter opm.io parsing succeeds
 
     """
 
@@ -42,16 +42,16 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
         if dimitem not in [0]:
             raise ValueError("Only item 0 in EQLDIMS can be estimated")
 
-    # A less than ecl2df-standard permissive sunbeam, when using
-    # this one sunbeam will fail if there are extra records
+    # A less than ecl2df-standard permissive opm.io, when using
+    # this one opm.io will fail if there are extra records
     # in tables (if NTSFUN in TABDIMS is wrong f.ex):
-    sunbeam_recovery_fail_extra_records = [
-        ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
-        ("SUMMARY_UNKNOWN_GROUP", sunbeam.action.ignore),
-        ("UNSUPPORTED_*", sunbeam.action.ignore),
-        ("PARSE_MISSING_SECTIONS", sunbeam.action.ignore),
-        ("PARSE_RANDOM_TEXT", sunbeam.action.ignore),
-        ("PARSE_MISSING_INCLUDE", sunbeam.action.ignore),
+    opmioparser_recovery_fail_extra_records = [
+        ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
+        ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
+        ("UNSUPPORTED_*", opm.io.action.ignore),
+        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
+        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
     ]
 
     max_guess = 640  # This ought to be enough for everybody
@@ -60,7 +60,7 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
         deck_candidate = inject_dimcount(deckstring, dimkeyword, dimitem, dimcountguess)
         try:
             EclFiles.str2deck(
-                deck_candidate, recovery=sunbeam_recovery_fail_extra_records
+                deck_candidate, parsecontext=opm.io.ParseContext(opmioparser_recovery_fail_extra_records)
             )
             # If we succeed, then the dimcountguess was correct
             break
@@ -82,7 +82,7 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
 def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
     """Insert a TABDIMS with NTSFUN into a deck
 
-    This is simple string manipulation, not sunbeam
+    This is simple string manipulation, not opm.io
     deck manipulation (which might be possible to do).
 
     Arguments:

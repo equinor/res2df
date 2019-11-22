@@ -14,8 +14,10 @@ import datetime
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month
+from .common import parse_opmio_date_rec, parse_opmio_deckrecord
 
+# The keywords supported in this module.
+WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
 # The record keys are all taken from the OPM source code:
 # https://github.com/OPM/opm-common/blob/master/
@@ -118,28 +120,27 @@ def deck2df(deck):
     for kword in deck:
         if kword.name == "DATES" or kword.name == "START":
             for rec in kword:
-                day = rec["DAY"][0]
-                month = rec["MONTH"][0]
-                year = rec["YEAR"][0]
-                date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
+                date = parse_opmio_date_rec(rec)
                 logging.info("Parsing at date %s", str(date))
         elif kword.name == "TSTEP":
             if not date:
                 logging.critical("Can't use TSTEP when there is no start_date")
                 return pd.DataFrame()
             for rec in kword:
-                steplist = rec[0]
+                steplist = rec[0].get_raw_data_list()
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
                 logging.info(
                     "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
-        elif kword.name in RECORD_KEYS:
+        elif kword.name in WCONKEYS:
             for rec in kword:  # Loop over the lines inside WCON* record
                 rec_data = {}
+                rec_data = parse_opmio_deckrecord(rec, kword.name)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD"] = kword.name
+
                 for rec_key in RECORD_KEYS[kword.name]:
                     try:
                         if rec[rec_key]:

@@ -10,6 +10,15 @@ import pandas as pd
 from ecl2df import common
 
 
+def test_opmkeywords():
+    assert 'WCONPROD' in common.opmkeywords
+    assert common.opmkeywords['WCONPROD']
+    assert 'name' in common.opmkeywords['WCONPROD']
+    assert 'BHP'  in [x['name']for x in common.opmkeywords['WCONPROD']['items']]
+
+    # This file should not be parsed..
+    assert not 'README' in common.opmkeywords
+
 def test_stack_on_colname():
     """ Test that we can stack column with an implicit double level
     in the column names indicated by a separator string"""

@@ -132,7 +132,7 @@ def deck2df(deck, satnumcount=None):
             satnum = 1
             for deckrecord in deck[keyword]:
                 # All data for an entire SATNUM is returned in one list
-                data = np.array(deckrecord[0])
+                data = np.array(deckrecord[0].get_raw_data_list())
                 # Split up into the correct number of columns
                 column_count = len(KEYWORD_COLUMNS[keyword])
                 if len(data) % column_count:

@@ -14,6 +14,7 @@ import argparse
 import pandas as pd
 
 from .eclfiles import EclFiles
+from .common import parse_opmio_deckrecord
 
 RECORD_COLUMNS = ["NAME", "IX1", "IX2", "IY1", "IY2", "IZ1", "IZ2", "FACE"]
 COLUMNS = ["NAME", "I", "J", "K", "FACE"]
@@ -38,11 +39,12 @@ def deck2df(deck):
             for rec in keyword:
                 # Each record now has a range potentially in three
                 # dimensions for the fault, unroll this:
-                faultname = rec[0][0]
-                faultface = rec[7][0]
-                for i_idx in range(rec[1][0], rec[2][0] + 1):
-                    for j_idx in range(rec[3][0], rec[4][0] + 1):
-                        for k_idx in range(rec[5][0], rec[6][0] + 1):
+                frec_dict = parse_opmio_deckrecord(rec, "FAULTS")
+                faultname = frec_dict["NAME"]
+                faultface = frec_dict["FACE"]
+                for i_idx in range(frec_dict["IX1"], frec_dict["IX2"] + 1):
+                    for j_idx in range(frec_dict["IY1"], frec_dict["IY2"] + 1):
+                        for k_idx in range(frec_dict["IZ1"], frec_dict["IZ2"] + 1):
                             data.append([faultname, i_idx, j_idx, k_idx, faultface])
     return pd.DataFrame(columns=COLUMNS, data=data)
 

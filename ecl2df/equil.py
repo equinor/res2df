@@ -14,6 +14,7 @@ import pandas as pd
 
 from ecl2df import inferdims
 from .eclfiles import EclFiles
+from .common import parse_opmio_deckrecord
 
 
 def deck2equildf(deck):
@@ -75,59 +76,59 @@ def deck2df(deck, ntequl=None):
     phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     if "OIL" in deck and "GAS" in deck and "WATER" in deck:
         # oil-water-gas
-        columnnames = [
-            "DATUM",
-            "PRESSURE",
-            "OWC",
-            "PCOWC",
-            "GOC",
-            "PCGOC",
-            "INITRS",
-            "INITRV",
-            "ACCURACY",
-        ]
+        columnrenamer = {
+            "DATUM_DEPTH": "DATUM",
+            "DATUM_PRESSURE": "PRESSURE",
+            "OWC": "OWC",
+            "PC_OWC": "PCOWC",
+            "GOC": "GOC",
+            "PC_GOC": "PCGOC",
+            "BLACK_OIL_INIT": "INITRS",
+            "BLACK_OIL_INIT_WG": "INITRV",
+            "OIP_INIT": "ACCURACY",
+        }
     if "OIL" not in deck and "GAS" in deck and "WATER" in deck:
         # gas-water
-        columnnames = [
-            "DATUM",
-            "PRESSURE",
-            "GWC",
-            "PCGWC",
-            "IGNORE1",
-            "IGNORE2",
-            "IGNORE3",
-            "IGNORE4",
-            "ACCURACY",
-        ]
+        columnrenamer = {
+            "DATUM_DEPTH": "DATUM",
+            "DATUM_PRESSURE": "PRESSURE",
+            "OWC": "GWC",
+            "PC_OWC": "PCGWC",
+            "GOC": "IGNORE1",
+            "PC_GOC": "IGNORE2",
+            "BLACK_OIL_INIT": "IGNORE3",
+            "BLACK_OIL_INIT_WG": "IGNORE4",
+            "OIP_INIT": "ACCURACY",
+        }
     if "OIL" in deck and "GAS" not in deck and "WATER" in deck:
         # oil-water
-        columnnames = [
-            "DATUM",
-            "PRESSURE",
-            "OWC",
-            "PCOWC",
-            "IGNORE1",
-            "IGNORE2",
-            "IGNORE3",
-            "IGNORE4",
-            "ACCURACY",
-        ]
+        columnrenamer = {
+            "DATUM_DEPTH": "DATUM",
+            "DATUM_PRESSURE": "PRESSURE",
+            "OWC": "OWC",
+            "PC_OWC": "PCOWC",
+            "GOC": "IGNORE1",
+            "PC_GOC": "IGNORE2",
+            "BLACK_OIL_INIT": "IGNORE3",
+            "BLACK_OIL_INIT_WG": "IGNORE4",
+            "OIP_INIT": "ACCURACY",
+        }
     if "OIL" in deck and "GAS" in deck and "WATER" not in deck:
         # oil-gas
-        columnnames = [
-            "DATUM",
-            "PRESSURE",
-            "IGNORE1",
-            "IGNORE2",
-            "GOC",
-            "PCGOC",
-            "IGNORE3",
-            "IGNORE4",
-            "ACCURACY",
-        ]
+        columnrenamer = {
+            "DATUM_DEPTH": "DATUM",
+            "DATUM_PRESSURE": "PRESSURE",
+            "OWC": "IGNORE1",
+            "PC_OWC": "IGNORE2",
+            "GOC": "GOC",
+            "PC_GOC": "PCGOC",
+            "BLACK_OIL_INIT": "IGNORE3",
+            "BLACK_OIL_INIT_WG": "IGNORE4",
+            "OIP_INIT": "ACCURACY",
+        }
     if phasecount == 1:
-        columnnames = ["DATUM", "PRESSURE"]
-    if not columnnames:
+        columnrenamer = {"DATUM_DEPTH": "DATUM", "DATUM_PRESSURE": "PRESSURE"}
+    if not columnrenamer:
         raise ValueError("Unsupported phase configuration")
 
     if "EQUIL" not in deck:
@@ -135,15 +136,10 @@ def deck2df(deck, ntequl=None):
 
     records = []
     for rec in deck["EQUIL"]:
-        rowlist = [x[0] for x in rec]
-        if len(rowlist) > len(columnnames):
-            rowlist = rowlist[: len(columnnames)]
-            logging.warning(
-                "Something wrong with columnnames " + "or EQUIL-data, data is chopped!"
-            )
-        records.append(rowlist)
+        equil_recdict = parse_opmio_deckrecord(rec, "EQUIL", renamer=columnrenamer)
+        records.append(equil_recdict)
 
-    dataframe = pd.DataFrame(columns=columnnames, data=records)
+    dataframe = pd.DataFrame(data=records)
 
     # The column handling can be made prettier..
     for col in dataframe.columns:

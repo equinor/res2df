@@ -8,97 +8,78 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import re
 import argparse
 import logging
 import datetime
+import shlex
+
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month
+from .common import parse_opmio_date_rec, OPMKEYWORDS
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-# The record keys are all taken from the OPM source code:
-# https://github.com/OPM/opm-common/blob/master/
-#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WCONHIST etc.
+# The keywords supported in this module.
+WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
-RECORD_KEYS = {}
-RECORD_KEYS["WCONHIST"] = [
-    "WELL",
-    "STATUS",
-    "CMODE",
-    "ORAT",
-    "WRAT",
-    "VFPTable",
-    "Lift",
-    "THP",
-    "BHP",
-    "NGLRAT",
-]  # Note that the non-all-uppercase names here will be renamed.
-
-RECORD_KEYS["WCONINJE"] = [
-    "WELL",
-    "TYPE",
-    "STATUS",
-    "CMODE",
-    "RATE",
-    "RESV",
-    "BHP",
-    "THP",
-    "VFP_TABLE",
-    "VAPOIL_C",
-    "GAS_STEAM_RATIO",
-    "SURFACE_OIL_FRACTION",
-    "SURFACE_WATER_FRACTION",
-    "SURFACE_GAS_FRACTION",
-    "OIL_STEAM_RATIO",
-]
-
-RECORD_KEYS["WCONINJH"] = [
-    "WELL",
-    "TYPE",
-    "STATUS",
-    "CMODE",
-    "RATE",
-    "RESV",
-    "BHP",
-    "THP",
-    "VFP_TABLE",
-    "VAPOIL_C",
-    "GAS_STEAM_RATIO",
-    "SURFACE_OIL_FRACTION",
-    "SURFACE_WATER_FRACTION",
-    "SURFACE_GAS_FRACTION",
-    "OIL_STEAM_RATIO",
-]
-
-
-RECORD_KEYS["WCONPROD"] = [
-    "WELL",
-    "STATUS",
-    "CMODE",
-    "ORAT",
-    "WRAT",
-    "GRAT",
-    "LRAT",
-    "RESV",
-    "BHP",
-    "THP",
-    "VFP_TABLE",
-    "ALQ",
-    "E300_ITEM13",
-    "E300_ITEM14",
-    "E300_ITEM15",
-    "E300_ITEM16",
-    "E300_ITEM17",
-    "E300_ITEM18",
-    "E300_ITEM19",
-    "E300_ITEM20",
-]
-
-# Rename some of the sunbeam columns:
+# Rename some of the opm-common column names:
 COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
+
+
+def unroll_defaulted_items(itemlist):
+    """
+    Expand list if list contains <int>* string elements
+
+    so ['a', '2*', 'b'] becomes ['a', '1*', '1*', 'b']
+    """
+    multipledefaults_matcher = re.compile(r"(\d+)\*")
+    unrolled_items = []
+    for item in itemlist:
+        def_matches = multipledefaults_matcher.match(item)
+        if def_matches:
+            unrolled_items.extend(["1*"] * int(def_matches.group(1)))
+        else:
+            unrolled_items.extend([item])
+    return unrolled_items
+
+
+def ad_hoc_wconparser(record, keyword):
+    """This is a band-aid solution awaiting support for UDA-values in opm-common
+
+    Replace this with common.parse_opmio_deckrecord when ready.
+
+    Args:
+        record (str): a string representation of a record with wcon data
+        keyword (str): The E100 keyword this record is valid for.
+    """
+    assert isinstance(record, str)
+    assert keyword in WCONKEYS  # Avoid using this function for too much else.
+    rec_items = unroll_defaulted_items(shlex.split(record))
+    meta_and_data = zip(OPMKEYWORDS[keyword]["items"], rec_items)
+    rec_dict = {}
+    for item in meta_and_data:
+        if item[1] == "/":
+            break
+        itemname = item[0]["name"]
+        if item[0]["value_type"].lower() in ["uda", "double"]:
+            dataconv = float
+        elif item[0]["value_type"].lower() in ["int"]:
+            dataconv = int
+        else:
+            dataconv = str
+        if itemname in COLUMN_RENAMER:
+            itemname = COLUMN_RENAMER[itemname]
+        if item[1] == "1*":
+            if "default" in item[0]:
+                rec_dict[itemname] = dataconv(item[0]["default"])
+            else:
+                rec_dict[itemname] = None
+        else:
+            rec_dict[itemname] = dataconv(item[1])
+    return rec_dict
 
 
 def deck2wcondf(deck):
@@ -120,34 +101,25 @@ def deck2df(deck):
     for kword in deck:
         if kword.name == "DATES" or kword.name == "START":
             for rec in kword:
-                day = rec["DAY"][0]
-                month = rec["MONTH"][0]
-                year = rec["YEAR"][0]
-                date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
                 logger.info("Parsing at date %s", str(date))
+                date = parse_opmio_date_rec(rec)
         elif kword.name == "TSTEP":
             if not date:
                 logger.critical("Can't use TSTEP when there is no start_date")
                 return pd.DataFrame()
             for rec in kword:
-                steplist = rec[0]
+                steplist = rec[0].get_raw_data_list()
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
                 logger.info(
                     "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
-        elif kword.name in RECORD_KEYS:
+        elif kword.name in WCONKEYS:
             for rec in kword:  # Loop over the lines inside WCON* record
-                rec_data = {}
+                rec_data = ad_hoc_wconparser(str(rec), kword.name)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD"] = kword.name
-                for rec_key in RECORD_KEYS[kword.name]:
-                    try:
-                        if rec[rec_key]:
-                            rec_data[rec_key.upper()] = rec[rec_key][0]
-                    except ValueError:
-                        pass
                 wconrecords.append(rec_data)
 
         elif kword.name == "TSTEP":

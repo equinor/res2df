@@ -12,51 +12,9 @@ import pandas as pd
 
 from ecl2df import wcon, ecl2csv
 from ecl2df.eclfiles import EclFiles
-from ecl2df.wcon import unroll_defaulted_items, ad_hoc_wconparser
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
-
-
-def test_unroller():
-    """Test that the defaults unroller is correct"""
-    assert len(unroll_defaulted_items(["3*"])) == 3
-    assert not unroll_defaulted_items(["0*"])
-    assert len(unroll_defaulted_items(["1*"])) == 1
-    assert len(unroll_defaulted_items(["99*"])) == 99
-    assert len(unroll_defaulted_items(["-1*"])) == 1
-    assert len(unroll_defaulted_items(["foo", "2*", "bar"])) == 4
-    assert unroll_defaulted_items(["foo", "2*", "bar"])[1] == "1*"
-    assert unroll_defaulted_items(["foo", "2*", "bar"])[2] == "1*"
-
-
-def test_ad_hoc_wconparser():
-    """This is the temporary parser that we need until opm-common is
-    up to speed"""
-    items = ad_hoc_wconparser(
-        ("'OP_2'  OPEN  RESV 3862.069 94.14519 710620.7 "
-        "   1*       1*       1*       1* "),
-        "WCONPROD",
-    )
-    print(items)
-    assert items["WELL"] == "OP_2"
-    assert items["STATUS"] == "OPEN"
-    assert items["CMODE"] == "RESV"
-    assert int(items["ORAT"]) == 3862
-    assert int(items["WRAT"]) == 94
-    assert int(items["GRAT"]) == 710620
-    assert int(items["RESV"]) == 0  # default value exists.
-    assert items["BHP"] == 1.01325  # default value
-    # VFP_TABLE is not here, because it was not mentioned.
-    # Not sure if we should have the default value
-    # in the returned data or just ignore it.
-
-    items = ad_hoc_wconparser(
-        "'OP_1'  OPEN  RESV 3833.858 50.36119 705429.9 ", "WCONHIST"
-    )
-    print(items)
-    assert items["WELL"] == "OP_1"
-    assert items["GRAT"] == 705429.9
 
 
 def test_wcon2df():

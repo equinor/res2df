@@ -1,3 +1,4 @@
 pandas
 pyyaml>=5.1
 treelib
+libecl

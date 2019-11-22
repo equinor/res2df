@@ -17,22 +17,10 @@ import dateutil
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month
+from .common import parse_opmio_date_rec, parse_opmio_deckrecord, parse_opmio_tstep_rec
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
-
-# From: https://github.com/OPM/opm-common/blob/master/
-#       src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET
-GRUPNETKEYS = [
-    "NAME",
-    "TERMINAL_PRESSURE",
-    "VFP_TABLE",
-    "ALQ",
-    "SUB_SEA_MANIFOLD",
-    "LIFT_GAS_FLOW_THROUGH",
-    "ALQ_SURFACE_EQV",
-]
 
 
 def gruptree2df(deck, startdate=None, welspecs=True):
@@ -111,15 +99,11 @@ def deck2df(deck, startdate=None, welspecs=True):
             # date:
             if kword.name == "DATES" or kword.name == "START":
                 for rec in kword:
-                    day = rec["DAY"][0]
-                    month = rec["MONTH"][0]
-                    year = rec["YEAR"][0]
-                    date = datetime.date(
-                        year=year, month=parse_ecl_month(month), day=day
-                    )
+                    date = parse_opmio_date_rec(rec)
+                    logging.info("Parsing at date %s", str(date))
             elif kword.name == "TSTEP":
                 for rec in kword:
-                    steplist = rec[0]
+                    steplist = parse_opmio_tstep_rec(rec)
                     # Assuming not LAB units, then the unit is days.
                     days = sum(steplist)
                     if days <= 0:
@@ -135,25 +119,19 @@ def deck2df(deck, startdate=None, welspecs=True):
         if kword.name == "GRUPTREE":
             found_gruptree = True
             for edgerec in kword:
-                child = edgerec[0][0]
-                parent = edgerec[1][0]
-                currentedges[(child, parent)] = "GRUPTREE"
+                edge_dict = parse_opmio_deckrecord(edgerec, "GRUPTREE")
+                currentedges[
+                    (edge_dict["CHILD_GROUP"], edge_dict["PARENT_GROUP"])
+                ] = "GRUPTREE"
         if kword.name == "WELSPECS" and welspecs:
             found_welspecs = True
             for wellrec in kword:
-                wellname = wellrec[0][0]
-                group = wellrec[1][0]
-                currentedges[(wellname, group)] = "WELSPECS"
+                wspc_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
+                currentedges[(wspc_dict["WELL"], wspc_dict["GROUP"])] = "WELSPECS"
         if kword.name == "GRUPNET":
             found_grupnet = True
             for rec in kword:
-                grupnet_data = {}
-                for rec_key in GRUPNETKEYS:
-                    try:
-                        if rec[rec_key]:
-                            grupnet_data[rec_key] = rec[rec_key][0]
-                    except ValueError:
-                        pass
+                grupnet_data = parse_opmio_deckrecord(rec, "GRUPNET")
                 grupnetrecords.append(grupnet_data)
             grupnet_df = (
                 pd.DataFrame(grupnetrecords)

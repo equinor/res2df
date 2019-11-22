@@ -1,5 +1,6 @@
 pandas
 pyyaml>=5.1
+libecl
 treelib
 networkx
 pytest

@@ -1,5 +1,5 @@
 language: python
-dist: trusty
+dist: bionic 
 
 compiler:
   - gcc
@@ -17,9 +17,7 @@ addons:
       - boost-latest
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-4.9
-      - g++-4.9
-      - libboost1.55-all-dev
+      - libboost-all-dev
       - liblapack-dev
 
 sudo: required
@@ -32,44 +30,23 @@ matrix:
     fast_finish: true
 
 before_install:
-  - export CXX="g++-4.9" CC="gcc-4.9"
-  - export PYTHONPATH=$INSTALL_ROOT/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
+  - export PYTHONPATH=$INSTALL_ROOT/lib/python$TRAVIS_PYTHON_VERSION/site-packages:$INSTALL_ROOT/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
 
 
 install:
   - pushd ..
-  - git clone https://github.com/equinor/libecl.git
   - git clone --recursive https://github.com/OPM/opm-common.git
-  - git clone --recursive https://github.com/equinor/sunbeam.git
-  - pushd libecl
-  - pip install -r requirements.txt
-  - popd
-  - mkdir libecl/build
-  - pushd libecl/build
-  - cmake .. -DENABLE_PYTHON=ON
-             -DBUILD_TESTS=OFF
-             -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT ..
-  - make -j4 install
-  - popd
   - mkdir opm-common/build
   - pushd opm-common/build
-  - git checkout release/sunbeam/2019.02
   - cmake .. -DCMAKE_PREFIX_PATH=$INSTALL_ROOT
              -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT
              -DBUILD_TESTING=OFF
              -DBUILD_SHARED_LIBS=ON
+             -DOPM_ENABLE_PYTHON=ON
+             -DOPM_INSTALL_PYTHON=ON
   - make -j4 install
-  - popd
-  - mkdir sunbeam/build
-  - pushd sunbeam/build
-  - cmake .. -DCMAKE_PREFIX_PATH=$INSTALL_ROOT
-             -DUSE_RPATH=ON
-             -DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT
-             -DPYTHON_EXECUTABLE=`which python`
-  - make -j 4 install
-  - popd
-  - popd
-  - pip install -r requirements.txt
+  - popd # back to opm-common
+  - popd # back to ecl2df
   - pip install -r requirements_dev.txt
   - pip install .
 

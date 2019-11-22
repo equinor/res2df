@@ -13,100 +13,39 @@ import logging
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month, merge_zones
+from .common import (
+    merge_zones,
+    parse_opmio_deckrecord,
+    parse_opmio_date_rec,
+    parse_opmio_tstep_rec,
+)
 from .grid import merge_initvectors
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-# Sunbeam terms:
-COMPDATKEYS = [
-    "WELL",
-    "I",
-    "J",
-    "K1",
-    "K2",
-    "STATE",
-    "SAT_TABLE",
-    "CONNECTION_TRANSMISSIBILITY_FACTOR",
-    "DIAMETER",
-    "Kh",
-    "SKIN",
-    "D_FACTOR",
-    "DIR",
-    "PR",
-]
+"""OPM authors and Roxar RMS authors have interpreted the Eclipse
+documentation ever so slightly different when naming the data.
 
-COMPSEGSKEYS = [
-    "I",
-    "J",
-    "K",
-    "BRANCH",
-    "DISTANCE_START",
-    "DISTANCE_END",
-    "DIRECTION",
-    "END_IJK",
-    "CENTER_DEPTH",
-    "THERMAL_LENGTH",
-    "SEGMENT_NUMBER",
-]
-
-# Based on https://github.com/OPM/opm-common/blob/master/
-#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS
-WELSEGSKEYS = [
-    "WELL",  # "Name of the well"
-    "DEPTH",  # "Depth of the nodal point of the top segment"
-    "LENGTH",  # Length down tubing to nodal point of top segment"
-    "WELLBORE_VOLUME",  # Effective wellbore volume of the top segment
-    "INFO_TYPE",  # Type of tubing length and depth information, INC or ABS
-    "PRESSURE_COMPONENTS",  # How to calculate pressure drop in each segment
-    "FLOW_MODEL",
-    "TOP_X",
-    "TOP_Y",  # END OF FIRST RECORD FOR E100. E300 has some more.
-    "SEGMENT1",  # For each subseqent record
-    "SEGMENT2",
-    "BRANCH",
-    "JOIN_SEGMENT",
-    "SEGMENT_LENGTH",  # Copied to SEGMENT_MD, as it can be both, depending on INFO_TYPE
-    "DEPTH_CHANGE",
-    "DIAMETER",
-    "ROUGHNESS",
-    "AREA",
-    "VOLUME",
-    "LENGTH_X",
-    "LENGTH_Y",
-]
-
-
-def sunbeam2rmsterm(reckey):
-    """Sunbeam authors and Roxar RMS authors have interpreted the Eclipse
-    documentation ever so slightly different when naming the data.
-
-    For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
-    one very long one, and mixed-case in sunbeam
-
-    Returns:
-        str with translated term, or of no translation available
-        the term is returned unchanged.
-    """
-
-    thedict = {
-        "WELL": "WELL",
-        "I": "I",
-        "J": "J",
-        "K1": "K1",
-        "K2": "K2",
-        "STATE": "OP/SH",
-        "SAT_TABLE": "SATN",
-        "CONNECTION_TRANSMISSIBILITY_FACTOR": "TRAN",
-        "DIAMETER": "WBDIA",
-        "Kh": "KH",
-        "SKIN": "SKIN",
-        "D_FACTOR": "DFACT",
-        "DIR": "DIR",
-        "PR": "PEQVR",
-    }
-    return thedict.get(reckey, reckey)
+For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
+one very long one, and mixed-case in opm
+"""
+COMPDAT_RENAMER = {
+    "WELL": "WELL",
+    "I": "I",
+    "J": "J",
+    "K1": "K1",
+    "K2": "K2",
+    "STATE": "OP/SH",
+    "SAT_TABLE": "SATN",
+    "CONNECTION_TRANSMISSIBILITY_FACTOR": "TRAN",
+    "DIAMETER": "WBDIA",
+    "Kh": "KH",
+    "SKIN": "SKIN",
+    "D_FACTOR": "DFACT",
+    "DIR": "DIR",
+    "PR": "PEQVR",
+}
 
 
 def deck2compdatsegsdfs(deck, start_date=None):
@@ -121,7 +60,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     The loop over the deck is a state machine, as it has to pick up dates
 
     Args:
-        deck (sunbeam.libsunbeam.Deck): A deck representing the schedule
+        deck (opm.libopmcommon_python.Deck): A deck representing the schedule
             Does not have to be a full Eclipse deck, an include file is sufficient
         start_date (datetime.date or str): The default date to use for
             events where the DATE or START keyword is not found in advance.
@@ -139,17 +78,14 @@ def deck2dfs(deck, start_date=None, unroll=True):
     for kword in deck:
         if kword.name == "DATES" or kword.name == "START":
             for rec in kword:
-                day = rec["DAY"][0]
-                month = rec["MONTH"][0]
-                year = rec["YEAR"][0]
-                date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
+                date = parse_opmio_date_rec(rec)
                 logger.info("Parsing at date %s", str(date))
         elif kword.name == "TSTEP":
             if not date:
                 logger.critical("Can't use TSTEP when there is no start_date")
                 return {}
             for rec in kword:
-                steplist = rec[0]
+                steplist = parse_opmio_tstep_rec(rec)
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
@@ -158,43 +94,29 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 )
         elif kword.name == "COMPDAT":
             for rec in kword:  # Loop over the lines inside COMPDAT record
-                rec_data = {}
+                rec_data = parse_opmio_deckrecord(
+                    rec, "COMPDAT", renamer=COMPDAT_RENAMER
+                )
                 rec_data["DATE"] = date
-                for rec_key in COMPDATKEYS:
-                    try:
-                        if rec[rec_key]:
-                            rec_data[sunbeam2rmsterm(rec_key)] = rec[rec_key][0]
-                        # "rec_key in rec" does not work..
-                    except ValueError:
-                        pass
                 compdatrecords.append(rec_data)
         elif kword.name == "COMPSEGS":
-            well = kword[0][0][0]
+            wellname = parse_opmio_deckrecord(
+                kword[0], "COMPSEGS", itemlistname="records", recordindex=0
+            )["WELL"]
             for recidx in range(1, len(kword)):
-                rec_data = {}
-                rec_data["WELL"] = well
-                rec_data["DATE"] = date
                 rec = kword[recidx]
-                for rec_key in COMPSEGSKEYS:
-                    try:
-                        if rec[rec_key]:
-                            rec_data[rec_key] = rec[rec_key][0]
-                    except ValueError:
-                        pass
+                rec_data = parse_opmio_deckrecord(
+                    rec, "COMPSEGS", itemlistname="records", recordindex=1
+                )
+                rec_data["WELL"] = wellname
+                rec_data["DATE"] = date
                 compsegsrecords.append(rec_data)
         elif kword.name == "WELSEGS":
             # First record contains meta-information for well
-            # (sunbeam deck returns default values for unspecified items.)
-            welsegsdict = {}
-            welsegsdict["WELL"] = well = kword[0][0][0]
-            welsegsdict["DEPTH"] = kword[0][1][0]
-            welsegsdict["LENGTH"] = kword[0][2][0]
-            welsegsdict["WELLBORE_VOLUME"] = kword[0][3][0]
-            welsegsdict["INFO_TYPE"] = kword[0][4][0]
-            welsegsdict["PRESSURE_COMPONENTS"] = kword[0][5][0]
-            welsegsdict["FLOW_MODEL"] = kword[0][6][0]
-            welsegsdict["TOP_X"] = kword[0][7][0]
-            welsegsdict["TOP_Y"] = kword[0][8][0]
+            # (opm deck returns default values for unspecified items.)
+            welsegsdict = parse_opmio_deckrecord(
+                kword[0], "WELSEGS", itemlistname="records", recordindex=0
+            )
             # Loop over all subsequent records.
             for recidx in range(1, len(kword)):
                 rec = kword[recidx]
@@ -202,12 +124,11 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 # we need to loop over a range just as for layer in compdat)
                 rec_data = welsegsdict.copy()
                 rec_data["DATE"] = date
-                for rec_key in WELSEGSKEYS:
-                    try:
-                        if rec[rec_key]:
-                            rec_data[rec_key] = rec[rec_key][0]
-                    except ValueError:
-                        pass
+                rec_data.update(
+                    parse_opmio_deckrecord(
+                        rec, "WELSEGS", itemlistname="records", recordindex=1
+                    )
+                )
                 if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
                     rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
                 welsegsrecords.append(rec_data)

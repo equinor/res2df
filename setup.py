@@ -13,6 +13,8 @@ setup(
     author_email="havb@equinor.com",
     license="GPLv3",
     packages=["ecl2df"],
+    package_dir = {'ecl2df': 'ecl2df'},
+    package_data={"ecl2df": ["opmkeywords/*"]},
     setup_requires=["pytest-runner"],
     zip_safe=False,
     entry_points={

@@ -49,6 +49,33 @@ def test_schfile2df():
     assert not compdfs["COMPDAT"].empty
 
 
+def test_str_compdat():
+    """Test compdat parsing directly on strings"""
+    schstr = """
+COMPDAT
+ 'OP1' 33 110 31 31 'OPEN' 1* 6467.31299 0.216 506642.25  0 1* 'Y' 7.18 /
+-- comments.
+/
+"""
+    deck = EclFiles.str2deck(schstr)
+    compdfs = compdat.deck2dfs(deck)
+    compdat_df = compdfs["COMPDAT"]
+    assert compdat_df.loc[0, "SATN"] == 0
+    assert not compdat_df.loc[0, "DFACT"]
+    assert compdat_df.loc[0, "DIR"] == "Y"
+
+    schstr = """
+COMPDAT
+ 'FOO' 303 1010 031 39  /
+/
+"""
+    compdat_df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    assert len(compdat_df) == 9
+    assert not compdat_df["DFACT"].values[0]
+    assert not compdat_df["TRAN"].values[0]
+    assert compdat_df["I"].values[0] == 303
+
+
 def test_str2df():
     schstr = """
 WELSPECS
@@ -106,7 +133,7 @@ WSEGVALV
     assert len(compsegs) == 1
     assert "WELL" in compsegs
     assert compsegs["WELL"].unique()[0] == "OP1"
-    assert len(compsegs.iloc[0]) == 9
+    assert len(compsegs.dropna(axis=1, how="all").iloc[0]) == 8
 
     # Check date handling
     assert "DATE" in compdat_df

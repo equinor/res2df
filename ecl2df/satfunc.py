@@ -52,7 +52,7 @@ def deck2satfuncdf(deck):
 def inject_satnumcount(deckstr, satnumcount):
     """Insert a TABDIMS with NTSFUN into a deck
 
-    This is simple string manipulation, not sunbeam
+    This is simple string manipulation, not OPM
     deck manipulation (which might be possible to do).
 
     Arguments:
@@ -87,7 +87,7 @@ def deck2df(deck, satnumcount=None):
     returning the first function by default).
 
     Arguments:
-        deck (sunbeam.deck or str): Incoming data deck. Always
+        deck (opm.io deck or str): Incoming data deck. Always
             supply as a string if you don't know TABDIMS-NTSFUN.
         satnumcount (int): Number of SATNUMs defined in the deck, only
             needed if TABDIMS with NTSFUN is not found in the deck.
@@ -135,7 +135,7 @@ def deck2df(deck, satnumcount=None):
             satnum = 1
             for deckrecord in deck[keyword]:
                 # All data for an entire SATNUM is returned in one list
-                data = np.array(deckrecord[0])
+                data = np.array(deckrecord[0].get_raw_data_list())
                 # Split up into the correct number of columns
                 column_count = len(KEYWORD_COLUMNS[keyword])
                 if len(data) % column_count:

@@ -1,4 +1,4 @@
-#!/user/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 End-user command line tool for accessing functionality
@@ -20,6 +20,7 @@ from ecl2df import (
     rft,
     satfunc,
     summary,
+    trans,
     wcon,
     compdat,
 )
@@ -55,6 +56,20 @@ def get_parser():
     faults_parser = subparsers.add_parser("faults", help="Extract faults data")
     faults.fill_parser(faults_parser)
     faults_parser.set_defaults(func=faults.faults2df_main)
+
+    trans_parser = subparsers.add_parser(
+        "trans",
+        help="Extract transmissibilities from EGRID file",
+        description=(
+            "Extract transmissibilities (TRANX,TRANY,TRANZ) from Eclipse "
+            "binary output files. Each row represent a connection between a cell pair "
+            "(I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for "
+            "each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 "
+            "and FIPNUM2."
+        ),
+    )
+    trans.fill_parser(trans_parser)
+    trans_parser.set_defaults(func=trans.trans2df_main)
 
     rft_parser = subparsers.add_parser(
         "rft",

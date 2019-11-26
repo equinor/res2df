@@ -69,6 +69,7 @@ install:
   - make -j 4 install
   - popd
   - popd
+  - pip install -r requirements.txt
   - pip install -r requirements_dev.txt
   - pip install .
 

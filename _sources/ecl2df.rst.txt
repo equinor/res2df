@@ -132,6 +132,14 @@ ecl2df.summary module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.trans module
+-------------------
+
+.. automodule:: ecl2df.trans
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.wcon module
 ------------------
 

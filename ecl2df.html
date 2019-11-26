@@ -110,6 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc">ecl2df.satfunc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc2df">ecl2df.satfunc2df module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.summary">ecl2df.summary module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.trans">ecl2df.trans module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.wcon">ecl2df.wcon module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df">Module contents</a></li>
 </ul>
@@ -676,38 +677,6 @@ called DATE will be added and data for all restart
 dates will be added in a stacked manner. Implies
 dateinheaders False.</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="ecl2df.grid.transdf">
-<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">transdf</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#transdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.transdf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a dataframe of the neighbour transmissibilities.</p>
-<p>The TRANX, TRANY and TRANZ (whenever nonzero) will be used
-to produce a row representing a cell-pair where there is
-transmissibility.</p>
-<dl class="simple">
-<dt>You will get a dataframe with the columns</dt><dd><p>I1, J1, K1, I2, J2, K2, DIR, TRAN</p>
-</dd>
-</dl>
-<p>similar to what you get from non-neighbour connection export.</p>
-<p>The DIR column indicates the direction, and can take the
-string values I, J or K.</p>
-<p>If you ask for additional vectors, like FIPNUM, then
-you will get a corresponding FIPNUM1 and FIPNUM2 added.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – An object representing your Eclipse run</p></li>
-<li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – Eclipse INIT vectors that you want to include</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>with one cell-pair pr. row. Empty dataframe if error.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1450,6 +1419,80 @@ with arguments</p>
 <dt id="ecl2df.summary.df">
 <code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">params=False</em>, <em class="sig-param">paramfile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function for Python API users</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ecl2df.trans">
+<span id="ecl2df-trans-module"></span><h2>ecl2df.trans module<a class="headerlink" href="#module-ecl2df.trans" title="Permalink to this headline">¶</a></h2>
+<p>Extract transmissibility information from Eclipse output files as Dataframes.</p>
+<dl class="function">
+<dt id="ecl2df.trans.df">
+<code class="sig-prename descclassname">ecl2df.trans.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors=None</em>, <em class="sig-param">boundaryfilter=False</em>, <em class="sig-param">group=False</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">onlykdir=False</em>, <em class="sig-param">onlyijdir=False</em>, <em class="sig-param">addnnc=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/trans.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.trans.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a dataframe of the neighbour transmissibilities.</p>
+<p>The TRANX, TRANY and TRANZ (whenever nonzero) will be used
+to produce a row representing a cell-pair where there is
+transmissibility.</p>
+<dl class="simple">
+<dt>You will get a dataframe with the columns</dt><dd><p>I1, J1, K1, I2, J2, K2, DIR, TRAN</p>
+</dd>
+</dl>
+<p>similar to what you get from non-neighbour connection export.</p>
+<p>If you ask for coordinates, you will also get the distance (DX,
+DY, DZ) for each connection.</p>
+<p>The DIR column indicates the direction, and can take the
+string values I, J or K.</p>
+<p>If you ask for additional vectors, like FIPNUM, then
+you will get a corresponding FIPNUM1 and FIPNUM2 added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – An object representing your Eclipse run</p></li>
+<li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – Eclipse INIT vectors that you want to include</p></li>
+<li><p><strong>boundaryfilter</strong> (<em>bool</em>) – Set to true if you want to filter where one INIT
+vector change. Only use for integer INIT vectors.</p></li>
+<li><p><strong>group</strong> (<em>bool</em>) – Set to true if you want to sum transmissibilities over
+boundary interfaces. Implies boundaryfilter and requires only one integer
+INIT vector.</p></li>
+<li><p><strong>coords</strong> (<em>bool</em>) – Set to true if you want to add coordinates (X1, Y1, Z1,
+X2, Y2, Z2)</p></li>
+<li><p><strong>onlykdir</strong> (<em>bool</em>) – Set to true if you only want transmissibilities in
+K direction</p></li>
+<li><p><strong>onlyijdir</strong> (<em>bool</em>) – Set to true if you only want transmissibilities
+in the IJ-plane</p></li>
+<li><p><strong>addnnc</strong> (<em>bool</em>) – Set to true if NNC connection should be concatenated to
+the dataframe</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>with one cell-pair pr. row. Empty dataframe if error.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.trans.nx">
+<code class="sig-prename descclassname">ecl2df.trans.</code><code class="sig-name descname">nx</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">region='FIPNUM'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/trans.html#nx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.trans.nx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a networkx graph for the transmissibilities.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.trans.fill_parser">
+<code class="sig-prename descclassname">ecl2df.trans.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/trans.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.trans.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up sys.argv parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> – argparse.ArgumentParser or argparse.subparser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.trans.trans2df_main">
+<code class="sig-prename descclassname">ecl2df.trans.</code><code class="sig-name descname">trans2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/trans.html#trans2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.trans.trans2df_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the command line API</p>
 </dd></dl>
 
 </div>

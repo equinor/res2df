@@ -11,6 +11,7 @@ from . import (
     gruptree,
     equil,
     faults,
+    pillars,
     wcon,
     satfunc,
     trans,

@@ -53,15 +53,19 @@ def dates2rstindices(eclfiles, dates):
             forces dateinheaders to be True.
             Can also be string, then the mnenomics
             'first', 'last', 'all', are supported, or ISO
-            date formats.
+            date formats. If None or empty string is supplied,
+            an empty return tuple is returned.
 
-
-    Raises exception no dates are not found.
+    Raises exception if no dates are not found.
 
     Return: tuple, first element is
         list of integers, corresponding to restart indices. Length 1 or more.
-        second element is list of corresponding datetime.date objecs.
+        second element is list of corresponding datetime.date objecs, third
+        is an ISO-8601 representation of the dates.
     """
+    if not dates:
+        return ([], [], [])
+
     availabledates = rstdates(eclfiles)
 
     supportedmnemonics = ["first", "last", "all"]
@@ -105,10 +109,11 @@ def dates2rstindices(eclfiles, dates):
         str([x.isoformat() for x in availabledates]),
     )
     rstindices = [availabledates.index(x) for x in chosendates]
-    return (rstindices, chosendates)
+    isostrings = [x.isoformat() for x in chosendates]
+    return (rstindices, chosendates, isostrings)
 
 
-def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False):
+def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
     """Return a dataframe with dynamic data from the restart file
     for each cell, at a particular date.
 
@@ -126,7 +131,7 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
          dateinheaders: boolean on whether the date should
             be added to the column headers. Instead of
             SGAS as a column header, you get SGAS@YYYY-MM-DD.
-        datestacked (bool): Default is false. If true, a column
+         stackdates (bool): Default is false. If true, a column
             called DATE will be added and data for all restart
             dates will be added in a stacked manner. Implies
             dateinheaders False.
@@ -139,12 +144,9 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
 
     # First task is to determine the restart index to extract
     # data for:
-    (rstindices, chosendates) = dates2rstindices(eclfiles, date)
+    (rstindices, chosendates, isodates) = dates2rstindices(eclfiles, date)
 
-    logging.info(
-        "Extracting restart information at dates %s",
-        str([x.isoformat() for x in chosendates]),
-    )
+    logging.info("Extracting restart information at dates %s", str(isodates))
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
@@ -159,8 +161,8 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
     rstvectors = list(set(rstvectors))  # Make unique list
     # Note that all of these might not exist at all timesteps.
 
-    if datestacked and dateinheaders:
-        logging.warning("Will not put date in headers when datestacked=True")
+    if stackdates and dateinheaders:
+        logging.warning("Will not put date in headers when stackdates=True")
         dateinheaders = False
 
     rst_dfs = {}
@@ -209,7 +211,7 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
         # Tag the column names if requested, or if multiple rst indices
         # are asked for
         datestr = chosendates[rstindices.index(rstindex)].isoformat()
-        if dateinheaders or len(rstindices) > 1 and not datestacked:
+        if dateinheaders or len(rstindices) > 1 and not stackdates:
             rst_df.columns = [colname + "@" + datestr for colname in rst_df.columns]
 
         rst_dfs[datestr] = rst_df
@@ -217,7 +219,7 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, datestacked=False)
     if not rst_dfs:
         return pd.DataFrame()
 
-    if not datestacked:
+    if not stackdates:
         return pd.concat(rst_dfs.values(), axis=1)
     rststack = pd.concat(rst_dfs, sort=False).reset_index()
     rststack.rename(columns={"level_0": "DATE"}, inplace=True)
@@ -323,15 +325,28 @@ def init2df(eclfiles, vectors=None):
     return init_df
 
 
-def df(eclfiles, vectors="*", dropconstants=False, rstdates=None):
+def df(eclfiles, vectors="*", dropconstants=False, rstdates=None, dateinheaders=False):
     """Produce a dataframe with grid information
 
-    This is the "main" function for Python API users"""
+    This is the "main" function for Python API users
+
+    Args:
+        eclfiles (EclFiles): Handle to an Eclipse case
+        vectors (str or list): Vectors to include, wildcards
+            supported. String argument. Used to match both
+            INIT vectors and RESTART vectors.
+        rstdates (list, str or datetime): Restart dates to include
+            Mnenomics such as first and last are supported.
+        dateinheaders (bool): Wheter columns with data from UNRST files
+            should always have the ISO-date embedded in the column header.
+    """
     gridgeom = gridgeometry2df(eclfiles)
     initdf = init2df(eclfiles, vectors=vectors)
     rst_df = None
     if rstdates:
-        rst_df = rst2df(eclfiles, rstdates)
+        rst_df = rst2df(
+            eclfiles, rstdates, vectors=vectors, dateinheaders=dateinheaders
+        )
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     if dropconstants:
         # Note: Ambigous object names, bool vs function

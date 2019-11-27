@@ -159,9 +159,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module to hold Eclipse input and output filenames</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">errno</span>
@@ -170,9 +170,9 @@
 
 <span class="kn">import</span> <span class="nn">sunbeam.deck</span>
 
-<span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="k">import</span> <span class="n">EclFile</span>
-<span class="kn">from</span> <span class="nn">ecl.grid</span> <span class="k">import</span> <span class="n">EclGrid</span>
-<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="k">import</span> <span class="n">EclSum</span>
+<span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="kn">import</span> <span class="n">EclFile</span>
+<span class="kn">from</span> <span class="nn">ecl.grid</span> <span class="kn">import</span> <span class="n">EclGrid</span>
+<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="kn">import</span> <span class="n">EclSum</span>
 
 <span class="c1"># Default parse option to Sunbeam for a very permissive parsing</span>
 <span class="n">SUNBEAM_RECOVERY</span> <span class="o">=</span> <span class="p">[</span>
@@ -208,7 +208,7 @@
 <span class="sd">    it should be loaded or served from cache.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">):</span>
         <span class="c1"># eclbase might be a a Posix path object</span>
         <span class="n">eclbase</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
 

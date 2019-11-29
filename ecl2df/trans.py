@@ -89,7 +89,7 @@ def df(
             "Filtering to both k and to ij simultaneously " "results in empty dataframe"
         )
 
-    grid_df = ecl2df.grid.df(eclfiles).set_index(["I", "J", "K"])
+    grid_df = ecl2df.grid.df(eclfiles)  # .set_index(["I", "J", "K"])
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
         logging.warning(
@@ -98,46 +98,43 @@ def df(
     vectors = existing_vectors
     transrows = []
     logging.info("Building transmissibility dataframe")
-    for ijk, row in grid_df.iterrows():
-        if abs(row["TRANX"]) > 0 and not onlykdir:
-            transrow = [
-                int(ijk[0]),
-                int(ijk[1]),
-                int(ijk[2]),
-                int(ijk[0] + 1),
-                int(ijk[1]),
-                int(ijk[2]),
-                "I",
-                row["TRANX"],
-            ]
-            transrows.append(transrow)
-        if abs(row["TRANY"]) > 0 and not onlykdir:
-            transrow = [
-                int(ijk[0]),
-                int(ijk[1]),
-                int(ijk[2]),
-                int(ijk[0]),
-                int(ijk[1] + 1),
-                int(ijk[2]),
-                "J",
-                row["TRANY"],
-            ]
-            transrows.append(transrow)
-        if abs(row["TRANZ"]) > 0 and not onlyijdir:
-            transrow = [
-                int(ijk[0]),
-                int(ijk[1]),
-                int(ijk[2]),
-                int(ijk[0]),
-                int(ijk[1]),
-                int(ijk[2] + 1),
-                "K",
-                row["TRANZ"],
-            ]
-            transrows.append(transrow)
-    trans_df = pd.DataFrame(data=transrows)
-    columnnames = ["I1", "J1", "K1", "I2", "J2", "K2", "DIR", "TRAN"]
-    trans_df.columns = columnnames
+    if not onlykdir:
+        tranx = pd.DataFrame(grid_df[grid_df["TRANX"] > 0][["I", "J", "K", "TRANX"]])
+        tranx.rename(
+            columns={"I": "I1", "J": "J1", "K": "K1", "TRANX": "TRAN"}, inplace=True
+        )
+        tranx["I2"] = tranx["I1"] + 1
+        tranx["J2"] = tranx["J1"]
+        tranx["K2"] = tranx["K1"]
+        tranx["DIR"] = "I"
+    else:
+        tranx = pd.DataFrame()
+
+    if not onlykdir:
+        trany = pd.DataFrame(grid_df[grid_df["TRANY"] > 0][["I", "J", "K", "TRANY"]])
+        trany.rename(
+            columns={"I": "I1", "J": "J1", "K": "K1", "TRANY": "TRAN"}, inplace=True
+        )
+        trany["I2"] = trany["I1"]
+        trany["J2"] = trany["J1"] + 1
+        trany["K2"] = trany["K1"]
+        trany["DIR"] = "J"
+    else:
+        trany = pd.DataFrame()
+
+    if not onlyijdir:
+        tranz = pd.DataFrame(grid_df[grid_df["TRANZ"] > 0][["I", "J", "K", "TRANZ"]])
+        tranz.rename(
+            columns={"I": "I1", "J": "J1", "K": "K1", "TRANZ": "TRAN"}, inplace=True
+        )
+        tranz["I2"] = tranz["I1"]
+        tranz["J2"] = tranz["J1"]
+        tranz["K2"] = tranz["K1"] + 1
+        tranz["DIR"] = "K"
+    else:
+        tranz = pd.DataFrame()
+
+    trans_df = pd.concat([tranx, trany, tranz], axis=0, sort=False)
 
     if addnnc:
         logging.info("Adding NNC data")
@@ -182,10 +179,6 @@ def df(
         trans_df["DY"] = abs(trans_df["Y1"] - trans_df["Y2"])
         trans_df["DZ"] = abs(trans_df["Z1"] - trans_df["Z2"])
         trans_df = trans_df.drop(["X1", "X2", "Y1", "Y2", "Z1", "Z2"], axis=1)
-
-    for vec in vectors:
-        columnnames.append(vec + "1")
-        columnnames.append(vec + "2")
 
     if boundaryfilter:
         assert len(vectors) == 1

@@ -174,15 +174,18 @@ def resample_smry_dates(
         return datetimes
 
 
-def smry2df(
+def df(
     eclfiles,
     time_index=None,
     column_keys=None,
     start_date=None,
     end_date=None,
     include_restart=True,
+    params=False,
+    paramfile=None,
 ):
-    """Extract data from UNSMRY as Pandas dataframes.
+    """
+    Extract data from UNSMRY as Pandas dataframes.
 
     This is a thin wrapper for EclSum.pandas_frame, by adding
     support for string mnenomics for the time index.
@@ -204,11 +207,14 @@ def smry2df(
             is 'last'.
         include_restart: boolean sent to libecl for wheter restarts
             files should be traversed
+        params (bool): If set, parameters.txt will be attempted loaded
+            and merged with the summary data.
+        paramsfile (str): Explicit path to parameters file if autodiscovery is
+            not wanted.
 
     Returns empty dataframe if there is no summary file, or if the
     column_keys are not existing.
     """
-
     if not isinstance(column_keys, list):
         column_keys = [column_keys]
     if isinstance(time_index, str) and time_index == "raw":
@@ -238,10 +244,29 @@ def smry2df(
         len(dframe),
     )
     dframe.index.name = "DATE"
+    if params:
+        if not paramfile:
+            param_files = parameters.find_parameter_files(eclfiles)
+            logging.info("Loading parameters from files: %s", str(param_files))
+            param_dict = parameters.load_all(param_files)
+        else:
+            if not os.path.isabs(paramfile):
+                param_file = parameters.find_parameter_files(
+                    eclfiles, filebase=paramfile
+                )
+                logging.info("Loading parameters from file: %s", str(param_file))
+                param_dict = parameters.load(param_file)
+            else:
+                logging.info("Loading parameter from file: %s", str(paramfile))
+                param_dict = parameters.load(paramfile)
+        logging.info("Loaded %d parameters", len(param_dict))
+        for key in param_dict:
+            # By converting to str we are more robust with respect to what objects are
+            # read from the parameters.json/txt/yml. Since we are only going
+            # to dump to csv, it should not cause side-effects that floats end up
+            # as strings in the dataframe.
+            dframe[key] = str(param_dict[key])
     return dframe
-
-
-# Remaining functions are for the command line interface
 
 
 def fill_parser(parser):
@@ -336,31 +361,3 @@ def summary2df_main(args):
         logging.info("Writing to file %s", str(args.output))
         sum_df.to_csv(args.output, index=True)
         print("Wrote to " + args.output)
-
-
-def df(eclfiles, time_index=None, column_keys=None, params=False, paramfile=None):
-    """Main function for Python API users"""
-    sum_df = smry2df(eclfiles, time_index=time_index, column_keys=column_keys)
-    if params:
-        if not paramfile:
-            param_files = parameters.find_parameter_files(eclfiles)
-            logging.info("Loading parameters from files: %s", str(param_files))
-            param_dict = parameters.load_all(param_files)
-        else:
-            if not os.path.isabs(paramfile):
-                param_file = parameters.find_parameter_files(
-                    eclfiles, filebase=paramfile
-                )
-                logging.info("Loading parameters from file: %s", str(param_file))
-                param_dict = parameters.load(param_file)
-            else:
-                logging.info("Loading parameter from file: %s", str(paramfile))
-                param_dict = parameters.load(paramfile)
-        logging.info("Loaded %d parameters", len(param_dict))
-        for key in param_dict:
-            # By converting to str we are more robust with respect to what objects are
-            # read from the parameters.json/txt/yml. Since we are only going
-            # to dump to csv, it should not cause side-effects that floats end up
-            # as strings in the dataframe.
-            sum_df[key] = str(param_dict[key])
-    return sum_df

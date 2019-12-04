@@ -1360,8 +1360,8 @@ normalized dates. Overriden if freq is ‘last’.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="ecl2df.summary.smry2df">
-<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">smry2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">end_date=None</em>, <em class="sig-param">include_restart=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#smry2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.smry2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.summary.df">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">start_date=None</em>, <em class="sig-param">end_date=None</em>, <em class="sig-param">include_restart=True</em>, <em class="sig-param">params=False</em>, <em class="sig-param">paramfile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
 <p>This is a thin wrapper for EclSum.pandas_frame, by adding
 support for string mnenomics for the time index.</p>
@@ -1384,6 +1384,10 @@ end_date will always be included. Overriden if time_index
 is ‘last’.</p></li>
 <li><p><strong>include_restart</strong> – boolean sent to libecl for wheter restarts
 files should be traversed</p></li>
+<li><p><strong>params</strong> (<em>bool</em>) – If set, parameters.txt will be attempted loaded
+and merged with the summary data.</p></li>
+<li><p><strong>paramsfile</strong> (<em>str</em>) – Explicit path to parameters file if autodiscovery is
+not wanted.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1413,12 +1417,6 @@ with arguments</p>
 <dt id="ecl2df.summary.summary2df_main">
 <code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">summary2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#summary2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.summary2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read summary data from disk and write CSV back to disk</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ecl2df.summary.df">
-<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">time_index=None</em>, <em class="sig-param">column_keys=None</em>, <em class="sig-param">params=False</em>, <em class="sig-param">paramfile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>

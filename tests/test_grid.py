@@ -235,10 +235,10 @@ def test_rst2df():
         "SOIL@2000-01-01" in grid.rst2df(eclfiles, "first", dateinheaders=True).columns
     )
 
-    rst_df = grid.rst2df(eclfiles, "first", datestacked=True)
+    rst_df = grid.rst2df(eclfiles, "first", stackdates=True)
     assert "DATE" in rst_df
     assert rst_df["DATE"].unique()[0] == "2000-01-01"
-    rst_df = grid.rst2df(eclfiles, "all", datestacked=True)
+    rst_df = grid.rst2df(eclfiles, "all", stackdates=True)
     assert len(rst_df["DATE"].unique()) == len(grid.rstdates(eclfiles))
     assert rst_df.shape == (4 * 35817, 23 + 1)  # "DATE" is now the extra column
 

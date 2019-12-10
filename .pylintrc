@@ -1,11 +1,28 @@
+# PYLINT: General settings for ecl2df 
+
 [GENERAL]
-disable=E0401,C0330
+disable=R0205, F0010, C0330, E1136, E0401
+output-format=colorized
+
+# E1136: Pylint is not able to detect that all objects really are subscriptable
 # E0401: import-error, these will be caught by automated tests anyhow
-# C0330: wrong hanging indentation, pylint disagrees with black here
 
 [MASTER]
-# Remove *2df.py when the files are deleted from the repo in a later version: ~0.4.0
-ignore=__init__.py,conf.py,satfunc2df.py,compdat2df.py
+ignore=_version.py,__init__.py,setup.py,versioneer.py,jobs.py
 
 [BASIC]
 good-names=df
+
+[FORMAT]
+max-line-length=88
+max-module-lines=3000
+
+[DESIGN]
+max-attributes=25
+max-args=15
+
+[SIMILARITIES]
+min-similarity-lines=4
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes

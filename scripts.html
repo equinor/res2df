@@ -117,34 +117,39 @@
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat4">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#rft">rft</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pillars">pillars</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat5">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat5">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rft">rft</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat6">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat6">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#compdat">compdat</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat7">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat7">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compdat">compdat</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat8">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat8">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#gruptree">gruptree</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat9">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat9">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gruptree">gruptree</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat10">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat10">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat11">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat11">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -223,7 +228,7 @@
 <p id="ecl2csv">From the command line there is a utility for dumping the
 data of interest to CSV files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
-               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">smry</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
+               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">smry</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
                <span class="o">...</span>
 </pre></div>
 </div>
@@ -446,22 +451,81 @@ with care. Default is raw, which will include clock times.</p>
 </dl>
 </div>
 </div>
-<div class="section" id="rft">
-<h3>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
-<p>Extract RFT data from Eclipse binary output files to CSV. Each row in the resulting table represents one point in a particular well at a particular time. If multisegment wells are found, associated data to a connection is merged onto the same row as additional columns. You need the Eclipse keyword WRFTPLT present in your DATA-file to get the data outputted.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+<div class="section" id="pillars">
+<h3>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h3>
+<p>Compute statistics pr. pillar in a cornerpoint grid, in addition pr a region parameter. Volumetrics, in-place, and contacts</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">pillars</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">region</span> <span class="n">REGION</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">rstdates</span> <span class="n">RSTDATES</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">stackdates</span><span class="p">]</span>
+                <span class="p">[</span><span class="o">--</span><span class="n">soilcutoff</span> <span class="n">SOILCUTOFF</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">sgascutoff</span> <span class="n">SGASCUTOFF</span><span class="p">]</span>
+                <span class="p">[</span><span class="o">--</span><span class="n">swatcutoff</span> <span class="n">SWATCUTOFF</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">group</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                <span class="n">DATAFILE</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments_repeat5">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
-<dd><p>Name of Eclipse DATA file or RFT file. If DATA file is provided, it will look for the associated DATA file</p>
+<dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
 </dd>
 </dl>
 </div>
 <div class="section" id="Named Arguments_repeat5">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>--region</kbd></dt>
+<dd><p>Name of Eclipse region parameter for which to separate the computations. Set to empty string to have no grouping.</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--rstdates</kbd></dt>
+<dd><p>Point in time to grab restart data from, either ‘first’ or ‘last’, ‘all’ or a date in YYYY-MM-DD format</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--stackdates</kbd></dt>
+<dd><p>If set, the dates from restart data will not be in the column but instead there will be a DATE column with the dates. Note that the static data will be repeated for each DATE.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--soilcutoff</kbd></dt>
+<dd><p>If supplied as float, an oil-water contact will be estimated pr. pillar, based on the deepest cell with SOIL above the given cutoff. Value is put in column OWC.</p>
+<p>Default: 0.5</p>
+</dd>
+<dt><kbd>--sgascutoff</kbd></dt>
+<dd><p>If supplied, a gas contact will be estimated pr pillar, based on the deepest cell with SGAS above the given cutoff. Value is put in column GOC.</p>
+<p>Default: 0.5</p>
+</dd>
+<dt><kbd>--swatcutoff</kbd></dt>
+<dd><p>For OWC or GWC computations, only pillars with at least one cell with water saturation above this value will be considered.</p>
+<p>Default: 0.5</p>
+</dd>
+<dt><kbd>--group</kbd></dt>
+<dd><p>If set, output will not be pr. pillar, but grouped overall pillars. If –region is set, data will be grouped over that vector. The aggregation operator is sum or mean, depending on datatype.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file.</p>
+<p>Default: “pillars.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="rft">
+<h3>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
+<p>Extract RFT data from Eclipse binary output files to CSV. Each row in the resulting table represents one point in a particular well at a particular time. If multisegment wells are found, associated data to a connection is merged onto the same row as additional columns. You need the Eclipse keyword WRFTPLT present in your DATA-file to get the data outputted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat6">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file or RFT file. If DATA file is provided, it will look for the associated DATA file</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat6">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output CSV file.</p>
@@ -480,16 +544,16 @@ with care. Default is raw, which will include clock times.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat6">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat7">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or file with saturation functions.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat6">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat7">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
@@ -508,16 +572,16 @@ with care. Default is raw, which will include clock times.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">compdat</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat7">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat8">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat7">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat8">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
@@ -536,16 +600,16 @@ with care. Default is raw, which will include clock times.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat8">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat9">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat8">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat9">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
@@ -564,16 +628,16 @@ with care. Default is raw, which will include clock times.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">gruptree</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">startdate</span> <span class="n">STARTDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat9">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat10">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat9">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat10">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file. No CSV dump if empty</p>
@@ -599,16 +663,16 @@ with care. Default is raw, which will include clock times.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wcon</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat10">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat11">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or Eclipse include file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat10">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat11">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>

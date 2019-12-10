@@ -210,15 +210,19 @@
 <span class="sd">            forces dateinheaders to be True.</span>
 <span class="sd">            Can also be string, then the mnenomics</span>
 <span class="sd">            &#39;first&#39;, &#39;last&#39;, &#39;all&#39;, are supported, or ISO</span>
-<span class="sd">            date formats.</span>
+<span class="sd">            date formats. If None or empty string is supplied,</span>
+<span class="sd">            an empty return tuple is returned.</span>
 
-
-<span class="sd">    Raises exception no dates are not found.</span>
+<span class="sd">    Raises exception if no dates are not found.</span>
 
 <span class="sd">    Return: tuple, first element is</span>
 <span class="sd">        list of integers, corresponding to restart indices. Length 1 or more.</span>
-<span class="sd">        second element is list of corresponding datetime.date objecs.</span>
+<span class="sd">        second element is list of corresponding datetime.date objecs, third</span>
+<span class="sd">        is an ISO-8601 representation of the dates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dates</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">([],</span> <span class="p">[],</span> <span class="p">[])</span>
+
     <span class="n">availabledates</span> <span class="o">=</span> <span class="n">rstdates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
 
     <span class="n">supportedmnemonics</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;last&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">]</span>
@@ -262,10 +266,11 @@
         <span class="nb">str</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">availabledates</span><span class="p">]),</span>
     <span class="p">)</span>
     <span class="n">rstindices</span> <span class="o">=</span> <span class="p">[</span><span class="n">availabledates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chosendates</span><span class="p">]</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span></div>
+    <span class="n">isostrings</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chosendates</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">,</span> <span class="n">isostrings</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">datestacked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stackdates</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
 <span class="sd">    for each cell, at a particular date.</span>
 
@@ -283,7 +288,7 @@
 <span class="sd">         dateinheaders: boolean on whether the date should</span>
 <span class="sd">            be added to the column headers. Instead of</span>
 <span class="sd">            SGAS as a column header, you get SGAS@YYYY-MM-DD.</span>
-<span class="sd">        datestacked (bool): Default is false. If true, a column</span>
+<span class="sd">         stackdates (bool): Default is false. If true, a column</span>
 <span class="sd">            called DATE will be added and data for all restart</span>
 <span class="sd">            dates will be added in a stacked manner. Implies</span>
 <span class="sd">            dateinheaders False.</span>
@@ -296,12 +301,9 @@
 
     <span class="c1"># First task is to determine the restart index to extract</span>
     <span class="c1"># data for:</span>
-    <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">)</span> <span class="o">=</span> <span class="n">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">,</span> <span class="n">isodates</span><span class="p">)</span> <span class="o">=</span> <span class="n">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;Extracting restart information at dates </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="nb">str</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chosendates</span><span class="p">]),</span>
-    <span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting restart information at dates </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">isodates</span><span class="p">))</span>
 
     <span class="c1"># Determine the available restart vectors, we only include</span>
     <span class="c1"># those with correct length, meaning that they are defined</span>
@@ -316,8 +318,8 @@
     <span class="n">rstvectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rstvectors</span><span class="p">))</span>  <span class="c1"># Make unique list</span>
     <span class="c1"># Note that all of these might not exist at all timesteps.</span>
 
-    <span class="k">if</span> <span class="n">datestacked</span> <span class="ow">and</span> <span class="n">dateinheaders</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Will not put date in headers when datestacked=True&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">stackdates</span> <span class="ow">and</span> <span class="n">dateinheaders</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Will not put date in headers when stackdates=True&quot;</span><span class="p">)</span>
         <span class="n">dateinheaders</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">rst_dfs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -366,7 +368,7 @@
         <span class="c1"># Tag the column names if requested, or if multiple rst indices</span>
         <span class="c1"># are asked for</span>
         <span class="n">datestr</span> <span class="o">=</span> <span class="n">chosendates</span><span class="p">[</span><span class="n">rstindices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rstindex</span><span class="p">)]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datestacked</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stackdates</span><span class="p">:</span>
             <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">colname</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">datestr</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
         <span class="n">rst_dfs</span><span class="p">[</span><span class="n">datestr</span><span class="p">]</span> <span class="o">=</span> <span class="n">rst_df</span>
@@ -374,7 +376,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">rst_dfs</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">datestacked</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stackdates</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">rststack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="n">rststack</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;level_0&quot;</span><span class="p">:</span> <span class="s2">&quot;DATE&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -480,15 +482,28 @@
     <span class="k">return</span> <span class="n">init_df</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">dropconstants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">dropconstants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
 
-<span class="sd">    This is the &quot;main&quot; function for Python API users&quot;&quot;&quot;</span>
+<span class="sd">    This is the &quot;main&quot; function for Python API users</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        eclfiles (EclFiles): Handle to an Eclipse case</span>
+<span class="sd">        vectors (str or list): Vectors to include, wildcards</span>
+<span class="sd">            supported. String argument. Used to match both</span>
+<span class="sd">            INIT vectors and RESTART vectors.</span>
+<span class="sd">        rstdates (list, str or datetime): Restart dates to include</span>
+<span class="sd">            Mnenomics such as first and last are supported.</span>
+<span class="sd">        dateinheaders (bool): Wheter columns with data from UNRST files</span>
+<span class="sd">            should always have the ISO-date embedded in the column header.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">)</span>
     <span class="n">rst_df</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">rstdates</span><span class="p">:</span>
-        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">)</span>
+        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span>
+            <span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="n">dateinheaders</span>
+        <span class="p">)</span>
     <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dropconstants</span><span class="p">:</span>
         <span class="c1"># Note: Ambigous object names, bool vs function</span>

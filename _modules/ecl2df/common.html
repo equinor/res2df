@@ -218,6 +218,55 @@
     <span class="n">zone_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span>
     <span class="n">zone_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zone_df</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">kname</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="stack_on_colnames"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.stack_on_colnames">[docs]</a><span class="k">def</span> <span class="nf">stack_on_colnames</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;For a dataframe where some columns are multilevel, but where</span>
+<span class="sd">    the second level is encoded in the column name, this function</span>
+<span class="sd">    will stack the dataframe by putting the second level of the column</span>
+<span class="sd">    multiindex into its own column, best understood by this example:</span>
+
+<span class="sd">    A dframe like this:</span>
+<span class="sd">       PORV   OWC@2000-01-01 OWC@2020-01-01</span>
+<span class="sd">       100       1000          990</span>
+
+<span class="sd">    will be stacked to:</span>
+<span class="sd">       PORV  OWC   DATE</span>
+<span class="sd">       100   1000  2000-01-01</span>
+<span class="sd">       100   990   2020-01-01</span>
+<span class="sd">    (for the defaults in sep and stackcolname)</span>
+
+<span class="sd">    Column order is not guaranteed</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe (pd.DataFrame): A dataframe to stack</span>
+<span class="sd">        sep (str): The separator that is used in dframe.columns to define</span>
+<span class="sd">            the multilevel column names.</span>
+<span class="sd">        stackcolname (str): Used as column name for the second level</span>
+<span class="sd">            of the column multiindex</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
+    <span class="n">tuplecolumns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)),</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">tuplecolumns</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No columns to stack&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dframe</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
+        <span class="n">tuplecolumns</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dummy&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+    <span class="n">staticcols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tuplecolumns</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">dframe</span><span class="p">[</span><span class="n">staticcols</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">staticcols</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Drop rows stemming from the NaNs in the second tuple-element for</span>
+    <span class="c1"># static columns:</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;level_0&quot;</span><span class="p">]</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dframe</span></div>
 </pre></div>
 
            </div>

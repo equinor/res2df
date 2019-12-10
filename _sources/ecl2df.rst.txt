@@ -100,6 +100,14 @@ ecl2df.parameters module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.pillars module
+---------------------
+
+.. automodule:: ecl2df.pillars
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.rft module
 -----------------
 

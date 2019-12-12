@@ -31,6 +31,67 @@ def test_summary2df():
     assert "FOPT" in sumdf.columns
 
 
+def test_summary2df_dates(tmpdir):
+    """Test that we have some API possibilities with ISO dates"""
+    eclfiles = EclFiles(DATAFILE)
+
+    sumdf = summary.df(
+        eclfiles,
+        start_date=datetime.date(2002, 1, 2),
+        end_date="2002-03-01",
+        time_index="daily",
+    )
+    assert len(sumdf) == 59
+    assert str(sumdf.index.values[0]) == "2002-01-02"
+    assert str(sumdf.index.values[-1]) == "2002-03-01"
+
+    sumdf = summary.df(eclfiles, time_index="last")
+    assert len(sumdf) == 1
+    assert str(sumdf.index.values[0]) == "2003-01-02"
+
+    sumdf = summary.df(eclfiles, time_index="first")
+    assert len(sumdf) == 1
+    assert str(sumdf.index.values[0]) == "2000-01-01"
+
+    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    sys.argv = [
+        "ecl2csv",
+        "smry",
+        DATAFILE,
+        "-o",
+        str(tmpcsvfile),
+        "--start_date",
+        "2002-01-02",
+        "--end_date",
+        "2003-01-02",
+    ]
+    ecl2csv.main()
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert len(disk_df) == 97  # Includes timestamps
+    assert str(disk_df["DATE"].values[0]) == "2002-01-02 00:00:00"
+    assert str(disk_df["DATE"].values[-1]) == "2003-01-02 00:00:00"
+
+    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    sys.argv = [
+        "ecl2csv",
+        "smry",
+        DATAFILE,
+        "-o",
+        str(tmpcsvfile),
+        "--time_index",
+        "daily",
+        "--start_date",
+        "2002-01-02",
+        "--end_date",
+        "2003-01-02",
+    ]
+    ecl2csv.main()
+    disk_df = pd.read_csv(tmpcsvfile)
+    assert len(disk_df) == 366
+    assert str(disk_df["DATE"].values[0]) == "2002-01-02"
+    assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
+
+
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")

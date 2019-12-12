@@ -14,6 +14,7 @@ import sys
 import logging
 import argparse
 import datetime
+import dateutil.parser
 
 import pandas as pd
 
@@ -57,7 +58,7 @@ def normalize_dates(start_date, end_date, freq):
         # This we don't need to normalize, but we should not give any warnings
         pass
     else:
-        raise ValueError("Unrecognized frequency for date normalization")
+        raise ValueError("Unrecognized frequency for date normalization: " + str(freq))
     return (start_date, end_date)
 
 
@@ -94,8 +95,6 @@ def resample_smry_dates(
         list of datetimes.
 
     """
-    import dateutil.parser
-
     if not eclsumsdates:
         return []
 
@@ -130,48 +129,49 @@ def resample_smry_dates(
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
         return datetimes
-    elif freq == "last":
-        end_date = max(eclsumsdates).date()
-        return [end_date]
+    if freq == "first":
+        return [min(eclsumsdates).date()]
+    if freq == "last":
+        return [max(eclsumsdates).date()]
+
+    # These are datetime.datetime, not datetime.date
+    start_smry = min(eclsumsdates)
+    end_smry = max(eclsumsdates)
+
+    pd_freq_mnenomics = {"monthly": "MS", "yearly": "YS", "daily": "D"}
+
+    (start_n, end_n) = normalize_dates(start_smry.date(), end_smry.date(), freq)
+
+    if not start_date and not normalize:
+        start_date_range = start_smry.date()
+    elif not start_date and normalize:
+        start_date_range = start_n
     else:
-        # These are datetime.datetime, not datetime.date
-        start_smry = min(eclsumsdates)
-        end_smry = max(eclsumsdates)
+        start_date_range = start_date
 
-        pd_freq_mnenomics = {"monthly": "MS", "yearly": "YS", "daily": "D"}
+    if not end_date and not normalize:
+        end_date_range = end_smry.date()
+    elif not end_date and normalize:
+        end_date_range = end_n
+    else:
+        end_date_range = end_date
 
-        (start_n, end_n) = normalize_dates(start_smry.date(), end_smry.date(), freq)
+    if freq not in pd_freq_mnenomics:
+        raise ValueError("Requested frequency %s not supported" % freq)
+    datetimes = pd.date_range(
+        start_date_range, end_date_range, freq=pd_freq_mnenomics[freq]
+    )
+    # Convert from Pandas' datetime64 to datetime.date:
+    datetimes = [x.date() for x in datetimes]
 
-        if not start_date and not normalize:
-            start_date_range = start_smry.date()
-        elif not start_date and normalize:
-            start_date_range = start_n
-        else:
-            start_date_range = start_date
-
-        if not end_date and not normalize:
-            end_date_range = end_smry.date()
-        elif not end_date and normalize:
-            end_date_range = end_n
-        else:
-            end_date_range = end_date
-
-        if freq not in pd_freq_mnenomics:
-            raise ValueError("Requested frequency %s not supported" % freq)
-        datetimes = pd.date_range(
-            start_date_range, end_date_range, freq=pd_freq_mnenomics[freq]
-        )
-        # Convert from Pandas' datetime64 to datetime.date:
-        datetimes = [x.date() for x in datetimes]
-
-        # pd.date_range will not include random dates that do not
-        # fit on frequency boundary. Force include these if
-        # supplied as user arguments.
-        if start_date and start_date not in datetimes:
-            datetimes = [start_date] + datetimes
-        if end_date and end_date not in datetimes:
-            datetimes = datetimes + [end_date]
-        return datetimes
+    # pd.date_range will not include random dates that do not
+    # fit on frequency boundary. Force include these if
+    # supplied as user arguments.
+    if start_date and start_date not in datetimes:
+        datetimes = [start_date] + datetimes
+    if end_date and end_date not in datetimes:
+        datetimes = datetimes + [end_date]
+    return datetimes
 
 
 def df(
@@ -218,7 +218,8 @@ def df(
     if not isinstance(column_keys, list):
         column_keys = [column_keys]
     if isinstance(time_index, str) and time_index == "raw":
-        time_index_arg = None
+        time_index_arg = resample_smry_dates(
+                eclfiles.get_eclsum().dates, "raw", False, start_date, end_date)
     elif isinstance(time_index, str):
         time_index_arg = resample_smry_dates(
             eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
@@ -238,6 +239,8 @@ def df(
     dframe = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
         time_index_arg, column_keys
     )
+    # If time_index_arg was None, but start_date was set, we need to date-truncate
+    # afterwards:
     logging.info(
         "Dataframe with smry data ready, %d columns and %d rows",
         len(dframe.columns),
@@ -286,7 +289,8 @@ def fill_parser(parser):
         help="""Time resolution mnemonic; raw, daily, monthly or yearly.
             Data at a given point in time applies until the next point in time.
             If not raw, data will be interpolated. Use interpolated rate vectors
-            with care. Default is raw, which will include clock times.
+            with care. Default is raw, which will include clock times. first and last
+            are also accepted and will print data for the first or the last date.
             """,
         default="raw",
     )
@@ -295,6 +299,25 @@ def fill_parser(parser):
         nargs="+",
         help="""Summary column vector wildcards, space-separated.
         Default is to include all summary vectors available.""",
+    )
+    parser.add_argument(
+        "--start_date",
+        type=str,
+        help=(
+            "Start at a specific date, in ISO format YYYY-MM-DD. "
+            "Ignored if time_index is first or last"
+        ),
+        default="",
+    )
+
+    parser.add_argument(
+        "--end_date",
+        type=str,
+        help=(
+            "End at a specific date, in ISO format YYYY-MM-DD"
+            "Ignored if time_index is first or last"
+        ),
+        default="",
     )
     parser.add_argument(
         "-p",
@@ -346,6 +369,8 @@ def summary2df_main(args):
         eclfiles,
         time_index=args.time_index,
         column_keys=args.column_keys,
+        start_date=args.start_date,
+        end_date=args.end_date,
         params=args.params,
         paramfile=args.paramfile,
     )

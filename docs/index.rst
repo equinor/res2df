@@ -1,10 +1,15 @@
-Welcome to ecl2df's documentation!
-========================================
+ecl2df
+======
+
+ecl2df is a Pandas DataFrame wrapper around libecl and sunbeam, which
+are used to access binary files outputted by the reservoir simulator
+Eclipse, or its input files --- or any other tool outputting to the same
+data format.
 
 .. toctree::
    :maxdepth: 2
 
-   readme
+   introduction
    installation
    scripts
    modules

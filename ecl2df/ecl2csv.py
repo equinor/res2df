@@ -44,7 +44,7 @@ def get_parser():
     grid_parser.set_defaults(func=grid.grid2df_main)
 
     summary_parser = subparsers.add_parser(
-        "smry",
+        "summary",
         help="Extract summary data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )

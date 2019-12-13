@@ -56,7 +56,7 @@ def test_summary2df_dates(tmpdir):
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")
     sys.argv = [
         "ecl2csv",
-        "smry",
+        "summary",
         DATAFILE,
         "-o",
         str(tmpcsvfile),
@@ -74,7 +74,7 @@ def test_summary2df_dates(tmpdir):
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")
     sys.argv = [
         "ecl2csv",
-        "smry",
+        "summary",
         DATAFILE,
         "-o",
         str(tmpcsvfile),
@@ -145,7 +145,7 @@ def test_paramsupport(tmpdir):
 def test_main_subparser(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")
-    sys.argv = ["ecl2csv", "smry", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))

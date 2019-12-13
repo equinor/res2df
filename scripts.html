@@ -280,7 +280,8 @@ data of interest to CSV files.</p>
 <h3>smry<a class="headerlink" href="#smry" title="Permalink to this headline">¶</a></h3>
 <p>Extract summary data</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">smry</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
-             <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">start_date</span> <span class="n">START_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">end_date</span> <span class="n">END_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
              <span class="p">[</span><span class="o">--</span><span class="n">paramfile</span> <span class="n">PARAMFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
              <span class="n">DATAFILE</span>
 </pre></div>
@@ -300,7 +301,8 @@ data of interest to CSV files.</p>
 <dd><dl class="simple">
 <dt>Time resolution mnemonic; raw, daily, monthly or yearly.</dt><dd><p>Data at a given point in time applies until the next point in time.
 If not raw, data will be interpolated. Use interpolated rate vectors
-with care. Default is raw, which will include clock times.</p>
+with care. Default is raw, which will include clock times. first and last
+are also accepted and will print data for the first or the last date.</p>
 </dd>
 </dl>
 <p>Default: “raw”</p>
@@ -310,6 +312,14 @@ with care. Default is raw, which will include clock times.</p>
 <dt>Summary column vector wildcards, space-separated.</dt><dd><p>Default is to include all summary vectors available.</p>
 </dd>
 </dl>
+</dd>
+<dt><kbd>--start_date</kbd></dt>
+<dd><p>Start at a specific date, in ISO format YYYY-MM-DD. Ignored if time_index is first or last</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--end_date</kbd></dt>
+<dd><p>End at a specific date, in ISO format YYYY-MM-DDIgnored if time_index is first or last</p>
+<p>Default: “”</p>
 </dd>
 <dt><kbd>-p, --params</kbd></dt>
 <dd><p>Merge key-value data from parameter file into each row</p>

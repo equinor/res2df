@@ -32,8 +32,10 @@ def df(
     to produce a row representing a cell-pair where there is
     transmissibility.
 
-    You will get a dataframe with the columns
+    You will get a dataframe with the columns::
+
         I1, J1, K1, I2, J2, K2, DIR, TRAN
+
     similar to what you get from non-neighbour connection export.
 
     If you ask for coordinates, you will also get the distance (DX,
@@ -276,7 +278,9 @@ def fill_parser(parser):
         ),
     )
     parser.add_argument(
-        "--nnc", action="store_true", help="Concatenate NNC transmissibilities"
+        "--nnc",
+        action="store_true",
+        help="Add NNC transmissibilities to the same dataframe",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument(

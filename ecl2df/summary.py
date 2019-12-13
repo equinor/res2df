@@ -219,7 +219,8 @@ def df(
         column_keys = [column_keys]
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = resample_smry_dates(
-                eclfiles.get_eclsum().dates, "raw", False, start_date, end_date)
+            eclfiles.get_eclsum().dates, "raw", False, start_date, end_date
+        )
     elif isinstance(time_index, str):
         time_index_arg = resample_smry_dates(
             eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
@@ -286,19 +287,22 @@ def fill_parser(parser):
     parser.add_argument(
         "--time_index",
         type=str,
-        help="""Time resolution mnemonic; raw, daily, monthly or yearly.
-            Data at a given point in time applies until the next point in time.
-            If not raw, data will be interpolated. Use interpolated rate vectors
-            with care. Default is raw, which will include clock times. first and last
-            are also accepted and will print data for the first or the last date.
-            """,
+        help=(
+            "Time resolution mnemonic; raw, daily, monthly or yearly. "
+            "Data at a given point in time applies until the next point in time. "
+            "If not raw, data will be interpolated. Use interpolated rate vectors "
+            "with care. Default is raw, which will include clock times. first and last "
+            "are also accepted and will print data for the first or the last date. "
+        ),
         default="raw",
     )
     parser.add_argument(
         "--column_keys",
         nargs="+",
-        help="""Summary column vector wildcards, space-separated.
-        Default is to include all summary vectors available.""",
+        help=(
+            "Summary column vector wildcards, space-separated. "
+            "Default is to include all summary vectors available."
+        ),
     )
     parser.add_argument(
         "--start_date",

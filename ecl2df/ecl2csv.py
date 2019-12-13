@@ -37,7 +37,13 @@ def get_parser():
     # Eclipse output files:
     grid_parser = subparsers.add_parser(
         "grid",
-        help="Extract grid data",
+        help=("Extract grid data with properties"),
+        description=(
+            "Each cell is represented by "
+            "one row of data. The coordinates are in the X, Y, and Z columns "
+            "and represent the grid centre. Volume pr. cell is added "
+            "and all INIT and UNRST data can be added to the rows"
+        ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     grid.fill_parser(grid_parser)
@@ -45,7 +51,12 @@ def get_parser():
 
     summary_parser = subparsers.add_parser(
         "summary",
-        help="Extract summary data",
+        help=("Extract summary data"),
+        description=(
+            "This is the time-dependent data for "
+            "field production data, well profiles etc. Each row contains data "
+            "for one point in time"
+        ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     summary.fill_parser(summary_parser)
@@ -59,7 +70,8 @@ def get_parser():
             "Extract NNC (Non-Neighbour Connection) data from the EGRID file. "
             "Each row is one connection, with the columns I1, J1, K1 for the first "
             "cell in the cell pair, and I2, J2, K2 for the second. The "
-            "transmissibility for the cell pair is in the TRAN column."
+            "transmissibility for the cell pair is in the TRAN column. "
+            "See also the trans subcommand."
         ),
     )
     nnc.fill_parser(nnc_parser)
@@ -67,7 +79,10 @@ def get_parser():
 
     faults_parser = subparsers.add_parser(
         "faults",
-        help="Extract faults data",
+        help="Extract data from the FAULTS keyword",
+        description=(
+            "Each row represents a particular cell and a face and the name of the fault"
+        ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     faults.fill_parser(faults_parser)
@@ -78,11 +93,12 @@ def get_parser():
         help="Extract transmissibilities from EGRID file",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "Extract transmissibilities (TRANX,TRANY,TRANZ) from Eclipse "
+            "Extract transmissibilities (TRANX, TRANY, TRANZ) from Eclipse "
             "binary output files. Each row represent a connection between a cell pair "
             "(I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for "
             "each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 "
-            "and FIPNUM2."
+            "and FIPNUM2, and it is possible to filter to connections where f.ex "
+            "FIPNUM change"
         ),
     )
     trans.fill_parser(trans_parser)
@@ -91,11 +107,11 @@ def get_parser():
     pillars_parser = subparsers.add_parser(
         "pillars",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        help="Compute cornerpoint pillar data",
+        help="Compute data pr. cornerpoint pillar",
         description=(
             "Compute statistics pr. pillar in a cornerpoint grid, "
-            "in addition pr a region parameter. Volumetrics, in-place, "
-            "and contacts"
+            "or alternatively by region parameter. Volumetrics, in-place, "
+            "and contacts."
         ),
     )
     pillars.fill_parser(pillars_parser)
@@ -123,6 +139,12 @@ def get_parser():
         "satfunc",
         help="Extract SWOF/SGOF/etc data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Data for all saturation functions are merged "
+            "into one dataframe for all SATNUMs. Each row has data for a "
+            "saturation point. For SWOF data, all columns related to SGOF "
+            "are empty and vice versa"
+        ),
     )
 
     satfunc.fill_parser(satfunc_parser)
@@ -130,8 +152,12 @@ def get_parser():
 
     compdat_parser = subparsers.add_parser(
         "compdat",
-        help="Extract COMPDAT/COMPSEGS/etc data",
+        help="Extract COMPDAT data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Each row represents a cell connection to a well. "
+            "Only COMPDAT data is exposed in CSV output currently."
+        ),
     )
     compdat.fill_parser(compdat_parser)
     compdat_parser.set_defaults(func=compdat.compdat2df_main)
@@ -140,6 +166,7 @@ def get_parser():
         "equil",
         help="Extract EQUIL data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=("Each row contains the equilibriation data for one EQLNUM."),
     )
     equil.fill_parser(equil_parser)
     equil_parser.set_defaults(func=equil.equil2df_main)
@@ -148,6 +175,7 @@ def get_parser():
         "gruptree",
         help="Extract GRUPTREE data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=("Each row represents an edge in the GRUPTREE at a specific date."),
     )
     gruptree.fill_parser(gruptree_parser)
     gruptree_parser.set_defaults(func=gruptree.gruptree2df_main)
@@ -156,6 +184,10 @@ def get_parser():
         "wcon",
         help="Extract well control data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Each row represents the control data for a certain "
+            "well or well wildcard at a specific date"
+        ),
     )
     wcon.fill_parser(wcon_parser)
     wcon_parser.set_defaults(func=wcon.wcon2df_main)

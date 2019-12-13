@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Extract NNC information from Eclipse output files.
-
-NNC = Non Neighbour Connection
-
-Inspired by
-https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py
+Extract non-neighbour connection (NNC) information from Eclipse output files.
 """
 from __future__ import print_function
 from __future__ import absolute_import

@@ -13,8 +13,8 @@ command line program ``ecl2csv``. Use the command line tool to dump the
 extracted or computed data to a CSV file, and use any other tool to
 view the CSV data.
 
-Example
--------
+Examples
+--------
 
 .. code-block:: console
 
@@ -37,7 +37,7 @@ a Pandas Dataframe.
     smry = ecl2df.summary.df(eclfiles, column_keys="F*", time_index="monthly")
     hc_contacts = ecl2df.pillars.df(eclfiles, rstdates="all")
 
-See the API for more documentation on each module.
+See the API for more documentation and possibilities for each module.
 
 Module overview
 ---------------

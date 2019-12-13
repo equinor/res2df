@@ -274,18 +274,18 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
     After unrolling, column pairs with ranges are transformed
     into multiple rows, with no ranges.
 
-    Example: COMPDAT supports K1, K2 intervals for multiple cells,
+    Example: COMPDAT supports K1, K2 intervals for multiple cells::
 
-    COMPDAT
-      'OP1' 33 44 10 11 /
-    /
+      COMPDAT
+        'OP1' 33 44 10 11 /
+      /
 
-    is transformed/unrolled so it would be equal to
+    is transformed/unrolled so it would be equal to::
 
-    COMPDAT
-      'OP1' 33 44 10 10 /
-      'OP1' 33 44 11 11 /
-    /
+      COMPDAT
+        'OP1' 33 44 10 10 /
+        'OP1' 33 44 11 11 /
+      /
 
     The latter is easier to work with in Pandas dataframes
 
@@ -297,7 +297,7 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
             of the range.
 
     Returns:
-        pd.Dataframe: Unrolled version. Identical to input if none of
+        pd.Dataframe, Unrolled version. Identical to input if none of
             rows had any ranges.
     """
     if dframe.empty:
@@ -372,7 +372,14 @@ def compdat2df_main(args):
 
 
 def df(eclfiles, initvectors=None):
-    """Main function for Python API users"""
+    """Main function for Python API users
+
+    Supports only COMPDAT information for now. Will
+    add a zone-name if a zonefile is found alongside
+
+    Returns:
+        pd.Dataframe with one row pr cell to well connection
+    """
     compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 

@@ -69,15 +69,24 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     will stack the dataframe by putting the second level of the column
     multiindex into its own column, best understood by this example:
 
-    A dframe like this:
-       PORV   OWC@2000-01-01 OWC@2020-01-01
-       100       1000          990
+    A dframe like this
 
-    will be stacked to:
+       ===== =============== ==============
+       PORV   OWC@2000-01-01 OWC@2020-01-01
+       ===== =============== ==============
+       100       1000          990
+       ===== =============== ==============
+
+    will be stacked to
+
+       ====  ====  ==========
        PORV  OWC   DATE
+       ====  ====  ==========
        100   1000  2000-01-01
        100   990   2020-01-01
-    (for the defaults in sep and stackcolname)
+       ====  ====  ==========
+
+    (for the defaults values for *sep* and *stackcolname*)
 
     Column order is not guaranteed
 

@@ -336,8 +336,8 @@ into multiple rows, with no ranges.</p>
 <li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Dataframe to be unrolled</p></li>
 <li><p><strong>start_column</strong> (<em>str</em>) – Column name that contains the start of
 a range.</p></li>
-<li><p><strong>end_column</strong> (<em>str</em>) – Column name that contains the corresponding
-end of the range.</p></li>
+<li><p><strong>end_column</strong> (<em>str</em>) – Column name that contains the corresponding end
+of the range.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -378,7 +378,7 @@ end of the range.</p></li>
 
 <dl class="function">
 <dt id="ecl2df.compdat.df">
-<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">initvectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function for Python API users</p>
 </dd></dl>
 
@@ -733,6 +733,27 @@ when merging with other dataframes with cell-data.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.grid.merge_initvectors">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">merge_initvectors</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">dframe</em>, <em class="sig-param">initvectors</em>, <em class="sig-param">ijknames=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#merge_initvectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.merge_initvectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge in INIT vectors to a dataframe by I, J, K.</p>
+<p>Utility function for other modules to use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Object representing the Eclipse output files</p></li>
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Table data to merge with</p></li>
+<li><p><strong>initvectors</strong> (<em>list</em><em> or </em><em>str</em>) – Names of INIT vectors to merge in.</p></li>
+<li><p><strong>ijknames</strong> (<em>list</em>) – Three strings that determine the I, J and K columns to use
+for merging in dframe. For compdat the ‘K’ is f.ex. denoted ‘K1’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame, copy of incoming dataframe with additional columns</p>
 </dd>
 </dl>
 </dd></dl>

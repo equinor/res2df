@@ -579,7 +579,9 @@ are also accepted and will print data for the first or the last date.</p>
 <div class="section" id="compdat">
 <h3>compdat<a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h3>
 <p>Extract COMPDAT/COMPSEGS/etc data</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">compdat</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">compdat</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">initvectors</span> <span class="n">INITVECTORS</span> <span class="p">[</span><span class="n">INITVECTORS</span> <span class="o">...</span><span class="p">]]</span>
+                <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                <span class="n">DATAFILE</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments_repeat8">
@@ -596,6 +598,9 @@ are also accepted and will print data for the first or the last date.</p>
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
 <p>Default: “compdat.csv”</p>
+</dd>
+<dt><kbd>--initvectors</kbd></dt>
+<dd><p>List of INIT vectors to merge into the data</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>

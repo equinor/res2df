@@ -357,17 +357,10 @@ def compdat2df_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    dfs = deck2dfs(deck)
-    compdat_df = dfs["COMPDAT"]
-    zonemap = eclfiles.get_zonemap()
-    if zonemap:
-        logging.info("Merging zones")
-        compdat_df = merge_zones(compdat_df, zonemap)
+    compdat_df = df(eclfiles)
     if compdat_df.empty:
         logging.warning("Empty COMPDAT data being written to disk!")
     compdat_df.to_csv(args.output, index=False)
-    dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
-    dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
     print("Wrote to " + args.output)
 
 

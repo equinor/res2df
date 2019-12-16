@@ -14,7 +14,7 @@ from .eclfiles import EclFiles
 from .grid import gridgeometry2df
 
 
-def nnc2df(eclfiles, coords=False, pillars=False):
+def df(eclfiles, coords=False, pillars=False):
     """Produce a Pandas Dataframe with NNC information
 
     A NNC is a pair of cells that are not next to each other
@@ -210,13 +210,8 @@ def nnc2df_main(args):
         logging.getLogger().setLevel(logging.INFO)
     logging.getLogger().name = "nnc2df"
     eclfiles = EclFiles(args.DATAFILE)
-    nncdf = nnc2df(eclfiles, coords=args.coords, pillars=args.pillars)
+    nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     if nncdf.empty:
         logging.warning("Empty NNC dataframe being written to disk!")
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
-
-
-def df(eclfiles, coords=False, pillars=False):
-    """Main function for Python API users"""
-    return nnc2df(eclfiles, coords=coords, pillars=pillars)

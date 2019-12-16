@@ -20,7 +20,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_nnc2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    nncdf = nnc.nnc2df(eclfiles)
+    nncdf = nnc.df(eclfiles)
 
     assert not nncdf.empty
     assert "I1" in nncdf
@@ -41,7 +41,7 @@ def test_nnc2df():
 def test_nnc2df_coords():
     """Test that we are able to add coordinates"""
     eclfiles = EclFiles(DATAFILE)
-    gnncdf = nnc.nnc2df(eclfiles, coords=True)
+    gnncdf = nnc.df(eclfiles, coords=True)
     assert not gnncdf.empty
     assert "X" in gnncdf
     assert "Y" in gnncdf
@@ -51,7 +51,7 @@ def test_nnc2df_coords():
 def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
     eclfiles = EclFiles(DATAFILE)
-    nncdf = nnc.nnc2df(eclfiles)
+    nncdf = nnc.df(eclfiles)
     faultsdf = faults.deck2df(eclfiles.get_ecldeck())
 
     merged = pd.merge(

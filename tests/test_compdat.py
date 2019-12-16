@@ -9,6 +9,8 @@ import sys
 
 import pandas as pd
 
+import pytest
+
 from ecl2df import compdat, ecl2csv
 from ecl2df import EclFiles
 
@@ -197,6 +199,28 @@ def test_unrollbogus():
     assert (unrolled == bogusdf).all().all()
 
 
+def test_initmerging():
+    """Test that we can ask for INIT vectors to be merged into the data"""
+    eclfiles = EclFiles(DATAFILE)
+    noinit_df = compdat.df(eclfiles)
+    df = compdat.df(eclfiles, initvectors=[])
+    assert isinstance(df, pd.DataFrame)
+    assert not df.empty
+
+    df = compdat.df(eclfiles, initvectors=["FIPNUM", "EQLNUM", "SATNUM"])
+    assert "FIPNUM" in df
+    assert "EQLNUM" in df
+    assert "SATNUM" in df
+    assert len(df) == len(noinit_df)
+
+    df = compdat.df(eclfiles, initvectors="FIPNUM")
+    assert "FIPNUM" in df
+    assert len(df) == len(noinit_df)
+
+    with pytest.raises(AssertionError):
+        compdat.df(eclfiles, initvectors=2)
+
+
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
@@ -217,4 +241,38 @@ def test_main_subparsers(tmpdir):
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "ZONE" in disk_df
+    assert not disk_df.empty
+
+    sys.argv = [
+        "ecl2csv",
+        "compdat",
+        DATAFILE,
+        "--initvectors",
+        "FIPNUM",
+        "-o",
+        str(tmpcsvfile),
+    ]
+    ecl2csv.main()
+
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
+    assert "FIPNUM" in disk_df
+    assert not disk_df.empty
+
+    sys.argv = [
+        "ecl2csv",
+        "compdat",
+        DATAFILE,
+        "--initvectors",
+        "FIPNUM",
+        "EQLNUM",
+        "-o",
+        str(tmpcsvfile),
+    ]
+    ecl2csv.main()
+
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
+    assert "FIPNUM" in disk_df
+    assert "EQLNUM" in disk_df
     assert not disk_df.empty

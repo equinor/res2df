@@ -14,6 +14,7 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 from .common import parse_ecl_month, merge_zones
+from .grid import merge_initvectors
 
 
 # Sunbeam terms:
@@ -292,8 +293,8 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
         dframe (pd.DataFrame): Dataframe to be unrolled
         start_column (str): Column name that contains the start of
             a range.
-        end_column (str): Column name that contains the corresponding
-            end of the range.
+        end_column (str): Column name that contains the corresponding end
+            of the range.
 
     Returns:
         pd.Dataframe: Unrolled version. Identical to input if none of
@@ -336,6 +337,12 @@ def fill_parser(parser):
         help="Name of output csv file.",
         default="compdat.csv",
     )
+    parser.add_argument(
+        "--initvectors",
+        help="List of INIT vectors to merge into the data",
+        nargs="+",
+        default=None,
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
 
@@ -357,24 +364,22 @@ def compdat2df_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    dfs = deck2dfs(deck)
-    compdat_df = dfs["COMPDAT"]
-    zonemap = eclfiles.get_zonemap()
-    if zonemap:
-        logging.info("Merging zones")
-        compdat_df = merge_zones(compdat_df, zonemap)
+    compdat_df = df(eclfiles, initvectors=args.initvectors)
     if compdat_df.empty:
         logging.warning("Empty COMPDAT data being written to disk!")
     compdat_df.to_csv(args.output, index=False)
-    dfs["COMPSEGS"].to_csv("compsegs.csv", index=False)
-    dfs["WELSEGS"].to_csv("welsegs.csv", index=False)
     print("Wrote to " + args.output)
 
 
-def df(eclfiles):
+def df(eclfiles, initvectors=None):
     """Main function for Python API users"""
     compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
+
+    if initvectors:
+        compdat_df = merge_initvectors(
+            eclfiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
+        )
 
     zonemap = eclfiles.get_zonemap()
     if zonemap:

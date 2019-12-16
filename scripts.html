@@ -97,7 +97,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#smry">smry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">summary</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat1">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat1">Named Arguments</a></li>
 </ul>
@@ -228,7 +228,7 @@
 <p id="ecl2csv">From the command line there is a utility for dumping the
 data of interest to CSV files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
-               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">smry</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
+               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
                <span class="o">...</span>
 </pre></div>
 </div>
@@ -276,14 +276,14 @@ data of interest to CSV files.</p>
 </dl>
 </div>
 </div>
-<div class="section" id="smry">
-<h3>smry<a class="headerlink" href="#smry" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="summary">
+<h3>summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
 <p>Extract summary data</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">smry</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
-             <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span>
-             <span class="p">[</span><span class="o">--</span><span class="n">start_date</span> <span class="n">START_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">end_date</span> <span class="n">END_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
-             <span class="p">[</span><span class="o">--</span><span class="n">paramfile</span> <span class="n">PARAMFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
-             <span class="n">DATAFILE</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
+                <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span>
+                <span class="p">[</span><span class="o">--</span><span class="n">start_date</span> <span class="n">START_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">end_date</span> <span class="n">END_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
+                <span class="p">[</span><span class="o">--</span><span class="n">paramfile</span> <span class="n">PARAMFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                <span class="n">DATAFILE</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments_repeat1">

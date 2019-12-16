@@ -274,6 +274,43 @@ def gridgeometry2df(eclfiles):
     return grid_df
 
 
+def merge_initvectors(eclfiles, dframe, initvectors, ijknames=None):
+    """Merge in INIT vectors to a dataframe by I, J, K.
+
+    Utility function for other modules to use.
+
+    Args:
+        eclfiles (EclFiles): Object representing the Eclipse output files
+        dframe (pd.DataFrame): Table data to merge with
+        initvectors (list or str): Names of INIT vectors to merge in.
+        ijknames (list): Three strings that determine the I, J and K columns to use
+            for merging in dframe. For compdat the 'K' is f.ex. denoted 'K1'
+
+    Returns:
+        pd.DataFrame, copy of incoming dataframe with additional columns
+    """
+    if not initvectors:
+        # Nothing to do.
+        return dframe
+    if not ijknames:
+        ijknames = ["I", "J", "K"]
+    if len(ijknames) != 3:
+        raise ValueError("ijknames must be a list of length 3")
+    assert isinstance(dframe, pd.DataFrame)
+    assert isinstance(eclfiles, EclFiles)
+
+    for col in ijknames:
+        assert col in dframe
+
+    if isinstance(initvectors, str):
+        initvectors = [initvectors]
+    assert isinstance(initvectors, list)
+
+    logging.info("Merging INIT data %s into dataframe", str(initvectors))
+    ijkinit = df(eclfiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
+    return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
+
+
 def init2df(eclfiles, vectors=None):
     """Extract information from INIT file with cell data
 

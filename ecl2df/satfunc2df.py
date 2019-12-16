@@ -1,6 +1,9 @@
+"""
+This module is only for backwards compatibility and will be removed in future versions
+"""
 import logging
 
-logging.warn(
+logging.warning(
     "satfunc2df has been renamed to satfunc, update your code before ecl2df 0.4.0"
 )
 

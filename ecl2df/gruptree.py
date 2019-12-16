@@ -178,10 +178,13 @@ def gruptree2dict(deck, date="END", welspecs=True):
     """Extract the GRUPTREE information as a tree structure
     in a dict.
 
-    Example result:
-    {'FIELD': ['WI', 'OP'],
-     'OP': ['OP_2', 'OP_3', 'OP_4', 'OP_5', 'OP_1'],
-     'WI': ['WI_1', 'WI_2', 'WI_3']}
+    Example result::
+
+      {
+        'FIELD': ['WI', 'OP'],
+        'OP': ['OP_2', 'OP_3', 'OP_4', 'OP_5', 'OP_1'],
+        'WI': ['WI_1', 'WI_2', 'WI_3']
+      }
 
     Returns an empty dict if there is no GRUPTREE in the deck.
 
@@ -208,14 +211,18 @@ def gruptree2dict(deck, date="END", welspecs=True):
 
 def gruptreedf2dict(dframe):
     """Convert list of edges into a
-    nested dictionary (tree), example:
+    nested dictionary (tree),
 
-    {'FIELD': {'OP': {'OP_1': {},
-     'OP_2': {},
-     'OP_3': {},
-     'OP_4': {},
-     'OP_5': {}},
-     'WI': {'WI_1': {}, 'WI_2': {}, 'WI_3': {}}}}
+    Example::
+
+      {
+        'FIELD': {'OP': {'OP_1': {},
+        'OP_2': {},
+        'OP_3': {},
+        'OP_4': {},
+        'OP_5': {}},
+        'WI': {'WI_1': {}, 'WI_2': {}, 'WI_3': {}}}
+      }
 
     Leaf nodes have empty dictionaries.
 
@@ -246,6 +253,7 @@ def dict2treelib(name, nested_dict):
     Args:
         name: name of root node
         nested_dict: nested dictonary of the children at the root.
+
     Return:
         treelib.Tree
     """

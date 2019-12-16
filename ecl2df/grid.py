@@ -119,7 +119,6 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
 
     Args:
         eclfiles: EclFiles object
-
         date: datetime.date or list of datetime.date, must
             correspond to an existing date. If list, it
             forces dateinheaders to be True.
@@ -372,6 +371,8 @@ def df(eclfiles, vectors="*", dropconstants=False, rstdates=None, dateinheaders=
         vectors (str or list): Vectors to include, wildcards
             supported. String argument. Used to match both
             INIT vectors and RESTART vectors.
+        dropconstants (bool): If true, columns that are constant
+            for every cell are dropped.
         rstdates (list, str or datetime): Restart dates to include
             Mnenomics such as first and last are supported.
         dateinheaders (bool): Wheter columns with data from UNRST files

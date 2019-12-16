@@ -194,7 +194,7 @@ class EclFiles(object):
 
         Typical usage is to map from grid layer to zone names.
 
-        The layer filename must currently follow format
+        The layer filename must currently follow format::
 
           'ZoneA' 1-4
           'ZoneB' 5-10

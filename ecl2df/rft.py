@@ -11,8 +11,7 @@ connection data (CONxxxxx) and its segment data (now giving
 information for the conditions in the tubing).
 
 The columns representing SEGxxxxx data on ICD segments are renamed
-by adding the prefix 'ICD_'
-
+by adding the prefix ``ICD_``
 """
 
 from __future__ import print_function

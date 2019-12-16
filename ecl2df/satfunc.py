@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Extract saturation function data (SWOF, SGOF, SWFN, ...)
+Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.
 
 Data can be extracted from a full Eclipse deck (*.DATA)

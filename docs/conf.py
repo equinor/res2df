@@ -91,8 +91,11 @@ exclude_patterns = ["_build"]
 
 # Sort members by input order in classes
 autodoc_member_order = "bysource"
-autodoc_default_options = {"members": True, "show_inheritance": True}
+# sphinx > v2.x.x / py3:
+# autodoc_default_options = {"members": True, "show_inheritance": True}
 
+# Py2/sphinx1.8: (this will give a warning in sphinx2)
+autodoc_default_flags = ["members", "show_inheritance"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.

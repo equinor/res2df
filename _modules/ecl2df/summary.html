@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.summary &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -86,7 +86,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -376,7 +376,8 @@
         <span class="n">column_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_keys</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">time_index</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
         <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
-                <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">()</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+            <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">()</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">resample_smry_dates</span><span class="p">(</span>
             <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">()</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span>
@@ -443,19 +444,22 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--time_index&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Time resolution mnemonic; raw, daily, monthly or yearly.</span>
-<span class="s2">            Data at a given point in time applies until the next point in time.</span>
-<span class="s2">            If not raw, data will be interpolated. Use interpolated rate vectors</span>
-<span class="s2">            with care. Default is raw, which will include clock times. first and last</span>
-<span class="s2">            are also accepted and will print data for the first or the last date.</span>
-<span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Time resolution mnemonic; raw, daily, monthly or yearly. &quot;</span>
+            <span class="s2">&quot;Data at a given point in time applies until the next point in time. &quot;</span>
+            <span class="s2">&quot;If not raw, data will be interpolated. Use interpolated rate vectors &quot;</span>
+            <span class="s2">&quot;with care. Default is raw, which will include clock times. first and last &quot;</span>
+            <span class="s2">&quot;are also accepted and will print data for the first or the last date. &quot;</span>
+        <span class="p">),</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--column_keys&quot;</span><span class="p">,</span>
         <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Summary column vector wildcards, space-separated.</span>
-<span class="s2">        Default is to include all summary vectors available.&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Summary column vector wildcards, space-separated. &quot;</span>
+            <span class="s2">&quot;Default is to include all summary vectors available.&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--start_date&quot;</span><span class="p">,</span>

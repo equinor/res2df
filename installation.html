@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; ecl2df 0.0.1 documentation</title>
+  <title>Installation &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Command line utility: ecl2csv" href="scripts.html" />
-    <link rel="prev" title="Introduction" href="readme.html" /> 
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -88,7 +88,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">API for ecl2df</a></li>
@@ -160,14 +160,23 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Internally in Equinor, ecl2df is distributed through Komodo.</p>
 <p>You need libecl and sunbeam installed upfront.</p>
-<p>Then issue the commands:</p>
-<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/equinor/ecl2df</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">ecl2df</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p>
-<p>For libecl and sunbeam installation, you might get some hints from the
-file <a class="reference external" href="https://github.com/equinor/ecl2df/blob/master/.travis.yml">.travis.yml</a> in the ecl2df repository.</p>
+<p>Either install a released version from pypi by</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install ecl2df
+</pre></div>
+</div>
+<p>or install the latest development version from source by the commands</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> git clone https://github.com/equinor/ecl2df
+<span class="gp">&gt;</span> <span class="nb">cd</span> ecl2df
+<span class="gp">&gt;</span> pip install -r requirements.txt
+<span class="gp">&gt;</span> pip install -e .
+</pre></div>
+</div>
+<p>For libecl and sunbeam installation, you can get hints from the
+file <a class="reference external" href="https://github.com/equinor/ecl2df/blob/master/.travis.yml">.travis.yml</a>
+in the ecl2df repository. This describes a working installation for a given
+Linux release, but it might require some adjustments on other systems.</p>
 </div>
 
 
@@ -181,7 +190,7 @@ file <a class="reference external" href="https://github.com/equinor/ecl2df/blob/
         <a href="scripts.html" class="btn btn-neutral float-right" title="Command line utility: ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="readme.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

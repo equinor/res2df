@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df package &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -88,7 +88,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">API for ecl2df</a><ul class="current">
@@ -227,16 +227,55 @@ default K1</p></li>
 the second level is encoded in the column name, this function
 will stack the dataframe by putting the second level of the column
 multiindex into its own column, best understood by this example:</p>
-<dl class="simple">
-<dt>A dframe like this:</dt><dd><p>PORV   <a class="reference external" href="mailto:OWC&#37;&#52;&#48;2000-01-01">OWC<span>&#64;</span>2000-01-01</a> <a class="reference external" href="mailto:OWC&#37;&#52;&#48;2020-01-01">OWC<span>&#64;</span>2020-01-01</a>
-100       1000          990</p>
-</dd>
-<dt>will be stacked to:</dt><dd><p>PORV  OWC   DATE
-100   1000  2000-01-01
-100   990   2020-01-01</p>
-</dd>
-</dl>
-<p>(for the defaults in sep and stackcolname)</p>
+<p>A dframe like this</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 44%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>PORV</p></th>
+<th class="head"><p><a class="reference external" href="mailto:OWC&#37;&#52;&#48;2000-01-01">OWC<span>&#64;</span>2000-01-01</a></p></th>
+<th class="head"><p><a class="reference external" href="mailto:OWC&#37;&#52;&#48;2020-01-01">OWC<span>&#64;</span>2020-01-01</a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>1000</p></td>
+<td><p>990</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>will be stacked to</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>PORV</p></th>
+<th class="head"><p>OWC</p></th>
+<th class="head"><p>DATE</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>1000</p></td>
+<td><p>2000-01-01</p></td>
+</tr>
+<tr class="row-odd"><td><p>100</p></td>
+<td><p>990</p></td>
+<td><p>2020-01-01</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>(for the defaults values for <em>sep</em> and <em>stackcolname</em>)</p>
 <p>Column order is not guaranteed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -316,19 +355,19 @@ like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</p></li>
 a range where data applies.</p>
 <p>After unrolling, column pairs with ranges are transformed
 into multiple rows, with no ranges.</p>
-<p>Example: COMPDAT supports K1, K2 intervals for multiple cells,</p>
-<dl class="simple">
-<dt>COMPDAT</dt><dd><p>‘OP1’ 33 44 10 11 /</p>
-</dd>
-</dl>
-<p>/</p>
-<p>is transformed/unrolled so it would be equal to</p>
-<dl class="simple">
-<dt>COMPDAT</dt><dd><p>‘OP1’ 33 44 10 10 /
-‘OP1’ 33 44 11 11 /</p>
-</dd>
-</dl>
-<p>/</p>
+<p>Example: COMPDAT supports K1, K2 intervals for multiple cells:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPDAT</span>
+  <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">11</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed/unrolled so it would be equal to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPDAT</span>
+  <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">10</span> <span class="mi">10</span> <span class="o">/</span>
+  <span class="s1">&#39;OP1&#39;</span> <span class="mi">33</span> <span class="mi">44</span> <span class="mi">11</span> <span class="mi">11</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
 <p>The latter is easier to work with in Pandas dataframes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -342,13 +381,10 @@ of the range.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>Unrolled version. Identical to input if none of</dt><dd><p>rows had any ranges.</p>
+<dt>pd.Dataframe, Unrolled version. Identical to input if none of</dt><dd><p>rows had any ranges.</p>
 </dd>
 </dl>
 </p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.Dataframe</p>
 </dd>
 </dl>
 </dd></dl>
@@ -380,11 +416,19 @@ of the range.</p></li>
 <dt id="ecl2df.compdat.df">
 <code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">initvectors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function for Python API users</p>
+<p>Supports only COMPDAT information for now. Will
+add a zone-name if a zonefile is found alongside</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.Dataframe with one row pr cell to well connection</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="section" id="module-ecl2df.compdat2df">
 <span id="ecl2df-compdat2df-module"></span><h2>ecl2df.compdat2df module<a class="headerlink" href="#module-ecl2df.compdat2df" title="Permalink to this headline">¶</a></h2>
+<p>This module is only for backwards compatibility and will be removed in future versions</p>
 </div>
 <div class="section" id="module-ecl2df.ecl2csv">
 <span id="ecl2df-ecl2csv-module"></span><h2>ecl2df.ecl2csv module<a class="headerlink" href="#module-ecl2df.ecl2csv" title="Permalink to this headline">¶</a></h2>
@@ -500,11 +544,11 @@ should be traversed.</p>
 <code class="sig-name descname">get_zonemap</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_zonemap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_zonemap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dictionary from (int) K layers in the simgrid to strings</p>
 <p>Typical usage is to map from grid layer to zone names.</p>
-<p>The layer filename must currently follow format</p>
-<blockquote>
-<div><p>‘ZoneA’ 1-4
-‘ZoneB’ 5-10</p>
-</div></blockquote>
+<p>The layer filename must currently follow format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+<span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
+</pre></div>
+</div>
 <p>where the single quotes are optional for zones without spaces.
 Write single layer zones as 11-11. NB: ResInsight requires single
 quotes always.</p>
@@ -786,6 +830,8 @@ glob-style wildcards supported</p></li>
 <li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – Vectors to include, wildcards
 supported. String argument. Used to match both
 INIT vectors and RESTART vectors.</p></li>
+<li><p><strong>dropconstants</strong> (<em>bool</em>) – If true, columns that are constant
+for every cell are dropped.</p></li>
 <li><p><strong>rstdates</strong> (<em>list</em><em>, </em><em>str</em><em> or </em><em>datetime</em>) – Restart dates to include
 Mnenomics such as first and last are supported.</p></li>
 <li><p><strong>dateinheaders</strong> (<em>bool</em>) – Wheter columns with data from UNRST files
@@ -893,12 +939,14 @@ with the new date.</p>
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree2dict</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">date='END'</em>, <em class="sig-param">welspecs=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree2dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the GRUPTREE information as a tree structure
 in a dict.</p>
-<p>Example result:
-{‘FIELD’: [‘WI’, ‘OP’],</p>
-<blockquote>
-<div><p>‘OP’: [‘OP_2’, ‘OP_3’, ‘OP_4’, ‘OP_5’, ‘OP_1’],
-‘WI’: [‘WI_1’, ‘WI_2’, ‘WI_3’]}</p>
-</div></blockquote>
+<p>Example result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;WI&#39;</span><span class="p">,</span> <span class="s1">&#39;OP&#39;</span><span class="p">],</span>
+  <span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;OP_2&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_3&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_4&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_5&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_1&#39;</span><span class="p">],</span>
+  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;WI_1&#39;</span><span class="p">,</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">,</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>Returns an empty dict if there is no GRUPTREE in the deck.</p>
 <p>This function might get deprecated in favour of the nested dictionary
 version.</p>
@@ -908,15 +956,18 @@ version.</p>
 <dt id="ecl2df.gruptree.gruptreedf2dict">
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptreedf2dict</code><span class="sig-paren">(</span><em class="sig-param">dframe</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptreedf2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptreedf2dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert list of edges into a
-nested dictionary (tree), example:</p>
-<dl class="simple">
-<dt>{‘FIELD’: {‘OP’: {‘OP_1’: {},</dt><dd><p>‘OP_2’: {},
-‘OP_3’: {},
-‘OP_4’: {},
-‘OP_5’: {}},
-‘WI’: {‘WI_1’: {}, ‘WI_2’: {}, ‘WI_3’: {}}}}</p>
-</dd>
-</dl>
+nested dictionary (tree),</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP_1&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_2&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_3&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_4&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_5&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;WI_1&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">:</span> <span class="p">{}}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>Leaf nodes have empty dictionaries.</p>
 <p>Returns a list of nested dictionary, as we sometimes
 have more than one root</p>
@@ -1029,13 +1080,10 @@ the SWOF keyword).</p></li>
 </div>
 <div class="section" id="module-ecl2df.nnc">
 <span id="ecl2df-nnc-module"></span><h2>ecl2df.nnc module<a class="headerlink" href="#module-ecl2df.nnc" title="Permalink to this headline">¶</a></h2>
-<p>Extract NNC information from Eclipse output files.</p>
-<p>NNC = Non Neighbour Connection</p>
-<p>Inspired by
-<a class="reference external" href="https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py</a></p>
+<p>Extract non-neighbour connection (NNC) information from Eclipse output files.</p>
 <dl class="function">
-<dt id="ecl2df.nnc.nnc2df">
-<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">nnc2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#nnc2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.nnc2df" title="Permalink to this definition">¶</a></dt>
+<dt id="ecl2df.nnc.df">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a Pandas Dataframe with NNC information</p>
 <p>A NNC is a pair of cells that are not next to each other
 in the index space (I, J, K), and are associated to a
@@ -1121,12 +1169,6 @@ and command line utility for each module in ecl2df</p>
 <dt id="ecl2df.nnc.nnc2df_main">
 <code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">nnc2df_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#nnc2df_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.nnc2df_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command line access point from main() or from ecl2csv via subparser</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ecl2df.nnc.df">
-<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">coords=False</em>, <em class="sig-param">pillars=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function for Python API users</p>
 </dd></dl>
 
 </div>
@@ -1349,7 +1391,7 @@ one segment), they are merged into the same row that already contains
 connection data (CONxxxxx) and its segment data (now giving
 information for the conditions in the tubing).</p>
 <p>The columns representing SEGxxxxx data on ICD segments are renamed
-by adding the prefix ‘<a href="#id3"><span class="problematic" id="id4">ICD_</span></a>’</p>
+by adding the prefix <code class="docutils literal notranslate"><span class="pre">ICD_</span></code></p>
 <dl class="function">
 <dt id="ecl2df.rft.rft2df">
 <code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">rft2df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#rft2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.rft2df" title="Permalink to this definition">¶</a></dt>
@@ -1388,7 +1430,7 @@ by adding the prefix ‘<a href="#id3"><span class="problematic" id="id4">ICD_</
 </div>
 <div class="section" id="module-ecl2df.satfunc">
 <span id="ecl2df-satfunc-module"></span><h2>ecl2df.satfunc module<a class="headerlink" href="#module-ecl2df.satfunc" title="Permalink to this headline">¶</a></h2>
-<p>Extract saturation function data (SWOF, SGOF, SWFN, …)
+<p>Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.</p>
 <p>Data can be extracted from a full Eclipse deck (<a href="#id1"><span class="problematic" id="id2">*</span></a>.DATA)
 or from individual files.</p>
@@ -1492,6 +1534,7 @@ it will be attempted inferred.</p></li>
 </div>
 <div class="section" id="module-ecl2df.satfunc2df">
 <span id="ecl2df-satfunc2df-module"></span><h2>ecl2df.satfunc2df module<a class="headerlink" href="#module-ecl2df.satfunc2df" title="Permalink to this headline">¶</a></h2>
+<p>This module is only for backwards compatibility and will be removed in future versions</p>
 </div>
 <div class="section" id="module-ecl2df.summary">
 <span id="ecl2df-summary-module"></span><h2>ecl2df.summary module<a class="headerlink" href="#module-ecl2df.summary" title="Permalink to this headline">¶</a></h2>
@@ -1628,10 +1671,10 @@ with arguments</p>
 <p>The TRANX, TRANY and TRANZ (whenever nonzero) will be used
 to produce a row representing a cell-pair where there is
 transmissibility.</p>
-<dl class="simple">
-<dt>You will get a dataframe with the columns</dt><dd><p>I1, J1, K1, I2, J2, K2, DIR, TRAN</p>
-</dd>
-</dl>
+<p>You will get a dataframe with the columns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I1</span><span class="p">,</span> <span class="n">J1</span><span class="p">,</span> <span class="n">K1</span><span class="p">,</span> <span class="n">I2</span><span class="p">,</span> <span class="n">J2</span><span class="p">,</span> <span class="n">K2</span><span class="p">,</span> <span class="n">DIR</span><span class="p">,</span> <span class="n">TRAN</span>
+</pre></div>
+</div>
 <p>similar to what you get from non-neighbour connection export.</p>
 <p>If you ask for coordinates, you will also get the distance (DX,
 DY, DZ) for each connection.</p>

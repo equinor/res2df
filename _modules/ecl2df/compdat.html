@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -86,7 +86,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -431,18 +431,18 @@
 <span class="sd">    After unrolling, column pairs with ranges are transformed</span>
 <span class="sd">    into multiple rows, with no ranges.</span>
 
-<span class="sd">    Example: COMPDAT supports K1, K2 intervals for multiple cells,</span>
+<span class="sd">    Example: COMPDAT supports K1, K2 intervals for multiple cells::</span>
 
-<span class="sd">    COMPDAT</span>
-<span class="sd">      &#39;OP1&#39; 33 44 10 11 /</span>
-<span class="sd">    /</span>
+<span class="sd">      COMPDAT</span>
+<span class="sd">        &#39;OP1&#39; 33 44 10 11 /</span>
+<span class="sd">      /</span>
 
-<span class="sd">    is transformed/unrolled so it would be equal to</span>
+<span class="sd">    is transformed/unrolled so it would be equal to::</span>
 
-<span class="sd">    COMPDAT</span>
-<span class="sd">      &#39;OP1&#39; 33 44 10 10 /</span>
-<span class="sd">      &#39;OP1&#39; 33 44 11 11 /</span>
-<span class="sd">    /</span>
+<span class="sd">      COMPDAT</span>
+<span class="sd">        &#39;OP1&#39; 33 44 10 10 /</span>
+<span class="sd">        &#39;OP1&#39; 33 44 11 11 /</span>
+<span class="sd">      /</span>
 
 <span class="sd">    The latter is easier to work with in Pandas dataframes</span>
 
@@ -454,7 +454,7 @@
 <span class="sd">            of the range.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.Dataframe: Unrolled version. Identical to input if none of</span>
+<span class="sd">        pd.Dataframe, Unrolled version. Identical to input if none of</span>
 <span class="sd">            rows had any ranges.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -529,7 +529,14 @@
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users</span>
+
+<span class="sd">    Supports only COMPDAT information for now. Will</span>
+<span class="sd">    add a zone-name if a zonefile is found alongside</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.Dataframe with one row pr cell to well connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">())[</span><span class="s2">&quot;COMPDAT&quot;</span><span class="p">]</span>
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">)</span>
 

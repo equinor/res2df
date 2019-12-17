@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -86,7 +86,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -335,10 +335,13 @@
     <span class="sd">&quot;&quot;&quot;Extract the GRUPTREE information as a tree structure</span>
 <span class="sd">    in a dict.</span>
 
-<span class="sd">    Example result:</span>
-<span class="sd">    {&#39;FIELD&#39;: [&#39;WI&#39;, &#39;OP&#39;],</span>
-<span class="sd">     &#39;OP&#39;: [&#39;OP_2&#39;, &#39;OP_3&#39;, &#39;OP_4&#39;, &#39;OP_5&#39;, &#39;OP_1&#39;],</span>
-<span class="sd">     &#39;WI&#39;: [&#39;WI_1&#39;, &#39;WI_2&#39;, &#39;WI_3&#39;]}</span>
+<span class="sd">    Example result::</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &#39;FIELD&#39;: [&#39;WI&#39;, &#39;OP&#39;],</span>
+<span class="sd">        &#39;OP&#39;: [&#39;OP_2&#39;, &#39;OP_3&#39;, &#39;OP_4&#39;, &#39;OP_5&#39;, &#39;OP_1&#39;],</span>
+<span class="sd">        &#39;WI&#39;: [&#39;WI_1&#39;, &#39;WI_2&#39;, &#39;WI_3&#39;]</span>
+<span class="sd">      }</span>
 
 <span class="sd">    Returns an empty dict if there is no GRUPTREE in the deck.</span>
 
@@ -365,14 +368,18 @@
 
 <div class="viewcode-block" id="gruptreedf2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptreedf2dict">[docs]</a><span class="k">def</span> <span class="nf">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert list of edges into a</span>
-<span class="sd">    nested dictionary (tree), example:</span>
+<span class="sd">    nested dictionary (tree),</span>
 
-<span class="sd">    {&#39;FIELD&#39;: {&#39;OP&#39;: {&#39;OP_1&#39;: {},</span>
-<span class="sd">     &#39;OP_2&#39;: {},</span>
-<span class="sd">     &#39;OP_3&#39;: {},</span>
-<span class="sd">     &#39;OP_4&#39;: {},</span>
-<span class="sd">     &#39;OP_5&#39;: {}},</span>
-<span class="sd">     &#39;WI&#39;: {&#39;WI_1&#39;: {}, &#39;WI_2&#39;: {}, &#39;WI_3&#39;: {}}}}</span>
+<span class="sd">    Example::</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &#39;FIELD&#39;: {&#39;OP&#39;: {&#39;OP_1&#39;: {},</span>
+<span class="sd">        &#39;OP_2&#39;: {},</span>
+<span class="sd">        &#39;OP_3&#39;: {},</span>
+<span class="sd">        &#39;OP_4&#39;: {},</span>
+<span class="sd">        &#39;OP_5&#39;: {}},</span>
+<span class="sd">        &#39;WI&#39;: {&#39;WI_1&#39;: {}, &#39;WI_2&#39;: {}, &#39;WI_3&#39;: {}}}</span>
+<span class="sd">      }</span>
 
 <span class="sd">    Leaf nodes have empty dictionaries.</span>
 
@@ -403,6 +410,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        name: name of root node</span>
 <span class="sd">        nested_dict: nested dictonary of the children at the root.</span>
+
 <span class="sd">    Return:</span>
 <span class="sd">        treelib.Tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>

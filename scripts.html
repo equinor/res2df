@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Command line utility: ecl2csv &mdash; ecl2df 0.0.1 documentation</title>
+  <title>Command line utility: ecl2csv &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -88,7 +88,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Command line utility: ecl2csv</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Sub-commands:">Sub-commands:</a><ul>
@@ -225,8 +225,12 @@
             
   <div class="section" id="command-line-utility-ecl2csv">
 <h1>Command line utility: ecl2csv<a class="headerlink" href="#command-line-utility-ecl2csv" title="Permalink to this headline">¶</a></h1>
-<p id="ecl2csv">From the command line there is a utility for dumping the
-data of interest to CSV files.</p>
+<p id="ecl2csv">Most of the functionality in ecl2df is exposed to the command line through
+the script <em>ecl2csv</em>. The first argument to this script is always
+the submodule (subcommand) from which you want functionality. Mandatory argument is
+always an Eclipse deck or sometimes individual Eclipse include files, and
+there is usually an <code class="docutils literal notranslate"><span class="pre">--output</span></code> option to specify which file to dump
+the CSV to. If you want output to your terminal, use <code class="docutils literal notranslate"><span class="pre">-</span></code> as the output filename.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
                <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
                <span class="o">...</span>
@@ -236,7 +240,7 @@ data of interest to CSV files.</p>
 <h2>Sub-commands:<a class="headerlink" href="#Sub-commands:" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="grid">
 <h3>grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h3>
-<p>Extract grid data</p>
+<p>Each cell is represented by one row of data. The coordinates are in the X, Y, and Z columns and represent the grid centre. Volume pr. cell is added and all INIT and UNRST data can be added to the rows</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">grid</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">initkeys</span> <span class="n">INITKEYS</span> <span class="p">[</span><span class="n">INITKEYS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">rstdate</span> <span class="n">RSTDATE</span><span class="p">]</span>
              <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dropconstants</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
              <span class="n">DATAFILE</span>
@@ -278,7 +282,7 @@ data of interest to CSV files.</p>
 </div>
 <div class="section" id="summary">
 <h3>summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
-<p>Extract summary data</p>
+<p>This is the time-dependent data for field production data, well profiles etc. Each row contains data for one point in time</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
                 <span class="p">[</span><span class="o">--</span><span class="n">column_keys</span> <span class="n">COLUMN_KEYS</span> <span class="p">[</span><span class="n">COLUMN_KEYS</span> <span class="o">...</span><span class="p">]]</span>
                 <span class="p">[</span><span class="o">--</span><span class="n">start_date</span> <span class="n">START_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">end_date</span> <span class="n">END_DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
@@ -298,20 +302,11 @@ data of interest to CSV files.</p>
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--time_index</kbd></dt>
-<dd><dl class="simple">
-<dt>Time resolution mnemonic; raw, daily, monthly or yearly.</dt><dd><p>Data at a given point in time applies until the next point in time.
-If not raw, data will be interpolated. Use interpolated rate vectors
-with care. Default is raw, which will include clock times. first and last
-are also accepted and will print data for the first or the last date.</p>
-</dd>
-</dl>
+<dd><p>Time resolution mnemonic; raw, daily, monthly or yearly. Data at a given point in time applies until the next point in time. If not raw, data will be interpolated. Use interpolated rate vectors with care. Default is raw, which will include clock times. first and last are also accepted and will print data for the first or the last date.</p>
 <p>Default: “raw”</p>
 </dd>
 <dt><kbd>--column_keys</kbd></dt>
-<dd><dl class="simple">
-<dt>Summary column vector wildcards, space-separated.</dt><dd><p>Default is to include all summary vectors available.</p>
-</dd>
-</dl>
+<dd><p>Summary column vector wildcards, space-separated. Default is to include all summary vectors available.</p>
 </dd>
 <dt><kbd>--start_date</kbd></dt>
 <dd><p>Start at a specific date, in ISO format YYYY-MM-DD. Ignored if time_index is first or last</p>
@@ -341,7 +336,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="nnc">
 <h3>nnc<a class="headerlink" href="#nnc" title="Permalink to this headline">¶</a></h3>
-<p>Extract NNC (Non-Neighbour Connection) data from the EGRID file. Each row is one connection, with the columns I1, J1, K1 for the first cell in the cell pair, and I2, J2, K2 for the second. The transmissibility for the cell pair is in the TRAN column.</p>
+<p>Extract NNC (Non-Neighbour Connection) data from the EGRID file. Each row is one connection, with the columns I1, J1, K1 for the first cell in the cell pair, and I2, J2, K2 for the second. The transmissibility for the cell pair is in the TRAN column. See also the trans subcommand.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">nnc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -377,7 +372,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="faults">
 <h3>faults<a class="headerlink" href="#faults" title="Permalink to this headline">¶</a></h3>
-<p>Extract faults data</p>
+<p>Each row represents a particular cell and a face and the name of the fault</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">faults</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -405,7 +400,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="trans">
 <h3>trans<a class="headerlink" href="#trans" title="Permalink to this headline">¶</a></h3>
-<p>Extract transmissibilities (TRANX,TRANY,TRANZ) from Eclipse binary output files. Each row represent a connection between a cell pair (I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 and FIPNUM2.</p>
+<p>Extract transmissibilities (TRANX, TRANY, TRANZ) from Eclipse binary output files. Each row represent a connection between a cell pair (I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 and FIPNUM2, and it is possible to filter to connections where f.ex FIPNUM change</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">trans</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vectors</span> <span class="n">VECTORS</span> <span class="p">[</span><span class="n">VECTORS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">boundaryfilter</span><span class="p">]</span>
               <span class="p">[</span><span class="o">--</span><span class="n">onlyk</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onlyij</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">coords</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">group</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">nnc</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
               <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span>
@@ -447,7 +442,7 @@ are also accepted and will print data for the first or the last date.</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>--nnc</kbd></dt>
-<dd><p>Concatenate NNC transmissibilities</p>
+<dd><p>Add NNC transmissibilities to the same dataframe</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
@@ -463,7 +458,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="pillars">
 <h3>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h3>
-<p>Compute statistics pr. pillar in a cornerpoint grid, in addition pr a region parameter. Volumetrics, in-place, and contacts</p>
+<p>Compute statistics pr. pillar in a cornerpoint grid, or alternatively by region parameter. Volumetrics, in-place, and contacts.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">pillars</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">region</span> <span class="n">REGION</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">rstdates</span> <span class="n">RSTDATES</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">stackdates</span><span class="p">]</span>
                 <span class="p">[</span><span class="o">--</span><span class="n">soilcutoff</span> <span class="n">SOILCUTOFF</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">sgascutoff</span> <span class="n">SGASCUTOFF</span><span class="p">]</span>
                 <span class="p">[</span><span class="o">--</span><span class="n">swatcutoff</span> <span class="n">SWATCUTOFF</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">group</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
@@ -482,7 +477,7 @@ are also accepted and will print data for the first or the last date.</p>
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--region</kbd></dt>
-<dd><p>Name of Eclipse region parameter for which to separate the computations. Set to empty string to have no grouping.</p>
+<dd><p>Name of Eclipse region parameter for which to separate the computations. Set to empty string to have no grouping (only by pillar).</p>
 <p>Default: “”</p>
 </dd>
 <dt><kbd>--rstdates</kbd></dt>
@@ -550,7 +545,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="satfunc">
 <h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
-<p>Extract SWOF/SGOF/etc data</p>
+<p>Data for all saturation functions are merged into one dataframe for all SATNUMs. Each row has data for a saturation point. For SWOF data, all columns related to SGOF are empty and vice versa</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -578,7 +573,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="compdat">
 <h3>compdat<a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h3>
-<p>Extract COMPDAT/COMPSEGS/etc data</p>
+<p>Each row represents a cell connection to a well. Only COMPDAT data is exposed in CSV output currently.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">compdat</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">initvectors</span> <span class="n">INITVECTORS</span> <span class="p">[</span><span class="n">INITVECTORS</span> <span class="o">...</span><span class="p">]]</span>
                 <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
                 <span class="n">DATAFILE</span>
@@ -611,7 +606,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="equil">
 <h3>equil<a class="headerlink" href="#equil" title="Permalink to this headline">¶</a></h3>
-<p>Extract EQUIL data</p>
+<p>Each row contains the equilibriation data for one EQLNUM.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -639,7 +634,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="gruptree">
 <h3>gruptree<a class="headerlink" href="#gruptree" title="Permalink to this headline">¶</a></h3>
-<p>Extract GRUPTREE data</p>
+<p>Each row represents an edge in the GRUPTREE at a specific date.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">gruptree</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">startdate</span> <span class="n">STARTDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -674,7 +669,7 @@ are also accepted and will print data for the first or the last date.</p>
 </div>
 <div class="section" id="wcon">
 <h3>wcon<a class="headerlink" href="#wcon" title="Permalink to this headline">¶</a></h3>
-<p>Extract well control data</p>
+<p>Each row represents the control data for a certain well or well wildcard at a specific date</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wcon</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>

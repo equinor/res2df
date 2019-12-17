@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -86,7 +86,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -226,15 +226,24 @@
 <span class="sd">    will stack the dataframe by putting the second level of the column</span>
 <span class="sd">    multiindex into its own column, best understood by this example:</span>
 
-<span class="sd">    A dframe like this:</span>
-<span class="sd">       PORV   OWC@2000-01-01 OWC@2020-01-01</span>
-<span class="sd">       100       1000          990</span>
+<span class="sd">    A dframe like this</span>
 
-<span class="sd">    will be stacked to:</span>
+<span class="sd">       ===== =============== ==============</span>
+<span class="sd">       PORV   OWC@2000-01-01 OWC@2020-01-01</span>
+<span class="sd">       ===== =============== ==============</span>
+<span class="sd">       100       1000          990</span>
+<span class="sd">       ===== =============== ==============</span>
+
+<span class="sd">    will be stacked to</span>
+
+<span class="sd">       ====  ====  ==========</span>
 <span class="sd">       PORV  OWC   DATE</span>
+<span class="sd">       ====  ====  ==========</span>
 <span class="sd">       100   1000  2000-01-01</span>
 <span class="sd">       100   990   2020-01-01</span>
-<span class="sd">    (for the defaults in sep and stackcolname)</span>
+<span class="sd">       ====  ====  ==========</span>
+
+<span class="sd">    (for the defaults values for *sep* and *stackcolname*)</span>
 
 <span class="sd">    Column order is not guaranteed</span>
 

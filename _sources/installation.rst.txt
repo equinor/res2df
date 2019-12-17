@@ -1,17 +1,26 @@
 Installation
 ============
 
+Internally in Equinor, ecl2df is distributed through Komodo.
+
 You need libecl and sunbeam installed upfront.
 
-Then issue the commands:
+Either install a released version from pypi by
 
-``git clone https://github.com/equinor/ecl2df``
+.. code-block:: console
 
-``cd ecl2df``
+    > pip install ecl2df
 
-``pip install -r requirements.txt``
+or install the latest development version from source by the commands
 
-``pip install -e .``
+.. code-block:: console
 
-For libecl and sunbeam installation, you might get some hints from the
-file `.travis.yml <https://github.com/equinor/ecl2df/blob/master/.travis.yml>`_ in the ecl2df repository.
+    > git clone https://github.com/equinor/ecl2df
+    > cd ecl2df
+    > pip install -r requirements.txt
+    > pip install -e .
+
+For libecl and sunbeam installation, you can get hints from the
+file `.travis.yml <https://github.com/equinor/ecl2df/blob/master/.travis.yml>`_
+in the ecl2df repository. This describes a working installation for a given
+Linux release, but it might require some adjustments on other systems.

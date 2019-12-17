@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="ecl2df" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.4.0+3.gaa4e4d4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-overview">Module overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary"><code class="docutils literal notranslate"><span class="pre">summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid"><code class="docutils literal notranslate"><span class="pre">grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nnc"><code class="docutils literal notranslate"><span class="pre">nnc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pillars"><code class="docutils literal notranslate"><span class="pre">pillars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trans"><code class="docutils literal notranslate"><span class="pre">trans</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rft"><code class="docutils literal notranslate"><span class="pre">rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#satfunc"><code class="docutils literal notranslate"><span class="pre">satfunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equil"><code class="docutils literal notranslate"><span class="pre">equil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compdat"><code class="docutils literal notranslate"><span class="pre">compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gruptree"><code class="docutils literal notranslate"><span class="pre">gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wcon"><code class="docutils literal notranslate"><span class="pre">wcon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eclfiles"><code class="docutils literal notranslate"><span class="pre">eclfiles</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#metadata-support">Metadata support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameters-txt">parameters.txt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zone-names">Zone names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Command line utility: ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p><em>ecl2df</em> is a <a class="reference external" href="https://pandas.pydata.org/">Pandas DataFrame</a> wrapper
+around <a class="reference external" href="https://github.com/equinor/libecl/">libecl</a> and <a class="reference external" href="https://github.com/equinor/sunbeam/">sunbeam</a>, which are used to access
+binary files outputted by the reservoir simulator Eclipse, or its
+input files — or any other tool outputting to the same data format,
+f.ex. <a class="reference external" href="https://opm-project.org/?page_id=19">flow</a>.</p>
+<p>Most of the features can be reached from the command line, through the
+command line program <code class="docutils literal notranslate"><span class="pre">ecl2csv</span></code>. Use the command line tool to dump the
+extracted or computed data to a CSV file, and use any other tool to
+view the CSV data.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> ecl2csv --help
+<span class="gp">&gt;</span> ecl2csv summary --help
+<span class="gp">&gt;</span> ecl2csv summary --column_keys <span class="s2">&quot;F*&quot;</span> --time_index monthly --output output.csv MYECLDECK.DATA
+<span class="gp">&gt;</span> ecl2csv pillars --help
+<span class="gp">&gt;</span> ecl2csv pillars --rstdates all MYECLDECK.DATA
+</pre></div>
+</div>
+<p>If you access the module from within a Python script, for each submodule
+there is a function called <code class="docutils literal notranslate"><span class="pre">df()</span></code> which provides more or less the same
+functionality as through <code class="docutils literal notranslate"><span class="pre">ecl2csv</span></code> from the command line, but which returns
+a Pandas Dataframe.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ecl2df</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYECLDECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">smry</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;monthly&quot;</span><span class="p">)</span>
+<span class="n">hc_contacts</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">pillars</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See the API for more documentation and possibilities for each module.</p>
+</div>
+<div class="section" id="module-overview">
+<h2>Module overview<a class="headerlink" href="#module-overview" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="summary">
+<h3><code class="docutils literal notranslate"><span class="pre">summary</span></code><a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>Extracts summary data from <cite>.UNSMRY</cite> files, at requested time sampling and
+for requested vectors.</p>
+</div>
+<div class="section" id="grid">
+<h3><code class="docutils literal notranslate"><span class="pre">grid</span></code><a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h3>
+<p>Extracts grid data from <cite>.INIT</cite> and <cite>.EGRID</cite> and <cite>.UNRST</cite> files. Restart file
+are optional to extract, and dates must be picked (or all). Data is
+merged into one DataFrame by the <cite>i</cite>, <cite>j</cite> and <cite>k</cite> indices. Bulk cell
+volume is included.</p>
+</div>
+<div class="section" id="nnc">
+<h3><code class="docutils literal notranslate"><span class="pre">nnc</span></code><a class="headerlink" href="#nnc" title="Permalink to this headline">¶</a></h3>
+<p>Extracts the non-neighbour connections in the grid (from the binary
+output data in EGRID, not the NNC input keyword), as pairs of
+<cite>ijk</cite>-indices and the associated transmissiblity. Optional filtering
+to vertical connections (along pillars).</p>
+</div>
+<div class="section" id="pillars">
+<h3><code class="docutils literal notranslate"><span class="pre">pillars</span></code><a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h3>
+<p>Compute statistics pr cornerpoint pillar, and optionally compute hydrocarbon
+fluid contacts pr. pillar and pr. date based on saturation cutoffs. Data
+can be grouped and aggregated over a region parameter.</p>
+</div>
+<div class="section" id="trans">
+<h3><code class="docutils literal notranslate"><span class="pre">trans</span></code><a class="headerlink" href="#trans" title="Permalink to this headline">¶</a></h3>
+<p>Extract transmissibilities for all cells. Can filter by directions, add
+transmissibilities from NNC-data. If a region vector is supplied, it is
+possible to filter on transmissibilities where the region changes, picking
+out transmissibilities over f.ex. a FIPNUM interface. Data can also be aggregated
+over the region interface to give a grid-independent quantification of region
+communication.</p>
+</div>
+<div class="section" id="rft">
+<h3><code class="docutils literal notranslate"><span class="pre">rft</span></code><a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
+<p>Reads the <cite>.RFT</cite> files which are outputted by the simulator when
+the <cite>WRFTPLT</cite> keyword is used, with details along wellbores.</p>
+<p>For multisegment wells, the well topology is calculated and data
+is merged accordingly, for example when ICD segments are used, enabling
+easy calculations of the pressure drop over an ICD valve.</p>
+</div>
+<div class="section" id="satfunc">
+<h3><code class="docutils literal notranslate"><span class="pre">satfunc</span></code><a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
+<p>Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
+into one DataFrame.</p>
+</div>
+<div class="section" id="equil">
+<h3><code class="docutils literal notranslate"><span class="pre">equil</span></code><a class="headerlink" href="#equil" title="Permalink to this headline">¶</a></h3>
+<p>Extracts the information in the <cite>EQUIL</cite> table in the input deck.</p>
+</div>
+<div class="section" id="compdat">
+<h3><code class="docutils literal notranslate"><span class="pre">compdat</span></code><a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h3>
+<p>Extracts well connection data from the <cite>COMPDAT</cite> keyword in the input deck.
+For multi-segment wells, <cite>WELSEGS</cite> and <cite>COMPSEGS</cite> is also parsed. The
+data is available as three different dataframes, which can be merged.</p>
+<p>It is also possible to parse individual “include” files, not only a
+finished working deck.</p>
+</div>
+<div class="section" id="gruptree">
+<h3><code class="docutils literal notranslate"><span class="pre">gruptree</span></code><a class="headerlink" href="#gruptree" title="Permalink to this headline">¶</a></h3>
+<p>Extracts the information from the <cite>GRUPTREE</cite> and <cite>WELSPECS</cite> keyword, at
+all timesteps, from the input deck. The tree structure at each relevant
+date can be returned as a dataframe of the edges, as a nested dictionary
+or as a <cite>treelib</cite> tree.</p>
+</div>
+<div class="section" id="wcon">
+<h3><code class="docutils literal notranslate"><span class="pre">wcon</span></code><a class="headerlink" href="#wcon" title="Permalink to this headline">¶</a></h3>
+<p>Extracts WCONxxxx keywords from the Schedule section, and providing the
+associated data in a dataframe format.</p>
+</div>
+<div class="section" id="eclfiles">
+<h3><code class="docutils literal notranslate"><span class="pre">eclfiles</span></code><a class="headerlink" href="#eclfiles" title="Permalink to this headline">¶</a></h3>
+<p>This is an internal helper module in order to represent finished or
+unfinished Eclipse decks and runs. The class EclFiles can cache binary
+files that are recently read, and is able to locate the various output
+files based on the basename or the <cite>.DATA</cite> filename.</p>
+</div>
+</div>
+<div class="section" id="metadata-support">
+<h2>Metadata support<a class="headerlink" href="#metadata-support" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parameters-txt">
+<h3>parameters.txt<a class="headerlink" href="#parameters-txt" title="Permalink to this headline">¶</a></h3>
+<p>Metadata for each Eclipse deck are sometimes added in a text file named
+parameters.txt, alongside the Eclipse DATA file or one or two directory levels
+above it.</p>
+<p>Each line in the text file should contain a string, interpreted as the key, and
+a value for the key, which can be a string or number. Some modules can merge this
+information onto each row, where the key in the parameters end up as column names.</p>
+<p>The filenames parameters.json and parameters.yml are also supported, but only one
+will be parsed.</p>
+<p>Currently only supported by the summary module, for other modules, the data will
+have to be merged with pandas.merge().</p>
+</div>
+<div class="section" id="zone-names">
+<h3>Zone names<a class="headerlink" href="#zone-names" title="Permalink to this headline">¶</a></h3>
+<p>If a text file with zone names are found alongside the Eclipse DATA file, some of the modules
+will add that information to rows where appropriate. The zone or layer file should contains
+lines like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
+<span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
+</pre></div>
+</div>
+<p>The default filename looked for is <em>zones.lyr</em>.</p>
+</div>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This library is released under GPLv3.</p>
+</div>
+<div class="section" id="copyright">
+<h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
+<p>The code is Copyright Equinor ASA 2019.</p>
+<p>Contributions without copyright transfer are welcome.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="ecl2df" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.ecl2csv &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.ecl2csv &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -86,7 +86,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -194,7 +194,13 @@
     <span class="c1"># Eclipse output files:</span>
     <span class="n">grid_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;grid&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract grid data&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract grid data with properties&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each cell is represented by &quot;</span>
+            <span class="s2">&quot;one row of data. The coordinates are in the X, Y, and Z columns &quot;</span>
+            <span class="s2">&quot;and represent the grid centre. Volume pr. cell is added &quot;</span>
+            <span class="s2">&quot;and all INIT and UNRST data can be added to the rows&quot;</span>
+        <span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">grid</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">grid_parser</span><span class="p">)</span>
@@ -202,7 +208,12 @@
 
     <span class="n">summary_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;summary&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract summary data&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract summary data&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;This is the time-dependent data for &quot;</span>
+            <span class="s2">&quot;field production data, well profiles etc. Each row contains data &quot;</span>
+            <span class="s2">&quot;for one point in time&quot;</span>
+        <span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">summary</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
@@ -216,7 +227,8 @@
             <span class="s2">&quot;Extract NNC (Non-Neighbour Connection) data from the EGRID file. &quot;</span>
             <span class="s2">&quot;Each row is one connection, with the columns I1, J1, K1 for the first &quot;</span>
             <span class="s2">&quot;cell in the cell pair, and I2, J2, K2 for the second. The &quot;</span>
-            <span class="s2">&quot;transmissibility for the cell pair is in the TRAN column.&quot;</span>
+            <span class="s2">&quot;transmissibility for the cell pair is in the TRAN column. &quot;</span>
+            <span class="s2">&quot;See also the trans subcommand.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">nnc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">nnc_parser</span><span class="p">)</span>
@@ -224,7 +236,10 @@
 
     <span class="n">faults_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;faults&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract faults data&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract data from the FAULTS keyword&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a particular cell and a face and the name of the fault&quot;</span>
+        <span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">faults</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">faults_parser</span><span class="p">)</span>
@@ -235,11 +250,12 @@
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract transmissibilities from EGRID file&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Extract transmissibilities (TRANX,TRANY,TRANZ) from Eclipse &quot;</span>
+            <span class="s2">&quot;Extract transmissibilities (TRANX, TRANY, TRANZ) from Eclipse &quot;</span>
             <span class="s2">&quot;binary output files. Each row represent a connection between a cell pair &quot;</span>
             <span class="s2">&quot;(I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for &quot;</span>
             <span class="s2">&quot;each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 &quot;</span>
-            <span class="s2">&quot;and FIPNUM2.&quot;</span>
+            <span class="s2">&quot;and FIPNUM2, and it is possible to filter to connections where f.ex &quot;</span>
+            <span class="s2">&quot;FIPNUM change&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">trans</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">trans_parser</span><span class="p">)</span>
@@ -248,11 +264,11 @@
     <span class="n">pillars_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;pillars&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Compute cornerpoint pillar data&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Compute data pr. cornerpoint pillar&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
             <span class="s2">&quot;Compute statistics pr. pillar in a cornerpoint grid, &quot;</span>
-            <span class="s2">&quot;in addition pr a region parameter. Volumetrics, in-place, &quot;</span>
-            <span class="s2">&quot;and contacts&quot;</span>
+            <span class="s2">&quot;or alternatively by region parameter. Volumetrics, in-place, &quot;</span>
+            <span class="s2">&quot;and contacts.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">pillars</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">pillars_parser</span><span class="p">)</span>
@@ -280,6 +296,12 @@
         <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract SWOF/SGOF/etc data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Data for all saturation functions are merged &quot;</span>
+            <span class="s2">&quot;into one dataframe for all SATNUMs. Each row has data for a &quot;</span>
+            <span class="s2">&quot;saturation point. For SWOF data, all columns related to SGOF &quot;</span>
+            <span class="s2">&quot;are empty and vice versa&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
     <span class="n">satfunc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
@@ -287,8 +309,12 @@
 
     <span class="n">compdat_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;compdat&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT/COMPSEGS/etc data&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a cell connection to a well. &quot;</span>
+            <span class="s2">&quot;Only COMPDAT data is exposed in CSV output currently.&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">compdat</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">compdat_parser</span><span class="p">)</span>
     <span class="n">compdat_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">compdat</span><span class="o">.</span><span class="n">compdat2df_main</span><span class="p">)</span>
@@ -297,6 +323,7 @@
         <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract EQUIL data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row contains the equilibriation data for one EQLNUM.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">equil</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
     <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil</span><span class="o">.</span><span class="n">equil2df_main</span><span class="p">)</span>
@@ -305,6 +332,7 @@
         <span class="s2">&quot;gruptree&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract GRUPTREE data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row represents an edge in the GRUPTREE at a specific date.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">gruptree</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">gruptree_parser</span><span class="p">)</span>
     <span class="n">gruptree_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">gruptree</span><span class="o">.</span><span class="n">gruptree2df_main</span><span class="p">)</span>
@@ -313,6 +341,10 @@
         <span class="s2">&quot;wcon&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well control data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents the control data for a certain &quot;</span>
+            <span class="s2">&quot;well or well wildcard at a specific date&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">wcon</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">wcon_parser</span><span class="p">)</span>
     <span class="n">wcon_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">wcon</span><span class="o">.</span><span class="n">wcon2df_main</span><span class="p">)</span>

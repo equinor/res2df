@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc &mdash; ecl2df 0.0.1 documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.0.1
+                v0.4.0+3.gaa4e4d4
               </div>
             
           
@@ -86,7 +86,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -157,12 +157,7 @@
   <h1>Source code for ecl2df.nnc</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Extract NNC information from Eclipse output files.</span>
-
-<span class="sd">NNC = Non Neighbour Connection</span>
-
-<span class="sd">Inspired by</span>
-<span class="sd">https://github.com/equinor/libecl/blob/master/python/docs/examples/cmp_nnc.py</span>
+<span class="sd">Extract non-neighbour connection (NNC) information from Eclipse output files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
@@ -176,7 +171,7 @@
 <span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">gridgeometry2df</span>
 
 
-<div class="viewcode-block" id="nnc2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.nnc2df">[docs]</a><span class="k">def</span> <span class="nf">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with NNC information</span>
 
 <span class="sd">    A NNC is a pair of cells that are not next to each other</span>
@@ -372,16 +367,11 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;nnc2df&quot;</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
+    <span class="n">nncdf</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">nncdf</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty NNC dataframe being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">nncdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">nnc2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">pillars</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

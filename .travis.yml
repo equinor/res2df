@@ -75,6 +75,7 @@ install:
 
 script:
   - pytest
+  - make docsrun
 
 deploy:
   - provider: pages

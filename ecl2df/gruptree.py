@@ -15,7 +15,6 @@ import argparse
 import collections
 import dateutil
 import pandas as pd
-import treelib
 
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
@@ -257,6 +256,7 @@ def dict2treelib(name, nested_dict):
     Return:
         treelib.Tree
     """
+    import treelib
     tree = treelib.Tree()
     tree.create_node(name, name)
     for child in nested_dict.keys():

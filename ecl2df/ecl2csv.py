@@ -32,7 +32,9 @@ def get_parser():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
+    subparsers = parser.add_subparsers(
+        required=True, parser_class=argparse.ArgumentParser
+    )
 
     # Eclipse output files:
     grid_parser = subparsers.add_parser(

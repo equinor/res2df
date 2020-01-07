@@ -19,6 +19,7 @@ from ecl2df import (
     gruptree,
     rft,
     pillars,
+    fipreports,
     satfunc,
     summary,
     trans,
@@ -133,6 +134,17 @@ def get_parser():
     )
     rft.fill_parser(rft_parser)
     rft_parser.set_defaults(func=rft.rft2df_main)
+
+    fipreports_parser = subparsers.add_parser(
+        "fipreports",
+        help=("Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file."),
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=("Extract FIPxxxxx REPORT REGION data from PRT file. "
+        "This parses currently in-place, outflows to wells and regions, and material "
+        "balance errors"),
+    )
+    fipreports.fill_parser(fipreports_parser)
+    fipreports_parser.set_defaults(func=fipreports.fipreports_main)
 
     # Eclipse input files:
     satfunc_parser = subparsers.add_parser(

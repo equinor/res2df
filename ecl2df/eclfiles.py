@@ -190,6 +190,10 @@ class EclFiles(object):
         """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
 
+    def get_prtfilename(self):
+        """Return the inferred name of the PRT file"""
+        return self._eclbase + ".PRT"
+
     def get_zonemap(self, filename=None):
         """Return a dictionary from (int) K layers in the simgrid to strings
 

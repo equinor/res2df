@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.fipreports &mdash; ecl2df v0.4.1+2.g5ba09ff documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+2.g5ba09ff
+                v0.4.1+5.g87b4355
               </div>
             
           
@@ -291,6 +291,11 @@
     <span class="n">reportblockmatcher</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.+&quot;</span> <span class="o">+</span> <span class="n">fipname</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;\s+REPORT\s+REGION\s+(\d+)&quot;</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">prtfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">prt_fh</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Parsing file </span><span class="si">%s</span><span class="s2"> for blocks starting with </span><span class="si">%s</span><span class="s2"> REPORT REGION&quot;</span><span class="p">,</span>
+            <span class="n">prtfile</span><span class="p">,</span>
+            <span class="n">fipname</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">prt_fh</span><span class="p">:</span>
             <span class="n">matcheddate</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">datematcher</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">matcheddate</span><span class="p">:</span>
@@ -314,12 +319,20 @@
                 <span class="k">continue</span>
 
             <span class="k">if</span> <span class="n">in_report_block</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; :&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; :--&quot;</span><span class="p">):</span>
-                    <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="p">[</span><span class="n">date</span><span class="p">,</span> <span class="n">fipname</span><span class="p">,</span> <span class="n">region_index</span><span class="p">]</span>
-                        <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">report_block_lineparser</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
-                    <span class="p">)</span>
-
+                <span class="n">interesting_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;IN PLACE&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTFLOW&quot;</span><span class="p">,</span> <span class="s2">&quot;MATERIAL&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">sum</span><span class="p">([</span><span class="n">string</span> <span class="ow">in</span> <span class="n">line</span> <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">interesting_strings</span><span class="p">]):</span>
+                    <span class="c1"># Skip if we are not on an interesting line.</span>
+                    <span class="k">continue</span>
+                <span class="c1"># The colons in the report block are not reliably included (wtf!), even in the</span>
+                <span class="c1"># same PRT file. We insert them in fixed positions and hope for the best</span>
+                <span class="c1"># (if the ASCII table is actually dynamic with respect to content, this will fail)</span>
+                <span class="n">linechars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">linechars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
+                <span class="n">linechars</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">linechars</span><span class="p">)</span>
+                <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">date</span><span class="p">,</span> <span class="n">fipname</span><span class="p">,</span> <span class="n">region_index</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">report_block_lineparser</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+                <span class="p">)</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">REGION_REPORT_COLUMNS</span><span class="p">)</span></div>
 
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df v0.4.1+2.g5ba09ff documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0+3.gaa4e4d4
+                v0.4.1+2.g5ba09ff
               </div>
             
           
@@ -172,7 +172,6 @@
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">dateutil</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">treelib</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span>
@@ -414,6 +413,7 @@
 <span class="sd">    Return:</span>
 <span class="sd">        treelib.Tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">treelib</span>
     <span class="n">tree</span> <span class="o">=</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">()</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>

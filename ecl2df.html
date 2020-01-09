@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
+  <title>ecl2df package &mdash; ecl2df v0.4.1+2.g5ba09ff documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                v0.4.0+3.gaa4e4d4
+                v0.4.1+2.g5ba09ff
               </div>
             
           
@@ -101,6 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.eclfiles">ecl2df.eclfiles module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.equil">ecl2df.equil module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.faults">ecl2df.faults module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.fipreports">ecl2df.fipreports module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.grid">ecl2df.grid module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.gruptree">ecl2df.gruptree module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.inferdims">ecl2df.inferdims module</a></li>
@@ -540,6 +541,12 @@ should be traversed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ecl2df.eclfiles.EclFiles.get_prtfilename">
+<code class="sig-name descname">get_prtfilename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_prtfilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_prtfilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inferred name of the PRT file</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ecl2df.eclfiles.EclFiles.get_zonemap">
 <code class="sig-name descname">get_zonemap</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_zonemap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_zonemap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dictionary from (int) K layers in the simgrid to strings</p>
@@ -689,6 +696,82 @@ a DataFrame</p>
 <dt id="ecl2df.faults.df">
 <code class="sig-prename descclassname">ecl2df.faults.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/faults.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.faults.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function for Python API users</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ecl2df.fipreports">
+<span id="ecl2df-fipreports-module"></span><h2>ecl2df.fipreports module<a class="headerlink" href="#module-ecl2df.fipreports" title="Permalink to this headline">¶</a></h2>
+<p>Extract FIP region reports from Eclipse PRT file</p>
+<dl>
+<dt>Example block to extract data from:</dt><dd><blockquote>
+<div><blockquote>
+<div><p>: FIPZON  REPORT REGION    2    :
+:     PAV =        139.76  BARSA:
+:     PORV=     27777509.   RM3 :</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">————— OIL    SM3  —————:– WAT    SM3  -:————— GAS    SM3  —————</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>:     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">————————-:——————————————-:—————-:——————————————-</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>:CURRENTLY IN PLACE       :     21091398.                    21091398.:       4590182. :           -0.    483594842.     483594842.
+:————————-:——————————————-:—————-:——————————————-:
+:OUTFLOW TO OTHER REGIONS :        76266.                       76266.:         75906. :            0.      1818879.       1818879.
+:OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.
+:MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.
+:————————-:——————————————-:—————-:——————————————-:
+:ORIGINALLY IN PLACE      :     21136892.                    21136892.:       4641214. :            0.    484657561.     484657561.
+:————————-:——————————————-:—————-:——————————————-:
+:OUTFLOW TO REGION   1    :       143128.                      143128.:       -161400. :            0.      3017075.       3017075.
+:OUTFLOW TO REGION   3    :       -66862.                      -66862.:        198900. :           -0.     -1198195.      -1198195.
+:OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.
+====================================================================================================================================</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="ecl2df.fipreports.report_block_lineparser">
+<code class="sig-prename descclassname">ecl2df.fipreports.</code><code class="sig-name descname">report_block_lineparser</code><span class="sig-paren">(</span><em class="sig-param">line</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/fipreports.html#report_block_lineparser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.fipreports.report_block_lineparser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses single lines within region reports, splits data into a tuple.</p>
+<p>Does not support many different phase configurations yet.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.fipreports.df">
+<code class="sig-prename descclassname">ecl2df.fipreports.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">prtfile</em>, <em class="sig-param">fipname='FIPNUM'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/fipreports.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.fipreports.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a PRT file from Eclipse and finds FIPXXXX REGION REPORT blocks and
+organizes those numbers into a dataframe</p>
+<p>Each row in the dataframe represents one parsed line in the PRT file, with
+DATE and region index added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prtfile</strong> (<em>string</em>) – filename</p></li>
+<li><p><strong>fipname</strong> (<em>string</em>) – The name of the regport regions, FIPNUM, FIPZON or whatever
+Max length of the string is 8, the first three characters must be FIP,
+and the next 3 characters must be unique for a given Eclipse deck.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.fipreports.fill_parser">
+<code class="sig-prename descclassname">ecl2df.fipreports.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/fipreports.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.fipreports.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill parser with command line arguments</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.fipreports.fipreports_main">
+<code class="sig-prename descclassname">ecl2df.fipreports.</code><code class="sig-name descname">fipreports_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/fipreports.html#fipreports_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.fipreports.fipreports_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command line API</p>
 </dd></dl>
 
 </div>

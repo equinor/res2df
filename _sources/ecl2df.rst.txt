@@ -60,6 +60,14 @@ ecl2df.faults module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.fipreports module
+------------------------
+
+.. automodule:: ecl2df.fipreports
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.grid module
 ------------------
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Command line utility: ecl2csv &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
+  <title>Command line utility: ecl2csv &mdash; ecl2df v0.4.1+2.g5ba09ff documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                v0.4.0+3.gaa4e4d4
+                v0.4.1+2.g5ba09ff
               </div>
             
           
@@ -127,29 +127,34 @@
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat6">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fipreports">fipreports</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat7">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat7">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#compdat">compdat</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat8">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat8">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compdat">compdat</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat9">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat9">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#gruptree">gruptree</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat10">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat10">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gruptree">gruptree</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat11">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat11">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat12">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat12">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -232,7 +237,7 @@ always an Eclipse deck or sometimes individual Eclipse include files, and
 there is usually an <code class="docutils literal notranslate"><span class="pre">--output</span></code> option to specify which file to dump
 the CSV to. If you want output to your terminal, use <code class="docutils literal notranslate"><span class="pre">-</span></code> as the output filename.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span>
-               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
+               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">fipreports</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
                <span class="o">...</span>
 </pre></div>
 </div>
@@ -543,22 +548,54 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 </dl>
 </div>
 </div>
+<div class="section" id="fipreports">
+<h3>fipreports<a class="headerlink" href="#fipreports" title="Permalink to this headline">¶</a></h3>
+<p>Extract FIPxxxxx REPORT REGION data from PRT file. This parses currently in-place, outflows to wells and regions, and material balance errors</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">fipreports</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">fipname</span> <span class="n">FIPNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">PRTFILE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments_repeat7">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>PRTFILE</kbd></dt>
+<dd><p>Eclipse PRT file (or DATA file)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments_repeat7">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<dl class="option-list">
+<dt><kbd>--fipname</kbd></dt>
+<dd><p>Region parameter name of interest</p>
+<p>Default: “FIPNUM”</p>
+</dd>
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Output CSV filename</p>
+<p>Default: “outflow.csv”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+</div>
 <div class="section" id="satfunc">
 <h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
 <p>Data for all saturation functions are merged into one dataframe for all SATNUMs. Each row has data for a saturation point. For SWOF data, all columns related to SGOF are empty and vice versa</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat7">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat8">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or file with saturation functions.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat7">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat8">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
@@ -579,16 +616,16 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
                 <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat8">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat9">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat8">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat9">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
@@ -610,16 +647,16 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat9">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat10">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat9">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat10">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>
@@ -638,16 +675,16 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">gruptree</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">startdate</span> <span class="n">STARTDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat10">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat11">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat10">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat11">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file. No CSV dump if empty</p>
@@ -673,16 +710,16 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wcon</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat11">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Positional Arguments_repeat12">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat12" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or Eclipse include file.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="Named Arguments_repeat11">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="Named Arguments_repeat12">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat12" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>

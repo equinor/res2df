@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction &mdash; ecl2df v0.4.0+3.gaa4e4d4 documentation</title>
+  <title>Introduction &mdash; ecl2df v0.4.1+2.g5ba09ff documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                v0.4.0+3.gaa4e4d4
+                v0.4.1+2.g5ba09ff
               </div>
             
           
@@ -97,6 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pillars"><code class="docutils literal notranslate"><span class="pre">pillars</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#trans"><code class="docutils literal notranslate"><span class="pre">trans</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rft"><code class="docutils literal notranslate"><span class="pre">rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fipreports"><code class="docutils literal notranslate"><span class="pre">fipreports</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#satfunc"><code class="docutils literal notranslate"><span class="pre">satfunc</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#equil"><code class="docutils literal notranslate"><span class="pre">equil</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compdat"><code class="docutils literal notranslate"><span class="pre">compdat</span></code></a></li>
@@ -259,6 +260,14 @@ the <cite>WRFTPLT</cite> keyword is used, with details along wellbores.</p>
 <p>For multisegment wells, the well topology is calculated and data
 is merged accordingly, for example when ICD segments are used, enabling
 easy calculations of the pressure drop over an ICD valve.</p>
+</div>
+<div class="section" id="fipreports">
+<h3><code class="docutils literal notranslate"><span class="pre">fipreports</span></code><a class="headerlink" href="#fipreports" title="Permalink to this headline">¶</a></h3>
+<p>Parses the PRT file from Eclipse looking for region reports (starting
+with ” … FIPNUM REPORT REGION”. It will extract all the data
+in the ASCII table in the PRT file and organize into a dataframe,
+currently-in-place, outflow to wells, outflows to regions, etc. It also
+supports custom FIPxxxxx names.</p>
 </div>
 <div class="section" id="satfunc">
 <h3><code class="docutils literal notranslate"><span class="pre">satfunc</span></code><a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>

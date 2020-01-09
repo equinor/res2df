@@ -91,6 +91,16 @@ For multisegment wells, the well topology is calculated and data
 is merged accordingly, for example when ICD segments are used, enabling
 easy calculations of the pressure drop over an ICD valve.
 
+``fipreports``
+^^^^^^^^^^^^^^
+
+Parses the PRT file from Eclipse looking for region reports (starting
+with " ... FIPNUM REPORT REGION". It will extract all the data
+in the ASCII table in the PRT file and organize into a dataframe,
+currently-in-place, outflow to wells, outflows to regions, etc. It also
+supports custom FIPxxxxx names.
+
+
 ``satfunc``
 ^^^^^^^^^^^
 

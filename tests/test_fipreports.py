@@ -15,6 +15,7 @@ from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+MOCKPRTFILE = os.path.join(TESTDIR, "data/fipreports/TEST1.PRT")
 
 
 def test_fipreports2df():
@@ -25,6 +26,27 @@ def test_fipreports2df():
     assert len(fipreport_df["DATE"].unique()) == 1
     assert fipreport_df["FIPNAME"].unique()[0] == "FIPNUM"
     assert len(fipreport_df["DATATYPE"].unique()) == 5
+
+
+def test_mockprtfile():
+    """
+    Test (a) mocked PRT file(s)
+    """
+    dframe = fipreports.df(MOCKPRTFILE)
+    assert dframe["FIPNAME"].unique() == "FIPNUM"
+    assert len(dframe["DATE"].unique()) == 1
+    assert int(dframe.loc[0, "GIIP_GAS"]) == 20
+
+    dframe = fipreports.df(MOCKPRTFILE, fipname="FIPZON")
+    assert dframe["FIPNAME"].unique() == "FIPZON"
+    assert len(dframe["REGION"].unique()) == 2
+    assert len(dframe["TO_REGION"].dropna().unique()) == 4
+    assert len(dframe["DATE"].unique()) == 3
+    assert len(dframe["DATATYPE"].unique()) == 6
+
+    dframe = fipreports.df(MOCKPRTFILE, fipname="FIPOWG")
+    assert dframe["FIPNAME"].unique() == "FIPOWG"
+    assert len(dframe["DATE"].unique()) == 1
 
 
 def test_report_block_lineparser():

@@ -134,6 +134,11 @@ def df(prtfile, fipname="FIPNUM"):
     reportblockmatcher = re.compile(".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)")
 
     with open(prtfile) as prt_fh:
+        logging.info(
+            "Parsing file %s for blocks starting with %s REPORT REGION",
+            prtfile,
+            fipname,
+        )
         for line in prt_fh:
             matcheddate = re.match(datematcher, line)
             if matcheddate:
@@ -157,12 +162,20 @@ def df(prtfile, fipname="FIPNUM"):
                 continue
 
             if in_report_block:
-                if line.startswith(" :") and not line.startswith(" :--"):
-                    records.append(
-                        [date, fipname, region_index]
-                        + list(report_block_lineparser(line))
-                    )
-
+                interesting_strings = ["IN PLACE", "OUTFLOW", "MATERIAL"]
+                if not sum([string in line for string in interesting_strings]):
+                    # Skip if we are not on an interesting line.
+                    continue
+                # The colons in the report block are not reliably included (wtf!), even in the
+                # same PRT file. We insert them in fixed positions and hope for the best
+                # (if the ASCII table is actually dynamic with respect to content, this will fail)
+                linechars = list(line)
+                linechars[1] = ":"
+                linechars[27] = ":"
+                line = "".join(linechars)
+                records.append(
+                    [date, fipname, region_index] + list(report_block_lineparser(line))
+                )
     return pd.DataFrame(data=records, columns=REGION_REPORT_COLUMNS)
 
 

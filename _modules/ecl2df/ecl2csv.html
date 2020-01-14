@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.ecl2csv &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.ecl2csv &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -296,9 +296,11 @@
         <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file.&quot;</span><span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
-        <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and material &quot;</span>
-        <span class="s2">&quot;balance errors&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
+            <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and &quot;</span>
+            <span class="s2">&quot;material balance errors&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">fipreports</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">fipreports_parser</span><span class="p">)</span>
     <span class="n">fipreports_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">fipreports</span><span class="o">.</span><span class="n">fipreports_main</span><span class="p">)</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.parameters &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.parameters &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -165,8 +165,10 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-
 <span class="kn">from</span> <span class="nn">ecl2df.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="find_parameter_files"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.find_parameter_files">[docs]</a><span class="k">def</span> <span class="nf">find_parameter_files</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">,</span> <span class="n">filebase</span><span class="o">=</span><span class="s2">&quot;parameters&quot;</span><span class="p">):</span>
@@ -247,7 +249,7 @@
         <span class="k">if</span> <span class="n">warnduplicates</span> <span class="ow">and</span> <span class="n">keyvalues</span><span class="p">:</span>
             <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keyvalues</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_params</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
             <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Duplicates keys </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">duplicates</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Duplicates keys </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">duplicates</span><span class="p">))</span>
         <span class="n">new_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">)</span>
         <span class="n">keyvalues</span> <span class="o">=</span> <span class="n">new_params</span>
     <span class="k">return</span> <span class="n">keyvalues</span></div>
@@ -265,38 +267,38 @@
     <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">yaml_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with yaml.safe_load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with yaml.safe_load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="c1"># yaml happily parses txt files into a single line, don&#39;t want that.</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">yaml_error</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with yaml, trying json.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with yaml, trying json.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="n">json_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with json.load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> with json.load()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">json_error</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="n">txt_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> as txt with pd.read_csv()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to parse </span><span class="si">%s</span><span class="s2"> as txt with pd.read_csv()&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as txt&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as txt&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">txt_error</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> wat not parseable as txt, no more options&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> wat not parseable as txt, no more options&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> could not be parsed as yaml, json or txt&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">yaml_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_error</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> could not be parsed as yaml, json or txt&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">yaml_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_error</span><span class="p">))</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not parse </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Filter to values that are NOT dict&#39;s. We can have dict as value when &quot;grouped&quot;</span>

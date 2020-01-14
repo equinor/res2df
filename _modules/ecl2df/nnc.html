@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -170,6 +170,9 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">gridgeometry2df</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with NNC information</span>
@@ -199,14 +202,14 @@
     <span class="n">init_file</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_initfile</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;NNC1&quot;</span> <span class="ow">in</span> <span class="n">egrid_file</span> <span class="ow">and</span> <span class="s2">&quot;NNC2&quot;</span> <span class="ow">in</span> <span class="n">egrid_file</span><span class="p">):</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No NNC data in EGRID&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No NNC data in EGRID&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="c1"># Grid indices for first cell in cell pairs, into a vertical</span>
     <span class="c1"># vector. The indices are &quot;global&quot; in libecl terms, and are</span>
     <span class="c1"># 1-based (FORTRAN). Convert to zero-based before sending to get_ijk()</span>
     <span class="n">nnc1</span> <span class="o">=</span> <span class="n">egrid_file</span><span class="p">[</span><span class="s2">&quot;NNC1&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy_view</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;NNC1: len: </span><span class="si">%d</span><span class="s2">, min: </span><span class="si">%d</span><span class="s2">, max: </span><span class="si">%d</span><span class="s2"> (global indices)&quot;</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">nnc1</span><span class="p">),</span>
         <span class="nb">min</span><span class="p">(</span><span class="n">nnc1</span><span class="p">),</span>
@@ -221,7 +224,7 @@
 
     <span class="c1"># Grid indices for second cell in cell pairs</span>
     <span class="n">nnc2</span> <span class="o">=</span> <span class="n">egrid_file</span><span class="p">[</span><span class="s2">&quot;NNC2&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy_view</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;NNC2: len: </span><span class="si">%d</span><span class="s2">, min: </span><span class="si">%d</span><span class="s2">, max: </span><span class="si">%d</span><span class="s2"> (global indices)&quot;</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">nnc2</span><span class="p">),</span>
         <span class="nb">min</span><span class="p">(</span><span class="n">nnc2</span><span class="p">),</span>
@@ -235,7 +238,7 @@
 
     <span class="c1"># Obtain transmissibility value, corresponding to the cell pairs above.</span>
     <span class="n">tran</span> <span class="o">=</span> <span class="n">init_file</span><span class="p">[</span><span class="s2">&quot;TRANNNC&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy_view</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;TRANNNC: len: </span><span class="si">%d</span><span class="s2">, min: </span><span class="si">%f</span><span class="s2">, max: </span><span class="si">%f</span><span class="s2">, mean=</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">tran</span><span class="p">),</span>
         <span class="nb">min</span><span class="p">(</span><span class="n">tran</span><span class="p">),</span>
@@ -306,7 +309,7 @@
     <span class="n">vnncdf</span> <span class="o">=</span> <span class="n">nncdf</span><span class="p">[</span><span class="n">nncdf</span><span class="p">[</span><span class="s2">&quot;I1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nncdf</span><span class="p">[</span><span class="s2">&quot;I2&quot;</span><span class="p">]]</span>
     <span class="n">vnncdf</span> <span class="o">=</span> <span class="n">vnncdf</span><span class="p">[</span><span class="n">vnncdf</span><span class="p">[</span><span class="s2">&quot;J1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">vnncdf</span><span class="p">[</span><span class="s2">&quot;J2&quot;</span><span class="p">]]</span>
     <span class="n">postlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vnncdf</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;Filtered to vertical connections, </span><span class="si">%d</span><span class="s2"> removed, </span><span class="si">%d</span><span class="s2"> connections kept&quot;</span><span class="p">,</span>
         <span class="n">prelen</span> <span class="o">-</span> <span class="n">postlen</span><span class="p">,</span>
         <span class="n">postlen</span><span class="p">,</span>
@@ -353,7 +356,7 @@
 <span class="sd">    It may become deprecated to have a main() function</span>
 <span class="sd">    and command line utility for each module in ecl2df</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;nnc2csv is deprecated, use &#39;ecl2csv nnc &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;nnc2csv is deprecated, use &#39;ecl2csv nnc &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
@@ -363,13 +366,11 @@
 <div class="viewcode-block" id="nnc2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.nnc2df_main">[docs]</a><span class="k">def</span> <span class="nf">nnc2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Command line access point from main() or from ecl2csv via subparser&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;nnc2df&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">nncdf</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">nncdf</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty NNC dataframe being written to disk!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty NNC dataframe being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">nncdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>

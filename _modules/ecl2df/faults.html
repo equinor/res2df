@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.faults &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.faults &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -172,6 +172,10 @@
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
 <span class="n">RECORD_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;IX1&quot;</span><span class="p">,</span> <span class="s2">&quot;IX2&quot;</span><span class="p">,</span> <span class="s2">&quot;IY1&quot;</span><span class="p">,</span> <span class="s2">&quot;IY2&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ1&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ2&quot;</span><span class="p">,</span> <span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
 <span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
 <span class="n">ALLOWED_FACES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;X-&quot;</span><span class="p">,</span> <span class="s2">&quot;Y-&quot;</span><span class="p">,</span> <span class="s2">&quot;Z-&quot;</span><span class="p">,</span> <span class="s2">&quot;I-&quot;</span><span class="p">,</span> <span class="s2">&quot;J-&quot;</span><span class="p">,</span> <span class="s2">&quot;K-&quot;</span><span class="p">]</span>
@@ -179,7 +183,7 @@
 
 <div class="viewcode-block" id="deck2faultsdf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.faults.deck2faultsdf">[docs]</a><span class="k">def</span> <span class="nf">deck2faultsdf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name deck2faultsdf&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name deck2faultsdf&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
 
 
@@ -225,7 +229,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.faults.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;faults2csv is deprecated, use &#39;ecl2csv faults &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;faults2csv is deprecated, use &#39;ecl2csv faults &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
@@ -235,13 +239,13 @@
 <div class="viewcode-block" id="faults2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.faults.faults2df_main">[docs]</a><span class="k">def</span> <span class="nf">faults2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
     <span class="n">faults_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">faults_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty FAULT data being written to disk!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty FAULT data being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">faults_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 

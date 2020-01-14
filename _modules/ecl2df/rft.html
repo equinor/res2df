@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.rft &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -185,7 +185,9 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">merge_zones</span>
 
-<span class="c1"># logging.basicConfig(level=logging.DEBUG)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_rftrecords2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
@@ -205,7 +207,7 @@
         <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>  <span class="c1"># forward fill (because any record is associated to the previous TIME record)</span>
     <span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;Located </span><span class="si">%s</span><span class="s2"> RFT records at </span><span class="si">%s</span><span class="s2"> distinct dates&quot;</span><span class="p">,</span>
         <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rftrecords</span><span class="p">)),</span>
         <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rftrecords</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())),</span>
@@ -239,7 +241,7 @@
         <span class="n">well</span> <span class="o">=</span> <span class="n">rftfile</span><span class="p">[</span><span class="n">welletcidx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">wellmodel</span> <span class="o">=</span> <span class="n">rftfile</span><span class="p">[</span><span class="n">welletcidx</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># MULTISEG or STANDARD</span>
 
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Extracting </span><span class="si">{}</span><span class="s2"> well </span><span class="si">{:&gt;8}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2">, record index: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">wellmodel</span><span class="p">,</span> <span class="n">well</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">timerecordidx</span>
             <span class="p">)</span>
@@ -255,7 +257,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">numberofrows</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="n">numberofrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numberofrows</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> has no data to extract at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">well</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> has no data to extract at </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">well</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
             <span class="k">continue</span>
 
         <span class="c1"># These datatypes now align nicely into a matrix of numbers,</span>
@@ -287,7 +289,7 @@
             <span class="n">wellmodel</span> <span class="o">==</span> <span class="s2">&quot;MULTISEG&quot;</span>
             <span class="ow">and</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SEG&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">empty</span>
         <span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> is MULTISEG but has no SEG data&quot;</span><span class="p">,</span> <span class="n">well</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2"> is MULTISEG but has no SEG data&quot;</span><span class="p">,</span> <span class="n">well</span><span class="p">)</span>
             <span class="n">numberofrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
                 <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SEGDEPTH&quot;</span><span class="p">][</span><span class="s2">&quot;recordlength&quot;</span><span class="p">]</span>
             <span class="p">)</span>
@@ -471,7 +473,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;rft2csv is deprecated, use &#39;ecl2csv rft &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;rft2csv is deprecated, use &#39;ecl2csv rft &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
@@ -481,8 +483,7 @@
 <div class="viewcode-block" id="rft2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df_main">[docs]</a><span class="k">def</span> <span class="nf">rft2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.RFT&quot;</span><span class="p">):</span>
         <span class="c1"># Support the RFT file as an argument also:</span>
         <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.RFT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">)</span>

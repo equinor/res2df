@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.pillars &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.pillars &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -174,6 +174,9 @@
 
 <span class="kn">import</span> <span class="nn">ecl2df</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 <span class="n">AGGREGATORS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;VOLUME&quot;</span><span class="p">:</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PORV&quot;</span><span class="p">:</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
@@ -252,17 +255,17 @@
     <span class="n">rstdates_iso</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">dates2rstindices</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing pillar statistics&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing pillar statistics&quot;</span><span class="p">)</span>
     <span class="n">groupbies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">region</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">region</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Region parameter </span><span class="si">%s</span><span class="s2"> not found, ignored&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Region parameter </span><span class="si">%s</span><span class="s2"> not found, ignored&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">groupbies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
             <span class="n">grid_df</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="n">region</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">datestr</span> <span class="ow">in</span> <span class="n">rstdates_iso</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Dynamic volumes for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">datestr</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Dynamic volumes for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">datestr</span><span class="p">)</span>
         <span class="n">volumes</span> <span class="o">=</span> <span class="n">compute_volumes</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">datestr</span><span class="o">=</span><span class="n">datestr</span><span class="p">)</span>
         <span class="n">grid_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">volumes</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -400,9 +403,9 @@
     <span class="n">epsilon_soil</span> <span class="o">=</span> <span class="mf">0.01</span>
 
     <span class="k">if</span> <span class="s2">&quot;SWAT&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No saturation in grid data. No contacts computed&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No saturation in grid data. No contacts computed&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing contacts pr. pillar&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing contacts pr. pillar&quot;</span><span class="p">)</span>
     <span class="n">groupbies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PILLAR&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
         <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
@@ -420,7 +423,7 @@
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">soilcutoff</span> <span class="ow">and</span> <span class="s2">&quot;SOIL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Calculating oil-water-contacts based on SOILcutoff </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">soilcutoff</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">owc</span> <span class="o">=</span> <span class="p">(</span>
@@ -434,7 +437,7 @@
         <span class="n">owc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">waterpillars</span><span class="p">,</span> <span class="n">owc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sgascutoff</span> <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating gas-contacts based on gas cutoff </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sgascutoff</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating gas-contacts based on gas cutoff </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sgascutoff</span><span class="p">))</span>
         <span class="k">if</span> <span class="s2">&quot;SOIL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span> <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
             <span class="c1"># Pillars to be used for GOC computation</span>
             <span class="n">gocpillars</span> <span class="o">=</span> <span class="p">(</span>
@@ -567,9 +570,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility. Deprecated to use</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-        <span class="s2">&quot;oilcol2csv is deprecated, use &#39;ecl2csv pillarstats &lt;args&gt;&#39; instead&quot;</span>
-    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;oilcol2csv is deprecated, use &#39;ecl2csv pillarstats &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">pillarstats_main</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span></div>
@@ -578,7 +579,7 @@
 <div class="viewcode-block" id="pillarstats_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.pillarstats_main">[docs]</a><span class="k">def</span> <span class="nf">pillarstats_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
         <span class="n">eclfiles</span><span class="p">,</span>
@@ -611,7 +612,7 @@
         <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing output to disk&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing output to disk&quot;</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>

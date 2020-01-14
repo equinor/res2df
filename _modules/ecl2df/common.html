@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -166,6 +166,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="parse_ecl_month"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_ecl_month">[docs]</a><span class="k">def</span> <span class="nf">parse_ecl_month</span><span class="p">(</span><span class="n">eclmonth</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Translate Eclipse month strings to integer months&quot;&quot;&quot;</span>
     <span class="n">eclmonth2num</span> <span class="o">=</span> <span class="p">{</span>
@@ -204,15 +208,15 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">zonedict</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Can&#39;t merge in empty zone information&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Can&#39;t merge in empty zone information&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span>
     <span class="k">if</span> <span class="n">zoneheader</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
             <span class="s2">&quot;Column name </span><span class="si">%s</span><span class="s2"> already exists, refusing to merge in any more&quot;</span><span class="p">,</span> <span class="n">zoneheader</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span>
     <span class="k">if</span> <span class="n">kname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Can&#39;t merge on non-existing column </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Can&#39;t merge on non-existing column </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span>
     <span class="n">zone_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">zonedict</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">zoneheader</span><span class="p">])</span>
     <span class="n">zone_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span>
@@ -261,7 +265,7 @@
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
     <span class="n">tuplecolumns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)),</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">tuplecolumns</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No columns to stack&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No columns to stack&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dframe</span>
     <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
         <span class="n">tuplecolumns</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dummy&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="p">]</span>

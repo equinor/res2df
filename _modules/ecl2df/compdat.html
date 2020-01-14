@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -173,6 +173,8 @@
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span><span class="p">,</span> <span class="n">merge_zones</span>
 <span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">merge_initvectors</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># Sunbeam terms:</span>
 <span class="n">COMPDATKEYS</span> <span class="o">=</span> <span class="p">[</span>
@@ -266,7 +268,7 @@
 
 <div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span></div>
 
 
@@ -298,17 +300,17 @@
                 <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">date</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use TSTEP when there is no start_date&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use TSTEP when there is no start_date&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                 <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
                 <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
                 <span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">:</span>
@@ -367,7 +369,7 @@
                     <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_MD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">]</span>
                 <span class="n">welsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Possible premature stop at first TSTEP&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Possible premature stop at first TSTEP&quot;</span><span class="p">)</span>
             <span class="k">break</span>
 
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compdatrecords</span><span class="p">)</span>
@@ -460,7 +462,7 @@
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">dframe</span>
     <span class="k">if</span> <span class="n">start_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="n">end_column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;Cannot unroll on non-existing columns </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">start_column</span><span class="p">,</span> <span class="n">end_column</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">dframe</span>
@@ -507,7 +509,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;compdat2csv is deprecated, use &#39;ecl2csv compdat &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;compdat2csv is deprecated, use &#39;ecl2csv compdat &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
@@ -517,13 +519,13 @@
 <div class="viewcode-block" id="compdat2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.compdat2df_main">[docs]</a><span class="k">def</span> <span class="nf">compdat2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initvectors</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty COMPDAT data being written to disk!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty COMPDAT data being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">compdat_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
@@ -547,7 +549,7 @@
 
     <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zonemap into compdat&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zonemap into compdat&quot;</span><span class="p">)</span>
         <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">compdat_df</span></div>

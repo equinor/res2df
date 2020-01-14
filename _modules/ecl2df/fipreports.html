@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.fipreports &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -193,6 +193,9 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 <span class="n">REGION_REPORT_COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;DATE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FIPNAME&quot;</span><span class="p">,</span>
@@ -291,7 +294,7 @@
     <span class="n">reportblockmatcher</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.+&quot;</span> <span class="o">+</span> <span class="n">fipname</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;\s+REPORT\s+REGION\s+(\d+)&quot;</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">prtfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">prt_fh</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Parsing file </span><span class="si">%s</span><span class="s2"> for blocks starting with </span><span class="si">%s</span><span class="s2"> REPORT REGION&quot;</span><span class="p">,</span>
             <span class="n">prtfile</span><span class="p">,</span>
             <span class="n">fipname</span><span class="p">,</span>
@@ -306,13 +309,13 @@
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">newdate</span> <span class="o">!=</span> <span class="n">date</span><span class="p">:</span>
                     <span class="n">date</span> <span class="o">=</span> <span class="n">newdate</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Found date: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Found date: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
                 <span class="k">continue</span>
             <span class="n">matchedreportblock</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">reportblockmatcher</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">matchedreportblock</span><span class="p">:</span>
                 <span class="n">in_report_block</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">region_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">matchedreportblock</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  Region report for region </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">region_index</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  Region report for region </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">region_index</span><span class="p">))</span>
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; ============================&quot;</span><span class="p">):</span>
                 <span class="n">in_report_block</span> <span class="o">=</span> <span class="kc">False</span>
@@ -355,7 +358,7 @@
 <div class="viewcode-block" id="fipreports_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.fipreports.fipreports_main">[docs]</a><span class="k">def</span> <span class="nf">fipreports_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Command line API&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.PRT&quot;</span><span class="p">):</span>
         <span class="n">prtfile</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span>
     <span class="k">else</span><span class="p">:</span>
@@ -368,7 +371,7 @@
         <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing output to disk&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing output to disk&quot;</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>

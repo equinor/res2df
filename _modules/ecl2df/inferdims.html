@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.inferdims &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -170,6 +170,9 @@
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="guess_dim"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.guess_dim">[docs]</a><span class="k">def</span> <span class="nf">guess_dim</span><span class="p">(</span><span class="n">deckstring</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimitem</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Guess the correct dimension count for an incoming deck (string)</span>
@@ -227,12 +230,10 @@
             <span class="k">continue</span>
             <span class="c1"># If we get here, try another dimnumcount</span>
     <span class="k">if</span> <span class="n">dimcountguess</span> <span class="o">==</span> <span class="n">max_guess</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;Unable to guess dim count for </span><span class="si">%s</span><span class="s2">, or larger than </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">max_guess</span>
         <span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;Guessed dimension count count for </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimcountguess</span>
-    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Guessed dimension count count for </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimcountguess</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dimcountguess</span></div>
 
 
@@ -262,7 +263,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only item 0 in EQLDIMS can be estimated&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">in</span> <span class="n">deckstr</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not inserting </span><span class="si">%s</span><span class="s2"> in a deck where already exists&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not inserting </span><span class="si">%s</span><span class="s2"> in a deck where already exists&quot;</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">deckstr</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">dimkeyword</span>

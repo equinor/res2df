@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.equil &mdash; ecl2df v0.4.1+5.g87b4355 documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+5.g87b4355
+                v0.4.1+7.g163e3e2
               </div>
             
           
@@ -172,10 +172,13 @@
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">inferdims</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="deck2equildf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.deck2equildf">[docs]</a><span class="k">def</span> <span class="nf">deck2equildf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2equildf&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2equildf&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
 
 
@@ -206,10 +209,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
                 <span class="s2">&quot;Will not be able to guess NTEQUL from a parsed deck without EQLDIMS.&quot;</span>
             <span class="p">)</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="s2">&quot;Only data for the first EQUIL will be returned. &quot;</span>
                     <span class="s2">&quot;Instead, supply string to deck2df()&quot;</span>
@@ -217,7 +220,7 @@
             <span class="p">)</span>
             <span class="n">ntequl</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ntequl</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;EQLDIMS+NTEQUL or ntequl not supplied. Will be guessed&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;EQLDIMS+NTEQUL or ntequl not supplied. Will be guessed&quot;</span><span class="p">)</span>
             <span class="n">ntequl_estimate</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">guess_dim</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span>
                 <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ntequl_estimate</span>
@@ -295,7 +298,7 @@
         <span class="n">rowlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rec</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnnames</span><span class="p">):</span>
             <span class="n">rowlist</span> <span class="o">=</span> <span class="n">rowlist</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnnames</span><span class="p">)]</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Something wrong with columnnames &quot;</span> <span class="o">+</span> <span class="s2">&quot;or EQUIL-data, data is chopped!&quot;</span>
             <span class="p">)</span>
         <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rowlist</span><span class="p">)</span>
@@ -327,7 +330,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;equil2csv is deprecated, use &#39;ecl2csv equil &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;equil2csv is deprecated, use &#39;ecl2csv equil &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
@@ -337,13 +340,13 @@
 <div class="viewcode-block" id="equil2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.equil2df_main">[docs]</a><span class="k">def</span> <span class="nf">equil2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
     <span class="n">equil_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">equil_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty EQUIL-data being written to disk!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty EQUIL-data being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">equil_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 

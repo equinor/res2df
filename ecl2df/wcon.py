@@ -16,6 +16,8 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
 
 # The record keys are all taken from the OPM source code:
 # https://github.com/OPM/opm-common/blob/master/
@@ -101,7 +103,7 @@ COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
 
 def deck2wcondf(deck):
     """Deprecated function name"""
-    logging.warning("Deprecated function name, deck2wcondf")
+    logger.warning("Deprecated function name, deck2wcondf")
     return deck2df(deck)
 
 
@@ -122,17 +124,17 @@ def deck2df(deck):
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
-                logging.info("Parsing at date %s", str(date))
+                logger.info("Parsing at date %s", str(date))
         elif kword.name == "TSTEP":
             if not date:
-                logging.critical("Can't use TSTEP when there is no start_date")
+                logger.critical("Can't use TSTEP when there is no start_date")
                 return pd.DataFrame()
             for rec in kword:
                 steplist = rec[0]
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
-                logging.info(
+                logger.info(
                     "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
         elif kword.name in RECORD_KEYS:
@@ -149,7 +151,7 @@ def deck2df(deck):
                 wconrecords.append(rec_data)
 
         elif kword.name == "TSTEP":
-            logging.warning("WARNING: Possible premature stop at first TSTEP")
+            logger.warning("WARNING: Possible premature stop at first TSTEP")
             break
 
     wcon_df = pd.DataFrame(wconrecords)
@@ -176,7 +178,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("wcon2csv is deprecated, use 'ecl2csv wcon <args>' instead")
+    logger.warning("wcon2csv is deprecated, use 'ecl2csv wcon <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -186,13 +188,13 @@ def main():
 def wcon2df_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     wcon_df = deck2df(deck)
     if wcon_df.empty:
-        logging.warning("Empty wcon dataframe being written to disk!")
+        logger.warning("Empty wcon dataframe being written to disk!")
     wcon_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

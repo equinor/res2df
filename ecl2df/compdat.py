@@ -16,6 +16,8 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month, merge_zones
 from .grid import merge_initvectors
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
 
 # Sunbeam terms:
 COMPDATKEYS = [
@@ -109,7 +111,7 @@ def sunbeam2rmsterm(reckey):
 
 def deck2compdatsegsdfs(deck, start_date=None):
     """Deprecated function name"""
-    logging.warning("Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()")
+    logger.warning("Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()")
     return deck2dfs(deck, start_date)
 
 
@@ -141,17 +143,17 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 month = rec["MONTH"][0]
                 year = rec["YEAR"][0]
                 date = datetime.date(year=year, month=parse_ecl_month(month), day=day)
-                logging.info("Parsing at date %s", str(date))
+                logger.info("Parsing at date %s", str(date))
         elif kword.name == "TSTEP":
             if not date:
-                logging.critical("Can't use TSTEP when there is no start_date")
+                logger.critical("Can't use TSTEP when there is no start_date")
                 return {}
             for rec in kword:
                 steplist = rec[0]
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
-                logging.info(
+                logger.info(
                     "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
         elif kword.name == "COMPDAT":
@@ -210,7 +212,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
                     rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
                 welsegsrecords.append(rec_data)
         elif kword.name == "TSTEP":
-            logging.warning("Possible premature stop at first TSTEP")
+            logger.warning("Possible premature stop at first TSTEP")
             break
 
     compdat_df = pd.DataFrame(compdatrecords)
@@ -303,7 +305,7 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
     if dframe.empty:
         return dframe
     if start_column not in dframe and end_column not in dframe:
-        logging.warning(
+        logger.warning(
             "Cannot unroll on non-existing columns %s and %s", start_column, end_column
         )
         return dframe
@@ -350,7 +352,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("compdat2csv is deprecated, use 'ecl2csv compdat <args>' instead")
+    logger.warning("compdat2csv is deprecated, use 'ecl2csv compdat <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -360,13 +362,13 @@ def main():
 def compdat2df_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     if compdat_df.empty:
-        logging.warning("Empty COMPDAT data being written to disk!")
+        logger.warning("Empty COMPDAT data being written to disk!")
     compdat_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 
@@ -390,7 +392,7 @@ def df(eclfiles, initvectors=None):
 
     zonemap = eclfiles.get_zonemap()
     if zonemap:
-        logging.info("Merging zonemap into compdat")
+        logger.info("Merging zonemap into compdat")
         compdat_df = merge_zones(compdat_df, zonemap)
 
     return compdat_df

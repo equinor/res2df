@@ -13,6 +13,9 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .grid import gridgeometry2df
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 
 def df(eclfiles, coords=False, pillars=False):
     """Produce a Pandas Dataframe with NNC information
@@ -42,14 +45,14 @@ def df(eclfiles, coords=False, pillars=False):
     init_file = eclfiles.get_initfile()
 
     if not ("NNC1" in egrid_file and "NNC2" in egrid_file):
-        logging.warning("No NNC data in EGRID")
+        logger.warning("No NNC data in EGRID")
         return pd.DataFrame()
 
     # Grid indices for first cell in cell pairs, into a vertical
     # vector. The indices are "global" in libecl terms, and are
     # 1-based (FORTRAN). Convert to zero-based before sending to get_ijk()
     nnc1 = egrid_file["NNC1"][0].numpy_view().reshape(-1, 1)
-    logging.info(
+    logger.info(
         "NNC1: len: %d, min: %d, max: %d (global indices)",
         len(nnc1),
         min(nnc1),
@@ -64,7 +67,7 @@ def df(eclfiles, coords=False, pillars=False):
 
     # Grid indices for second cell in cell pairs
     nnc2 = egrid_file["NNC2"][0].numpy_view().reshape(-1, 1)
-    logging.info(
+    logger.info(
         "NNC2: len: %d, min: %d, max: %d (global indices)",
         len(nnc2),
         min(nnc2),
@@ -78,7 +81,7 @@ def df(eclfiles, coords=False, pillars=False):
 
     # Obtain transmissibility value, corresponding to the cell pairs above.
     tran = init_file["TRANNNC"][0].numpy_view().reshape(-1, 1)
-    logging.info(
+    logger.info(
         "TRANNNC: len: %d, min: %f, max: %f, mean=%f",
         len(tran),
         min(tran),
@@ -149,7 +152,7 @@ def filter_vertical(nncdf):
     vnncdf = nncdf[nncdf["I1"] == nncdf["I2"]]
     vnncdf = vnncdf[vnncdf["J1"] == vnncdf["J2"]]
     postlen = len(vnncdf)
-    logging.info(
+    logger.info(
         "Filtered to vertical connections, %d removed, %d connections kept",
         prelen - postlen,
         postlen,
@@ -196,7 +199,7 @@ def main():
     It may become deprecated to have a main() function
     and command line utility for each module in ecl2df
     """
-    logging.warning("nnc2csv is deprecated, use 'ecl2csv nnc <args>' instead")
+    logger.warning("nnc2csv is deprecated, use 'ecl2csv nnc <args>' instead")
     parser = argparse.ArgumentParser()
     fill_parser(parser)
     args = parser.parse_args()
@@ -206,12 +209,10 @@ def main():
 def nnc2df_main(args):
     """Command line access point from main() or from ecl2csv via subparser"""
     if args.verbose:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.INFO)
-    logging.getLogger().name = "nnc2df"
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     if nncdf.empty:
-        logging.warning("Empty NNC dataframe being written to disk!")
+        logger.warning("Empty NNC dataframe being written to disk!")
     nncdf.to_csv(args.output, index=False)
     print("Wrote to " + args.output)

@@ -139,9 +139,11 @@ def get_parser():
         "fipreports",
         help=("Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file."),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description=("Extract FIPxxxxx REPORT REGION data from PRT file. "
-        "This parses currently in-place, outflows to wells and regions, and material "
-        "balance errors"),
+        description=(
+            "Extract FIPxxxxx REPORT REGION data from PRT file. "
+            "This parses currently in-place, outflows to wells and regions, and "
+            "material balance errors"
+        ),
     )
     fipreports.fill_parser(fipreports_parser)
     fipreports_parser.set_defaults(func=fipreports.fipreports_main)

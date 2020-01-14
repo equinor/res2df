@@ -21,6 +21,9 @@ import pandas as pd
 from .eclfiles import EclFiles
 from . import parameters
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 
 def normalize_dates(start_date, end_date, freq):
     """
@@ -232,7 +235,7 @@ def df(
         column_keys_str = "*"
     else:
         column_keys_str = ",".join(column_keys)
-    logging.info(
+    logger.info(
         "Requesting columns_keys: %s at time_index: %s",
         column_keys_str,
         str(time_index_arg or "raw"),
@@ -242,7 +245,7 @@ def df(
     )
     # If time_index_arg was None, but start_date was set, we need to date-truncate
     # afterwards:
-    logging.info(
+    logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",
         len(dframe.columns),
         len(dframe),
@@ -251,19 +254,19 @@ def df(
     if params:
         if not paramfile:
             param_files = parameters.find_parameter_files(eclfiles)
-            logging.info("Loading parameters from files: %s", str(param_files))
+            logger.info("Loading parameters from files: %s", str(param_files))
             param_dict = parameters.load_all(param_files)
         else:
             if not os.path.isabs(paramfile):
                 param_file = parameters.find_parameter_files(
                     eclfiles, filebase=paramfile
                 )
-                logging.info("Loading parameters from file: %s", str(param_file))
+                logger.info("Loading parameters from file: %s", str(param_file))
                 param_dict = parameters.load(param_file)
             else:
-                logging.info("Loading parameter from file: %s", str(paramfile))
+                logger.info("Loading parameter from file: %s", str(paramfile))
                 param_dict = parameters.load(paramfile)
-        logging.info("Loaded %d parameters", len(param_dict))
+        logger.info("Loaded %d parameters", len(param_dict))
         for key in param_dict:
             # By converting to str we are more robust with respect to what objects are
             # read from the parameters.json/txt/yml. Since we are only going
@@ -357,7 +360,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("summary2csv is deprecated, use 'ecl2csv smry <args>' instead")
+    logger.warning("summary2csv is deprecated, use 'ecl2csv smry <args>' instead")
     parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -367,7 +370,7 @@ def main():
 def summary2df_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     sum_df = df(
         eclfiles,
@@ -379,7 +382,7 @@ def summary2df_main(args):
         paramfile=args.paramfile,
     )
     if sum_df.empty:
-        logging.warning("Empty summary data being written to disk!")
+        logger.warning("Empty summary data being written to disk!")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL
@@ -387,6 +390,6 @@ def summary2df_main(args):
         signal(SIGPIPE, SIG_DFL)
         sum_df.to_csv(sys.stdout, index=True)
     else:
-        logging.info("Writing to file %s", str(args.output))
+        logger.info("Writing to file %s", str(args.output))
         sum_df.to_csv(args.output, index=True)
         print("Wrote to " + args.output)

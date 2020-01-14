@@ -77,7 +77,7 @@ def test_main_subparser(tmpdir):
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-faultsdf.csv")
-    sys.argv = ["faults2csv", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["faults2csv", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     faults.main()
 
     assert os.path.exists(str(tmpcsvfile))

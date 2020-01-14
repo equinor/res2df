@@ -121,7 +121,7 @@ def test_main(tmpdir):
 def test_main_subparser(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-gruptree.csv")
-    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "gruptree", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))

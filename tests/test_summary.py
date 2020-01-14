@@ -57,6 +57,7 @@ def test_summary2df_dates(tmpdir):
     sys.argv = [
         "ecl2csv",
         "summary",
+        "-v",
         DATAFILE,
         "-o",
         str(tmpcsvfile),

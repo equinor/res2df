@@ -36,6 +36,9 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 REGION_REPORT_COLUMNS = [
     "DATE",
     "FIPNAME",
@@ -134,7 +137,7 @@ def df(prtfile, fipname="FIPNUM"):
     reportblockmatcher = re.compile(".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)")
 
     with open(prtfile) as prt_fh:
-        logging.info(
+        logger.info(
             "Parsing file %s for blocks starting with %s REPORT REGION",
             prtfile,
             fipname,
@@ -149,13 +152,13 @@ def df(prtfile, fipname="FIPNUM"):
                 )
                 if newdate != date:
                     date = newdate
-                    logging.info("Found date: %s", str(date))
+                    logger.info("Found date: %s", str(date))
                 continue
             matchedreportblock = re.match(reportblockmatcher, line)
             if matchedreportblock:
                 in_report_block = True
                 region_index = int(matchedreportblock.group(1))
-                logging.info("  Region report for region %s", str(region_index))
+                logger.info("  Region report for region %s", str(region_index))
                 continue
             if line.startswith(" ============================"):
                 in_report_block = False
@@ -198,7 +201,7 @@ def fill_parser(parser):
 def fipreports_main(args):
     """Command line API"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:
@@ -211,6 +214,6 @@ def fipreports_main(args):
         signal(SIGPIPE, SIG_DFL)
         dframe.to_csv(sys.stdout, index=False)
     else:
-        logging.info("Writing output to disk")
+        logger.info("Writing output to disk")
         dframe.to_csv(args.output, index=False)
         print("Wrote to " + args.output)

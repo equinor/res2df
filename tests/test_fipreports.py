@@ -87,7 +87,7 @@ def test_report_block_lineparser():
 def test_cmdline(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-fipreports.csv")
-    sys.argv = ["ecl2csv", "fipreports", DATAFILE, "--output", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))

@@ -15,6 +15,9 @@ import pandas as pd
 import ecl2df
 from .eclfiles import EclFiles
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 
 def df(
     eclfiles,
@@ -77,29 +80,29 @@ def df(
         boundaryfilter = True
 
     if boundaryfilter and len(vectors) > 1:
-        logging.error(
+        logger.error(
             "Can't filter to boundaries when more than one INIT vector is supplied"
         )
         return pd.DataFrame()
 
     if group and len(vectors) > 1:
-        logging.error("Can't group to more than one INIT vector at a time")
+        logger.error("Can't group to more than one INIT vector at a time")
         return pd.DataFrame()
 
     if onlykdir and onlyijdir:
-        logging.warning(
+        logger.warning(
             "Filtering to both k and to ij simultaneously " "results in empty dataframe"
         )
 
     grid_df = ecl2df.grid.df(eclfiles)  # .set_index(["I", "J", "K"])
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
-        logging.warning(
+        logger.warning(
             "Vectors %s not found, skipping", str(set(vectors) - set(existing_vectors))
         )
     vectors = existing_vectors
     transrows = []
-    logging.info("Building transmissibility dataframe")
+    logger.info("Building transmissibility dataframe")
     if not onlykdir:
         tranx = pd.DataFrame(grid_df[grid_df["TRANX"] > 0][["I", "J", "K", "TRANX"]])
         tranx.rename(
@@ -139,7 +142,7 @@ def df(
     trans_df = pd.concat([tranx, trany, tranz], axis=0, sort=False)
 
     if addnnc:
-        logging.info("Adding NNC data")
+        logger.info("Adding NNC data")
         nnc_df = ecl2df.nnc.df(eclfiles, coords=False, pillars=False)
         nnc_df["DIR"] = "NNC"
         trans_df = pd.concat([trans_df, nnc_df], sort=False)
@@ -155,7 +158,7 @@ def df(
             vectorscoords.append("Z")
 
     if vectorscoords:
-        logging.info("Adding vectors %s", str(vectorscoords))
+        logger.info("Adding vectors %s", str(vectorscoords))
         grid_df = grid_df.reset_index()
         trans_df = pd.merge(
             trans_df,
@@ -184,7 +187,7 @@ def df(
 
     if boundaryfilter:
         assert len(vectors) == 1
-        logging.info(
+        logger.info(
             "Filtering to transmissibilities crossing different %s values", vectors[0]
         )
         vec1 = vectors[0] + "1"
@@ -194,7 +197,7 @@ def df(
     if group:
         assert len(vectors) == 1  # This is checked above
         assert boundaryfilter
-        logging.info("Grouping transmissiblity over %s interfaces", str(vectors[0]))
+        logger.info("Grouping transmissiblity over %s interfaces", str(vectors[0]))
         vec1 = vectors[0] + "1"
         vec2 = vectors[0] + "2"
         pairname = vectors[0] + "PAIR"
@@ -231,7 +234,7 @@ def nx(eclfiles, region="FIPNUM"):
     try:
         import networkx
     except ImportError:
-        logging.error("Please install networkx for this function to work")
+        logger.error("Please install networkx for this function to work")
         return None
     trans_df = df(eclfiles, vectors=[region], coords=True, group=True)
     reg1 = region + "1"
@@ -296,7 +299,7 @@ def fill_parser(parser):
 def trans2df_main(args):
     """This is the command line API"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     trans_df = df(
         eclfiles,

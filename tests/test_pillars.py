@@ -309,6 +309,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
+        "-v",
         DATAFILE,
         "--rstdates",
         "all",

@@ -30,11 +30,14 @@ from .eclfiles import EclFiles
 
 from .common import merge_zones
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 
 def rstdates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
-    logging.info(
+    logger.info(
         "Restart report indices (count %s): %s",
         str(len(report_indices)),
         str(report_indices),
@@ -99,11 +102,11 @@ def dates2rstindices(eclfiles, dates):
         if not chosendates:
             raise ValueError("None of the requested dates were found")
         elif len(chosendates) < len(availabledates):
-            logging.warning("Not all dates found in UNRST\n")
+            logger.warning("Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")
 
-    logging.info(
+    logger.info(
         "Available dates (count %s) in RST: %s",
         str(len(availabledates)),
         str([x.isoformat() for x in availabledates]),
@@ -139,13 +142,13 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
         vectors = "*"  # This will include everything
     if not isinstance(vectors, list):
         vectors = [vectors]
-    logging.info("Extracting vectors %s from RST file", str(vectors))
+    logger.info("Extracting vectors %s from RST file", str(vectors))
 
     # First task is to determine the restart index to extract
     # data for:
     (rstindices, chosendates, isodates) = dates2rstindices(eclfiles, date)
 
-    logging.info("Extracting restart information at dates %s", str(isodates))
+    logger.info("Extracting restart information at dates %s", str(isodates))
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
@@ -161,7 +164,7 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
     # Note that all of these might not exist at all timesteps.
 
     if stackdates and dateinheaders:
-        logging.warning("Will not put date in headers when stackdates=True")
+        logger.warning("Will not put date in headers when stackdates=True")
         dateinheaders = False
 
     rst_dfs = {}
@@ -175,13 +178,13 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
                     present_rstvectors.append(vec)
             except IndexError:
                 pass
-        logging.info(
+        logger.info(
             "Present restart vectors at index %s: %s",
             str(rstindex),
             str(present_rstvectors),
         )
         if not present_rstvectors:
-            logging.warning("No restart vectors available at index %s", str(rstindex))
+            logger.warning("No restart vectors available at index %s", str(rstindex))
             continue
 
         # Make the dataframe
@@ -246,7 +249,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logging.info("Extracting grid geometry from %s", str(egrid_file))
+    logger.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 
@@ -267,7 +270,7 @@ def gridgeometry2df(eclfiles):
 
     zonemap = eclfiles.get_zonemap()
     if zonemap:
-        logging.info("Merging zonemap into grid")
+        logger.info("Merging zonemap into grid")
         grid_df = merge_zones(grid_df, zonemap, kname="K")
 
     return grid_df
@@ -305,7 +308,7 @@ def merge_initvectors(eclfiles, dframe, initvectors, ijknames=None):
         initvectors = [initvectors]
     assert isinstance(initvectors, list)
 
-    logging.info("Merging INIT data %s into dataframe", str(initvectors))
+    logger.info("Merging INIT data %s into dataframe", str(initvectors))
     ijkinit = df(eclfiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
     return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
@@ -324,7 +327,7 @@ def init2df(eclfiles, vectors=None):
         vectors = "*"  # This will include everything
     if not isinstance(vectors, list):
         vectors = [vectors]
-    logging.info("Extracting vectors %s from INIT file", str(vectors))
+    logger.info("Extracting vectors %s from INIT file", str(vectors))
 
     init = eclfiles.get_initfile()
     egrid = eclfiles.get_egrid()
@@ -491,7 +494,7 @@ def grid2df(eclfiles, vectors="*"):
 def main():
     """Entry-point for module, for command line utility. Deprecated to use
     """
-    logging.warning("eclgrid2csv is deprecated, use 'ecl2csv grid <args>' instead")
+    logger.warning("eclgrid2csv is deprecated, use 'ecl2csv grid <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -501,7 +504,7 @@ def main():
 def grid2df_main(args):
     """This is the command line API"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     grid_df = df(
         eclfiles,

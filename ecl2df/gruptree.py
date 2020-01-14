@@ -19,6 +19,9 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 # From: https://github.com/OPM/opm-common/blob/master/
 #       src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET
 GRUPNETKEYS = [
@@ -34,7 +37,7 @@ GRUPNETKEYS = [
 
 def gruptree2df(deck, startdate=None, welspecs=True):
     """Deprecated function name"""
-    logging.warning("Deprecated function name, gruptree2df")
+    logger.warning("Deprecated function name, gruptree2df")
     return deck2df(deck, startdate, welspecs)
 
 
@@ -81,10 +84,10 @@ def deck2df(deck, startdate=None, welspecs=True):
             # at every date with a change, not only the newfound edges.
             if currentedges and (found_gruptree or found_welspecs or found_grupnet):
                 if date is None:
-                    logging.warning(
+                    logger.warning(
                         "WARNING: No date parsed, maybe you should pass --startdate"
                     )
-                    logging.warning("         Using 1900-01-01")
+                    logger.warning("         Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
                 # Store all edges in dataframe at the previous date.
                 for edgename, value in currentedges.items():
@@ -116,14 +119,14 @@ def deck2df(deck, startdate=None, welspecs=True):
                     # Assuming not LAB units, then the unit is days.
                     days = sum(steplist)
                     if days <= 0:
-                        logging.critical("Invalid TSTEP, summed to %s days", str(days))
+                        logger.critical("Invalid TSTEP, summed to %s days", str(days))
                         return pd.DataFrame()
                     date += datetime.timedelta(days=days)
-                    logging.info(
+                    logger.info(
                         "Advancing %s days to %s through TSTEP", str(days), str(date)
                     )
             else:
-                logging.critical("BUG: Should not get here")
+                logger.critical("BUG: Should not get here")
                 return pd.DataFrame()
         if kword.name == "GRUPTREE":
             found_gruptree = True
@@ -257,6 +260,7 @@ def dict2treelib(name, nested_dict):
         treelib.Tree
     """
     import treelib
+
     tree = treelib.Tree()
     tree.create_node(name, name)
     for child in nested_dict.keys():
@@ -298,7 +302,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("gruptree2csv is deprecated, use 'ecl2csv compdat <args>' instead")
+    logger.warning("gruptree2csv is deprecated, use 'ecl2csv compdat <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -308,7 +312,7 @@ def main():
 def gruptree2df_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
@@ -323,7 +327,7 @@ def gruptree2df_main(args):
                 print(dict2treelib(rootname, tree[rootname]))
             print("")
     if dframe.empty:
-        logging.warning("Empty GRUPTREE dataframe being written to disk!")
+        logger.warning("Empty GRUPTREE dataframe being written to disk!")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL

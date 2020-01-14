@@ -28,7 +28,9 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import merge_zones
 
-# logging.basicConfig(level=logging.DEBUG)
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
 
 
 def _rftrecords2df(eclfiles):
@@ -48,7 +50,7 @@ def _rftrecords2df(eclfiles):
         method="ffill", inplace=True
     )  # forward fill (because any record is associated to the previous TIME record)
     rftrecords["timeindex"] = rftrecords["timeindex"].astype(int)
-    logging.info(
+    logger.info(
         "Located %s RFT records at %s distinct dates",
         str(len(rftrecords)),
         str(len(rftrecords["timeindex"].unique())),
@@ -82,7 +84,7 @@ def rft2df(eclfiles):
         well = rftfile[welletcidx][1].strip()
         wellmodel = rftfile[welletcidx][6].strip()  # MULTISEG or STANDARD
 
-        logging.info(
+        logger.info(
             "Extracting {} well {:>8} at {}, record index: {}".format(
                 wellmodel, well, date, timerecordidx
             )
@@ -98,7 +100,7 @@ def rft2df(eclfiles):
         if not numberofrows.empty:
             numberofrows = int(numberofrows)
         else:
-            logging.debug("Well %s has no data to extract at %s", str(well), str(date))
+            logger.debug("Well %s has no data to extract at %s", str(well), str(date))
             continue
 
         # These datatypes now align nicely into a matrix of numbers,
@@ -130,7 +132,7 @@ def rft2df(eclfiles):
             wellmodel == "MULTISEG"
             and not headers[headers["recordname"].str.startswith("SEG")].empty
         ):
-            logging.debug("Well %s is MULTISEG but has no SEG data", well)
+            logger.debug("Well %s is MULTISEG but has no SEG data", well)
             numberofrows = int(
                 headers[headers["recordname"] == "SEGDEPTH"]["recordlength"]
             )
@@ -314,7 +316,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("rft2csv is deprecated, use 'ecl2csv rft <args>' instead")
+    logger.warning("rft2csv is deprecated, use 'ecl2csv rft <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -324,8 +326,7 @@ def main():
 def rft2df_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.INFO)
+        logger.setLevel(logging.INFO)
     if args.DATAFILE.endswith(".RFT"):
         # Support the RFT file as an argument also:
         eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")

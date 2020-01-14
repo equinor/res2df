@@ -26,6 +26,9 @@ import pandas as pd
 from ecl2df import inferdims
 from .eclfiles import EclFiles
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 # Dictionary of Eclipse keywords that holds saturation data, with
 # lists of which datatypes they contain. The datatypes/names will
 # be used as column headers in returned dataframes.
@@ -42,7 +45,7 @@ KEYWORD_COLUMNS = {
 
 def deck2satfuncdf(deck):
     """Deprecated function, to be removed"""
-    logging.warning("Deprecated function name, deck2satfuncdf")
+    logger.warning("Deprecated function name, deck2satfuncdf")
     return deck2df(deck)
 
 
@@ -61,7 +64,7 @@ def inject_satnumcount(deckstr, satnumcount):
         str: New deck with TABDIMS prepended.
     """
     if "TABDIMS" in deckstr:
-        logging.warning("Not inserting TABDIMS in a deck where already exists")
+        logger.warning("Not inserting TABDIMS in a deck where already exists")
         return deckstr
     return "TABDIMS\n " + str(satnumcount) + " /\n\n" + str(deckstr)
 
@@ -96,10 +99,10 @@ def deck2df(deck, satnumcount=None):
     """
     if "TABDIMS" not in deck:
         if not isinstance(deck, str):
-            logging.critical(
+            logger.critical(
                 "Will not be able to guess NTSFUN from a parsed deck without TABDIMS."
             )
-            logging.critical(
+            logger.critical(
                 (
                     "Only data for first SATNUM will be returned."
                     "Instead, supply string to deck2df()"
@@ -109,7 +112,7 @@ def deck2df(deck, satnumcount=None):
         # If TABDIMS is in the deck, NTSFUN always has a value. It will
         # be set to 1 if defaulted.
         if not satnumcount:
-            logging.warning(
+            logger.warning(
                 "TABDIMS+NTSFUN or satnumcount not supplied. Will be guessed."
             )
             ntsfun_estimate = inferdims.guess_dim(deck, "TABDIMS", 0)
@@ -136,7 +139,7 @@ def deck2df(deck, satnumcount=None):
                 # Split up into the correct number of columns
                 column_count = len(KEYWORD_COLUMNS[keyword])
                 if len(data) % column_count:
-                    logging.error("Inconsistent data length or bug")
+                    logger.error("Inconsistent data length or bug")
                     return pd.DataFrame()
                 satpoints = int(len(data) / column_count)
                 dframe = pd.DataFrame(
@@ -152,7 +155,7 @@ def deck2df(deck, satnumcount=None):
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:
         return pd.concat(nonempty_frames, axis=0, sort=False)
-    logging.warning("No saturation data found in deck")
+    logger.warning("No saturation data found in deck")
     return pd.DataFrame()
 
 
@@ -179,7 +182,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
+    logger.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -189,7 +192,7 @@ def main():
 def satfunc2df_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -204,13 +207,13 @@ def satfunc2df_main(args):
         stringdeck = "".join(open(args.DATAFILE).readlines())
         satfunc_df = deck2df(stringdeck)
     if not satfunc_df.empty:
-        logging.info(
+        logger.info(
             "Unique satnums: %d, saturation keywords: %s",
             len(satfunc_df["SATNUM"].unique()),
             str(satfunc_df["KEYWORD"].unique()),
         )
     else:
-        logging.warning("Empty saturation function dataframe being written to disk!")
+        logger.warning("Empty saturation function dataframe being written to disk!")
     satfunc_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

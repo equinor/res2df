@@ -9,6 +9,10 @@ import logging
 import pandas as pd
 
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
+
 def parse_ecl_month(eclmonth):
     """Translate Eclipse month strings to integer months"""
     eclmonth2num = {
@@ -47,15 +51,15 @@ def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
     assert isinstance(kname, str)
     assert isinstance(df, pd.DataFrame)
     if not zonedict:
-        logging.warning("Can't merge in empty zone information")
+        logger.warning("Can't merge in empty zone information")
         return df
     if zoneheader in df:
-        logging.error(
+        logger.error(
             "Column name %s already exists, refusing to merge in any more", zoneheader
         )
         return df
     if kname not in df:
-        logging.error("Can't merge on non-existing column %s", kname)
+        logger.error("Can't merge on non-existing column %s", kname)
         return df
     zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
     zone_df.index.name = "K"
@@ -104,7 +108,7 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
         dframe = pd.DataFrame(dframe)
     tuplecolumns = list(map(lambda x: tuple(x.split(sep)), dframe.columns))
     if max(map(len, tuplecolumns)) < 2:
-        logging.info("No columns to stack")
+        logger.info("No columns to stack")
         return dframe
     dframe.columns = pd.MultiIndex.from_tuples(
         tuplecolumns, names=["dummy", stackcolname]

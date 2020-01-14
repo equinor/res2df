@@ -141,7 +141,7 @@ def test_mergegridframes():
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-eclgrid.csv")
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", str(tmpcsvfile), "--init", "PORO"]
+    sys.argv = ["eclgrid2csv", "-v", DATAFILE, "-o", str(tmpcsvfile), "--init", "PORO"]
     grid.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))

@@ -17,6 +17,9 @@ from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 # Default parse option to Sunbeam for a very permissive parsing
 SUNBEAM_RECOVERY = [
     ("PARSE_UNKNOWN_KEYWORD", sunbeam.action.ignore),
@@ -83,7 +86,7 @@ class EclFiles(object):
                 deckfile = self._eclbase + ".DATA"
             else:
                 deckfile = self._eclbase  # Will be any filename
-            logging.info("Parsing deck file %s...", deckfile)
+            logger.info("Parsing deck file %s...", deckfile)
             deck = sunbeam.deck.parse(deckfile, recovery=SUNBEAM_RECOVERY)
             self._deck = deck
         return self._deck
@@ -111,7 +114,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
-            logging.info("Opening grid data from EGRID file: %s", egridfilename)
+            logger.info("Opening grid data from EGRID file: %s", egridfilename)
             self._egrid = EclGrid(egridfilename)
         return self._egrid
 
@@ -125,7 +128,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
-            logging.info("Opening data vectors from EGRID file: %s", egridfilename)
+            logger.info("Opening data vectors from EGRID file: %s", egridfilename)
             self._egridfile = EclFile(egridfilename)
         return self._egridfile
 
@@ -145,7 +148,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
-            logging.info("Opening UNSMRY file: %s", smryfilename)
+            logger.info("Opening UNSMRY file: %s", smryfilename)
             self._eclsum = EclSum(smryfilename, include_restart=include_restart)
         return self._eclsum
 
@@ -157,7 +160,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), initfilename
                 )
-            logging.info("Opening INIT file: %s", initfilename)
+            logger.info("Opening INIT file: %s", initfilename)
             self._initfile = EclFile(initfilename)
         return self._initfile
 
@@ -169,7 +172,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), rftfilename
                 )
-            logging.info("Opening RFT file: %s", rftfilename)
+            logger.info("Opening RFT file: %s", rftfilename)
             self._rftfile = EclFile(rftfilename)
         return self._rftfile
 
@@ -181,7 +184,7 @@ class EclFiles(object):
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), rstfilename
                 )
-            logging.info("Opening RST file: %s", rstfilename)
+            logger.info("Opening RST file: %s", rstfilename)
             self._rstfile = EclFile(rstfilename)
         return self._rstfile
 
@@ -230,7 +233,7 @@ class EclFiles(object):
             if filename_defaulted:
                 # No warnings when the default filename is not there.
                 return {}
-            logging.warning("Zonefile %s not found, ignoring", fullpath)
+            logger.warning("Zonefile %s not found, ignoring", fullpath)
             return {}
 
         zonelines = open(fullpath).readlines()

@@ -15,10 +15,13 @@ import pandas as pd
 from ecl2df import inferdims
 from .eclfiles import EclFiles
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 
 def deck2equildf(deck):
     """Deprecated function name"""
-    logging.warning("Deprecated function name, deck2equildf")
+    logger.warning("Deprecated function name, deck2equildf")
     return deck2df(deck)
 
 
@@ -49,10 +52,10 @@ def deck2df(deck, ntequl=None):
     """
     if "EQLDIMS" not in deck:
         if not isinstance(deck, str):
-            logging.critical(
+            logger.critical(
                 "Will not be able to guess NTEQUL from a parsed deck without EQLDIMS."
             )
-            logging.critical(
+            logger.critical(
                 (
                     "Only data for the first EQUIL will be returned. "
                     "Instead, supply string to deck2df()"
@@ -60,7 +63,7 @@ def deck2df(deck, ntequl=None):
             )
             ntequl = 1
         if not ntequl:
-            logging.warning("EQLDIMS+NTEQUL or ntequl not supplied. Will be guessed")
+            logger.warning("EQLDIMS+NTEQUL or ntequl not supplied. Will be guessed")
             ntequl_estimate = inferdims.guess_dim(deck, "EQLDIMS", 0)
             augmented_strdeck = inferdims.inject_dimcount(
                 deck, "EQLDIMS", 0, ntequl_estimate
@@ -138,7 +141,7 @@ def deck2df(deck, ntequl=None):
         rowlist = [x[0] for x in rec]
         if len(rowlist) > len(columnnames):
             rowlist = rowlist[: len(columnnames)]
-            logging.warning(
+            logger.warning(
                 "Something wrong with columnnames " + "or EQUIL-data, data is chopped!"
             )
         records.append(rowlist)
@@ -170,7 +173,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("equil2csv is deprecated, use 'ecl2csv equil <args>' instead")
+    logger.warning("equil2csv is deprecated, use 'ecl2csv equil <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -180,13 +183,13 @@ def main():
 def equil2df_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     equil_df = deck2df(deck)
     if equil_df.empty:
-        logging.warning("Empty EQUIL-data being written to disk!")
+        logger.warning("Empty EQUIL-data being written to disk!")
     equil_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

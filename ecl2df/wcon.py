@@ -8,6 +8,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import sys
 import argparse
 import logging
 import datetime
@@ -25,11 +26,7 @@ WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 # Rename some of the sunbeam columns:
 COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
 
-
-def deck2wcondf(deck):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name, deck2wcondf")
-    return deck2df(deck)
+DEACTIVATED_MSG = "The wcon is deactivated pending upgrade in opm-common"
 
 
 def deck2df(deck):
@@ -40,6 +37,9 @@ def deck2df(deck):
     Return:
         pd.DataFrame
     """
+    logger.error(DEACTIVATED_MSG)
+    return pd.DataFrame()
+
     wconrecords = []  # List of dicts of every line in input file
     date = None  # DATE columns will always be there, but can contain NaN
     for kword in deck:
@@ -111,6 +111,8 @@ def main():
 
 def wcon2df_main(args):
     """Read from disk and write CSV back to disk"""
+    logger.error(DEACTIVATED_MSG)
+    sys.exit(1)
     if args.verbose:
         logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)

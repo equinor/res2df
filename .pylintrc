@@ -11,7 +11,7 @@ output-format=colorized
 ignore=_version.py,__init__.py,setup.py,versioneer.py,jobs.py
 
 [BASIC]
-good-names=df
+good-names=df,logger
 
 [FORMAT]
 max-line-length=88

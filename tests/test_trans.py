@@ -87,7 +87,7 @@ def test_nx(tmpdir):
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-trans.csv")
-    sys.argv = ["ecl2csv", "trans", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "trans", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))

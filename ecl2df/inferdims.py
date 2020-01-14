@@ -13,6 +13,9 @@ import opm.io
 
 from ecl2df import EclFiles
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 
 def guess_dim(deckstring, dimkeyword, dimitem=0):
     """Guess the correct dimension count for an incoming deck (string)
@@ -70,12 +73,10 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
             continue
             # If we get here, try another dimnumcount
     if dimcountguess == max_guess:
-        logging.warning(
+        logger.warning(
             "Unable to guess dim count for %s, or larger than %d", dimkeyword, max_guess
         )
-    logging.info(
-        "Guessed dimension count count for %s to %d", dimkeyword, dimcountguess
-    )
+    logger.info("Guessed dimension count count for %s to %d", dimkeyword, dimcountguess)
     return dimcountguess
 
 
@@ -105,7 +106,7 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
             raise ValueError("Only item 0 in EQLDIMS can be estimated")
 
     if dimkeyword in deckstr:
-        logging.warning("Not inserting %s in a deck where already exists", dimkeyword)
+        logger.warning("Not inserting %s in a deck where already exists", dimkeyword)
         return deckstr
     return (
         dimkeyword

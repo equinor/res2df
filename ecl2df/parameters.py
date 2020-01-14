@@ -8,8 +8,10 @@ import json
 import yaml
 import pandas as pd
 
-
 from ecl2df.eclfiles import EclFiles
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
 
 
 def find_parameter_files(ecldeck_or_eclpath, filebase="parameters"):
@@ -90,7 +92,7 @@ def load_all(filenames, warnduplicates=True):
         if warnduplicates and keyvalues:
             duplicates = set(keyvalues.keys()).intersection(set(new_params.keys()))
             if duplicates:
-                logging.debug("Duplicates keys %s", str(duplicates))
+                logger.debug("Duplicates keys %s", str(duplicates))
         new_params.update(keyvalues)
         keyvalues = new_params
     return keyvalues
@@ -108,38 +110,38 @@ def load(filename):
     params_dict = None
     yaml_error = ""
     try:
-        logging.debug("Trying to parse %s with yaml.safe_load()", filename)
+        logger.debug("Trying to parse %s with yaml.safe_load()", filename)
         params_dict = yaml.safe_load(open(filename))
-        logging.debug(" - ok, parsed as yaml")
+        logger.debug(" - ok, parsed as yaml")
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
     except Exception as yaml_error:
-        logging.debug("%s was not parseable with yaml, trying json.", filename)
+        logger.debug("%s was not parseable with yaml, trying json.", filename)
 
     json_error = ""
     if not params_dict:
         try:
-            logging.debug("Trying to parse %s with json.load()", filename)
+            logger.debug("Trying to parse %s with json.load()", filename)
             params_dict = json.load(open(filename))
             assert isinstance(params_dict, dict)
-            logging.debug(" - ok, parsed as yaml")
+            logger.debug(" - ok, parsed as yaml")
         except Exception as json_error:
-            logging.debug("%s was not parseable with json, trying txt.", filename)
+            logger.debug("%s was not parseable with json, trying txt.", filename)
 
     txt_error = ""
     if not params_dict:
         try:
-            logging.debug("Trying to parse %s as txt with pd.read_csv()", filename)
+            logger.debug("Trying to parse %s as txt with pd.read_csv()", filename)
             params_dict = load_parameterstxt(filename)
             assert isinstance(params_dict, dict)
-            logging.debug(" - ok, parsed as txt")
+            logger.debug(" - ok, parsed as txt")
         except Exception as txt_error:
-            logging.debug("%s wat not parseable as txt, no more options", filename)
+            logger.debug("%s wat not parseable as txt, no more options", filename)
 
     if not params_dict:
-        logging.warning("%s could not be parsed as yaml, json or txt", filename)
-        logging.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
+        logger.warning("%s could not be parsed as yaml, json or txt", filename)
+        logger.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
         raise ValueError("Could not parse {}".format(filename))
     else:
         # Filter to values that are NOT dict's. We can have dict as value when "grouped"

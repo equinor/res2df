@@ -7,7 +7,6 @@ from __future__ import print_function
 
 import os
 import sys
-import logging
 
 import pandas as pd
 import numpy as np
@@ -17,9 +16,6 @@ from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
-
-LOGGER = logging.getLogger("")
-LOGGER.setLevel(logging.DEBUG)
 
 
 def test_rftrecords2df():
@@ -68,6 +64,7 @@ def test_main_subparsers(tmpdir):
     sys.argv = [
         "ecl2cvsv",
         "rft",
+        "-v",
         DATAFILE.replace(".DATA", ".RFT"),
         "-o",
         str(tmpcsvfile),

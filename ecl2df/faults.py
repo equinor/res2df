@@ -16,6 +16,10 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_opmio_deckrecord
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
+
 RECORD_COLUMNS = ["NAME", "IX1", "IX2", "IY1", "IY2", "IZ1", "IZ2", "FACE"]
 COLUMNS = ["NAME", "I", "J", "K", "FACE"]
 ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
@@ -23,7 +27,7 @@ ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-
 
 def deck2faultsdf(deck):
     """Deprecated function name"""
-    logging.warning("Deprecated function name deck2faultsdf")
+    logger.warning("Deprecated function name deck2faultsdf")
     return deck2df(deck)
 
 
@@ -70,7 +74,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility
     """
-    logging.warning("faults2csv is deprecated, use 'ecl2csv faults <args>' instead")
+    logger.warning("faults2csv is deprecated, use 'ecl2csv faults <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
@@ -80,13 +84,13 @@ def main():
 def faults2df_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     faults_df = deck2df(deck)
     if faults_df.empty:
-        logging.warning("Empty FAULT data being written to disk!")
+        logger.warning("Empty FAULT data being written to disk!")
     faults_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
 

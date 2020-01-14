@@ -75,7 +75,7 @@ def test_nnc2df_faultnames():
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-nnc.csv")
-    sys.argv = ["ecl2csv", "nnc", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "nnc", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))

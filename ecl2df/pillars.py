@@ -17,6 +17,9 @@ import pandas as pd
 
 import ecl2df
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
 AGGREGATORS = {
     "VOLUME": "sum",
     "PORV": "sum",
@@ -95,17 +98,17 @@ def df(
     rstdates_iso = ecl2df.grid.dates2rstindices(eclfiles, rstdates)[2]
 
     grid_df["PILLAR"] = grid_df["I"].astype(str) + "-" + grid_df["J"].astype(str)
-    logging.info("Computing pillar statistics")
+    logger.info("Computing pillar statistics")
     groupbies = ["PILLAR"]
     if region:
         if region not in grid_df:
-            logging.warning("Region parameter %s not found, ignored", region)
+            logger.warning("Region parameter %s not found, ignored", region)
         else:
             groupbies.append(region)
             grid_df[region] = grid_df[region].astype(int)
 
     for datestr in rstdates_iso:
-        logging.info("Dynamic volumes for %s", datestr)
+        logger.info("Dynamic volumes for %s", datestr)
         volumes = compute_volumes(grid_df, datestr=datestr)
         grid_df = pd.concat([grid_df, volumes], axis="columns", sort=False)
 
@@ -243,9 +246,9 @@ def compute_pillar_contacts(
     epsilon_soil = 0.01
 
     if "SWAT" + atdatestr not in grid_df:
-        logging.warning("No saturation in grid data. No contacts computed")
+        logger.warning("No saturation in grid data. No contacts computed")
         return pd.DataFrame()
-    logging.info("Computing contacts pr. pillar")
+    logger.info("Computing contacts pr. pillar")
     groupbies = ["PILLAR"]
     if "PILLAR" not in grid_df:
         grid_df["PILLAR"] = grid_df["I"].astype(str) + "-" + grid_df["J"].astype(str)
@@ -263,7 +266,7 @@ def compute_pillar_contacts(
         .reset_index()
     )
     if soilcutoff and "SOIL" + atdatestr in grid_df:
-        logging.info(
+        logger.info(
             "Calculating oil-water-contacts based on SOILcutoff %s", str(soilcutoff)
         )
         owc = (
@@ -277,7 +280,7 @@ def compute_pillar_contacts(
         owc = pd.merge(waterpillars, owc, how="inner").drop("Z", axis="columns")
 
     if sgascutoff and "SGAS" + atdatestr in grid_df:
-        logging.info("Calculating gas-contacts based on gas cutoff %s", str(sgascutoff))
+        logger.info("Calculating gas-contacts based on gas cutoff %s", str(sgascutoff))
         if "SOIL" + atdatestr in grid_df and "SGAS" + atdatestr in grid_df:
             # Pillars to be used for GOC computation
             gocpillars = (
@@ -410,9 +413,7 @@ def fill_parser(parser):
 def main():
     """Entry-point for module, for command line utility. Deprecated to use
     """
-    logging.warning(
-        "oilcol2csv is deprecated, use 'ecl2csv pillarstats <args>' instead"
-    )
+    logger.warning("oilcol2csv is deprecated, use 'ecl2csv pillarstats <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     pillarstats_main(parser.parse_args())
@@ -421,7 +422,7 @@ def main():
 def pillarstats_main(args):
     """This is the command line API"""
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
     eclfiles = ecl2df.EclFiles(args.DATAFILE)
     dframe = df(
         eclfiles,
@@ -454,6 +455,6 @@ def pillarstats_main(args):
         signal(SIGPIPE, SIG_DFL)
         dframe.to_csv(sys.stdout, index=False)
     else:
-        logging.info("Writing output to disk")
+        logger.info("Writing output to disk")
         dframe.to_csv(args.output, index=False)
         print("Wrote to " + args.output)

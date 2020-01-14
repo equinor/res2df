@@ -261,7 +261,7 @@ def test_main(tmpdir):
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
-    sys.argv = ["ecl2csv", "compdat", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "compdat", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))

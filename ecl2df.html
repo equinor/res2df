@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
+  <title>ecl2df package &mdash; ecl2df v0.4.2+1.gf0bf4a8 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                v0.4.1+7.g163e3e2
+                v0.4.2+1.gf0bf4a8
               </div>
             
           
@@ -895,7 +895,7 @@ for merging in dframe. For compdat the ‘K’ is f.ex. denoted ‘K1’</p></li
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Object that can serve the EGRID and INIT files</p></li>
 <li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – List of vectors to include,
-glob-style wildcards supported</p></li>
+glob-style wildcards supported.</p></li>
 </ul>
 </dd>
 </dl>
@@ -903,7 +903,7 @@ glob-style wildcards supported</p></li>
 
 <dl class="function">
 <dt id="ecl2df.grid.df">
-<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors='*'</em>, <em class="sig-param">dropconstants=False</em>, <em class="sig-param">rstdates=None</em>, <em class="sig-param">dateinheaders=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">vectors='*'</em>, <em class="sig-param">dropconstants=False</em>, <em class="sig-param">rstdates=None</em>, <em class="sig-param">dateinheaders=False</em>, <em class="sig-param">stackdates=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a dataframe with grid information</p>
 <p>This is the “main” function for Python API users</p>
 <dl class="field-list simple">
@@ -917,8 +917,12 @@ INIT vectors and RESTART vectors.</p></li>
 for every cell are dropped.</p></li>
 <li><p><strong>rstdates</strong> (<em>list</em><em>, </em><em>str</em><em> or </em><em>datetime</em>) – Restart dates to include
 Mnenomics such as first and last are supported.</p></li>
-<li><p><strong>dateinheaders</strong> (<em>bool</em>) – Wheter columns with data from UNRST files
+<li><p><strong>dateinheaders</strong> (<em>bool</em>) – Whether columns with data from UNRST files
 should always have the ISO-date embedded in the column header.</p></li>
+<li><p><strong>stackdates</strong> (<em>bool</em>) – Default is false. If true, a column
+called DATE will be added and data for all restart
+dates will be added in a stacked manner. Implies
+dateinheaders False.</p></li>
 </ul>
 </dd>
 </dl>

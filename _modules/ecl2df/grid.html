@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.grid &mdash; ecl2df v0.4.1+7.g163e3e2 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df v0.4.2+1.gf0bf4a8 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.1+7.g163e3e2
+                v0.4.2+1.gf0bf4a8
               </div>
             
           
@@ -478,7 +478,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles (EclFiles): Object that can serve the EGRID and INIT files</span>
 <span class="sd">        vectors (str or list): List of vectors to include,</span>
-<span class="sd">            glob-style wildcards supported</span>
+<span class="sd">            glob-style wildcards supported.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vectors</span><span class="p">:</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>  <span class="c1"># This will include everything</span>
@@ -500,15 +500,18 @@
         <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PORV&quot;</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;PORV&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]):</span>
             <span class="n">include_porv</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">columns</span><span class="o">=</span><span class="n">usevectors</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">init</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpyView</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">usevectors</span>
-            <span class="p">]</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">usevectors</span><span class="p">:</span>
+        <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">usevectors</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">init</span><span class="o">.</span><span class="n">iget_named_kw</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpyView</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">usevectors</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>  <span class="c1"># empty</span>
 
     <span class="c1"># PORV is indexed by active_index, not global, needs special treatment:</span>
     <span class="k">if</span> <span class="n">include_porv</span><span class="p">:</span>
@@ -521,7 +524,14 @@
     <span class="k">return</span> <span class="n">init_df</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">dropconstants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">eclfiles</span><span class="p">,</span>
+    <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+    <span class="n">dropconstants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">rstdates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">stackdates</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
 
 <span class="sd">    This is the &quot;main&quot; function for Python API users</span>
@@ -535,15 +545,23 @@
 <span class="sd">            for every cell are dropped.</span>
 <span class="sd">        rstdates (list, str or datetime): Restart dates to include</span>
 <span class="sd">            Mnenomics such as first and last are supported.</span>
-<span class="sd">        dateinheaders (bool): Wheter columns with data from UNRST files</span>
+<span class="sd">        dateinheaders (bool): Whether columns with data from UNRST files</span>
 <span class="sd">            should always have the ISO-date embedded in the column header.</span>
+<span class="sd">        stackdates (bool): Default is false. If true, a column</span>
+<span class="sd">            called DATE will be added and data for all restart</span>
+<span class="sd">            dates will be added in a stacked manner. Implies</span>
+<span class="sd">            dateinheaders False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">)</span>
     <span class="n">rst_df</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">rstdates</span><span class="p">:</span>
         <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst2df</span><span class="p">(</span>
-            <span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="n">dateinheaders</span>
+            <span class="n">eclfiles</span><span class="p">,</span>
+            <span class="n">rstdates</span><span class="p">,</span>
+            <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">,</span>
+            <span class="n">dateinheaders</span><span class="o">=</span><span class="n">dateinheaders</span><span class="p">,</span>
+            <span class="n">stackdates</span><span class="o">=</span><span class="n">stackdates</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dropconstants</span><span class="p">:</span>

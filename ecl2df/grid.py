@@ -321,7 +321,7 @@ def init2df(eclfiles, vectors=None):
     Args:
         eclfiles (EclFiles): Object that can serve the EGRID and INIT files
         vectors (str or list): List of vectors to include,
-            glob-style wildcards supported
+            glob-style wildcards supported.
     """
     if not vectors:
         vectors = "*"  # This will include everything
@@ -343,15 +343,18 @@ def init2df(eclfiles, vectors=None):
         if vec[0] == "PORV" and any([fnmatch.fnmatch("PORV", key) for key in vectors]):
             include_porv = True
 
-    init_df = pd.DataFrame(
-        columns=usevectors,
-        data=np.hstack(
-            [
-                init.iget_named_kw(vec, 0).numpyView().reshape(-1, 1)
-                for vec in usevectors
-            ]
-        ),
-    )
+    if usevectors:
+        init_df = pd.DataFrame(
+            columns=usevectors,
+            data=np.hstack(
+                [
+                    init.iget_named_kw(vec, 0).numpyView().reshape(-1, 1)
+                    for vec in usevectors
+                ]
+            ),
+        )
+    else:
+        init_df = pd.DataFrame()  # empty
 
     # PORV is indexed by active_index, not global, needs special treatment:
     if include_porv:
@@ -364,7 +367,14 @@ def init2df(eclfiles, vectors=None):
     return init_df
 
 
-def df(eclfiles, vectors="*", dropconstants=False, rstdates=None, dateinheaders=False):
+def df(
+    eclfiles,
+    vectors="*",
+    dropconstants=False,
+    rstdates=None,
+    dateinheaders=False,
+    stackdates=False,
+):
     """Produce a dataframe with grid information
 
     This is the "main" function for Python API users
@@ -378,15 +388,23 @@ def df(eclfiles, vectors="*", dropconstants=False, rstdates=None, dateinheaders=
             for every cell are dropped.
         rstdates (list, str or datetime): Restart dates to include
             Mnenomics such as first and last are supported.
-        dateinheaders (bool): Wheter columns with data from UNRST files
+        dateinheaders (bool): Whether columns with data from UNRST files
             should always have the ISO-date embedded in the column header.
+        stackdates (bool): Default is false. If true, a column
+            called DATE will be added and data for all restart
+            dates will be added in a stacked manner. Implies
+            dateinheaders False.
     """
     gridgeom = gridgeometry2df(eclfiles)
     initdf = init2df(eclfiles, vectors=vectors)
     rst_df = None
     if rstdates:
         rst_df = rst2df(
-            eclfiles, rstdates, vectors=vectors, dateinheaders=dateinheaders
+            eclfiles,
+            rstdates,
+            vectors=vectors,
+            dateinheaders=dateinheaders,
+            stackdates=stackdates,
         )
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     if dropconstants:

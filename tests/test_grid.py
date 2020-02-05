@@ -138,6 +138,82 @@ def test_mergegridframes():
     )
 
 
+def test_df():
+    """Test the df function"""
+    eclfiles = EclFiles(DATAFILE)
+    # assert error..
+    with pytest.raises(TypeError):
+        grid.df()
+
+    grid_df = grid.df(eclfiles)
+    assert not grid_df.empty
+    assert "I" in grid_df  # From GRID
+    assert "PORO" in grid_df  # From INIT
+    assert "SOIL" not in grid_df  # We do not get RST unless we ask for it.
+
+    grid_df = grid.df(eclfiles, vectors="*")
+    assert "I" in grid_df  # From GRID
+    assert "PORO" in grid_df  # From INIT
+    assert "SOIL" not in grid_df  # We do not get RST unless we ask for it.
+
+    grid_df = grid.df(eclfiles, vectors=["*"])
+    assert "I" in grid_df  # From GRID
+    assert "PORO" in grid_df  # From INIT
+    assert "SOIL" not in grid_df  # We do not get RST unless we ask for it.
+
+    grid_df = grid.df(eclfiles, vectors="PRESSURE")
+    assert "I" in grid_df
+    assert "PRESSURE" not in grid_df  # that vector is only in RST
+    assert len(grid_df) == 35817
+    assert "VOLUME" in grid_df
+
+    grid_df = grid.df(eclfiles, vectors=["PRESSURE"])
+    assert "I" in grid_df
+    assert not grid_df.empty
+    assert "PRESSURE" not in grid_df
+    geometry_cols = len(grid_df.columns)
+
+    grid_df = grid.df(eclfiles, vectors=["PRESSURE"], rstdates="last", stackdates=True)
+    assert "PRESSURE" in grid_df
+    assert len(grid_df.columns) == geometry_cols + 2
+    assert "DATE" in grid_df  # awaits stacking
+
+    grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="last")
+    assert "PRESSURE" in grid_df
+    assert len(grid_df.columns) == geometry_cols + 1
+
+    grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="last", dateinheaders=True)
+    assert "PRESSURE" not in grid_df
+    assert "PRESSURE@2001-08-01" in grid_df
+
+    grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="all", stackdates=True)
+    assert "PRESSURE" in grid_df
+    assert len(grid_df.columns) == geometry_cols + 2
+    assert "DATE" in grid_df
+    assert len(grid_df["DATE"].unique()) == 4
+
+    grid_df = grid.df(eclfiles, vectors="PORO")
+    assert "I" in grid_df
+    assert "PORO" in grid_df
+    assert len(grid_df) == 35817
+    assert "DATE" not in grid_df
+
+    grid_df = grid.df(eclfiles, vectors="PORO", rstdates="all")
+    assert "I" in grid_df
+    assert "PORO" in grid_df
+    assert "DATE" not in grid_df
+    # (no RST columns, so no DATE info in the daaframe)
+    # (warnings should be printed)
+
+    grid_df = grid.df(eclfiles, vectors="PORO", rstdates="all", stackdates=True)
+    assert "I" in grid_df
+    assert "PORO" in grid_df
+    assert "DATE" not in grid_df
+    # DATE is not included as it really does not make sense. The code
+    # could have multiplied up the static dataframe each tagged with a date
+    # but not for now.
+
+
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-eclgrid.csv")
@@ -250,7 +326,6 @@ def test_rst2df():
     assert "SOIL" in rst_df  # This is actually computed
     assert "FIPWAT" not in rst_df
 
-    # Test more vectors:
     rst_df = grid.rst2df(eclfiles, "first", vectors=["PRESSURE", "SWAT"])
     assert "PRESSURE" in rst_df
     assert "SWAT" in rst_df

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df v0.4.2+1.gf0bf4a8 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df v0.4.2+2.ge322015 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.2+1.gf0bf4a8
+                v0.4.2+2.ge322015
               </div>
             
           
@@ -211,6 +211,10 @@
 <span class="sd">    with the new date.</span>
 
 <span class="sd">    startdate is only relevant when START is not in the deck.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame - with one row pr edge. Empty dataframe</span>
+<span class="sd">            if no information is found in deck.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">startdate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -476,15 +480,16 @@
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">(),</span> <span class="n">startdate</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">startdate</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Date: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;M8[D]&quot;</span><span class="p">)))</span>
-            <span class="n">trees</span> <span class="o">=</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
-                <span class="n">rootname</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">dict2treelib</span><span class="p">(</span><span class="n">rootname</span><span class="p">,</span> <span class="n">tree</span><span class="p">[</span><span class="n">rootname</span><span class="p">]))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty GRUPTREE dataframe being written to disk!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Date: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;M8[D]&quot;</span><span class="p">)))</span>
+                <span class="n">trees</span> <span class="o">=</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+                    <span class="n">rootname</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">dict2treelib</span><span class="p">(</span><span class="n">rootname</span><span class="p">,</span> <span class="n">tree</span><span class="p">[</span><span class="n">rootname</span><span class="p">]))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No tree data to prettyprint&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
         <span class="c1"># Ignore pipe errors when writing to stdout.</span>
         <span class="kn">from</span> <span class="nn">signal</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
@@ -492,12 +497,14 @@
         <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty GRUPTREE dataframe being written to disk!&quot;</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">startdate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Main function for Python API users. Wraps deck2df, check doc there.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">(),</span> <span class="n">startdate</span><span class="o">=</span><span class="n">startdate</span><span class="p">)</span></div>
 </pre></div>
 

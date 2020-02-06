@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df v0.4.2+1.gf0bf4a8 documentation</title>
+  <title>ecl2df package &mdash; ecl2df v0.4.2+2.ge322015 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                v0.4.2+1.gf0bf4a8
+                v0.4.2+2.ge322015
               </div>
             
           
@@ -1019,6 +1019,15 @@ GRUPTREE or WELSPECS.</p>
 and a new complete tree is added to the dataframe tagged
 with the new date.</p>
 <p>startdate is only relevant when START is not in the deck.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>pd.DataFrame - with one row pr edge. Empty dataframe</dt><dd><p>if no information is found in deck.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -1104,7 +1113,7 @@ object. This function is recursive</p>
 <dl class="function">
 <dt id="ecl2df.gruptree.df">
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">eclfiles</em>, <em class="sig-param">startdate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function for Python API users</p>
+<dd><p>Main function for Python API users. Wraps deck2df, check doc there.</p>
 </dd></dl>
 
 </div>

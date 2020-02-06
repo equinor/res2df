@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.pillars &mdash; ecl2df v0.4.2+2.ge322015 documentation</title>
+  <title>ecl2df.pillars &mdash; ecl2df v0.4.2+4.g6768445 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.2+2.ge322015
+                v0.4.2+4.g6768445
               </div>
             
           
@@ -596,7 +596,7 @@
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dframe</span>
         <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">AGGREGATORS</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
         <span class="n">groupbies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">stackdates</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
         <span class="n">groupbies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>

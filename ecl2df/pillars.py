@@ -439,7 +439,7 @@ def pillarstats_main(args):
         for key in dframe
         if key.split("@")[0] in AGGREGATORS
     }
-    if args.region:
+    if args.region and args.group:
         groupbies.append(args.region)
     if args.stackdates and args.group:
         groupbies.append("DATE")

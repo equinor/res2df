@@ -163,7 +163,9 @@ def test_main(tmpdir):
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
     assert not disk_df.empty
+    assert len(disk_df) == 2560
 
+    # Group over every pillar, no matter what FIPNUM. One single row output
     sys.argv = [
         "ecl2csv",
         "pillars",
@@ -177,12 +179,30 @@ def test_main(tmpdir):
     ecl2csv.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
-    assert "PILLAR" not in disk_df  # because of region averaging
+    assert "PILLAR" not in disk_df  # because of grouping
     assert "FIPNUM" not in disk_df
     assert "EQLNUM" not in disk_df
     # We are getting a single row only
     assert len(disk_df) == 1
     assert not disk_df.empty
+
+    # Pillars pr region, but no grouping
+    sys.argv = [
+        "ecl2csv",
+        "pillars",
+        DATAFILE,
+        "--region",
+        "FIPNUM",
+        "-o",
+        str(tmpcsvfile),
+    ]
+    ecl2csv.main()
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
+    assert "PILLAR" in disk_df
+    assert "FIPNUM" in disk_df
+    assert "EQLNUM" not in disk_df
+    assert len(disk_df) == 7675
 
     # Group pr. FIPNUM:
     sys.argv = [
@@ -198,8 +218,8 @@ def test_main(tmpdir):
     ecl2csv.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
-    assert "PILLAR" not in disk_df  # because of region averaging
-    assert "FIPNUM" in disk_df
+    assert "PILLAR" not in disk_df  # because of grouping
+    assert "FIPNUM" in disk_df  # grouped by this.
     assert len(disk_df) == 6
 
     # Test dates:
@@ -305,7 +325,7 @@ def test_main(tmpdir):
     assert "DATE" in disk_df
     assert len(disk_df) == 4
 
-    # Test stacked dates:
+    # Test stacked dates, no grouping:
     sys.argv = [
         "ecl2csv",
         "pillars",
@@ -321,12 +341,12 @@ def test_main(tmpdir):
     ecl2csv.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
-    assert "PILLAR" not in disk_df  # because of region averaging
+    assert "PILLAR" in disk_df
     assert "FIPNUM" in disk_df
     assert "WATVOL@2001-02-01" not in disk_df
     assert "WATVOL" in disk_df
     assert "DATE" in disk_df
-    assert len(disk_df) == 4
+    assert len(disk_df) == 30700
 
     # Test stacked dates but with grouping only on pillars
     sys.argv = [
@@ -352,4 +372,4 @@ def test_main(tmpdir):
     assert "WATVOL" in disk_df
     assert "OILVOL" in disk_df
     assert "DATE" in disk_df
-    assert len(disk_df) > 100
+    assert len(disk_df) == 10240 == 2560 * len(disk_df["DATE"].unique())

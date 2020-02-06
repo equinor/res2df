@@ -54,7 +54,7 @@ for requested vectors.
 Extracts grid data from `.INIT` and `.EGRID` and `.UNRST` files. Restart file
 are optional to extract, and dates must be picked (or all). Data is
 merged into one DataFrame by the `i`, `j` and `k` indices. Bulk cell
-volume is included.
+volume is included. Cells are indexed as in Eclipse, starting with 1.
 
 ``nnc``
 ^^^^^^^

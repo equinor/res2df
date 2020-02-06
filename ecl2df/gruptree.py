@@ -54,6 +54,10 @@ def deck2df(deck, startdate=None, welspecs=True):
     with the new date.
 
     startdate is only relevant when START is not in the deck.
+
+    Returns:
+        pd.DataFrame - with one row pr edge. Empty dataframe
+            if no information is found in deck.
     """
 
     if startdate is not None:
@@ -319,15 +323,16 @@ def gruptree2df_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     dframe = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
-        for date in dframe["DATE"].dropna().unique():
-            print("Date: " + str(date.astype("M8[D]")))
-            trees = gruptreedf2dict(dframe[dframe["DATE"] == date])
-            for tree in trees:
-                rootname = tree.keys()[0]
-                print(dict2treelib(rootname, tree[rootname]))
-            print("")
-    if dframe.empty:
-        logger.warning("Empty GRUPTREE dataframe being written to disk!")
+        if "DATE" in dframe:
+            for date in dframe["DATE"].dropna().unique():
+                print("Date: " + str(date.astype("M8[D]")))
+                trees = gruptreedf2dict(dframe[dframe["DATE"] == date])
+                for tree in trees:
+                    rootname = tree.keys()[0]
+                    print(dict2treelib(rootname, tree[rootname]))
+                print("")
+        else:
+            logger.warning("No tree data to prettyprint")
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
         from signal import signal, SIGPIPE, SIG_DFL
@@ -335,10 +340,12 @@ def gruptree2df_main(args):
         signal(SIGPIPE, SIG_DFL)
         dframe.to_csv(sys.stdout, index=False)
     elif args.output:
+        if dframe.empty:
+            logger.warning("Empty GRUPTREE dataframe being written to disk!")
         dframe.to_csv(args.output, index=False)
         print("Wrote to " + args.output)
 
 
 def df(eclfiles, startdate=None):
-    """Main function for Python API users"""
+    """Main function for Python API users. Wraps deck2df, check doc there."""
     return deck2df(eclfiles.get_ecldeck(), startdate=startdate)

@@ -305,6 +305,29 @@ def test_main(tmpdir):
     assert "DATE" in disk_df
     assert len(disk_df) == 4
 
+    # Test stacked dates:
+    sys.argv = [
+        "ecl2csv",
+        "pillars",
+        DATAFILE,
+        "--region",
+        "FIPNUM",
+        "--rstdates",
+        "all",
+        "--stackdates",
+        "-o",
+        str(tmpcsvfile),
+    ]
+    ecl2csv.main()
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
+    assert "PILLAR" not in disk_df  # because of region averaging
+    assert "FIPNUM" in disk_df
+    assert "WATVOL@2001-02-01" not in disk_df
+    assert "WATVOL" in disk_df
+    assert "DATE" in disk_df
+    assert len(disk_df) == 4
+
     # Test stacked dates but with grouping only on pillars
     sys.argv = [
         "ecl2csv",

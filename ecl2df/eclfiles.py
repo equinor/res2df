@@ -58,6 +58,12 @@ class EclFiles(object):
         # eclbase might be a a Posix path object
         eclbase = str(eclbase)
 
+        # Hint about possible wrong filenames:
+        if ".DATA" in eclbase and not os.path.exists(eclbase):
+            logger.warning("File %s does not exist", eclbase)
+            # (this is not an error, because it is possible
+            # to obtain summary without the DATA file being present)
+
         # Strip .DATA or . at end of eclbase:
         eclbase = rreplace(".DATA", "", eclbase)
         eclbase = rreplace(".", "", eclbase)

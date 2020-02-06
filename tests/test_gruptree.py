@@ -84,6 +84,19 @@ GRUPNET
     assert 100 in grupdf["TERMINAL_PRESSURE"].values
 
 
+def test_emptytree():
+    """Test empty schedule sections. Don't want to crash"""
+    schstr = ""
+    deck = EclFiles.str2deck(schstr)
+    grupdf = gruptree.deck2df(deck)
+    assert grupdf.empty
+    gruptreedict = gruptree.gruptreedf2dict(grupdf)
+    assert not gruptreedict
+    treelibtree = gruptree.dict2treelib("", gruptreedict)
+    treestring = str(treelibtree)
+    assert not treestring.strip()  # Let it return whitespace
+
+
 def test_tstep():
     schstr = """
 GRUPTREE

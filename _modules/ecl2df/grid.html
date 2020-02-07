@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.grid &mdash; ecl2df v0.4.2+4.g6768445 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df v0.4.2+5.ga378f8e documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.2+4.g6768445
+                v0.4.2+5.ga378f8e
               </div>
             
           
@@ -534,7 +534,10 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
 
-<span class="sd">    This is the &quot;main&quot; function for Python API users</span>
+<span class="sd">    Grid information (center coordinates x, y, z), cell</span>
+<span class="sd">    indices (i, j, k) (indices follow the Eclipse convention starting</span>
+<span class="sd">    at 1, not zero as in libecl), properties from INIT, and optionally</span>
+<span class="sd">    any time dependent data from Restart files.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles (EclFiles): Handle to an Eclipse case</span>

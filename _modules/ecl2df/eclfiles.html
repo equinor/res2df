@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.eclfiles &mdash; ecl2df v0.4.2+5.ga378f8e documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df v0.4.2+6.g39712cd documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.2+5.ga378f8e
+                v0.4.2+6.g39712cd
               </div>
             
           
@@ -214,6 +214,12 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">):</span>
         <span class="c1"># eclbase might be a a Posix path object</span>
         <span class="n">eclbase</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
+
+        <span class="c1"># Hint about possible wrong filenames:</span>
+        <span class="k">if</span> <span class="s2">&quot;.DATA&quot;</span> <span class="ow">in</span> <span class="n">eclbase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">eclbase</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> does not exist&quot;</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
+            <span class="c1"># (this is not an error, because it is possible</span>
+            <span class="c1"># to obtain summary without the DATA file being present)</span>
 
         <span class="c1"># Strip .DATA or . at end of eclbase:</span>
         <span class="n">eclbase</span> <span class="o">=</span> <span class="n">rreplace</span><span class="p">(</span><span class="s2">&quot;.DATA&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>

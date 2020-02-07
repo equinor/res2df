@@ -377,7 +377,10 @@ def df(
 ):
     """Produce a dataframe with grid information
 
-    This is the "main" function for Python API users
+    Grid information (center coordinates x, y, z), cell
+    indices (i, j, k) (indices follow the Eclipse convention starting
+    at 1, not zero as in libecl), properties from INIT, and optionally
+    any time dependent data from Restart files.
 
     Args:
         eclfiles (EclFiles): Handle to an Eclipse case

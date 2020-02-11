@@ -27,11 +27,25 @@ from ecl2df import (
     compdat,
 )
 
+from ._version import get_versions
+
+__version__ = get_versions()["version"]
+del get_versions
+
 
 def get_parser():
     """Make parser"""
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "ecl2csv (" + __version__ + ") is a command line frontend to ecl2df. "
+            "Documentation at https://equinor.github.io/ecl2df/ "
+        ),
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s {version}".format(version=__version__),
     )
     subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
 

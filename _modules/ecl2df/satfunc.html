@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.satfunc &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -209,7 +209,7 @@
 <div class="viewcode-block" id="inject_satnumcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.inject_satnumcount">[docs]</a><span class="k">def</span> <span class="nf">inject_satnumcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">,</span> <span class="n">satnumcount</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
 
-<span class="sd">    This is simple string manipulation, not sunbeam</span>
+<span class="sd">    This is simple string manipulation, not OPM</span>
 <span class="sd">    deck manipulation (which might be possible to do).</span>
 
 <span class="sd">    Arguments:</span>
@@ -244,7 +244,7 @@
 <span class="sd">    returning the first function by default).</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deck (sunbeam.deck or str): Incoming data deck. Always</span>
+<span class="sd">        deck (opm.io deck or str): Incoming data deck. Always</span>
 <span class="sd">            supply as a string if you don&#39;t know TABDIMS-NTSFUN.</span>
 <span class="sd">        satnumcount (int): Number of SATNUMs defined in the deck, only</span>
 <span class="sd">            needed if TABDIMS with NTSFUN is not found in the deck.</span>
@@ -292,7 +292,7 @@
             <span class="n">satnum</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">for</span> <span class="n">deckrecord</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="n">keyword</span><span class="p">]:</span>
                 <span class="c1"># All data for an entire SATNUM is returned in one list</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_raw_data_list</span><span class="p">())</span>
                 <span class="c1"># Split up into the correct number of columns</span>
                 <span class="n">column_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">KEYWORD_COLUMNS</span><span class="p">[</span><span class="n">keyword</span><span class="p">])</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="n">column_count</span><span class="p">:</span>

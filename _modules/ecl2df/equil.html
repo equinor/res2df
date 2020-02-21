@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.equil &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -171,6 +171,7 @@
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">inferdims</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_opmio_deckrecord</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -192,14 +193,14 @@
 <span class="sd">    dataframe.</span>
 
 <span class="sd">    If ntequil is not supplied and EQLDIMS is not in the deck, the</span>
-<span class="sd">    equil data is not well defined in terms of sunbeam. This means</span>
+<span class="sd">    equil data is not well defined in terms of OPM. This means</span>
 <span class="sd">    that we have to infer the correct number of EQUIL lines from what</span>
-<span class="sd">    gives us successful parsing from sunbeam. In those cases, the</span>
+<span class="sd">    gives us successful parsing from OPM. In those cases, the</span>
 <span class="sd">    deck must be supplied as a string, if not, extra EQUIL lines</span>
-<span class="sd">    are possibly already removed by the sunbeam parser in eclfiles.str2deck().</span>
+<span class="sd">    are possibly already removed by the OPM parser in eclfiles.str2deck().</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deck (sunbeam.deck or str): Eclipse deck or string with deck. If</span>
+<span class="sd">        deck (opm.io deck or str): Eclipse deck or string with deck. If</span>
 <span class="sd">           not string, EQLDIMS must be present in the deck.</span>
 <span class="sd">        ntequil (int): If not None, should state the NTEQUL in EQLDIMS. If</span>
 <span class="sd">            None and EQLDIMS is not present, it will be inferred.</span>
@@ -235,59 +236,59 @@
     <span class="n">phasecount</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">])</span>
     <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># oil-water-gas</span>
-        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;INITRS&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;INITRV&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
+        <span class="n">columnrenamer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;INITRS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;INITRV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
     <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># gas-water</span>
-        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GWC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PCGWC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
+        <span class="n">columnrenamer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;GWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
     <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># oil-water</span>
-        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
+        <span class="n">columnrenamer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
     <span class="k">if</span> <span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># oil-gas</span>
-        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
+        <span class="n">columnrenamer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;GOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PC_GOC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGOC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;BLACK_OIL_INIT_WG&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
     <span class="k">if</span> <span class="n">phasecount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">columnnames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">columnnames</span><span class="p">:</span>
+        <span class="n">columnrenamer</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span> <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">columnrenamer</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported phase configuration&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;EQUIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -295,15 +296,10 @@
 
     <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">]:</span>
-        <span class="n">rowlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rec</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnnames</span><span class="p">):</span>
-            <span class="n">rowlist</span> <span class="o">=</span> <span class="n">rowlist</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnnames</span><span class="p">)]</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Something wrong with columnnames &quot;</span> <span class="o">+</span> <span class="s2">&quot;or EQUIL-data, data is chopped!&quot;</span>
-            <span class="p">)</span>
-        <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rowlist</span><span class="p">)</span>
+        <span class="n">equil_recdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">columnrenamer</span><span class="p">)</span>
+        <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">equil_recdict</span><span class="p">)</span>
 
-    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columnnames</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">)</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">)</span>
 
     <span class="c1"># The column handling can be made prettier..</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>

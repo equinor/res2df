@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.wcon &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df.wcon &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -165,97 +165,78 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_opmio_date_rec</span><span class="p">,</span> <span class="n">OPMKEYWORDS</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="c1"># The record keys are all taken from the OPM source code:</span>
-<span class="c1"># https://github.com/OPM/opm-common/blob/master/</span>
-<span class="c1">#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WCONHIST etc.</span>
+<span class="c1"># The keywords supported in this module.</span>
+<span class="n">WCONKEYS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;WCONHIST&quot;</span><span class="p">,</span> <span class="s2">&quot;WCONINJE&quot;</span><span class="p">,</span> <span class="s2">&quot;WCONINJH&quot;</span><span class="p">,</span> <span class="s2">&quot;WCONPROD&quot;</span><span class="p">]</span>
 
-<span class="n">RECORD_KEYS</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">RECORD_KEYS</span><span class="p">[</span><span class="s2">&quot;WCONHIST&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;STATUS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CMODE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ORAT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;WRAT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VFPTable&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Lift&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;THP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BHP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NGLRAT&quot;</span><span class="p">,</span>
-<span class="p">]</span>  <span class="c1"># Note that the non-all-uppercase names here will be renamed.</span>
-
-<span class="n">RECORD_KEYS</span><span class="p">[</span><span class="s2">&quot;WCONINJE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TYPE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;STATUS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CMODE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RATE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RESV&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BHP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;THP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VFP_TABLE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VAPOIL_C&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GAS_STEAM_RATIO&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SURFACE_OIL_FRACTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SURFACE_WATER_FRACTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SURFACE_GAS_FRACTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;OIL_STEAM_RATIO&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
-<span class="n">RECORD_KEYS</span><span class="p">[</span><span class="s2">&quot;WCONINJH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TYPE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;STATUS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CMODE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RATE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RESV&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BHP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;THP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VFP_TABLE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VAPOIL_C&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GAS_STEAM_RATIO&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SURFACE_OIL_FRACTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SURFACE_WATER_FRACTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SURFACE_GAS_FRACTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;OIL_STEAM_RATIO&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
-
-<span class="n">RECORD_KEYS</span><span class="p">[</span><span class="s2">&quot;WCONPROD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;STATUS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CMODE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ORAT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;WRAT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GRAT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;LRAT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RESV&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BHP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;THP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VFP_TABLE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ALQ&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM13&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM14&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM15&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM16&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM17&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM18&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM19&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;E300_ITEM20&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
-<span class="c1"># Rename some of the sunbeam columns:</span>
+<span class="c1"># Rename some of the opm-common column names:</span>
 <span class="n">COLUMN_RENAMER</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;VFPTable&quot;</span><span class="p">:</span> <span class="s2">&quot;VFP_TABLE&quot;</span><span class="p">,</span> <span class="s2">&quot;Lift&quot;</span><span class="p">:</span> <span class="s2">&quot;ALQ&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="unroll_defaulted_items"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.unroll_defaulted_items">[docs]</a><span class="k">def</span> <span class="nf">unroll_defaulted_items</span><span class="p">(</span><span class="n">itemlist</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Expand list if list contains &lt;int&gt;* string elements</span>
+
+<span class="sd">    so [&#39;a&#39;, &#39;2*&#39;, &#39;b&#39;] becomes [&#39;a&#39;, &#39;1*&#39;, &#39;1*&#39;, &#39;b&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">multipledefaults_matcher</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)\*&quot;</span><span class="p">)</span>
+    <span class="n">unrolled_items</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">itemlist</span><span class="p">:</span>
+        <span class="n">def_matches</span> <span class="o">=</span> <span class="n">multipledefaults_matcher</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">def_matches</span><span class="p">:</span>
+            <span class="n">unrolled_items</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;1*&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">def_matches</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unrolled_items</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">item</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">unrolled_items</span></div>
+
+
+<div class="viewcode-block" id="ad_hoc_wconparser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.ad_hoc_wconparser">[docs]</a><span class="k">def</span> <span class="nf">ad_hoc_wconparser</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">keyword</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is a band-aid solution awaiting support for UDA-values in opm-common</span>
+
+<span class="sd">    Replace this with common.parse_opmio_deckrecord when ready.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        record (str): a string representation of a record with wcon data</span>
+<span class="sd">        keyword (str): The E100 keyword this record is valid for.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">WCONKEYS</span>  <span class="c1"># Avoid using this function for too much else.</span>
+    <span class="n">rec_items</span> <span class="o">=</span> <span class="n">unroll_defaulted_items</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+    <span class="n">meta_and_data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">],</span> <span class="n">rec_items</span><span class="p">)</span>
+    <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">meta_and_data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">itemname</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;value_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uda&quot;</span><span class="p">,</span> <span class="s2">&quot;double&quot;</span><span class="p">]:</span>
+            <span class="n">dataconv</span> <span class="o">=</span> <span class="nb">float</span>
+        <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;value_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">]:</span>
+            <span class="n">dataconv</span> <span class="o">=</span> <span class="nb">int</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dataconv</span> <span class="o">=</span> <span class="nb">str</span>
+        <span class="k">if</span> <span class="n">itemname</span> <span class="ow">in</span> <span class="n">COLUMN_RENAMER</span><span class="p">:</span>
+            <span class="n">itemname</span> <span class="o">=</span> <span class="n">COLUMN_RENAMER</span><span class="p">[</span><span class="n">itemname</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1*&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">rec_dict</span><span class="p">[</span><span class="n">itemname</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataconv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;default&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rec_dict</span><span class="p">[</span><span class="n">itemname</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rec_dict</span><span class="p">[</span><span class="n">itemname</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataconv</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">rec_dict</span></div>
 
 
 <div class="viewcode-block" id="deck2wcondf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.deck2wcondf">[docs]</a><span class="k">def</span> <span class="nf">deck2wcondf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
@@ -277,34 +258,25 @@
     <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">day</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;DAY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+                <span class="n">date</span> <span class="o">=</span> <span class="n">parse_opmio_date_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">date</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use TSTEP when there is no start_date&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_raw_data_list</span><span class="p">()</span>
                 <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                 <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
                 <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
                 <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">RECORD_KEYS</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">WCONKEYS</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside WCON* record</span>
-                <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">ad_hoc_wconparser</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span>
-                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">RECORD_KEYS</span><span class="p">[</span><span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
-                            <span class="n">rec_data</span><span class="p">[</span><span class="n">rec_key</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="k">pass</span>
                 <span class="n">wconrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>

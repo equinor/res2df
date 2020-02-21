@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -174,22 +174,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_opmio_date_rec</span><span class="p">,</span> <span class="n">parse_opmio_deckrecord</span><span class="p">,</span> <span class="n">parse_opmio_tstep_rec</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
-<span class="c1"># From: https://github.com/OPM/opm-common/blob/master/</span>
-<span class="c1">#       src/opm/parser/eclipse/share/keywords/000_Eclipse100/G/GRUPNET</span>
-<span class="n">GRUPNETKEYS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;NAME&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TERMINAL_PRESSURE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VFP_TABLE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ALQ&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SUB_SEA_MANIFOLD&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;LIFT_GAS_FLOW_THROUGH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ALQ_SURFACE_EQV&quot;</span><span class="p">,</span>
-<span class="p">]</span>
 
 
 <div class="viewcode-block" id="gruptree2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptree2df">[docs]</a><span class="k">def</span> <span class="nf">gruptree2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">startdate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">welspecs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -268,15 +256,11 @@
             <span class="c1"># date:</span>
             <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                    <span class="n">day</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;DAY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span>
-                        <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span>
-                    <span class="p">)</span>
+                    <span class="n">date</span> <span class="o">=</span> <span class="n">parse_opmio_date_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                    <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">steplist</span> <span class="o">=</span> <span class="n">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
                     <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                     <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">days</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
@@ -292,25 +276,19 @@
         <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span>
             <span class="n">found_gruptree</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">edgerec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">child</span> <span class="o">=</span> <span class="n">edgerec</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">parent</span> <span class="o">=</span> <span class="n">edgerec</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">currentedges</span><span class="p">[(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;GRUPTREE&quot;</span>
+                <span class="n">edge_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">edgerec</span><span class="p">,</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">)</span>
+                <span class="n">currentedges</span><span class="p">[</span>
+                    <span class="p">(</span><span class="n">edge_dict</span><span class="p">[</span><span class="s2">&quot;CHILD_GROUP&quot;</span><span class="p">],</span> <span class="n">edge_dict</span><span class="p">[</span><span class="s2">&quot;PARENT_GROUP&quot;</span><span class="p">])</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GRUPTREE&quot;</span>
         <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSPECS&quot;</span> <span class="ow">and</span> <span class="n">welspecs</span><span class="p">:</span>
             <span class="n">found_welspecs</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">wellrec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">wellname</span> <span class="o">=</span> <span class="n">wellrec</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">group</span> <span class="o">=</span> <span class="n">wellrec</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">currentedges</span><span class="p">[(</span><span class="n">wellname</span><span class="p">,</span> <span class="n">group</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;WELSPECS&quot;</span>
+                <span class="n">wspc_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">wellrec</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">)</span>
+                <span class="n">currentedges</span><span class="p">[(</span><span class="n">wspc_dict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">],</span> <span class="n">wspc_dict</span><span class="p">[</span><span class="s2">&quot;GROUP&quot;</span><span class="p">])]</span> <span class="o">=</span> <span class="s2">&quot;WELSPECS&quot;</span>
         <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">:</span>
             <span class="n">found_grupnet</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">grupnet_data</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">GRUPNETKEYS</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
-                            <span class="n">grupnet_data</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="k">pass</span>
+                <span class="n">grupnet_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">)</span>
                 <span class="n">grupnetrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grupnet_data</span><span class="p">)</span>
             <span class="n">grupnet_df</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">grupnetrecords</span><span class="p">)</span>

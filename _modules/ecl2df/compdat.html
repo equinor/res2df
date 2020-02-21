@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -170,100 +170,39 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span><span class="p">,</span> <span class="n">merge_zones</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">merge_zones</span><span class="p">,</span>
+    <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
+    <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
+    <span class="n">parse_opmio_tstep_rec</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">merge_initvectors</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="c1"># Sunbeam terms:</span>
-<span class="n">COMPDATKEYS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;I&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;J&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;STATE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SAT_TABLE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CONNECTION_TRANSMISSIBILITY_FACTOR&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DIAMETER&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Kh&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SKIN&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;D_FACTOR&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DIR&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PR&quot;</span><span class="p">,</span>
-<span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;OPM authors and Roxar RMS authors have interpreted the Eclipse</span>
+<span class="sd">documentation ever so slightly different when naming the data.</span>
 
-<span class="n">COMPSEGSKEYS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;I&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;J&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;K&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BRANCH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DISTANCE_START&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DISTANCE_END&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DIRECTION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;END_IJK&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CENTER_DEPTH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;THERMAL_LENGTH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGMENT_NUMBER&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
-<span class="c1"># Based on https://github.com/OPM/opm-common/blob/master/</span>
-<span class="c1">#        src/opm/parser/eclipse/share/keywords/000_Eclipse100/W/WELSEGS</span>
-<span class="n">WELSEGSKEYS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Name of the well&quot;</span>
-    <span class="s2">&quot;DEPTH&quot;</span><span class="p">,</span>  <span class="c1"># &quot;Depth of the nodal point of the top segment&quot;</span>
-    <span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>  <span class="c1"># Length down tubing to nodal point of top segment&quot;</span>
-    <span class="s2">&quot;WELLBORE_VOLUME&quot;</span><span class="p">,</span>  <span class="c1"># Effective wellbore volume of the top segment</span>
-    <span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">,</span>  <span class="c1"># Type of tubing length and depth information, INC or ABS</span>
-    <span class="s2">&quot;PRESSURE_COMPONENTS&quot;</span><span class="p">,</span>  <span class="c1"># How to calculate pressure drop in each segment</span>
-    <span class="s2">&quot;FLOW_MODEL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TOP_X&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TOP_Y&quot;</span><span class="p">,</span>  <span class="c1"># END OF FIRST RECORD FOR E100. E300 has some more.</span>
-    <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span>  <span class="c1"># For each subseqent record</span>
-    <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BRANCH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;JOIN_SEGMENT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">,</span>  <span class="c1"># Copied to SEGMENT_MD, as it can be both, depending on INFO_TYPE</span>
-    <span class="s2">&quot;DEPTH_CHANGE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DIAMETER&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ROUGHNESS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AREA&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VOLUME&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;LENGTH_X&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;LENGTH_Y&quot;</span><span class="p">,</span>
-<span class="p">]</span>
-
-
-<div class="viewcode-block" id="sunbeam2rmsterm"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.sunbeam2rmsterm">[docs]</a><span class="k">def</span> <span class="nf">sunbeam2rmsterm</span><span class="p">(</span><span class="n">reckey</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sunbeam authors and Roxar RMS authors have interpreted the Eclipse</span>
-<span class="sd">    documentation ever so slightly different when naming the data.</span>
-
-<span class="sd">    For COMPDAT dataframe columnnames, we prefer the RMS terms due to the</span>
-<span class="sd">    one very long one, and mixed-case in sunbeam</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str with translated term, or of no translation available</span>
-<span class="sd">        the term is returned unchanged.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">thedict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;WELL&quot;</span><span class="p">:</span> <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;J&quot;</span><span class="p">:</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;K1&quot;</span><span class="p">:</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;K2&quot;</span><span class="p">:</span> <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;STATE&quot;</span><span class="p">:</span> <span class="s2">&quot;OP/SH&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;SAT_TABLE&quot;</span><span class="p">:</span> <span class="s2">&quot;SATN&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;CONNECTION_TRANSMISSIBILITY_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;TRAN&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DIAMETER&quot;</span><span class="p">:</span> <span class="s2">&quot;WBDIA&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Kh&quot;</span><span class="p">:</span> <span class="s2">&quot;KH&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;SKIN&quot;</span><span class="p">:</span> <span class="s2">&quot;SKIN&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;D_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;DFACT&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;DIR&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;PR&quot;</span><span class="p">:</span> <span class="s2">&quot;PEQVR&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">thedict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reckey</span><span class="p">,</span> <span class="n">reckey</span><span class="p">)</span></div>
+<span class="sd">For COMPDAT dataframe columnnames, we prefer the RMS terms due to the</span>
+<span class="sd">one very long one, and mixed-case in opm</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">COMPDAT_RENAMER</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;WELL&quot;</span><span class="p">:</span> <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;J&quot;</span><span class="p">:</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;K1&quot;</span><span class="p">:</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;K2&quot;</span><span class="p">:</span> <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;STATE&quot;</span><span class="p">:</span> <span class="s2">&quot;OP/SH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SAT_TABLE&quot;</span><span class="p">:</span> <span class="s2">&quot;SATN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CONNECTION_TRANSMISSIBILITY_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;TRAN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIAMETER&quot;</span><span class="p">:</span> <span class="s2">&quot;WBDIA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Kh&quot;</span><span class="p">:</span> <span class="s2">&quot;KH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SKIN&quot;</span><span class="p">:</span> <span class="s2">&quot;SKIN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;D_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;DFACT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;DIR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PR&quot;</span><span class="p">:</span> <span class="s2">&quot;PEQVR&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -278,7 +217,7 @@
 <span class="sd">    The loop over the deck is a state machine, as it has to pick up dates</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (sunbeam.libsunbeam.Deck): A deck representing the schedule</span>
+<span class="sd">        deck (opm.libopmcommon_python.Deck): A deck representing the schedule</span>
 <span class="sd">            Does not have to be a full Eclipse deck, an include file is sufficient</span>
 <span class="sd">        start_date (datetime.date or str): The default date to use for</span>
 <span class="sd">            events where the DATE or START keyword is not found in advance.</span>
@@ -296,17 +235,14 @@
     <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">day</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;DAY&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">month</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;MONTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">year</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s2">&quot;YEAR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
+                <span class="n">date</span> <span class="o">=</span> <span class="n">parse_opmio_date_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">date</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Can&#39;t use TSTEP when there is no start_date&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
-                <span class="n">steplist</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">steplist</span> <span class="o">=</span> <span class="n">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
                 <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                 <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
                 <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
@@ -315,43 +251,29 @@
                 <span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside COMPDAT record</span>
-                <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
+                    <span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">COMPDAT_RENAMER</span>
+                <span class="p">)</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
-                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">COMPDATKEYS</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
-                            <span class="n">rec_data</span><span class="p">[</span><span class="n">sunbeam2rmsterm</span><span class="p">(</span><span class="n">rec_key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                        <span class="c1"># &quot;rec_key in rec&quot; does not work..</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="k">pass</span>
                 <span class="n">compdatrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">:</span>
-            <span class="n">well</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">wellname</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
+                <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span> <span class="n">itemlistname</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kword</span><span class="p">)):</span>
-                <span class="n">rec_data</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span>
-                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">rec</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">COMPSEGSKEYS</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
-                            <span class="n">rec_data</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="k">pass</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
+                    <span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span> <span class="n">itemlistname</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wellname</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">compsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
             <span class="c1"># First record contains meta-information for well</span>
-            <span class="c1"># (sunbeam deck returns default values for unspecified items.)</span>
-            <span class="n">welsegsdict</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">well</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;WELLBORE_VOLUME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;PRESSURE_COMPONENTS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">5</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;FLOW_MODEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">7</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">welsegsdict</span><span class="p">[</span><span class="s2">&quot;TOP_Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">8</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># (opm deck returns default values for unspecified items.)</span>
+            <span class="n">welsegsdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
+                <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">,</span> <span class="n">itemlistname</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
             <span class="c1"># Loop over all subsequent records.</span>
             <span class="k">for</span> <span class="n">recidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">kword</span><span class="p">)):</span>
                 <span class="n">rec</span> <span class="o">=</span> <span class="n">kword</span><span class="p">[</span><span class="n">recidx</span><span class="p">]</span>
@@ -359,12 +281,11 @@
                 <span class="c1"># we need to loop over a range just as for layer in compdat)</span>
                 <span class="n">rec_data</span> <span class="o">=</span> <span class="n">welsegsdict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
-                <span class="k">for</span> <span class="n">rec_key</span> <span class="ow">in</span> <span class="n">WELSEGSKEYS</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]:</span>
-                            <span class="n">rec_data</span><span class="p">[</span><span class="n">rec_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="n">rec_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="k">pass</span>
+                <span class="n">rec_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
+                        <span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">,</span> <span class="n">itemlistname</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="o">=</span><span class="mi">1</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;INFO_TYPE&quot;</span> <span class="ow">in</span> <span class="n">rec_data</span> <span class="ow">and</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ABS&quot;</span><span class="p">:</span>
                     <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_MD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">]</span>
                 <span class="n">welsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>

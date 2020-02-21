@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df package &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -202,6 +202,52 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="ecl2df.common.parse_opmio_deckrecord">
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">parse_opmio_deckrecord</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">keyword</em>, <em class="sig-param">itemlistname='items'</em>, <em class="sig-param">recordindex=None</em>, <em class="sig-param">renamer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_opmio_deckrecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.parse_opmio_deckrecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>opm.libopmcommon_python.DeckRecord</em>) – Record be parsed</p></li>
+<li><p><strong>keyword</strong> (<em>string</em>) – Which Eclipse keyword this belongs to</p></li>
+<li><p><strong>itemlistname</strong> (<em>string</em>) – The key in the json dict that describes the items,
+typically ‘items’ or ‘records’</p></li>
+<li><p><strong>recordindex</strong> (<em>int</em>) – For keywords where itemlistname is ‘records’, this is a
+list index to the “record”
+Beware, there are multiple concepts here for what we call a record.</p></li>
+<li><p><strong>renamer</strong> (<em>dict</em>) – If supplied, this dictionary will be used to remap
+the keys in returned dict</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.common.parse_opmio_date_rec">
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">parse_opmio_date_rec</code><span class="sig-paren">(</span><em class="sig-param">record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_opmio_date_rec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.parse_opmio_date_rec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>datetime.date</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.common.parse_opmio_tstep_rec">
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">parse_opmio_tstep_rec</code><span class="sig-paren">(</span><em class="sig-param">record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_opmio_tstep_rec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.parse_opmio_tstep_rec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a record with TSTEP data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of floats or ints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="ecl2df.common.merge_zones">
 <code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">merge_zones</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">zonedict</em>, <em class="sig-param">zoneheader='ZONE'</em>, <em class="sig-param">kname='K1'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#merge_zones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.merge_zones" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge in a column with zone names, from a dictionary mapping
@@ -298,19 +344,13 @@ of the column multiindex</p></li>
 <div class="section" id="module-ecl2df.compdat">
 <span id="ecl2df-compdat-module"></span><h2>ecl2df.compdat module<a class="headerlink" href="#module-ecl2df.compdat" title="Permalink to this headline">¶</a></h2>
 <p>Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck</p>
-<dl class="function">
-<dt id="ecl2df.compdat.sunbeam2rmsterm">
-<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">sunbeam2rmsterm</code><span class="sig-paren">(</span><em class="sig-param">reckey</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/compdat.html#sunbeam2rmsterm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.compdat.sunbeam2rmsterm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sunbeam authors and Roxar RMS authors have interpreted the Eclipse
+<dl class="data">
+<dt id="ecl2df.compdat.logger">
+<code class="sig-prename descclassname">ecl2df.compdat.</code><code class="sig-name descname">logger</code><em class="property"> = &lt;Logger ecl2df.compdat (WARNING)&gt;</em><a class="headerlink" href="#ecl2df.compdat.logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>OPM authors and Roxar RMS authors have interpreted the Eclipse
 documentation ever so slightly different when naming the data.</p>
 <p>For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
-one very long one, and mixed-case in sunbeam</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>str with translated term, or of no translation available
-the term is returned unchanged.</p>
-</dd>
-</dl>
+one very long one, and mixed-case in opm</p>
 </dd></dl>
 
 <dl class="function">
@@ -327,7 +367,7 @@ the term is returned unchanged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<em>sunbeam.libsunbeam.Deck</em>) – A deck representing the schedule
+<li><p><strong>deck</strong> (<em>opm.libopmcommon_python.Deck</em>) – A deck representing the schedule
 Does not have to be a full Eclipse deck, an include file is sufficient</p></li>
 <li><p><strong>start_date</strong> (<em>datetime.date</em><em> or </em><em>str</em>) – The default date to use for
 events where the DATE or START keyword is not found in advance.
@@ -471,13 +511,13 @@ it should be loaded or served from cache.</p>
 <dl class="method">
 <dt id="ecl2df.eclfiles.EclFiles.get_ecldeck">
 <code class="sig-name descname">get_ecldeck</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.get_ecldeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_ecldeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a sunbeam deck of the DATA file</p>
+<dd><p>Return a opm.io deck of the DATA file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ecl2df.eclfiles.EclFiles.str2deck">
-<em class="property">static </em><code class="sig-name descname">str2deck</code><span class="sig-paren">(</span><em class="sig-param">string</em>, <em class="sig-param">recovery=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.str2deck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.str2deck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce a sunbeam deck from a string, using permissive
+<em class="property">static </em><code class="sig-name descname">str2deck</code><span class="sig-paren">(</span><em class="sig-param">string</em>, <em class="sig-param">parsecontext=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/eclfiles.html#EclFiles.str2deck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.str2deck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a opm.io deck from a string, using permissive
 parsing by default</p>
 </dd></dl>
 
@@ -603,15 +643,15 @@ depends on the phase configuration in the deck, which means
 that we need more than the EQUIL section alone to determine the
 dataframe.</p>
 <p>If ntequil is not supplied and EQLDIMS is not in the deck, the
-equil data is not well defined in terms of sunbeam. This means
+equil data is not well defined in terms of OPM. This means
 that we have to infer the correct number of EQUIL lines from what
-gives us successful parsing from sunbeam. In those cases, the
+gives us successful parsing from OPM. In those cases, the
 deck must be supplied as a string, if not, extra EQUIL lines
-are possibly already removed by the sunbeam parser in eclfiles.str2deck().</p>
+are possibly already removed by the OPM parser in eclfiles.str2deck().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<em>sunbeam.deck</em><em> or </em><em>str</em>) – Eclipse deck or string with deck. If
+<li><p><strong>deck</strong> (<em>opm.io deck</em><em> or </em><em>str</em>) – Eclipse deck or string with deck. If
 not string, EQLDIMS must be present in the deck.</p></li>
 <li><p><strong>ntequil</strong> (<em>int</em>) – If not None, should state the NTEQUL in EQLDIMS. If
 None and EQLDIMS is not present, it will be inferred.</p></li>
@@ -1129,7 +1169,7 @@ Eclipse 100 decks (typically single include-files)</p>
 <code class="sig-prename descclassname">ecl2df.inferdims.</code><code class="sig-name descname">guess_dim</code><span class="sig-paren">(</span><em class="sig-param">deckstring</em>, <em class="sig-param">dimkeyword</em>, <em class="sig-param">dimitem=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/inferdims.html#guess_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.inferdims.guess_dim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Guess the correct dimension count for an incoming deck (string)</p>
 <p>The incoming deck must in string form, if not, extra data is most
-likely already removed by the sunbeam parser. TABDIMS or EQLDIMS
+likely already removed by the opm.io parser. TABDIMS or EQLDIMS
 must not be present</p>
 <p>This function will inject TABDIMS or EQLDIMS into it and reparse it in a
 stricter mode, to detect the correct table dimensionality</p>
@@ -1142,7 +1182,7 @@ stricter mode, to detect the correct table dimensionality</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The lowest number for which stricter sunbeam parsing succeeds</p>
+<dd class="field-even"><p>The lowest number for which stricter opm.io parsing succeeds</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>int</p>
@@ -1154,7 +1194,7 @@ stricter mode, to detect the correct table dimensionality</p>
 <dt id="ecl2df.inferdims.inject_dimcount">
 <code class="sig-prename descclassname">ecl2df.inferdims.</code><code class="sig-name descname">inject_dimcount</code><span class="sig-paren">(</span><em class="sig-param">deckstr</em>, <em class="sig-param">dimkeyword</em>, <em class="sig-param">dimitem</em>, <em class="sig-param">dimvalue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/inferdims.html#inject_dimcount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.inferdims.inject_dimcount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a TABDIMS with NTSFUN into a deck</p>
-<p>This is simple string manipulation, not sunbeam
+<p>This is simple string manipulation, not opm.io
 deck manipulation (which might be possible to do).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1548,7 +1588,7 @@ TABDIMS or to supply the satnumcount directly to avoid possible bugs.</p>
 <dt id="ecl2df.satfunc.inject_satnumcount">
 <code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">inject_satnumcount</code><span class="sig-paren">(</span><em class="sig-param">deckstr</em>, <em class="sig-param">satnumcount</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#inject_satnumcount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.inject_satnumcount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a TABDIMS with NTSFUN into a deck</p>
-<p>This is simple string manipulation, not sunbeam
+<p>This is simple string manipulation, not OPM
 deck manipulation (which might be possible to do).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1587,7 +1627,7 @@ returning the first function by default).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<em>sunbeam.deck</em><em> or </em><em>str</em>) – Incoming data deck. Always
+<li><p><strong>deck</strong> (<em>opm.io deck</em><em> or </em><em>str</em>) – Incoming data deck. Always
 supply as a string if you don’t know TABDIMS-NTSFUN.</p></li>
 <li><p><strong>satnumcount</strong> (<em>int</em>) – Number of SATNUMs defined in the deck, only
 needed if TABDIMS with NTSFUN is not found in the deck.
@@ -1837,6 +1877,28 @@ the dataframe</p></li>
 <div class="section" id="module-ecl2df.wcon">
 <span id="ecl2df-wcon-module"></span><h2>ecl2df.wcon module<a class="headerlink" href="#module-ecl2df.wcon" title="Permalink to this headline">¶</a></h2>
 <p>Extract WCON* from an Eclipse deck</p>
+<dl class="function">
+<dt id="ecl2df.wcon.unroll_defaulted_items">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">unroll_defaulted_items</code><span class="sig-paren">(</span><em class="sig-param">itemlist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#unroll_defaulted_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.unroll_defaulted_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expand list if list contains &lt;int&gt;* string elements</p>
+<p>so [‘a’, ‘2*’, ‘b’] becomes [‘a’, ‘1*’, ‘1*’, ‘b’]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.wcon.ad_hoc_wconparser">
+<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">ad_hoc_wconparser</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">keyword</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#ad_hoc_wconparser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.ad_hoc_wconparser" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a band-aid solution awaiting support for UDA-values in opm-common</p>
+<p>Replace this with common.parse_opmio_deckrecord when ready.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>str</em>) – a string representation of a record with wcon data</p></li>
+<li><p><strong>keyword</strong> (<em>str</em>) – The E100 keyword this record is valid for.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="ecl2df.wcon.deck2wcondf">
 <code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">deck2wcondf</code><span class="sig-paren">(</span><em class="sig-param">deck</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#deck2wcondf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.deck2wcondf" title="Permalink to this definition">¶</a></dt>

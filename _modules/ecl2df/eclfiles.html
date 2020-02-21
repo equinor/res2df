@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.eclfiles &mdash; ecl2df v0.4.3+1.ga54f9ff documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+1.ga54f9ff
+                v0.4.3+2.g94658cf
               </div>
             
           
@@ -168,7 +168,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
 
-<span class="kn">import</span> <span class="nn">sunbeam.deck</span>
+<span class="kn">import</span> <span class="nn">opm.io</span>
 
 <span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="kn">import</span> <span class="n">EclFile</span>
 <span class="kn">from</span> <span class="nn">ecl.grid</span> <span class="kn">import</span> <span class="n">EclGrid</span>
@@ -177,18 +177,18 @@
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="c1"># Default parse option to Sunbeam for a very permissive parsing</span>
-<span class="n">SUNBEAM_RECOVERY</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_UNKNOWN_KEYWORD&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;SUMMARY_UNKNOWN_GROUP&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_SLASH&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;UNSUPPORTED_*&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_DIMS_KEYWORD&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_RECORDS&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_DATA&quot;</span><span class="p">,</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+<span class="c1"># Default parse option to opm.io for a very permissive parsing</span>
+<span class="n">OPMIOPARSER_RECOVERY</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_UNKNOWN_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;SUMMARY_UNKNOWN_GROUP&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_SLASH&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;UNSUPPORTED_*&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_DIMS_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_RECORDS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_DATA&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
 <span class="p">]</span>
 
 <span class="c1"># For Python2 compatibility:</span>
@@ -243,24 +243,25 @@
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="EclFiles.get_ecldeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_ecldeck">[docs]</a>    <span class="k">def</span> <span class="nf">get_ecldeck</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a sunbeam deck of the DATA file&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a opm.io deck of the DATA file&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">):</span>
                 <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">deckfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span>  <span class="c1"># Will be any filename</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing deck file </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">deckfile</span><span class="p">)</span>
-            <span class="n">deck</span> <span class="o">=</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">deckfile</span><span class="p">,</span> <span class="n">recovery</span><span class="o">=</span><span class="n">SUNBEAM_RECOVERY</span><span class="p">)</span>
+            <span class="n">parsecontext</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ParseContext</span><span class="p">(</span><span class="n">OPMIOPARSER_RECOVERY</span><span class="p">)</span>
+            <span class="n">deck</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">deckfile</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span> <span class="o">=</span> <span class="n">deck</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span></div>
 
 <div class="viewcode-block" id="EclFiles.str2deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.str2deck">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">str2deck</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">recovery</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Produce a sunbeam deck from a string, using permissive</span>
+    <span class="k">def</span> <span class="nf">str2deck</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parsecontext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Produce a opm.io deck from a string, using permissive</span>
 <span class="sd">        parsing by default&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">recovery</span><span class="p">:</span>
-            <span class="n">recovery</span> <span class="o">=</span> <span class="n">SUNBEAM_RECOVERY</span>
-        <span class="k">return</span> <span class="n">sunbeam</span><span class="o">.</span><span class="n">deck</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">recovery</span><span class="o">=</span><span class="n">recovery</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">parsecontext</span><span class="p">:</span>
+            <span class="n">parsecontext</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ParseContext</span><span class="p">(</span><span class="n">OPMIOPARSER_RECOVERY</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EclFiles.file2deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.file2deck">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>

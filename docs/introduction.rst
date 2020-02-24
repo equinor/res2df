@@ -2,8 +2,8 @@ Introduction
 ============
 
 *ecl2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
-around `libecl <https://github.com/equinor/libecl/>`_ and `sunbeam
-<https://github.com/equinor/sunbeam/>`_, which are used to access
+around `libecl <https://github.com/equinor/libecl/>`_ and `opm.io
+<https://github.com/OPM/opm-common/>`_, which are used to access
 binary files outputted by the reservoir simulator Eclipse, or its
 input files --- or any other tool outputting to the same data format,
 f.ex. `flow <https://opm-project.org/?page_id=19>`_.

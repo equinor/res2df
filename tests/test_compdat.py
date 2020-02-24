@@ -112,7 +112,7 @@ WSEGVALV
     assert len(compdat_df) == 1
     assert compdat_df["WELL"].unique()[0] == "OP1"
 
-    # Check that we have not used the very long sunbeam term here:
+    # Check that we have not used the very long opm.io term here:
     assert "CONNECTION_TRANSMISSIBILITY_FACTOR" not in compdat_df
     assert "TRAN" in compdat_df
 

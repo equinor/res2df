@@ -268,7 +268,7 @@ texinfo_documents = [
         u"ecl2df Documentation",
         u"Håvard Berland",
         "ecl2df",
-        "Dataframe wrapper for libecl and sunbeam.",
+        "Dataframe wrapper for libecl and opm.io.",
         "Miscellaneous",
     )
 ]

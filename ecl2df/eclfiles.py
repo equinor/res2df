@@ -108,7 +108,7 @@ class EclFiles(object):
 
     @staticmethod
     def file2deck(filename):
-        """Try to convert standalone files into Sunbeam Deck objects"""
+        """Try to convert standalone files into opm.io Deck objects"""
         with open(filename) as fhandle:
             filestring = "".join(fhandle.readlines())
             return EclFiles.str2deck(filestring)

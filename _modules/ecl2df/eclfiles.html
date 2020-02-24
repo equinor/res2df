@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.eclfiles &mdash; ecl2df v0.4.3+2.g94658cf documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df v0.5.0+1.g3c07f5c documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.3+2.g94658cf
+                v0.5.0+1.g3c07f5c
               </div>
             
           
@@ -265,7 +265,7 @@
 
 <div class="viewcode-block" id="EclFiles.file2deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.file2deck">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Try to convert standalone files into Sunbeam Deck objects&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Try to convert standalone files into opm.io Deck objects&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhandle</span><span class="p">:</span>
             <span class="n">filestring</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fhandle</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
             <span class="k">return</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">filestring</span><span class="p">)</span></div>

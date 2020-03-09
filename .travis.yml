@@ -14,7 +14,6 @@ env:
 addons:
   apt:
     sources:
-      - boost-latest
       - ubuntu-toolchain-r-test
     packages:
       - libboost-all-dev

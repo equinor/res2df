@@ -96,7 +96,10 @@ def parse_opmio_deckrecord(
 
     for item_idx, jsonitem in enumerate(itemlist):
         item_name = jsonitem["name"]
-        if not hasattr(record[item_idx], "defaulted") or not record[item_idx].defaulted(0):
+        if (
+            not hasattr(record[item_idx], "defaulted")
+            or not record[item_idx].defaulted(0)
+        ):
             rec_dict[item_name] = getattr(
                 record[item_idx], deckitem_fn[jsonitem["value_type"]]
             )(0)

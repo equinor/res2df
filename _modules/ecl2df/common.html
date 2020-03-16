@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df v0.5.0+1.g3c07f5c documentation</title>
+  <title>ecl2df.common &mdash; ecl2df v0.5.0+2.g654b0e2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.5.0+1.g3c07f5c
+                v0.5.0+2.g654b0e2
               </div>
             
           
@@ -253,7 +253,11 @@
 
     <span class="k">for</span> <span class="n">item_idx</span><span class="p">,</span> <span class="n">jsonitem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">itemlist</span><span class="p">):</span>
         <span class="n">item_name</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">defaulted</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># Cleanup after 2020.03 for opm-common is released</span>
+        <span class="c1"># to not use the private property __defaulted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="s2">&quot;__defaulted&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span>
+            <span class="n">item_idx</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">__defaulted</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
             <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
                 <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="n">deckitem_fn</span><span class="p">[</span><span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]]</span>
             <span class="p">)(</span><span class="mi">0</span><span class="p">)</span>

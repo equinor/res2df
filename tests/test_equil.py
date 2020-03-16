@@ -42,7 +42,7 @@ EQUIL
     assert df["OWC"].values == 2200
     assert len(df) == 1
     assert "IGNORE1" not in df
-
+    assert df["EQLNUM"].unique()[0] == 1
     deckstr = """
 OIL
 WATER
@@ -99,7 +99,8 @@ EQUIL
     df = equil.deck2df(deckstr)
     assert set(df["GOC"].values) == set([2100, 2100])
     assert len(df) == 2
-
+    assert df["EQLNUM"].min() == 1
+    assert df["EQLNUM"].max() == 2
     # Supply correct NTEQUL instead of estimating
     df = equil.deck2df(deckstr, 2)
     assert len(df) == 2

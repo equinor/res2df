@@ -149,6 +149,9 @@ def deck2df(deck, ntequl=None):
         if "IGNORE" in col:
             del dataframe[col]
 
+    # EQLNUM is inferred from the order
+    dataframe["EQLNUM"] = dataframe.index + 1
+
     return dataframe
 
 

@@ -27,10 +27,7 @@ from ecl2df import (
     compdat,
 )
 
-from ._version import get_versions
-
-__version__ = get_versions()["version"]
-del get_versions
+from ecl2df import __version__
 
 
 def get_parser():

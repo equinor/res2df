@@ -1,5 +1,11 @@
 name = "ecl2df"
 
+try:
+    from .version import version
+    __version__ = version
+except ImportError:
+    __version__ = "v0.0.0"
+
 from .eclfiles import EclFiles
 
 from . import (
@@ -17,7 +23,3 @@ from . import (
     trans,
 )
 
-from ._version import get_versions
-
-__version__ = get_versions()["version"]
-del get_versions

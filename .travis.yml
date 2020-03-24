@@ -50,13 +50,14 @@ install:
   - pip install .
 
 script:
-  - pytest
-  - make docsrun
+  - python setup.py test
+  - python setup.py build_sphinx
+  - touch build/sphinx/html/.nojekyll
 
 deploy:
   - provider: pages
     skip_cleanup: true
-    local_dir: ./docs/_build/html
+    local_dir: ./build/sphinx/html
     github_token:
       secure: "mwHEDpi1MYrpewxsi5+sCD9EcfC698SlxutkRFVkLnVXljssENfRBfekpDrbpJvZidBbwyr8D6LPlTjXO0coXCMql6304XHqz8VVgK6N45J5qT67WjAAbxo5KzovB0CwbPlbtlwX7mk8uBZLYG8gWqWB7NShiq+iPk0YreQkptXEamK4hyGkDaRS2S38Yl9inVbC5CuRBNc5Pk/+Vg+8X8SiXOFzt9wlvzmtcsjye59YigJDu6Iq8amM11MhkP98DYAA6inXvV28z+W6+Ws3UmXJZh80afIV6gGny1XWNYX0r8lZ7lq3Dng4JURfUXPELpyWFR7QmtKOng/sWg/V7DCFqJOYcc0it684S2pWIaJiPqk6zacE4w6sI9B7Af3DarKktEMCnHJY7EFhOSKLX/bb3YWuwJzDQGW2Xd7W+xWjbtn8R0miM9QAwojIk0s1FKAwA+6xc5dsDw4+lu4f+MtO0zY0VT6yHS7SqHw5na43+IfvrUVKpD8tO4owYRtPc5PPDdTh1ALTwxIKN53/9bfyyvDL7BC/gwxXasEidWvqAeH01hs+erJVu/fTRQ6CVCASbS2iqn4/jk+9IN84tuhltukFOFf9MSyIR5J45vSrH1G8QFsDEYwJomin92tkC3derxyVeLJYwqOOix2RMYYacHdkpkyzl0YsKwjlwhc="
     keep_history: true

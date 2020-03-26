@@ -8,7 +8,7 @@ output-format=colorized
 # E0401: import-error, these will be caught by automated tests anyhow
 
 [MASTER]
-ignore=__init__.py,setup.py,jobs.py
+ignore=__init__.py,setup.py
 
 [BASIC]
 good-names=df,logger

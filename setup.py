@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
-from setuptools_scm import get_version
 from sphinx.setup_command import BuildDoc
 
 

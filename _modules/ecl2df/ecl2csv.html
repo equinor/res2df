@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ecl2df.ecl2csv &mdash; ecl2df 0.5.2.dev6+g5908a3d documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.2.dev6+g5908a3d
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>ecl2df.ecl2csv</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ecl2df.ecl2csv</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">End-user command line tool for accessing functionality</span>
+<span class="sd">in ecl2df</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">grid</span><span class="p">,</span>
+    <span class="n">nnc</span><span class="p">,</span>
+    <span class="n">faults</span><span class="p">,</span>
+    <span class="n">equil</span><span class="p">,</span>
+    <span class="n">gruptree</span><span class="p">,</span>
+    <span class="n">rft</span><span class="p">,</span>
+    <span class="n">pillars</span><span class="p">,</span>
+    <span class="n">fipreports</span><span class="p">,</span>
+    <span class="n">satfunc</span><span class="p">,</span>
+    <span class="n">summary</span><span class="p">,</span>
+    <span class="n">trans</span><span class="p">,</span>
+    <span class="n">wcon</span><span class="p">,</span>
+    <span class="n">compdat</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.ecl2csv.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Make parser&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;ecl2csv (&quot;</span> <span class="o">+</span> <span class="n">__version__</span> <span class="o">+</span> <span class="s2">&quot;) is a command line frontend to ecl2df. &quot;</span>
+            <span class="s2">&quot;Documentation at https://equinor.github.io/ecl2df/ &quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(prog)s</span><span class="s2"> </span><span class="si">{version}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span>
+
+    <span class="c1"># Eclipse output files:</span>
+    <span class="n">grid_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;grid&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract grid data with properties&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each cell is represented by &quot;</span>
+            <span class="s2">&quot;one row of data. The coordinates are in the X, Y, and Z columns &quot;</span>
+            <span class="s2">&quot;and represent the grid centre. Volume pr. cell is added &quot;</span>
+            <span class="s2">&quot;and all INIT and UNRST data can be added to the rows&quot;</span>
+        <span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">grid_parser</span><span class="p">)</span>
+    <span class="n">grid_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">grid2df_main</span><span class="p">)</span>
+
+    <span class="n">summary_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;summary&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract summary data&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;This is the time-dependent data for &quot;</span>
+            <span class="s2">&quot;field production data, well profiles etc. Each row contains data &quot;</span>
+            <span class="s2">&quot;for one point in time&quot;</span>
+        <span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
+    <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary</span><span class="o">.</span><span class="n">summary2df_main</span><span class="p">)</span>
+
+    <span class="n">nnc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;nnc&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract NNC data from EGRID file&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract NNC (Non-Neighbour Connection) data from the EGRID file. &quot;</span>
+            <span class="s2">&quot;Each row is one connection, with the columns I1, J1, K1 for the first &quot;</span>
+            <span class="s2">&quot;cell in the cell pair, and I2, J2, K2 for the second. The &quot;</span>
+            <span class="s2">&quot;transmissibility for the cell pair is in the TRAN column. &quot;</span>
+            <span class="s2">&quot;See also the trans subcommand.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">nnc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">nnc_parser</span><span class="p">)</span>
+    <span class="n">nnc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">nnc</span><span class="o">.</span><span class="n">nnc2df_main</span><span class="p">)</span>
+
+    <span class="n">faults_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;faults&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract data from the FAULTS keyword&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a particular cell and a face and the name of the fault&quot;</span>
+        <span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">faults</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">faults_parser</span><span class="p">)</span>
+    <span class="n">faults_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">faults</span><span class="o">.</span><span class="n">faults2df_main</span><span class="p">)</span>
+
+    <span class="n">trans_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;trans&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract transmissibilities from EGRID file&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract transmissibilities (TRANX, TRANY, TRANZ) from Eclipse &quot;</span>
+            <span class="s2">&quot;binary output files. Each row represent a connection between a cell pair &quot;</span>
+            <span class="s2">&quot;(I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for &quot;</span>
+            <span class="s2">&quot;each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 &quot;</span>
+            <span class="s2">&quot;and FIPNUM2, and it is possible to filter to connections where f.ex &quot;</span>
+            <span class="s2">&quot;FIPNUM change&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">trans</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">trans_parser</span><span class="p">)</span>
+    <span class="n">trans_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">trans</span><span class="o">.</span><span class="n">trans2df_main</span><span class="p">)</span>
+
+    <span class="n">pillars_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;pillars&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Compute data pr. cornerpoint pillar&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Compute statistics pr. pillar in a cornerpoint grid, &quot;</span>
+            <span class="s2">&quot;or alternatively by region parameter. Volumetrics, in-place, &quot;</span>
+            <span class="s2">&quot;and contacts.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">pillars</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">pillars_parser</span><span class="p">)</span>
+    <span class="n">pillars_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pillars</span><span class="o">.</span><span class="n">pillarstats_main</span><span class="p">)</span>
+
+    <span class="n">rft_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;rft&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract RFT data from Eclipse binary output files.&quot;</span><span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract RFT data from Eclipse binary output files to CSV. &quot;</span>
+            <span class="s2">&quot;Each row in the resulting table represents one point in a &quot;</span>
+            <span class="s2">&quot;particular well at a particular time. &quot;</span>
+            <span class="s2">&quot;If multisegment wells are found, associated data &quot;</span>
+            <span class="s2">&quot;to a connection is merged onto the same row as additional columns. &quot;</span>
+            <span class="s2">&quot;You need the Eclipse keyword WRFTPLT present in your DATA-file to get &quot;</span>
+            <span class="s2">&quot;the data outputted.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">rft</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">rft_parser</span><span class="p">)</span>
+    <span class="n">rft_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rft</span><span class="o">.</span><span class="n">rft2df_main</span><span class="p">)</span>
+
+    <span class="n">fipreports_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file.&quot;</span><span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
+            <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and &quot;</span>
+            <span class="s2">&quot;material balance errors&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">fipreports</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">fipreports_parser</span><span class="p">)</span>
+    <span class="n">fipreports_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">fipreports</span><span class="o">.</span><span class="n">fipreports_main</span><span class="p">)</span>
+
+    <span class="c1"># Eclipse input files:</span>
+    <span class="n">satfunc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract SWOF/SGOF/etc data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Data for all saturation functions are merged &quot;</span>
+            <span class="s2">&quot;into one dataframe for all SATNUMs. Each row has data for a &quot;</span>
+            <span class="s2">&quot;saturation point. For SWOF data, all columns related to SGOF &quot;</span>
+            <span class="s2">&quot;are empty and vice versa&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">satfunc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
+    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc</span><span class="o">.</span><span class="n">satfunc2df_main</span><span class="p">)</span>
+
+    <span class="n">compdat_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;compdat&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a cell connection to a well. &quot;</span>
+            <span class="s2">&quot;Only COMPDAT data is exposed in CSV output currently.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">compdat</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">compdat_parser</span><span class="p">)</span>
+    <span class="n">compdat_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">compdat</span><span class="o">.</span><span class="n">compdat2df_main</span><span class="p">)</span>
+
+    <span class="n">equil_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract EQUIL data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row contains the equilibriation data for one EQLNUM.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">equil</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
+    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil</span><span class="o">.</span><span class="n">equil2df_main</span><span class="p">)</span>
+
+    <span class="n">gruptree_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;gruptree&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract GRUPTREE data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row represents an edge in the GRUPTREE at a specific date.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">gruptree</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">gruptree_parser</span><span class="p">)</span>
+    <span class="n">gruptree_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">gruptree</span><span class="o">.</span><span class="n">gruptree2df_main</span><span class="p">)</span>
+
+    <span class="n">wcon_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;wcon&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well control data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents the control data for a certain &quot;</span>
+            <span class="s2">&quot;well or well wildcard at a specific date&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">wcon</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">wcon_parser</span><span class="p">)</span>
+    <span class="n">wcon_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">wcon</span><span class="o">.</span><span class="n">wcon2df_main</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.ecl2csv.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Entry point&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+  </style>
+
+
+</body>
+</html>

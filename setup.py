@@ -7,6 +7,7 @@ try:
     cmdclass = {"build_sphinx": BuildDoc}
 except ImportError:
     # Skip cmdclass when sphinx is not installed (yet)
+
     cmdclass = {}
 
 

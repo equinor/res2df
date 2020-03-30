@@ -20,14 +20,14 @@ for keyw in [
     "COMPSEGS",
     "EQUIL",
     "FAULTS",
-    "WELSPECS",
-    "WELSEGS",
-    "WCONPROD",
+    "GRUPNET",
+    "GRUPTREE",
     "WCONHIST",
     "WCONINJE",
     "WCONINJH",
-    "GRUPTREE",
-    "GRUPNET",
+    "WCONPROD",
+    "WELSEGS",
+    "WELSPECS",
 ]:
     OPMKEYWORDS[keyw] = json.load(
         open(os.path.join(os.path.dirname(__file__), "opmkeywords", keyw))

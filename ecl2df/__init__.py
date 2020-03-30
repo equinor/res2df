@@ -9,17 +9,17 @@ except ImportError:
 from .eclfiles import EclFiles
 
 from . import (
-    grid,
     ecl2csv,
-    nnc,
-    rft,
-    summary,
-    gruptree,
     equil,
     faults,
+    grid,
+    gruptree,
+    nnc,
     pillars,
-    wcon,
+    rft,
     satfunc,
+    summary,
     trans,
+    wcon,
 )
 

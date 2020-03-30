@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
-from sphinx.setup_command import BuildDoc
+
+try:
+    from sphinx.setup_command import BuildDoc
+
+    cmdclass = {"build_sphinx": BuildDoc}
+except ImportError:
+    # Skip cmdclass when sphinx is not installed (yet)
+    cmdclass = {}
 
 
 def parse_requirements(filename):
@@ -19,7 +26,7 @@ SETUP_REQUIREMENTS = ["pytest-runner", "setuptools >=28", "setuptools_scm"]
 setup(
     name="ecl2df",
     use_scm_version={"write_to": "ecl2df/version.py"},
-    cmdclass={"build_sphinx": BuildDoc},
+    cmdclass=cmdclass,
     description="Convert Eclipse 100 input and output to DataFrames",
     url="http://github.com/equinor/ecl2df",
     author="Håvard Berland",

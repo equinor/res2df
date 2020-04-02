@@ -117,14 +117,14 @@ def deck2df(deck, satnumcount=None):
             )
             ntsfun_estimate = inferdims.guess_dim(deck, "TABDIMS", 0)
             augmented_strdeck = inferdims.inject_dimcount(
-                str(deck), "TABDIMS", 0, ntsfun_estimate
+                str(deck), "TABDIMS", inferdims.NTSFUN_POS, ntsfun_estimate
             )
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)
 
         else:
             augmented_strdeck = inferdims.inject_dimcount(
-                str(deck), "TABDIMS", 0, satnumcount
+                str(deck), "TABDIMS", inferdims.NTSFUN_POS, satnumcount
             )
             # Re-parse the modified deck:
             deck = EclFiles.str2deck(augmented_strdeck)

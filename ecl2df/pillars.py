@@ -10,9 +10,9 @@ from __future__ import absolute_import
 import sys
 import logging
 import argparse
-import dateutil.parser
 import datetime
 
+import dateutil.parser
 import pandas as pd
 
 import ecl2df

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- """Test module for nnc2df"""
+"""Test module for nnc2df"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -45,7 +45,7 @@ def test_schfile2df():
     """Test that we can process individual files"""
     deck = EclFiles.file2deck(SCHFILE)
     compdfs = compdat.deck2dfs(deck)
-    assert len(compdfs["COMPDAT"].columns)
+    assert not compdfs["COMPDAT"].columns.empty
     assert not compdfs["COMPDAT"].empty
 
 
@@ -125,7 +125,8 @@ WSEGVALV
     # Continue to WELSEGS
     assert len(welsegs) == 1  # First record is appended to every row.
 
-    # Since we have 'ABS' in WELSEGS, there should be an extra column called 'SEGMENT_MD'
+    # Since we have 'ABS' in WELSEGS, there should be an extra
+    # column called 'SEGMENT_MD'
     assert "SEGMENT_MD" in welsegs
     assert welsegs["SEGMENT_MD"].max() == 1923.9
 

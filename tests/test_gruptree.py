@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for nnc2df"""
 
 from __future__ import absolute_import

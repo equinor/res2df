@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for nnc2df"""
 
 from __future__ import absolute_import
@@ -45,6 +44,7 @@ FAULTS
 
 
 def test_multiplestr2df():
+    """Test that we support multiple occurences of the FAULTS keyword"""
     deckstr = """
 FAULTS
   'A' 1 2 3 4 5 6 'I' /

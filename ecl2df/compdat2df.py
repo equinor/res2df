@@ -3,8 +3,10 @@ This module is only for backwards compatibility and will be removed in future ve
 """
 import logging
 
+
 logging.warning(
     "compdat2df has been renamed to compdat, update your code before ecl2df 0.4.0"
 )
 
+# pylint: disable=wrong-import-position
 from .compdat import deck2dfs

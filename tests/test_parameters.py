@@ -6,8 +6,8 @@ from __future__ import print_function
 
 import os
 
-import yaml
 import json
+import yaml
 
 from ecl2df.parameters import load, load_all, find_parameter_files
 from ecl2df.eclfiles import EclFiles

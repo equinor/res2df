@@ -2,6 +2,7 @@ name = "ecl2df"
 
 try:
     from .version import version
+
     __version__ = version
 except ImportError:
     __version__ = "v0.0.0"
@@ -22,4 +23,3 @@ from . import (
     trans,
     wcon,
 )
-

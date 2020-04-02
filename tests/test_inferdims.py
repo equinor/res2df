@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for satfunc2df"""
 
 from __future__ import absolute_import
@@ -32,6 +31,7 @@ def test_guess_ntequil():
 
 
 def test_guess_satnumcount():
+    """Test that we are able to guess the SATUM count in difficult cases"""
     # We always require a newline after a "/" in the Eclipse syntax
     # (anything between a / and \n is ignored)
     assert inferdims.guess_dim("SWOF\n0/\n0/\n", "TABDIMS", 0) == 2

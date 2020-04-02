@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for user API for ecl2df"""
 
 from __future__ import absolute_import
@@ -21,17 +20,22 @@ def test_userapi():
     To the user reading the source: Skip all 'assert' lines, read the rest.
 
     """
-    ef = ecl2df.EclFiles(DATAFILE)
+    eclfiles = ecl2df.EclFiles(DATAFILE)
 
-    grid_df = ecl2df.grid.df(ef)
-    grst_df = ecl2df.grid.df(ef, rstdates="last")
-    nnc = ecl2df.nnc.df(ef)
-    rft = ecl2df.rft.df(ef)
-    smry = ecl2df.summary.df(ef)
-    wcon = ecl2df.wcon.df(ef)
-    compdatdf = ecl2df.compdat.df(ef)
-    equil = ecl2df.equil.df(ef)
-    gruptree = ecl2df.gruptree.df(ef)
+    compdatdf = ecl2df.compdat.df(eclfiles)
+    equil = ecl2df.equil.df(eclfiles)
+    faults = ecl2df.faults.df(eclfiles)
+    fipreports = ecl2df.fipreports.df(eclfiles)
+    grid_df = ecl2df.grid.df(eclfiles)
+    grst_df = ecl2df.grid.df(eclfiles, rstdates="last")
+    gruptree = ecl2df.gruptree.df(eclfiles)
+    nnc = ecl2df.nnc.df(eclfiles)
+    pillars = ecl2df.pillars.df(eclfiles)
+    rft = ecl2df.rft.df(eclfiles)
+    satfund = ecl2df.satfunc.df(eclfiles)
+    smry = ecl2df.summary.df(eclfiles)
+    trans = ecl2df.trans.df(eclfiles)
+    wcon = ecl2df.wcon.df(eclfiles)
 
     assert "PORV" in grid_df
     assert "SOIL" not in grid_df

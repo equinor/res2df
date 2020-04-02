@@ -144,8 +144,9 @@ def load(filename):
         logger.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
         raise ValueError("Could not parse {}".format(filename))
     else:
-        # Filter to values that are NOT dict's. We can have dict as value when "grouped"
-        # keys are present in the json files, both as "group:key value" and in a dict called group
+        # Filter to values that are NOT dict's. We can have dict as value when
+        # "grouped" keys are present in the json files, both as "group:key value"
+        # and in a dict called group
         params_dict = {
             key: value
             for (key, value) in params_dict.items()

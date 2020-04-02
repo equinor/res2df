@@ -101,7 +101,6 @@ def df(
             "Vectors %s not found, skipping", str(set(vectors) - set(existing_vectors))
         )
     vectors = existing_vectors
-    transrows = []
     logger.info("Building transmissibility dataframe")
     if not onlykdir:
         tranx = pd.DataFrame(grid_df[grid_df["TRANX"] > 0][["I", "J", "K", "TRANX"]])

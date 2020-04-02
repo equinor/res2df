@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for layer mapping to zone names"""
 
 from __future__ import absolute_import

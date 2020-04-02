@@ -113,13 +113,15 @@ def df(prtfile, fipname="FIPNUM"):
     DATE and region index added.
 
     Args:
-        prtfile (string): filename
+        prtfile (string or EclFiles): filename (*PRT) or an EclFiles object
         fipname (string): The name of the regport regions, FIPNUM, FIPZON or whatever
             Max length of the string is 8, the first three characters must be FIP,
             and the next 3 characters must be unique for a given Eclipse deck.
     Returns:
         pd.DataFrame
     """
+    if isinstance(prtfile, EclFiles):
+        prtfile = prtfile.get_prtfilename()
     if not fipname.startswith("FIP"):
         raise ValueError("fipname must start with FIP")
     if len(fipname) > 8:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for wcon"""
 
 from __future__ import absolute_import
@@ -34,8 +33,10 @@ def test_ad_hoc_wconparser():
     """This is the temporary parser that we need until opm-common is
     up to speed"""
     items = ad_hoc_wconparser(
-        ("'OP_2'  OPEN  RESV 3862.069 94.14519 710620.7 "
-        "   1*       1*       1*       1* "),
+        (
+            "'OP_2'  OPEN  RESV 3862.069 94.14519 710620.7 "
+            "   1*       1*       1*       1* "
+        ),
         "WCONPROD",
     )
     print(items)
@@ -72,6 +73,7 @@ def test_wcon2df():
 
 
 def test_str2df():
+    """Test dataframe extraction from strings"""
     wconstr = """
 WCONHIST
   'FOO' 0 1 /
@@ -110,6 +112,7 @@ WCONPROD
 
 
 def test_tstep():
+    """Test that we support the TSTEP keyword"""
     schstr = """
 DATES
    1 MAY 2001 /

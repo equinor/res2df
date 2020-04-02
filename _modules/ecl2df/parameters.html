@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.parameters &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df.parameters &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -301,8 +301,9 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">yaml_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_error</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_error</span><span class="p">))</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not parse </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># Filter to values that are NOT dict&#39;s. We can have dict as value when &quot;grouped&quot;</span>
-        <span class="c1"># keys are present in the json files, both as &quot;group:key value&quot; and in a dict called group</span>
+        <span class="c1"># Filter to values that are NOT dict&#39;s. We can have dict as value when</span>
+        <span class="c1"># &quot;grouped&quot; keys are present in the json files, both as &quot;group:key value&quot;</span>
+        <span class="c1"># and in a dict called group</span>
         <span class="n">params_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">key</span><span class="p">:</span> <span class="n">value</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>

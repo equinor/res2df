@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.fipreports &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -270,13 +270,15 @@
 <span class="sd">    DATE and region index added.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        prtfile (string): filename</span>
+<span class="sd">        prtfile (string or EclFiles): filename (*PRT) or an EclFiles object</span>
 <span class="sd">        fipname (string): The name of the regport regions, FIPNUM, FIPZON or whatever</span>
 <span class="sd">            Max length of the string is 8, the first three characters must be FIP,</span>
 <span class="sd">            and the next 3 characters must be unique for a given Eclipse deck.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prtfile</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">):</span>
+        <span class="n">prtfile</span> <span class="o">=</span> <span class="n">prtfile</span><span class="o">.</span><span class="n">get_prtfilename</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">fipname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;FIP&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;fipname must start with FIP&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fipname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">:</span>

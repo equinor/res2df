@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -251,25 +251,51 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">itemlist</span> <span class="o">=</span> <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="n">itemlistname</span><span class="p">][</span><span class="n">recordindex</span><span class="p">]</span>
 
+    <span class="c1"># Loop over the items in the &quot;items&quot; section of the json keyword</span>
+    <span class="c1"># description.</span>
+    <span class="c1"># Usually these items refer to one number/value in the deck record (&quot;one line&quot;)</span>
+    <span class="c1"># but for some keywords there are more values, like for PVTO</span>
     <span class="k">for</span> <span class="n">item_idx</span><span class="p">,</span> <span class="n">jsonitem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">itemlist</span><span class="p">):</span>
         <span class="n">item_name</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="c1"># Cleanup after 2020.03 for opm-common is released</span>
         <span class="c1"># to not use the private property __defaulted</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="s2">&quot;__defaulted&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span>
-            <span class="n">item_idx</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">__defaulted</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
-            <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
-                <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="n">deckitem_fn</span><span class="p">[</span><span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]]</span>
-            <span class="p">)(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Determine if there value is defaulted in the deck:</span>
+        <span class="n">defaulted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="s2">&quot;__defaulted&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">defaulted</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">__defaulted</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="c1"># Code this better, ask for defaulted propertiies properly</span>
+                <span class="c1"># (we end here for items which are lists, e.g. the</span>
+                <span class="c1"># DATA item of the PVTO keyword)</span>
+                <span class="k">pass</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">defaulted</span><span class="p">:</span>
+            <span class="c1"># Do the data extraction from the record:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                    <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="n">deckitem_fn</span><span class="p">[</span><span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]]</span>
+                <span class="p">)(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># items -&gt; size_type is set to ALL in json in these cases,</span>
+                <span class="c1"># means that the deck record consists of arbitrary sized lists</span>
+                <span class="c1"># (but multiple of len(items -&gt; dimension))</span>
+                <span class="c1"># Currently only PVT* ends here:</span>
+                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="s2">&quot;get_raw_data_list&quot;</span><span class="p">)()</span>
+                <span class="c1"># This data must then be unrolled somewhere.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">jsonitem</span><span class="p">:</span>
+                <span class="c1"># Use the default value provided in the json file for</span>
+                <span class="c1"># the keyword.</span>
                 <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Give up giving a sensible default value.</span>
                 <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">if</span> <span class="n">renamer</span><span class="p">:</span>
         <span class="n">renamed_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">rec_dict</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">renamer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">renamer</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="n">renamed_dict</span><span class="p">[</span><span class="n">renamer</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rec_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">renamed_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>

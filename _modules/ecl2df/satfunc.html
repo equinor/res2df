@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -274,14 +274,14 @@
             <span class="p">)</span>
             <span class="n">ntsfun_estimate</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">guess_dim</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">),</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ntsfun_estimate</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">),</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">NTSFUN_POS</span><span class="p">,</span> <span class="n">ntsfun_estimate</span>
             <span class="p">)</span>
             <span class="c1"># Re-parse the modified deck:</span>
             <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">augmented_strdeck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_dimcount</span><span class="p">(</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">),</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">satnumcount</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">),</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">NTSFUN_POS</span><span class="p">,</span> <span class="n">satnumcount</span>
             <span class="p">)</span>
             <span class="c1"># Re-parse the modified deck:</span>
             <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>

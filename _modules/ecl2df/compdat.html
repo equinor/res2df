@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -331,7 +331,8 @@
     <span class="c1"># 1. Merge compdata and compsegs</span>
     <span class="c1"># 2. Then we are ready.. compsegs contains the correct branch number</span>
 
-    <span class="c1"># compdatsegs = pd.merge(compdat_df, compsegs_df, on=[&quot;date&quot;, &quot;well&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;])</span>
+    <span class="c1"># compdatsegs = pd.merge(compdat_df,</span>
+    <span class="c1">#                        compsegs_df, on=[&quot;date&quot;, &quot;well&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;])</span>
     <span class="c1"># WARNING: Only correct for dual-branch wells,</span>
     <span class="c1"># not triple-branach wells with ICD..</span>
     <span class="n">compsegs_icd_df</span> <span class="o">=</span> <span class="n">compsegs_df</span><span class="p">[</span><span class="n">compsegs_df</span><span class="o">.</span><span class="n">branch</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
@@ -442,8 +443,6 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initvectors</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty COMPDAT data being written to disk!&quot;</span><span class="p">)</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.trans &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df.trans &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -258,7 +258,6 @@
             <span class="s2">&quot;Vectors </span><span class="si">%s</span><span class="s2"> not found, skipping&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">existing_vectors</span><span class="p">))</span>
         <span class="p">)</span>
     <span class="n">vectors</span> <span class="o">=</span> <span class="n">existing_vectors</span>
-    <span class="n">transrows</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building transmissibility dataframe&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">onlykdir</span><span class="p">:</span>
         <span class="n">tranx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">grid_df</span><span class="p">[</span><span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;TRANX&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">][[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;TRANX&quot;</span><span class="p">]])</span>

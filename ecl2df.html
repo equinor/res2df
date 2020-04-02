@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev8+g1a80b50 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev8+g1a80b50
+                0.5.2.dev9+g5edb527
               </div>
             
           
@@ -670,7 +670,8 @@ None and EQLDIMS is not present, it will be inferred.</p></li>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to fill with arguments</p>
+<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to
+fill with arguments</p>
 </dd>
 </dl>
 </dd></dl>
@@ -791,7 +792,7 @@ DATE and region index added.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prtfile</strong> (<em>string</em>) – filename</p></li>
+<li><p><strong>prtfile</strong> (<em>string</em><em> or </em><a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – filename (<a href="#id1"><span class="problematic" id="id2">*</span></a>PRT) or an EclFiles object</p></li>
 <li><p><strong>fipname</strong> (<em>string</em>) – The name of the regport regions, FIPNUM, FIPZON or whatever
 Max length of the string is 8, the first three characters must be FIP,
 and the next 3 characters must be unique for a given Eclipse deck.</p></li>
@@ -1137,7 +1138,8 @@ object. This function is recursive</p>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to fill with arguments</p>
+<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser
+to fill with arguments</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1572,7 +1574,7 @@ by adding the prefix <code class="docutils literal notranslate"><span class="pre
 <span id="ecl2df-satfunc-module"></span><h2>ecl2df.satfunc module<a class="headerlink" href="#module-ecl2df.satfunc" title="Permalink to this headline">¶</a></h2>
 <p>Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.</p>
-<p>Data can be extracted from a full Eclipse deck (<a href="#id1"><span class="problematic" id="id2">*</span></a>.DATA)
+<p>Data can be extracted from a full Eclipse deck (<a href="#id3"><span class="problematic" id="id4">*</span></a>.DATA)
 or from individual files.</p>
 <p>Note that when parsing from individual files, it is
 undefined in the syntax how many saturation functions (SATNUMs) are
@@ -1927,7 +1929,8 @@ the dataframe</p></li>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to fill with arguments</p>
+<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to
+fill with arguments</p>
 </dd>
 </dl>
 </dd></dl>

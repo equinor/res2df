@@ -94,25 +94,53 @@ def parse_opmio_deckrecord(
     else:
         itemlist = OPMKEYWORDS[keyword][itemlistname][recordindex]
 
+    # Loop over the items in the "items" section of the json keyword
+    # description.
+    # Usually these items refer to one number/value in the deck record ("one line")
+    # but for some keywords there are more values, like for PVTO
     for item_idx, jsonitem in enumerate(itemlist):
         item_name = jsonitem["name"]
         # Cleanup after 2020.03 for opm-common is released
         # to not use the private property __defaulted
-        if not hasattr(record[item_idx], "__defaulted") or not record[
-            item_idx
-        ].__defaulted(0):
-            rec_dict[item_name] = getattr(
-                record[item_idx], deckitem_fn[jsonitem["value_type"]]
-            )(0)
+
+        # Determine if there value is defaulted in the deck:
+        defaulted = False
+        if hasattr(record[item_idx], "__defaulted"):
+            try:
+                defaulted = record[item_idx].__defaulted(0)
+            except IndexError:
+                # Code this better, ask for defaulted propertiies properly
+                # (we end here for items which are lists, e.g. the
+                # DATA item of the PVTO keyword)
+                pass
+        if not defaulted:
+            # Do the data extraction from the record:
+            if len(record[item_idx]) == 1:
+                rec_dict[item_name] = getattr(
+                    record[item_idx], deckitem_fn[jsonitem["value_type"]]
+                )(0)
+            else:
+                # items -> size_type is set to ALL in json in these cases,
+                # means that the deck record consists of arbitrary sized lists
+                # (but multiple of len(items -> dimension))
+                # Currently only PVT* ends here:
+                rec_dict[item_name] = getattr(
+                    record[item_idx], "get_raw_data_list"
+                )()
+                # This data must then be unrolled somewhere.
         else:
             if "default" in jsonitem:
+                # Use the default value provided in the json file for
+                # the keyword.
                 rec_dict[item_name] = jsonitem["default"]
             else:
+                # Give up giving a sensible default value.
                 rec_dict[item_name] = None
+
     if renamer:
         renamed_dict = {}
         for key in rec_dict:
-            if key in renamer:
+            if key in renamer and not isinstance(renamer[key], list):
                 renamed_dict[renamer[key]] = rec_dict[key]
             else:
                 renamed_dict[key] = rec_dict[key]

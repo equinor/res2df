@@ -34,8 +34,10 @@ def test_ad_hoc_wconparser():
     """This is the temporary parser that we need until opm-common is
     up to speed"""
     items = ad_hoc_wconparser(
-        ("'OP_2'  OPEN  RESV 3862.069 94.14519 710620.7 "
-        "   1*       1*       1*       1* "),
+        (
+            "'OP_2'  OPEN  RESV 3862.069 94.14519 710620.7 "
+            "   1*       1*       1*       1* "
+        ),
         "WCONPROD",
     )
     print(items)

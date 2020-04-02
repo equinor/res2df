@@ -16,6 +16,8 @@ from ecl2df import EclFiles
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
+# Constants to use for pointing to positions in the TABDIMS keyword
+NTSFUN_POS = 0
 
 def guess_dim(deckstring, dimkeyword, dimitem=0):
     """Guess the correct dimension count for an incoming deck (string)

@@ -12,13 +12,14 @@ from ecl2df import common
 
 def test_opmkeywords():
     """Test that we have loaded some keyword metadata from json files on disk"""
-    assert 'WCONPROD' in common.OPMKEYWORDS
-    assert common.OPMKEYWORDS['WCONPROD']
-    assert 'name' in common.OPMKEYWORDS['WCONPROD']
-    assert 'BHP'  in [x['name']for x in common.OPMKEYWORDS['WCONPROD']['items']]
+    assert "WCONPROD" in common.OPMKEYWORDS
+    assert common.OPMKEYWORDS["WCONPROD"]
+    assert "name" in common.OPMKEYWORDS["WCONPROD"]
+    assert "BHP" in [x["name"] for x in common.OPMKEYWORDS["WCONPROD"]["items"]]
 
     # This file should not be parsed..
-    assert 'README' not in common.OPMKEYWORDS
+    assert "README" not in common.OPMKEYWORDS
+
 
 def test_stack_on_colname():
     """ Test that we can stack column with an implicit double level

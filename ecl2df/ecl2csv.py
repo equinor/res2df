@@ -9,22 +9,26 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import sys
+
 import argparse
 
+import six
+
 from ecl2df import (
-    grid,
-    nnc,
-    faults,
+    compdat,
     equil,
-    gruptree,
-    rft,
-    pillars,
+    faults,
     fipreports,
+    grid,
+    gruptree,
+    nnc,
+    pillars,
+    rft,
     satfunc,
     summary,
     trans,
     wcon,
-    compdat,
 )
 
 from ecl2df import __version__
@@ -44,7 +48,13 @@ def get_parser():
         action="version",
         version="%(prog)s {version}".format(version=__version__),
     )
-    subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
+
+    if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
+       subparsers = parser.add_subparsers(
+            required=True, dest="subcommand", parser_class=argparse.ArgumentParser
+        )
+    else:
+        subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
 
     # Eclipse output files:
     grid_parser = subparsers.add_parser(

@@ -10,6 +10,7 @@ import json
 import logging
 import datetime
 
+import numpy as np
 import pandas as pd
 
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
@@ -63,6 +64,70 @@ def parse_ecl_month(eclmonth):
         "DEC": 12,
     }
     return eclmonth2num[eclmonth]
+
+
+def ecl_keyworddata_to_df(
+    deck, keyword, renamer=None, indexname=None, emptyrecordcountername=None
+):
+    """Extract data associated to an Eclipse keyword into a tabular form.
+
+    Works for selected keywords.
+
+    Arguments:
+        deck (opm.common.Deck): Parsed deck
+        keyword (str): Name of the keyword for which to extract data.
+        renamer (dict): Mapping of names present in OPM json files for the
+            keyword to desired column names in returned dataframe
+        indexname (str): If present, an extra column is added with this name
+            with consecutive rows enumerated from 1. Use this to assign
+            EQLNUM or similar when this should be consecutive pr. row (not
+            the case for all keywords).
+        emptyrecordname (str): If supplied, an index is added to every parsed
+            row based on how many empty records is encountered. For PVTO f.ex,
+            this gives the PVTNUM indexing.
+    """
+    records = []  # list of dicts or dataframes
+
+    record_counter = 1
+    emptyrecord_counter = 1
+    for deckrecord in deck[keyword]:
+        recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
+        # If all values are None, this is an empty record, and for some
+        # keywords this signifies that we jump to the next table, e.g. for PVTO
+        if all(
+            [value is None for value in recdict.values() if not isinstance(value, list)]
+        ):
+            if "DATA" not in recdict or ("DATA" in recdict and not recdict["DATA"]):
+                emptyrecord_counter += 1
+                continue
+        if emptyrecordcountername is not None:
+            recdict[emptyrecordcountername] = emptyrecord_counter
+        if indexname is not None:
+            recdict[indexname] = record_counter
+        # Now some keywords have an arbitrary amount of data for a record, f.ex.
+        # PVTO, where multiple undersaturated lines can be added. We want
+        # to unroll this data. We detect this situation by the item name "DATA" in
+        # the json files, and that its value is of list type:
+        if "DATA" in recdict and isinstance(recdict["DATA"], list):
+            # If DATA is sometimes used for something else in the jsons, redo this.
+            data_dim = len(renamer["DATA"])  # The renamers must be in sync with json!
+            data_chunks = int(len(recdict["DATA"]) / data_dim)
+            data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
+            data_df = pd.DataFrame(columns=renamer["DATA"], data=data_reshaped)
+            # Assign the remaining items from the parsed dict to the dataframe:
+            for key, value in recdict.items():
+                if key != "DATA":
+                    data_df[key] = recdict[key]
+            records.append(data_df)
+            record_counter += 1
+        else:
+            records.append(recdict)
+            record_counter += 1
+    if isinstance(records[0], pd.DataFrame):
+        dframe = pd.concat(records)
+    else:  # records contain lists.
+        dframe = pd.DataFrame(data=records)
+    return dframe
 
 
 def parse_opmio_deckrecord(

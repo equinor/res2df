@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Support module for inferring EQLDIMS and TABDIMS from incomplete
 Eclipse 100 decks (typically single include-files)
@@ -9,6 +8,8 @@ from __future__ import absolute_import
 from __future__ import division
 
 import logging
+import six
+
 import opm.io
 
 from ecl2df import EclFiles
@@ -16,9 +17,8 @@ from ecl2df import EclFiles
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-# Constants to use for pointing to positions in the TABDIMS keyword
-NTPVT_POS = 1
-NTSFUN_POS = 0
+# Constants to use for pointing to positions in the xxxDIMS keyword
+DIMS_POS = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)
 
 
 def guess_dim(deckstring, dimkeyword, dimitem=0):
@@ -93,6 +93,8 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
     This is simple string manipulation, not opm.io
     deck manipulation (which might be possible to do).
 
+    This function is to be wrapped by inject_xxxdims_ntxxx()
+
     Arguments:
         deckstr (str): A string containing a partial deck (f.ex only
             the SWOF keyword).
@@ -123,3 +125,55 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
         + " /\n\n"
         + str(deckstr)
     )
+
+
+def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
+    """Ensures TABDIMS/EQLDIMS is present in a deck.
+
+    If ntxxx_value=None and ntxxx_name not in the deck, ntxxx_name will
+    be inferred through trial-and-error parsing of the deck, and then injected
+    into the deck.
+
+    Args:
+        xxxdims (str): TABDIMS or EQLDIMS
+        ntxxx_name (str): NTPVT, NTEQUL or NTSFUN
+        deck (str or opm.io deck): A data deck. If ntxxx_name is to be estimated
+            this must be a string and not a fully parsed deck.
+        npxxx_value (int): Supply this if ntxxx_name is known, but not present in the
+            deck, this will override any guessing. If the deck already
+            contains XXXDIMS, this will be ignored.
+
+    Returns:
+        opm.io Deck object
+    """
+    assert xxxdims in ["TABDIMS", "EQLDIMS"]
+    assert ntxxx_name in ["NTPVT", "NTEQUL", "NTSFUN"]
+    if xxxdims not in deck:
+        if not isinstance(deck, six.string_types):
+            msg = "Can't guess {} from a parsed deck without {}.\n".format(
+                ntxxx_name, xxxdims
+            )
+            msg += "Only data for the first PVT region will be returned.\n"
+            msg += "Supply the deck as a string to automatically determine NTPVT"
+            logger.critical(msg)
+            ntxxx_value = 1
+        else:
+            if ntxxx_value is None:
+                ntxxx_estimate = guess_dim(deck, xxxdims, DIMS_POS[ntxxx_name])
+                logger.warning("Guessed %s=%s", ntxxx_name, str(ntxxx_estimate))
+            else:
+                ntxxx_estimate = ntxxx_value
+            augmented_strdeck = inject_dimcount(
+                str(deck), xxxdims, DIMS_POS[ntxxx_name], ntxxx_estimate
+            )
+            # Overwrite the deck object
+            deck = EclFiles.str2deck(augmented_strdeck)
+    else:
+        if ntxxx_value is not None:
+            logger.warning(
+                "Ignoring {} argument, it is already in the deck", str(ntxxx_name)
+            )
+    if isinstance(deck, six.string_types):
+        # If a string is supplied as a deck, we always return a parsed Deck object
+        deck = EclFiles.str2deck(deck)
+    return deck

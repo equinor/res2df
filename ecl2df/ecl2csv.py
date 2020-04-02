@@ -223,7 +223,7 @@ def get_parser():
         description=("Each row contains the equilibriation data for one EQLNUM."),
     )
     equil.fill_parser(equil_parser)
-    equil_parser.set_defaults(func=equil.equil2df_main)
+    equil_parser.set_defaults(func=equil.equil_main)
 
     gruptree_parser = subparsers.add_parser(
         "gruptree",

@@ -9,15 +9,14 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
+import datetime
 import logging
 
 import numpy as np
 import pandas as pd
 
-from ecl2df import inferdims
+from ecl2df import inferdims, common, __version__
 from .eclfiles import EclFiles
-
-from .common import ecl_keyworddata_to_df, comment_formatter
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -113,7 +112,7 @@ def inject_tabdims_ntpvt(deck, ntpvt=None):
             else:
                 pvtnum_estimate = ntpvt
             augmented_strdeck = inferdims.inject_dimcount(
-                str(deck), "TABDIMS", inferdims.NTPVT_POS, pvtnum_estimate
+                str(deck), "TABDIMS", inferdims.DIMS_POS["NTPVT"], pvtnum_estimate
             )
             # Overwrite the deck object
             deck = EclFiles.str2deck(augmented_strdeck)
@@ -135,8 +134,8 @@ def pvtw_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    return ecl_keyworddata_to_df(
-        deck, "PVTW", renamer=RENAMERS["PVTW"], indexname="PVTNUM"
+    return common.ecl_keyworddata_to_df(
+        deck, "PVTW", renamer=RENAMERS["PVTW"], recordcountername="PVTNUM"
     )
 
 
@@ -150,8 +149,8 @@ def density_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    return ecl_keyworddata_to_df(
-        deck, "DENSITY", renamer=RENAMERS["DENSITY"], indexname="PVTNUM"
+    return common.ecl_keyworddata_to_df(
+        deck, "DENSITY", renamer=RENAMERS["DENSITY"], recordcountername="PVTNUM"
     )
 
 
@@ -165,8 +164,8 @@ def rock_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    return ecl_keyworddata_to_df(
-        deck, "ROCK", renamer=RENAMERS["ROCK"], indexname="PVTNUM"
+    return common.ecl_keyworddata_to_df(
+        deck, "ROCK", renamer=RENAMERS["ROCK"], recordcountername="PVTNUM"
     )
 
 
@@ -180,7 +179,7 @@ def pvto_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    pvto_df = ecl_keyworddata_to_df(
+    pvto_df = common.ecl_keyworddata_to_df(
         deck, "PVTO", renamer=RENAMERS["PVTO"], emptyrecordcountername="PVTNUM"
     )
     return pvto_df
@@ -196,8 +195,8 @@ def pvdo_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    pvdg_df = ecl_keyworddata_to_df(
-        deck, "PVDO", renamer=RENAMERS["PVDO"], indexname="PVTNUM"
+    pvdg_df = common.ecl_keyworddata_to_df(
+        deck, "PVDO", renamer=RENAMERS["PVDO"], recordcountername="PVTNUM"
     )
     return pvdg_df
 
@@ -212,8 +211,8 @@ def pvdg_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    pvdg_df = ecl_keyworddata_to_df(
-        deck, "PVDG", renamer=RENAMERS["PVDG"], indexname="PVTNUM"
+    pvdg_df = common.ecl_keyworddata_to_df(
+        deck, "PVDG", renamer=RENAMERS["PVDG"], recordcountername="PVTNUM"
     )
     return pvdg_df
 
@@ -228,7 +227,7 @@ def pvtg_fromdeck(deck, ntpvt=None):
     """
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    pvtg_df = ecl_keyworddata_to_df(
+    pvtg_df = common.ecl_keyworddata_to_df(
         deck, "PVTG", renamer=RENAMERS["PVTG"], emptyrecordcountername="PVTNUM"
     )
     return pvtg_df
@@ -261,7 +260,7 @@ def df(deck, keywords=None, ntpvt=None):
         deck = deck.get_ecldeck()
     if "TABDIMS" not in deck:
         deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
-    ntpvt = deck["TABDIMS"][0][inferdims.NTPVT_POS].get_int(0)
+    ntpvt = deck["TABDIMS"][0][inferdims.DIMS_POS["NTPVT"]].get_int(0)
     if keywords[0] is None and len(keywords) == 1:
         # By default, select all supported PVT keywords:
         keywords = SUPPORTED_KEYWORDS
@@ -336,30 +335,7 @@ def fill_reverse_parser(parser):
     Arguments:
         parser (ArgumentParser or subparser): parser to fill with arguments
     """
-    parser.add_argument(
-        "csvfile", help="Name of CSV file with PVT data on ecl2df format"
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=str,
-        help=(
-            "Name of output Eclipse include file file, default pvt.inc. "
-            "Use '-' for stdout."
-        ),
-        default="pvt.inc",
-    )
-    parser.add_argument(
-        "-k",
-        "--keywords",
-        nargs="+",
-        help=(
-            "List of PVT keywords to include. "
-            "If not supplied, all supported and found keywords will be included."
-        ),
-    )
-    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    return parser
+    return common.fill_reverse_parser(parser, "PVT", "pvt.inc")
 
 
 def pvt_main(args):
@@ -429,63 +405,12 @@ def df2ecl(pvt_df, keywords=None, comments=None):
         keywords (list of str): List of keywords to include. Must be
             supported and present in the incoming dataframe.
         comments (dict): Dictionary indexed by keyword with comments to be
-            included pr.  keyword.
+            included pr. keyword. If a key named "master" is present
+            it will be used as a master comment for the outputted file.
     """
-    # Check consecutive PVTNUM in frame:
-    if pvt_df.empty:
-        raise ValueError("Empty dataframe")
-    if "PVTNUM" in pvt_df:
-        if not (
-            min(pvt_df["PVTNUM"]) == 1
-            and len(pvt_df["PVTNUM"].unique()) == max(pvt_df["PVTNUM"])
-        ):
-            logger.critical(
-                "PVTNUM inconsistent in input dataframe, got the values %s",
-                str(pvt_df["PVTNUM"].unique()),
-            )
-            raise ValueError
-
-    # "KEYWORD" must always be in the dataframe:
-    if "KEYWORD" not in pvt_df:
-        raise ValueError("KEYWORD must be in the dataframe")
-
-    if comments is None:
-        comments = {}
-    if not isinstance(keywords, list):
-        keywords = [keywords]  # Can still be None
-    keywords_in_frame = set(pvt_df["KEYWORD"])
-    if keywords[0] is None and len(keywords) == 1:
-        # By default, select all supported PVT keywords:
-        keywords = SUPPORTED_KEYWORDS
-    else:
-        # Warn if some keywords are unsupported:
-        not_supported = set(keywords) - set(SUPPORTED_KEYWORDS)
-        if not_supported:
-            logger.warning(
-                "Requested keyword(s) not supported by ecl2df.pvt: %s",
-                str(not_supported),
-            )
-        # Reduce to only supported keywords:
-        keywords = list(set(keywords) - set(not_supported))
-        # Warn if some requested keywords are not in frame:
-        not_in_frame = set(keywords) - keywords_in_frame
-        if not_in_frame:
-            logger.warning(
-                "Requested keyword(s) not present in dataframe: %s", str(not_in_frame)
-            )
-    keywords = keywords_in_frame.intersection(keywords).intersection(
-        set(SUPPORTED_KEYWORDS)
+    return common.df2ecl(
+        pvt_df, keywords, comments, supported=SUPPORTED_KEYWORDS, consecutive="PVTNUM"
     )
-    string = ""
-    for keyword in keywords:
-        # Construct the associated function names
-        function_name = "df2ecl_" + keyword.lower()
-        function = globals()[function_name]
-        if keyword in comments:
-            string += function(pvt_df, comments[keyword])
-        else:
-            string += function(pvt_df)
-    return string
 
 
 def df2ecl_rock(dframe, comment=None):
@@ -496,7 +421,7 @@ def df2ecl_rock(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "ROCK\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21}\n".format("PRESSURE", "COMPRESSIBILITY")
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -524,7 +449,7 @@ def df2ecl_density(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "DENSITY\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "OILDENSITY", "WATERDENSITY", "GASDENSITY"
     )
@@ -548,12 +473,15 @@ def df2ecl_density(dframe, comment=None):
 def df2ecl_pvtw(dframe, comment=None):
     """Print PVTW keyword with data
 
+    PVTW is one line/record with data for a reference pressure
+    for each PVTNUM.
+
     Args:
         dframe (pd.DataFrame): Containing PVTW data
         comment (str): Text that will be included as a comment
     """
     string = "PVTW\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21} {:^21} {:^21}  \n".format(
         "PRESSURE", "VOLUMEFACTOR", "COMPRESSIBILITY", "VISCOSITY", "VISCOSIBILITY"
     )
@@ -578,12 +506,14 @@ def df2ecl_pvtw(dframe, comment=None):
 def df2ecl_pvtg(dframe, comment=None):
     """Print DENSITY keyword with data
 
+    DENSITY is one line (one record) of data pr. PVTNUM
+
     Args:
         dframe (pd.DataFrame): Containing PVTG data
         comment (str): Text that will be included as a comment
     """
     string = "DENSITY\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "OILDENSITY", "WATERDENSITY", "GASDENSITY"
     )
@@ -607,12 +537,15 @@ def df2ecl_pvtg(dframe, comment=None):
 def df2ecl_pvdg(dframe, comment=None):
     """Print PVDG keyword with data
 
+    This data consists of one table (volumefactor and visosity
+    as a function of pressure) pr. PVTNUM.
+
     Args:
         dframe (pd.DataFrame): Containing PVDG data
         comment (str): Text that will be included as a comment
     """
     string = "PVDG\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
     )
@@ -622,9 +555,6 @@ def df2ecl_pvdg(dframe, comment=None):
     else:
         subset = dframe[dframe["KEYWORD"] == "PVDG"]
     if "PVTNUM" not in subset:
-        if len(subset) != 1:
-            logger.critical("If PVTNUM is not supplied, only one row should be given")
-            return ""
         subset["PVTNUM"] = 1
 
     def _pvdg_pvtnum(dframe):
@@ -661,7 +591,7 @@ def df2ecl_pvdo(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "PVDO\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
     )
@@ -710,7 +640,7 @@ def df2ecl_pvto(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "PVTO\n"
-    string += comment_formatter(comment)
+    string += common.comment_formatter(comment)
     string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
         "RS", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
     )

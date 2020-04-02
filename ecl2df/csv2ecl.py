@@ -15,7 +15,7 @@ import argparse
 
 import six
 
-from ecl2df import pvt
+from ecl2df import pvt, equil
 
 from ecl2df import __version__
 
@@ -42,16 +42,27 @@ def get_parser():
     else:
         subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
 
+    equil_parser = subparsers.add_parser(
+        "equil",
+        help="Write SOLUTION include files",
+        description=(
+            "Write SOLUTION keywords (EQUIL, RSVD, RVVD) "
+            "to Eclipse include files from CSV in ecl2df format."
+        ),
+    )
+    equil.fill_reverse_parser(equil_parser)
+    equil_parser.set_defaults(func=equil.equil_reverse_main)
+
     pvt_parser = subparsers.add_parser(
         "pvt",
         help="Write PVT include files",
         description=(
-            "Write Eclipse include files from dataframes/CSV files on "
-            "the ecl2df format."
+            "Write Eclipse include files from CSV files on " "the ecl2df format."
         ),
     )
     pvt.fill_reverse_parser(pvt_parser)
     pvt_parser.set_defaults(func=pvt.pvt_reverse_main)
+
     return parser
 
 

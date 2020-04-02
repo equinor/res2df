@@ -13,6 +13,8 @@ import datetime
 import numpy as np
 import pandas as pd
 
+from ecl2df import __version__
+
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
 # of supported Eclipse keyword data
 OPMKEYWORDS = {}
@@ -20,6 +22,7 @@ for keyw in [
     "COMPDAT",
     "COMPSEGS",
     "DENSITY",
+    "EQLDIMS",
     "EQUIL",
     "FAULTS",
     "GRUPNET",
@@ -30,6 +33,9 @@ for keyw in [
     "PVTO",
     "PVTW",
     "ROCK",
+    "RSVD",
+    "RVVD",
+    "TABDIMS",
     "WCONHIST",
     "WCONINJE",
     "WCONINJH",
@@ -67,18 +73,21 @@ def parse_ecl_month(eclmonth):
 
 
 def ecl_keyworddata_to_df(
-    deck, keyword, renamer=None, indexname=None, emptyrecordcountername=None
+    deck, keyword, renamer=None, recordcountername=None, emptyrecordcountername=None
 ):
     """Extract data associated to an Eclipse keyword into a tabular form.
 
-    Works for selected keywords.
+    Two modes of enueration of tables in the keyworddata is supported, you
+    will have to find out which one fits your particular keyword. Activate
+    by setting recordcountername or emptyrecordcountername to some string, which
+    will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.
 
     Arguments:
         deck (opm.common.Deck): Parsed deck
         keyword (str): Name of the keyword for which to extract data.
         renamer (dict): Mapping of names present in OPM json files for the
             keyword to desired column names in returned dataframe
-        indexname (str): If present, an extra column is added with this name
+        recordcountername (str): If present, an extra column is added with this name
             with consecutive rows enumerated from 1. Use this to assign
             EQLNUM or similar when this should be consecutive pr. row (not
             the case for all keywords).
@@ -102,8 +111,8 @@ def ecl_keyworddata_to_df(
                 continue
         if emptyrecordcountername is not None:
             recdict[emptyrecordcountername] = emptyrecord_counter
-        if indexname is not None:
-            recdict[indexname] = record_counter
+        if recordcountername is not None:
+            recdict[recordcountername] = record_counter
         # Now some keywords have an arbitrary amount of data for a record, f.ex.
         # PVTO, where multiple undersaturated lines can be added. We want
         # to unroll this data. We detect this situation by the item name "DATA" in
@@ -145,7 +154,9 @@ def parse_opmio_deckrecord(
             list index to the "record"
             Beware, there are multiple concepts here for what we call a record.
         renamer (dict): If supplied, this dictionary will be used to remap
-            the keys in returned dict
+            the keys in returned dict. For items with name DATA, the dict
+            value is assumed to be a list of strings to be mapped to
+            each subitem.
     Returns:
         dict
     """
@@ -294,6 +305,173 @@ def comment_formatter(multiline, prefix="-- "):
         "\n".join([prefix + line.strip() for line in multiline.splitlines()]).strip()
         + "\n"
     )
+
+
+def handle_wanted_keywords(wanted, deck, supported, modulename=""):
+    """Handle three list of keywords, wanted, available and supported
+
+    Args:
+        keywords (list of str): None, or list of strings of user-requested keywords
+        deck (opm.common Deck): Used to query which data is available
+        supported (list of str): Keywords that are supported by the module
+        modulename (str): Name of the module calling this function, used in logging
+    """
+    if not isinstance(wanted, list):
+        wanted = [wanted]
+    if wanted[0] is None and len(wanted) == 1:
+        # By default, select all supported keywords:
+        keywords = supported
+    else:
+        # Warn if some keywords are unsupported:
+        not_supported = set(wanted) - set(supported)
+        if not_supported:
+            logger.warning(
+                "Requested keyword(s) not supported by ecl2df.%s: %s",
+                modulename,
+                str(not_supported),
+            )
+        # Reduce to only supported keywords:
+        keywords = list(set(wanted) - set(not_supported))
+        # Warn if some requested keywords are not in deck:
+        keywords_in_deck = [keyword for keyword in keywords if keyword in deck]
+        not_in_deck = set(keywords) - set(keywords_in_deck)
+        if not_in_deck:
+            logger.warning(
+                "Requested keyword(s) not present in deck: %s", str(not_in_deck)
+            )
+    # Reduce again to only present keywords, but without warning:
+    keywords = [keyword for keyword in keywords if keyword in deck]
+
+    return keywords
+
+
+def fill_reverse_parser(parser, modulename, defaultoutputfile):
+    """A standardized submodule parser for the command line utility
+    to produce Eclipse include files from a CSV file.
+
+    Arguments:
+        parser (ArgumentParser or subparser): parser to fill with arguments
+        modulename (str): Will be included in the help text
+        defaultoutputfile (str): Default output filename
+    """
+    parser.add_argument(
+        "csvfile", help="Name of CSV file with " + modulename + " data on ecl2df format"
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Name of output Eclipse include file file, default "
+            + defaultoutputfile
+            + ". "
+            "Use '-' for stdout."
+        ),
+        default=defaultoutputfile,
+    )
+    parser.add_argument(
+        "-k",
+        "--keywords",
+        nargs="+",
+        help=(
+            "List of " + modulename + " keywords to include. "
+            "If not supplied, all supported and found keywords will be included."
+        ),
+    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    return parser
+
+
+def df2ecl(dataframe, keywords=None, comments=None, supported=None, consecutive=None):
+    """Generate Eclipse include strings from dataframes in ecl2df format
+
+    Args:
+        dataframe (pd.DataFrame): Dataframe with Eclipse data on ecl2df format.
+        keywords (list of str): List of keywords to include. Will be reduced
+            to the set of keywords available in dataframe and to those supported
+        comments (dict): Dictionary indexed by keyword with comments to be
+            included pr.  keyword. If a key named "master" is present
+            it will be used as a master comment for the outputted file.
+        supported (list): List of strings of keywords which are
+            supported in this invocation of this function.
+        consecutive (str): Column name for which we require the
+            numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.
+    """
+    import inspect
+
+    from_module = inspect.stack()[1]
+    calling_module = inspect.getmodule(from_module[0])
+    if dataframe.empty:
+        raise ValueError("Empty dataframe")
+    if consecutive is not None and consecutive in dataframe:
+        if not (
+            min(dataframe[consecutive]) == 1
+            and len(dataframe[consecutive].unique()) == max(dataframe[consecutive])
+        ):
+            logger.critical(
+                "%s inconsistent in input dataframe, got the values %s",
+                consecutive,
+                str(dataframe[consecutive].unique()),
+            )
+            raise ValueError
+
+    # "KEYWORD" must always be in the dataframe:
+    if "KEYWORD" not in dataframe:
+        raise ValueError("KEYWORD must be in the dataframe")
+
+    if comments is None:
+        comments = {}
+    if not isinstance(keywords, list):
+        keywords = [keywords]  # Can still be None
+    keywords_in_frame = set(dataframe["KEYWORD"])
+    if keywords[0] is None and len(keywords) == 1:
+        # By default, select all supported PVT keywords:
+        keywords = supported
+    else:
+        # Warn if some keywords are unsupported:
+        not_supported = set(keywords) - set(supported)
+        if not_supported:
+            logger.warning(
+                "Requested keyword(s) not supported by %s: %s",
+                calling_module.__name__,
+                str(not_supported),
+            )
+        # Reduce to only supported keywords:
+        keywords = list(set(keywords) - set(not_supported))
+        # Warn if some requested keywords are not in frame:
+        not_in_frame = set(keywords) - keywords_in_frame
+        if not_in_frame:
+            logger.warning(
+                "Requested keyword(s) not present in dataframe: %s", str(not_in_frame)
+            )
+    keywords = keywords_in_frame.intersection(keywords).intersection(set(supported))
+    if not keywords:
+        # Nothing to do
+
+        return ""
+    string = ""
+    ecl2df_header = (
+        "Output file printed by "
+        + calling_module.__name__
+        + " "
+        + __version__
+        + "\n"
+        + " at "
+        + str(datetime.datetime.now())
+    )
+    string += comment_formatter(ecl2df_header)
+    string += "\n"
+    if "master" in comments:
+        string += comment_formatter(comments["master"])
+    for keyword in keywords:
+        # Construct the associated function names
+        function_name = "df2ecl_" + keyword.lower()
+        function = getattr(calling_module, function_name)
+        if keyword in comments:
+            string += function(dataframe, comments[keyword])
+        else:
+            string += function(dataframe)
+    return string
 
 
 def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):

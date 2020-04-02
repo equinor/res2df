@@ -17,7 +17,7 @@ import pandas as pd
 from ecl2df import inferdims
 from .eclfiles import EclFiles
 
-from .common import ecl_keyworddata_to_df
+from .common import ecl_keyworddata_to_df, comment_formatter
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -496,8 +496,7 @@ def df2ecl_rock(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "ROCK\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "--   {:^21} {:^21}\n".format("PRESSURE", "COMPRESSIBILITY")
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -525,8 +524,7 @@ def df2ecl_density(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "DENSITY\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "OILDENSITY", "WATERDENSITY", "GASDENSITY"
     )
@@ -555,8 +553,7 @@ def df2ecl_pvtw(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "PVTW\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21} {:^21} {:^21}  \n".format(
         "PRESSURE", "VOLUMEFACTOR", "COMPRESSIBILITY", "VISCOSITY", "VISCOSIBILITY"
     )
@@ -586,8 +583,7 @@ def df2ecl_pvtg(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "DENSITY\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "OILDENSITY", "WATERDENSITY", "GASDENSITY"
     )
@@ -616,8 +612,7 @@ def df2ecl_pvdg(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "PVDG\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
     )
@@ -666,8 +661,7 @@ def df2ecl_pvdo(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "PVDO\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
         "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
     )
@@ -716,8 +710,7 @@ def df2ecl_pvto(dframe, comment=None):
         comment (str): Text that will be included as a comment
     """
     string = "PVTO\n"
-    if comment is not None:
-        string += "-- {}\n".format(comment.strip())
+    string += comment_formatter(comment)
     string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
         "RS", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
     )

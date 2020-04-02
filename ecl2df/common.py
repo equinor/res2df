@@ -274,6 +274,28 @@ def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
     return pd.merge(df, zone_df, left_on=kname, right_on="K")
 
 
+def comment_formatter(multiline, prefix="-- "):
+    """Prepends comment characters to every line in input
+
+    If nothing is supplied, an empty string is returned.
+
+    Args:
+        multiline (str): String that can contain newlines
+        prefix (str): Comment characters to prepend every line with
+            Default is the Eclipse comment syntax '-- '
+
+    Returns:
+        string, with newlines preserved, and where each line
+            starts with the given prefix. Always ends with a newline.
+    """
+    if multiline is None or not multiline.strip():
+        return ""
+    return (
+        "\n".join([prefix + line.strip() for line in multiline.splitlines()]).strip()
+        + "\n"
+    )
+
+
 def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     """For a dataframe where some columns are multilevel, but where
     the second level is encoded in the column name, this function

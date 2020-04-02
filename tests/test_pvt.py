@@ -378,6 +378,19 @@ def test_df2ecl():
     rock_inc = pvt.df2ecl(rock_df, comments=dict(DENSITY="foo"))
     assert "foo" not in rock_inc
 
+    rock_inc = pvt.df2ecl(rock_df, comments=dict(ROCK="foo\nbar"))
+    assert "foo" in rock_inc
+    assert "bar" in rock_inc
+    # Multiline comments are tricky, is the output valid?
+    rock_df_from_inc = pvt.rock_fromdeck(rock_inc).assign(KEYWORD="ROCK")
+    # Need to sort columns for comparison, as column order does not matter
+    # in dataframes, but it does in the function assert_frame_equal
+    rock_df_from_inc = rock_df_from_inc.reindex(
+        sorted(rock_df_from_inc.columns), axis=1
+    )
+    rock_df = rock_df_from_inc.reindex(sorted(rock_df.columns), axis=1)
+    pd.testing.assert_frame_equal(rock_df_from_inc, rock_df)
+
     rock_inc = pvt.df2ecl(rock_df, keywords=["DENSITY"])
     assert not rock_inc
     rock_inc = pvt.df2ecl(rock_df, keywords="DENSITY")

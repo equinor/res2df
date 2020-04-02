@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for ecl2df.grid"""
 
 from __future__ import absolute_import
@@ -39,6 +38,8 @@ def test_gridgeometry2df():
 
 
 def test_wrongfile():
+    """Test the EclFiles object on nonexistent files"""
+    # pylint: disable=invalid-name,redefined-builtin
     try:
         FileNotFoundError
     except NameError:
@@ -111,6 +112,7 @@ def test_subvectors():
 
 
 def test_dropconstants():
+    """Test dropping of constants columns from dataframes"""
     df = pd.DataFrame(columns=["A", "B"], data=[[1, 1], [2, 1]])
     assert "B" not in grid.dropconstants(df)
     assert "A" in grid.dropconstants(df)
@@ -143,6 +145,7 @@ def test_df():
     eclfiles = EclFiles(DATAFILE)
     # assert error..
     with pytest.raises(TypeError):
+        # pylint: disable=no-value-for-parameter
         grid.df()
 
     grid_df = grid.df(eclfiles)
@@ -271,6 +274,7 @@ def test_main(tmpdir):
 
 
 def test_rstdates():
+    """Test the support of dates in restart files"""
     eclfiles = EclFiles(DATAFILE)
     # rstfile = eclfiles.get_rstfile()
 
@@ -301,6 +305,7 @@ def test_rstdates():
 
 
 def test_rst2df():
+    """Test producing dataframes from restart files"""
     eclfiles = EclFiles(DATAFILE)
     assert grid.rst2df(eclfiles, "first").shape == (35817, 23)
     assert grid.rst2df(eclfiles, "last").shape == (35817, 23)

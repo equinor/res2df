@@ -174,7 +174,8 @@ def postprocess():
     # 1. Merge compdata and compsegs
     # 2. Then we are ready.. compsegs contains the correct branch number
 
-    # compdatsegs = pd.merge(compdat_df, compsegs_df, on=["date", "well", "i", "j", "k"])
+    # compdatsegs = pd.merge(compdat_df,
+    #                        compsegs_df, on=["date", "well", "i", "j", "k"])
     # WARNING: Only correct for dual-branch wells,
     # not triple-branach wells with ICD..
     compsegs_icd_df = compsegs_df[compsegs_df.branch > 2]
@@ -285,8 +286,6 @@ def compdat2df_main(args):
     if args.verbose:
         logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
-    if eclfiles:
-        deck = eclfiles.get_ecldeck()
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     if compdat_df.empty:
         logger.warning("Empty COMPDAT data being written to disk!")

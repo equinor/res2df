@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for wcon"""
 
 from __future__ import absolute_import
@@ -74,6 +73,7 @@ def test_wcon2df():
 
 
 def test_str2df():
+    """Test dataframe extraction from strings"""
     wconstr = """
 WCONHIST
   'FOO' 0 1 /
@@ -112,6 +112,7 @@ WCONPROD
 
 
 def test_tstep():
+    """Test that we support the TSTEP keyword"""
     schstr = """
 DATES
    1 MAY 2001 /

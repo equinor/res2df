@@ -7,4 +7,5 @@ logging.warning(
     "satfunc2df has been renamed to satfunc, update your code before ecl2df 0.4.0"
 )
 
+# pylint: disable=wrong-import-position
 from .satfunc import deck2satfuncdf, deck2df  # noqa

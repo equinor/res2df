@@ -14,7 +14,6 @@ the dataframes to files in CSV format.
 
 For documentation, see <https://equinor.github.io/ecl2df/>
 
-
 ## License
 
 This library is released under GPLv3.

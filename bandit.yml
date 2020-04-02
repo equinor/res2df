@@ -1,1 +1,3 @@
-skips: ['B101']
+skips: ['B101', 'B404']
+# B101  assert_used
+# B404  import_subprocess

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for nnc2df"""
 
 from __future__ import absolute_import
@@ -7,11 +6,10 @@ from __future__ import print_function
 
 import os
 import sys
+import datetime
 
 import yaml
 import pandas as pd
-
-import datetime
 
 from ecl2df import summary, ecl2csv
 from ecl2df.eclfiles import EclFiles
@@ -192,6 +190,7 @@ def test_datenormalization():
 
 
 def test_resample_smry_dates():
+    """Test resampling of summary dates"""
     from ecl2df.summary import resample_smry_dates
 
     eclfiles = EclFiles(DATAFILE)

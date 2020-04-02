@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for nnc2df"""
 
 from __future__ import absolute_import
@@ -19,6 +18,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_rftrecords2df():
+    """Test that RFT records can be converted to dataframes"""
     eclfiles = EclFiles(DATAFILE)
 
     rftrecs = rft._rftrecords2df(eclfiles)
@@ -35,7 +35,7 @@ def test_rft2df():
     rftdf = rft.rft2df(eclfiles)
     assert "ZONE" in rftdf
     assert not rftdf.empty
-    assert len(rftdf.columns)
+    assert not rftdf.columns.empty
 
 
 def test_main(tmpdir):

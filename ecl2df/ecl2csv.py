@@ -50,7 +50,7 @@ def get_parser():
     )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
-       subparsers = parser.add_subparsers(
+        subparsers = parser.add_subparsers(
             required=True, dest="subcommand", parser_class=argparse.ArgumentParser
         )
     else:

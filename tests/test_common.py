@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Test module for ecl2df.common"""
 
 from __future__ import absolute_import

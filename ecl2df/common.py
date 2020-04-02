@@ -124,9 +124,7 @@ def parse_opmio_deckrecord(
                 # means that the deck record consists of arbitrary sized lists
                 # (but multiple of len(items -> dimension))
                 # Currently only PVT* ends here:
-                rec_dict[item_name] = getattr(
-                    record[item_idx], "get_raw_data_list"
-                )()
+                rec_dict[item_name] = getattr(record[item_idx], "get_raw_data_list")()
                 # This data must then be unrolled somewhere.
         else:
             if "default" in jsonitem:

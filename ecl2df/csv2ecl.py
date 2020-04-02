@@ -59,7 +59,6 @@ def main():
     """Entry point"""
     parser = get_parser()
     args = parser.parse_args()
-    print(args)
     args.func(args)
 
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.ecl2csv &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
+  <title>ecl2df.ecl2csv &mdash; ecl2df 0.5.2.dev10+gd85f1fc documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev9+g5edb527
+                0.5.2.dev10+gd85f1fc
               </div>
             
           
@@ -181,6 +181,7 @@
     <span class="n">gruptree</span><span class="p">,</span>
     <span class="n">nnc</span><span class="p">,</span>
     <span class="n">pillars</span><span class="p">,</span>
+    <span class="n">pvt</span><span class="p">,</span>
     <span class="n">rft</span><span class="p">,</span>
     <span class="n">satfunc</span><span class="p">,</span>
     <span class="n">summary</span><span class="p">,</span>
@@ -295,6 +296,24 @@
     <span class="p">)</span>
     <span class="n">pillars</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">pillars_parser</span><span class="p">)</span>
     <span class="n">pillars_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pillars</span><span class="o">.</span><span class="n">pillarstats_main</span><span class="p">)</span>
+
+    <span class="n">pvt_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;pvt&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract PVT data&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract data for the PVT keywords in an Eclipse deck &quot;</span>
+            <span class="s2">&quot;and merge all data into a single dataframe. &quot;</span>
+            <span class="s2">&quot;Supported keywords are PVTO, PVDO, PVTG, PVDG, PVTW, &quot;</span>
+            <span class="s2">&quot;ROCK and DENSITY. Gas phase pressure and oil phase &quot;</span>
+            <span class="s2">&quot;pressure are both called PRESSURE in the resulting &quot;</span>
+            <span class="s2">&quot;dataframe, similar for volume factors and viscosity. &quot;</span>
+            <span class="s2">&quot;Deduce meaning for column names from the Eclipse manual. &quot;</span>
+            <span class="s2">&quot;The column KEYWORD denotes which PVT keyword a particular &quot;</span>
+            <span class="s2">&quot;data row stems from. &quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">pvt</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">pvt_parser</span><span class="p">)</span>
+    <span class="n">pvt_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pvt</span><span class="o">.</span><span class="n">pvt_main</span><span class="p">)</span>
 
     <span class="n">rft_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;rft&quot;</span><span class="p">,</span>

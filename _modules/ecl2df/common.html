@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev10+gd85f1fc documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev9+g5edb527
+                0.5.2.dev10+gd85f1fc
               </div>
             
           
@@ -167,6 +167,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="c1"># Parse named JSON files, this exposes a dict of dictionary describing the contents</span>
@@ -175,10 +176,17 @@
 <span class="k">for</span> <span class="n">keyw</span> <span class="ow">in</span> <span class="p">[</span>
     <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
     <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FAULTS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVDG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVDO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVTG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVTO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVTW&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ROCK&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WCONHIST&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WCONINJE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WCONINJH&quot;</span><span class="p">,</span>
@@ -213,6 +221,70 @@
         <span class="s2">&quot;DEC&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">eclmonth2num</span><span class="p">[</span><span class="n">eclmonth</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ecl_keyworddata_to_df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.ecl_keyworddata_to_df">[docs]</a><span class="k">def</span> <span class="nf">ecl_keyworddata_to_df</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indexname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emptyrecordcountername</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract data associated to an Eclipse keyword into a tabular form.</span>
+
+<span class="sd">    Works for selected keywords.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        deck (opm.common.Deck): Parsed deck</span>
+<span class="sd">        keyword (str): Name of the keyword for which to extract data.</span>
+<span class="sd">        renamer (dict): Mapping of names present in OPM json files for the</span>
+<span class="sd">            keyword to desired column names in returned dataframe</span>
+<span class="sd">        indexname (str): If present, an extra column is added with this name</span>
+<span class="sd">            with consecutive rows enumerated from 1. Use this to assign</span>
+<span class="sd">            EQLNUM or similar when this should be consecutive pr. row (not</span>
+<span class="sd">            the case for all keywords).</span>
+<span class="sd">        emptyrecordname (str): If supplied, an index is added to every parsed</span>
+<span class="sd">            row based on how many empty records is encountered. For PVTO f.ex,</span>
+<span class="sd">            this gives the PVTNUM indexing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of dicts or dataframes</span>
+
+    <span class="n">record_counter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">emptyrecord_counter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">deckrecord</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="n">keyword</span><span class="p">]:</span>
+        <span class="n">recdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
+        <span class="c1"># If all values are None, this is an empty record, and for some</span>
+        <span class="c1"># keywords this signifies that we jump to the next table, e.g. for PVTO</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">recdict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)]</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;DATA&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recdict</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;DATA&quot;</span> <span class="ow">in</span> <span class="n">recdict</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">]):</span>
+                <span class="n">emptyrecord_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">emptyrecordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">recdict</span><span class="p">[</span><span class="n">emptyrecordcountername</span><span class="p">]</span> <span class="o">=</span> <span class="n">emptyrecord_counter</span>
+        <span class="k">if</span> <span class="n">indexname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">recdict</span><span class="p">[</span><span class="n">indexname</span><span class="p">]</span> <span class="o">=</span> <span class="n">record_counter</span>
+        <span class="c1"># Now some keywords have an arbitrary amount of data for a record, f.ex.</span>
+        <span class="c1"># PVTO, where multiple undersaturated lines can be added. We want</span>
+        <span class="c1"># to unroll this data. We detect this situation by the item name &quot;DATA&quot; in</span>
+        <span class="c1"># the json files, and that its value is of list type:</span>
+        <span class="k">if</span> <span class="s2">&quot;DATA&quot;</span> <span class="ow">in</span> <span class="n">recdict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># If DATA is sometimes used for something else in the jsons, redo this.</span>
+            <span class="n">data_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">renamer</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span>  <span class="c1"># The renamers must be in sync with json!</span>
+            <span class="n">data_chunks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">data_dim</span><span class="p">)</span>
+            <span class="n">data_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">data_chunks</span><span class="p">,</span> <span class="n">data_dim</span><span class="p">))</span>
+            <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">renamer</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="n">data_reshaped</span><span class="p">)</span>
+            <span class="c1"># Assign the remaining items from the parsed dict to the dataframe:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">recdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s2">&quot;DATA&quot;</span><span class="p">:</span>
+                    <span class="n">data_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">recdict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_df</span><span class="p">)</span>
+            <span class="n">record_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">recdict</span><span class="p">)</span>
+            <span class="n">record_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># records contain lists.</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dframe</span></div>
 
 
 <div class="viewcode-block" id="parse_opmio_deckrecord"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_deckrecord">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_deckrecord</span><span class="p">(</span>
@@ -357,6 +429,28 @@
     <span class="n">zone_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span>
     <span class="n">zone_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zone_df</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">kname</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="comment_formatter"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.comment_formatter">[docs]</a><span class="k">def</span> <span class="nf">comment_formatter</span><span class="p">(</span><span class="n">multiline</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;-- &quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prepends comment characters to every line in input</span>
+
+<span class="sd">    If nothing is supplied, an empty string is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        multiline (str): String that can contain newlines</span>
+<span class="sd">        prefix (str): Comment characters to prepend every line with</span>
+<span class="sd">            Default is the Eclipse comment syntax &#39;-- &#39;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string, with newlines preserved, and where each line</span>
+<span class="sd">            starts with the given prefix. Always ends with a newline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">multiline</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">multiline</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">multiline</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="stack_on_colnames"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.stack_on_colnames">[docs]</a><span class="k">def</span> <span class="nf">stack_on_colnames</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

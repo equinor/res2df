@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev9+g5edb527 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev10+gd85f1fc documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev9+g5edb527
+                0.5.2.dev10+gd85f1fc
               </div>
             
           
@@ -97,6 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.common">ecl2df.common module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.compdat">ecl2df.compdat module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.compdat2df">ecl2df.compdat2df module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.csv2ecl">ecl2df.csv2ecl module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.ecl2csv">ecl2df.ecl2csv module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.eclfiles">ecl2df.eclfiles module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.equil">ecl2df.equil module</a></li>
@@ -108,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.nnc">ecl2df.nnc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.parameters">ecl2df.parameters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.pillars">ecl2df.pillars module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.pvt">ecl2df.pvt module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.rft">ecl2df.rft module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc">ecl2df.satfunc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ecl2df.satfunc2df">ecl2df.satfunc2df module</a></li>
@@ -203,6 +205,30 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="ecl2df.common.ecl_keyworddata_to_df">
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">ecl_keyworddata_to_df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">keyword</em>, <em class="sig-param">renamer=None</em>, <em class="sig-param">indexname=None</em>, <em class="sig-param">emptyrecordcountername=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#ecl_keyworddata_to_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.ecl_keyworddata_to_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data associated to an Eclipse keyword into a tabular form.</p>
+<p>Works for selected keywords.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>opm.common.Deck</em>) – Parsed deck</p></li>
+<li><p><strong>keyword</strong> (<em>str</em>) – Name of the keyword for which to extract data.</p></li>
+<li><p><strong>renamer</strong> (<em>dict</em>) – Mapping of names present in OPM json files for the
+keyword to desired column names in returned dataframe</p></li>
+<li><p><strong>indexname</strong> (<em>str</em>) – If present, an extra column is added with this name
+with consecutive rows enumerated from 1. Use this to assign
+EQLNUM or similar when this should be consecutive pr. row (not
+the case for all keywords).</p></li>
+<li><p><strong>emptyrecordname</strong> (<em>str</em>) – If supplied, an index is added to every parsed
+row based on how many empty records is encountered. For PVTO f.ex,
+this gives the PVTNUM indexing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="ecl2df.common.parse_opmio_deckrecord">
 <code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">parse_opmio_deckrecord</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">keyword</em>, <em class="sig-param">itemlistname='items'</em>, <em class="sig-param">recordindex=None</em>, <em class="sig-param">renamer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_opmio_deckrecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.parse_opmio_deckrecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p>
@@ -264,6 +290,29 @@ default: ZONE</p></li>
 <li><p><strong>kname</strong> (<em>str</em>) – Column header in your dataframe that maps to dictionary keys.
 default K1</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.common.comment_formatter">
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">comment_formatter</code><span class="sig-paren">(</span><em class="sig-param">multiline</em>, <em class="sig-param">prefix='-- '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#comment_formatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.comment_formatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepends comment characters to every line in input</p>
+<p>If nothing is supplied, an empty string is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>multiline</strong> (<em>str</em>) – String that can contain newlines</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Comment characters to prepend every line with
+Default is the Eclipse comment syntax ‘– ‘</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>string, with newlines preserved, and where each line</dt><dd><p>starts with the given prefix. Always ends with a newline.</p>
+</dd>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -471,6 +520,23 @@ add a zone-name if a zonefile is found alongside</p>
 <div class="section" id="module-ecl2df.compdat2df">
 <span id="ecl2df-compdat2df-module"></span><h2>ecl2df.compdat2df module<a class="headerlink" href="#module-ecl2df.compdat2df" title="Permalink to this headline">¶</a></h2>
 <p>This module is only for backwards compatibility and will be removed in future versions</p>
+</div>
+<div class="section" id="module-ecl2df.csv2ecl">
+<span id="ecl2df-csv2ecl-module"></span><h2>ecl2df.csv2ecl module<a class="headerlink" href="#module-ecl2df.csv2ecl" title="Permalink to this headline">¶</a></h2>
+<p>Convert dataframes (in ecl2df format) to Eclipse include files,
+for selected keywords</p>
+<dl class="function">
+<dt id="ecl2df.csv2ecl.get_parser">
+<code class="sig-prename descclassname">ecl2df.csv2ecl.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/csv2ecl.html#get_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.csv2ecl.get_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make parser</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.csv2ecl.main">
+<code class="sig-prename descclassname">ecl2df.csv2ecl.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/csv2ecl.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.csv2ecl.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry point</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ecl2df.ecl2csv">
 <span id="ecl2df-ecl2csv-module"></span><h2>ecl2df.ecl2csv module<a class="headerlink" href="#module-ecl2df.ecl2csv" title="Permalink to this headline">¶</a></h2>
@@ -1522,6 +1588,341 @@ them to be available for OWC/GWC computations.</p></li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-ecl2df.pvt">
+<span id="ecl2df-pvt-module"></span><h2>ecl2df.pvt module<a class="headerlink" href="#module-ecl2df.pvt" title="Permalink to this headline">¶</a></h2>
+<p>Extract the PVT data from an Eclipse (input) deck as Pandas Dataframes</p>
+<p>Data can be extracted from a full Eclipse deck (<a href="#id3"><span class="problematic" id="id4">*</span></a>.DATA)
+or from individual files.</p>
+<dl class="function">
+<dt id="ecl2df.pvt.inject_ntpvt">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">inject_ntpvt</code><span class="sig-paren">(</span><em class="sig-param">deckstr</em>, <em class="sig-param">ntpvt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#inject_ntpvt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.inject_ntpvt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a TABDIMS with NTPVT into a deck</p>
+<p>This is simple string manipulation, not opm.io
+deck manipulation (which might be possible to do).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deckstr</strong> (<em>str</em>) – A string containing a partial deck (f.ex only
+the DENSITY keyword).</p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – The number for NTPVT to use in TABDIMS
+(this function does not care if it is correct or not)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New deck with TABDIMS prepended.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.inject_tabdims_ntpvt">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">inject_tabdims_ntpvt</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#inject_tabdims_ntpvt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.inject_tabdims_ntpvt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures TABDIMS is present in a deck.</p>
+<p>If ntpvt==None and NTPVT is not in the deck, NTPVT will be inferred
+through trial-and-error parsing of the deck, and then injected
+into the deck.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.io deck</em>) – A data deck. If NTPVT is to be estimated
+this must be a string and not a fully parsed deck.</p></li>
+<li><p><strong>nptvt</strong> (<em>int</em>) – Supply this if NTPVT is known, but not present in the
+deck, this will override any NTPVT guessing. If the deck already
+contains TABDIMS, this will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>opm.io Deck object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvtw_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvtw_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvtw_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvtw_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PVTW from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.density_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">density_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#density_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.density_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract DENSITY from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.rock_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">rock_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#rock_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.rock_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract ROCK from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvto_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvto_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvto_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvto_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PVTO from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvdo_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvdo_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvdo_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvdo_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PVDO from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvdg_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvdg_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvdg_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvdg_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PVDG from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvtg_fromdeck">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvtg_fromdeck</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvtg_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvtg_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PVTG from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntpvt</strong> (<em>int</em>) – Number of PVT regions in deck. Will
+be inferred if not present in deck.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param">deck</em>, <em class="sig-param">keywords=None</em>, <em class="sig-param">ntpvt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all (most) PVT data from a deck.</p>
+<p>If you want to call this function on Eclipse include files,
+read them in to strings as in this example:</p>
+<p>&gt; pvt_df = pvt.df(open(“pvt.inc”).read())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>opm.io deck</em><em> or </em><em>str</em>) – Incoming data deck. Always
+supply as a string if you don’t know TABDIMS-NTSFUN.</p></li>
+<li><p><strong>keywords</strong> (<em>list of str</em>) – List of keywords for which data is
+wanted. All data will be merged into one dataframe.</p></li>
+<li><p><strong>pvtnumcount</strong> (<em>int</em>) – Number of PVTNUMs defined in the deck, only
+needed if TABDIMS with NTPVT is not found in the deck.
+If not supplied (or None) and NTPVT is not defined,
+it will be attempted inferred.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.fill_parser">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up sys.argv parsers for parsing Eclipse deck or
+include files into dataframes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> (<em>ArgumentParser</em><em> or </em><em>subparser</em>) – parser to fill with arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.fill_reverse_parser">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">fill_reverse_parser</code><span class="sig-paren">(</span><em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#fill_reverse_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.fill_reverse_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up sys.argv parsers for writing Eclipse include files from
+dataframes (as CSV files)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> (<em>ArgumentParser</em><em> or </em><em>subparser</em>) – parser to fill with arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvt_main">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvt_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvt_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvt_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry-point for module, for command line utility for Eclipse to CSV</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.pvt_reverse_main">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">pvt_reverse_main</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#pvt_reverse_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.pvt_reverse_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry-point for module, for command line utility for CSV to Eclipse</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param">pvt_df</em>, <em class="sig-param">keywords=None</em>, <em class="sig-param">comments=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate Eclipse include strings from PVT dataframes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pvt_df</strong> (<em>pd.DataFrame</em>) – Dataframe with PVT data on ecl2df format.</p></li>
+<li><p><strong>keywords</strong> (<em>list of str</em>) – List of keywords to include. Must be
+supported and present in the incoming dataframe.</p></li>
+<li><p><strong>comments</strong> (<em>dict</em>) – Dictionary indexed by keyword with comments to be
+included pr.  keyword.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_rock">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_rock</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_rock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_rock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print ROCK keyword with data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing ROCK data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_density">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_density</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print DENSITY keyword with data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing DENSITY data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_pvtw">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_pvtw</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_pvtw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_pvtw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print PVTW keyword with data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PVTW data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_pvtg">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_pvtg</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_pvtg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_pvtg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print DENSITY keyword with data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PVTG data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_pvdg">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_pvdg</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_pvdg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_pvdg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print PVDG keyword with data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PVDG data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_pvdo">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_pvdo</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_pvdo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_pvdo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print PVDO keyword with data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PVDO data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ecl2df.pvt.df2ecl_pvto">
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_pvto</code><span class="sig-paren">(</span><em class="sig-param">dframe</em>, <em class="sig-param">comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_pvto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_pvto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print PVTO-data from a dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PVTO data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-ecl2df.rft">
 <span id="ecl2df-rft-module"></span><h2>ecl2df.rft module<a class="headerlink" href="#module-ecl2df.rft" title="Permalink to this headline">¶</a></h2>
 <p>Converter module for Eclipse RFT output files to Pandas Dataframes</p>
@@ -1574,7 +1975,7 @@ by adding the prefix <code class="docutils literal notranslate"><span class="pre
 <span id="ecl2df-satfunc-module"></span><h2>ecl2df.satfunc module<a class="headerlink" href="#module-ecl2df.satfunc" title="Permalink to this headline">¶</a></h2>
 <p>Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.</p>
-<p>Data can be extracted from a full Eclipse deck (<a href="#id3"><span class="problematic" id="id4">*</span></a>.DATA)
+<p>Data can be extracted from a full Eclipse deck (<a href="#id5"><span class="problematic" id="id6">*</span></a>.DATA)
 or from individual files.</p>
 <p>Note that when parsing from individual files, it is
 undefined in the syntax how many saturation functions (SATNUMs) are

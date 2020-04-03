@@ -28,6 +28,14 @@ ecl2df.compdat2df module
    :undoc-members:
    :show-inheritance:
 
+ecl2df.csv2ecl module
+---------------------
+
+.. automodule:: ecl2df.csv2ecl
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ecl2df.ecl2csv module
 ---------------------
 
@@ -112,6 +120,14 @@ ecl2df.pillars module
 ---------------------
 
 .. automodule:: ecl2df.pillars
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ecl2df.pvt module
+-----------------
+
+.. automodule:: ecl2df.pvt
    :members:
    :undoc-members:
    :show-inheritance:

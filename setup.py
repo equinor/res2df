@@ -40,6 +40,7 @@ setup(
     entry_points={
         "console_scripts": [
             "compdat2csv=ecl2df.compdat:main",
+            "csv2ecl=ecl2df.csv2ecl:main",
             "ecl2csv=ecl2df.ecl2csv:main",
             "eclgrid2csv=ecl2df.grid:main",
             "equil2csv=ecl2df.equil:main",
@@ -47,6 +48,7 @@ setup(
             "grid2csv=ecl2df.grid:main",
             "gruptree2csv=ecl2df.gruptree:main",
             "nnc2csv=ecl2df.nnc:main",
+            "pvt2csv=ecl2df.pvt:main",
             "rft2csv=ecl2df.rft:main",
             "satfunc2csv=ecl2df.satfunc:main",
             "summary2csv=ecl2df.summary:main",

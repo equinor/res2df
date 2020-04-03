@@ -17,6 +17,7 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 # Constants to use for pointing to positions in the TABDIMS keyword
+NTPVT_POS = 1
 NTSFUN_POS = 0
 
 

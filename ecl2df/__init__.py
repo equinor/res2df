@@ -17,6 +17,7 @@ from . import (
     gruptree,
     nnc,
     pillars,
+    pvt,
     rft,
     satfunc,
     summary,

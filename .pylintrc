@@ -11,7 +11,7 @@ output-format=colorized
 ignore=__init__.py,setup.py
 
 [BASIC]
-good-names=df,logger
+good-names=df,logger,rs
 
 [FORMAT]
 max-line-length=88

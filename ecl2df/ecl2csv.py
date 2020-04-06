@@ -202,7 +202,7 @@ def get_parser():
     )
 
     satfunc.fill_parser(satfunc_parser)
-    satfunc_parser.set_defaults(func=satfunc.satfunc2df_main)
+    satfunc_parser.set_defaults(func=satfunc.satfunc_main)
 
     compdat_parser = subparsers.add_parser(
         "compdat",

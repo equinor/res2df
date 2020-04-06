@@ -43,8 +43,7 @@ SWOF
  1 1 0 0
  /
 """
-    deck = EclFiles.str2deck(swofstr)
-    satdf = satfunc.deck2df(deck)
+    satdf = satfunc.deck2df(swofstr)
     assert len(satdf) == 2
 
     swofstr2 = """
@@ -64,8 +63,7 @@ SWOF
  1 1 0 0
 /
 """
-    deck2 = EclFiles.str2deck(swofstr2)
-    satdf2 = satfunc.deck2df(deck2)
+    satdf2 = satfunc.df(swofstr2)
     assert "SATNUM" in satdf
     assert len(satdf2["SATNUM"].unique()) == 2
     assert len(satdf2) == 5
@@ -86,6 +84,75 @@ SWOF
     # # assert len(tricky["SATNUM"].unique()) == 1
     # ### It remains unsolved how to avoid an error here!
 
+def test_slgof():
+    string = """
+SLGOF
+  0 1 1 0
+  1 0 0 0
+/
+"""
+    slgof_df = satfunc.df(string)
+    assert len(slgof_df) == 2
+    assert "SL" in slgof_df
+    assert "KRG" in slgof_df
+    assert "KRO" in slgof_df
+    assert "PCOG" in slgof_df
+
+def test_sof2():
+    string = """
+SOF2
+  0 1
+  1 0
+/
+"""
+    sof2_df = satfunc.df(string)
+    assert len(sof2_df) == 2
+    assert "SO" in sof2_df
+    assert "KRO" in sof2_df
+def test_sof3():
+    string = """
+SOF3
+  0 1 1
+  1 0 0
+/
+"""
+    sof3_df = satfunc.df(string)
+    assert len(sof3_df) == 2
+    assert "SO" in sof3_df
+    assert "KROW" in sof3_df
+    assert "KROG" in sof3_df
+
+def test_sgfn():
+    string = """
+SGFN
+  0 1 0
+  1 0 0
+/
+  0 1 0
+  1 0.1 1
+/
+"""
+    sgfn_df = satfunc.df(string)
+    assert len(sgfn_df) == 4
+    assert len(sgfn_df["SATNUM"].unique()) == 2
+    assert "SG" in sgfn_df
+    assert "KRG" in sgfn_df
+    assert "PCOG" in sgfn_df
+
+def test_sgwfn():
+    string="""
+ SGWFN
+  0 1 1 0
+  1 0 0 0
+ /
+ """
+    sgwfn_df = satfunc.df(string)
+    assert len(sgwfn_df) == 2
+    assert "SG" in sgwfn_df
+    assert "KRG" in sgwfn_df
+    assert "KRW" in sgwfn_df
+    assert "PCGW" in sgwfn_df
+
 
 def test_sgof_satnuminferrer(tmpdir):
     """Test inferring of SATNUMS in SGOF strings"""
@@ -105,22 +172,18 @@ SGOF
 """
     tmpdir.chdir()
     assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
-    sgofdf = satfunc.deck2df(sgofstr)
+    sgofdf = satfunc.df(sgofstr)
     assert "SATNUM" in sgofdf
     assert len(sgofdf["SATNUM"].unique()) == 3
     assert len(sgofdf) == 8
 
-    # This illustrates how we cannot do it, CRITICAL
-    # logging errors will be displayed:
-    sgofdf = satfunc.deck2df(EclFiles.str2deck(sgofstr))
-    assert len(sgofdf["SATNUM"].unique()) == 1
 
     # Write to file and try to parse it with command line:
     sgoffile = "__sgof_tmp.txt"
     with open(sgoffile, "w") as sgof_f:
         sgof_f.write(sgofstr)
 
-    sys.argv = ["ecl2csv", "satfunc", sgoffile, "-o", sgoffile + ".csv"]
+    sys.argv = ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
     ecl2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3

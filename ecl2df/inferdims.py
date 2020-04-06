@@ -137,8 +137,8 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
     Args:
         xxxdims (str): TABDIMS or EQLDIMS
         ntxxx_name (str): NTPVT, NTEQUL or NTSFUN
-        deck (str or opm.io deck): A data deck. If ntxxx_name is to be estimated
-            this must be a string and not a fully parsed deck.
+        deck (str or opm.io deck): A data deck. If ntxxx_name is to be
+            estimated this *must* be a string and not a fully parsed deck.
         npxxx_value (int): Supply this if ntxxx_name is known, but not present in the
             deck, this will override any guessing. If the deck already
             contains XXXDIMS, this will be ignored.
@@ -148,32 +148,33 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
     """
     assert xxxdims in ["TABDIMS", "EQLDIMS"]
     assert ntxxx_name in ["NTPVT", "NTEQUL", "NTSFUN"]
-    if xxxdims not in deck:
-        if not isinstance(deck, six.string_types):
-            msg = "Can't guess {} from a parsed deck without {}.\n".format(
-                ntxxx_name, xxxdims
-            )
-            msg += "Only data for the first PVT region will be returned.\n"
-            msg += "Supply the deck as a string to automatically determine NTPVT"
-            logger.critical(msg)
-            ntxxx_value = 1
-        else:
-            if ntxxx_value is None:
-                ntxxx_estimate = guess_dim(deck, xxxdims, DIMS_POS[ntxxx_name])
-                logger.warning("Guessed %s=%s", ntxxx_name, str(ntxxx_estimate))
-            else:
-                ntxxx_estimate = ntxxx_value
-            augmented_strdeck = inject_dimcount(
-                str(deck), xxxdims, DIMS_POS[ntxxx_name], ntxxx_estimate
-            )
-            # Overwrite the deck object
-            deck = EclFiles.str2deck(augmented_strdeck)
+
+    if xxxdims in deck and ntxxx_value is not None:
+        logger.warning(
+            "Ignoring %s argument, it is already in the deck", str(ntxxx_name)
+        )
+        return deck
+
+    if not isinstance(deck, six.string_types):
+        # The deck must be converted to a string deck in order
+        # to estimate dimensions.
+        deck = str(deck)
+
+    # Estimate if ntxxx_value is not provided:
+    if ntxxx_value is None:
+        ntxxx_estimate = guess_dim(deck, xxxdims, DIMS_POS[ntxxx_name])
+        logger.warning("Estimated %s=%s", ntxxx_name, str(ntxxx_estimate))
     else:
-        if ntxxx_value is not None:
-            logger.warning(
-                "Ignoring %s argument, it is already in the deck", str(ntxxx_name)
-            )
+        ntxxx_estimate = ntxxx_value
+
+    augmented_strdeck = inject_dimcount(
+                str(deck), xxxdims, DIMS_POS[ntxxx_name], ntxxx_estimate
+    )
+    # Overwrite the deck object
+    deck = EclFiles.str2deck(augmented_strdeck)
+
     if isinstance(deck, six.string_types):
         # If a string is supplied as a deck, we always return a parsed Deck object
         deck = EclFiles.str2deck(deck)
+
     return deck

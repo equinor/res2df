@@ -10,9 +10,9 @@ data format.
    :maxdepth: 2
 
    introduction
-   installation
    scripts
    modules
+   installation
    authors
    history
 

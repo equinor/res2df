@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev10+gd85f1fc documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev17+g795b1d0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev10+gd85f1fc
+                0.5.2.dev17+g795b1d0
               </div>
             
           
@@ -87,9 +87,10 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#reverse-command-line-utility-csv2ecl">Reverse command line utility: csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
 </ul>
@@ -170,6 +171,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
+
 <span class="c1"># Parse named JSON files, this exposes a dict of dictionary describing the contents</span>
 <span class="c1"># of supported Eclipse keyword data</span>
 <span class="n">OPMKEYWORDS</span> <span class="o">=</span> <span class="p">{}</span>
@@ -177,6 +180,7 @@
     <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FAULTS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span>
@@ -187,6 +191,17 @@
     <span class="s2">&quot;PVTO&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PVTW&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ROCK&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RSVD&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RVVD&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SLGOF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SWOF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WCONHIST&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WCONINJE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WCONINJH&quot;</span><span class="p">,</span>
@@ -224,18 +239,21 @@
 
 
 <div class="viewcode-block" id="ecl_keyworddata_to_df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.ecl_keyworddata_to_df">[docs]</a><span class="k">def</span> <span class="nf">ecl_keyworddata_to_df</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indexname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emptyrecordcountername</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recordcountername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emptyrecordcountername</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract data associated to an Eclipse keyword into a tabular form.</span>
 
-<span class="sd">    Works for selected keywords.</span>
+<span class="sd">    Two modes of enueration of tables in the keyworddata is supported, you</span>
+<span class="sd">    will have to find out which one fits your particular keyword. Activate</span>
+<span class="sd">    by setting recordcountername or emptyrecordcountername to some string, which</span>
+<span class="sd">    will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        deck (opm.common.Deck): Parsed deck</span>
 <span class="sd">        keyword (str): Name of the keyword for which to extract data.</span>
 <span class="sd">        renamer (dict): Mapping of names present in OPM json files for the</span>
 <span class="sd">            keyword to desired column names in returned dataframe</span>
-<span class="sd">        indexname (str): If present, an extra column is added with this name</span>
+<span class="sd">        recordcountername (str): If present, an extra column is added with this name</span>
 <span class="sd">            with consecutive rows enumerated from 1. Use this to assign</span>
 <span class="sd">            EQLNUM or similar when this should be consecutive pr. row (not</span>
 <span class="sd">            the case for all keywords).</span>
@@ -259,8 +277,8 @@
                 <span class="k">continue</span>
         <span class="k">if</span> <span class="n">emptyrecordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">recdict</span><span class="p">[</span><span class="n">emptyrecordcountername</span><span class="p">]</span> <span class="o">=</span> <span class="n">emptyrecord_counter</span>
-        <span class="k">if</span> <span class="n">indexname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">recdict</span><span class="p">[</span><span class="n">indexname</span><span class="p">]</span> <span class="o">=</span> <span class="n">record_counter</span>
+        <span class="k">if</span> <span class="n">recordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">recdict</span><span class="p">[</span><span class="n">recordcountername</span><span class="p">]</span> <span class="o">=</span> <span class="n">record_counter</span>
         <span class="c1"># Now some keywords have an arbitrary amount of data for a record, f.ex.</span>
         <span class="c1"># PVTO, where multiple undersaturated lines can be added. We want</span>
         <span class="c1"># to unroll this data. We detect this situation by the item name &quot;DATA&quot; in</span>
@@ -284,7 +302,7 @@
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># records contain lists.</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">dframe</span></div>
+    <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parse_opmio_deckrecord"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_deckrecord">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_deckrecord</span><span class="p">(</span>
@@ -302,7 +320,9 @@
 <span class="sd">            list index to the &quot;record&quot;</span>
 <span class="sd">            Beware, there are multiple concepts here for what we call a record.</span>
 <span class="sd">        renamer (dict): If supplied, this dictionary will be used to remap</span>
-<span class="sd">            the keys in returned dict</span>
+<span class="sd">            the keys in returned dict. For items with name DATA, the dict</span>
+<span class="sd">            value is assumed to be a list of strings to be mapped to</span>
+<span class="sd">            each subitem.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -453,6 +473,173 @@
     <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="handle_wanted_keywords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.handle_wanted_keywords">[docs]</a><span class="k">def</span> <span class="nf">handle_wanted_keywords</span><span class="p">(</span><span class="n">wanted</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">supported</span><span class="p">,</span> <span class="n">modulename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Handle three list of keywords, wanted, available and supported</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keywords (list of str): None, or list of strings of user-requested keywords</span>
+<span class="sd">        deck (opm.common Deck): Used to query which data is available</span>
+<span class="sd">        supported (list of str): Keywords that are supported by the module</span>
+<span class="sd">        modulename (str): Name of the module calling this function, used in logging</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wanted</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">wanted</span> <span class="o">=</span> <span class="p">[</span><span class="n">wanted</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">wanted</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># By default, select all supported keywords:</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">supported</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Warn if some keywords are unsupported:</span>
+        <span class="n">not_supported</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">not_supported</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Requested keyword(s) not supported by ecl2df.</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">modulename</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">not_supported</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="c1"># Reduce to only supported keywords:</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">not_supported</span><span class="p">))</span>
+        <span class="c1"># Warn if some requested keywords are not in deck:</span>
+        <span class="n">keywords_in_deck</span> <span class="o">=</span> <span class="p">[</span><span class="n">keyword</span> <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">]</span>
+        <span class="n">not_in_deck</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">keywords_in_deck</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">not_in_deck</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Requested keyword(s) not present in deck: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">not_in_deck</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="c1"># Reduce again to only present keywords, but without warning:</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">keyword</span> <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">keywords</span></div>
+
+
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">modulename</span><span class="p">,</span> <span class="n">defaultoutputfile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A standardized submodule parser for the command line utility</span>
+<span class="sd">    to produce Eclipse include files from a CSV file.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
+<span class="sd">        modulename (str): Will be included in the help text</span>
+<span class="sd">        defaultoutputfile (str): Default output filename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;csvfile&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of CSV file with &quot;</span> <span class="o">+</span> <span class="n">modulename</span> <span class="o">+</span> <span class="s2">&quot; data on ecl2df format&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Name of output Eclipse include file file, default &quot;</span>
+            <span class="o">+</span> <span class="n">defaultoutputfile</span>
+            <span class="o">+</span> <span class="s2">&quot;. &quot;</span>
+            <span class="s2">&quot;Use &#39;-&#39; for stdout.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">defaultoutputfile</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-k&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--keywords&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;List of &quot;</span> <span class="o">+</span> <span class="n">modulename</span> <span class="o">+</span> <span class="s2">&quot; keywords to include. &quot;</span>
+            <span class="s2">&quot;If not supplied, all supported and found keywords will be included.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">supported</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consecutive</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes in ecl2df format</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataframe (pd.DataFrame): Dataframe with Eclipse data on ecl2df format.</span>
+<span class="sd">        keywords (list of str): List of keywords to include. Will be reduced</span>
+<span class="sd">            to the set of keywords available in dataframe and to those supported</span>
+<span class="sd">        comments (dict): Dictionary indexed by keyword with comments to be</span>
+<span class="sd">            included pr.  keyword. If a key named &quot;master&quot; is present</span>
+<span class="sd">            it will be used as a master comment for the outputted file.</span>
+<span class="sd">        supported (list): List of strings of keywords which are</span>
+<span class="sd">            supported in this invocation of this function.</span>
+<span class="sd">        consecutive (str): Column name for which we require the</span>
+<span class="sd">            numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">inspect</span>
+
+    <span class="n">from_module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">calling_module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="n">from_module</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Empty dataframe&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">consecutive</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">consecutive</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">dataframe</span><span class="p">[</span><span class="n">consecutive</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataframe</span><span class="p">[</span><span class="n">consecutive</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">dataframe</span><span class="p">[</span><span class="n">consecutive</span><span class="p">])</span>
+        <span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> inconsistent in input dataframe, got the values </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">consecutive</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">dataframe</span><span class="p">[</span><span class="n">consecutive</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span>
+
+    <span class="c1"># &quot;KEYWORD&quot; must always be in the dataframe:</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;KEYWORD must be in the dataframe&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">comments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">comments</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">keywords</span><span class="p">]</span>  <span class="c1"># Can still be None</span>
+    <span class="n">keywords_in_frame</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># By default, select all supported PVT keywords:</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">supported</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Warn if some keywords are unsupported:</span>
+        <span class="n">not_supported</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">not_supported</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Requested keyword(s) not supported by </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">calling_module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">not_supported</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="c1"># Reduce to only supported keywords:</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">not_supported</span><span class="p">))</span>
+        <span class="c1"># Warn if some requested keywords are not in frame:</span>
+        <span class="n">not_in_frame</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">-</span> <span class="n">keywords_in_frame</span>
+        <span class="k">if</span> <span class="n">not_in_frame</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Requested keyword(s) not present in dataframe: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">not_in_frame</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords_in_frame</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">keywords</span><span class="p">:</span>
+        <span class="c1"># Nothing to do</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">ecl2df_header</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Output file printed by &quot;</span>
+        <span class="o">+</span> <span class="n">calling_module</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="o">+</span> <span class="n">__version__</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot; at &quot;</span>
+        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">ecl2df_header</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;master&quot;</span> <span class="ow">in</span> <span class="n">comments</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comments</span><span class="p">[</span><span class="s2">&quot;master&quot;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+        <span class="c1"># Construct the associated function names</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;df2ecl_&quot;</span> <span class="o">+</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">calling_module</span><span class="p">,</span> <span class="n">function_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">comments</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">comments</span><span class="p">[</span><span class="n">keyword</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+
 <div class="viewcode-block" id="stack_on_colnames"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.stack_on_colnames">[docs]</a><span class="k">def</span> <span class="nf">stack_on_colnames</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;For a dataframe where some columns are multilevel, but where</span>
 <span class="sd">    the second level is encoded in the column name, this function</span>
@@ -557,6 +744,9 @@
     /* Sidebar */
     .wy-nav-side {
       background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
     }
   </style>
 

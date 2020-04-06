@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.csv2ecl &mdash; ecl2df 0.5.2.dev10+gd85f1fc documentation</title>
+  <title>ecl2df.csv2ecl &mdash; ecl2df 0.5.2.dev17+g795b1d0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev10+gd85f1fc
+                0.5.2.dev17+g795b1d0
               </div>
             
           
@@ -87,9 +87,10 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html#reverse-command-line-utility-csv2ecl">Reverse command line utility: csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
 </ul>
@@ -170,9 +171,7 @@
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-
-<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">pvt</span>
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">pvt</span><span class="p">,</span> <span class="n">equil</span><span class="p">,</span> <span class="n">satfunc</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
 
@@ -199,16 +198,38 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span>
 
+    <span class="n">equil_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write SOLUTION include files&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Write SOLUTION keywords (EQUIL, RSVD, RVVD) &quot;</span>
+            <span class="s2">&quot;to Eclipse include files from CSV in ecl2df format.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">equil</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
+    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil</span><span class="o">.</span><span class="n">equil_reverse_main</span><span class="p">)</span>
+
     <span class="n">pvt_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;pvt&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write PVT include files&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Write Eclipse include files from dataframes/CSV files on &quot;</span>
-            <span class="s2">&quot;the ecl2df format.&quot;</span>
+            <span class="s2">&quot;Write Eclipse include files from CSV files on the ecl2df format.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">pvt</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">pvt_parser</span><span class="p">)</span>
     <span class="n">pvt_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pvt</span><span class="o">.</span><span class="n">pvt_reverse_main</span><span class="p">)</span>
+
+    <span class="n">satfunc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write saturation function include files&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Write saturation function include files from CSV files on &quot;</span>
+            <span class="s2">&quot;the ecl2df format.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">satfunc</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
+    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc</span><span class="o">.</span><span class="n">satfunc_reverse_main</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -269,6 +290,9 @@
     /* Sidebar */
     .wy-nav-side {
       background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
     }
   </style>
 

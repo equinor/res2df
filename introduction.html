@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction &mdash; ecl2df 0.5.2.dev10+gd85f1fc documentation</title>
+  <title>Introduction &mdash; ecl2df 0.5.2.dev17+g795b1d0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="next" title="Command line utility: ecl2csv" href="scripts.html" />
     <link rel="prev" title="ecl2df" href="index.html" /> 
 </head>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev10+gd85f1fc
+                0.5.2.dev17+g795b1d0
               </div>
             
           
@@ -90,7 +90,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-overview">Module overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#short-description-of-each-submodule">Short description of each submodule</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#summary"><code class="docutils literal notranslate"><span class="pre">summary</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#grid"><code class="docutils literal notranslate"><span class="pre">grid</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nnc"><code class="docutils literal notranslate"><span class="pre">nnc</span></code></a></li>
@@ -102,6 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#equil"><code class="docutils literal notranslate"><span class="pre">equil</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compdat"><code class="docutils literal notranslate"><span class="pre">compdat</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#gruptree"><code class="docutils literal notranslate"><span class="pre">gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pvt"><code class="docutils literal notranslate"><span class="pre">pvt</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#wcon"><code class="docutils literal notranslate"><span class="pre">wcon</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#eclfiles"><code class="docutils literal notranslate"><span class="pre">eclfiles</span></code></a></li>
 </ul>
@@ -115,9 +116,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#copyright">Copyright</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Command line utility: ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html#reverse-command-line-utility-csv2ecl">Reverse command line utility: csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
 </ul>
@@ -217,8 +219,8 @@ a Pandas Dataframe.</p>
 </div>
 <p>See the API for more documentation and possibilities for each module.</p>
 </div>
-<div class="section" id="module-overview">
-<h2>Module overview<a class="headerlink" href="#module-overview" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="short-description-of-each-submodule">
+<h2>Short description of each submodule<a class="headerlink" href="#short-description-of-each-submodule" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="summary">
 <h3><code class="docutils literal notranslate"><span class="pre">summary</span></code><a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
 <p>Extracts summary data from <cite>.UNSMRY</cite> files, at requested time sampling and
@@ -272,11 +274,12 @@ supports custom FIPxxxxx names.</p>
 <div class="section" id="satfunc">
 <h3><code class="docutils literal notranslate"><span class="pre">satfunc</span></code><a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
 <p>Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
-into one DataFrame.</p>
+into one DataFrame. Can write back to Eclipse include files.</p>
 </div>
 <div class="section" id="equil">
 <h3><code class="docutils literal notranslate"><span class="pre">equil</span></code><a class="headerlink" href="#equil" title="Permalink to this headline">¶</a></h3>
-<p>Extracts the information in the <cite>EQUIL</cite> table in the input deck.</p>
+<p>Extracts the information in the <cite>EQUIL</cite> table, <cite>RSVD</cite> and <cite>RVVD</cite> in the
+input deck. Can write back to Eclipse include files.</p>
 </div>
 <div class="section" id="compdat">
 <h3><code class="docutils literal notranslate"><span class="pre">compdat</span></code><a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h3>
@@ -293,9 +296,14 @@ all timesteps, from the input deck. The tree structure at each relevant
 date can be returned as a dataframe of the edges, as a nested dictionary
 or as a <cite>treelib</cite> tree.</p>
 </div>
+<div class="section" id="pvt">
+<h3><code class="docutils literal notranslate"><span class="pre">pvt</span></code><a class="headerlink" href="#pvt" title="Permalink to this headline">¶</a></h3>
+<p>Extracts PVT data from an Eclipse deck, from the keywords <cite>PVTO</cite>, <cite>PVDG</cite>,
+<cite>DENSITY</cite>, <cite>ROCK</cite> etc. Can write data back to Eclipse include files.</p>
+</div>
 <div class="section" id="wcon">
 <h3><code class="docutils literal notranslate"><span class="pre">wcon</span></code><a class="headerlink" href="#wcon" title="Permalink to this headline">¶</a></h3>
-<p>Extracts WCONxxxx keywords from the Schedule section, and providing the
+<p>Extracts <cite>WCONxxxx</cite> keywords from the Schedule section, and providing the
 associated data in a dataframe format.</p>
 </div>
 <div class="section" id="eclfiles">
@@ -339,7 +347,7 @@ lines like:</p>
 </div>
 <div class="section" id="copyright">
 <h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
-<p>The code is Copyright Equinor ASA 2019.</p>
+<p>The code is Copyright Equinor ASA 2019-2020.</p>
 <p>Contributions without copyright transfer are welcome.</p>
 </div>
 </div>
@@ -352,7 +360,7 @@ lines like:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scripts.html" class="btn btn-neutral float-right" title="Command line utility: ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="ecl2df" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -400,6 +408,9 @@ lines like:</p>
     /* Sidebar */
     .wy-nav-side {
       background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
     }
   </style>
 

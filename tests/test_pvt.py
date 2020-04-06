@@ -346,16 +346,34 @@ def test_df2ecl_pvto():
         data=[[1, 50, 100, 2, 1.04]],
     )
     pvto_string = pvt.df2ecl_pvto(dframe)
-    print(pvto_string)
     assert "PVTO" in pvto_string
     assert "1.04" in pvto_string
     assert "100" in pvto_string
+    dframe_from_str = pvt.df(pvto_string)
+    print(dframe_from_str)
+    print(dframe)
+    pd.testing.assert_frame_equal(
+        dframe,
+        dframe_from_str.drop("KEYWORD", axis="columns"),
+        check_like=True,
+        check_dtype=False,
+    )
 
     dframe = pd.DataFrame(
         columns=["PVTNUM", "RS", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"],
         data=[[1, 50, 100, 2, 1.04], [1, 50, 120, 3, 1.05]],
     )
-    print(pvt.df2ecl_pvto(dframe))
+    pvto_string = pvt.df2ecl_pvto(dframe)
+    assert "PVTO" in pvto_string
+    assert "1.05" in pvto_string
+    assert "120" in pvto_string
+    dframe_from_str = pvt.df(pvto_string)
+    pd.testing.assert_frame_equal(
+        dframe,
+        dframe_from_str.drop("KEYWORD", axis="columns"),
+        check_like=True,
+        check_dtype=False,
+    )
 
 
 def test_df2ecl():
@@ -389,6 +407,8 @@ def test_df2ecl():
         sorted(rock_df_from_inc.columns), axis=1
     )
     rock_df = rock_df_from_inc.reindex(sorted(rock_df.columns), axis=1)
+    print(rock_df_from_inc)
+    print(rock_df)
     pd.testing.assert_frame_equal(rock_df_from_inc, rock_df)
 
     rock_inc = pvt.df2ecl(rock_df, keywords=["DENSITY"])

@@ -33,7 +33,7 @@ START
 --NOSIM
 
 -- Fluid phases present
---OIL
+OIL
 GAS
 WATER
 --DISGAS

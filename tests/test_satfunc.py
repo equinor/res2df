@@ -9,7 +9,7 @@ import sys
 
 import pandas as pd
 
-from ecl2df import satfunc, ecl2csv, inferdims
+from ecl2df import satfunc, ecl2csv, inferdims, csv2ecl
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,6 +34,10 @@ def test_satfunc2df():
     assert "KROG" in satdf
     assert satdf["SATNUM"].unique() == [1]
 
+    inc = satfunc.df2ecl(satdf)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(satdf, df_from_inc)
+
 
 def test_str2df():
     """Test parsing of a direct string"""
@@ -43,9 +47,11 @@ SWOF
  1 1 0 0
  /
 """
-    deck = EclFiles.str2deck(swofstr)
-    satdf = satfunc.deck2df(deck)
+    satdf = satfunc.df(swofstr)
     assert len(satdf) == 2
+    inc = satfunc.df2ecl_swof(satdf)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(satdf, df_from_inc)
 
     swofstr2 = """
 -- RUNSPEC -- (this line is optional)
@@ -64,11 +70,14 @@ SWOF
  1 1 0 0
 /
 """
-    deck2 = EclFiles.str2deck(swofstr2)
-    satdf2 = satfunc.deck2df(deck2)
+    satdf2 = satfunc.df(swofstr2)
     assert "SATNUM" in satdf
     assert len(satdf2["SATNUM"].unique()) == 2
     assert len(satdf2) == 5
+
+    inc = satfunc.df2ecl(satdf)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(satdf, df_from_inc)
 
     # Try empty/bogus data:
     bogusdf = satfunc.deck2df("SWRF\n 0 /\n")
@@ -85,6 +94,96 @@ SWOF
     # # assert not tricky.empty
     # # assert len(tricky["SATNUM"].unique()) == 1
     # ### It remains unsolved how to avoid an error here!
+
+
+def test_slgof():
+    string = """
+SLGOF
+  0 1 1 0
+  1 0 0 0
+/
+"""
+    slgof_df = satfunc.df(string)
+    assert len(slgof_df) == 2
+    assert "SL" in slgof_df
+    assert "KRG" in slgof_df
+    assert "KRO" in slgof_df
+    assert "PCOG" in slgof_df
+    inc = satfunc.df2ecl(slgof_df)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(slgof_df, df_from_inc)
+
+
+def test_sof2():
+    string = """
+SOF2
+  0 1
+  1 0
+/
+"""
+    sof2_df = satfunc.df(string)
+    assert len(sof2_df) == 2
+    assert "SO" in sof2_df
+    assert "KRO" in sof2_df
+    inc = satfunc.df2ecl(sof2_df)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(sof2_df, df_from_inc)
+
+
+def test_sof3():
+    string = """
+SOF3
+  0 1 1
+  1 0 0
+/
+"""
+    sof3_df = satfunc.df(string)
+    assert len(sof3_df) == 2
+    assert "SO" in sof3_df
+    assert "KROW" in sof3_df
+    assert "KROG" in sof3_df
+    inc = satfunc.df2ecl(sof3_df)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(sof3_df, df_from_inc)
+
+
+def test_sgfn():
+    string = """
+SGFN
+  0 1 0
+  1 0 0
+/
+  0 1 0
+  1 0.1 1
+/
+"""
+    sgfn_df = satfunc.df(string)
+    assert len(sgfn_df) == 4
+    assert len(sgfn_df["SATNUM"].unique()) == 2
+    assert "SG" in sgfn_df
+    assert "KRG" in sgfn_df
+    assert "PCOG" in sgfn_df
+    inc = satfunc.df2ecl(sgfn_df)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(sgfn_df, df_from_inc)
+
+
+def test_sgwfn():
+    string = """
+ SGWFN
+  0 1 1 0
+  1 0 0 0
+ /
+ """
+    sgwfn_df = satfunc.df(string)
+    assert len(sgwfn_df) == 2
+    assert "SG" in sgwfn_df
+    assert "KRG" in sgwfn_df
+    assert "KRW" in sgwfn_df
+    assert "PCGW" in sgwfn_df
+    inc = satfunc.df2ecl(sgwfn_df)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(sgwfn_df, df_from_inc)
 
 
 def test_sgof_satnuminferrer(tmpdir):
@@ -105,22 +204,20 @@ SGOF
 """
     tmpdir.chdir()
     assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
-    sgofdf = satfunc.deck2df(sgofstr)
+    sgofdf = satfunc.df(sgofstr)
     assert "SATNUM" in sgofdf
     assert len(sgofdf["SATNUM"].unique()) == 3
     assert len(sgofdf) == 8
-
-    # This illustrates how we cannot do it, CRITICAL
-    # logging errors will be displayed:
-    sgofdf = satfunc.deck2df(EclFiles.str2deck(sgofstr))
-    assert len(sgofdf["SATNUM"].unique()) == 1
+    inc = satfunc.df2ecl(sgofdf)
+    df_from_inc = satfunc.df(inc)
+    pd.testing.assert_frame_equal(sgofdf, df_from_inc)
 
     # Write to file and try to parse it with command line:
     sgoffile = "__sgof_tmp.txt"
     with open(sgoffile, "w") as sgof_f:
         sgof_f.write(sgofstr)
 
-    sys.argv = ["ecl2csv", "satfunc", sgoffile, "-o", sgoffile + ".csv"]
+    sys.argv = ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
     ecl2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
@@ -136,7 +233,17 @@ def test_main(tmpdir):
     assert os.path.exists(tmpcsvfile)
     disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
+
+    # Write back to include file:
+    incfile = str(tmpdir.join("relperm.inc"))
+    sys.argv = ["csv2ecl", "satfunc", "-v", tmpcsvfile, "-o", incfile]
+    csv2ecl.main()
+
+    # Reparse the include file on disk back to dataframe
+    # and check dataframe equality
+    assert os.path.exists(incfile)
+    disk_inc_df = satfunc.df(open(incfile).read())
+    pd.testing.assert_frame_equal(disk_df, disk_inc_df)
 
 
 def test_main_subparsers():

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Support module for inferring EQLDIMS and TABDIMS from incomplete
 Eclipse 100 decks (typically single include-files)
@@ -9,6 +8,8 @@ from __future__ import absolute_import
 from __future__ import division
 
 import logging
+import six
+
 import opm.io
 
 from ecl2df import EclFiles
@@ -16,9 +17,8 @@ from ecl2df import EclFiles
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-# Constants to use for pointing to positions in the TABDIMS keyword
-NTPVT_POS = 1
-NTSFUN_POS = 0
+# Constants to use for pointing to positions in the xxxDIMS keyword
+DIMS_POS = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)
 
 
 def guess_dim(deckstring, dimkeyword, dimitem=0):
@@ -64,7 +64,9 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     max_guess = 640  # This ought to be enough for everybody
     dimcountguess = 0
     for dimcountguess in range(1, max_guess + 1):
-        deck_candidate = inject_dimcount(deckstring, dimkeyword, dimitem, dimcountguess)
+        deck_candidate = inject_dimcount(
+            deckstring, dimkeyword, dimitem, dimcountguess, nowarn=True
+        )
         try:
             EclFiles.str2deck(
                 deck_candidate,
@@ -87,11 +89,13 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     return dimcountguess
 
 
-def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
+def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue, nowarn=False):
     """Insert a TABDIMS with NTSFUN into a deck
 
     This is simple string manipulation, not opm.io
     deck manipulation (which might be possible to do).
+
+    This function is to be wrapped by inject_xxxdims_ntxxx()
 
     Arguments:
         deckstr (str): A string containing a partial deck (f.ex only
@@ -100,6 +104,8 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
         dimitem (int): Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.
         dimvalue (int): The NTSFUN/NTPVT/NTEQUIL number to use
             (this function does not care if it is correct or not)
+        nowarn (bool): By default it will warn if this function
+            is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.
     Returns:
         str: New deck with TABDIMS/EQLDIMS prepended.
     """
@@ -113,7 +119,10 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
             raise ValueError("Only item 0 in EQLDIMS can be estimated")
 
     if dimkeyword in deckstr:
-        logger.warning("Not inserting %s in a deck where already exists", dimkeyword)
+        if not nowarn:
+            logger.warning(
+                "Not inserting %s in a deck where already exists", dimkeyword
+            )
         return deckstr
     return (
         dimkeyword
@@ -123,3 +132,62 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue):
         + " /\n\n"
         + str(deckstr)
     )
+
+
+def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
+    """Ensures TABDIMS/EQLDIMS is present in a deck.
+
+    If ntxxx_value=None and ntxxx_name not in the deck, ntxxx_name will
+    be inferred through trial-and-error parsing of the deck, and then injected
+    into the deck.
+
+    Args:
+        xxxdims (str): TABDIMS or EQLDIMS
+        ntxxx_name (str): NTPVT, NTEQUL or NTSFUN
+        deck (str or opm.io deck): A data deck. If ntxxx_name is to be
+            estimated this *must* be a string and not a fully parsed deck.
+        npxxx_value (int): Supply this if ntxxx_name is known, but not present in the
+            deck, this will override any guessing. If the deck already
+            contains XXXDIMS, this will be ignored.
+
+    Returns:
+        opm.io Deck object
+    """
+    assert xxxdims in ["TABDIMS", "EQLDIMS"]
+    assert ntxxx_name in ["NTPVT", "NTEQUL", "NTSFUN"]
+
+    if xxxdims in deck and ntxxx_value is None:
+        # Then we have nothing to do, but ensure we parse a potential string to a deck
+        if isinstance(deck, six.string_types):
+            deck = EclFiles.str2deck(deck)
+        return deck
+
+    if xxxdims in deck and ntxxx_value is not None:
+        logger.warning(
+            "Ignoring %s argument, it is already in the deck", str(ntxxx_name)
+        )
+        return deck
+
+    if not isinstance(deck, six.string_types):
+        # The deck must be converted to a string deck in order
+        # to estimate dimensions.
+        deck = str(deck)
+
+    # Estimate if ntxxx_value is not provided:
+    if ntxxx_value is None:
+        ntxxx_estimate = guess_dim(deck, xxxdims, DIMS_POS[ntxxx_name])
+        logger.warning("Estimated %s=%s", ntxxx_name, str(ntxxx_estimate))
+    else:
+        ntxxx_estimate = ntxxx_value
+
+    augmented_strdeck = inject_dimcount(
+        str(deck), xxxdims, DIMS_POS[ntxxx_name], ntxxx_estimate, nowarn=True
+    )
+    # Overwrite the deck object
+    deck = EclFiles.str2deck(augmented_strdeck)
+
+    if isinstance(deck, six.string_types):
+        # If a string is supplied as a deck, we always return a parsed Deck object
+        deck = EclFiles.str2deck(deck)
+
+    return deck

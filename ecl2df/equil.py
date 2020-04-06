@@ -8,6 +8,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import sys
 import logging
 import argparse
 import pandas as pd
@@ -302,10 +303,24 @@ def equil_main(args):
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string
         equil_df = df("".join(open(args.DATAFILE).readlines()))
-    if equil_df.empty:
+    if not equil_df.empty:
+        if args.output == "-":
+            # Ignore pipe errors when writing to stdout.
+            from signal import signal, SIGPIPE, SIG_DFL
+
+            signal(SIGPIPE, SIG_DFL)
+            equil_df.to_csv(sys.stdout, index=False)
+        else:
+            logger.info(
+                "Unique EQLNUMs: %d, keywords: %s",
+                len(equil_df["EQLNUM"].unique()),
+                str(equil_df["KEYWORD"].unique()),
+            )
+            equil_df.to_csv(args.output, index=False)
+            print("Wrote to " + args.output)
+
+    else:
         logger.warning("Empty EQUIL-data being written to disk!")
-    equil_df.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)
 
 
 def equil_reverse_main(args):

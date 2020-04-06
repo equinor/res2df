@@ -13,7 +13,7 @@ import sys
 
 import argparse
 
-from ecl2df import pvt, equil
+from ecl2df import pvt, equil, satfunc
 
 from ecl2df import __version__
 
@@ -55,11 +55,22 @@ def get_parser():
         "pvt",
         help="Write PVT include files",
         description=(
-            "Write Eclipse include files from CSV files on " "the ecl2df format."
+            "Write Eclipse include files from CSV files on the ecl2df format."
         ),
     )
     pvt.fill_reverse_parser(pvt_parser)
     pvt_parser.set_defaults(func=pvt.pvt_reverse_main)
+
+    satfunc_parser = subparsers.add_parser(
+        "satfunc",
+        help="Write saturation function include files",
+        description=(
+            "Write saturation function include files from CSV files on "
+            "the ecl2df format."
+        ),
+    )
+    satfunc.fill_reverse_parser(satfunc_parser)
+    satfunc_parser.set_defaults(func=satfunc.satfunc_reverse_main)
 
     return parser
 

@@ -18,6 +18,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import sys
 import logging
 import argparse
 import numpy as np
@@ -189,6 +190,7 @@ def sgfn_fromdeck(deck, ntsfun=None):
         deck, "SGFN", renamer=RENAMERS["SGFN"], recordcountername="SATNUM"
     )
 
+
 def sgwfn_fromdeck(deck, ntsfun=None):
     """Extract SGWFN data from a deck
 
@@ -254,6 +256,11 @@ def fill_parser(parser):
     return parser
 
 
+def fill_reverse_parser(parser):
+    """Fill a parser for the operation dataframe -> eclipse include file"""
+    return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
+
+
 def main():
     """Entry-point for module, for command line utility
     """
@@ -280,17 +287,180 @@ def satfunc_main(args):
         # TABDIMS. Then we send it to df() as a string
         satfunc_df = df("".join(open(args.DATAFILE).readlines()))
     if not satfunc_df.empty:
-        logger.info(
-            "Unique satnums: %d, saturation keywords: %s",
-            len(satfunc_df["SATNUM"].unique()),
-            str(satfunc_df["KEYWORD"].unique()),
-        )
+        if args.output == "-":
+            # Ignore pipe errors when writing to stdout.
+            from signal import signal, SIGPIPE, SIG_DFL
+
+            signal(SIGPIPE, SIG_DFL)
+            satfunc_df.to_csv(sys.stdout, index=False)
+        else:
+            logger.info(
+                "Unique SATNUMs: %d, saturation keywords: %s",
+                len(satfunc_df["SATNUM"].unique()),
+                str(satfunc_df["KEYWORD"].unique()),
+            )
+            satfunc_df.to_csv(args.output, index=False)
+            print("Wrote to " + args.output)
     else:
         logger.warning("Empty saturation function dataframe being written to disk!")
-    satfunc_df.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)
+
+
+def satfunc_reverse_main(args):
+    """For command line utility for CSV to Eclipse"""
+    if args.verbose:
+        logger.setLevel(logging.INFO)
+    satfunc_df = pd.read_csv(args.csvfile)
+    logger.info("Parsed %s", args.csvfile)
+    inc_string = df2ecl(satfunc_df, keywords=args.keywords)
+
+    if args.output == "-":
+        # Ignore pipe errors when writing to stdout.
+        from signal import signal, SIGPIPE, SIG_DFL
+
+        signal(SIGPIPE, SIG_DFL)
+        print(inc_string)
+    else:
+        with open(args.output, "w") as f_handle:
+            f_handle.write(inc_string)
+        print("Wrote to " + args.output)
 
 
 def deck2df(eclfiles):
     """Deprecated Python API"""
     return df(eclfiles)
+
+
+def df2ecl(satfunc_df, keywords=None, comments=None):
+    """Generate Eclipse include strings from dataframes with
+    saturation functions (SWOF, SGOF, ...)
+
+    Args:
+        satfunc_df (pd.DataFrame): Dataframe with data on ecl2df format.
+        keywords (list of str): List of keywords to include. Must be
+            supported and present in the incoming dataframe.
+        comments (dict): Dictionary indexed by keyword with comments to be
+            included pr. keyword. If a key named "master" is present
+            it will be used as a master comment for the outputted file.
+    """
+    string = ""
+    string += common.df2ecl(
+        satfunc_df,
+        keywords=keywords,
+        comments=comments,
+        supported=SUPPORTED_KEYWORDS,
+        consecutive="SATNUM",
+    )
+    return string
+
+
+def df2ecl_swof(dframe, comment=None):
+    """Print SWOF data
+
+    Args:
+        dframe (pd.DataFrame): Containing SWOF data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SWOF", dframe, comment)
+
+
+def df2ecl_sgof(dframe, comment=None):
+    """Print SGOF data
+
+    Args:
+        dframe (pd.DataFrame): Containing SGOF data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SGOF", dframe, comment)
+
+
+def df2ecl_sgfn(dframe, comment=None):
+    """Print SGFN data
+
+    Args:
+        dframe (pd.DataFrame): Containing SGFN data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SGFN", dframe, comment)
+
+
+def df2ecl_sgwfn(dframe, comment=None):
+    """Print SGWFN data
+
+    Args:
+        dframe (pd.DataFrame): Containing SGWFN data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SGWFN", dframe, comment)
+
+
+def df2ecl_swfn(dframe, comment=None):
+    """Print SWFN data
+
+    Args:
+        dframe (pd.DataFrame): Containing SWFN data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SWFN", dframe, comment)
+
+
+def df2ecl_slgof(dframe, comment=None):
+    """Print SLGOF data
+
+    Args:
+        dframe (pd.DataFrame): Containing SLGOF data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SLGOF", dframe, comment)
+
+
+def df2ecl_sof2(dframe, comment=None):
+    """Print SOF2 data
+
+    Args:
+        dframe (pd.DataFrame): Containing SOF2 data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SOF2", dframe, comment)
+
+
+def df2ecl_sof3(dframe, comment=None):
+    """Print SOF3 data
+
+    Args:
+        dframe (pd.DataFrame): Containing SOF3 data
+        comment (str): Text that will be included as a comment
+    """
+    return _df2ecl_satfuncs("SOF3", dframe, comment)
+
+
+def _df2ecl_satfuncs(keyword, dframe, comment=None):
+    string = "{}\n".format(keyword)
+    string += common.comment_formatter(comment)
+    col_headers = RENAMERS[keyword]["DATA"]
+
+    if "KEYWORD" not in dframe:
+        # Use everything..
+        subset = dframe
+    else:
+        subset = dframe[dframe["KEYWORD"] == keyword]
+    if "SATNUM" not in subset:
+        subset["SATNUM"] = 1
+    subset = subset.set_index("SATNUM").sort_index()
+
+    # Make a function that is to be called for each SATNUM
+    def _df2ecl_satfuncs_satnum(keyword, dframe):
+        """Print one saturation function for one specific SATNUM"""
+        col_headers = RENAMERS[keyword]["DATA"]
+        string = (
+            "-- "
+            + dframe[col_headers].to_string(
+                float_format=" %g", header=True, index=False
+            )[3:]
+        )
+        return string + "\n/\n"
+
+    # Loop over every SATNUM
+    for satnum in subset.index.unique():
+        string += "-- SATNUM: {}\n".format(satnum)
+        string += _df2ecl_satfuncs_satnum(keyword, subset[subset.index == satnum])
+    return string + "\n"

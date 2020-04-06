@@ -274,7 +274,7 @@ def pvt_main(args):
             pvt_df.to_csv(sys.stdout, index=False)
         else:
             logger.info(
-                "PVTNUM: %d, PVT keywords: %s",
+                "Unique PVTNUMs: %d, PVT keywords: %s",
                 len(pvt_df["PVTNUM"].unique()),
                 str(pvt_df["KEYWORD"].unique()),
             )

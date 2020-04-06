@@ -142,6 +142,7 @@ RSVD
  30 400 /
  50 100 /"""
     rsvd_df = equil.df(deckstr)
+    print(rsvd_df)
     assert "KEYWORD" in rsvd_df
     assert "EQUIL" not in rsvd_df["KEYWORD"].values
     assert max(rsvd_df["EQLNUM"]) == 3
@@ -152,6 +153,12 @@ RSVD
     pd.testing.assert_frame_equal(rsvd_df, df_from_inc)
 
     assert equil.df(deckstr, keywords="EQUIL").empty
+
+    # Check that we can use the underlying function directly:
+    rsvd_df2 = equil.rsvd_fromdeck(deckstr)
+    print(rsvd_df)
+    print(rsvd_df2)
+    pd.testing.assert_frame_equal(rsvd_df.drop("KEYWORD", axis="columns"), rsvd_df2)
 
     deckstr = """
 RSVD
@@ -169,6 +176,10 @@ RSVD
     inc = equil.df2ecl(rsvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rsvd_df, df_from_inc)
+
+    # Check that we can use the underlying function directly:
+    rsvd_df2 = equil.rsvd_fromdeck(deckstr)
+    pd.testing.assert_frame_equal(rsvd_df.drop("KEYWORD", axis="columns"), rsvd_df2)
 
 
 def test_rvvd():
@@ -190,6 +201,12 @@ RVVD
     pd.testing.assert_frame_equal(rvvd_df, df_from_inc)
 
     assert equil.df(deckstr, keywords="EQUIL").empty
+
+    # Check that we can use the underlying function directly:
+    rvvd_df2 = equil.rvvd_fromdeck(deckstr)
+    print(rvvd_df)
+    print(rvvd_df2)
+    pd.testing.assert_frame_equal(rvvd_df.drop("KEYWORD", axis="columns"), rvvd_df2)
 
     deckstr = """
 RVVD

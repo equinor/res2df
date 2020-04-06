@@ -136,7 +136,7 @@ def ecl_keyworddata_to_df(
         dframe = pd.concat(records)
     else:  # records contain lists.
         dframe = pd.DataFrame(data=records)
-    return dframe
+    return dframe.reset_index(drop=True)
 
 
 def parse_opmio_deckrecord(

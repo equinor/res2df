@@ -13,8 +13,6 @@ import sys
 
 import argparse
 
-import six
-
 from ecl2df import pvt, equil
 
 from ecl2df import __version__

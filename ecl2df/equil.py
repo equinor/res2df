@@ -14,11 +14,6 @@ import pandas as pd
 
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
-from .common import (
-    parse_opmio_deckrecord,
-    handle_wanted_keywords,
-    ecl_keyworddata_to_df,
-)
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -111,7 +106,8 @@ def df(deck, keywords=None, ntequl=None):
     deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     ntequl = deck["EQLDIMS"][0][inferdims.DIMS_POS["NTEQUL"]].get_int(0)
 
-    keywords = handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+
     frames = []
     for keyword in keywords:
         # Construct the associated function names
@@ -134,8 +130,8 @@ def rsvd_fromdeck(deck, ntequl=None):
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
-        deck = inject_eqldims_ntequl(deck, ntequl=None)
-    rsvd_df = ecl_keyworddata_to_df(
+        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    rsvd_df = common.ecl_keyworddata_to_df(
         deck, "RSVD", renamer=RENAMERS["RSVD"], recordcountername="EQLNUM"
     )
     return rsvd_df
@@ -150,8 +146,8 @@ def rvvd_fromdeck(deck, ntequl=None):
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
-        deck = inject_eqldims_ntequl(deck, ntequl=None)
-    rsvd_df = ecl_keyworddata_to_df(
+        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    rsvd_df = common.ecl_keyworddata_to_df(
         deck, "RVVD", renamer=RENAMERS["RVVD"], recordcountername="EQLNUM"
     )
     return rsvd_df
@@ -217,7 +213,7 @@ def equil_fromdeck(deck, ntequl=None):
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
-        deck = inject_eqldims_ntequl(deck, ntequl=None)
+        deck = inject_eqldims_ntequl(deck, ntequl)
 
     phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     phases = phases_from_deck(deck)
@@ -231,7 +227,7 @@ def equil_fromdeck(deck, ntequl=None):
     if not columnrenamer:
         raise ValueError("Unsupported phase configuration")
 
-    dataframe = ecl_keyworddata_to_df(
+    dataframe = common.ecl_keyworddata_to_df(
         deck, "EQUIL", renamer=columnrenamer, recordcountername="EQLNUM"
     )
 
@@ -277,6 +273,7 @@ def fill_parser(parser):
 
 
 def fill_reverse_parser(parser):
+    """Fill a parser for the operation dataframe -> eclipse include file"""
     return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
 
 

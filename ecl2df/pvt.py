@@ -9,10 +9,8 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
-import datetime
 import logging
 
-import numpy as np
 import pandas as pd
 
 from ecl2df import inferdims, common, __version__
@@ -58,72 +56,6 @@ RENAMERS["DENSITY"] = {
 RENAMERS["ROCK"] = {"PREF": "PRESSURE", "COMPRESSIBILITY": "COMPRESSIBILITY"}
 
 
-def inject_ntpvt(deckstr, ntpvt):
-    """Insert a TABDIMS with NTPVT into a deck
-
-    This is simple string manipulation, not opm.io
-    deck manipulation (which might be possible to do).
-
-    Arguments:
-        deckstr (str): A string containing a partial deck (f.ex only
-            the DENSITY keyword).
-        ntpvt (int): The number for NTPVT to use in TABDIMS
-            (this function does not care if it is correct or not)
-    Returns:
-        str: New deck with TABDIMS prepended.
-    """
-    if "TABDIMS" in deckstr:
-        logger.warning("Not inserting TABDIMS in a deck where already exists")
-        return deckstr
-    return "TABDIMS\n 1* " + str(ntpvt) + " /\n\n" + str(deckstr)
-
-
-def inject_tabdims_ntpvt(deck, ntpvt=None):
-    """Ensures TABDIMS is present in a deck.
-
-    If ntpvt==None and NTPVT is not in the deck, NTPVT will be inferred
-    through trial-and-error parsing of the deck, and then injected
-    into the deck.
-
-    Args:
-        deck (str or opm.io deck): A data deck. If NTPVT is to be estimated
-            this must be a string and not a fully parsed deck.
-        nptvt (int): Supply this if NTPVT is known, but not present in the
-            deck, this will override any NTPVT guessing. If the deck already
-            contains TABDIMS, this will be ignored.
-
-    Returns:
-        opm.io Deck object
-    """
-    if "TABDIMS" not in deck:
-        if not isinstance(deck, str):
-            logger.critical(
-                (
-                    "Can't guess NTPVT from a parsed deck without TABDIMS.\n"
-                    "Only data for the first PVT region will be returned.\n"
-                    "Supply the deck as a string to automatically determine NTPVT"
-                )
-            )
-            ntpvt = 1
-        else:
-            if ntpvt is None:
-                pvtnum_estimate = inferdims.guess_dim(deck, "TABDIMS", 1)
-                logger.warning("Guessed NPTVT=%s", str(pvtnum_estimate))
-            else:
-                pvtnum_estimate = ntpvt
-            augmented_strdeck = inferdims.inject_dimcount(
-                str(deck), "TABDIMS", inferdims.DIMS_POS["NTPVT"], pvtnum_estimate
-            )
-            # Overwrite the deck object
-            deck = EclFiles.str2deck(augmented_strdeck)
-    else:
-        logger.warning("Ignoring NTPVT argument, it is already in the deck")
-    if isinstance(deck, str):
-        # If a string is supplied as a deck, we always return a parsed Deck object
-        deck = EclFiles.str2deck(deck)
-    return deck
-
-
 def pvtw_fromdeck(deck, ntpvt=None):
     """Extract PVTW from a deck
 
@@ -133,7 +65,7 @@ def pvtw_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     return common.ecl_keyworddata_to_df(
         deck, "PVTW", renamer=RENAMERS["PVTW"], recordcountername="PVTNUM"
     )
@@ -148,7 +80,7 @@ def density_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     return common.ecl_keyworddata_to_df(
         deck, "DENSITY", renamer=RENAMERS["DENSITY"], recordcountername="PVTNUM"
     )
@@ -163,7 +95,7 @@ def rock_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     return common.ecl_keyworddata_to_df(
         deck, "ROCK", renamer=RENAMERS["ROCK"], recordcountername="PVTNUM"
     )
@@ -178,7 +110,7 @@ def pvto_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     pvto_df = common.ecl_keyworddata_to_df(
         deck, "PVTO", renamer=RENAMERS["PVTO"], emptyrecordcountername="PVTNUM"
     )
@@ -194,7 +126,7 @@ def pvdo_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     pvdg_df = common.ecl_keyworddata_to_df(
         deck, "PVDO", renamer=RENAMERS["PVDO"], recordcountername="PVTNUM"
     )
@@ -210,7 +142,7 @@ def pvdg_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     pvdg_df = common.ecl_keyworddata_to_df(
         deck, "PVDG", renamer=RENAMERS["PVDG"], recordcountername="PVTNUM"
     )
@@ -226,7 +158,7 @@ def pvtg_fromdeck(deck, ntpvt=None):
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     pvtg_df = common.ecl_keyworddata_to_df(
         deck, "PVTG", renamer=RENAMERS["PVTG"], emptyrecordcountername="PVTNUM"
     )
@@ -254,39 +186,16 @@ def df(deck, keywords=None, ntpvt=None):
     Return:
         pd.DataFrame
     """
-    if not isinstance(keywords, list):
-        keywords = [keywords]  # Can still be None
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()
-    if "TABDIMS" not in deck:
-        deck = inject_tabdims_ntpvt(deck, ntpvt=ntpvt)
+
+    deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     ntpvt = deck["TABDIMS"][0][inferdims.DIMS_POS["NTPVT"]].get_int(0)
-    if keywords[0] is None and len(keywords) == 1:
-        # By default, select all supported PVT keywords:
-        keywords = SUPPORTED_KEYWORDS
-    else:
-        # Warn if some keywords are unsupported:
-        not_supported = [
-            keyword for keyword in keywords if keyword not in SUPPORTED_KEYWORDS
-        ]
-        if not_supported:
-            logger.warning(
-                "Requested keyword(s) not supported by ecl2df.pvt: %s",
-                str(not_supported),
-            )
-        # Reduce to only supported keywords:
-        keywords = list(set(keywords) - set(not_supported))
-        # Warn if some requested keywords are not in deck:
-        not_in_deck = [keyword for keyword in keywords if keyword not in deck]
-        if not_in_deck:
-            logger.warning(
-                "Requested keyword(s) not present in deck: %s", str(not_in_deck)
-            )
-    keywords_in_deck = [keyword for keyword in keywords if keyword in deck]
-    assert isinstance(keywords, list)
+
+    keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
-    for keyword in keywords_in_deck:
+    for keyword in keywords:
         # Construct the associated function names
         function_name = keyword.lower() + "_fromdeck"
         function = globals()[function_name]

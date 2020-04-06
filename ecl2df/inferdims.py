@@ -171,7 +171,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
     else:
         if ntxxx_value is not None:
             logger.warning(
-                "Ignoring {} argument, it is already in the deck", str(ntxxx_name)
+                "Ignoring %s argument, it is already in the deck", str(ntxxx_name)
             )
     if isinstance(deck, six.string_types):
         # If a string is supplied as a deck, we always return a parsed Deck object

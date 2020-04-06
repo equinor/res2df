@@ -389,6 +389,8 @@ def test_df2ecl():
         sorted(rock_df_from_inc.columns), axis=1
     )
     rock_df = rock_df_from_inc.reindex(sorted(rock_df.columns), axis=1)
+    print(rock_df_from_inc)
+    print(rock_df)
     pd.testing.assert_frame_equal(rock_df_from_inc, rock_df)
 
     rock_inc = pvt.df2ecl(rock_df, keywords=["DENSITY"])

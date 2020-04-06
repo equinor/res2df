@@ -39,8 +39,8 @@ a Pandas Dataframe.
 
 See the API for more documentation and possibilities for each module.
 
-Module overview
----------------
+Short description of each submodule
+-----------------------------------
 
 ``summary``
 ^^^^^^^^^^^^^^
@@ -105,12 +105,13 @@ supports custom FIPxxxxx names.
 ^^^^^^^^^^^
 
 Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
-into one DataFrame.
+into one DataFrame. Can write back to Eclipse include files.
 
 ``equil``
 ^^^^^^^^^
 
-Extracts the information in the `EQUIL` table in the input deck.
+Extracts the information in the `EQUIL` table, `RSVD` and `RVVD` in the
+input deck. Can write back to Eclipse include files.
 
 ``compdat``
 ^^^^^^^^^^^
@@ -130,10 +131,16 @@ all timesteps, from the input deck. The tree structure at each relevant
 date can be returned as a dataframe of the edges, as a nested dictionary
 or as a `treelib` tree.
 
+``pvt``
+^^^^^^^
+
+Extracts PVT data from an Eclipse deck, from the keywords `PVTO`, `PVDG`,
+`DENSITY`, `ROCK` etc. Can write data back to Eclipse include files.
+
 ``wcon``
 ^^^^^^^^
 
-Extracts WCONxxxx keywords from the Schedule section, and providing the
+Extracts `WCONxxxx` keywords from the Schedule section, and providing the
 associated data in a dataframe format.
 
 ``eclfiles``
@@ -184,6 +191,6 @@ This library is released under GPLv3.
 Copyright
 ---------
 
-The code is Copyright Equinor ASA 2019.
+The code is Copyright Equinor ASA 2019-2020.
 
 Contributions without copyright transfer are welcome.

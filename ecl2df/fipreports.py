@@ -4,6 +4,7 @@
 Extract FIP region reports from Eclipse PRT file
 
 Example block to extract data from:
+
                                                 =================================
                                                 : FIPZON  REPORT REGION    2    :
                                                 :     PAV =        139.76  BARSA:
@@ -23,7 +24,6 @@ Example block to extract data from:
  :OUTFLOW TO REGION   3    :       -66862.                      -66862.:        198900. :           -0.     -1198195.      -1198195.
  :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.
  ====================================================================================================================================
-
 
 """
 

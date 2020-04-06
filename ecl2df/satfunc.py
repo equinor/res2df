@@ -4,7 +4,7 @@
 Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.
 
-Data can be extracted from a full Eclipse deck (*.DATA)
+Data can be extracted from a full Eclipse deck (`*.DATA`)
 or from individual files.
 
 Note that when parsing from individual files, it is

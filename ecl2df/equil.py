@@ -294,7 +294,14 @@ def equil_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    equil_df = deck2df(deck)
+    if "EQLDIMS" in deck:
+        # Things are easier when a full deck with (correct) EQLDIMS
+        # is supplied:
+        equil_df = df(deck)
+    else:
+        # This might be an include file for which we have to infer/guess
+        # EQLDIMS. Then we send it to df() as a string
+        equil_df = df("".join(open(args.DATAFILE).readlines()))
     if equil_df.empty:
         logger.warning("Empty EQUIL-data being written to disk!")
     equil_df.to_csv(args.output, index=False)

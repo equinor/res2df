@@ -142,7 +142,6 @@ RSVD
  30 400 /
  50 100 /"""
     rsvd_df = equil.df(deckstr)
-    print(rsvd_df)
     assert "KEYWORD" in rsvd_df
     assert "EQUIL" not in rsvd_df["KEYWORD"].values
     assert max(rsvd_df["EQLNUM"]) == 3
@@ -156,8 +155,6 @@ RSVD
 
     # Check that we can use the underlying function directly:
     rsvd_df2 = equil.rsvd_fromdeck(deckstr)
-    print(rsvd_df)
-    print(rsvd_df2)
     pd.testing.assert_frame_equal(rsvd_df.drop("KEYWORD", axis="columns"), rsvd_df2)
 
     deckstr = """
@@ -225,6 +222,24 @@ RVVD
     inc = equil.df2ecl(rvvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rvvd_df, df_from_inc)
+
+def test_rsvd_via_file(tmpdir):
+    """Test that we can reparse RSVD with unknown TABDIMS
+    from a file using the command line utility"""
+    tmpdir.chdir()
+    deckstr = """
+RSVD
+ 10 100
+ 30 400 /
+ 50 100
+ 60 1000 /"""
+    rsvd_df = equil.df(deckstr)
+    with open("rsvd.inc", "w") as filehandle:
+        filehandle.write(deckstr)
+    sys.argv = ["ecl2csv", "equil", "-v", "rsvd.inc", "-o", "rsvd.csv"]
+    ecl2csv.main()
+    rsvd_df_fromcsv = pd.read_csv("rsvd.csv")
+    pd.testing.assert_frame_equal(rsvd_df, rsvd_df_fromcsv)
 
 
 def test_ntequl():

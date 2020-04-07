@@ -214,7 +214,7 @@ def equil_fromdeck(deck, ntequl=None):
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
-        deck = inject_eqldims_ntequl(deck, ntequl)
+        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
 
     phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     phases = phases_from_deck(deck)

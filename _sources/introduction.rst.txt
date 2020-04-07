@@ -48,6 +48,8 @@ Short description of each submodule
 Extracts summary data from `.UNSMRY` files, at requested time sampling and
 for requested vectors.
 
+More documentation on :doc:`usage/summary`.
+
 ``grid``
 ^^^^^^^^
 
@@ -55,6 +57,8 @@ Extracts grid data from `.INIT` and `.EGRID` and `.UNRST` files. Restart file
 are optional to extract, and dates must be picked (or all). Data is
 merged into one DataFrame by the `i`, `j` and `k` indices. Bulk cell
 volume is included. Cells are indexed as in Eclipse, starting with 1.
+
+More documentation on :doc:`usage/grid`.
 
 ``nnc``
 ^^^^^^^
@@ -64,12 +68,16 @@ output data in EGRID, not the NNC input keyword), as pairs of
 `ijk`-indices and the associated transmissiblity. Optional filtering
 to vertical connections (along pillars).
 
+More documentation on :doc:`usage/nnc`.
+
 ``pillars``
 ^^^^^^^^^^^
 
 Compute statistics pr cornerpoint pillar, and optionally compute hydrocarbon
 fluid contacts pr. pillar and pr. date based on saturation cutoffs. Data
 can be grouped and aggregated over a region parameter.
+
+More documentation on :doc:`usage/pillars`.
 
 ``trans``
 ^^^^^^^^^
@@ -81,6 +89,8 @@ out transmissibilities over f.ex. a FIPNUM interface. Data can also be aggregate
 over the region interface to give a grid-independent quantification of region
 communication.
 
+More documentation on :doc:`usage/trans`.
+
 ``rft``
 ^^^^^^^
 
@@ -91,6 +101,8 @@ For multisegment wells, the well topology is calculated and data
 is merged accordingly, for example when ICD segments are used, enabling
 easy calculations of the pressure drop over an ICD valve.
 
+More documentation on :doc:`usage/rft`.
+
 ``fipreports``
 ^^^^^^^^^^^^^^
 
@@ -100,6 +112,8 @@ in the ASCII table in the PRT file and organize into a dataframe,
 currently-in-place, outflow to wells, outflows to regions, etc. It also
 supports custom FIPxxxxx names.
 
+More documentation on :doc:`usage/fipreports`.
+
 
 ``satfunc``
 ^^^^^^^^^^^
@@ -107,11 +121,15 @@ supports custom FIPxxxxx names.
 Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
 into one DataFrame. Can write back to Eclipse include files.
 
+More documentation on :doc:`usage/satfunc`.
+
 ``equil``
 ^^^^^^^^^
 
 Extracts the information in the `EQUIL` table, `RSVD` and `RVVD` in the
 input deck. Can write back to Eclipse include files.
+
+More documentation on :doc:`usage/equil`.
 
 ``compdat``
 ^^^^^^^^^^^
@@ -123,6 +141,8 @@ data is available as three different dataframes, which can be merged.
 It is also possible to parse individual "include" files, not only a
 finished working deck.
 
+More documentation on :doc:`usage/compdat`.
+
 ``gruptree``
 ^^^^^^^^^^^^
 
@@ -131,17 +151,23 @@ all timesteps, from the input deck. The tree structure at each relevant
 date can be returned as a dataframe of the edges, as a nested dictionary
 or as a `treelib` tree.
 
+More documentation on :doc:`usage/gruptree`.
+
 ``pvt``
 ^^^^^^^
 
 Extracts PVT data from an Eclipse deck, from the keywords `PVTO`, `PVDG`,
 `DENSITY`, `ROCK` etc. Can write data back to Eclipse include files.
 
+More documentation on :doc:`usage/pvt`.
+
 ``wcon``
 ^^^^^^^^
 
 Extracts `WCONxxxx` keywords from the Schedule section, and providing the
 associated data in a dataframe format.
+
+More documentation on :doc:`usage/wcon`.
 
 ``eclfiles``
 ^^^^^^^^^^^^

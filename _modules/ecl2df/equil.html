@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.equil &mdash; ecl2df 0.5.2.dev17+g795b1d0 documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.5.2.dev22+g037ddb7 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev17+g795b1d0
+                0.5.2.dev22+g037ddb7
               </div>
             
           
@@ -87,6 +87,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html#reverse-command-line-utility-csv2ecl">Reverse command line utility: csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -182,7 +183,7 @@
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RVVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RV&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RSVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RS&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;oil-water-gas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
@@ -193,7 +194,7 @@
     <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;gas-water&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;GWC&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCGWC&quot;</span><span class="p">,</span>
@@ -204,7 +205,7 @@
     <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;oil-water&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;PCOWC&quot;</span><span class="p">,</span>
@@ -215,7 +216,7 @@
     <span class="s2">&quot;OIP_INIT&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCURACY&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;oil-gas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
     <span class="s2">&quot;OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PC_OWC&quot;</span><span class="p">:</span> <span class="s2">&quot;IGNORE2&quot;</span><span class="p">,</span>
@@ -372,7 +373,7 @@
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_eqldims_ntequl</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
 
     <span class="n">phasecount</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">])</span>
     <span class="n">phases</span> <span class="o">=</span> <span class="n">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
@@ -697,7 +698,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright Equinor
+        &copy; Copyright Equinor 2019-2020
 
     </p>
   </div>

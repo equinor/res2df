@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.fipreports &mdash; ecl2df 0.5.2.dev17+g795b1d0 documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df 0.5.2.dev22+g037ddb7 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev17+g795b1d0
+                0.5.2.dev22+g037ddb7
               </div>
             
           
@@ -87,6 +87,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Command line utility: ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html#reverse-command-line-utility-csv2ecl">Reverse command line utility: csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
@@ -160,29 +161,6 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract FIP region reports from Eclipse PRT file</span>
-
-<span class="sd">Example block to extract data from:</span>
-
-<span class="sd">                                                =================================</span>
-<span class="sd">                                                : FIPZON  REPORT REGION    2    :</span>
-<span class="sd">                                                :     PAV =        139.76  BARSA:</span>
-<span class="sd">                                                :     PORV=     27777509.   RM3 :</span>
-<span class="sd">                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:</span>
-<span class="sd">                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :</span>
-<span class="sd"> :-------------------------:-------------------------------------------:----------------:-------------------------------------------:</span>
-<span class="sd"> :CURRENTLY IN PLACE       :     21091398.                    21091398.:       4590182. :           -0.    483594842.     483594842.</span>
-<span class="sd"> :-------------------------:-------------------------------------------:----------------:-------------------------------------------:</span>
-<span class="sd"> :OUTFLOW TO OTHER REGIONS :        76266.                       76266.:         75906. :            0.      1818879.       1818879.</span>
-<span class="sd"> :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.</span>
-<span class="sd"> :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.</span>
-<span class="sd"> :-------------------------:-------------------------------------------:----------------:-------------------------------------------:</span>
-<span class="sd"> :ORIGINALLY IN PLACE      :     21136892.                    21136892.:       4641214. :            0.    484657561.     484657561.</span>
-<span class="sd"> :-------------------------:-------------------------------------------:----------------:-------------------------------------------:</span>
-<span class="sd"> :OUTFLOW TO REGION   1    :       143128.                      143128.:       -161400. :            0.      3017075.       3017075.</span>
-<span class="sd"> :OUTFLOW TO REGION   3    :       -66862.                      -66862.:        198900. :           -0.     -1198195.      -1198195.</span>
-<span class="sd"> :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.</span>
-<span class="sd"> ====================================================================================================================================</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
@@ -271,10 +249,12 @@
 <span class="sd">    DATE and region index added.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        prtfile (string or EclFiles): filename (*PRT) or an EclFiles object</span>
+<span class="sd">        prtfile (string or EclFiles): filename (PRT) or an EclFiles object</span>
+
 <span class="sd">        fipname (string): The name of the regport regions, FIPNUM, FIPZON or whatever</span>
 <span class="sd">            Max length of the string is 8, the first three characters must be FIP,</span>
 <span class="sd">            and the next 3 characters must be unique for a given Eclipse deck.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -389,7 +369,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright Equinor
+        &copy; Copyright Equinor 2019-2020
 
     </p>
   </div>

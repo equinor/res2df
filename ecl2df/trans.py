@@ -58,8 +58,9 @@ def df(
         group (bool): Set to true if you want to sum transmissibilities over
             boundary interfaces. Implies boundaryfilter and requires only one integer
             INIT vector.
-        coords (bool): Set to true if you want to add coordinates (X1, Y1, Z1,
-            X2, Y2, Z2)
+        coords (bool): Set to true if you want to add coordinates for the
+            average of the two cells centerpoint and the distance between
+            the two cells centerpoints (X, Y, Z, DX, DY, DZ)
         onlykdir (bool): Set to true if you only want transmissibilities in
             K direction
         onlyijdir (bool): Set to true if you only want transmissibilities

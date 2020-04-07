@@ -4,7 +4,6 @@
 ecl2df.egg-info
 .tox
 *.swp
-*.csv
 *.pyc
 *~
 docs/modules.rst

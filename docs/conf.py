@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = "ecl2df"
-copyright = "2020, Håvard Berland"
-author = "Håvard Berland"
+author = u"Håvard Berland"
+copyright = "Equinor 2019-2020"
 
 # The short X.Y version
 import ecl2df
@@ -135,7 +135,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "ecl2df.tex", "ecl2df Documentation", "Håvard Berland", "manual")
+    (master_doc, "ecl2df.tex", "ecl2df Documentation", author, "manual")
 ]
 
 

@@ -327,6 +327,7 @@ def satfunc_reverse_main(args):
 
 def deck2df(eclfiles, satnumcount=None):
     """Deprecated Python API"""
+    logger.warning("Deprecated function call satfunc.deck2df(). Use satfunc.df()")
     if satnumcount is not None:
         return df(eclfiles, ntsfun=satnumcount)
     else:

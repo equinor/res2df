@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 """
 Extract EQUIL from an Eclipse deck as Pandas DataFrame
@@ -242,6 +243,7 @@ def equil_fromdeck(deck, ntequl=None):
 
 def deck2df(eclfiles, ntequl=None):
     """Wrapper for deprecated syntax (does not support the keywords argument)"""
+    logger.warning("Deprecated function name equil.deck2df(). Use equil.df()")
     return df(eclfiles, ntequl=ntequl)
 
 

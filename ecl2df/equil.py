@@ -24,7 +24,7 @@ RENAMERS = {}
 RENAMERS["RVVD"] = {"DATA": ["Z", "RV"]}
 RENAMERS["RSVD"] = {"DATA": ["Z", "RS"]}
 RENAMERS["oil-water-gas"] = {
-    "DATUM_DEPTH": "DATUM",
+    "DATUM_DEPTH": "Z",
     "DATUM_PRESSURE": "PRESSURE",
     "OWC": "OWC",
     "PC_OWC": "PCOWC",
@@ -35,7 +35,7 @@ RENAMERS["oil-water-gas"] = {
     "OIP_INIT": "ACCURACY",
 }
 RENAMERS["gas-water"] = {
-    "DATUM_DEPTH": "DATUM",
+    "DATUM_DEPTH": "Z",
     "DATUM_PRESSURE": "PRESSURE",
     "OWC": "GWC",
     "PC_OWC": "PCGWC",
@@ -46,7 +46,7 @@ RENAMERS["gas-water"] = {
     "OIP_INIT": "ACCURACY",
 }
 RENAMERS["oil-water"] = {
-    "DATUM_DEPTH": "DATUM",
+    "DATUM_DEPTH": "Z",
     "DATUM_PRESSURE": "PRESSURE",
     "OWC": "OWC",
     "PC_OWC": "PCOWC",
@@ -57,7 +57,7 @@ RENAMERS["oil-water"] = {
     "OIP_INIT": "ACCURACY",
 }
 RENAMERS["oil-gas"] = {
-    "DATUM_DEPTH": "DATUM",
+    "DATUM_DEPTH": "Z",
     "DATUM_PRESSURE": "PRESSURE",
     "OWC": "IGNORE1",
     "PC_OWC": "IGNORE2",
@@ -214,7 +214,7 @@ def equil_fromdeck(deck, ntequl=None):
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
-        deck = inject_eqldims_ntequl(deck, ntequl)
+        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
 
     phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     phases = phases_from_deck(deck)

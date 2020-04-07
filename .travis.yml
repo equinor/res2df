@@ -54,7 +54,6 @@ script:
   - python setup.py test
   - sphinx-apidoc -H "API for ecl2df" -o docs ecl2df
   - python setup.py build_sphinx
-  - touch build/sphinx/html/.nojekyll
 
 deploy:
   - provider: pages

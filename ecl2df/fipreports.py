@@ -2,29 +2,6 @@
 
 """
 Extract FIP region reports from Eclipse PRT file
-
-Example block to extract data from:
-
-                                                =================================
-                                                : FIPZON  REPORT REGION    2    :
-                                                :     PAV =        139.76  BARSA:
-                                                :     PORV=     27777509.   RM3 :
-                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
-                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
- :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
- :CURRENTLY IN PLACE       :     21091398.                    21091398.:       4590182. :           -0.    483594842.     483594842.
- :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
- :OUTFLOW TO OTHER REGIONS :        76266.                       76266.:         75906. :            0.      1818879.       1818879.
- :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.
- :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.
- :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
- :ORIGINALLY IN PLACE      :     21136892.                    21136892.:       4641214. :            0.    484657561.     484657561.
- :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
- :OUTFLOW TO REGION   1    :       143128.                      143128.:       -161400. :            0.      3017075.       3017075.
- :OUTFLOW TO REGION   3    :       -66862.                      -66862.:        198900. :           -0.     -1198195.      -1198195.
- :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.
- ====================================================================================================================================
-
 """
 
 import re
@@ -113,10 +90,12 @@ def df(prtfile, fipname="FIPNUM"):
     DATE and region index added.
 
     Args:
-        prtfile (string or EclFiles): filename (*PRT) or an EclFiles object
+        prtfile (string or EclFiles): filename (PRT) or an EclFiles object
+
         fipname (string): The name of the regport regions, FIPNUM, FIPZON or whatever
             Max length of the string is 8, the first three characters must be FIP,
             and the next 3 characters must be unique for a given Eclipse deck.
+
     Returns:
         pd.DataFrame
     """

@@ -10,6 +10,7 @@ data format.
    :maxdepth: 2
 
    introduction
+   usage
    scripts
    modules
    installation

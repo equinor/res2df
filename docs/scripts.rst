@@ -1,5 +1,5 @@
-Command line utility: ecl2csv
-=============================
+ecl2csv
+=======
 
 .. _ecl2csv:
 
@@ -14,8 +14,8 @@ the CSV to. If you want output to your terminal, use ``-`` as the output filenam
    :ref: ecl2df.ecl2csv.get_parser
    :prog: ecl2csv
 
-Reverse command line utility: csv2ecl
-=====================================
+csv2ecl
+=======
 
 .. _csv2ecl:
 

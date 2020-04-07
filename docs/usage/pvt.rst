@@ -5,13 +5,21 @@ Extracts PVT related keyword data from the PROPS section in an Eclipse deck,
 typically the keywords ``PVTO``, ``PVDG``, ``DENSITY`` and ``ROCK``. Data from
 all keywords will be merged into one common dataframe.
 
+Example usage:
 
 .. code-block:: python
 
    from ecl2df import pvt, EclFiles
 
-   eclfiles = EclFiles('MYDATADECK.DATA')
+   eclfiles = EclFiles("MYDATADECK.DATA")
    dframe = pvt.df(eclfiles)
+
+Alternatively, we may also read directly from an include file
+if we read the contents of the file and supply it as a string:
+
+.. code-block:: python
+
+   dframe = pvt.df(open("pvt.inc").read())
 
 ..
   pvt.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).tail(15).to_csv('docs/usage/pvt.csv', index=False)
@@ -20,6 +28,17 @@ all keywords will be merged into one common dataframe.
 .. csv-table:: Example PVT table (last 15 rows to show non-Nan data)
   :file: pvt.csv
   :header-rows: 1
+
+If your PVT data resides in multiple include files, but you can't import
+the entire deck, you have to merge the dataframes in Python like this:
+
+.. code-block:: python
+
+   import pandas as pd
+
+   pvto = pvt.df(open("pvto.inc").read()))
+   density = pvt.df(open("density.inc").read())
+   pvt_df = pd.concat([pvto, density], ignore_index=True)
 
 Transforming PVT data
 ^^^^^^^^^^^^^^^^^^^^^

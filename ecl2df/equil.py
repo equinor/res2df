@@ -20,10 +20,12 @@ from .eclfiles import EclFiles
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS = ["EQUIL", "RSVD", "RVVD"]
+SUPPORTED_KEYWORDS = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
 RENAMERS = {}
-RENAMERS["RVVD"] = {"DATA": ["Z", "RV"]}
+RENAMERS["PBVD"] = {"DATA": ["Z", "PB"]}
+RENAMERS["PDVD"] = {"DATA": ["Z", "PD"]}
 RENAMERS["RSVD"] = {"DATA": ["Z", "RS"]}
+RENAMERS["RVVD"] = {"DATA": ["Z", "RV"]}
 RENAMERS["oil-water-gas"] = {
     "DATUM_DEPTH": "Z",
     "DATUM_PRESSURE": "PRESSURE",
@@ -77,7 +79,8 @@ def deck2equildf(deck):
 
 
 def df(deck, keywords=None, ntequl=None):
-    """Extract EQUIL related keyword data, EQUIL, RSVD and RVVD
+    """Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
+    PBVD and PDVD.
 
     How each data value in the EQUIL records are to be interpreted
     depends on the phase configuration in the deck, which means
@@ -133,10 +136,9 @@ def rsvd_fromdeck(deck, ntequl=None):
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    rsvd_df = common.ecl_keyworddata_to_df(
+    return common.ecl_keyworddata_to_df(
         deck, "RSVD", renamer=RENAMERS["RSVD"], recordcountername="EQLNUM"
     )
-    return rsvd_df
 
 
 def rvvd_fromdeck(deck, ntequl=None):
@@ -149,10 +151,39 @@ def rvvd_fromdeck(deck, ntequl=None):
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    rsvd_df = common.ecl_keyworddata_to_df(
+    return common.ecl_keyworddata_to_df(
         deck, "RVVD", renamer=RENAMERS["RVVD"], recordcountername="EQLNUM"
     )
-    return rsvd_df
+
+
+def pbvd_fromdeck(deck, ntequl=None):
+    """Extract PBVD data from a deck
+
+    Args:
+        deck (str or opm.common Deck)
+        ntequl (int): Number of EQLNUM regions in deck. Will
+            be inferred if not present in deck
+    """
+    if "EQLDIMS" not in deck:
+        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    return common.ecl_keyworddata_to_df(
+        deck, "PBVD", renamer=RENAMERS["PBVD"], recordcountername="EQLNUM"
+    )
+
+
+def pdvd_fromdeck(deck, ntequl=None):
+    """Extract PDVD data from a deck
+
+    Args:
+        deck (str or opm.common Deck)
+        ntequl (int): Number of EQLNUM regions in deck. Will
+            be inferred if not present in deck
+    """
+    if "EQLDIMS" not in deck:
+        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    return common.ecl_keyworddata_to_df(
+        deck, "PDVD", renamer=RENAMERS["PDVD"], recordcountername="EQLNUM"
+    )
 
 
 def phases_from_deck(deck):
@@ -434,7 +465,7 @@ def df2ecl_equil(dframe, comment=None):
     # Add a final column with the end-slash, invisible header:
     equildf[" "] = "/"
     string += "-- " + equildf.to_string(header=True, index=False)
-    return string + "\n"
+    return string + "\n\n"
 
 
 def df2ecl_rsvd(dframe, comment=None):
@@ -450,38 +481,7 @@ def df2ecl_rsvd(dframe, comment=None):
     Returns:
         string
     """
-    string = "RSVD\n"
-    string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} \n".format("DEPTH", "RS")
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "RSVD"]
-    if "EQLNUM" not in subset:
-        subset["EQLNUM"] = 1
-
-    def _rsvd_eqlnum(dframe):
-        """Print one Rs vs Z table for a specific
-        EQLNUM
-
-        Args:
-            dframe (pd.DataFrame): Cropped to only contain data for one EQLNUM
-
-        Returns:
-            string
-        """
-        string = ""
-        dframe = dframe.sort_values("Z")
-        for _, row in dframe.iterrows():
-            string += "  {Z:20.7f} {RS:20.7f}\n".format(**(row.to_dict()))
-        return string + "/\n"
-
-    subset = subset.set_index("EQLNUM").sort_index()
-    for eqlnum in subset.index.unique():
-        string += "-- EQLNUM: {}\n".format(eqlnum)
-        string += _rsvd_eqlnum(subset[subset.index == eqlnum])
-    return string + "\n"
+    return _df2ecl_equilfuncs("RSVD", dframe, comment)
 
 
 def df2ecl_rvvd(dframe, comment=None):
@@ -491,25 +491,68 @@ def df2ecl_rvvd(dframe, comment=None):
     of depth) for each EQLNUM
 
     Args:
-        dframe (pd.DataFrame): Containing RSVD data
+        dframe (pd.DataFrame): Containing RVVD data
         comment (str): Text that will be included as a comment
 
     Returns:
         string
     """
-    string = "RVVD\n"
+    return _df2ecl_equilfuncs("RVVD", dframe, comment)
+
+
+def df2ecl_pbvd(dframe, comment=None):
+    """Print PBVD keyword with data
+
+    Bubble-point versus depth
+
+    This data consists of one table (Pb as a function
+    of depth) for each EQLNUM
+
+    Args:
+        dframe (pd.DataFrame): Containing PBVD data
+        comment (str): Text that will be included as a comment
+
+    Returns:
+        string
+    """
+    return _df2ecl_equilfuncs("PBVD", dframe, comment)
+
+
+def df2ecl_pdvd(dframe, comment=None):
+    """Print PDVD keyword with data.
+
+    Dew-point versus depth.
+
+    This data consists of one table (Pd as a function
+    of depth) for each EQLNUM
+
+    Args:
+        dframe (pd.DataFrame): Containing PDVD data
+        comment (str): Text that will be included as a comment
+
+    Returns:
+        string
+    """
+    return _df2ecl_equilfuncs("PDVD", dframe, comment)
+
+
+def _df2ecl_equilfuncs(keyword, dframe, comment=None):
+    """Internal function to be used by df2ecl_<keyword>() functions"""
+    string = "{}\n".format(keyword)
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} \n".format("DEPTH", "RV")
+    col_headers = RENAMERS[keyword]["DATA"]
+
+    string += "--   {:^21} {:^21} \n".format("DEPTH", col_headers[1])
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
     else:
-        subset = dframe[dframe["KEYWORD"] == "RVVD"]
+        subset = dframe[dframe["KEYWORD"] == keyword]
     if "EQLNUM" not in subset:
         subset["EQLNUM"] = 1
 
-    def _rvvd_eqlnum(dframe):
-        """Print one Rv vs Z table for a specific
+    def _df2ecl_equilfuncs_eqlnum(dframe):
+        """Print one equilibriation function table for a specific
         EQLNUM
 
         Args:
@@ -521,11 +564,13 @@ def df2ecl_rvvd(dframe, comment=None):
         string = ""
         dframe = dframe.sort_values("Z")
         for _, row in dframe.iterrows():
-            string += "  {Z:20.7f} {RV:20.7f}\n".format(**(row.to_dict()))
+            string += "  {:20.7f} {:20.7f}\n".format(
+                row[col_headers[0]], row[col_headers[1]]
+            )
         return string + "/\n"
 
     subset = subset.set_index("EQLNUM").sort_index()
     for eqlnum in subset.index.unique():
         string += "-- EQLNUM: {}\n".format(eqlnum)
-        string += _rvvd_eqlnum(subset[subset.index == eqlnum])
+        string += _df2ecl_equilfuncs_eqlnum(subset[subset.index == eqlnum])
     return string + "\n"

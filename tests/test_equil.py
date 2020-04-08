@@ -201,8 +201,6 @@ RVVD
 
     # Check that we can use the underlying function directly:
     rvvd_df2 = equil.rvvd_fromdeck(deckstr)
-    print(rvvd_df)
-    print(rvvd_df2)
     pd.testing.assert_frame_equal(rvvd_df.drop("KEYWORD", axis="columns"), rvvd_df2)
 
     deckstr = """
@@ -222,6 +220,57 @@ RVVD
     inc = equil.df2ecl(rvvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rvvd_df, df_from_inc)
+
+
+def test_pbvd():
+    """Test PBVD tables"""
+    deckstr = """
+PBVD
+ 10 100 /
+ 30 400 /
+ 50 100 /"""
+    pbvd_df = equil.df(deckstr)
+    assert "KEYWORD" in pbvd_df
+    assert "EQUIL" not in pbvd_df["KEYWORD"].values
+    assert max(pbvd_df["EQLNUM"]) == 3
+    assert set(pbvd_df["Z"].values) == {10, 30, 50}
+    assert set(pbvd_df["PB"].values) == {100, 400}
+
+    inc = equil.df2ecl(pbvd_df)
+    df_from_inc = equil.df(inc)
+    pd.testing.assert_frame_equal(pbvd_df, df_from_inc)
+
+    assert equil.df(deckstr, keywords="EQUIL").empty
+
+    # Check that we can use the underlying function directly:
+    pbvd_df2 = equil.pbvd_fromdeck(deckstr)
+    pd.testing.assert_frame_equal(pbvd_df.drop("KEYWORD", axis="columns"), pbvd_df2)
+
+
+def test_pdvd():
+    """Test PDVD tables"""
+    deckstr = """
+PDVD
+ 10 100 /
+ 30 400 /
+ 50 100 /"""
+    pdvd_df = equil.df(deckstr)
+    assert "KEYWORD" in pdvd_df
+    assert "EQUIL" not in pdvd_df["KEYWORD"].values
+    assert max(pdvd_df["EQLNUM"]) == 3
+    assert set(pdvd_df["Z"].values) == {10, 30, 50}
+    assert set(pdvd_df["PD"].values) == {100, 400}
+
+    inc = equil.df2ecl(pdvd_df)
+    df_from_inc = equil.df(inc)
+    pdvd_df2 = equil.pdvd_fromdeck(deckstr)
+    pd.testing.assert_frame_equal(pdvd_df, df_from_inc)
+
+    assert equil.df(deckstr, keywords="EQUIL").empty
+
+    # Check that we can use the underlying function directly:
+    pdvd_df2 = equil.pdvd_fromdeck(deckstr)
+    pd.testing.assert_frame_equal(pdvd_df.drop("KEYWORD", axis="columns"), pdvd_df2)
 
 
 def test_rsvd_via_file(tmpdir):

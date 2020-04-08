@@ -27,6 +27,8 @@ for keyw in [
     "FAULTS",
     "GRUPNET",
     "GRUPTREE",
+    "PBVD",
+    "PDVD",
     "PVDG",
     "PVDO",
     "PVTG",

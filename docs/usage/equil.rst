@@ -4,8 +4,8 @@ equil
 This is the ecl2df module for processing the ``SOLUTION`` section of
 the Eclipse input deck.
 
-Supported keywords are ``EQUIL``, ``RSVD`` and ``RVVD``. Typical usage
-is
+Supported keywords are ``EQUIL``, ``RSVD``, ``RVVD``, ``PBVD`` and
+``PDVD``. Typical usage is
 
 .. code-block:: python
 

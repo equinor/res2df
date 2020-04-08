@@ -184,15 +184,15 @@ parameters.txt
 ^^^^^^^^^^^^^^
 
 Metadata for each Eclipse deck are sometimes added in a text file named
-parameters.txt, alongside the Eclipse DATA file or one or two directory levels
+``parameters.txt``, alongside the Eclipse DATA file or one or two directory levels
 above it.
 
 Each line in the text file should contain a string, interpreted as the key, and
 a value for the key, which can be a string or number. Some modules can merge this
 information onto each row, where the key in the parameters end up as column names.
 
-The filenames parameters.json and parameters.yml are also supported, but only one
-will be parsed.
+The filenames ``parameters.json`` and ``parameters.yml`` are also supported, assumed
+to be of JSON or YAML format respectively, but only one of them will be parsed.
 
 Currently only supported by the summary module, for other modules, the data will
 have to be merged with pandas.merge().
@@ -207,7 +207,7 @@ lines like::
   'ZoneA' 1-4
   'ZoneB' 5-10
 
-The default filename looked for is *zones.lyr*.
+The default filename looked for is ``zones.lyr``.
 
 License
 -------

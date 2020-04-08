@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pvt &mdash; ecl2df 0.5.2.dev22+g037ddb7 documentation</title>
+  <title>pvt &mdash; ecl2df 0.5.2.dev26+gd84024b documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Command line utility: ecl2csv" href="../scripts.html" />
+    <link rel="next" title="ecl2csv" href="../scripts.html" />
     <link rel="prev" title="pillars" href="pillars.html" /> 
 </head>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev22+g037ddb7
+                0.5.2.dev26+gd84024b
               </div>
             
           
@@ -101,8 +101,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Command line utility: ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scripts.html#reverse-command-line-utility-csv2ecl">Reverse command line utility: csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -178,10 +178,16 @@
 <p>Extracts PVT related keyword data from the PROPS section in an Eclipse deck,
 typically the keywords <code class="docutils literal notranslate"><span class="pre">PVTO</span></code>, <code class="docutils literal notranslate"><span class="pre">PVDG</span></code>, <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> and <code class="docutils literal notranslate"><span class="pre">ROCK</span></code>. Data from
 all keywords will be merged into one common dataframe.</p>
+<p>Example usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">pvt</span><span class="p">,</span> <span class="n">EclFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, we may also read directly from an include file
+if we read the contents of the file and supply it as a string:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pvt.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -396,6 +402,15 @@ all keywords will be merged into one common dataframe.</p>
 </tr>
 </tbody>
 </table>
+<p>If your PVT data resides in multiple include files, but you can’t import
+the entire deck, you have to merge the dataframes in Python like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pvto</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pvto.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()))</span>
+<span class="n">density</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;density.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">pvt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pvto</span><span class="p">,</span> <span class="n">density</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="section" id="transforming-pvt-data">
 <h2>Transforming PVT data<a class="headerlink" href="#transforming-pvt-data" title="Permalink to this headline">¶</a></h2>
 <p>Care should be taken when perturbing PVT data, as a lot
@@ -444,7 +459,7 @@ if you dump to CSV from your Python code instead.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../scripts.html" class="btn btn-neutral float-right" title="Command line utility: ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../scripts.html" class="btn btn-neutral float-right" title="ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="pillars.html" class="btn btn-neutral float-left" title="pillars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

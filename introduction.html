@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction &mdash; ecl2df 0.5.2.dev26+gd84024b documentation</title>
+  <title>Introduction &mdash; ecl2df 0.5.2.dev27+g2f8b14b documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev26+gd84024b
+                0.5.2.dev27+g2f8b14b
               </div>
             
           
@@ -259,7 +259,7 @@ possible to filter on transmissibilities where the region changes, picking
 out transmissibilities over f.ex. a FIPNUM interface. Data can also be aggregated
 over the region interface to give a grid-independent quantification of region
 communication.</p>
-<p>More documentation on <span class="xref std std-doc">usage/trans</span>.</p>
+<p>More documentation on <a class="reference internal" href="usage/trans.html"><span class="doc">trans</span></a>.</p>
 </div>
 <div class="section" id="rft">
 <h3><code class="docutils literal notranslate"><span class="pre">rft</span></code><a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
@@ -333,13 +333,13 @@ files based on the basename or the <cite>.DATA</cite> filename.</p>
 <div class="section" id="parameters-txt">
 <h3>parameters.txt<a class="headerlink" href="#parameters-txt" title="Permalink to this headline">¶</a></h3>
 <p>Metadata for each Eclipse deck are sometimes added in a text file named
-parameters.txt, alongside the Eclipse DATA file or one or two directory levels
+<code class="docutils literal notranslate"><span class="pre">parameters.txt</span></code>, alongside the Eclipse DATA file or one or two directory levels
 above it.</p>
 <p>Each line in the text file should contain a string, interpreted as the key, and
 a value for the key, which can be a string or number. Some modules can merge this
 information onto each row, where the key in the parameters end up as column names.</p>
-<p>The filenames parameters.json and parameters.yml are also supported, but only one
-will be parsed.</p>
+<p>The filenames <code class="docutils literal notranslate"><span class="pre">parameters.json</span></code> and <code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code> are also supported, assumed
+to be of JSON or YAML format respectively, but only one of them will be parsed.</p>
 <p>Currently only supported by the summary module, for other modules, the data will
 have to be merged with pandas.merge().</p>
 </div>
@@ -352,7 +352,7 @@ lines like:</p>
 <span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
 </pre></div>
 </div>
-<p>The default filename looked for is <em>zones.lyr</em>.</p>
+<p>The default filename looked for is <code class="docutils literal notranslate"><span class="pre">zones.lyr</span></code>.</p>
 </div>
 </div>
 <div class="section" id="license">

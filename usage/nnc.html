@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>nnc &mdash; ecl2df 0.5.2.dev26+gd84024b documentation</title>
+  <title>nnc &mdash; ecl2df 0.5.2.dev27+g2f8b14b documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev26+gd84024b
+                0.5.2.dev27+g2f8b14b
               </div>
             
           
@@ -95,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
@@ -173,6 +174,8 @@
 <h1>nnc<a class="headerlink" href="#nnc" title="Permalink to this headline">¶</a></h1>
 <p>nnc will extract Non-Neighbour-Connections from your Eclipse grid as pairs
 of <em>ijk</em> indices together with their associated transmissibilities.</p>
+<p>See also the <span class="xref std std-doc">usage/trans</span> module, which can extract all transmissibilities, not only
+non-neigbour connections.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">EclFiles</span>
 
 <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
@@ -331,7 +334,7 @@ of <em>ijk</em> indices together with their associated transmissibilities.</p>
 average of the xyz for each of the cells involved in a connection pair) as
 extra columns.</p>
 <p>If you only want vertical connections, add the option <code class="docutils literal notranslate"><span class="pre">--pillars</span></code> or <code class="docutils literal notranslate"><span class="pre">-vertical</span></code>,
-or set <code class="docutils literal notranslate"><span class="pre">pillars=True</span></code> if using the Python API.</p>
+or set <code class="docutils literal notranslate"><span class="pre">pillars=True</span></code> if using the Python API (<a class="reference internal" href="../ecl2df.html#ecl2df.nnc.df" title="ecl2df.nnc.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.nnc.df()</span></code></a>)</p>
 </div>
 
 

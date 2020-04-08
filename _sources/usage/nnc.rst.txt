@@ -4,6 +4,9 @@ nnc
 nnc will extract Non-Neighbour-Connections from your Eclipse grid as pairs
 of *ijk* indices together with their associated transmissibilities.
 
+See also the :doc:`usage/trans` module, which can extract all transmissibilities, not only
+non-neigbour connections.
+
 ..
   nnc.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/nnc.csv', index=False)
 
@@ -30,6 +33,6 @@ average of the xyz for each of the cells involved in a connection pair) as
 extra columns.
 
 If you only want vertical connections, add the option ``--pillars`` or ``-vertical``,
-or set ``pillars=True`` if using the Python API.
+or set ``pillars=True`` if using the Python API (:func:`ecl2df.nnc.df`)
 
 

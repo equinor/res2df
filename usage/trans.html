@@ -1,0 +1,634 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>trans &mdash; ecl2df 0.5.2.dev27+g2f8b14b documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ecl2csv" href="../scripts.html" />
+    <link rel="prev" title="pvt" href="pvt.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.2.dev27+g2f8b14b
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">trans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-more-data-for-each-connection">Adding more data for each connection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering-connections">Filtering connections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aggregating-connection-data-over-region-interfaces">Aggregating connection data over region interfaces</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>trans</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/trans.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="trans">
+<h1>trans<a class="headerlink" href="#trans" title="Permalink to this headline">¶</a></h1>
+<p>The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
+from a simulation grid.</p>
+<p>Python API: <a class="reference internal" href="../ecl2df.html#ecl2df.trans.df" title="ecl2df.trans.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.trans.df()</span></code></a></p>
+<p>Applied on an Eclipse deck, the <em>trans</em> module will give out a dataframe of neighbour
+connections</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">EclFiles</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Neighbour transmissibilities, sample rows from an example simulation.</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>I1</p></th>
+<th class="head"><p>J1</p></th>
+<th class="head"><p>K1</p></th>
+<th class="head"><p>TRAN</p></th>
+<th class="head"><p>I2</p></th>
+<th class="head"><p>J2</p></th>
+<th class="head"><p>K2</p></th>
+<th class="head"><p>DIR</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>63</p></td>
+<td><p>2</p></td>
+<td><p>0.16</p></td>
+<td><p>8</p></td>
+<td><p>63</p></td>
+<td><p>2</p></td>
+<td><p>I</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>44</p></td>
+<td><p>3</p></td>
+<td><p>507.75</p></td>
+<td><p>12</p></td>
+<td><p>44</p></td>
+<td><p>4</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>61</p></td>
+<td><p>5</p></td>
+<td><p>0.24</p></td>
+<td><p>17</p></td>
+<td><p>61</p></td>
+<td><p>5</p></td>
+<td><p>I</p></td>
+</tr>
+<tr class="row-odd"><td><p>34</p></td>
+<td><p>14</p></td>
+<td><p>10</p></td>
+<td><p>4.58</p></td>
+<td><p>35</p></td>
+<td><p>14</p></td>
+<td><p>10</p></td>
+<td><p>I</p></td>
+</tr>
+<tr class="row-even"><td><p>35</p></td>
+<td><p>24</p></td>
+<td><p>3</p></td>
+<td><p>105.97</p></td>
+<td><p>35</p></td>
+<td><p>24</p></td>
+<td><p>4</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>59</p></td>
+<td><p>11</p></td>
+<td><p>0.88</p></td>
+<td><p>5</p></td>
+<td><p>59</p></td>
+<td><p>11</p></td>
+<td><p>I</p></td>
+</tr>
+<tr class="row-even"><td><p>38</p></td>
+<td><p>45</p></td>
+<td><p>3</p></td>
+<td><p>0.21</p></td>
+<td><p>39</p></td>
+<td><p>45</p></td>
+<td><p>3</p></td>
+<td><p>I</p></td>
+</tr>
+</tbody>
+</table>
+<p>The last column <code class="docutils literal notranslate"><span class="pre">DIR</span></code> is the direction of the connection in i-j-k, space, and can
+take on the values <code class="docutils literal notranslate"><span class="pre">I</span></code>, <code class="docutils literal notranslate"><span class="pre">J</span></code>, and <code class="docutils literal notranslate"><span class="pre">K</span></code>. The <code class="docutils literal notranslate"><span class="pre">TRAN</span></code> column has values from the
+<code class="docutils literal notranslate"><span class="pre">TRANX</span></code>, <code class="docutils literal notranslate"><span class="pre">TRANY</span></code> or <code class="docutils literal notranslate"><span class="pre">TRANZ</span></code> in the Eclipse output files.</p>
+<p>You can obtain this dataframe as a CSV file by writing this command on the
+command line:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv trans MYDATADECK.DATA --verbose --output trans.csv</span>
+</pre></div>
+</div>
+<div class="section" id="adding-more-data-for-each-connection">
+<h2>Adding more data for each connection<a class="headerlink" href="#adding-more-data-for-each-connection" title="Permalink to this headline">¶</a></h2>
+<p>You can add <code class="docutils literal notranslate"><span class="pre">coords=True</span></code> to the <code class="docutils literal notranslate"><span class="pre">df()</span></code> call, which will add the columns <code class="docutils literal notranslate"><span class="pre">X</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Y</span></code>, <code class="docutils literal notranslate"><span class="pre">Z</span></code> (which will be the average of the coordinates for the two cell
+centerpoints) and also <code class="docutils literal notranslate"><span class="pre">DX</span></code>, <code class="docutils literal notranslate"><span class="pre">DY</span></code> and <code class="docutils literal notranslate"><span class="pre">DZ</span></code> being the distance between the
+two cells centerpoints. If using the command line client, the option is called
+<code class="docutils literal notranslate"><span class="pre">--coords</span></code>.</p>
+<p>Extra INIT (static data) vectors can be added, of particular interest is perhaps
+some region parameter like <code class="docutils literal notranslate"><span class="pre">FIPNUM</span></code> or <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>, through the <code class="docutils literal notranslate"><span class="pre">vectors</span></code> argument.
+For such vectors, there will be one column <code class="docutils literal notranslate"><span class="pre">FIPNUM1</span></code> and another column <code class="docutils literal notranslate"><span class="pre">FIPNUM2</span></code>
+for the other cell in the cell pair. This is often used together with filtering,
+see below.</p>
+<p>Non-neighbour connections can be added the dataframe by supplying the option
+<code class="docutils literal notranslate"><span class="pre">addnnc=True</span></code>. These connections will have the string <code class="docutils literal notranslate"><span class="pre">NNC</span></code> in the <code class="docutils literal notranslate"><span class="pre">DIR</span></code>
+column.</p>
+</div>
+<div class="section" id="filtering-connections">
+<h2>Filtering connections<a class="headerlink" href="#filtering-connections" title="Permalink to this headline">¶</a></h2>
+<p>The API supports some filtering directly in the <code class="docutils literal notranslate"><span class="pre">df()</span></code> function call for
+convenience.</p>
+<p>Simple filtering based on vertical vs horizontal can be accomplished
+by the options <code class="docutils literal notranslate"><span class="pre">onlyijdir=True</span></code> or  <code class="docutils literal notranslate"><span class="pre">onlykdir=True</span></code>, or through the command line
+options <code class="docutils literal notranslate"><span class="pre">--onlyk</span></code> or <code class="docutils literal notranslate"><span class="pre">--onlyij</span></code>. Filtering is only a selection of which
+the Eclipse vectors <code class="docutils literal notranslate"><span class="pre">TRANX</span></code>, <code class="docutils literal notranslate"><span class="pre">TRANY</span></code> and <code class="docutils literal notranslate"><span class="pre">TRANZ</span></code> to include.</p>
+<p>Note that the filtering only applies to neighbour connections. If you also choose
+to add NNC-connections, these will still be added  to the dataframe with no filtering.</p>
+<p>If you have added (only one) an INIT vector, typically a region parameter like
+<code class="docutils literal notranslate"><span class="pre">FIPNUM</span></code> or <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>, you have the option to filter to those connections
+where this region parameter <em>changes</em>, which implies the connection is over
+a region boundary. This is accomplished by providing a vector to include, and the
+option <code class="docutils literal notranslate"><span class="pre">boundaryfilter</span></code>. It is recommmended to include NNC in applications
+like this. Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which gives the dataframe</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Sample rows from connections where FIPNUM is changing</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>I1</p></th>
+<th class="head"><p>J1</p></th>
+<th class="head"><p>K1</p></th>
+<th class="head"><p>TRAN</p></th>
+<th class="head"><p>I2</p></th>
+<th class="head"><p>J2</p></th>
+<th class="head"><p>K2</p></th>
+<th class="head"><p>DIR</p></th>
+<th class="head"><p>FIPNUM1</p></th>
+<th class="head"><p>FIPNUM2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+<td><p>180.10</p></td>
+<td><p>17</p></td>
+<td><p>1</p></td>
+<td><p>6</p></td>
+<td><p>K</p></td>
+<td><p>2.00</p></td>
+<td><p>4.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p>18</p></td>
+<td><p>10</p></td>
+<td><p>0.00</p></td>
+<td><p>25</p></td>
+<td><p>18</p></td>
+<td><p>11</p></td>
+<td><p>NNC</p></td>
+<td><p>3.00</p></td>
+<td><p>5.00</p></td>
+</tr>
+<tr class="row-even"><td><p>22</p></td>
+<td><p>27</p></td>
+<td><p>5</p></td>
+<td><p>1.21</p></td>
+<td><p>22</p></td>
+<td><p>27</p></td>
+<td><p>6</p></td>
+<td><p>K</p></td>
+<td><p>1.00</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>7</p></td>
+<td><p>10</p></td>
+<td><p>0.00</p></td>
+<td><p>19</p></td>
+<td><p>7</p></td>
+<td><p>8</p></td>
+<td><p>NNC</p></td>
+<td><p>4.00</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>40</p></td>
+<td><p>10</p></td>
+<td><p>0.00</p></td>
+<td><p>21</p></td>
+<td><p>40</p></td>
+<td><p>14</p></td>
+<td><p>NNC</p></td>
+<td><p>4.00</p></td>
+<td><p>5.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>10</p></td>
+<td><p>7</p></td>
+<td><p>0.04</p></td>
+<td><p>17</p></td>
+<td><p>10</p></td>
+<td><p>7</p></td>
+<td><p>I</p></td>
+<td><p>4.00</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>55</p></td>
+<td><p>5</p></td>
+<td><p>0.67</p></td>
+<td><p>6</p></td>
+<td><p>55</p></td>
+<td><p>6</p></td>
+<td><p>K</p></td>
+<td><p>2.00</p></td>
+<td><p>4.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p>24</p></td>
+<td><p>5</p></td>
+<td><p>0.62</p></td>
+<td><p>24</p></td>
+<td><p>24</p></td>
+<td><p>6</p></td>
+<td><p>K</p></td>
+<td><p>1.00</p></td>
+<td><p>3.00</p></td>
+</tr>
+<tr class="row-even"><td><p>14</p></td>
+<td><p>21</p></td>
+<td><p>5</p></td>
+<td><p>0.34</p></td>
+<td><p>14</p></td>
+<td><p>21</p></td>
+<td><p>6</p></td>
+<td><p>K</p></td>
+<td><p>2.00</p></td>
+<td><p>4.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>23</p></td>
+<td><p>57</p></td>
+<td><p>5</p></td>
+<td><p>3.15</p></td>
+<td><p>23</p></td>
+<td><p>57</p></td>
+<td><p>6</p></td>
+<td><p>K</p></td>
+<td><p>2.00</p></td>
+<td><p>4.00</p></td>
+</tr>
+</tbody>
+</table>
+<p>If you also append coordinates to this dataframe, it would be possible to visualize
+all your region connections in 3D, coloured by transmissibility.</p>
+</div>
+<div class="section" id="aggregating-connection-data-over-region-interfaces">
+<h2>Aggregating connection data over region interfaces<a class="headerlink" href="#aggregating-connection-data-over-region-interfaces" title="Permalink to this headline">¶</a></h2>
+<p>The example above with filtering to wherever for example <code class="docutils literal notranslate"><span class="pre">FIPNUM</span></code> is changing,
+naturally leads over to an application where transmissibility data is aggregated
+over a region interface. This is accomplished by adding the <code class="docutils literal notranslate"><span class="pre">group=True</span></code> option.
+(this requires one INIT vector to have been specified, and it implicitly implies
+<code class="docutils literal notranslate"><span class="pre">boundaryfilter=True</span></code>). NNC is not required, but recommended.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">EclFiles</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Transmissibilities summed over each FIPNUM interface</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>FIPNUMPAIR</p></th>
+<th class="head"><p>TRAN</p></th>
+<th class="head"><p>FIPNUM1</p></th>
+<th class="head"><p>FIPNUM2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1-2</p></td>
+<td><p>2381.65</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>1-3</p></td>
+<td><p>24624.76</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>1-4</p></td>
+<td><p>0.02</p></td>
+<td><p>1</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>1-5</p></td>
+<td><p>135.81</p></td>
+<td><p>1</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>2-3</p></td>
+<td><p>0.43</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>2-4</p></td>
+<td><p>35864.16</p></td>
+<td><p>2</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>2-5</p></td>
+<td><p>0.15</p></td>
+<td><p>2</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-4</p></td>
+<td><p>3903.47</p></td>
+<td><p>3</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>3-5</p></td>
+<td><p>6759383.45</p></td>
+<td><p>3</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-6</p></td>
+<td><p>0.05</p></td>
+<td><p>3</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>4-5</p></td>
+<td><p>0.26</p></td>
+<td><p>4</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>4-6</p></td>
+<td><p>11127640.81</p></td>
+<td><p>4</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>5-6</p></td>
+<td><p>2298.43</p></td>
+<td><p>5</p></td>
+<td><p>6</p></td>
+</tr>
+</tbody>
+</table>
+<p>where this last table can also be exported directly from the command line using</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../scripts.html" class="btn btn-neutral float-right" title="ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pvt.html" class="btn btn-neutral float-left" title="pvt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

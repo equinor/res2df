@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.equil &mdash; ecl2df 0.5.2.dev27+g2f8b14b documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.5.2.dev28+geffd3be documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev27+g2f8b14b
+                0.5.2.dev28+geffd3be
               </div>
             
           
@@ -179,10 +179,12 @@
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">SUPPORTED_KEYWORDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span> <span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="s2">&quot;RVVD&quot;</span><span class="p">]</span>
+<span class="n">SUPPORTED_KEYWORDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span> <span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="s2">&quot;RVVD&quot;</span><span class="p">]</span>
 <span class="n">RENAMERS</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RVVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RV&quot;</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PBVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;PB&quot;</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PDVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;PD&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RSVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RS&quot;</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RVVD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;RV&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;oil-water-gas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
@@ -236,7 +238,8 @@
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extract EQUIL related keyword data, EQUIL, RSVD and RVVD</span>
+    <span class="sd">&quot;&quot;&quot;Extract EQUIL related keyword data, EQUIL, RSVD, RVVD</span>
+<span class="sd">    PBVD and PDVD.</span>
 
 <span class="sd">    How each data value in the EQUIL records are to be interpreted</span>
 <span class="sd">    depends on the phase configuration in the deck, which means</span>
@@ -292,10 +295,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
-    <span class="n">rsvd_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
         <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RSVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">rsvd_df</span></div>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="rvvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.rvvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rvvd_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -308,10 +310,39 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
-    <span class="n">rsvd_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
         <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;RVVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;RVVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">rsvd_df</span></div>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pbvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.pbvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pbvd_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract PBVD data from a deck</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck (str or opm.common Deck)</span>
+<span class="sd">        ntequl (int): Number of EQLNUM regions in deck. Will</span>
+<span class="sd">            be inferred if not present in deck</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PBVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pdvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.pdvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pdvd_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract PDVD data from a deck</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck (str or opm.common Deck)</span>
+<span class="sd">        ntequl (int): Number of EQLNUM regions in deck. Will</span>
+<span class="sd">            be inferred if not present in deck</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PDVD&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="phases_from_deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.phases_from_deck">[docs]</a><span class="k">def</span> <span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
@@ -593,7 +624,7 @@
     <span class="c1"># Add a final column with the end-slash, invisible header:</span>
     <span class="n">equildf</span><span class="p">[</span><span class="s2">&quot; &quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- &quot;</span> <span class="o">+</span> <span class="n">equildf</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="df2ecl_rsvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_rsvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -609,38 +640,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;RSVD</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">,</span> <span class="s2">&quot;RS&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RSVD&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
-        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="k">def</span> <span class="nf">_rsvd_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print one Rs vs Z table for a specific</span>
-<span class="sd">        EQLNUM</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            dframe (pd.DataFrame): Cropped to only contain data for one EQLNUM</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            string</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;  </span><span class="si">{Z:20.7f}</span><span class="s2"> </span><span class="si">{RS:20.7f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
-        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">eqlnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- EQLNUM: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eqlnum</span><span class="p">)</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="n">_rsvd_eqlnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">eqlnum</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df2ecl_rvvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_rvvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -650,25 +650,68 @@
 <span class="sd">    of depth) for each EQLNUM</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing RSVD data</span>
+<span class="sd">        dframe (pd.DataFrame): Containing RVVD data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;RVVD</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RVVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df2ecl_pbvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_pbvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print PBVD keyword with data</span>
+
+<span class="sd">    Bubble-point versus depth</span>
+
+<span class="sd">    This data consists of one table (Pb as a function</span>
+<span class="sd">    of depth) for each EQLNUM</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe (pd.DataFrame): Containing PBVD data</span>
+<span class="sd">        comment (str): Text that will be included as a comment</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df2ecl_pdvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_pdvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print PDVD keyword with data.</span>
+
+<span class="sd">    Dew-point versus depth.</span>
+
+<span class="sd">    This data consists of one table (Pd as a function</span>
+<span class="sd">    of depth) for each EQLNUM</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe (pd.DataFrame): Containing PDVD data</span>
+<span class="sd">        comment (str): Text that will be included as a comment</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_df2ecl_equilfuncs</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Internal function to be used by df2ecl_&lt;keyword&gt;() functions&quot;&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">,</span> <span class="s2">&quot;RV&quot;</span><span class="p">)</span>
+    <span class="n">col_headers</span> <span class="o">=</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;DATA&quot;</span><span class="p">]</span>
+
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;DEPTH&quot;</span><span class="p">,</span> <span class="n">col_headers</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="c1"># Use everything..</span>
         <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RVVD&quot;</span><span class="p">]</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">_rvvd_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print one Rv vs Z table for a specific</span>
+    <span class="k">def</span> <span class="nf">_df2ecl_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print one equilibriation function table for a specific</span>
 <span class="sd">        EQLNUM</span>
 
 <span class="sd">        Args:</span>
@@ -680,14 +723,16 @@
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;  </span><span class="si">{Z:20.7f}</span><span class="s2"> </span><span class="si">{RV:20.7f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;  </span><span class="si">{:20.7f}</span><span class="s2"> </span><span class="si">{:20.7f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">row</span><span class="p">[</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">col_headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
 
     <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">eqlnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- EQLNUM: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eqlnum</span><span class="p">)</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="n">_rvvd_eqlnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">eqlnum</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">_df2ecl_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">eqlnum</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 </pre></div>
 
            </div>

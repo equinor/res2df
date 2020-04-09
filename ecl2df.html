@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev27+g2f8b14b documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev28+geffd3be documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev27+g2f8b14b
+                0.5.2.dev28+geffd3be
               </div>
             
           
@@ -770,7 +770,8 @@ parsing by default</p>
 <dl class="py function">
 <dt id="ecl2df.equil.df">
 <code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deck</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ntequl</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract EQUIL related keyword data, EQUIL, RSVD and RVVD</p>
+<dd><p>Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
+PBVD and PDVD.</p>
 <p>How each data value in the EQUIL records are to be interpreted
 depends on the phase configuration in the deck, which means
 that we need more than the EQUIL section alone to determine the
@@ -835,6 +836,46 @@ not be necessary in production.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="ecl2df.equil.df2ecl_pbvd">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df2ecl_pbvd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df2ecl_pbvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_pbvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print PBVD keyword with data</p>
+<p>Bubble-point versus depth</p>
+<p>This data consists of one table (Pb as a function
+of depth) for each EQLNUM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PBVD data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.equil.df2ecl_pdvd">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df2ecl_pdvd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df2ecl_pdvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_pdvd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print PDVD keyword with data.</p>
+<p>Dew-point versus depth.</p>
+<p>This data consists of one table (Pd as a function
+of depth) for each EQLNUM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing PDVD data</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="ecl2df.equil.df2ecl_rsvd">
 <code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df2ecl_rsvd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df2ecl_rsvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_rsvd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print RSVD keyword with data</p>
@@ -862,7 +903,7 @@ of depth) for each EQLNUM</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing RSVD data</p></li>
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing RVVD data</p></li>
 <li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
@@ -921,6 +962,36 @@ fill with arguments</p>
 <dt id="ecl2df.equil.main">
 <code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.equil.pbvd_fromdeck">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">pbvd_fromdeck</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deck</span></em>, <em class="sig-param"><span class="n">ntequl</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#pbvd_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.pbvd_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PBVD data from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntequl</strong> (<em>int</em>) – Number of EQLNUM regions in deck. Will
+be inferred if not present in deck</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.equil.pdvd_fromdeck">
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">pdvd_fromdeck</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deck</span></em>, <em class="sig-param"><span class="n">ntequl</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#pdvd_fromdeck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.pdvd_fromdeck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract PDVD data from a deck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deck</strong> (<em>str</em><em> or </em><em>opm.common Deck</em>) – </p></li>
+<li><p><strong>ntequl</strong> (<em>int</em>) – Number of EQLNUM regions in deck. Will
+be inferred if not present in deck</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

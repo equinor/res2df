@@ -440,6 +440,7 @@ def fill_parser(parser):
     )
     parser.add_argument(
         "--rstdates",
+        "--rstdate",  # --rstdate is deprecated
         type=str,
         help="Point in time to grab restart data from, "
         + "either 'first' or 'last', 'all', or a date in "

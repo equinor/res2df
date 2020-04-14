@@ -23,10 +23,18 @@ def test_summary2df():
     eclfiles = EclFiles(DATAFILE)
     sumdf = summary.df(eclfiles)
 
+    assert sumdf.index.name == "DATE"
+    assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
+
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
     assert not sumdf.columns.empty
     assert "FOPT" in sumdf.columns
+
+    sumdf = summary.df(eclfiles, datetime=True)
+    # (datetime=True is superfluous when raw timereports are requested)
+    assert sumdf.index.name == "DATE"
+    assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
 
 def test_summary2df_dates(tmpdir):
@@ -39,6 +47,10 @@ def test_summary2df_dates(tmpdir):
         end_date="2002-03-01",
         time_index="daily",
     )
+    assert sumdf.index.name == "DATE"
+    # This is the default when daily index is requested:
+    assert sumdf.index.dtype == "object"
+
     assert len(sumdf) == 59
     assert str(sumdf.index.values[0]) == "2002-01-02"
     assert str(sumdf.index.values[-1]) == "2002-03-01"
@@ -50,6 +62,16 @@ def test_summary2df_dates(tmpdir):
     sumdf = summary.df(eclfiles, time_index="first")
     assert len(sumdf) == 1
     assert str(sumdf.index.values[0]) == "2000-01-01"
+
+    sumdf = summary.df(
+        eclfiles,
+        start_date=datetime.date(2002, 1, 2),
+        end_date="2002-03-01",
+        time_index="daily",
+        datetime=True,
+    )
+    assert sumdf.index.name == "DATE"
+    assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")
     sys.argv = [

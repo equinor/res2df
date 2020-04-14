@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev29+g24593dd documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev29+g24593dd
+                0.5.2.dev30+gf8aed32
               </div>
             
           
@@ -1199,12 +1199,12 @@ any time dependent data from Restart files.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Handle to an Eclipse case</p></li>
 <li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – Vectors to include, wildcards
-supported. String argument. Used to match both
+supported. Used to match both
 INIT vectors and RESTART vectors.</p></li>
 <li><p><strong>dropconstants</strong> (<em>bool</em>) – If true, columns that are constant
 for every cell are dropped.</p></li>
-<li><p><strong>rstdates</strong> (<em>list</em><em>, </em><em>str</em><em> or </em><em>datetime</em>) – Restart dates to include
-Mnenomics such as first and last are supported.</p></li>
+<li><p><strong>rstdates</strong> (<em>list</em><em>, </em><em>str</em><em> or </em><em>datetime</em>) – Restart dates to include in ISO-8601 format.
+Alternatively, pick from the mnenomics ‘first’, ‘all’ and ‘last’.</p></li>
 <li><p><strong>dateinheaders</strong> (<em>bool</em>) – Whether columns with data from UNRST files
 should always have the ISO-date embedded in the column header.</p></li>
 <li><p><strong>stackdates</strong> (<em>bool</em>) – Default is false. If true, a column

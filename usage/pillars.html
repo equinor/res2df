@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pillars &mdash; ecl2df 0.5.2.dev29+g24593dd documentation</title>
+  <title>pillars &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pvt" href="pvt.html" />
-    <link rel="prev" title="fipreports" href="fipreports.html" /> 
+    <link rel="prev" title="nnc" href="nnc.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev29+g24593dd
+                0.5.2.dev30+gf8aed32
               </div>
             
           
@@ -90,12 +90,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pillars</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#static-data">Static data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dynamic-data">Dynamic data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-data-volumes-and-fluid-contacts">Dynamic data, volumes and fluid contacts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grouping-data">Grouping data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#stacked-version">Stacked version</a></li>
 </ul>
 </li>
@@ -176,7 +178,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="pillars">
-<h1>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h1>
+<span id="usage-pillars"></span><h1>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h1>
 <p>pillars is a module to compute data on “pillars” in the grid from an
 Eclipse simulation, including both static and dynamic data from the grid.</p>
 <div class="section" id="static-data">
@@ -268,20 +270,54 @@ pillar (and optionally pr some region parameter).</p>
 </tr>
 </tbody>
 </table>
-<p>where the first <code class="docutils literal notranslate"><span class="pre">PILLAR</span></code> column is the <code class="docutils literal notranslate"><span class="pre">I</span></code> and <code class="docutils literal notranslate"><span class="pre">J</span></code> identification of the pillar.
-and the other values are arithmetic averages of the values in the cells belonging
-to a particular pillar. If you provide a region parameter (like <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>), the
-value for the region will be added in an extra column called <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>.</p>
+<p>where the first <code class="docutils literal notranslate"><span class="pre">PILLAR</span></code> column is the <code class="docutils literal notranslate"><span class="pre">I</span></code> and <code class="docutils literal notranslate"><span class="pre">J</span></code> identification of the
+pillar.  and the other values are arithmetic averages of the values in the cells
+belonging to a particular pillar.</p>
+<p>If you provide a region parameter (like <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>), the value for the region
+will be added in an extra column called <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>. Each pillar will then be
+repeated for each region value where it exists.</p>
 </div>
-<div class="section" id="dynamic-data">
-<h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dynamic-data-volumes-and-fluid-contacts">
+<h2>Dynamic data, volumes and fluid contacts<a class="headerlink" href="#dynamic-data-volumes-and-fluid-contacts" title="Permalink to this headline">¶</a></h2>
 <p>The API <a class="reference internal" href="../ecl2df.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a> and command line client allows specifying
-dates if dynamic data should
-be included through the <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> option to the API or the <code class="docutils literal notranslate"><span class="pre">--rstdates</span></code> option
-on the command line. Providing dates as an option will trigger computation of
-phase volumes <code class="docutils literal notranslate"><span class="pre">WATVOL</span></code>, <code class="docutils literal notranslate"><span class="pre">OILVOL</span></code>, and <code class="docutils literal notranslate"><span class="pre">GASVOL</span></code> for each date.</p>
+dates if dynamic data should be included through the <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> option to the
+API or the <code class="docutils literal notranslate"><span class="pre">--rstdates</span></code> option on the command line. Providing dates as an
+option will trigger computation of phase volumes <code class="docutils literal notranslate"><span class="pre">WATVOL</span></code>, <code class="docutils literal notranslate"><span class="pre">OILVOL</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">GASVOL</span></code> for each date.</p>
 <p>If, in addition to dates, the parameters <code class="docutils literal notranslate"><span class="pre">soilcutoff</span></code> etc. are provided, these
-are used to determine oil-water and/or gas-oil contacts pr pillar (and pr. region)</p>
+are used to determine oil-water and/or gas-oil contacts pr pillar (and pr.
+region).</p>
+<p>An oil-water contact pr. pillar is determined as the deepest cell
+centre with SOIL above the given contact, among those pillars with at least one
+cell above <code class="docutils literal notranslate"><span class="pre">swatcutoff</span></code>.</p>
+<p>A gas-oil contact is the deepest cell
+centre with SGAS above the cutoff <code class="docutils literal notranslate"><span class="pre">sgascutoff</span></code>, among those pillars with at
+least one cell with non-zero oil saturation.</p>
+<p>Gas-water contact is only computed when <code class="docutils literal notranslate"><span class="pre">SOIL</span></code> is not present in the
+simulation (two-phase runs), it will be the deepest cell centre with gas
+saturation above sgascutoff, among those pillars with at least one cell above
+<code class="docutils literal notranslate"><span class="pre">swatcutoff</span></code>. See the API documentation,
+<a class="reference internal" href="../ecl2df.html#ecl2df.pillars.compute_pillar_contacts" title="ecl2df.pillars.compute_pillar_contacts"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.compute_pillar_contacts()</span></code></a>.</p>
+<p>The functionality is also available through the command line tool <code class="docutils literal notranslate"><span class="pre">ecl2csv</span> <span class="pre">pillars</span></code>
+as in the example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv pillars --help  # This will display some help text</span>
+<span class="go">ecl2csv pillars MYDATAFILE.DATA --rstdates all --stackdates</span>
+</pre></div>
+</div>
+<p>It is <em>strongly</em> recommended to play with the cutoffs to get the desired result.
+Also calibrate the computed contacts with the initial contacts, you may see that
+you should add a constance distance to all computed contacts. Beware that shale
+cells with little oil, but in the oil zone necessarily will affect the
+computation (sometimes that explains the need for calibration to initial
+contacts).</p>
+</div>
+<div class="section" id="grouping-data">
+<h2>Grouping data<a class="headerlink" href="#grouping-data" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to aggregate data over all pillars after computation. Activate
+using <code class="docutils literal notranslate"><span class="pre">--group</span></code> to the command line client, and add optionally a <code class="docutils literal notranslate"><span class="pre">--region</span></code>
+parameter to group over a particular region, typically <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>.</p>
+<p>The Python API will group over any data that is supplied via the <code class="docutils literal notranslate"><span class="pre">region</span></code>
+option, check <a class="reference internal" href="../ecl2df.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a></p>
 </div>
 <div class="section" id="stacked-version">
 <h2>Stacked version<a class="headerlink" href="#stacked-version" title="Permalink to this headline">¶</a></h2>
@@ -544,7 +580,7 @@ obtained by triggering the stacking option in <a class="reference internal" href
         <a href="pvt.html" class="btn btn-neutral float-right" title="pvt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="fipreports.html" class="btn btn-neutral float-left" title="fipreports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="nnc.html" class="btn btn-neutral float-left" title="nnc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

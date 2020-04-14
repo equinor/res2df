@@ -1,0 +1,1025 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>grid &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nnc" href="nnc.html" />
+    <link rel="prev" title="fipreports" href="fipreports.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.2.dev30+gf8aed32
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">grid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-computations-on-a-grid-dataframe">Example computations on a grid dataframe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zone-information">Zone information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-data">Dynamic data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>grid</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/grid.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="grid">
+<h1>grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h1>
+<p>The grid module will extract static and dynamic cell properties from
+an Eclipse grid (from the binary output files from Eclipse). Each row
+in a returned dataframe represents one cell.</p>
+<p>Typical usage</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">EclFiles</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the API is documented at <a class="reference internal" href="../ecl2df.html#ecl2df.grid.df" title="ecl2df.grid.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.grid.df()</span></code></a>.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Example grid table</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>I</p></th>
+<th class="head"><p>J</p></th>
+<th class="head"><p>K</p></th>
+<th class="head"><p>X</p></th>
+<th class="head"><p>Y</p></th>
+<th class="head"><p>Z</p></th>
+<th class="head"><p>VOLUME</p></th>
+<th class="head"><p>ZONE</p></th>
+<th class="head"><p>DX</p></th>
+<th class="head"><p>DY</p></th>
+<th class="head"><p>DZ</p></th>
+<th class="head"><p>PERMX</p></th>
+<th class="head"><p>PERMY</p></th>
+<th class="head"><p>PERMZ</p></th>
+<th class="head"><p>MULTX</p></th>
+<th class="head"><p>MULTY</p></th>
+<th class="head"><p>MULTZ</p></th>
+<th class="head"><p>PORO</p></th>
+<th class="head"><p>NTG</p></th>
+<th class="head"><p>TOPS</p></th>
+<th class="head"><p>DEPTH</p></th>
+<th class="head"><p>TRANX</p></th>
+<th class="head"><p>TRANY</p></th>
+<th class="head"><p>TRANZ</p></th>
+<th class="head"><p>MINPVV</p></th>
+<th class="head"><p>MULTPV</p></th>
+<th class="head"><p>MULTX-</p></th>
+<th class="head"><p>MULTY-</p></th>
+<th class="head"><p>MULTZ-</p></th>
+<th class="head"><p>PVTNUM</p></th>
+<th class="head"><p>SATNUM</p></th>
+<th class="head"><p>EQLNUM</p></th>
+<th class="head"><p>FIPNUM</p></th>
+<th class="head"><p>SWCR</p></th>
+<th class="head"><p>SGCR</p></th>
+<th class="head"><p>SOWCR</p></th>
+<th class="head"><p>SOGCR</p></th>
+<th class="head"><p>SWL</p></th>
+<th class="head"><p>SWU</p></th>
+<th class="head"><p>SGL</p></th>
+<th class="head"><p>SGU</p></th>
+<th class="head"><p>KRW</p></th>
+<th class="head"><p>KRG</p></th>
+<th class="head"><p>KRO</p></th>
+<th class="head"><p>SWATINIT</p></th>
+<th class="head"><p>KRWR</p></th>
+<th class="head"><p>KRGR</p></th>
+<th class="head"><p>KRORG</p></th>
+<th class="head"><p>KRORW</p></th>
+<th class="head"><p>SWLPC</p></th>
+<th class="head"><p>SGLPC</p></th>
+<th class="head"><p>PCW</p></th>
+<th class="head"><p>PCG</p></th>
+<th class="head"><p>ENDNUM</p></th>
+<th class="head"><p>PORV</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>23</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>459776.0701863504</p></td>
+<td><p>5937299.085766716</p></td>
+<td><p>1757.8822326660156</p></td>
+<td><p>99330.31626694043</p></td>
+<td><p>UpperReek</p></td>
+<td><p>163.39739990234375</p></td>
+<td><p>158.17127990722656</p></td>
+<td><p>3.94350004196167</p></td>
+<td><p>291.2421569824219</p></td>
+<td><p>388.28912353515625</p></td>
+<td><p>3.1562774181365967</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.16037899255752563</p></td>
+<td><p>1.0</p></td>
+<td><p>1755.9105224609375</p></td>
+<td><p>1757.8822021484375</p></td>
+<td><p>17.7293758392334</p></td>
+<td><p>19.964935302734375</p></td>
+<td><p>181.11993408203125</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>15930.535</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>53</p></td>
+<td><p>1</p></td>
+<td><p>464269.0370720582</p></td>
+<td><p>5930539.88376835</p></td>
+<td><p>1735.4860076904297</p></td>
+<td><p>116523.4936566496</p></td>
+<td><p>UpperReek</p></td>
+<td><p>158.56028747558594</p></td>
+<td><p>160.1057586669922</p></td>
+<td><p>4.6579999923706055</p></td>
+<td><p>2434.3759765625</p></td>
+<td><p>2216.073486328125</p></td>
+<td><p>527.5244140625</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.24831819534301758</p></td>
+<td><p>1.0</p></td>
+<td><p>1733.156982421875</p></td>
+<td><p>1735.4859619140625</p></td>
+<td><p>78.80950164794922</p></td>
+<td><p>88.21028900146484</p></td>
+<td><p>364.77716064453125</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>2.0</p></td>
+<td><p>2.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>28934.979</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>46</p></td>
+<td><p>10</p></td>
+<td><p>462723.45372664544</p></td>
+<td><p>5930929.489098628</p></td>
+<td><p>1730.0513610839844</p></td>
+<td><p>59744.15687065503</p></td>
+<td><p>MidReek</p></td>
+<td><p>160.9716339111328</p></td>
+<td><p>158.70919799804688</p></td>
+<td><p>2.205749988555908</p></td>
+<td><p>2019.752197265625</p></td>
+<td><p>2044.1414794921875</p></td>
+<td><p>368.9112243652344</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.2520661950111389</p></td>
+<td><p>1.0</p></td>
+<td><p>1728.948486328125</p></td>
+<td><p>1730.0513916015625</p></td>
+<td><p>37.21283721923828</p></td>
+<td><p>1.9777858257293701</p></td>
+<td><p>24393.595703125</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>2.0</p></td>
+<td><p>4.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>15059.473</p></td>
+</tr>
+<tr class="row-odd"><td><p>32</p></td>
+<td><p>4</p></td>
+<td><p>13</p></td>
+<td><p>461233.6713524928</p></td>
+<td><p>5937780.070730224</p></td>
+<td><p>1897.7990112304688</p></td>
+<td><p>59521.34889857084</p></td>
+<td><p>LowerReek</p></td>
+<td><p>151.81863403320312</p></td>
+<td><p>155.2905731201172</p></td>
+<td><p>2.7685000896453857</p></td>
+<td><p>658.3163452148438</p></td>
+<td><p>630.5045776367188</p></td>
+<td><p>149.94065856933594</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.22325842082500458</p></td>
+<td><p>1.0</p></td>
+<td><p>1896.414794921875</p></td>
+<td><p>1897.7989501953125</p></td>
+<td><p>20.44584083557129</p></td>
+<td><p>15.248754501342773</p></td>
+<td><p>4105.8955078125</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>5.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>13288.638</p></td>
+</tr>
+<tr class="row-even"><td><p>36</p></td>
+<td><p>50</p></td>
+<td><p>9</p></td>
+<td><p>465427.05580475694</p></td>
+<td><p>5931752.460815124</p></td>
+<td><p>1721.4455108642578</p></td>
+<td><p>69620.65229405048</p></td>
+<td><p>MidReek</p></td>
+<td><p>162.64073181152344</p></td>
+<td><p>159.10983276367188</p></td>
+<td><p>2.672499895095825</p></td>
+<td><p>1346.779296875</p></td>
+<td><p>1835.1986083984375</p></td>
+<td><p>304.00140380859375</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.19691987335681915</p></td>
+<td><p>1.0</p></td>
+<td><p>1720.1092529296875</p></td>
+<td><p>1721.445556640625</p></td>
+<td><p>44.50223159790039</p></td>
+<td><p>0.09453800320625305</p></td>
+<td><p>33929.94140625</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>3.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>13709.606</p></td>
+</tr>
+<tr class="row-odd"><td><p>34</p></td>
+<td><p>43</p></td>
+<td><p>7</p></td>
+<td><p>464591.2048424498</p></td>
+<td><p>5932552.282908066</p></td>
+<td><p>1642.1188659667969</p></td>
+<td><p>106701.46173701137</p></td>
+<td><p>MidReek</p></td>
+<td><p>159.6248016357422</p></td>
+<td><p>158.1421661376953</p></td>
+<td><p>4.285250186920166</p></td>
+<td><p>13.432663917541504</p></td>
+<td><p>13.57823371887207</p></td>
+<td><p>3.131927251815796</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.11800593137741089</p></td>
+<td><p>1.0</p></td>
+<td><p>1639.9761962890625</p></td>
+<td><p>1642.118896484375</p></td>
+<td><p>0.5122823119163513</p></td>
+<td><p>0.9352467060089111</p></td>
+<td><p>92.85663604736328</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>3.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>9.979680061340332</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>12591.326</p></td>
+</tr>
+<tr class="row-even"><td><p>30</p></td>
+<td><p>2</p></td>
+<td><p>4</p></td>
+<td><p>460756.2620853709</p></td>
+<td><p>5937863.04753433</p></td>
+<td><p>1793.4758758544922</p></td>
+<td><p>82903.32502586277</p></td>
+<td><p>UpperReek</p></td>
+<td><p>167.15647888183594</p></td>
+<td><p>158.9747772216797</p></td>
+<td><p>3.5517499446868896</p></td>
+<td><p>1743.577880859375</p></td>
+<td><p>1618.5360107421875</p></td>
+<td><p>561.593994140625</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.19482234120368958</p></td>
+<td><p>1.0</p></td>
+<td><p>1791.699951171875</p></td>
+<td><p>1793.475830078125</p></td>
+<td><p>16.566715240478516</p></td>
+<td><p>31.11016273498535</p></td>
+<td><p>188.0027618408203</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>16151.522</p></td>
+</tr>
+<tr class="row-odd"><td><p>32</p></td>
+<td><p>15</p></td>
+<td><p>6</p></td>
+<td><p>462090.14562706737</p></td>
+<td><p>5936250.963035</p></td>
+<td><p>1755.0493774414062</p></td>
+<td><p>32689.321961582336</p></td>
+<td><p>MidReek</p></td>
+<td><p>143.7932586669922</p></td>
+<td><p>159.54820251464844</p></td>
+<td><p>1.559749960899353</p></td>
+<td><p>407.056884765625</p></td>
+<td><p>428.8248291015625</p></td>
+<td><p>146.62095642089844</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.201984703540802</p></td>
+<td><p>1.0</p></td>
+<td><p>1754.26953125</p></td>
+<td><p>1755.04931640625</p></td>
+<td><p>9.980521202087402</p></td>
+<td><p>8.382685661315918</p></td>
+<td><p>3591.13623046875</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>3.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>6602.732</p></td>
+</tr>
+<tr class="row-even"><td><p>26</p></td>
+<td><p>53</p></td>
+<td><p>11</p></td>
+<td><p>464257.1626453873</p></td>
+<td><p>5930521.6329711275</p></td>
+<td><p>1770.0675048828125</p></td>
+<td><p>44809.835502386755</p></td>
+<td><p>LowerReek</p></td>
+<td><p>160.2397003173828</p></td>
+<td><p>159.1490936279297</p></td>
+<td><p>1.7864999771118164</p></td>
+<td><p>890.9497680664062</p></td>
+<td><p>960.828369140625</p></td>
+<td><p>69.2765884399414</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.19531480967998505</p></td>
+<td><p>1.0</p></td>
+<td><p>1769.1741943359375</p></td>
+<td><p>1770.0675048828125</p></td>
+<td><p>21.86947250366211</p></td>
+<td><p>5.684478282928467</p></td>
+<td><p>274.0634765625</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>2.0</p></td>
+<td><p>6.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>8752.043</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>60</p></td>
+<td><p>3</p></td>
+<td><p>462431.74820378097</p></td>
+<td><p>5928188.103496998</p></td>
+<td><p>1759.6751403808594</p></td>
+<td><p>79486.83783019359</p></td>
+<td><p>UpperReek</p></td>
+<td><p>162.1187286376953</p></td>
+<td><p>158.88229370117188</p></td>
+<td><p>3.085750102996826</p></td>
+<td><p>139.136474609375</p></td>
+<td><p>139.597412109375</p></td>
+<td><p>1.8151482343673706</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.10835999995470047</p></td>
+<td><p>1.0</p></td>
+<td><p>1758.1322021484375</p></td>
+<td><p>1759.6751708984375</p></td>
+<td><p>0.32930848002433777</p></td>
+<td><p>7.082298755645752</p></td>
+<td><p>220.17921447753906</p></td>
+<td><p>9.999999974752427e-07</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>2.0</p></td>
+<td><p>2.0</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.10000000149011612</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>0.8999999761581421</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>-1.0000000200408773e+20</p></td>
+<td><p>1.0</p></td>
+<td><p>8613.183</p></td>
+</tr>
+</tbody>
+</table>
+<p>Alternatively, the same data can be produced as a CSV file using the command line</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv grid --help  # Will display some help text</span>
+<span class="go">ecl2csv grid MYDATADECK.DATA --rstdates last --verbose --output grid.csv</span>
+</pre></div>
+</div>
+<p>Select which vectors to include (INIT and/or restart vectors) with the
+<code class="docutils literal notranslate"><span class="pre">vectors</span></code> argument.</p>
+<div class="section" id="example-computations-on-a-grid-dataframe">
+<h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this headline">¶</a></h2>
+<p>Some grid statistic operations are very neatly expressed using Python and
+Pandas. Some examples (provided that the <code class="docutils literal notranslate"><span class="pre">drame</span></code> object is initialized as in
+the topmost example):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Average non-weighted porosity:</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># Bulk volume in Gm3:</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOUME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
+
+<span class="c1"># Total pore volume:</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># Average (weighted) porosity:</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># Apex reservoir (cell centre):</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Pandas has powerful aggregation operators, and any thinkable statistical measure
+can be applied to the data. The Pandas <cite>groupby()</cite> operation can be used to get
+statistical measures pr. regions. All of the above examples can be rephrased to
+compute values for every SATNUM, EQLNUM or similar. Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apex reservoir pr equilibriation zone</span>
+<span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">])[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+<span class="n">EQLNUM</span>
+<span class="mf">1.0</span>    <span class="mf">1568.876251</span>
+<span class="mf">2.0</span>    <span class="mf">1619.720749</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">Z</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="zone-information">
+<h2>Zone information<a class="headerlink" href="#zone-information" title="Permalink to this headline">¶</a></h2>
+<p>As mentioned in <a class="reference internal" href="../introduction.html#zone-names"><span class="std std-ref">Zone names</span></a>, if the text file called <cite>zones.lyr</cite> is found
+alongside, zone information will automatically be merged into each row based on the <cite>K</cite>
+column. This can be used for statistics pr. zone,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Permeability (arithmetic average) pr. zone</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ZONE&quot;</span><span class="p">)[</span><span class="s2">&quot;PERMX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+<span class="n">ZONE</span>
+<span class="n">LowerReek</span>    <span class="mf">979.605462</span>
+<span class="n">MidReek</span>      <span class="mf">833.304757</span>
+<span class="n">UpperReek</span>    <span class="mf">545.180473</span>
+</pre></div>
+</div>
+<p>If you have the layer information in a different file, you need to tell the code
+the whereabouts of the file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">common</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;&#39;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="c1"># The filename with layers is relative to DATA-file location</span>
+<span class="c1"># or an absolute path.</span>
+<span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">(</span><span class="s2">&quot;subzones.lyr&quot;</span><span class="p">)</span>
+<span class="n">dframe_with_subzones</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">merge_zones</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span>
+                                          <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;SUBZONE&quot;</span><span class="p">)</span>
+                                          <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more control over merging of zones, check the documentation for
+the function <a class="reference internal" href="../ecl2df.html#ecl2df.common.merge_zones" title="ecl2df.common.merge_zones"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.common.merge_zones()</span></code></a> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">ecl2df.EclFiles.get_zonemap()</span></code></p>
+</div>
+<div class="section" id="dynamic-data">
+<h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this headline">¶</a></h2>
+<p>By adding a restart date, dynamic data for one particular restart date can be
+added, through the API option <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> or the command line option
+<code class="docutils literal notranslate"><span class="pre">--rstdates</span></code>.</p>
+<p>You can write dates in ISO-8601 format, or you can specify <em>first</em>, <em>last</em> or
+<em>all</em>.  If you select all dates, you can choose to have a set of columns for
+every date, or have the date encoded in a column called <code class="docutils literal notranslate"><span class="pre">DATE</span></code>, this is
+controlled via the <code class="docutils literal notranslate"><span class="pre">--stackdates</span></code> option.</p>
+<p>See also the <a class="reference internal" href="pillars.html#usage-pillars"><span class="std std-ref">pillars</span></a> module for an application of the grid data.
+Calculating volumes of dynamic data (pr. some region parameter) can be obtained
+from that module as a by-product of the pillar computations.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nnc.html" class="btn btn-neutral float-right" title="nnc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fipreports.html" class="btn btn-neutral float-left" title="fipreports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

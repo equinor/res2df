@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.grid &mdash; ecl2df 0.5.2.dev29+g24593dd documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev29+g24593dd
+                0.5.2.dev30+gf8aed32
               </div>
             
           
@@ -544,12 +544,12 @@
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles (EclFiles): Handle to an Eclipse case</span>
 <span class="sd">        vectors (str or list): Vectors to include, wildcards</span>
-<span class="sd">            supported. String argument. Used to match both</span>
+<span class="sd">            supported. Used to match both</span>
 <span class="sd">            INIT vectors and RESTART vectors.</span>
 <span class="sd">        dropconstants (bool): If true, columns that are constant</span>
 <span class="sd">            for every cell are dropped.</span>
-<span class="sd">        rstdates (list, str or datetime): Restart dates to include</span>
-<span class="sd">            Mnenomics such as first and last are supported.</span>
+<span class="sd">        rstdates (list, str or datetime): Restart dates to include in ISO-8601 format.</span>
+<span class="sd">            Alternatively, pick from the mnenomics &#39;first&#39;, &#39;all&#39; and &#39;last&#39;.</span>
 <span class="sd">        dateinheaders (bool): Whether columns with data from UNRST files</span>
 <span class="sd">            should always have the ISO-date embedded in the column header.</span>
 <span class="sd">        stackdates (bool): Default is false. If true, a column</span>

@@ -1,3 +1,5 @@
+.. _usage-pillars:
+
 pillars
 -------
 

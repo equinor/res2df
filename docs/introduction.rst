@@ -197,6 +197,8 @@ to be of JSON or YAML format respectively, but only one of them will be parsed.
 Currently only supported by the summary module, for other modules, the data will
 have to be merged with pandas.merge().
 
+.. _zone-names:
+
 Zone names
 ^^^^^^^^^^
 

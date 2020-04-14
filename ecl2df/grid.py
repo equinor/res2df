@@ -139,7 +139,11 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
             dateinheaders False.
     """
     if not vectors:
+        vectorswasdefaulted = True
         vectors = "*"  # This will include everything
+    else:
+        vectorswasdefaulted = False
+
     if not isinstance(vectors, list):
         vectors = [vectors]
     logger.info("Extracting vectors %s from RST file", str(vectors))
@@ -184,7 +188,10 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
             str(present_rstvectors),
         )
         if not present_rstvectors:
-            logger.warning("No restart vectors available at index %s", str(rstindex))
+            if vectorswasdefaulted:
+                logger.warning(
+                    "No restart vectors available at index %s", str(rstindex)
+                )
             continue
 
         # Make the dataframe

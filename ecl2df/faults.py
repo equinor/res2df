@@ -9,6 +9,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import sys
 import logging
 import argparse
 import pandas as pd
@@ -25,14 +26,17 @@ COLUMNS = ["NAME", "I", "J", "K", "FACE"]
 ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
 
 
-def deck2faultsdf(deck):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name deck2faultsdf")
-    return deck2df(deck)
+def df(deck):
+    """Produce a dataframe of fault data from a deck
 
+    All data for the keyword FAULTS will be returned.
 
-def deck2df(deck):
-    """Produce a dataframe of fault data from a deck"""
+    Args:
+        deck (opm.io Deck or EclFiles): Eclipse deck
+    """
+    if isinstance(deck, EclFiles):
+        deck = deck.get_ecldeck()
+
     # In[91]: list(deck['FAULTS'][0])
     # Out[91]: [[u'F1'], [36], [36], [41], [42], [1], [14], [u'I']]
     data = []
@@ -78,23 +82,18 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    faults2df_main(args)
+    faults_main(args)
 
 
-def faults2df_main(args):
+def faults_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
         logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    faults_df = deck2df(deck)
+    faults_df = df(deck)
     if faults_df.empty:
         logger.warning("Empty FAULT data being written to disk!")
     faults_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
-
-
-def df(eclfiles):
-    """Main function for Python API users"""
-    return deck2df(eclfiles.get_ecldeck())

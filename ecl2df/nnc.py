@@ -203,10 +203,10 @@ def main():
     parser = argparse.ArgumentParser()
     fill_parser(parser)
     args = parser.parse_args()
-    nnc2df_main(args)
+    nnc_main(args)
 
 
-def nnc2df_main(args):
+def nnc_main(args):
     """Command line access point from main() or from ecl2csv via subparser"""
     if args.verbose:
         logger.setLevel(logging.INFO)

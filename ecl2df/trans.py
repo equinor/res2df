@@ -296,7 +296,7 @@ def fill_parser(parser):
     return parser
 
 
-def trans2df_main(args):
+def trans_main(args):
     """This is the command line API"""
     if args.verbose:
         logger.setLevel(logging.INFO)

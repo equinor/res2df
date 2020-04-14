@@ -19,7 +19,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_faults2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    faultsdf = faults.deck2df(eclfiles.get_ecldeck())
+    faultsdf = faults.df(eclfiles.get_ecldeck())
 
     assert "NAME" in faultsdf
     assert "I" in faultsdf
@@ -38,7 +38,7 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults.deck2df(deck)
+    faultsdf = faults.df(deck)
 
     assert len(faultsdf) == 16
 
@@ -56,7 +56,7 @@ FAULTS
 /
 """
     deck = EclFiles.str2deck(deckstr)
-    faultsdf = faults.deck2df(deck).set_index("NAME")
+    faultsdf = faults.df(deck).set_index("NAME")
 
     assert len(faultsdf) == 23
     assert len(faultsdf.loc[["D"]]) == 1  # Pass lists to .loc for single row
@@ -68,17 +68,6 @@ def test_main_subparser(tmpdir):
     tmpcsvfile = tmpdir.join(".TMP-faultsdf.csv")
     sys.argv = ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-
-
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-faultsdf.csv")
-    sys.argv = ["faults2csv", "-v", DATAFILE, "-o", str(tmpcsvfile)]
-    faults.main()
 
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))

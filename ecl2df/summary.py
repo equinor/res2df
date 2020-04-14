@@ -373,10 +373,10 @@ def main():
     parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
     parser = fill_parser(parser)
     args = parser.parse_args()
-    summary2df_main(args)
+    summary_main(args)
 
 
-def summary2df_main(args):
+def summary_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
         logger.setLevel(logging.INFO)

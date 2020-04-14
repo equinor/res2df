@@ -139,7 +139,11 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
             dateinheaders False.
     """
     if not vectors:
+        vectorswasdefaulted = True
         vectors = "*"  # This will include everything
+    else:
+        vectorswasdefaulted = False
+
     if not isinstance(vectors, list):
         vectors = [vectors]
     logger.info("Extracting vectors %s from RST file", str(vectors))
@@ -184,7 +188,10 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
             str(present_rstvectors),
         )
         if not present_rstvectors:
-            logger.warning("No restart vectors available at index %s", str(rstindex))
+            if vectorswasdefaulted:
+                logger.warning(
+                    "No restart vectors available at index %s", str(rstindex)
+                )
             continue
 
         # Make the dataframe
@@ -385,12 +392,12 @@ def df(
     Args:
         eclfiles (EclFiles): Handle to an Eclipse case
         vectors (str or list): Vectors to include, wildcards
-            supported. String argument. Used to match both
+            supported. Used to match both
             INIT vectors and RESTART vectors.
         dropconstants (bool): If true, columns that are constant
             for every cell are dropped.
-        rstdates (list, str or datetime): Restart dates to include
-            Mnenomics such as first and last are supported.
+        rstdates (list, str or datetime): Restart dates to include in ISO-8601 format.
+            Alternatively, pick from the mnenomics 'first', 'all' and 'last'.
         dateinheaders (bool): Whether columns with data from UNRST files
             should always have the ISO-date embedded in the column header.
         stackdates (bool): Default is false. If true, a column
@@ -411,8 +418,7 @@ def df(
         )
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     if dropconstants:
-        # Note: Ambigous object names, bool vs function
-        grid_df = ecl2df.grid.dropconstants(grid_df)
+        grid_df = ecl2df.grid.drop_constant_columns(grid_df)
     return grid_df
 
 
@@ -433,16 +439,18 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
-        "--initkeys",
+        "--vectors",
+        "--initkeys",  # --initkeys is deprecated
         nargs="+",
-        help="INIT vector wildcards for vectors to include",
+        help="INIT and/or restart wildcards for vectors to include",
         default="*",
     )
     parser.add_argument(
-        "--rstdate",
+        "--rstdates",
+        "--rstdate",  # --rstdate is deprecated
         type=str,
         help="Point in time to grab restart data from, "
-        + "either 'first' or 'last', or a date in "
+        + "either 'first' or 'last', 'all', or a date in "
         + "YYYY-MM-DD format",
         default="",
     )
@@ -450,9 +458,19 @@ def fill_parser(parser):
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
+        help="Name of output csv file. Use '-' for stdout.",
         default="eclgrid.csv",
     )
+    parser.add_argument(
+        "--stackdates",
+        action="store_true",
+        help=(
+            "If set, the dates from restart data will not be in the column "
+            "but instead there will be a DATE column with the dates. Note "
+            "that the static data will be repeated for each DATE."
+        ),
+    )
+
     parser.add_argument(
         "--dropconstants",
         action="store_true",
@@ -462,7 +480,7 @@ def fill_parser(parser):
     return parser
 
 
-def dropconstants(dframe, alwayskeep=None):
+def drop_constant_columns(dframe, alwayskeep=None):
     """Drop/delete constant columns from a dataframe.
 
     Args:
@@ -492,26 +510,6 @@ def dropconstants(dframe, alwayskeep=None):
     return dframe.drop(columnstodelete, axis=1)
 
 
-def grid2df(eclfiles, vectors="*"):
-    """Produce a grid dataframe from EclFiles
-
-    Given a set of Eclipse files (an EclFiles object), this
-    function will return a dataframe with a row for each cell
-    including cell coordinates and volume and any requested data
-    for the cell
-
-    Arguments:
-        eclfiles (EclFiles): Object holding the set of Eclipse output files
-        vectors (str or list): List of vectors to include,
-            glob-style wildcards supported
-
-    Returns:
-        pandas.DataFrame
-    """
-
-    return merge_gridframes(gridgeometry2df(eclfiles), init2df(eclfiles, vectors), None)
-
-
 def main():
     """Entry-point for module, for command line utility. Deprecated to use
     """
@@ -519,19 +517,20 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    grid2df_main(args)
+    grid_main(args)
 
 
-def grid2df_main(args):
+def grid_main(args):
     """This is the command line API"""
     if args.verbose:
         logger.setLevel(logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     grid_df = df(
         eclfiles,
-        vectors=args.initkeys,
-        rstdates=args.rstdate,
+        vectors=args.vectors,
+        rstdates=args.rstdates,
         dropconstants=args.dropconstants,
+        stackdates=args.stackdates,
     )
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.

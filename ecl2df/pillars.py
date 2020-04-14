@@ -419,7 +419,7 @@ def main():
     pillarstats_main(parser.parse_args())
 
 
-def pillarstats_main(args):
+def pillars_main(args):
     """This is the command line API"""
     if args.verbose:
         logger.setLevel(logging.INFO)

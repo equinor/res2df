@@ -411,8 +411,7 @@ def df(
         )
     grid_df = merge_gridframes(gridgeom, initdf, rst_df)
     if dropconstants:
-        # Note: Ambigous object names, bool vs function
-        grid_df = ecl2df.grid.dropconstants(grid_df)
+        grid_df = ecl2df.grid.drop_constant_columns(grid_df)
     return grid_df
 
 
@@ -439,10 +438,10 @@ def fill_parser(parser):
         default="*",
     )
     parser.add_argument(
-        "--rstdate",
+        "--rstdates",
         type=str,
         help="Point in time to grab restart data from, "
-        + "either 'first' or 'last', or a date in "
+        + "either 'first' or 'last', 'all', or a date in "
         + "YYYY-MM-DD format",
         default="",
     )
@@ -454,6 +453,16 @@ def fill_parser(parser):
         default="eclgrid.csv",
     )
     parser.add_argument(
+        "--stackdates",
+        action="store_true",
+        help=(
+            "If set, the dates from restart data will not be in the column "
+            "but instead there will be a DATE column with the dates. Note "
+            "that the static data will be repeated for each DATE."
+        ),
+    )
+
+    parser.add_argument(
         "--dropconstants",
         action="store_true",
         help="Drop constant columns from the dataset",
@@ -462,7 +471,7 @@ def fill_parser(parser):
     return parser
 
 
-def dropconstants(dframe, alwayskeep=None):
+def drop_constant_columns(dframe, alwayskeep=None):
     """Drop/delete constant columns from a dataframe.
 
     Args:
@@ -492,26 +501,6 @@ def dropconstants(dframe, alwayskeep=None):
     return dframe.drop(columnstodelete, axis=1)
 
 
-def grid2df(eclfiles, vectors="*"):
-    """Produce a grid dataframe from EclFiles
-
-    Given a set of Eclipse files (an EclFiles object), this
-    function will return a dataframe with a row for each cell
-    including cell coordinates and volume and any requested data
-    for the cell
-
-    Arguments:
-        eclfiles (EclFiles): Object holding the set of Eclipse output files
-        vectors (str or list): List of vectors to include,
-            glob-style wildcards supported
-
-    Returns:
-        pandas.DataFrame
-    """
-
-    return merge_gridframes(gridgeometry2df(eclfiles), init2df(eclfiles, vectors), None)
-
-
 def main():
     """Entry-point for module, for command line utility. Deprecated to use
     """
@@ -519,10 +508,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    grid2df_main(args)
+    grid_main(args)
 
 
-def grid2df_main(args):
+def grid_main(args):
     """This is the command line API"""
     if args.verbose:
         logger.setLevel(logging.INFO)
@@ -530,8 +519,9 @@ def grid2df_main(args):
     grid_df = df(
         eclfiles,
         vectors=args.initkeys,
-        rstdates=args.rstdate,
+        rstdates=args.rstdates,
         dropconstants=args.dropconstants,
+        stackdates=args.stackdates,
     )
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.

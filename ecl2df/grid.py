@@ -385,12 +385,12 @@ def df(
     Args:
         eclfiles (EclFiles): Handle to an Eclipse case
         vectors (str or list): Vectors to include, wildcards
-            supported. String argument. Used to match both
+            supported. Used to match both
             INIT vectors and RESTART vectors.
         dropconstants (bool): If true, columns that are constant
             for every cell are dropped.
-        rstdates (list, str or datetime): Restart dates to include
-            Mnenomics such as first and last are supported.
+        rstdates (list, str or datetime): Restart dates to include in ISO-8601 format.
+            Alternatively, pick from the mnenomics 'first', 'all' and 'last'.
         dateinheaders (bool): Whether columns with data from UNRST files
             should always have the ISO-date embedded in the column header.
         stackdates (bool): Default is false. If true, a column

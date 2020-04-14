@@ -432,9 +432,10 @@ def fill_parser(parser):
         help="Name of Eclipse DATA file. " + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument(
-        "--initkeys",
+        "--vectors",
+        "--initkeys",  # --initkeys is deprecated
         nargs="+",
-        help="INIT vector wildcards for vectors to include",
+        help="INIT and/or restart wildcards for vectors to include",
         default="*",
     )
     parser.add_argument(
@@ -449,7 +450,7 @@ def fill_parser(parser):
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
+        help="Name of output csv file. Use '-' for stdout.",
         default="eclgrid.csv",
     )
     parser.add_argument(
@@ -518,7 +519,7 @@ def grid_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     grid_df = df(
         eclfiles,
-        vectors=args.initkeys,
+        vectors=args.vectors,
         rstdates=args.rstdates,
         dropconstants=args.dropconstants,
         stackdates=args.stackdates,

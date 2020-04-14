@@ -26,10 +26,10 @@ logger = logging.getLogger(__name__)
 def gruptree2df(deck, startdate=None, welspecs=True):
     """Deprecated function name"""
     logger.warning("Deprecated function name, gruptree2df")
-    return deck2df(deck, startdate, welspecs)
+    return df(deck, startdate, welspecs)
 
 
-def deck2df(deck, startdate=None, welspecs=True):
+def df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.
 
@@ -43,6 +43,8 @@ def deck2df(deck, startdate=None, welspecs=True):
 
     startdate is only relevant when START is not in the deck.
 
+    Args:
+        deck: opm.io Deck object or EclFiles
     Returns:
         pd.DataFrame - with one row pr edge. Empty dataframe
             if no information is found in deck.
@@ -52,6 +54,9 @@ def deck2df(deck, startdate=None, welspecs=True):
         date = startdate
     else:
         date = None
+
+    if isinstance(deck, EclFiles):
+        deck = deck.get_ecldeck()
 
     gruptreerecords = []  # list of dict of rows containing an edge.
     grupnetrecords = []
@@ -289,10 +294,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    gruptree2df_main(args)
+    gruptree_main(args)
 
 
-def gruptree2df_main(args):
+def gruptree_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
         logger.setLevel(logging.INFO)
@@ -325,6 +330,6 @@ def gruptree2df_main(args):
         print("Wrote to " + args.output)
 
 
-def df(eclfiles, startdate=None):
-    """Main function for Python API users. Wraps deck2df, check doc there."""
-    return deck2df(eclfiles.get_ecldeck(), startdate=startdate)
+def deck2df(eclfiles, startdate=None):
+    """Deprecated"""
+    return df(eclfiles, startdate=startdate)

@@ -1,4 +1,4 @@
-"""Test module for nnc2df"""
+"""Test module for nnc"""
 
 from __future__ import absolute_import
 from __future__ import division

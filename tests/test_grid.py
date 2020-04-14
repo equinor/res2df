@@ -64,10 +64,10 @@ def test_init2df():
     assert "PORV" in init_df
 
 
-def test_grid2df():
+def test_grid_df():
     """Test that dataframe with INIT vectors and coordinates can be produced"""
     eclfiles = EclFiles(DATAFILE)
-    grid_df = grid.grid2df(eclfiles)
+    grid_df = grid.df(eclfiles)
 
     assert isinstance(grid_df, pd.DataFrame)
     assert not grid_df.empty
@@ -114,10 +114,10 @@ def test_subvectors():
 def test_dropconstants():
     """Test dropping of constants columns from dataframes"""
     df = pd.DataFrame(columns=["A", "B"], data=[[1, 1], [2, 1]])
-    assert "B" not in grid.dropconstants(df)
-    assert "A" in grid.dropconstants(df)
-    assert "B" in grid.dropconstants(df, alwayskeep="B")
-    assert "B" in grid.dropconstants(df, alwayskeep=["B"])
+    assert "B" not in grid.drop_constant_columns(df)
+    assert "A" in grid.drop_constant_columns(df)
+    assert "B" in grid.drop_constant_columns(df, alwayskeep="B")
+    assert "B" in grid.drop_constant_columns(df, alwayskeep=["B"])
 
 
 def test_mergegridframes():
@@ -220,21 +220,13 @@ def test_df():
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-eclgrid.csv")
-    sys.argv = ["eclgrid2csv", "-v", DATAFILE, "-o", str(tmpcsvfile), "--init", "PORO"]
-    grid.main()
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-    os.remove(str(tmpcsvfile))
-
-    # Do again with also restarts, and using subparsers:
     sys.argv = [
         "ecl2csv",
         "grid",
         DATAFILE,
         "-o",
         str(tmpcsvfile),
-        "--rstdate",
+        "--rstdates",
         "first",
         "--init",
         "PORO",
@@ -247,24 +239,25 @@ def test_main(tmpdir):
 
     # Do again with also restarts:
     sys.argv = [
-        "eclgrid2csv",
+        "ecl2csv",
+        "grid",
         DATAFILE,
         "-o",
         str(tmpcsvfile),
-        "--rstdate",
+        "--rstdates",
         "2001-02-01",
         "--init",
         "PORO",
     ]
-    grid.main()
+    ecl2csv.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     os.remove(str(tmpcsvfile))
 
     # Test with constants dropping
-    sys.argv = ["eclgrid2csv", DATAFILE, "-o", str(tmpcsvfile), "--dropconstants"]
-    grid.main()
+    sys.argv = ["ecl2csv", "grid", DATAFILE, "-o", str(tmpcsvfile), "--dropconstants"]
+    ecl2csv.main()
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
     # That PVTNUM is constant is a particular feature

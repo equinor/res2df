@@ -88,14 +88,21 @@ def deck2wcondf(deck):
     return deck2df(deck)
 
 
-def deck2df(deck):
+def df(deck):
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
 
+    Args:
+        deck (opm.io Deck) or EclFiles object
+
     Return:
         pd.DataFrame
     """
+
+    if isinstance(deck, EclFiles):
+        deck = deck.get_ecldeck()
+
     wconrecords = []  # List of dicts of every line in input file
     date = None  # DATE columns will always be there, but can contain NaN
     for kword in deck:
@@ -155,10 +162,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    wcon2df_main(args)
+    wcon_main(args)
 
 
-def wcon2df_main(args):
+def wcon_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
         logger.setLevel(logging.INFO)
@@ -172,6 +179,6 @@ def wcon2df_main(args):
     print("Wrote to " + args.output)
 
 
-def df(eclfiles):
-    """Main function for Python API users"""
-    return deck2df(eclfiles.get_ecldeck())
+def deck2df(eclfiles):
+    """Deprecated function call"""
+    return df(eclfiles)

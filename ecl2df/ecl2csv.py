@@ -70,7 +70,7 @@ def get_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     grid.fill_parser(grid_parser)
-    grid_parser.set_defaults(func=grid.grid2df_main)
+    grid_parser.set_defaults(func=grid.grid_main)
 
     summary_parser = subparsers.add_parser(
         "summary",
@@ -83,7 +83,7 @@ def get_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     summary.fill_parser(summary_parser)
-    summary_parser.set_defaults(func=summary.summary2df_main)
+    summary_parser.set_defaults(func=summary.summary_main)
 
     nnc_parser = subparsers.add_parser(
         "nnc",
@@ -98,7 +98,7 @@ def get_parser():
         ),
     )
     nnc.fill_parser(nnc_parser)
-    nnc_parser.set_defaults(func=nnc.nnc2df_main)
+    nnc_parser.set_defaults(func=nnc.nnc_main)
 
     faults_parser = subparsers.add_parser(
         "faults",
@@ -109,7 +109,7 @@ def get_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     faults.fill_parser(faults_parser)
-    faults_parser.set_defaults(func=faults.faults2df_main)
+    faults_parser.set_defaults(func=faults.faults_main)
 
     trans_parser = subparsers.add_parser(
         "trans",
@@ -125,7 +125,7 @@ def get_parser():
         ),
     )
     trans.fill_parser(trans_parser)
-    trans_parser.set_defaults(func=trans.trans2df_main)
+    trans_parser.set_defaults(func=trans.trans_main)
 
     pillars_parser = subparsers.add_parser(
         "pillars",
@@ -138,7 +138,7 @@ def get_parser():
         ),
     )
     pillars.fill_parser(pillars_parser)
-    pillars_parser.set_defaults(func=pillars.pillarstats_main)
+    pillars_parser.set_defaults(func=pillars.pillars_main)
 
     pvt_parser = subparsers.add_parser(
         "pvt",
@@ -173,7 +173,7 @@ def get_parser():
         ),
     )
     rft.fill_parser(rft_parser)
-    rft_parser.set_defaults(func=rft.rft2df_main)
+    rft_parser.set_defaults(func=rft.rft_main)
 
     fipreports_parser = subparsers.add_parser(
         "fipreports",
@@ -214,7 +214,7 @@ def get_parser():
         ),
     )
     compdat.fill_parser(compdat_parser)
-    compdat_parser.set_defaults(func=compdat.compdat2df_main)
+    compdat_parser.set_defaults(func=compdat.compdat_main)
 
     equil_parser = subparsers.add_parser(
         "equil",
@@ -232,7 +232,7 @@ def get_parser():
         description=("Each row represents an edge in the GRUPTREE at a specific date."),
     )
     gruptree.fill_parser(gruptree_parser)
-    gruptree_parser.set_defaults(func=gruptree.gruptree2df_main)
+    gruptree_parser.set_defaults(func=gruptree.gruptree_main)
 
     wcon_parser = subparsers.add_parser(
         "wcon",
@@ -244,7 +244,7 @@ def get_parser():
         ),
     )
     wcon.fill_parser(wcon_parser)
-    wcon_parser.set_defaults(func=wcon.wcon2df_main)
+    wcon_parser.set_defaults(func=wcon.wcon_main)
 
     return parser
 

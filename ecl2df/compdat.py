@@ -278,10 +278,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    compdat2df_main(args)
+    compdat_main(args)
 
 
-def compdat2df_main(args):
+def compdat_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
         logger.setLevel(logging.INFO)

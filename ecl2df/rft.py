@@ -58,7 +58,7 @@ def _rftrecords2df(eclfiles):
     return rftrecords
 
 
-def rft2df(eclfiles):
+def df(eclfiles):
     """Construct the final dataframe of RFT data"""
     rftrecords = _rftrecords2df(eclfiles)
     rftfile = eclfiles.get_rftfile()
@@ -320,10 +320,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
     args = parser.parse_args()
-    rft2df_main(args)
+    rft_main(args)
 
 
-def rft2df_main(args):
+def rft_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
         logger.setLevel(logging.INFO)
@@ -337,9 +337,9 @@ def rft2df_main(args):
     print("Wrote to " + args.output)
 
 
-def df(eclfiles):
-    """Main function for Python API users"""
-    return rft2df(eclfiles)
+def rft2df(eclfiles):
+    """Deprecated function"""
+    return df(eclfiles)
 
 
 ## Vector	Description

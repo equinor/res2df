@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.wcon &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
+  <title>ecl2df.wcon &mdash; ecl2df 0.5.2.dev31+g8dab290 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev30+gf8aed32
+                0.5.2.dev31+g8dab290
               </div>
             
           
@@ -247,14 +247,21 @@
     <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
 
 <span class="sd">    The loop over the deck is a state machine, as it has to pick up dates</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        deck (opm.io Deck) or EclFiles object</span>
+
 <span class="sd">    Return:</span>
 <span class="sd">        pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">):</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
+
     <span class="n">wconrecords</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of dicts of every line in input file</span>
     <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># DATE columns will always be there, but can contain NaN</span>
     <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -314,10 +321,10 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">wcon2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+    <span class="n">wcon_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="wcon2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.wcon2df_main">[docs]</a><span class="k">def</span> <span class="nf">wcon2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="wcon_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.wcon_main">[docs]</a><span class="k">def</span> <span class="nf">wcon_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -331,9 +338,9 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">())</span></div>
+<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deprecated function call&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

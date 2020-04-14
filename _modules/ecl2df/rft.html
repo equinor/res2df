@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.rft &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.5.2.dev31+g8dab290 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev30+gf8aed32
+                0.5.2.dev31+g8dab290
               </div>
             
           
@@ -217,7 +217,7 @@
     <span class="k">return</span> <span class="n">rftrecords</span>
 
 
-<div class="viewcode-block" id="rft2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df">[docs]</a><span class="k">def</span> <span class="nf">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Construct the final dataframe of RFT data&quot;&quot;&quot;</span>
     <span class="n">rftrecords</span> <span class="o">=</span> <span class="n">_rftrecords2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">rftfile</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rftfile</span><span class="p">()</span>
@@ -479,10 +479,10 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">rft2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+    <span class="n">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rft2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df_main">[docs]</a><span class="k">def</span> <span class="nf">rft2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="rft_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft_main">[docs]</a><span class="k">def</span> <span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -496,9 +496,9 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Main function for Python API users&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span></div>
+<div class="viewcode-block" id="rft2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df">[docs]</a><span class="k">def</span> <span class="nf">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deprecated function&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span></div>
 
 
 <span class="c1">## Vector	Description</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.grid &mdash; ecl2df 0.5.2.dev30+gf8aed32 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.5.2.dev31+g8dab290 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev30+gf8aed32
+                0.5.2.dev31+g8dab290
               </div>
             
           
@@ -298,7 +298,11 @@
 <span class="sd">            dateinheaders False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vectors</span><span class="p">:</span>
+        <span class="n">vectorswasdefaulted</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>  <span class="c1"># This will include everything</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vectorswasdefaulted</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectors</span><span class="p">]</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting vectors </span><span class="si">%s</span><span class="s2"> from RST file&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vectors</span><span class="p">))</span>
@@ -343,7 +347,10 @@
             <span class="nb">str</span><span class="p">(</span><span class="n">present_rstvectors</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">present_rstvectors</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No restart vectors available at index </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rstindex</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">vectorswasdefaulted</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;No restart vectors available at index </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rstindex</span><span class="p">)</span>
+                <span class="p">)</span>
             <span class="k">continue</span>
 
         <span class="c1"># Make the dataframe</span>
@@ -570,8 +577,7 @@
         <span class="p">)</span>
     <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dropconstants</span><span class="p">:</span>
-        <span class="c1"># Note: Ambigous object names, bool vs function</span>
-        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">dropconstants</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
+        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">drop_constant_columns</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">grid_df</span></div>
 
 
@@ -592,16 +598,18 @@
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file. &quot;</span> <span class="o">+</span> <span class="s2">&quot;INIT and EGRID file must lie alongside.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--initkeys&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--vectors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--initkeys&quot;</span><span class="p">,</span>  <span class="c1"># --initkeys is deprecated</span>
         <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;INIT vector wildcards for vectors to include&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;INIT and/or restart wildcards for vectors to include&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--rstdate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--rstdates&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--rstdate&quot;</span><span class="p">,</span>  <span class="c1"># --rstdate is deprecated</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Point in time to grab restart data from, &quot;</span>
-        <span class="o">+</span> <span class="s2">&quot;either &#39;first&#39; or &#39;last&#39;, or a date in &quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;either &#39;first&#39; or &#39;last&#39;, &#39;all&#39;, or a date in &quot;</span>
         <span class="o">+</span> <span class="s2">&quot;YYYY-MM-DD format&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -609,9 +617,19 @@
         <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
         <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file. Use &#39;-&#39; for stdout.&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;eclgrid.csv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--stackdates&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;If set, the dates from restart data will not be in the column &quot;</span>
+            <span class="s2">&quot;but instead there will be a DATE column with the dates. Note &quot;</span>
+            <span class="s2">&quot;that the static data will be repeated for each DATE.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--dropconstants&quot;</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
@@ -621,7 +639,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="dropconstants"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.dropconstants">[docs]</a><span class="k">def</span> <span class="nf">dropconstants</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="drop_constant_columns"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.drop_constant_columns">[docs]</a><span class="k">def</span> <span class="nf">drop_constant_columns</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Drop/delete constant columns from a dataframe.</span>
 
 <span class="sd">    Args:</span>
@@ -651,26 +669,6 @@
     <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columnstodelete</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="grid2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.grid2df">[docs]</a><span class="k">def</span> <span class="nf">grid2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Produce a grid dataframe from EclFiles</span>
-
-<span class="sd">    Given a set of Eclipse files (an EclFiles object), this</span>
-<span class="sd">    function will return a dataframe with a row for each cell</span>
-<span class="sd">    including cell coordinates and volume and any requested data</span>
-<span class="sd">    for the cell</span>
-
-<span class="sd">    Arguments:</span>
-<span class="sd">        eclfiles (EclFiles): Object holding the set of Eclipse output files</span>
-<span class="sd">        vectors (str or list): List of vectors to include,</span>
-<span class="sd">            glob-style wildcards supported</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        pandas.DataFrame</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">),</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility. Deprecated to use</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -678,19 +676,20 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+    <span class="n">grid_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="grid2df_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.grid2df_main">[docs]</a><span class="k">def</span> <span class="nf">grid2df_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="grid_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.grid_main">[docs]</a><span class="k">def</span> <span class="nf">grid_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">grid_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
         <span class="n">eclfiles</span><span class="p">,</span>
-        <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initkeys</span><span class="p">,</span>
-        <span class="n">rstdates</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">rstdate</span><span class="p">,</span>
+        <span class="n">vectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span>
+        <span class="n">rstdates</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">rstdates</span><span class="p">,</span>
         <span class="n">dropconstants</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dropconstants</span><span class="p">,</span>
+        <span class="n">stackdates</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">stackdates</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
         <span class="c1"># Ignore pipe errors when writing to stdout.</span>

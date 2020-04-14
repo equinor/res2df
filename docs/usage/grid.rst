@@ -30,3 +30,8 @@ Alternatively, the same data can be produced as a CSV file using the command lin
   ecl2csv grid MYDATADECK.DATA --verbose --output grid.csv
 
 
+Dynamic data
+^^^^^^^^^^^^
+
+By adding a restart date, dynamic data for one particular restart date can be added,
+through the API option ``rstdate`` or the command line option ``--rstdate``.

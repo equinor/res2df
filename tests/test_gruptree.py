@@ -96,10 +96,9 @@ WELSPECS
     grupdf = gruptree.df(deck)
     grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
     grupdf.to_csv("gruptreenet.csv", index=False)
-    print(grupdf)
     grup_dict = gruptree.df2dict(grupdf)
-    print(grup_dict)
-    print(gruptree.dict2treelib("", grup_dict[0]))
+    print("Copy and paste into RST files:")
+    print(str(gruptree.dict2treelib("", grup_dict[0])))
 
 
 def test_grupnetdf():

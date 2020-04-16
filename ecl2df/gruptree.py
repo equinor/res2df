@@ -54,7 +54,7 @@ def df(deck, startdate=None, welspecs=True):
 
     Returns:
         pd.DataFrame with one row pr edge. Empty dataframe if no
-            information is found in deck.
+        information is found in deck.
     """
 
     if startdate is not None:
@@ -192,7 +192,7 @@ def df2dict(dframe):
 
     Returns:
         list of nested dictionary, as we in general
-            may have more than one root.
+        may have more than one root.
     """
     if dframe.empty:
         return {}

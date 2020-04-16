@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df 0.5.2.dev32+g2d23627 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.5.2.dev33+gb370247 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev32+g2d23627
+                0.5.2.dev33+gb370247
               </div>
             
           
@@ -172,7 +172,6 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">dateutil</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
@@ -192,6 +191,12 @@
     <span class="sd">&quot;&quot;&quot;Extract all group information from a deck</span>
 <span class="sd">    and present as a Pandas Dataframe of all edges.</span>
 
+<span class="sd">    Numerical properties for nodes given in GRUPNET will</span>
+<span class="sd">    be added as extra columns.</span>
+
+<span class="sd">    From WELSPECS, well names are extracted and added</span>
+<span class="sd">    as nodes with an edge to its group.</span>
+
 <span class="sd">    The gruptree is a time dependent property,</span>
 <span class="sd">    with accumulative effects from new occurences of</span>
 <span class="sd">    GRUPTREE or WELSPECS.</span>
@@ -204,9 +209,10 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck: opm.io Deck object or EclFiles</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.DataFrame - with one row pr edge. Empty dataframe</span>
-<span class="sd">            if no information is found in deck.</span>
+<span class="sd">        pd.DataFrame with one row pr edge. Empty dataframe if no</span>
+<span class="sd">        information is found in deck.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">startdate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -251,7 +257,7 @@
                         <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                         <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                         <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                        <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                        <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
                     <span class="p">}</span>
                     <span class="k">if</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">grupnet_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
                         <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
@@ -310,7 +316,7 @@
                 <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                 <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                 <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="k">if</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">grupnet_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
                 <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
@@ -322,63 +328,35 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<div class="viewcode-block" id="gruptree2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptree2dict">[docs]</a><span class="k">def</span> <span class="nf">gruptree2dict</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="s2">&quot;END&quot;</span><span class="p">,</span> <span class="n">welspecs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extract the GRUPTREE information as a tree structure</span>
-<span class="sd">    in a dict.</span>
+<div class="viewcode-block" id="df2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.df2dict">[docs]</a><span class="k">def</span> <span class="nf">df2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert list of edges in a dataframe into a</span>
+<span class="sd">    nested dictionary (tree).</span>
 
-<span class="sd">    Example result::</span>
-
-<span class="sd">      {</span>
-<span class="sd">        &#39;FIELD&#39;: [&#39;WI&#39;, &#39;OP&#39;],</span>
-<span class="sd">        &#39;OP&#39;: [&#39;OP_2&#39;, &#39;OP_3&#39;, &#39;OP_4&#39;, &#39;OP_5&#39;, &#39;OP_1&#39;],</span>
-<span class="sd">        &#39;WI&#39;: [&#39;WI_1&#39;, &#39;WI_2&#39;, &#39;WI_3&#39;]</span>
-<span class="sd">      }</span>
-
-<span class="sd">    Returns an empty dict if there is no GRUPTREE in the deck.</span>
-
-<span class="sd">    This function might get deprecated in favour of the nested dictionary</span>
-<span class="sd">    version.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">dframe</span> <span class="o">=</span> <span class="n">gruptree2df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">date</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">date</span> <span class="o">==</span> <span class="s2">&quot;END&quot;</span><span class="p">:</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">isoparse</span><span class="p">(</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;date &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not understood&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">date</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{}</span>
-    <span class="k">return</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">date</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="gruptreedf2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptreedf2dict">[docs]</a><span class="k">def</span> <span class="nf">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert list of edges into a</span>
-<span class="sd">    nested dictionary (tree),</span>
+<span class="sd">    The dataframe cannot have multiple DATEs, filter to the date you</span>
+<span class="sd">    want prior to calling this function.</span>
 
 <span class="sd">    Example::</span>
 
-<span class="sd">      {</span>
+<span class="sd">      [{</span>
 <span class="sd">        &#39;FIELD&#39;: {&#39;OP&#39;: {&#39;OP_1&#39;: {},</span>
 <span class="sd">        &#39;OP_2&#39;: {},</span>
 <span class="sd">        &#39;OP_3&#39;: {},</span>
 <span class="sd">        &#39;OP_4&#39;: {},</span>
 <span class="sd">        &#39;OP_5&#39;: {}},</span>
 <span class="sd">        &#39;WI&#39;: {&#39;WI_1&#39;: {}, &#39;WI_2&#39;: {}, &#39;WI_3&#39;: {}}}</span>
-<span class="sd">      }</span>
+<span class="sd">      }]</span>
 
-<span class="sd">    Leaf nodes have empty dictionaries.</span>
+<span class="sd">    Leaf nodes have empty dictionaries as their value.</span>
 
-<span class="sd">    Returns a list of nested dictionary, as we sometimes</span>
-<span class="sd">    have more than one root</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list of nested dictionary, as we in general</span>
+<span class="sd">        may have more than one root.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only handle one date at a time&quot;</span><span class="p">)</span>
     <span class="n">subtrees</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
@@ -396,7 +374,14 @@
 
 <div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert a nested dictonary to a treelib Tree</span>
-<span class="sd">    object. This function is recursive</span>
+<span class="sd">    object. This function is recursive.</span>
+
+<span class="sd">    The treelib representation of the trees is used</span>
+<span class="sd">    for pretty-printing (in ASCII) of the tree, you</span>
+<span class="sd">    only need to do str() of the returned result</span>
+<span class="sd">    from this function.</span>
+
+<span class="sd">    See `https://treelib.readthedocs.io/`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        name: name of root node</span>
@@ -469,9 +454,11 @@
         <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Date: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;M8[D]&quot;</span><span class="p">)))</span>
-                <span class="n">trees</span> <span class="o">=</span> <span class="n">gruptreedf2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
+                <span class="n">trees</span> <span class="o">=</span> <span class="n">df2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
+                <span class="c1"># Returns list of dicts, one for each root found</span>
+                <span class="c1"># (typically only one)</span>
                 <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
-                    <span class="n">rootname</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">rootname</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">dict2treelib</span><span class="p">(</span><span class="n">rootname</span><span class="p">,</span> <span class="n">tree</span><span class="p">[</span><span class="n">rootname</span><span class="p">]))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

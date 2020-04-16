@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gruptree &mdash; ecl2df 0.5.2.dev33+gb370247 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nnc" href="nnc.html" />
+    <link rel="prev" title="grid" href="grid.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.2.dev33+gb370247
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gruptree</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grupnet-and-welspecs">GRUPNET and WELSPECS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>gruptree</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/gruptree.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gruptree">
+<h1>gruptree<a class="headerlink" href="#gruptree" title="Permalink to this headline">¶</a></h1>
+<p>Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from an Eclipse
+deck and presents the production network either as pretty-printed ASCII or in a
+dataframe-representation.</p>
+<p>The GRUPTREE section of your Eclipse deck defines the production network
+from wells and up to the platform (and possibly also to a field having
+many platforms). In the Eclipse deck it be as simple as this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">START</span>
+  <span class="mi">01</span> <span class="s1">&#39;JAN&#39;</span> <span class="mi">2000</span> <span class="o">/</span>
+
+<span class="n">SCHEDULE</span>
+
+<span class="n">GRUPTREE</span>
+  <span class="s1">&#39;OPEAST&#39;</span> <span class="s1">&#39;OP&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;OPWEST&#39;</span> <span class="s1">&#39;OP&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;INJEAST&#39;</span> <span class="s1">&#39;WI&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;OP&#39;</span> <span class="s1">&#39;FIELD&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;WI&#39;</span> <span class="s1">&#39;FIELD&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;FIELD&#39;</span> <span class="s1">&#39;AREA&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;AREA&#39;</span> <span class="s1">&#39;NORTHSEA&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>which will yield the dataframe</p>
+<p>If you run this from the command line, a pretty printed ASCII graph is also
+available (here also wells from WELSPECS is included):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> ecl2csv gruptree --prettyprint MYDATADECK.DATA
+<span class="go">Date: 2000-01-01</span>
+<span class="go">└── NORTHSEA</span>
+<span class="go">    └── AREA</span>
+<span class="go">        └── FIELD</span>
+<span class="go">            ├── OP</span>
+<span class="go">            │   ├── OPEAST</span>
+<span class="go">            │   │   └── OP2</span>
+<span class="go">            │   └── OPWEST</span>
+<span class="go">            │       └── OP1</span>
+<span class="go">            └── WI</span>
+<span class="go">                └── INJEAST</span>
+<span class="go">                    └── INJ1</span>
+</pre></div>
+</div>
+<p>In your deck, the table will be repeated for every new occurence of the
+GRUPTREE keyword in the Schedule section.</p>
+<div class="section" id="grupnet-and-welspecs">
+<h2>GRUPNET and WELSPECS<a class="headerlink" href="#grupnet-and-welspecs" title="Permalink to this headline">¶</a></h2>
+<p>By default, the module will also pick up information from GRUPNET (typical
+terminal pressure values for the network nodes) and WELSPECS (well
+specifications), so for a full deck, your dataframe will contain more
+information than in the example above.</p>
+<p>If our deck also contains:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GRUPNET</span>
+  <span class="s1">&#39;FIELD&#39;</span> <span class="mi">90</span> <span class="o">/</span>
+  <span class="s1">&#39;OPWEST&#39;</span> <span class="mi">100</span> <span class="o">/</span>
+<span class="o">/</span>
+
+<span class="n">WELSPECS</span>
+  <span class="s1">&#39;OP1&#39;</span>  <span class="s1">&#39;OPWEST&#39;</span>  <span class="mi">41</span> <span class="mi">125</span> <span class="mf">1759.74</span> <span class="s1">&#39;OIL&#39;</span> <span class="mf">0.0</span> <span class="s1">&#39;STD&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="s1">&#39;YES&#39;</span>  <span class="mi">0</span>  <span class="s1">&#39;SEG&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;OP2&#39;</span>  <span class="s1">&#39;OPEAST&#39;</span>  <span class="mi">43</span> <span class="mi">122</span> <span class="mf">1776.01</span> <span class="s1">&#39;OIL&#39;</span> <span class="mf">0.0</span> <span class="s1">&#39;STD&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="s1">&#39;YES&#39;</span>  <span class="mi">0</span>  <span class="s1">&#39;SEG&#39;</span> <span class="o">/</span>
+  <span class="s1">&#39;INJ1&#39;</span> <span class="s1">&#39;INJEAST&#39;</span> <span class="mi">33</span> <span class="mi">115</span> <span class="mf">1960.21</span> <span class="s1">&#39;OIL&#39;</span> <span class="mf">0.0</span> <span class="s1">&#39;STD&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="s1">&#39;YES&#39;</span>  <span class="mi">0</span>  <span class="s1">&#39;SEG&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>the dataframe will get additional rows and columns:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Dataframe from GRUPTREE, GRUPNET and WELSPECS</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>DATE</p></th>
+<th class="head"><p>CHILD</p></th>
+<th class="head"><p>PARENT</p></th>
+<th class="head"><p>KEYWORD</p></th>
+<th class="head"><p>TERMINAL_PRESSURE</p></th>
+<th class="head"><p>VFP_TABLE</p></th>
+<th class="head"><p>ALQ</p></th>
+<th class="head"><p>SUB_SEA_MANIFOLD</p></th>
+<th class="head"><p>LIFT_GAS_FLOW_THROUGH</p></th>
+<th class="head"><p>ALQ_SURFACE_EQV</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>OPEAST</p></td>
+<td><p>OP</p></td>
+<td><p>GRUPTREE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>OPWEST</p></td>
+<td><p>OP</p></td>
+<td><p>GRUPTREE</p></td>
+<td><p>100.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+<td><p>NONE</p></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>INJEAST</p></td>
+<td><p>WI</p></td>
+<td><p>GRUPTREE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>OP</p></td>
+<td><p>FIELD</p></td>
+<td><p>GRUPTREE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>WI</p></td>
+<td><p>FIELD</p></td>
+<td><p>GRUPTREE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>FIELD</p></td>
+<td><p>AREA</p></td>
+<td><p>GRUPTREE</p></td>
+<td><p>90.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+<td><p>NONE</p></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>AREA</p></td>
+<td><p>NORTHSEA</p></td>
+<td><p>GRUPTREE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>OP1</p></td>
+<td><p>OPWEST</p></td>
+<td><p>WELSPECS</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>OP2</p></td>
+<td><p>OPEAST</p></td>
+<td><p>WELSPECS</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>INJ1</p></td>
+<td><p>INJEAST</p></td>
+<td><p>WELSPECS</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nnc.html" class="btn btn-neutral float-right" title="nnc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="grid.html" class="btn btn-neutral float-left" title="grid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev32+g2d23627 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev33+gb370247 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev32+g2d23627
+                0.5.2.dev33+gb370247
               </div>
             
           
@@ -1366,6 +1366,10 @@ dateinheaders False.</p>
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deck</span></em>, <em class="sig-param"><span class="n">startdate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">welspecs</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all group information from a deck
 and present as a Pandas Dataframe of all edges.</p>
+<p>Numerical properties for nodes given in GRUPNET will
+be added as extra columns.</p>
+<p>From WELSPECS, well names are extracted and added
+as nodes with an edge to its group.</p>
 <p>The gruptree is a time dependent property,
 with accumulative effects from new occurences of
 GRUPTREE or WELSPECS.</p>
@@ -1378,11 +1382,35 @@ with the new date.</p>
 <dd class="field-odd"><p><strong>deck</strong> – opm.io Deck object or EclFiles</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>pd.DataFrame - with one row pr edge. Empty dataframe</dt><dd><p>if no information is found in deck.</p>
+<dd class="field-even"><p>pd.DataFrame with one row pr edge. Empty dataframe if no
+information is found in deck.</p>
 </dd>
 </dl>
-</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.gruptree.df2dict">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">df2dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#df2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.df2dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert list of edges in a dataframe into a
+nested dictionary (tree).</p>
+<p>The dataframe cannot have multiple DATEs, filter to the date you
+want prior to calling this function.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP_1&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_2&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_3&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_4&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_5&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;WI_1&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">:</span> <span class="p">{}}}</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>Leaf nodes have empty dictionaries as their value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of nested dictionary, as we in general
+may have more than one root.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1391,7 +1419,12 @@ with the new date.</p>
 <dt id="ecl2df.gruptree.dict2treelib">
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">dict2treelib</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">nested_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#dict2treelib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.dict2treelib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a nested dictonary to a treelib Tree
-object. This function is recursive</p>
+object. This function is recursive.</p>
+<p>The treelib representation of the trees is used
+for pretty-printing (in ASCII) of the tree, you
+only need to do str() of the returned result
+from this function.</p>
+<p>See <cite>https://treelib.readthedocs.io/</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1424,48 +1457,9 @@ to fill with arguments</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="ecl2df.gruptree.gruptree2dict">
-<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree2dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deck</span></em>, <em class="sig-param"><span class="n">date</span><span class="o">=</span><span class="default_value">'END'</span></em>, <em class="sig-param"><span class="n">welspecs</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree2dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the GRUPTREE information as a tree structure
-in a dict.</p>
-<p>Example result:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;WI&#39;</span><span class="p">,</span> <span class="s1">&#39;OP&#39;</span><span class="p">],</span>
-  <span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;OP_2&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_3&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_4&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_5&#39;</span><span class="p">,</span> <span class="s1">&#39;OP_1&#39;</span><span class="p">],</span>
-  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;WI_1&#39;</span><span class="p">,</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">,</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Returns an empty dict if there is no GRUPTREE in the deck.</p>
-<p>This function might get deprecated in favour of the nested dictionary
-version.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt id="ecl2df.gruptree.gruptree_main">
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptree_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="ecl2df.gruptree.gruptreedf2dict">
-<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">gruptreedf2dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptreedf2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.gruptreedf2dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert list of edges into a
-nested dictionary (tree),</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP_1&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_2&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_3&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_4&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_5&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;WI_1&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">:</span> <span class="p">{}}}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Leaf nodes have empty dictionaries.</p>
-<p>Returns a list of nested dictionary, as we sometimes
-have more than one root</p>
 </dd></dl>
 
 <dl class="py function">

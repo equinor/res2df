@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev31+g8dab290 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev32+g2d23627 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev31+g8dab290
+                0.5.2.dev32+g2d23627
               </div>
             
           
@@ -2576,7 +2576,7 @@ the SWOF keyword).</p></li>
 <p>Code taken from fmu.ensemble.ScratchRealization</p>
 <dl class="py function">
 <dt id="ecl2df.summary.df">
-<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em>, <em class="sig-param"><span class="n">time_index</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">column_keys</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">start_date</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end_date</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_restart</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">paramfile</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em>, <em class="sig-param"><span class="n">time_index</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">column_keys</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">start_date</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end_date</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_restart</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">paramfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">datetime</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
 <p>This is a thin wrapper for EclSum.pandas_frame, by adding
 support for string mnenomics for the time index.</p>
@@ -2603,6 +2603,11 @@ files should be traversed</p></li>
 and merged with the summary data.</p></li>
 <li><p><strong>paramsfile</strong> (<em>str</em>) – Explicit path to parameters file if autodiscovery is
 not wanted.</p></li>
+<li><p><strong>datetime</strong> (<em>bool</em>) – If True, the time index of the returned DataFrame
+is always of datetime type. If not, it will be datetime
+if raw dates are requested (which are at second accuracy),
+or it will be strings in case of yearly, monthly or daily
+time frequency.</p></li>
 </ul>
 </dd>
 </dl>

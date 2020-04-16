@@ -32,7 +32,7 @@ def test_summary2df():
     assert "FOPT" in sumdf.columns
 
     sumdf = summary.df(eclfiles, datetime=True)
-    # (datetime=True is superfluous when raw timereports are requested)
+    # (datetime=True is superfluous when raw time reports are requested)
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 

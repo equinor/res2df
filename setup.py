@@ -11,17 +11,18 @@ except ImportError:
     cmdclass = {}
 
 
-def parse_requirements(filename):
-    """Load requirements from a pip requirements file"""
-    try:
-        lineiter = (line.strip() for line in open(filename))
-        return [line for line in lineiter if line and not line.startswith("#")]
-    except IOError:
-        return []
-
-
-REQUIREMENTS = parse_requirements("requirements.txt")
-TEST_REQUIREMENTS = parse_requirements("requirements_dev.txt")
+REQUIREMENTS = [
+    "libecl",
+    "pandas",
+    "pyyaml>=5.1",
+    "treelib",
+]
+TEST_REQUIREMENTS = [
+    "pytest",
+    "sphinx",
+    "sphinx-argparse",
+    "sphinx_rtd_theme",
+]
 SETUP_REQUIREMENTS = ["pytest-runner", "setuptools >=28", "setuptools_scm"]
 
 setup(
@@ -55,6 +56,7 @@ setup(
             "wcon2csv=ecl2df.wcon:main",
         ]
     },
+
     install_requires=REQUIREMENTS,
     tests_require=TEST_REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,

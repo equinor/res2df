@@ -92,7 +92,7 @@ def df(deck, startdate=None, welspecs=True):
                         "DATE": date,
                         "CHILD": edgename[0],
                         "PARENT": edgename[1],
-                        "TYPE": value,
+                        "KEYWORD": value,
                     }
                     if edgename[0] in grupnet_df.index:
                         rec_dict.update(grupnet_df.loc[edgename[0]])
@@ -151,7 +151,7 @@ def df(deck, startdate=None, welspecs=True):
                 "DATE": date,
                 "CHILD": edgename[0],
                 "PARENT": edgename[1],
-                "TYPE": value,
+                "KEYWORD": value,
             }
             if edgename[0] in grupnet_df.index:
                 rec_dict.update(grupnet_df.loc[edgename[0]])

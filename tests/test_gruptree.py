@@ -25,13 +25,13 @@ def test_gruptree2df():
     assert len(grupdf["DATE"].unique()) == 5
     assert len(grupdf["CHILD"].unique()) == 10
     assert len(grupdf["PARENT"].unique()) == 3
-    assert set(grupdf["TYPE"].unique()) == set(["GRUPTREE", "WELSPECS"])
+    assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
     grupdfnowells = gruptree.df(eclfiles.get_ecldeck(), welspecs=False)
 
-    assert len(grupdfnowells["TYPE"].unique()) == 1
+    assert len(grupdfnowells["KEYWORD"].unique()) == 1
     assert grupdf["PARENT"].unique()[0] == "FIELD"
-    assert grupdf["TYPE"].unique()[0] == "GRUPTREE"
+    assert grupdf["KEYWORD"].unique()[0] == "GRUPTREE"
 
 
 def test_str2df():
@@ -61,11 +61,21 @@ WELSPECS
     assert len(withstart) == 5
 
 
-def test_grupnetdf():
+def test_grupnet_rst_docs(tmpdir):
+    """Provide the input and output for the examples in the RST documentation"""
+    tmpdir.chdir()
     schstr = """
+START
+ 01 'JAN' 2000 /
+
+SCHEDULE
+
 GRUPTREE
+ 'OPEAST' 'OP' /
  'OPWEST' 'OP' /
+ 'INJEAST' 'WI' /
  'OP' 'FIELD' /
+ 'WI' 'FIELD' /
  'FIELD' 'AREA' /
  'AREA' 'NORTHSEA' /
 /
@@ -78,6 +88,33 @@ GRUPNET
 """
     deck = EclFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
+    grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
+    grupdf.to_csv("gruptreenet.csv", index=False)
+    print(grupdf)
+    grup_dict = gruptree.gruptreedf2dict(grupdf)
+    print(grup_dict)
+    print(gruptree.dict2treelib("", grup_dict[0]))
+
+
+def test_grupnetdf():
+    schstr = """
+GRUPTREE
+ 'OPWEST' 'OP' /
+ 'OP' 'FIELD' /
+ 'WI' 'FIELD' /
+ 'FIELD' 'AREA' /
+ 'AREA' 'NORTHSEA' /
+/
+
+GRUPNET
+  'FIELD' 90 /
+  'OPWEST' 100 /
+/
+
+"""
+    deck = EclFiles.str2deck(schstr)
+    grupdf = gruptree.df(deck, startdate="2000-01-01")
+    print(grupdf)
     assert "TERMINAL_PRESSURE" in grupdf
     assert 90 in grupdf["TERMINAL_PRESSURE"].values
     assert 100 in grupdf["TERMINAL_PRESSURE"].values

@@ -13,7 +13,6 @@ import logging
 import datetime
 import argparse
 import collections
-import dateutil
 import pandas as pd
 
 from .eclfiles import EclFiles

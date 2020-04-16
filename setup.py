@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from setuptools import setup
 
 try:
@@ -11,6 +12,7 @@ except ImportError:
     cmdclass = {}
 
 
+SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
     "libecl",
     "pandas",
@@ -18,12 +20,14 @@ REQUIREMENTS = [
     "treelib",
 ]
 TEST_REQUIREMENTS = [
+    "black; python_version >= '3'",
+    "networkx",
     "pytest",
     "sphinx",
     "sphinx-argparse",
     "sphinx_rtd_theme",
 ]
-SETUP_REQUIREMENTS = ["pytest-runner", "setuptools >=28", "setuptools_scm"]
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS}
 
 setup(
     name="ecl2df",
@@ -56,8 +60,8 @@ setup(
             "wcon2csv=ecl2df.wcon:main",
         ]
     },
-
+    test_suite="tests",
     install_requires=REQUIREMENTS,
-    tests_require=TEST_REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,
+    extras_require=EXTRAS_REQUIRE,
 )

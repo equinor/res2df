@@ -1,0 +1,111 @@
+name: ecl2df
+
+on:
+  push: 
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  release:
+    types: 
+      - published
+  schedule:
+    # Run CI every night and check that tests are working with latest dependencies
+    - cron:  '0 0 * * *'
+
+jobs:
+  
+  ecl2df:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: ['2.7', '3.6', '3.7']
+    env:
+      PYTHONPATH: ${{ github.workspace }}/install/lib/python${{ matrix.python-version }}/site-packages:${{ github.workspace }}/install/lib/python${{ matrix.python-version }}/dist-packages
+
+    steps:
+      - name: Checkout commit locally
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }} 
+
+      - name: Check code style
+        if: matrix.python-version != '2.7'
+        run: |
+          pip install black
+          black --check ecl2df/*py tests/test_*py setup.py docs/conf.py
+
+      - name: Compile and install opm-common
+        run: |
+          sudo apt-get install libboost-all-dev liblapack-dev
+          pushd ..
+          git clone --recursive https://github.com/OPM/opm-common.git
+          mkdir opm-common/build
+          pushd opm-common/build
+          cmake .. -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install \
+                   -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
+                   -DBUILD_TESTING=OFF \
+                   -DBUILD_SHARED_LIBS=ON \
+                   -DOPM_ENABLE_PYTHON=ON \
+                   -DOPM_INSTALL_PYTHON=ON
+          make -j2 install
+          popd
+          popd
+
+      - name: Install ecl2df with dependencies
+        run: |
+          pip install --upgrade pip
+          pip install .
+    
+      - name: Install test dependencies
+        run: pip install .[tests]
+    
+      - name: List all installed packages
+        run: pip freeze
+    
+      - name: Run tests
+        run: |
+          python -c "import ecl2df"
+          pytest tests/
+          
+      - name: Build documentation
+        run: |
+          sphinx-apidoc -H "API for ecl2df" -o docs ecl2df
+          python setup.py build_sphinx
+    
+      - name: Update GitHub pages
+        if: github.ref == 'refs/heads/master' && matrix.python-version == '3.6'
+        run: |
+            cp -R ./build/sphinx/html ../html
+    
+            git config --local user.email "ecl2df-github-action"
+            git config --local user.name "ecl2df-github-action"
+            git fetch origin gh-pages
+            git checkout --track origin/gh-pages
+            git clean -f -f -d -x
+            git rm -r *
+    
+            cp -R ../html/* .
+    
+            git add .
+    
+            if git diff-index --quiet HEAD; then
+              echo "No changes in documentation. Skip documentation deploy."
+            else
+              git commit -m "Update Github Pages"
+              git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+            fi
+    
+      - name: Build python package and publish to pypi
+        if: github.event_name == 'release' && matrix.python-version == '3.6'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.ecl2df_pypi_token }}
+        run: |
+          python -m pip install --upgrade setuptools wheel twine
+          python setup.py sdist bdist_wheel
+          twine upload dist/*

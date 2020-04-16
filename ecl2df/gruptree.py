@@ -13,7 +13,6 @@ import logging
 import datetime
 import argparse
 import collections
-import dateutil
 import pandas as pd
 
 from .eclfiles import EclFiles
@@ -33,6 +32,12 @@ def df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.
 
+    Numerical properties for nodes given in GRUPNET will
+    be added as extra columns.
+
+    From WELSPECS, well names are extracted and added
+    as nodes with an edge to its group.
+
     The gruptree is a time dependent property,
     with accumulative effects from new occurences of
     GRUPTREE or WELSPECS.
@@ -45,9 +50,10 @@ def df(deck, startdate=None, welspecs=True):
 
     Args:
         deck: opm.io Deck object or EclFiles
+
     Returns:
-        pd.DataFrame - with one row pr edge. Empty dataframe
-            if no information is found in deck.
+        pd.DataFrame with one row pr edge. Empty dataframe if no
+        information is found in deck.
     """
 
     if startdate is not None:
@@ -92,7 +98,7 @@ def df(deck, startdate=None, welspecs=True):
                         "DATE": date,
                         "CHILD": edgename[0],
                         "PARENT": edgename[1],
-                        "TYPE": value,
+                        "KEYWORD": value,
                     }
                     if edgename[0] in grupnet_df.index:
                         rec_dict.update(grupnet_df.loc[edgename[0]])
@@ -151,7 +157,7 @@ def df(deck, startdate=None, welspecs=True):
                 "DATE": date,
                 "CHILD": edgename[0],
                 "PARENT": edgename[1],
-                "TYPE": value,
+                "KEYWORD": value,
             }
             if edgename[0] in grupnet_df.index:
                 rec_dict.update(grupnet_df.loc[edgename[0]])
@@ -163,63 +169,35 @@ def df(deck, startdate=None, welspecs=True):
     return dframe
 
 
-def gruptree2dict(deck, date="END", welspecs=True):
-    """Extract the GRUPTREE information as a tree structure
-    in a dict.
+def df2dict(dframe):
+    """Convert list of edges in a dataframe into a
+    nested dictionary (tree).
 
-    Example result::
-
-      {
-        'FIELD': ['WI', 'OP'],
-        'OP': ['OP_2', 'OP_3', 'OP_4', 'OP_5', 'OP_1'],
-        'WI': ['WI_1', 'WI_2', 'WI_3']
-      }
-
-    Returns an empty dict if there is no GRUPTREE in the deck.
-
-    This function might get deprecated in favour of the nested dictionary
-    version.
-    """
-
-    dframe = gruptree2df(deck, welspecs).set_index("DATE")
-    if isinstance(date, str):
-        if date == "START":
-            date = dframe.index[0]
-        if date == "END":
-            date = dframe.index[-1]
-        else:
-            try:
-                dateutil.parser.isoparse(date).date()
-            except ValueError:
-                raise ValueError("date " + str(date) + " not understood")
-
-    if date not in dframe.index:
-        return {}
-    return gruptreedf2dict(dframe.loc[date])
-
-
-def gruptreedf2dict(dframe):
-    """Convert list of edges into a
-    nested dictionary (tree),
+    The dataframe cannot have multiple DATEs, filter to the date you
+    want prior to calling this function.
 
     Example::
 
-      {
+      [{
         'FIELD': {'OP': {'OP_1': {},
         'OP_2': {},
         'OP_3': {},
         'OP_4': {},
         'OP_5': {}},
         'WI': {'WI_1': {}, 'WI_2': {}, 'WI_3': {}}}
-      }
+      }]
 
-    Leaf nodes have empty dictionaries.
+    Leaf nodes have empty dictionaries as their value.
 
-    Returns a list of nested dictionary, as we sometimes
-    have more than one root
+    Returns:
+        list of nested dictionary, as we in general
+        may have more than one root.
     """
     if dframe.empty:
         return {}
+    if "DATE" in dframe:
+        if len(dframe["DATE"].unique()) > 1:
+            raise ValueError("Can only handle one date at a time")
     subtrees = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
@@ -237,7 +215,14 @@ def gruptreedf2dict(dframe):
 
 def dict2treelib(name, nested_dict):
     """Convert a nested dictonary to a treelib Tree
-    object. This function is recursive
+    object. This function is recursive.
+
+    The treelib representation of the trees is used
+    for pretty-printing (in ASCII) of the tree, you
+    only need to do str() of the returned result
+    from this function.
+
+    See `https://treelib.readthedocs.io/`
 
     Args:
         name: name of root node
@@ -310,9 +295,11 @@ def gruptree_main(args):
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
                 print("Date: " + str(date.astype("M8[D]")))
-                trees = gruptreedf2dict(dframe[dframe["DATE"] == date])
+                trees = df2dict(dframe[dframe["DATE"] == date])
+                # Returns list of dicts, one for each root found
+                # (typically only one)
                 for tree in trees:
-                    rootname = tree.keys()[0]
+                    rootname = list(tree.keys())[0]
                     print(dict2treelib(rootname, tree[rootname]))
                 print("")
         else:

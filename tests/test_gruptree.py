@@ -25,13 +25,13 @@ def test_gruptree2df():
     assert len(grupdf["DATE"].unique()) == 5
     assert len(grupdf["CHILD"].unique()) == 10
     assert len(grupdf["PARENT"].unique()) == 3
-    assert set(grupdf["TYPE"].unique()) == set(["GRUPTREE", "WELSPECS"])
+    assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
     grupdfnowells = gruptree.df(eclfiles.get_ecldeck(), welspecs=False)
 
-    assert len(grupdfnowells["TYPE"].unique()) == 1
+    assert len(grupdfnowells["KEYWORD"].unique()) == 1
     assert grupdf["PARENT"].unique()[0] == "FIELD"
-    assert grupdf["TYPE"].unique()[0] == "GRUPTREE"
+    assert grupdf["KEYWORD"].unique()[0] == "GRUPTREE"
 
 
 def test_str2df():
@@ -61,11 +61,52 @@ WELSPECS
     assert len(withstart) == 5
 
 
+def test_grupnet_rst_docs(tmpdir):
+    """Provide the input and output for the examples in the RST documentation"""
+    tmpdir.chdir()
+    schstr = """
+START
+ 01 'JAN' 2000 /
+
+SCHEDULE
+
+GRUPTREE
+ 'OPEAST' 'OP' /
+ 'OPWEST' 'OP' /
+ 'INJEAST' 'WI' /
+ 'OP' 'FIELD' /
+ 'WI' 'FIELD' /
+ 'FIELD' 'AREA' /
+ 'AREA' 'NORTHSEA' /
+/
+
+GRUPNET
+  'FIELD' 90 /
+  'OPWEST' 100 /
+/
+
+WELSPECS
+ 'OP1'  'OPWEST'  41 125 1759.74 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+ 'OP2'  'OPEAST'  43 122 1776.01 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+ 'INJ1' 'INJEAST' 33 115 1960.21 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+/
+
+"""
+    deck = EclFiles.str2deck(schstr)
+    grupdf = gruptree.df(deck)
+    grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
+    grupdf.to_csv("gruptreenet.csv", index=False)
+    grup_dict = gruptree.df2dict(grupdf)
+    print("Copy and paste into RST files:")
+    print(str(gruptree.dict2treelib("", grup_dict[0])))
+
+
 def test_grupnetdf():
     schstr = """
 GRUPTREE
  'OPWEST' 'OP' /
  'OP' 'FIELD' /
+ 'WI' 'FIELD' /
  'FIELD' 'AREA' /
  'AREA' 'NORTHSEA' /
 /
@@ -77,7 +118,8 @@ GRUPNET
 
 """
     deck = EclFiles.str2deck(schstr)
-    grupdf = gruptree.df(deck)
+    grupdf = gruptree.df(deck, startdate="2000-01-01")
+    print(grupdf)
     assert "TERMINAL_PRESSURE" in grupdf
     assert 90 in grupdf["TERMINAL_PRESSURE"].values
     assert 100 in grupdf["TERMINAL_PRESSURE"].values
@@ -89,7 +131,7 @@ def test_emptytree():
     deck = EclFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.empty
-    gruptreedict = gruptree.gruptreedf2dict(grupdf)
+    gruptreedict = gruptree.df2dict(grupdf)
     assert not gruptreedict
     treelibtree = gruptree.dict2treelib("", gruptreedict)
     treestring = str(treelibtree)
@@ -122,12 +164,18 @@ WELSPECS
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-gruptree.csv")
-    sys.argv = ["gruptree2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    gruptree.main()
+    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)]
+    ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+def test_prettyprint():
+    """Test pretty printing via command line interface"""
+    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
+    ecl2csv.main()
 
 
 def test_main_subparser(tmpdir):

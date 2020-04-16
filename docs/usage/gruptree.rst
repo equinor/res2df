@@ -48,6 +48,7 @@ available (here also wells from WELSPECS is included):
                 └── WI
                     └── INJEAST
                         └── INJ1
+
 In your deck, the table will be repeated for every new occurence of the
 GRUPTREE keyword in the Schedule section.
 

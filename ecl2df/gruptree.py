@@ -195,31 +195,38 @@ def gruptree2dict(deck, date="END", welspecs=True):
 
     if date not in dframe.index:
         return {}
-    return gruptreedf2dict(dframe.loc[date])
+    return df2dict(dframe.loc[date])
 
 
-def gruptreedf2dict(dframe):
-    """Convert list of edges into a
-    nested dictionary (tree),
+def df2dict(dframe):
+    """Convert list of edges in a dataframe into a
+    nested dictionary (tree).
+
+    The dataframe cannot have multiple DATEs, filter to the date you
+    want prior to calling this function.
 
     Example::
 
-      {
+      [{
         'FIELD': {'OP': {'OP_1': {},
         'OP_2': {},
         'OP_3': {},
         'OP_4': {},
         'OP_5': {}},
         'WI': {'WI_1': {}, 'WI_2': {}, 'WI_3': {}}}
-      }
+      }]
 
-    Leaf nodes have empty dictionaries.
+    Leaf nodes have empty dictionaries as their value.
 
-    Returns a list of nested dictionary, as we sometimes
-    have more than one root
+    Returns:
+        list of nested dictionary, as we in general
+            may have more than one root.
     """
     if dframe.empty:
         return {}
+    if "DATE" in dframe:
+        if len(dframe["DATE"].unique()) > 1:
+            raise ValueError("Can only handle one date at a time")
     subtrees = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
@@ -310,9 +317,11 @@ def gruptree_main(args):
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
                 print("Date: " + str(date.astype("M8[D]")))
-                trees = gruptreedf2dict(dframe[dframe["DATE"] == date])
+                trees = df2dict(dframe[dframe["DATE"] == date])
+                # Returns list of dicts, one for each root found
+                # (typically only one)
                 for tree in trees:
-                    rootname = tree.keys()[0]
+                    rootname = list(tree.keys())[0]
                     print(dict2treelib(rootname, tree[rootname]))
                 print("")
         else:

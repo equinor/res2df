@@ -85,13 +85,19 @@ GRUPNET
   'OPWEST' 100 /
 /
 
+WELSPECS
+ 'OP1'  'OPWEST'  41 125 1759.74 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+ 'OP2'  'OPEAST'  43 122 1776.01 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+ 'INJ1' 'INJEAST' 33 115 1960.21 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /
+/
+
 """
     deck = EclFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
     grupdf.to_csv("gruptreenet.csv", index=False)
     print(grupdf)
-    grup_dict = gruptree.gruptreedf2dict(grupdf)
+    grup_dict = gruptree.df2dict(grupdf)
     print(grup_dict)
     print(gruptree.dict2treelib("", grup_dict[0]))
 
@@ -126,7 +132,7 @@ def test_emptytree():
     deck = EclFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.empty
-    gruptreedict = gruptree.gruptreedf2dict(grupdf)
+    gruptreedict = gruptree.df2dict(grupdf)
     assert not gruptreedict
     treelibtree = gruptree.dict2treelib("", gruptreedict)
     treestring = str(treelibtree)
@@ -159,12 +165,18 @@ WELSPECS
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-gruptree.csv")
-    sys.argv = ["gruptree2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    gruptree.main()
+    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)]
+    ecl2csv.main()
 
     assert os.path.exists(str(tmpcsvfile))
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+def test_prettyprint():
+    """Test pretty printing via command line interface"""
+    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
+    ecl2csv.main()
 
 
 def test_main_subparser(tmpdir):

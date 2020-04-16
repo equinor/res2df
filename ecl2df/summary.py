@@ -186,6 +186,7 @@ def df(
     include_restart=True,
     params=False,
     paramfile=None,
+    datetime=False,
 ):
     """
     Extract data from UNSMRY as Pandas dataframes.
@@ -214,6 +215,11 @@ def df(
             and merged with the summary data.
         paramsfile (str): Explicit path to parameters file if autodiscovery is
             not wanted.
+        datetime (bool): If True, the time index of the returned DataFrame
+            is always of datetime type. If not, it will be datetime
+            if raw dates are requested (which are at second accuracy),
+            or it will be strings in case of yearly, monthly or daily
+            time frequency.
 
     Returns empty dataframe if there is no summary file, or if the
     column_keys are not existing.
@@ -273,6 +279,9 @@ def df(
             # to dump to csv, it should not cause side-effects that floats end up
             # as strings in the dataframe.
             dframe[key] = str(param_dict[key])
+    if datetime:
+        if dframe.index.dtype == 'object':
+            dframe.index = pd.to_datetime(dframe.index)
     return dframe
 
 

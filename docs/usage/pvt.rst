@@ -75,11 +75,7 @@ Eclipse from your modified data by issuing
 
 .. code-block:: python
 
-   inc_string = pvt.df2ecl(dframe)
-
-   # Write inc_string to a file
-   with open("pvt.inc", "w") as file_handle:
-      file_handle.write(inc_string)
+   pvt.df2ecl(dframe, filename="pvt.inc")
 
 When injecting this produced ``pvt.inc`` into any new Eclipse deck, ensure you
 check which keywords have been written out, compared to what you gave in to

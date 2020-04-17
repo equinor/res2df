@@ -392,7 +392,14 @@ def fill_reverse_parser(parser, modulename, defaultoutputfile):
     return parser
 
 
-def df2ecl(dataframe, keywords=None, comments=None, supported=None, consecutive=None):
+def df2ecl(
+    dataframe,
+    keywords=None,
+    comments=None,
+    supported=None,
+    consecutive=None,
+    filename=None,
+):
     """Generate Eclipse include strings from dataframes in ecl2df format
 
     Args:
@@ -406,6 +413,11 @@ def df2ecl(dataframe, keywords=None, comments=None, supported=None, consecutive=
             supported in this invocation of this function.
         consecutive (str): Column name for which we require the
             numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.
+        filename (str): If supplied, the generated text will also be dumped
+            to file.
+
+    Returns:
+        string that can be used as an include file for Eclipse.
     """
     import inspect
 
@@ -481,6 +493,14 @@ def df2ecl(dataframe, keywords=None, comments=None, supported=None, consecutive=
             string += function(dataframe, comments[keyword])
         else:
             string += function(dataframe)
+
+    if filename is not None:
+        # Make directory if not present:
+        filenamedir = os.path.dirname(filename)
+        if filenamedir and not os.path.exists(filenamedir):
+            os.makedirs(filenamedir)
+        with open(filename, "w") as file_handle:
+            file_handle.write(string)
     return string
 
 

@@ -306,7 +306,7 @@ def pvt_reverse_main(args):
 # Eclipse include files:
 
 
-def df2ecl(pvt_df, keywords=None, comments=None):
+def df2ecl(pvt_df, keywords=None, comments=None, filename=None):
     """Generate Eclipse include strings from PVT dataframes
 
     Args:
@@ -316,18 +316,28 @@ def df2ecl(pvt_df, keywords=None, comments=None):
         comments (dict): Dictionary indexed by keyword with comments to be
             included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.
+        filename (str): If supplied, the generated text will also be dumped
+            to file.
     """
     return common.df2ecl(
-        pvt_df, keywords, comments, supported=SUPPORTED_KEYWORDS, consecutive="PVTNUM"
+        pvt_df,
+        keywords,
+        comments,
+        supported=SUPPORTED_KEYWORDS,
+        consecutive="PVTNUM",
+        filename=filename,
     )
 
 
-def df2ecl_rock(dframe, comment=None):
+def df2ecl_rock(dframe, comment=None, filename=None):
     """Print ROCK keyword with data
 
     Args:
         dframe (pd.DataFrame): Containing ROCK data
         comment (str): Text that will be included as a comment
+         filename (str): If supplied, the generated text will also be dumped
+            to file.
+
     """
     string = "ROCK\n"
     string += common.comment_formatter(comment)

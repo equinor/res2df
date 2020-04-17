@@ -38,6 +38,19 @@ def test_equil2df():
     pd.testing.assert_frame_equal(equildf, df_from_inc, check_dtype=False)
 
 
+def test_df2ecl(tmpdir):
+    """Test that we can write include files to disk"""
+    tmpdir.chdir()
+    eclfiles = EclFiles(DATAFILE)
+    equildf = equil.df(eclfiles)
+    equil.df2ecl(equildf, filename="equil.inc")
+    assert os.path.exists("equil.inc")
+
+    # Test automatic directory creation:
+    equil.df2ecl(equildf, filename="eclipse/include/equil.inc")
+    assert os.path.exists("eclipse/include/equil.inc")
+
+
 def test_decks():
     """Test some string decks"""
     deckstr = """

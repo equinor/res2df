@@ -376,11 +376,12 @@ def test_df2ecl_pvto():
     )
 
 
-def test_df2ecl():
+def test_df2ecl(tmpdir):
     """Test generation of PVT include files from dataframes
 
     The validity of produced dataframes is tested in other test functions
     herein, here we mainly test for the API and error handling"""
+    tmpdir.chdir()
     with pytest.raises(ValueError):
         pvt.df2ecl(pd.DataFrame())
 
@@ -396,7 +397,8 @@ def test_df2ecl():
     rock_inc = pvt.df2ecl(rock_df, comments=dict(DENSITY="foo"))
     assert "foo" not in rock_inc
 
-    rock_inc = pvt.df2ecl(rock_df, comments=dict(ROCK="foo\nbar"))
+    rock_inc = pvt.df2ecl(rock_df, comments=dict(ROCK="foo\nbar"), filename="foo.inc")
+    assert os.path.exists("foo.inc")
     assert "foo" in rock_inc
     assert "bar" in rock_inc
     # Multiline comments are tricky, is the output valid?

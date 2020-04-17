@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev33+gb370247 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev34+g614249c documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev33+gb370247
+                0.5.2.dev34+g614249c
               </div>
             
           
@@ -1268,6 +1268,8 @@ when merging with other dataframes with cell-data.</p>
 <dt id="ecl2df.grid.init2df">
 <code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">init2df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em>, <em class="sig-param"><span class="n">vectors</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#init2df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.init2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract information from INIT file with cell data</p>
+<p>Normally, you would use the df() function which will
+call this function on your behalf.</p>
 <p>Order is significant, as index is used for merging</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1287,16 +1289,11 @@ glob-style wildcards supported.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="ecl2df.grid.merge_gridframes">
-<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">merge_gridframes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grid_df</span></em>, <em class="sig-param"><span class="n">init_df</span></em>, <em class="sig-param"><span class="n">rst_df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#merge_gridframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.merge_gridframes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge dataframes with grid data</p>
-</dd></dl>
-
-<dl class="py function">
 <dt id="ecl2df.grid.merge_initvectors">
 <code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">merge_initvectors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em>, <em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">initvectors</span></em>, <em class="sig-param"><span class="n">ijknames</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#merge_initvectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.merge_initvectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge in INIT vectors to a dataframe by I, J, K.</p>
-<p>Utility function for other modules to use.</p>
+<p>Utility function for other modules to use. Normally it is sufficient
+for API users to only use the df() function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

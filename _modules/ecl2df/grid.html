@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.grid &mdash; ecl2df 0.5.2.dev33+gb370247 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.5.2.dev34+g614249c documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev33+gb370247
+                0.5.2.dev34+g614249c
               </div>
             
           
@@ -445,7 +445,8 @@
 <div class="viewcode-block" id="merge_initvectors"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.merge_initvectors">[docs]</a><span class="k">def</span> <span class="nf">merge_initvectors</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">initvectors</span><span class="p">,</span> <span class="n">ijknames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Merge in INIT vectors to a dataframe by I, J, K.</span>
 
-<span class="sd">    Utility function for other modules to use.</span>
+<span class="sd">    Utility function for other modules to use. Normally it is sufficient</span>
+<span class="sd">    for API users to only use the df() function.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles (EclFiles): Object representing the Eclipse output files</span>
@@ -481,6 +482,9 @@
 
 <div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
+
+<span class="sd">    Normally, you would use the df() function which will</span>
+<span class="sd">    call this function on your behalf.</span>
 
 <span class="sd">    Order is significant, as index is used for merging</span>
 
@@ -519,6 +523,13 @@
                 <span class="p">]</span>
             <span class="p">),</span>
         <span class="p">)</span>
+        <span class="c1"># libecl emits a number around -1.0000000200408773e+20 which</span>
+        <span class="c1"># should be considered Not-a-number</span>
+        <span class="n">init_df</span> <span class="o">=</span> <span class="n">init_df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">init_df</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e20</span> <span class="o">+</span> <span class="mf">1e13</span><span class="p">)</span>  <span class="c1"># some trial and error</span>
+
+        <span class="c1"># Remove columns that are all NaN:</span>
+        <span class="n">init_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>  <span class="c1"># empty</span>
 
@@ -575,16 +586,10 @@
             <span class="n">dateinheaders</span><span class="o">=</span><span class="n">dateinheaders</span><span class="p">,</span>
             <span class="n">stackdates</span><span class="o">=</span><span class="n">stackdates</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">merge_gridframes</span><span class="p">(</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">)</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dropconstants</span><span class="p">:</span>
         <span class="n">grid_df</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">drop_constant_columns</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">grid_df</span></div>
-
-
-<div class="viewcode-block" id="merge_gridframes"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.merge_gridframes">[docs]</a><span class="k">def</span> <span class="nf">merge_gridframes</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Merge dataframes with grid data&quot;&quot;&quot;</span>
-    <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">init_df</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">merged</span></div>
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.pvt &mdash; ecl2df 0.5.2.dev35+gbade064 documentation</title>
+  <title>ecl2df.pvt &mdash; ecl2df 0.5.2.dev36+gc5aeeb6 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev35+gbade064
+                0.5.2.dev36+gc5aeeb6
               </div>
             
           
@@ -465,7 +465,7 @@
 <span class="c1"># Eclipse include files:</span>
 
 
-<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pvt.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pvt.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from PVT dataframes</span>
 
 <span class="sd">    Args:</span>
@@ -475,18 +475,28 @@
 <span class="sd">        comments (dict): Dictionary indexed by keyword with comments to be</span>
 <span class="sd">            included pr. keyword. If a key named &quot;master&quot; is present</span>
 <span class="sd">            it will be used as a master comment for the outputted file.</span>
+<span class="sd">        filename (str): If supplied, the generated text will also be dumped</span>
+<span class="sd">            to file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">df2ecl</span><span class="p">(</span>
-        <span class="n">pvt_df</span><span class="p">,</span> <span class="n">keywords</span><span class="p">,</span> <span class="n">comments</span><span class="p">,</span> <span class="n">supported</span><span class="o">=</span><span class="n">SUPPORTED_KEYWORDS</span><span class="p">,</span> <span class="n">consecutive</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+        <span class="n">pvt_df</span><span class="p">,</span>
+        <span class="n">keywords</span><span class="p">,</span>
+        <span class="n">comments</span><span class="p">,</span>
+        <span class="n">supported</span><span class="o">=</span><span class="n">SUPPORTED_KEYWORDS</span><span class="p">,</span>
+        <span class="n">consecutive</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_rock"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pvt.df2ecl_rock">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_rock"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pvt.df2ecl_rock">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print ROCK keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing ROCK data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">         filename (str): If supplied, the generated text will also be dumped</span>
+<span class="sd">            to file.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;ROCK</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev35+gbade064 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.5.2.dev36+gc5aeeb6 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev35+gbade064
+                0.5.2.dev36+gc5aeeb6
               </div>
             
           
@@ -551,7 +551,14 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">supported</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consecutive</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
+    <span class="n">dataframe</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">supported</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">consecutive</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes in ecl2df format</span>
 
 <span class="sd">    Args:</span>
@@ -565,6 +572,11 @@
 <span class="sd">            supported in this invocation of this function.</span>
 <span class="sd">        consecutive (str): Column name for which we require the</span>
 <span class="sd">            numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</span>
+<span class="sd">        filename (str): If supplied, the generated text will also be dumped</span>
+<span class="sd">            to file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string that can be used as an include file for Eclipse.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">inspect</span>
 
@@ -640,6 +652,14 @@
             <span class="n">string</span> <span class="o">+=</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">comments</span><span class="p">[</span><span class="n">keyword</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">string</span> <span class="o">+=</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Make directory if not present:</span>
+        <span class="n">filenamedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filenamedir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filenamedir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">filenamedir</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">string</span></div>
 
 

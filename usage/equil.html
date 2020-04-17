@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>equil &mdash; ecl2df 0.5.2.dev35+gbade064 documentation</title>
+  <title>equil &mdash; ecl2df 0.5.2.dev36+gc5aeeb6 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev35+gbade064
+                0.5.2.dev36+gc5aeeb6
               </div>
             
           
@@ -285,11 +285,7 @@ one meter for compatibility, which you could do by the statements:</p>
 <h2>Re-exporting tables to Eclipse include files<a class="headerlink" href="#re-exporting-tables-to-eclipse-include-files" title="Permalink to this headline">¶</a></h2>
 <p>When you are done with the table, you can generate new include files for
 Eclipse from your modified data by issuing</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inc_string</span> <span class="o">=</span> <span class="n">equil</span><span class="o">.</span><span class="n">df2ecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
-
-<span class="c1"># Write inc_string to a file</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;solution.inc&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
-   <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">inc_string</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">equil</span><span class="o">.</span><span class="n">df2ecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;solution.inc&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The last step can also be done using the <code class="docutils literal notranslate"><span class="pre">csv2ecl</span></code> command line utility

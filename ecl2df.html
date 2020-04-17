@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.5.2.dev35+gbade064 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.5.2.dev36+gc5aeeb6 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev35+gbade064
+                0.5.2.dev36+gc5aeeb6
               </div>
             
           
@@ -225,7 +225,7 @@ Default is the Eclipse comment syntax ‘– ‘</p></li>
 
 <dl class="py function">
 <dt id="ecl2df.common.df2ecl">
-<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframe</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">supported</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consecutive</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.df2ecl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframe</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">supported</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consecutive</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.df2ecl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Eclipse include strings from dataframes in ecl2df format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -240,7 +240,12 @@ it will be used as a master comment for the outputted file.</p></li>
 supported in this invocation of this function.</p></li>
 <li><p><strong>consecutive</strong> (<em>str</em>) – Column name for which we require the
 numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – If supplied, the generated text will also be dumped
+to file.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string that can be used as an include file for Eclipse.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -801,7 +806,7 @@ None and EQLDIMS is not present, it will be inferred.</p></li>
 
 <dl class="py function">
 <dt id="ecl2df.equil.df2ecl">
-<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">equil_df</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">withphases</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df2ecl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.equil.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">equil_df</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">withphases</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/equil.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.equil.df2ecl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Eclipse include strings from dataframes with
 solution (EQUIL, RSVD++) data.</p>
 <dl class="field-list simple">
@@ -816,6 +821,8 @@ it will be used as a master comment for the outputted file.</p></li>
 <li><p><strong>withphases</strong> (<em>boolean</em>) – If True, the phase configuration keywords
 will be outputted. This is mostly for testing, and should
 not be necessary in production.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – If supplied, the generated text will also be dumped
+to file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1901,7 +1908,7 @@ it will be attempted inferred.</p></li>
 
 <dl class="py function">
 <dt id="ecl2df.pvt.df2ecl">
-<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pvt_df</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pvt_df</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Eclipse include strings from PVT dataframes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1912,6 +1919,8 @@ supported and present in the incoming dataframe.</p></li>
 <li><p><strong>comments</strong> (<em>dict</em>) – Dictionary indexed by keyword with comments to be
 included pr. keyword. If a key named “master” is present
 it will be used as a master comment for the outputted file.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – If supplied, the generated text will also be dumped
+to file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2008,13 +2017,18 @@ for each PVTNUM.</p>
 
 <dl class="py function">
 <dt id="ecl2df.pvt.df2ecl_rock">
-<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_rock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_rock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_rock" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.pvt.</code><code class="sig-name descname">df2ecl_rock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/pvt.html#df2ecl_rock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.pvt.df2ecl_rock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print ROCK keyword with data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Containing ROCK data</p></li>
-<li><p><strong>comment</strong> (<em>str</em>) – Text that will be included as a comment</p></li>
+<li><p><strong>comment</strong> (<em>str</em>) – <p>Text that will be included as a comment
+filename (str): If supplied, the generated text will also be dumped</p>
+<blockquote>
+<div><p>to file.</p>
+</div></blockquote>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -2249,7 +2263,7 @@ it will be attempted inferred.</p></li>
 
 <dl class="py function">
 <dt id="ecl2df.satfunc.df2ecl">
-<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">satfunc_df</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.df2ecl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ecl2df.satfunc.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">satfunc_df</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comments</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/satfunc.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.satfunc.df2ecl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Eclipse include strings from dataframes with
 saturation functions (SWOF, SGOF, …)</p>
 <dl class="field-list simple">
@@ -2261,6 +2275,8 @@ supported and present in the incoming dataframe.</p></li>
 <li><p><strong>comments</strong> (<em>dict</em>) – Dictionary indexed by keyword with comments to be
 included pr. keyword. If a key named “master” is present
 it will be used as a master comment for the outputted file.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – If supplied, the generated text will also be dumped
+to file.</p></li>
 </ul>
 </dd>
 </dl>

@@ -364,6 +364,13 @@ def init2df(eclfiles, vectors=None):
                 ]
             ),
         )
+        # libecl emits a number around -1.0000000200408773e+20 which
+        # should be considered Not-a-number
+        init_df = init_df.where(init_df > -1e20 + 1e13)  # some trial and error
+
+        # Remove columns that are all NaN:
+        init_df.dropna(axis="columns", how="all", inplace=True)
+
     else:
         init_df = pd.DataFrame()  # empty
 

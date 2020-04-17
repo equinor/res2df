@@ -96,7 +96,9 @@ SWOF
     # ### It remains unsolved how to avoid an error here!
 
 
-def test_slgof():
+def test_slgof(tmpdir):
+    """Test parsing of SLGOF"""
+    tmpdir.chdir()
     string = """
 SLGOF
   0 1 1 0
@@ -109,12 +111,14 @@ SLGOF
     assert "KRG" in slgof_df
     assert "KRO" in slgof_df
     assert "PCOG" in slgof_df
-    inc = satfunc.df2ecl(slgof_df)
+    inc = satfunc.df2ecl(slgof_df, filename="slgof.inc")
+    assert os.path.exists("slgof.inc")
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(slgof_df, df_from_inc)
 
 
 def test_sof2():
+    """Test parsing of SOF2"""
     string = """
 SOF2
   0 1
@@ -131,6 +135,7 @@ SOF2
 
 
 def test_sof3():
+    """Test parsing of SOF3"""
     string = """
 SOF3
   0 1 1
@@ -148,6 +153,7 @@ SOF3
 
 
 def test_sgfn():
+    """Test parsing of SGFN"""
     string = """
 SGFN
   0 1 0
@@ -169,6 +175,7 @@ SGFN
 
 
 def test_sgwfn():
+    """Test parsing of SGWFN"""
     string = """
  SGWFN
   0 1 1 0

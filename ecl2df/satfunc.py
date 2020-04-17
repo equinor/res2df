@@ -334,7 +334,7 @@ def deck2df(eclfiles, satnumcount=None):
         return df(eclfiles)
 
 
-def df2ecl(satfunc_df, keywords=None, comments=None):
+def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):
     """Generate Eclipse include strings from dataframes with
     saturation functions (SWOF, SGOF, ...)
 
@@ -345,6 +345,9 @@ def df2ecl(satfunc_df, keywords=None, comments=None):
         comments (dict): Dictionary indexed by keyword with comments to be
             included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.
+        filename (str): If supplied, the generated text will also be dumped
+            to file.
+
     """
     string = ""
     string += common.df2ecl(
@@ -353,6 +356,7 @@ def df2ecl(satfunc_df, keywords=None, comments=None):
         comments=comments,
         supported=SUPPORTED_KEYWORDS,
         consecutive="SATNUM",
+        filename=filename,
     )
     return string
 

@@ -376,7 +376,7 @@ def equil_reverse_main(args):
         print("Wrote to " + args.output)
 
 
-def df2ecl(equil_df, keywords=None, comments=None, withphases=False):
+def df2ecl(equil_df, keywords=None, comments=None, withphases=False, filename=None):
     """Generate Eclipse include strings from dataframes with
     solution (EQUIL, RSVD++) data.
 
@@ -390,6 +390,9 @@ def df2ecl(equil_df, keywords=None, comments=None, withphases=False):
         withphases (boolean): If True, the phase configuration keywords
             will be outputted. This is mostly for testing, and should
             not be necessary in production.
+        filename (str): If supplied, the generated text will also be dumped
+            to file.
+
     """
     string = ""
     if withphases:
@@ -402,6 +405,7 @@ def df2ecl(equil_df, keywords=None, comments=None, withphases=False):
         comments=comments,
         supported=SUPPORTED_KEYWORDS,
         consecutive="EQLNUM",
+        filename=filename,
     )
     return string
 

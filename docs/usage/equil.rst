@@ -59,11 +59,7 @@ Eclipse from your modified data by issuing
 
 .. code-block:: python
 
-   inc_string = equil.df2ecl(dframe)
-
-   # Write inc_string to a file
-   with open("solution.inc", "w") as file_handle:
-      file_handle.write(inc_string)
+   equil.df2ecl(dframe, filename="solution.inc")
 
 The last step can also be done using the ``csv2ecl`` command line utility
 if you dump to CSV from your Python code instead.

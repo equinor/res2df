@@ -1,4 +1,11 @@
-# ecl2df [![Build Status](https://travis-ci.com/equinor/ecl2df.svg?branch=master)](https://travis-ci.com/equinor/ecl2df) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fceedc1ee9c946aa85bf60f39ec8962a)](https://www.codacy.com/app/berland/ecl2df?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=equinor/ecl2df&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://img.shields.io/github/workflow/status/equinor/ecl2df/ecl2df)](https://github.com/equinor/ecl2df/actions?query=workflow%3Aecl2df)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/equinor/ecl2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/ecl2df/context:python)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/equinor/ecl2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/ecl2df/alerts/)
+[![Python 2.7-3.7](https://img.shields.io/badge/python-2.7%20|%203.6%20|%203.7-blue.svg)](https://www.python.org)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+# ecl2df
 
 ecl2df is a Pandas DataFrame wrapper around libecl and opm.io, which
 are used to access binary files outputted by the reservoir simulator

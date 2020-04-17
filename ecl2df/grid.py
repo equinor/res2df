@@ -420,7 +420,7 @@ def df(
             dateinheaders=dateinheaders,
             stackdates=stackdates,
         )
-    grid_df = pd.concat([grid_df, init_df, rst_df], axis=1, sort=False)
+    grid_df = pd.concat([gridgeom, initdf, rst_df], axis=1, sort=False)
     if dropconstants:
         grid_df = ecl2df.grid.drop_constant_columns(grid_df)
     return grid_df

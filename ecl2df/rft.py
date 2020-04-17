@@ -117,10 +117,6 @@ def df(eclfiles):
 
         con_data["CONIDX"] = con_data.index + 1  # Add an index that starts with 1
 
-        # Set branch count to 1. If it is a multisegment well, this
-        # variable might get updated.
-        numberofbranches = 1
-
         # Process multisegment data (not necessarily the same number
         # of rows as the connection data) Currently data for segments
         # that are not associated with a connection will not be

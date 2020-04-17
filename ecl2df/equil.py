@@ -415,7 +415,6 @@ def df2ecl_equil(dframe, comment=None):
     """
     string = "EQUIL\n"
     string += common.comment_formatter(comment)
-    col_headers = [item["name"] for item in common.OPMKEYWORDS["EQUIL"]["items"]]
 
     if "KEYWORD" not in dframe:
         # Use everything..

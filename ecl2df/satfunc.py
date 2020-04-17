@@ -21,7 +21,6 @@ from __future__ import division
 import sys
 import logging
 import argparse
-import numpy as np
 import pandas as pd
 
 from ecl2df import inferdims, common
@@ -440,7 +439,6 @@ def df2ecl_sof3(dframe, comment=None):
 def _df2ecl_satfuncs(keyword, dframe, comment=None):
     string = "{}\n".format(keyword)
     string += common.comment_formatter(comment)
-    col_headers = RENAMERS[keyword]["DATA"]
 
     if "KEYWORD" not in dframe:
         # Use everything..

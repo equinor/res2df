@@ -280,7 +280,7 @@ def df(
             # as strings in the dataframe.
             dframe[key] = str(param_dict[key])
     if datetime:
-        if dframe.index.dtype == 'object':
+        if dframe.index.dtype == "object":
             dframe.index = pd.to_datetime(dframe.index)
     return dframe
 

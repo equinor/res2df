@@ -7,6 +7,8 @@ from __future__ import print_function
 import os
 import sys
 import datetime
+
+import numpy as np
 import pandas as pd
 
 import pytest
@@ -63,6 +65,13 @@ def test_init2df():
     assert "PORO" in init_df
     assert "PORV" in init_df
 
+    # The KRO data from the INIT file contains only NaN's,
+    # but libecl gives out a large negative integer/float.
+    # ecl2df should ensure this comes out as a NaN (but it
+    # should be allowed later to drop columns which have only NaNs))
+    if "KRO" in init_df:
+        assert np.isnan(init_df["KRO"].unique()).all()
+
 
 def test_grid_df():
     """Test that dataframe with INIT vectors and coordinates can be produced"""
@@ -81,6 +90,13 @@ def test_grid_df():
     assert "Y" in grid_df
     assert "Z" in grid_df
     assert "VOLUME" in grid_df
+
+    # Check that PORV is sensible
+    assert (
+        abs(sum(grid_df["PORO"] * grid_df["VOLUME"] - grid_df["PORV"]))
+        / sum(grid_df["PORV"])
+        < 0.00001
+    )
 
 
 def test_subvectors():
@@ -118,26 +134,6 @@ def test_dropconstants():
     assert "A" in grid.drop_constant_columns(df)
     assert "B" in grid.drop_constant_columns(df, alwayskeep="B")
     assert "B" in grid.drop_constant_columns(df, alwayskeep=["B"])
-
-
-def test_mergegridframes():
-    """Test that we can merge together data for the grid"""
-    eclfiles = EclFiles(DATAFILE)
-    init_df = grid.init2df(eclfiles)
-    grid_geom = grid.gridgeometry2df(eclfiles)
-
-    assert len(init_df) == len(grid_geom)
-
-    merged = grid.merge_gridframes(grid_geom, init_df, pd.DataFrame())
-    assert isinstance(merged, pd.DataFrame)
-    assert len(merged) == len(grid_geom)
-
-    # Check that PORV is sensible
-    assert (
-        abs(sum(merged["PORO"] * merged["VOLUME"] - merged["PORV"]))
-        / sum(merged["PORV"])
-        < 0.00001
-    )
 
 
 def test_df():

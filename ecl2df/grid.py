@@ -286,7 +286,8 @@ def gridgeometry2df(eclfiles):
 def merge_initvectors(eclfiles, dframe, initvectors, ijknames=None):
     """Merge in INIT vectors to a dataframe by I, J, K.
 
-    Utility function for other modules to use.
+    Utility function for other modules to use. Normally it is sufficient
+    for API users to only use the df() function.
 
     Args:
         eclfiles (EclFiles): Object representing the Eclipse output files
@@ -322,6 +323,9 @@ def merge_initvectors(eclfiles, dframe, initvectors, ijknames=None):
 
 def init2df(eclfiles, vectors=None):
     """Extract information from INIT file with cell data
+
+    Normally, you would use the df() function which will
+    call this function on your behalf.
 
     Order is significant, as index is used for merging
 
@@ -360,6 +364,13 @@ def init2df(eclfiles, vectors=None):
                 ]
             ),
         )
+        # libecl emits a number around -1.0000000200408773e+20 which
+        # should be considered Not-a-number
+        init_df = init_df.where(init_df > -1e20 + 1e13)  # some trial and error
+
+        # Remove columns that are all NaN:
+        init_df.dropna(axis="columns", how="all", inplace=True)
+
     else:
         init_df = pd.DataFrame()  # empty
 
@@ -416,16 +427,10 @@ def df(
             dateinheaders=dateinheaders,
             stackdates=stackdates,
         )
-    grid_df = merge_gridframes(gridgeom, initdf, rst_df)
+    grid_df = pd.concat([gridgeom, initdf, rst_df], axis=1, sort=False)
     if dropconstants:
         grid_df = ecl2df.grid.drop_constant_columns(grid_df)
     return grid_df
-
-
-def merge_gridframes(grid_df, init_df, rst_df):
-    """Merge dataframes with grid data"""
-    merged = pd.concat([grid_df, init_df, rst_df], axis=1, sort=False)
-    return merged
 
 
 def fill_parser(parser):

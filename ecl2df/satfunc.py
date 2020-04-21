@@ -31,6 +31,9 @@ logger = logging.getLogger(__name__)
 
 SUPPORTED_KEYWORDS = ["SWOF", "SGOF", "SGWFN", "SWFN", "SOF2", "SGFN", "SOF3", "SLGOF"]
 
+# RENAMERS are a dictionary of dictionaries, referring to
+# how we should rename deck record items, from the JSON
+# files in opm.common and into Dataframe column names.
 RENAMERS = {}
 RENAMERS["SGFN"] = {"DATA": ["SG", "KRG", "PCOG"]}
 RENAMERS["SGOF"] = {"DATA": ["SG", "KRG", "KROG", "PCOG"]}
@@ -251,6 +254,15 @@ def fill_parser(parser):
         help="Name of output csv file.",
         default="satfuncs.csv",
     )
+    parser.add_argument(
+        "-k",
+        "--keywords",
+        nargs="+",
+        help=(
+            "List of saturation function keywords to fetch data from. "
+            "If not supplied, all supported keywords will be included."
+        ),
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
 
@@ -280,11 +292,13 @@ def satfunc_main(args):
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS
         # is supplied:
-        satfunc_df = df(eclfiles)
+        satfunc_df = df(eclfiles, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string
-        satfunc_df = df("".join(open(args.DATAFILE).readlines()))
+        satfunc_df = df(
+            "".join(open(args.DATAFILE).readlines()), keywords=args.keywords
+        )
     if not satfunc_df.empty:
         if args.output == "-":
             # Ignore pipe errors when writing to stdout.

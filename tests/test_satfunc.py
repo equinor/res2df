@@ -253,13 +253,29 @@ def test_main(tmpdir):
     pd.testing.assert_frame_equal(disk_df, disk_inc_df)
 
 
-def test_main_subparsers():
+def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = ".TMP-satfunc.csv"
-    sys.argv = ["ecl2csv", "satfunc", DATAFILE, "-o", tmpcsvfile]
+    tmpcsvfile = tmpdir.join(".TMP-satfunc.csv")
+    sys.argv = ["ecl2csv", "satfunc", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
+    assert os.path.exists(str(tmpcsvfile))
+    disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(tmpcsvfile)
+
+    tmpcsvfile2 = tmpdir.join(".TMP-satfunc-swof.csv")
+    print(tmpcsvfile2)
+    sys.argv = [
+        "ecl2csv",
+        "satfunc",
+        DATAFILE,
+        "--keywords",
+        "SWOF",
+        "--output",
+        str(tmpcsvfile2),
+    ]
+    ecl2csv.main()
+
+    assert os.path.exists(str(tmpcsvfile2))
+    disk_df = pd.read_csv(str(tmpcsvfile2))
+    assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}

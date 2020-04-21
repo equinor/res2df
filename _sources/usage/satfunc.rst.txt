@@ -1,0 +1,88 @@
+satfunc
+-------
+
+satfunc will extract saturation functions from Eclipse decks or from Eclipse
+include files, these are the keywords ``SWOF``, ``SGOF``, ``SGWFN``, ``SWFN``,
+``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
+
+The data obtained from one invocation of the satfunc module will be put in one
+dataframe, where data from different keywords are separated by the ``KEYWORD``
+column.
+
+..
+  import numpy as np
+  satfunc.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).iloc[np.r_[0:5, 37:42, -5:0]].to_csv('docs/usage/satfunc.csv', index=False)
+
+.. code-block:: python
+
+   from ecl2df import satfunc, EclFiles
+
+   eclfiles = EclFiles('MYDATADECK.DATA')
+   dframe = satfunc.df(eclfiles)
+
+.. csv-table:: Example satfunc table (only a subset of the rows are shown)
+   :file: satfunc.csv
+   :header-rows: 1
+
+Alternatively, the same data can be produced as a CSV file using the command line
+
+.. code-block:: console
+
+  ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv
+
+Be aware when importing the CSV files into applications that the datatype of the
+columns are guessed correctly. This is typically a problem for SGOF columns as
+these column are often empty for many hundreds of rows (the SWOF rows).
+
+To parse Eclipse include files, only one include file at a time is currently
+supported. Just replace the filename MYDATADECK.DATA with the path of your
+include file.
+
+Generating Eclipse include files from dataframes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When a dataframe of saturation function data is loaded into Python, any operation
+may be applied on the data. Simple operations would typically be scaling, perhaps
+individual pr. SATNUM. Still, read below on pyscal before embarking on too many
+Pandas operations on saturation functions.
+
+An example operation could for example to scale all `KRW` data of the first SATNUM
+in the SWOF table, and if `dframe` holds all the data, this can be performed by
+the command
+
+.. code-block:: python
+
+   # Build boolean array of which rows in the big dataframe we want to touch:
+   rows_to_touch = (dframe["KEYWORD"] == "SWOF") & (dframe["SATNUM"] == 1)
+   # Multiplicate these rows by 0.5
+   dframe.loc[rows_to_touch, "KRW"] *= 0.5
+
+For a dataframe or a CSV file in the format provided by this module, an Eclipse
+include file can be generated either with the Python API
+:func:`ecl2df.satfunc.df2ecl` function or the command
+
+.. code-block:: console
+
+  csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
+
+which should give a file `relperm.inc` that can be parsed by Eclipse. The command
+above will only pick the keywords ``SWOF`` and ``SGOF`` (in the case there are
+data for more keywords in the dataframe).
+
+There are no automated checks for validity of the dumped include files.
+
+pyscal
+^^^^^^
+
+Manipulation of curve shapes or potentially interpolation between curves is hard
+to do directly on the dataframes. Before doing manipulations of dataframes in
+ecl2df.satfunc, consider if it is better to implement the manipulations
+through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
+Pyscal can create curves from parametrizations, and interpolate between curves.
+
+Pyscal can create initialize its relperm objects from Eclipse include files
+though the parsing capabilities of ecl2df.satfunc.
+
+The function `pyscal.pyscallist.df()` is analogous to `ecl2df.satfunc.df()` in
+what it produces, and the :func:`ecl2df.satfunc.df2ecl()` can be used on both
+(potentially with some filtering needed.).

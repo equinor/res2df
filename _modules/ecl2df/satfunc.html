@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev36+gc5aeeb6 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev37+g82b6e59 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev36+gc5aeeb6
+                0.5.2.dev37+g82b6e59
               </div>
             
           
@@ -506,6 +506,9 @@
 <span class="sd">        filename (str): If supplied, the generated text will also be dumped</span>
 <span class="sd">            to file.</span>
 
+<span class="sd">    Returns:</span>
+<span class="sd">        Generated Eclipse include string</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">df2ecl</span><span class="p">(</span>
@@ -520,7 +523,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_swof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_swof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swof</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SWOF data</span>
+    <span class="sd">&quot;&quot;&quot;Print SWOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SWOF data</span>
@@ -530,7 +533,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sgof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SGOF data</span>
+    <span class="sd">&quot;&quot;&quot;Print SGOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SGOF data</span>
@@ -540,7 +543,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sgfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SGFN data</span>
+    <span class="sd">&quot;&quot;&quot;Print SGFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SGFN data</span>
@@ -550,7 +553,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sgwfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgwfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgwfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SGWFN data</span>
+    <span class="sd">&quot;&quot;&quot;Print SGWFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SGWFN data</span>
@@ -560,7 +563,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_swfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_swfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SWFN data</span>
+    <span class="sd">&quot;&quot;&quot;Print SWFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SWFN data</span>
@@ -570,7 +573,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_slgof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_slgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_slgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SLGOF data</span>
+    <span class="sd">&quot;&quot;&quot;Print SLGOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SLGOF data</span>
@@ -580,7 +583,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sof2"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sof2">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof2</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SOF2 data</span>
+    <span class="sd">&quot;&quot;&quot;Print SOF2 data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SOF2 data</span>
@@ -590,7 +593,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sof3"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sof3">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof3</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print SOF3 data</span>
+    <span class="sd">&quot;&quot;&quot;Print SOF3 data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing SOF3 data</span>

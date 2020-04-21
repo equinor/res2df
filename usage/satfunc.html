@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>satfunc &mdash; ecl2df 0.5.2.dev37+g82b6e59 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="trans" href="trans.html" />
+    <link rel="prev" title="pvt" href="pvt.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.2.dev37+g82b6e59
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">satfunc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generating-eclipse-include-files-from-dataframes">Generating Eclipse include files from dataframes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyscal">pyscal</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>satfunc</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/satfunc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="satfunc">
+<h1>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h1>
+<p>satfunc will extract saturation functions from Eclipse decks or from Eclipse
+include files, these are the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGWFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SWFN</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SOF2</span></code>, <code class="docutils literal notranslate"><span class="pre">SGFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SOF3</span></code> and  <code class="docutils literal notranslate"><span class="pre">SLGOF</span></code>.</p>
+<p>The data obtained from one invocation of the satfunc module will be put in one
+dataframe, where data from different keywords are separated by the <code class="docutils literal notranslate"><span class="pre">KEYWORD</span></code>
+column.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">EclFiles</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Example satfunc table (only a subset of the rows are shown)</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>SW</p></th>
+<th class="head"><p>KRW</p></th>
+<th class="head"><p>KROW</p></th>
+<th class="head"><p>PCOW</p></th>
+<th class="head"><p>SATNUM</p></th>
+<th class="head"><p>KEYWORD</p></th>
+<th class="head"><p>SG</p></th>
+<th class="head"><p>KRG</p></th>
+<th class="head"><p>KROG</p></th>
+<th class="head"><p>PCOG</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.32</p></td>
+<td><p>0.0</p></td>
+<td><p>1.0</p></td>
+<td><p>165.728151841</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>0.3374</p></td>
+<td><p>1.676119e-08</p></td>
+<td><p>0.9680216</p></td>
+<td><p>153.074777675</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>0.3548</p></td>
+<td><p>4.795631e-07</p></td>
+<td><p>0.9119928</p></td>
+<td><p>141.953412741</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>0.3722</p></td>
+<td><p>3.451875e-06</p></td>
+<td><p>0.8430636</p></td>
+<td><p>132.116390967</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>0.3896</p></td>
+<td><p>1.412955e-05</p></td>
+<td><p>0.7672163</p></td>
+<td><p>123.365246941</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>0.98</p></td>
+<td><p>0.92</p></td>
+<td><p>0.0</p></td>
+<td><p>30.9230370781</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>1.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.0</p></td>
+<td><p>30.0</p></td>
+<td><p>1</p></td>
+<td><p>SWOF</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>1.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.0192</p></td>
+<td><p>0.001220697</p></td>
+<td><p>0.8731062</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.0384</p></td>
+<td><p>0.004073989</p></td>
+<td><p>0.7505835</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.6144</p></td>
+<td><p>0.8307268</p></td>
+<td><p>2.713968e-07</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.64</p></td>
+<td><p>0.87</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.6533333</p></td>
+<td><p>0.9133333</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.6666667</p></td>
+<td><p>0.9566667</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>SGOF</p></td>
+<td><p>0.68</p></td>
+<td><p>1.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+</tbody>
+</table>
+<p>Alternatively, the same data can be produced as a CSV file using the command line</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv</span>
+</pre></div>
+</div>
+<p>Be aware when importing the CSV files into applications that the datatype of the
+columns are guessed correctly. This is typically a problem for SGOF columns as
+these column are often empty for many hundreds of rows (the SWOF rows).</p>
+<p>To parse Eclipse include files, only one include file at a time is currently
+supported. Just replace the filename MYDATADECK.DATA with the path of your
+include file.</p>
+<div class="section" id="generating-eclipse-include-files-from-dataframes">
+<h2>Generating Eclipse include files from dataframes<a class="headerlink" href="#generating-eclipse-include-files-from-dataframes" title="Permalink to this headline">¶</a></h2>
+<p>When a dataframe of saturation function data is loaded into Python, any operation
+may be applied on the data. Simple operations would typically be scaling, perhaps
+individual pr. SATNUM. Still, read below on pyscal before embarking on too many
+Pandas operations on saturation functions.</p>
+<p>An example operation could for example to scale all <cite>KRW</cite> data of the first SATNUM
+in the SWOF table, and if <cite>dframe</cite> holds all the data, this can be performed by
+the command</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build boolean array of which rows in the big dataframe we want to touch:</span>
+<span class="n">rows_to_touch</span> <span class="o">=</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SWOF&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Multiplicate these rows by 0.5</span>
+<span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_touch</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+<p>For a dataframe or a CSV file in the format provided by this module, an Eclipse
+include file can be generated either with the Python API
+<a class="reference internal" href="../ecl2df.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> function or the command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose</span>
+</pre></div>
+</div>
+<p>which should give a file <cite>relperm.inc</cite> that can be parsed by Eclipse. The command
+above will only pick the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code> and <code class="docutils literal notranslate"><span class="pre">SGOF</span></code> (in the case there are
+data for more keywords in the dataframe).</p>
+<p>There are no automated checks for validity of the dumped include files.</p>
+</div>
+<div class="section" id="pyscal">
+<h2>pyscal<a class="headerlink" href="#pyscal" title="Permalink to this headline">¶</a></h2>
+<p>Manipulation of curve shapes or potentially interpolation between curves is hard
+to do directly on the dataframes. Before doing manipulations of dataframes in
+ecl2df.satfunc, consider if it is better to implement the manipulations
+through the <a class="reference external" href="https://equinor.github.io/pyscal/">pyscal</a> library.
+Pyscal can create curves from parametrizations, and interpolate between curves.</p>
+<p>Pyscal can create initialize its relperm objects from Eclipse include files
+though the parsing capabilities of ecl2df.satfunc.</p>
+<p>The function <cite>pyscal.pyscallist.df()</cite> is analogous to <cite>ecl2df.satfunc.df()</cite> in
+what it produces, and the <a class="reference internal" href="../ecl2df.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> can be used on both
+(potentially with some filtering needed.).</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="trans.html" class="btn btn-neutral float-right" title="trans" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pvt.html" class="btn btn-neutral float-left" title="pvt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

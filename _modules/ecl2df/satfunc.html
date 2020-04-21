@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev37+g82b6e59 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev38+g72f0128 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev37+g82b6e59
+                0.5.2.dev38+g72f0128
               </div>
             
           
@@ -190,6 +190,9 @@
 
 <span class="n">SUPPORTED_KEYWORDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SWOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span> <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span> <span class="s2">&quot;SLGOF&quot;</span><span class="p">]</span>
 
+<span class="c1"># RENAMERS are a dictionary of dictionaries, referring to</span>
+<span class="c1"># how we should rename deck record items, from the JSON</span>
+<span class="c1"># files in opm.common and into Dataframe column names.</span>
 <span class="n">RENAMERS</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGFN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGOF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
@@ -410,6 +413,15 @@
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;satfuncs.csv&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-k&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--keywords&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;List of saturation function keywords to fetch data from. &quot;</span>
+            <span class="s2">&quot;If not supplied, all supported keywords will be included.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
@@ -439,11 +451,13 @@
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="c1"># Things are easier when a full deck with (correct) TABDIMS</span>
         <span class="c1"># is supplied:</span>
-        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># This might be an include file for which we have to infer/guess</span>
         <span class="c1"># TABDIMS. Then we send it to df() as a string</span>
-        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()))</span>
+        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
+            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()),</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">satfunc_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
             <span class="c1"># Ignore pipe errors when writing to stdout.</span>

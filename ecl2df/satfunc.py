@@ -347,6 +347,9 @@ def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):
         filename (str): If supplied, the generated text will also be dumped
             to file.
 
+    Returns:
+        Generated Eclipse include string
+
     """
     string = ""
     string += common.df2ecl(
@@ -361,7 +364,7 @@ def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):
 
 
 def df2ecl_swof(dframe, comment=None):
-    """Print SWOF data
+    """Print SWOF data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SWOF data
@@ -371,7 +374,7 @@ def df2ecl_swof(dframe, comment=None):
 
 
 def df2ecl_sgof(dframe, comment=None):
-    """Print SGOF data
+    """Print SGOF data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SGOF data
@@ -381,7 +384,7 @@ def df2ecl_sgof(dframe, comment=None):
 
 
 def df2ecl_sgfn(dframe, comment=None):
-    """Print SGFN data
+    """Print SGFN data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SGFN data
@@ -391,7 +394,7 @@ def df2ecl_sgfn(dframe, comment=None):
 
 
 def df2ecl_sgwfn(dframe, comment=None):
-    """Print SGWFN data
+    """Print SGWFN data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SGWFN data
@@ -401,7 +404,7 @@ def df2ecl_sgwfn(dframe, comment=None):
 
 
 def df2ecl_swfn(dframe, comment=None):
-    """Print SWFN data
+    """Print SWFN data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SWFN data
@@ -411,7 +414,7 @@ def df2ecl_swfn(dframe, comment=None):
 
 
 def df2ecl_slgof(dframe, comment=None):
-    """Print SLGOF data
+    """Print SLGOF data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SLGOF data
@@ -421,7 +424,7 @@ def df2ecl_slgof(dframe, comment=None):
 
 
 def df2ecl_sof2(dframe, comment=None):
-    """Print SOF2 data
+    """Print SOF2 data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SOF2 data
@@ -431,7 +434,7 @@ def df2ecl_sof2(dframe, comment=None):
 
 
 def df2ecl_sof3(dframe, comment=None):
-    """Print SOF3 data
+    """Print SOF3 data. Used by df2ecl().
 
     Args:
         dframe (pd.DataFrame): Containing SOF3 data

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from setuptools import setup
 
 try:
@@ -11,18 +12,22 @@ except ImportError:
     cmdclass = {}
 
 
-def parse_requirements(filename):
-    """Load requirements from a pip requirements file"""
-    try:
-        lineiter = (line.strip() for line in open(filename))
-        return [line for line in lineiter if line and not line.startswith("#")]
-    except IOError:
-        return []
-
-
-REQUIREMENTS = parse_requirements("requirements.txt")
-TEST_REQUIREMENTS = parse_requirements("requirements_dev.txt")
-SETUP_REQUIREMENTS = ["pytest-runner", "setuptools >=28", "setuptools_scm"]
+SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
+REQUIREMENTS = [
+    "libecl",
+    "pandas",
+    "pyyaml>=5.1",
+    "treelib",
+]
+TEST_REQUIREMENTS = [
+    "black; python_version >= '3'",
+    "networkx",
+    "pytest",
+    "sphinx",
+    "sphinx-argparse",
+    "sphinx_rtd_theme",
+]
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS}
 
 setup(
     name="ecl2df",
@@ -55,7 +60,8 @@ setup(
             "wcon2csv=ecl2df.wcon:main",
         ]
     },
+    test_suite="tests",
     install_requires=REQUIREMENTS,
-    tests_require=TEST_REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,
+    extras_require=EXTRAS_REQUIRE,
 )

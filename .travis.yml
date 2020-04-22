@@ -11,14 +11,6 @@ env:
   global:
     - INSTALL_ROOT=$HOME/install
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - libboost-all-dev
-      - liblapack-dev
-
 sudo: required
 
 python:

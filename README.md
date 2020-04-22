@@ -1,7 +1,7 @@
 [![Build Status](https://img.shields.io/github/workflow/status/equinor/ecl2df/ecl2df)](https://github.com/equinor/ecl2df/actions?query=workflow%3Aecl2df)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/equinor/ecl2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/ecl2df/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/equinor/ecl2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/ecl2df/alerts/)
-[![Python 2.7-3.7](https://img.shields.io/badge/python-2.7%20|%203.6%20|%203.7-blue.svg)](https://www.python.org)
+[![Python 2.7-3.8](https://img.shields.io/badge/python-2.7%20|%203.6%20|%203.7-blue.svg|%203.8-blue.svg))](https://www.python.org)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 

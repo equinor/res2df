@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev38+g72f0128 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.5.2.dev39+gb55cf76 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev38+g72f0128
+                0.5.2.dev39+gb55cf76
               </div>
             
           
@@ -188,7 +188,7 @@
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">SUPPORTED_KEYWORDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SWOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span> <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span> <span class="s2">&quot;SLGOF&quot;</span><span class="p">]</span>
+<span class="n">SUPPORTED_KEYWORDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SWOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span> <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span> <span class="s2">&quot;SLGOF&quot;</span><span class="p">]</span>
 
 <span class="c1"># RENAMERS are a dictionary of dictionaries, referring to</span>
 <span class="c1"># how we should rename deck record items, from the JSON</span>
@@ -273,7 +273,14 @@
         <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">))</span>
     <span class="n">nonempty_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">nonempty_frames</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">nonempty_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">nonempty_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># We want to sort the keywords by the order they appear in</span>
+        <span class="c1"># SUPPORTED_KEYWORDS (mainly to get WaterOil before GasOil)</span>
+        <span class="c1"># We do that by converting to a Categorical series:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">],</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dframe</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 

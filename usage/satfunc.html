@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>satfunc &mdash; ecl2df 0.5.2.dev38+g72f0128 documentation</title>
+  <title>satfunc &mdash; ecl2df 0.5.2.dev39+gb55cf76 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.2.dev38+g72f0128
+                0.5.2.dev39+gb55cf76
               </div>
             
           
@@ -390,12 +390,10 @@ column.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv</span>
 </pre></div>
 </div>
-<p>Be aware when importing the CSV files into applications that the datatype of the
-columns are guessed correctly. This is typically a problem for SGOF columns as
-these column are often empty for many hundreds of rows (the SWOF rows).</p>
-<p>To parse Eclipse include files, only one include file at a time is currently
-supported. Just replace the filename MYDATADECK.DATA with the path of your
-include file.</p>
+<p>It is possible to extract keywords one at a time using the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> command
+line option.</p>
+<p>Instead of Eclipse data decks, individual include files may also be parsed, but
+only one at a time.</p>
 <div class="section" id="generating-eclipse-include-files-from-dataframes">
 <h2>Generating Eclipse include files from dataframes<a class="headerlink" href="#generating-eclipse-include-files-from-dataframes" title="Permalink to this headline">¶</a></h2>
 <p>When a dataframe of saturation function data is loaded into Python, any operation

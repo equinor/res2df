@@ -30,13 +30,11 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
   ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv
 
-Be aware when importing the CSV files into applications that the datatype of the
-columns are guessed correctly. This is typically a problem for SGOF columns as
-these column are often empty for many hundreds of rows (the SWOF rows).
+It is possible to extract keywords one at a time using the ``--keywords`` command
+line option.
 
-To parse Eclipse include files, only one include file at a time is currently
-supported. Just replace the filename MYDATADECK.DATA with the path of your
-include file.
+Instead of Eclipse data decks, individual include files may also be parsed, but
+only one at a time.
 
 Generating Eclipse include files from dataframes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

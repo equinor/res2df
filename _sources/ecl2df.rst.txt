@@ -172,14 +172,6 @@ ecl2df.trans module
    :undoc-members:
    :show-inheritance:
 
-ecl2df.version module
----------------------
-
-.. automodule:: ecl2df.version
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 ecl2df.wcon module
 ------------------
 

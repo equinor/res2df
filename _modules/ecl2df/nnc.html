@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc &mdash; ecl2df 0.5.2.dev39+gb55cf76 documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df 0.5.2.dev40+g739fc63 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.2.dev39+gb55cf76
+                0.5.2.dev40+g739fc63
               </div>
             
           
@@ -219,7 +219,8 @@
     <span class="p">)</span>
     <span class="n">idx_cols1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I1&quot;</span><span class="p">,</span> <span class="s2">&quot;J1&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">]</span>
     <span class="n">nnc1_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">columns</span><span class="o">=</span><span class="n">idx_cols1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">egrid_grid</span><span class="o">.</span><span class="n">get_ijk</span><span class="p">(</span><span class="n">global_index</span><span class="o">=</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nnc1</span><span class="p">]</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">idx_cols1</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">egrid_grid</span><span class="o">.</span><span class="n">get_ijk</span><span class="p">(</span><span class="n">global_index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nnc1</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="c1"># Returned indices from get_ijk are zero-based, convert to 1-based indices</span>
     <span class="n">nnc1_df</span><span class="p">[</span><span class="n">idx_cols1</span><span class="p">]</span> <span class="o">=</span> <span class="n">nnc1_df</span><span class="p">[</span><span class="n">idx_cols1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
@@ -234,7 +235,8 @@
     <span class="p">)</span>
     <span class="n">idx_cols2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I2&quot;</span><span class="p">,</span> <span class="s2">&quot;J2&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">]</span>
     <span class="n">nnc2_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">columns</span><span class="o">=</span><span class="n">idx_cols2</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">egrid_grid</span><span class="o">.</span><span class="n">get_ijk</span><span class="p">(</span><span class="n">global_index</span><span class="o">=</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nnc2</span><span class="p">]</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">idx_cols2</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">egrid_grid</span><span class="o">.</span><span class="n">get_ijk</span><span class="p">(</span><span class="n">global_index</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nnc2</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="n">nnc2_df</span><span class="p">[</span><span class="n">idx_cols2</span><span class="p">]</span> <span class="o">=</span> <span class="n">nnc2_df</span><span class="p">[</span><span class="n">idx_cols2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
 

@@ -246,7 +246,8 @@ def gridgeometry2df(eclfiles):
         eclfiles (EclFiles): object holding the Eclipse output files.
 
     Returns:
-        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell.
+        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell. The
+        index of the dataframe are the global indices
     """
     if not eclfiles:
         raise ValueError
@@ -256,7 +257,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logger.info("Extracting grid geometry from %s", str(egrid_file))
+    logger.info("Extracting grjd geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 
@@ -264,9 +265,12 @@ def gridgeometry2df(eclfiles):
     vol = grid.export_volume(index_frame)
     grid_df = pd.DataFrame(
         index=index_frame["active"],
-        columns=["i", "j", "k", "x", "y", "z", "volume"],
-        data=np.hstack((ijk, xyz, vol.reshape(-1, 1))),
+        columns=["i", "j", "k", "x", "y", "z", "volume", "global_index"],
+        data=np.hstack(
+            (ijk, xyz, vol.reshape(-1, 1), np.array(index_frame.index).reshape(-1, 1))
+        ),
     )
+
     # Type conversion, hstack maybe ruined the datatypes..
     grid_df["i"] = grid_df["i"].astype(int)
     grid_df["j"] = grid_df["j"].astype(int)

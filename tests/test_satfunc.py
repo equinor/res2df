@@ -36,7 +36,10 @@ def test_satfunc2df():
 
     inc = satfunc.df2ecl(satdf)
     df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(satdf, df_from_inc)
+    pd.testing.assert_frame_equal(
+        satdf.sort_values(["SATNUM", "KEYWORD"]),
+        df_from_inc.sort_values(["SATNUM", "KEYWORD"]),
+    )
 
 
 def test_str2df():
@@ -190,7 +193,10 @@ def test_sgwfn():
     assert "PCGW" in sgwfn_df
     inc = satfunc.df2ecl(sgwfn_df)
     df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(sgwfn_df, df_from_inc)
+    pd.testing.assert_frame_equal(
+        sgwfn_df.sort_values(["SATNUM", "KEYWORD"]),
+        df_from_inc.sort_values(["SATNUM", "KEYWORD"]),
+    )
 
 
 def test_sgof_satnuminferrer(tmpdir):
@@ -250,7 +256,10 @@ def test_main(tmpdir):
     # and check dataframe equality
     assert os.path.exists(incfile)
     disk_inc_df = satfunc.df(open(incfile).read())
-    pd.testing.assert_frame_equal(disk_df, disk_inc_df)
+    pd.testing.assert_frame_equal(
+        disk_df.sort_values(["SATNUM", "KEYWORD"]).reset_index(drop=True),
+        disk_inc_df.sort_values(["SATNUM", "KEYWORD"]).reset_index(drop=True),
+    )
 
 
 def test_main_subparsers(tmpdir):

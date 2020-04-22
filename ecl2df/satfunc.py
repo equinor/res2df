@@ -29,7 +29,7 @@ from .eclfiles import EclFiles
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS = ["SWOF", "SGOF", "SGWFN", "SWFN", "SOF2", "SGFN", "SOF3", "SLGOF"]
+SUPPORTED_KEYWORDS = ["SWOF", "SGOF", "SWFN", "SGWFN", "SOF2", "SGFN", "SOF3", "SLGOF"]
 
 # RENAMERS are a dictionary of dictionaries, referring to
 # how we should rename deck record items, from the JSON
@@ -114,7 +114,14 @@ def df(deck, keywords=None, ntsfun=None):
         frames.append(dframe.assign(KEYWORD=keyword))
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:
-        return pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
+        dframe = pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
+        # We want to sort the keywords by the order they appear in
+        # SUPPORTED_KEYWORDS (mainly to get WaterOil before GasOil)
+        # We do that by converting to a Categorical series:
+        dframe["KEYWORD"] = pd.Categorical(dframe["KEYWORD"], SUPPORTED_KEYWORDS)
+        dframe.sort_values(["SATNUM", "KEYWORD"], inplace=True)
+        dframe["KEYWORD"] = dframe["KEYWORD"].astype(str)
+        return dframe
     return pd.DataFrame()
 
 

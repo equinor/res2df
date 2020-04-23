@@ -76,3 +76,18 @@ def test_stack_on_colname():
     assert len(stacked.columns) == 2
     assert len(stacked) == 2
     assert not stacked.isnull().sum().sum()
+
+
+def test_eclcompress():
+    """Test that we can compress string using Eclipse style
+    run-length encoding"""
+    assert common.runlength_eclcompress("") == ""
+    assert common.runlength_eclcompress(" ") == ""
+    assert common.runlength_eclcompress("1 2") == "1  2"
+    assert common.runlength_eclcompress("1 2", sep=" ") == "1 2"
+    assert common.runlength_eclcompress("1 2", sep="   ") == "1   2"
+    assert common.runlength_eclcompress("1") == "1"
+    assert common.runlength_eclcompress("1 1") == "2*1"
+    assert common.runlength_eclcompress("1 1 1") == "3*1"
+    assert common.runlength_eclcompress("1     1 1") == "3*1"
+    assert common.runlength_eclcompress("1  \n  1 1 2") == "3*1  2"

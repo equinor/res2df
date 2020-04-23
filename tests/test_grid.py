@@ -37,6 +37,10 @@ def test_gridgeometry2df():
     assert "Z" in grid_geom
     assert "VOLUME" in grid_geom
     assert "ZONE" in grid_geom
+    assert "GLOBAL_INDEX" in grid_geom
+
+    # If at least one inactive cell, this will hold:
+    assert grid_geom["GLOBAL_INDEX"].max() > len(grid_geom)
 
 
 def test_wrongfile():
@@ -97,6 +101,68 @@ def test_grid_df():
         / sum(grid_df["PORV"])
         < 0.00001
     )
+
+
+def test_df2ecl(tmpdir):
+    """Test if we are able to output include files for grid data"""
+    eclfiles = EclFiles(DATAFILE)
+    grid_df = grid.df(eclfiles)
+
+    fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
+    assert "FIPNUM" in fipnum_str
+    assert "-- Output file printed by ecl2df.grid" in fipnum_str
+    assert "35817 active cells" in fipnum_str  # (comment at the end)
+    assert "35840 total cell count" in fipnum_str  # (comment at the end)
+    assert len(fipnum_str) > 100
+
+    fipnum_str_nocomment = grid.df2ecl(grid_df, "FIPNUM", dtype=int, nocomments=True)
+    assert "--" not in fipnum_str_nocomment
+    fipnum2_str = grid.df2ecl(
+        grid_df, "FIPNUM", dtype=int, eclfiles=eclfiles, nocomments=True
+    )
+    # This would mean that we guessed the correct global size in the first run
+    assert fipnum_str_nocomment == fipnum2_str
+
+    float_fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=float)
+    assert len(float_fipnum_str) > len(fipnum_str)  # lots of .0 in the string.
+
+    fipsatnum_str = grid.df2ecl(grid_df, ["FIPNUM", "SATNUM"], dtype=int)
+    assert "FIPNUM" in fipsatnum_str
+    assert "SATNUM" in fipsatnum_str
+
+    grid_df["FIPNUM"] = grid_df["FIPNUM"] * 3333
+    fipnum_big_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
+    assert "3333" in fipnum_big_str
+    assert len(fipnum_big_str) > len(fipnum_str)
+
+    tmpdir.chdir()
+    grid.df2ecl(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
+    assert os.path.exists("perm.inc")
+    incstring = open("perm.inc").readlines()
+    assert sum([1 for line in incstring if "PERM" in line]) == 6
+
+    with pytest.raises(ValueError):
+        grid.df2ecl(grid_df, ["PERMRR"])
+
+    # Check when we have restart info included:
+    gr_rst = grid.df(eclfiles, rstdates="all")
+    fipnum_str_rst = grid.df2ecl(gr_rst, "FIPNUM", dtype=int, nocomments=True)
+    assert fipnum_str_rst == fipnum_str_nocomment
+
+    # When dates are stacked, there are NaN's  in the FIPNUM column,
+    # which should be gracefully ignored.
+    gr_rst_stacked = grid.df(eclfiles, rstdates="all", stackdates=True)
+    fipnum_str_rst = grid.df2ecl(gr_rst_stacked, "FIPNUM", dtype=int, nocomments=True)
+    assert fipnum_str_rst == fipnum_str_nocomment
+
+
+def test_df2ecl_mock():
+    """Test that we can use df2ecl for mocked minimal dataframes"""
+    gr = pd.DataFrame(columns=["FIPNUM"], data=[[1], [2], [3]])
+    simple_fipnum_inc = grid.df2ecl(gr, keywords="FIPNUM", dtype=int, nocomments=True)
+    # (A warning is printed, that warning is warranted)
+    assert "FIPNUM" in simple_fipnum_inc
+    assert len(simple_fipnum_inc.replace("\n", " ").split()) == 5
 
 
 def test_subvectors():

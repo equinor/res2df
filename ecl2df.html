@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.1.dev1+g38e9694 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.1.dev1+gcb68407 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.dev1+g38e9694
+                0.1.dev1+gcb68407
               </div>
             
           
@@ -378,6 +378,36 @@ each subitem.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>list of floats or ints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.common.runlength_eclcompress">
+<code class="sig-prename descclassname">ecl2df.common.</code><code class="sig-name descname">runlength_eclcompress</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">'  '</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#runlength_eclcompress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.common.runlength_eclcompress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compress a string of space-separated elements so that</p>
+<blockquote>
+<div><p>2 2 2 2 2 3 3 4</p>
+</div></blockquote>
+<p>becomes</p>
+<blockquote>
+<div><p>5*2 2*3 4</p>
+</div></blockquote>
+<p>which is the format supported by Eclipse. The input
+string must be splittable with split(). Any newlines
+will be replaced by a space prior to split().</p>
+<p>See <a class="reference external" href="https:///en.wikipedia.org/wiki/Run-length_encoding">https:///en.wikipedia.org/wiki/Run-length_encoding</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> (<em>str</em>) – String of space-separated elements to compress</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Separator string used in output. Separator string in
+input is not conserved, but it must be compatible with
+str.split()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string, shorter or equal-length to the input.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1217,6 +1247,46 @@ dateinheaders False.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="ecl2df.grid.df2ecl">
+<code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">df2ecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grid_df</span></em>, <em class="sig-param"><span class="n">keywords</span></em>, <em class="sig-param"><span class="n">eclfiles</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dtype</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nocomments</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#df2ecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.df2ecl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an include file with grid data keyword, like PERMX, PORO,
+FIPNUM etc, for the GRID section of the Eclipse deck.</p>
+<p>Output (returned as string and optionally written to file) will then
+contain f.ex:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>PERMX</dt><dd><p>3.3 4.1 500.1 8543.0 1223.0 5022.0
+411.455 4433.9</p>
+</dd>
+</dl>
+<p>/</p>
+</div></blockquote>
+<p>if the grid contains 8 cells (inactive and active).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_df</strong> (<em>pd.DataFrame</em>) – we want to export data, and also the a column with GLOBAL_INDEX.
+Without GLOBAL_INDEX, the output will likely be invalid.
+The grid can contain both active and inactive cells.</p></li>
+<li><p><strong>keywords</strong> (<em>str</em><em> or </em><em>list of str</em>) – The keyword(s) to export, with one value for every cell.</p></li>
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – If provided, the total cell count for the grid
+will be requested from this object. If not, it will be <em>guessed</em>
+from the maximum number of GLOBAL_INDEX, which can be under-estimated
+in the corner-case that the last cells are inactive.</p></li>
+<li><p><strong>dtype</strong> (<em>float</em><em> or </em><em>int-class</em>) – If provided, the columns which are
+outputted are converted to int or float. Dataframe columns
+read from CSV files easily gets the wrong type, while Eclipse
+might require some data to be strictly integer.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – If provided, the string produced will also to be
+written to this filename.</p></li>
+<li><p><strong>nocomments</strong> (<em>bool</em>) – Set to True to avoid any comments being written. Defaults
+to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="ecl2df.grid.drop_constant_columns">
 <code class="sig-prename descclassname">ecl2df.grid.</code><code class="sig-name descname">drop_constant_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">alwayskeep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#drop_constant_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.grid.drop_constant_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop/delete constant columns from a dataframe.</p>
@@ -1262,7 +1332,8 @@ when merging with other dataframes with cell-data.</p>
 <dd class="field-odd"><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – object holding the Eclipse output files.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell.</p>
+<dd class="field-even"><p>With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell. The
+index of the dataframe are the global indices</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>DataFrame</p>

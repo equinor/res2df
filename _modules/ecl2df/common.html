@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.1.dev1+g38e9694 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.1.dev1+gcb68407 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.1.dev1+g38e9694
+                0.1.dev1+gcb68407
               </div>
             
           
@@ -168,6 +168,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -661,6 +662,40 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
             <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">string</span></div>
+
+
+<div class="viewcode-block" id="runlength_eclcompress"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.runlength_eclcompress">[docs]</a><span class="k">def</span> <span class="nf">runlength_eclcompress</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;  &quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compress a string of space-separated elements so that</span>
+
+<span class="sd">       2 2 2 2 2 3 3 4</span>
+
+<span class="sd">    becomes</span>
+
+<span class="sd">       5*2 2*3 4</span>
+
+<span class="sd">    which is the format supported by Eclipse. The input</span>
+<span class="sd">    string must be splittable with split(). Any newlines</span>
+<span class="sd">    will be replaced by a space prior to split().</span>
+
+<span class="sd">    See https:///en.wikipedia.org/wiki/Run-length_encoding</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string (str): String of space-separated elements to compress</span>
+<span class="sd">        sep (str): Separator string used in output. Separator string in</span>
+<span class="sd">            input is not conserved, but it must be compatible with</span>
+<span class="sd">            str.split()</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        string, shorter or equal-length to the input.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">compresseddata</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">stringlist</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">stringlist</span><span class="p">):</span>
+        <span class="n">equalvalues</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">equalvalues</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">compresseddata</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equalvalues</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">equalvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">compresseddata</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">equalvalues</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compresseddata</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="stack_on_colnames"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.stack_on_colnames">[docs]</a><span class="k">def</span> <span class="nf">stack_on_colnames</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

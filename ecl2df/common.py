@@ -9,6 +9,7 @@ import os
 import json
 import logging
 import datetime
+import itertools
 
 import numpy as np
 import pandas as pd
@@ -502,6 +503,40 @@ def df2ecl(
         with open(filename, "w") as file_handle:
             file_handle.write(string)
     return string
+
+
+def runlength_eclcompress(string, sep="  "):
+    """Compress a string of space-separated elements so that
+
+       2 2 2 2 2 3 3 4
+
+    becomes
+
+       5*2 2*3 4
+
+    which is the format supported by Eclipse. The input
+    string must be splittable with split(). Any newlines
+    will be replaced by a space prior to split().
+
+    See https:///en.wikipedia.org/wiki/Run-length_encoding
+
+    Args:
+        string (str): String of space-separated elements to compress
+        sep (str): Separator string used in output. Separator string in
+            input is not conserved, but it must be compatible with
+            str.split()
+    Returns:
+        string, shorter or equal-length to the input.
+    """
+    compresseddata = []
+    stringlist = string.replace("\n", " ").split()
+    for _, group in itertools.groupby(stringlist):
+        equalvalues = list(group)
+        if len(equalvalues) > 1:
+            compresseddata += [str(len(equalvalues)) + "*" + str(equalvalues[0])]
+        else:
+            compresseddata += [sep.join(equalvalues)]
+    return sep.join(compresseddata)
 
 
 def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):

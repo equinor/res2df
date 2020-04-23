@@ -129,3 +129,35 @@ See also the :ref:`usage-pillars` module for an application of the grid data.
 Calculating volumes of dynamic data (pr. some region parameter) can be obtained
 from that module as a by-product of the pillar computations.
 
+
+Generating Eclipse include files from grid data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you have loaded grid data into a Pandas frame, some operations are easily performed,
+scaling porosity, permeability etc. Or remapping some region parameters. Using the
+:func:`ecl2df.grid.df2ecl()` function these manipulated vectors can be written back as
+include files to Eclipse.
+
+Say you want to change the FIPNUM, and that FIPNUM 6 should be removed, and set
+it to FIPNUM 5. This can be accomplished using
+
+.. code-block:: python
+
+   from ecl2df import grid, EclFiles, common
+
+   eclfiles = EclFiles("'MYDATADECK.DATA")
+   dframe = grid.df(eclfiles)
+
+   # Change FIPNUM 6 to FIPNUM 5:
+   rows_to_touch = dframe["FIPNUM"] == 6
+   dframe.loc[rows_to_touch, "FIPNUM"] = 5
+
+   # Write back to new include file, ensure datatype is integer.
+   grid.df2ecl(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", eclfiles=eclfiles)
+
+This will produce the file `fipnum.inc` with the contents:
+
+.. literalinclude:: fipnum.inc
+
+It is recommended to supply the ``eclfiles`` object to ``df2ecl``, if not, correct grid
+size can not be ensured.

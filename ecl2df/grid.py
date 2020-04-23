@@ -14,10 +14,12 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+import os
 import sys
 import logging
 import argparse
 import fnmatch
+import textwrap
 import datetime
 import dateutil.parser
 
@@ -25,6 +27,7 @@ import numpy as np
 import pandas as pd
 
 import ecl2df
+from ecl2df import common
 from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
 
@@ -517,6 +520,144 @@ def drop_constant_columns(dframe, alwayskeep=None):
     if columnstodelete:
         logging.info("Deleting constant columns %s", str(columnstodelete))
     return dframe.drop(columnstodelete, axis=1)
+
+
+def df2ecl(
+    grid_df, keywords, eclfiles=None, dtype=None, filename=None, nocomments=False
+):
+    """
+    Write an include file with grid data keyword, like PERMX, PORO,
+    FIPNUM etc, for the GRID section of the Eclipse deck.
+
+    Output (returned as string and optionally written to file) will then
+    contain f.ex:
+
+        PERMX
+           3.3 4.1 500.1 8543.0 1223.0 5022.0
+           411.455 4433.9
+        /
+
+    if the grid contains 8 cells (inactive and active).
+
+    Args:
+        grid_df (pd.DataFrame). Dataframe with the keyword for which
+            we want to export data, and also the a column with GLOBAL_INDEX.
+            Without GLOBAL_INDEX, the output will likely be invalid.
+            The grid can contain both active and inactive cells.
+        keywords (str or list of str): The keyword(s) to export, with one value for every cell.
+        eclfiles (EclFiles): If provided, the total cell count for the grid
+            will be requested from this object. If not, it will be *guessed*
+            from the maximum number of GLOBAL_INDEX, which can be under-estimated
+            in the corner-case that the last cells are inactive.
+        dtype (float or int-class): If provided, the columns which are
+            outputted are converted to int or float. Dataframe columns
+            read from CSV files easily gets the wrong type, while Eclipse
+            might require some data to be strictly integer.
+        filename (str): If provided, the string produced will also to be
+            written to this filename.
+        nocomments (bool): Set to True to avoid any comments being written. Defaults
+            to False.
+    """
+    if isinstance(keywords, str):
+        keywords = [keywords]
+
+    if isinstance(dtype, str):
+        if dtype.startswith("int"):
+            dtype = int
+        elif dtype.startswith("float"):
+            dtype = float
+        else:
+            raise ValueError("Wrong dtype argument {}".format(dtype))
+
+    # Figure out the total number of cells for which we need to export data for:
+    global_size = None
+    active_cells = None
+    if eclfiles is not None:
+        if eclfiles.get_egrid() is not None:
+            global_size = eclfiles.get_egrid().get_global_size()
+            active_cells = eclfiles.get_egrid().getNumActive()
+
+    if "GLOBAL_INDEX" not in grid_df:
+        logger.warning(
+            (
+                "Global index not found in grid dataframe. "
+                "Assumes all cells are active"
+            )
+        )
+        # Drop NaN rows for columns to be used (triggerd by stacked dates and no global index, unlikely)
+        # Also copy dataframe to avoid side-effects on incoming data.
+        grid_df = grid_df.dropna(
+            axis="rows", subset=[keyword for keyword in keywords if keyword in grid_df]
+        )
+        grid_df["GLOBAL_INDEX"] = grid_df.index
+
+    if global_size is None:
+        global_size = int(grid_df["GLOBAL_INDEX"].max() + 1)
+        active_cells = len(grid_df[grid_df.index >= 0])
+        logger.warning("Global grid size estimated to %s", str(global_size))
+
+    ecl2df_header = (
+        "Output file printed by "
+        + "ecl2df.grid "
+        + ecl2df.__version__
+        + "\n"
+        + " at "
+        + str(datetime.datetime.now())
+    )
+
+    string = ""
+    if not nocomments:
+        string += common.comment_formatter(ecl2df_header)
+    string += "\n"
+
+    # If we have NaNs in the dataframe, we will be more careful (costs memory)
+    if grid_df.isna().any().any():
+        grid_df = grid_df.dropna(
+            axis="rows", subset=[keyword for keyword in keywords if keyword in grid_df]
+        )
+
+    for keyword in keywords:
+        if keyword not in grid_df.columns:
+            raise ValueError("Keyword {} not found in grid dataframe".format(keyword))
+        vector = np.zeros(global_size)
+        vector[grid_df["GLOBAL_INDEX"].astype(int).values] = grid_df[keyword]
+        if dtype == int:
+            vector = vector.astype(int)
+        if dtype == float:
+            vector = vector.astype(float)
+        if len(vector) != global_size:
+            logger.warning(
+                "Mismatch between dumped vector length %d from df2ecl and assumed grid size %d",
+                len(vector),
+                global_size,
+            )
+            logger.warning("Data will be dumped, but may error in simulator")
+        strvector = "  ".join([str(x) for x in vector])
+        strvector = common.runlength_eclcompress(strvector)
+
+        string += keyword + "\n"
+        indent = " " * 5
+        string += "\n".join(
+            textwrap.wrap(
+                strvector, initial_indent=indent, subsequent_indent=indent, width=70
+            )
+        )
+        string += "\n/"
+        if not nocomments:
+            string += " -- {}: {} active cells, {} total cell count\n".format(
+                keyword, active_cells, global_size
+            )
+        string += "\n"
+
+    if filename is not None:
+        # Make directory if not present:
+        filenamedir = os.path.dirname(filename)
+        if filenamedir and not os.path.exists(filenamedir):
+            os.makedirs(filenamedir)
+        with open(filename, "w") as file_handle:
+            file_handle.write(string)
+
+    return string
 
 
 def main():

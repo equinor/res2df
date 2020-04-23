@@ -26,12 +26,10 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 
-import ecl2df
-from ecl2df import common
+from ecl2df import common, __version__
+
 from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
-
-from .common import merge_zones
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -285,7 +283,7 @@ def gridgeometry2df(eclfiles):
     zonemap = eclfiles.get_zonemap()
     if zonemap:
         logger.info("Merging zonemap into grid")
-        grid_df = merge_zones(grid_df, zonemap, kname="K")
+        grid_df = common.merge_zones(grid_df, zonemap, kname="K")
 
     return grid_df
 
@@ -436,7 +434,7 @@ def df(
         )
     grid_df = pd.concat([gridgeom, initdf, rst_df], axis=1, sort=False)
     if dropconstants:
-        grid_df = ecl2df.grid.drop_constant_columns(grid_df)
+        grid_df = drop_constant_columns(grid_df)
     return grid_df
 
 
@@ -599,7 +597,7 @@ def df2ecl(
     ecl2df_header = (
         "Output file printed by "
         + "ecl2df.grid "
-        + ecl2df.__version__
+        + __version__
         + "\n"
         + " at "
         + str(datetime.datetime.now())

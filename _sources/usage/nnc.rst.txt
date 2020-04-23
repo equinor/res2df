@@ -4,7 +4,7 @@ nnc
 nnc will extract Non-Neighbour-Connections from your Eclipse grid as pairs
 of *ijk* indices together with their associated transmissibilities.
 
-See also the :doc:`usage/trans` module, which can extract all transmissibilities, not only
+See also the :doc:`trans` module, which can extract all transmissibilities, not only
 non-neigbour connections.
 
 ..

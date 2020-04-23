@@ -16,6 +16,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import pkg_resources
 
 # -- Project information -----------------------------------------------------
 
@@ -26,10 +27,8 @@ copyright = "Equinor 2019-2020"
 # The short X.Y version
 import ecl2df
 
-version = ecl2df.__version__
-# The full version, including alpha/beta/rc tags
-release = ecl2df.__version__
-
+release = pkg_resources.get_distribution("ecl2df").version
+version = release
 
 # -- General configuration ---------------------------------------------------
 

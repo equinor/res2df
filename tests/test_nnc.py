@@ -8,8 +8,9 @@ import os
 import sys
 
 import pandas as pd
+import pytest
 
-from ecl2df import nnc, faults, ecl2csv
+from ecl2df import nnc, faults, ecl2csv, trans
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -69,6 +70,35 @@ def test_nnc2df_faultnames():
     )
     # Fix columnnames so that we don't get FACE_x and FACE_y etc.
     # Remove I_x, J_x, K_x (and _y) which is not needed
+
+
+def test_df2ecl_editnnc(tmpdir):
+    """Test generation of EDITNNC keyword"""
+    eclfiles = EclFiles(DATAFILE)
+    nncdf = nnc.df(eclfiles)
+    tmpdir.chdir()
+
+    nncdf["TRANM"] = 2
+    editnnc = nnc.df2ecl_editnnc(nncdf, filename="editnnc.inc")
+    editnnc_fromfile = "".join(open("editnnc.inc").readlines())
+    assert editnnc == editnnc_fromfile
+    assert "EDITNNC" in editnnc
+    assert editnnc.count("/") == len(nncdf) + 1
+    assert "avg multiplier" in editnnc
+
+    # Fails when columns are missing
+    with pytest.raises((KeyError, ValueError)):
+        nnc.df2ecl_editnnc(nncdf[["I1", "I2"]])
+
+    editnnc = nnc.df2ecl_editnnc(nncdf, nocomments=True)
+    assert "avg multiplier" not in editnnc
+
+    # Test compatibility with trans module:
+    trans_df = trans.df(eclfiles, addnnc=True)
+    editnnc = nnc.df2ecl_editnnc(trans_df.assign(TRANM=0.3))
+    assert "avg multiplier 0.3" in editnnc or "avg multiplier 0.29999" in editnnc
+
+    print(nnc.df2ecl_editnnc(nnc.df(eclfiles).head(4).assign(TRANM=0.1)))
 
 
 def test_main(tmpdir):

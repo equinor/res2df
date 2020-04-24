@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc &mdash; ecl2df 0.1.dev1+gcef052f documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df 0.1.dev1+gc23fde6 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.1.dev1+gcef052f
+                0.1.dev1+gc23fde6
               </div>
             
           
@@ -165,12 +165,13 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">gridgeometry2df</span>
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">common</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">__version__</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -272,7 +273,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataFrame: Incoming dataframe augmented with the columns X, Y and Z.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">gridgeometry</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+    <span class="n">gridgeometry</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">gnncdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
         <span class="n">nncdf</span><span class="p">,</span>
         <span class="n">gridgeometry</span><span class="p">,</span>
@@ -352,6 +353,87 @@
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="df2ecl_editnnc"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.df2ecl_editnnc">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_editnnc</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nocomments</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write an EDITNNC keyword</span>
+
+<span class="sd">    This will write</span>
+<span class="sd">        EDITNNC</span>
+<span class="sd">           IX IY IZ JX JY JZ TRANM /</span>
+<span class="sd">           ...</span>
+<span class="sd">        /</span>
+
+<span class="sd">    and return as string and/or dump to filename.</span>
+
+<span class="sd">    The column TRANM must be in the incoming dataframe</span>
+<span class="sd">    and it should be the multiplier to be written for</span>
+<span class="sd">    each connection.</span>
+
+<span class="sd">    If you want to edit only a subset of the non-neighbour</span>
+<span class="sd">    connections, filter the dataframe upfront.</span>
+
+<span class="sd">    Only rows where the column &quot;DIR&quot; is &quot;NNC&quot; will be considered.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nnc_df (pd.DataFrame): Dataframe with I1, J1, K1, I2, J2, K2 and a TRANM</span>
+<span class="sd">            column, where the multiplier to be written is in TRANM. If the DIR</span>
+<span class="sd">            column is present, only the rows with &#39;NNC&#39; in the DIR column</span>
+<span class="sd">            are included.</span>
+<span class="sd">        filename (str): Filename to write to</span>
+<span class="sd">        nocomments (bool): Set to True if you don&#39;t want any comments</span>
+<span class="sd">            in the produced string/file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string with the EDITNNC keyword.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">ecl2df_header</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Output file printed by ecl2df.nnc&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="o">+</span> <span class="n">__version__</span>
+        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot; at &quot;</span>
+        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">nocomments</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">ecl2df_header</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;DIR&quot;</span> <span class="ow">in</span> <span class="n">nnc_df</span><span class="p">:</span>
+        <span class="n">nnc_df</span> <span class="o">=</span> <span class="n">nnc_df</span><span class="p">[</span><span class="n">nnc_df</span><span class="p">[</span><span class="s2">&quot;DIR&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;NNC&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;TRANM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nnc_df</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;TRANM not supplied in nnc_df&quot;</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;EDITNNC&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span>
+    <span class="n">table_str</span> <span class="o">=</span> <span class="n">nnc_df</span><span class="p">[[</span><span class="s2">&quot;I1&quot;</span><span class="p">,</span> <span class="s2">&quot;J1&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;I2&quot;</span><span class="p">,</span> <span class="s2">&quot;J2&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">,</span> <span class="s2">&quot;TRANM&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">table_str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
+    <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- &quot;</span> <span class="o">+</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">indent</span> <span class="o">+</span> <span class="n">line</span> <span class="o">+</span> <span class="s2">&quot; /&quot;</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">nocomments</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span>
+            <span class="s2">&quot;  </span><span class="si">{}</span><span class="s2"> nnc connections, avg multiplier </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">),</span> <span class="n">nnc_df</span><span class="p">[</span><span class="s2">&quot;TRANM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Make directory if not present:</span>
+        <span class="n">filenamedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filenamedir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filenamedir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">filenamedir</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">string</span></div>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>

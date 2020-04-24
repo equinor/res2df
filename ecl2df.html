@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.1.dev1+gcef052f documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.1.dev1+gc23fde6 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.dev1+gcef052f
+                0.1.dev1+gc23fde6
               </div>
             
           
@@ -1677,6 +1677,44 @@ X, Y and Z.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.DataFrame. Empty if no NNC information found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.nnc.df2ecl_editnnc">
+<code class="sig-prename descclassname">ecl2df.nnc.</code><code class="sig-name descname">df2ecl_editnnc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nnc_df</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nocomments</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/nnc.html#df2ecl_editnnc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.nnc.df2ecl_editnnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an EDITNNC keyword</p>
+<dl>
+<dt>This will write</dt><dd><dl class="simple">
+<dt>EDITNNC</dt><dd><p>IX IY IZ JX JY JZ TRANM /
+…</p>
+</dd>
+</dl>
+<p>/</p>
+</dd>
+</dl>
+<p>and return as string and/or dump to filename.</p>
+<p>The column TRANM must be in the incoming dataframe
+and it should be the multiplier to be written for
+each connection.</p>
+<p>If you want to edit only a subset of the non-neighbour
+connections, filter the dataframe upfront.</p>
+<p>Only rows where the column “DIR” is “NNC” will be considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nnc_df</strong> (<em>pd.DataFrame</em>) – Dataframe with I1, J1, K1, I2, J2, K2 and a TRANM
+column, where the multiplier to be written is in TRANM. If the DIR
+column is present, only the rows with ‘NNC’ in the DIR column
+are included.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Filename to write to</p></li>
+<li><p><strong>nocomments</strong> (<em>bool</em>) – Set to True if you don’t want any comments
+in the produced string/file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string with the EDITNNC keyword.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -10,14 +10,18 @@
 ecl2df is a Pandas DataFrame wrapper around libecl and opm.io, which
 are used to access binary files outputted by the reservoir simulator
 Eclipse, or its input files --- or any other tool outputting to the same
-data format. 
+data format.
+
+The reverse operation, from a Pandas DataFrame to Eclipse include files,
+is provided for some of the modules.
 
 The package consists of a module pr. datatype, e.g. one module for summary 
 files (.UNSMRY), one for completion data etc.
 
 There is a command line frontend for almost all functionality, called
 `ecl2csv`, which converts the Eclipse data to DataFrames, and then dumps
-the dataframes to files in CSV format.
+the dataframes to files in CSV format, and a similar `csv2ecl` for the
+reverse operation.
 
 For documentation, see <https://equinor.github.io/ecl2df/>
 
@@ -27,6 +31,6 @@ This library is released under GPLv3.
 
 ## Copyright
 
-The code is Copyright Equinor ASA 2019.
+The code is Copyright Equinor ASA 2019-2020.
 
 Contributions without copyright transfer are welcome.

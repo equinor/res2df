@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from os import path
+
 from setuptools import setup
 
 try:
@@ -11,14 +13,13 @@ except ImportError:
 
     cmdclass = {}
 
+# Read the contents of README.md, for PyPI
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, "README.md")) as f_handle:
+    LONG_DESCRIPTION = f_handle.read()
 
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
-REQUIREMENTS = [
-    "libecl",
-    "pandas",
-    "pyyaml>=5.1",
-    "treelib",
-]
+REQUIREMENTS = ["libecl", "pandas", "pyyaml>=5.1", "treelib"]
 TEST_REQUIREMENTS = [
     "black; python_version >= '3'",
     "networkx",
@@ -34,6 +35,8 @@ setup(
     use_scm_version={"write_to": "ecl2df/version.py"},
     cmdclass=cmdclass,
     description="Convert Eclipse 100 input and output to DataFrames",
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/markdown",
     url="http://github.com/equinor/ecl2df",
     author="Håvard Berland",
     author_email="havb@equinor.com",

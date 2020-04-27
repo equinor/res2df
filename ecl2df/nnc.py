@@ -6,12 +6,13 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import os
 import logging
+import datetime
 import argparse
 import pandas as pd
 
-from .eclfiles import EclFiles
-from .grid import gridgeometry2df
+from ecl2df import common, EclFiles, grid, __version__
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -113,7 +114,7 @@ def add_nnc_coords(nncdf, eclfiles):
     Returns:
         DataFrame: Incoming dataframe augmented with the columns X, Y and Z.
     """
-    gridgeometry = gridgeometry2df(eclfiles)
+    gridgeometry = grid.gridgeometry2df(eclfiles)
     gnncdf = pd.merge(
         nncdf,
         gridgeometry,
@@ -193,6 +194,87 @@ def fill_parser(parser):
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
+
+
+def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
+    """Write an EDITNNC keyword
+
+    This will write
+        EDITNNC
+           IX IY IZ JX JY JZ TRANM /
+           ...
+        /
+
+    and return as string and/or dump to filename.
+
+    The column TRANM must be in the incoming dataframe
+    and it should be the multiplier to be written for
+    each connection.
+
+    If you want to edit only a subset of the non-neighbour
+    connections, filter the dataframe upfront.
+
+    Only rows where the column "DIR" is "NNC" will be considered.
+
+    Args:
+        nnc_df (pd.DataFrame): Dataframe with I1, J1, K1, I2, J2, K2 and a TRANM
+            column, where the multiplier to be written is in TRANM. If the DIR
+            column is present, only the rows with 'NNC' in the DIR column
+            are included.
+        filename (str): Filename to write to
+        nocomments (bool): Set to True if you don't want any comments
+            in the produced string/file
+
+    Returns:
+        string with the EDITNNC keyword.
+    """
+
+    string = ""
+    ecl2df_header = (
+        "Output file printed by ecl2df.nnc"
+        + " "
+        + __version__
+        + "\n"
+        + " at "
+        + str(datetime.datetime.now())
+    )
+    if not nocomments:
+        string += common.comment_formatter(ecl2df_header)
+    string += "\n"
+
+    if "DIR" in nnc_df:
+        nnc_df = nnc_df[nnc_df["DIR"] == "NNC"]
+
+    if "TRANM" not in nnc_df:
+        raise ValueError("TRANM not supplied in nnc_df")
+    string += "EDITNNC" + os.linesep
+    table_str = nnc_df[["I1", "J1", "K1", "I2", "J2", "K2", "TRANM"]].to_string(
+        header=True, index=False
+    )
+    lines = table_str.rstrip().split(os.linesep)
+    indent = "   "
+    string += "-- " + lines[0] + os.linesep
+    string += os.linesep.join([indent + line + " /" for line in lines[1:]])
+    string += os.linesep
+    string += "/"
+    if not nocomments:
+        string += " "
+        string += common.comment_formatter(
+            "  {} nnc connections, avg multiplier {}".format(
+                len(nnc_df), nnc_df["TRANM"].mean()
+            )
+        )
+    string += "\n\n"
+
+    if filename is not None:
+        # Make directory if not present:
+        filenamedir = os.path.dirname(filename)
+        if filenamedir and not os.path.exists(filenamedir):
+            os.makedirs(filenamedir)
+        with open(filename, "w") as file_handle:
+            file_handle.write(string)
+
+    return string
 
 
 def main():

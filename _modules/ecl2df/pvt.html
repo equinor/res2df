@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.pvt &mdash; ecl2df 0.6.1.dev3+g0d705fa documentation</title>
+  <title>ecl2df.pvt &mdash; ecl2df 0.6.1.dev4+g397a265 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.6.1.dev3+g0d705fa
+                0.6.1.dev4+g397a265
               </div>
             
           
@@ -438,7 +438,9 @@
                 <span class="nb">str</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
             <span class="p">)</span>
             <span class="n">pvt_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Empty PVT data, not written to disk&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
@@ -498,6 +500,8 @@
 <span class="sd">            to file.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;ROCK</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;COMPRESSIBILITY&quot;</span><span class="p">)</span>
@@ -526,6 +530,8 @@
 <span class="sd">        dframe (pd.DataFrame): Containing DENSITY data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;DENSITY</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -558,6 +564,8 @@
 <span class="sd">        dframe (pd.DataFrame): Containing PVTW data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVTW</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -590,6 +598,8 @@
 <span class="sd">        dframe (pd.DataFrame): Containing PVTG data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;DENSITY</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -622,6 +632,8 @@
 <span class="sd">        dframe (pd.DataFrame): Containing PVDG data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVDG</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -668,6 +680,8 @@
 <span class="sd">        dframe (pd.DataFrame): Containing PVDO data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVDO</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -717,6 +731,8 @@
 <span class="sd">        dframe (pd.DataFrame): Containing PVTO data</span>
 <span class="sd">        comment (str): Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVTO</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>

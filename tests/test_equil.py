@@ -71,6 +71,11 @@ EQUIL
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
 
+    # Test empty data:
+    inc = equil.df2ecl_equil(equil.df(""))
+    assert "No data" in inc
+    assert equil.df(inc).empty
+
     deckstr = """
 OIL
 WATER

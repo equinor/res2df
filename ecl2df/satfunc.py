@@ -322,7 +322,7 @@ def satfunc_main(args):
             satfunc_df.to_csv(args.output, index=False)
             print("Wrote to " + args.output)
     else:
-        logger.warning("Empty saturation function dataframe being written to disk!")
+        logger.error("Empty saturation functions data, not written to disk!")
 
 
 def satfunc_reverse_main(args):
@@ -465,6 +465,8 @@ def df2ecl_sof3(dframe, comment=None):
 
 
 def _df2ecl_satfuncs(keyword, dframe, comment=None):
+    if dframe.empty:
+        return "-- No data!\n"
     string = "{}\n".format(keyword)
     string += common.comment_formatter(comment)
 

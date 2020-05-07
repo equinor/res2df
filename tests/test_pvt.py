@@ -95,6 +95,11 @@ def test_pvto_strings():
     dframe_via_string = pvt.pvto_fromdeck(pvt.df2ecl_pvto(dframe))
     pd.testing.assert_frame_equal(dframe_via_string, dframe)
 
+    # Test emtpy data:
+    inc = pvt.df2ecl_pvto(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
+
 
 def test_pvdg_string():
     """Test that PVDG can be parsed from a string"""
@@ -115,6 +120,11 @@ PVDG
     assert "VOLUMEFACTOR" in dframe
     assert "VISCOSITY" in dframe
 
+    # Test emtpy data:
+    inc = pvt.df2ecl_pvdg(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
+
 
 def test_pvdo_string():
     """Test that PVDO can be parsed from a string"""
@@ -134,6 +144,11 @@ PVDO
     assert "PRESSURE" in dframe
     assert "VOLUMEFACTOR" in dframe
     assert "VISCOSITY" in dframe
+
+    # Test emtpy data:
+    inc = pvt.df2ecl_pvdo(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
 
 
 def test_pvt_reek():
@@ -239,6 +254,11 @@ PVTG
     assert max(pvtg_df["VOLUMEFACTOR"]) == 0.0523
     assert max(pvtg_df["VISCOSITY"]) == 0.0393
 
+    # Test emtpy data:
+    inc = pvt.df2ecl_pvtg(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
+
 
 def test_density():
     """Test that DENSITY can be parsed from files and from strings"""
@@ -269,6 +289,11 @@ def test_density():
     dframe_via_string = pvt.density_fromdeck(pvt.df2ecl_density(density_df))
     pd.testing.assert_frame_equal(dframe_via_string, density_df)
 
+    # Test emtpy data:
+    inc = pvt.df2ecl_density(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
+
 
 def test_pvtw():
     """Test that PVTW can be parsed from a string"""
@@ -287,6 +312,11 @@ def test_pvtw():
     pvtw_df = pvt.pvtw_fromdeck(deck)  # Must give string, not deck, for NTPVT guessing
     assert len(pvtw_df) == 2
 
+    # Test emtpy data:
+    inc = pvt.df2ecl_pvtw(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
+
 
 def test_rock():
     """Test parsing of the ROCK keyword from a string"""
@@ -298,6 +328,11 @@ def test_rock():
     assert "COMPRESSIBILITY" in rock_df
     dframe_via_string = pvt.rock_fromdeck(pvt.df2ecl_rock(rock_df))
     pd.testing.assert_frame_equal(dframe_via_string, rock_df)
+
+    # Test emtpy data:
+    inc = pvt.df2ecl_rock(pvt.df(""))
+    assert "No data" in inc
+    assert pvt.df(inc).empty
 
 
 def test_df():

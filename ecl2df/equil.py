@@ -353,7 +353,7 @@ def equil_main(args):
             print("Wrote to " + args.output)
 
     else:
-        logger.warning("Empty EQUIL-data being written to disk!")
+        logger.error("Empty EQUIL-data, not written to disk!")
 
 
 def equil_reverse_main(args):
@@ -417,6 +417,8 @@ def df2ecl_equil(dframe, comment=None):
         dframe (pd.DataFrame): Containing EQUIL data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "EQUIL\n"
     string += common.comment_formatter(comment)
 
@@ -541,6 +543,8 @@ def df2ecl_pdvd(dframe, comment=None):
 
 def _df2ecl_equilfuncs(keyword, dframe, comment=None):
     """Internal function to be used by df2ecl_<keyword>() functions"""
+    if dframe.empty:
+        return "-- No data!"
     string = "{}\n".format(keyword)
     string += common.comment_formatter(comment)
     col_headers = RENAMERS[keyword]["DATA"]

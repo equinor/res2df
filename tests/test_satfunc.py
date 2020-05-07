@@ -42,6 +42,19 @@ def test_satfunc2df():
     )
 
 
+def test_nodata():
+    """Test when no data is found"""
+    swofstr = ""
+
+    satdf = satfunc.df(swofstr)
+    assert len(satdf) == 0
+
+    inc = satfunc.df2ecl_swof(satdf)
+    assert "No data" in inc
+    df_from_inc = satfunc.df(inc)
+    assert df_from_inc.empty
+
+
 def test_str2df():
     """Test parsing of a direct string"""
     swofstr = """

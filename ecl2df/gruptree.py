@@ -312,9 +312,10 @@ def gruptree_main(args):
         dframe.to_csv(sys.stdout, index=False)
     elif args.output:
         if dframe.empty:
-            logger.warning("Empty GRUPTREE dataframe being written to disk!")
-        dframe.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+            logger.error("Empty GRUPTREE dataframe, not written to disk!")
+        else:
+            dframe.to_csv(args.output, index=False)
+            print("Wrote to " + args.output)
 
 
 def deck2df(eclfiles, startdate=None):

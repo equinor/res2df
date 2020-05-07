@@ -280,6 +280,8 @@ def pvt_main(args):
             )
             pvt_df.to_csv(args.output, index=False)
             print("Wrote to " + args.output)
+    else:
+        logger.error("Empty PVT data, not written to disk")
 
 
 def pvt_reverse_main(args):
@@ -339,6 +341,8 @@ def df2ecl_rock(dframe, comment=None, filename=None):
             to file.
 
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "ROCK\n"
     string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21}\n".format("PRESSURE", "COMPRESSIBILITY")
@@ -367,6 +371,8 @@ def df2ecl_density(dframe, comment=None):
         dframe (pd.DataFrame): Containing DENSITY data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "DENSITY\n"
     string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
@@ -399,6 +405,8 @@ def df2ecl_pvtw(dframe, comment=None):
         dframe (pd.DataFrame): Containing PVTW data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "PVTW\n"
     string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21} {:^21} {:^21}  \n".format(
@@ -431,6 +439,8 @@ def df2ecl_pvtg(dframe, comment=None):
         dframe (pd.DataFrame): Containing PVTG data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "DENSITY\n"
     string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
@@ -463,6 +473,8 @@ def df2ecl_pvdg(dframe, comment=None):
         dframe (pd.DataFrame): Containing PVDG data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "PVDG\n"
     string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
@@ -509,6 +521,8 @@ def df2ecl_pvdo(dframe, comment=None):
         dframe (pd.DataFrame): Containing PVDO data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "PVDO\n"
     string += common.comment_formatter(comment)
     string += "--   {:^21} {:^21} {:^21}  \n".format(
@@ -558,6 +572,8 @@ def df2ecl_pvto(dframe, comment=None):
         dframe (pd.DataFrame): Containing PVTO data
         comment (str): Text that will be included as a comment
     """
+    if dframe.empty:
+        return "-- No data!"
     string = "PVTO\n"
     string += common.comment_formatter(comment)
     string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(

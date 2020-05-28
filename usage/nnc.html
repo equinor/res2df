@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>nnc &mdash; ecl2df 0.6.1.dev4+g397a265 documentation</title>
+  <title>nnc &mdash; ecl2df 0.6.1.dev5+g352cd99 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.6.1.dev4+g397a265
+                0.6.1.dev5+g352cd99
               </div>
             
           
@@ -182,6 +182,8 @@
 of <em>ijk</em> indices together with their associated transmissibilities.</p>
 <p>See also the <a class="reference internal" href="trans.html"><span class="doc">trans</span></a> module, which can extract all transmissibilities, not only
 non-neigbour connections.</p>
+<p>Note: Eclipse300 will not export TRANNNC data in parallel mode.
+Run in serial to get this output.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">EclFiles</span>
 
 <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc &mdash; ecl2df 0.6.1.dev4+g397a265 documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df 0.6.1.dev5+g352cd99 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.6.1.dev4+g397a265
+                0.6.1.dev5+g352cd99
               </div>
             
           
@@ -206,6 +206,9 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;NNC1&quot;</span> <span class="ow">in</span> <span class="n">egrid_file</span> <span class="ow">and</span> <span class="s2">&quot;NNC2&quot;</span> <span class="ow">in</span> <span class="n">egrid_file</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No NNC data in EGRID&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;TRANNNC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init_file</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No TRANNNC data in INIT (E300 parallell run?)&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="c1"># Grid indices for first cell in cell pairs, into a vertical</span>

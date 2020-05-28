@@ -7,6 +7,9 @@ of *ijk* indices together with their associated transmissibilities.
 See also the :doc:`trans` module, which can extract all transmissibilities, not only
 non-neigbour connections.
 
+Note: Eclipse300 will not export TRANNNC data in parallel mode.
+Run in serial to get this output.
+
 ..
   nnc.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/nnc.csv', index=False)
 

@@ -48,6 +48,9 @@ def df(eclfiles, coords=False, pillars=False):
     if not ("NNC1" in egrid_file and "NNC2" in egrid_file):
         logger.warning("No NNC data in EGRID")
         return pd.DataFrame()
+    if "TRANNNC" not in init_file:
+        logger.warning("No TRANNNC data in INIT (E300 parallell run?)")
+        return pd.DataFrame()
 
     # Grid indices for first cell in cell pairs, into a vertical
     # vector. The indices are "global" in libecl terms, and are

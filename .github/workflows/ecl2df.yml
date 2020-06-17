@@ -42,28 +42,12 @@ jobs:
         if: matrix.python-version != '2.7'
         run: |
           pip install black
-          black --check ecl2df/*py tests/test_*py setup.py docs/conf.py
-
-      - name: Compile and install opm-common
-        run: |
-          sudo apt-get install libboost-all-dev liblapack-dev
-          pushd ..
-          git clone --recursive https://github.com/OPM/opm-common.git
-          mkdir opm-common/build
-          pushd opm-common/build
-          cmake .. -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install \
-                   -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
-                   -DBUILD_TESTING=OFF \
-                   -DBUILD_SHARED_LIBS=ON \
-                   -DOPM_ENABLE_PYTHON=ON \
-                   -DOPM_INSTALL_PYTHON=ON
-          make -j2 install
-          popd
-          popd
+          black --check ecl2df/*py tests/test_*py setup.py docs/
 
       - name: Install ecl2df with dependencies
         run: |
           pip install --upgrade pip
+          pip install -i https://test.pypi.org/simple/ CeeSolOpm
           pip install .
 
       - name: Install test dependencies

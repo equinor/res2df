@@ -42,7 +42,7 @@ jobs:
         if: matrix.python-version != '2.7'
         run: |
           pip install black
-          black --check ecl2df/*py tests/test_*py setup.py docs/
+          black --check ecl2df/*py tests/test_*py setup.py docs/conf.py
 
       - name: Install ecl2df with dependencies
         run: |

@@ -67,4 +67,5 @@ setup(
     install_requires=REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,
     extras_require=EXTRAS_REQUIRE,
+    python_requires=">=2.7",
 )

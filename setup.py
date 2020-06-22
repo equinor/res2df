@@ -19,7 +19,13 @@ with open(path.join(this_directory, "README.md")) as f_handle:
     LONG_DESCRIPTION = f_handle.read()
 
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
-REQUIREMENTS = ["libecl", "pandas", "pyyaml>=5.1", "treelib"]
+REQUIREMENTS = [
+    "libecl",
+    "opm; python_version >= '3.5'",
+    "pandas",
+    "pyyaml>=5.1",
+    "treelib",
+]
 TEST_REQUIREMENTS = [
     "black; python_version >= '3'",
     "networkx",

@@ -169,7 +169,7 @@ def df(deck, startdate=None, welspecs=True):
     return dframe
 
 
-def df2dict(dframe):
+def edge_dataframe2dict(dframe):
     """Convert list of edges in a dataframe into a
     nested dictionary (tree).
 
@@ -190,11 +190,11 @@ def df2dict(dframe):
     Leaf nodes have empty dictionaries as their value.
 
     Returns:
-        list of nested dictionary, as we in general
-        may have more than one root.
+        list of nested dictionaries, as we in general
+            may have more than one root.
     """
     if dframe.empty:
-        return {}
+        return [{}]
     if "DATE" in dframe:
         if len(dframe["DATE"].unique()) > 1:
             raise ValueError("Can only handle one date at a time")
@@ -295,7 +295,7 @@ def gruptree_main(args):
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
                 print("Date: " + str(date.astype("M8[D]")))
-                trees = df2dict(dframe[dframe["DATE"] == date])
+                trees = edge_dataframe2dict(dframe[dframe["DATE"] == date])
                 # Returns list of dicts, one for each root found
                 # (typically only one)
                 for tree in trees:

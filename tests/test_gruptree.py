@@ -96,7 +96,7 @@ WELSPECS
     grupdf = gruptree.df(deck)
     grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
     grupdf.to_csv("gruptreenet.csv", index=False)
-    grup_dict = gruptree.df2dict(grupdf)
+    grup_dict = gruptree.edge_dataframe2dict(grupdf)
     print("Copy and paste into RST files:")
     print(str(gruptree.dict2treelib("", grup_dict[0])))
 
@@ -131,9 +131,9 @@ def test_emptytree():
     deck = EclFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.empty
-    gruptreedict = gruptree.df2dict(grupdf)
-    assert not gruptreedict
-    treelibtree = gruptree.dict2treelib("", gruptreedict)
+    gruptreedict = gruptree.edge_dataframe2dict(grupdf)
+    assert not gruptreedict[0]
+    treelibtree = gruptree.dict2treelib("", gruptreedict[0])
     treestring = str(treelibtree)
     assert not treestring.strip()  # Let it return whitespace
 

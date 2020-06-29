@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rft &mdash; ecl2df 0.6.1.dev10+g3782c74 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="satfunc" href="satfunc.html" />
+    <link rel="prev" title="pvt" href="pvt.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.1.dev10+g3782c74
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rft</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#eclipse-usage">Eclipse usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#segment-and-icd-analysis">Segment and ICD analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analysis-examples">Analysis examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#column-names">Column names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="satfunc.html">satfunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>rft</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/rft.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rft">
+<h1>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h1>
+<p>rft will convert the binary RFT files from Eclipse to dataframes or CSV files,
+facilitating analysis of inflow and pressure for each connection the well
+has to the reservoir grid.</p>
+<p>Typical usage is to generate the CSV from the command line:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv rft MYDATADECK.DATA --verbose --output rft.csv</span>
+</pre></div>
+</div>
+<p>It is possible to a specific well, a date (YYYY-MM-DD). If you enable debug mode
+through <code class="docutils literal notranslate"><span class="pre">--debug</span></code>, more information is printed, including an ASCII representation
+of each wells topology, and also three extra CSV files printed for the last
+processed well.</p>
+<div class="section" id="eclipse-usage">
+<h2>Eclipse usage<a class="headerlink" href="#eclipse-usage" title="Permalink to this headline">¶</a></h2>
+<p>In order to get RFT files emitted from Eclipse, you need the <code class="docutils literal notranslate"><span class="pre">WRFTPLT</span></code> keyword
+in your DATA-file, example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">WRFTPLT</span>
+<span class="go">  &#39;*&#39; &#39;REPT&#39; &#39;REPT&#39; &#39;REPT&#39; /</span>
+<span class="go">/</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">*</span></code> will match all wells defined up to this point.</p>
+<p>From RMS11, you can insert</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">YYYY-MM-DD IORFT NAME=&#39;*&#39; PLTFREQ=&#39;Yes&#39; RFTFREQ=&#39;Yes&#39; SEGFREQ=&#39;Yes&#39;</span>
+</pre></div>
+</div>
+<p>into your events files to obtain the same (input a date in your
+specified date format).</p>
+</div>
+<div class="section" id="segment-and-icd-analysis">
+<h2>Segment and ICD analysis<a class="headerlink" href="#segment-and-icd-analysis" title="Permalink to this headline">¶</a></h2>
+<p>For multisegment wells, reservoir connections (<code class="docutils literal notranslate"><span class="pre">CONxxxxx</span></code> data) are matched
+to their corresponding well segment (<code class="docutils literal notranslate"><span class="pre">SEGxxxxx</span></code> data) and the matched data is
+returned on the same row in the CSV file, facilitating cross-plot of data.</p>
+<p>When ICD segments are detected (well segments that sit alone on their own
+branch), these data are tagged with an <code class="docutils literal notranslate"><span class="pre">ICD_</span></code> prefix to their <code class="docutils literal notranslate"><span class="pre">SEGxxxxx</span></code>
+columns, and also matched to the row with the connection and segment data.
+This facilitates analysis of f.ex. pressure drop from the reservoir, in the ICD,
+and in the tubing.</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>Each segment must correspond to no more than one reservoir connection. This is the
+recommended way to model multisegment wells.</p>
+<p>Segments not related to a reservoir connection are not included in the outputted
+CSV file.</p>
+</div>
+<div class="section" id="analysis-examples">
+<h2>Analysis examples<a class="headerlink" href="#analysis-examples" title="Permalink to this headline">¶</a></h2>
+<p>Example illustrating inflow analysis of a two-branch well in a visual tool for
+tabular data. From the data in the emitted CSV, branch lengths can be computed,
+inflow pr. phase can be plotted versus segment index or depth, or phase flow
+in the tubing versus the same. Pressure drop from reservoir cell to tubing
+can be analyzed. In this image, the data is filtered to a specific date.</p>
+<a class="reference internal image-reference" href="../_images/multibranch-rftanalysis.png"><img alt="../_images/multibranch-rftanalysis.png" src="../_images/multibranch-rftanalysis.png" style="width: 600px;" /></a>
+<p>Vertical injector/producer analysis for a gas injector that is later converted
+to a producer for the blowdown period (date indicated by colour). Gas inflow/outflow
+plotted versus grid <code class="docutils literal notranslate"><span class="pre">k</span></code>-index. This if for a non-multisegment well, and
+no segment data is available.</p>
+<a class="reference internal image-reference" href="../_images/injectoranalysis.png"><img alt="../_images/injectoranalysis.png" src="../_images/injectoranalysis.png" style="width: 200px;" /></a>
+</div>
+<div class="section" id="column-names">
+<h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Column names and explanations</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Vector</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CONDEPTH</p></td>
+<td><p>Depth at the centre of each connection in the well</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONLENST</p></td>
+<td><p>Length down the tubing from the BH reference point to the start of the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONLENEN</p></td>
+<td><p>Length down the tubing from the BH reference point to the far end of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONPRES</p></td>
+<td><p>Pressure in the wellbore at the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONORAT</p></td>
+<td><p>Oil production rate of the connection at surface conditions</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONWRAT</p></td>
+<td><p>Water production rate of the connection at surface conditions</p></td>
+</tr>
+<tr class="row-even"><td><p>CONGRAT</p></td>
+<td><p>Gas production rate of the connection at surface conditions</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONOTUB</p></td>
+<td><p>Oil flow rate through the tubing at the start of the connection at surface conditions</p></td>
+</tr>
+<tr class="row-even"><td><p>CONWTUB</p></td>
+<td><p>Water flow rate through the tubing at the start of the connection at surface conditions</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONGTUB</p></td>
+<td><p>Gas flow rate through the tubing at the start of the connection at surface conditions</p></td>
+</tr>
+<tr class="row-even"><td><p>CONVTUB</p></td>
+<td><p>Volumetric flow rate of the mixture at the start of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONFAC</p></td>
+<td><p>Connection transmissibility factor</p></td>
+</tr>
+<tr class="row-even"><td><p>CONKH</p></td>
+<td><p>Connection Kh value</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONNXT</p></td>
+<td><p>Number of the neighbouring connection towards the wellhead</p></td>
+</tr>
+<tr class="row-even"><td><p>CONSEGNO</p></td>
+<td><p>Segment number containing the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONBRNO</p></td>
+<td><p>Branch number containing the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONIPOS</p></td>
+<td><p>I location of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONJPOS</p></td>
+<td><p>J location of the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONKPOS</p></td>
+<td><p>K location of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONBDEPH</p></td>
+<td><p>Depth of the grid block of the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONBPRES</p></td>
+<td><p>Pressure of the grid block of the connection (Copy of the PRESSURE data)</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONBSWAT</p></td>
+<td><p>Water saturation of the grid block of the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONBSGAS</p></td>
+<td><p>Gas saturation of the grid block of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONBSOIL</p></td>
+<td><p>Oil saturation of the grid block of the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>COMPLETION</p></td>
+<td><p>Completion index of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONMD</p></td>
+<td><p>Measured depth of the connection</p></td>
+</tr>
+<tr class="row-even"><td><p>CONLENTH</p></td>
+<td><p>Length of the connection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONORATS</p></td>
+<td><p>Scaled oil production rate at surface conditions</p></td>
+</tr>
+<tr class="row-even"><td><p>CONWRATS</p></td>
+<td><p>Scaled water production rate at surface conditions</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONGRATS</p></td>
+<td><p>Scaled gas production rate at surface conditions</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGDEPTH</p></td>
+<td><p>Depth at the far end of each segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGLENST</p></td>
+<td><p>Length down the tubing from the zero tubing length reference point to the start of the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGLELEN</p></td>
+<td><p>Length down the tubing from the zero tubing length reference point to the far end of the segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGXCORD</p></td>
+<td><p>X-coordinate at the far end of the segment (as entered by the 11th item of the WELSEGS record)</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGXCORD</p></td>
+<td><p>Y-coordinate at the far end of the segment (as entered by the 12th item of the WELSEGS record)</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGPRES</p></td>
+<td><p>Pressure in the wellbore at the far end of the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGORAT</p></td>
+<td><p>Oil flow rate through the segment through its near end</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGWRAT</p></td>
+<td><p>Water flow rate through the segment through its near end</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGGRAT</p></td>
+<td><p>Gas flow rate through the segment through its near end</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGOVEL</p></td>
+<td><p>Free oil phase velocity through the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGWVEL</p></td>
+<td><p>Water flow velocity through the segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGGVEL</p></td>
+<td><p>Free gas phase flow velocity through the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGOHF</p></td>
+<td><p>Free oil phase holdup fraction in the segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGWHF</p></td>
+<td><p>Water holdup fraction in the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGGHF</p></td>
+<td><p>Free gas phase holdup fraction in the segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGBRNO</p></td>
+<td><p>Branch number of the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGNXT</p></td>
+<td><p>Number of the neighbouring segment towards the wellhead</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGMD</p></td>
+<td><p>Segment measured depth</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGLENTH</p></td>
+<td><p>Segment length</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGORATS</p></td>
+<td><p>Scaled water flow rate through the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGWRATS</p></td>
+<td><p>Scaled water flow rate through the segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGGRATS</p></td>
+<td><p>Scaled gas flow rate through the segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGCORAT</p></td>
+<td><p>Summed connection oil flow rate through segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGCWRAT</p></td>
+<td><p>Summed connection water flow rate through segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGCGRAT</p></td>
+<td><p>Summer connection gas flow rate through segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGCORTS</p></td>
+<td><p>Scaled summed connection oil flow rate through segment</p></td>
+</tr>
+<tr class="row-even"><td><p>SEGCWRTS</p></td>
+<td><p>Scaled summed connection water flow rate through segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>SEGCGRTS</p></td>
+<td><p>Scaled summed connection gas flow rate through segment</p></td>
+</tr>
+</tbody>
+</table>
+<p>If addition, if you have branches with only one segment, these will be assumed
+to represent ICD segments. The corresponding <code class="docutils literal notranslate"><span class="pre">SEG*</span></code> data for these ICD segments
+will be joined to the segment they are connected to, and have their <code class="docutils literal notranslate"><span class="pre">SEG*</span></code> data
+renamed to <code class="docutils literal notranslate"><span class="pre">ICD*</span></code>. For understanding your <code class="docutils literal notranslate"><span class="pre">ICD*</span></code> data, look at the description of
+the analogue <code class="docutils literal notranslate"><span class="pre">SEG*</span></code> data above.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="satfunc.html" class="btn btn-neutral float-right" title="satfunc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pvt.html" class="btn btn-neutral float-left" title="pvt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

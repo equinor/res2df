@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2csv &mdash; ecl2df 0.6.1.dev7+gc281a5b documentation</title>
+  <title>ecl2csv &mdash; ecl2df 0.6.1.dev10+g3782c74 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.1.dev7+gc281a5b
+                0.6.1.dev10+g3782c74
               </div>
             
           
@@ -268,7 +268,7 @@ the submodule (subcommand) from which you want functionality. Mandatory argument
 always an Eclipse deck or sometimes individual Eclipse include files, and
 there is usually an <code class="docutils literal notranslate"><span class="pre">--output</span></code> option to specify which file to dump
 the CSV to. If you want output to your terminal, use <code class="docutils literal notranslate"><span class="pre">-</span></code> as the output filename.</p>
-<p><p>ecl2csv (0.6.1.dev7+gc281a5b) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
+<p><p>ecl2csv (0.6.1.dev10+g3782c74) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">fipreports</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
@@ -599,7 +599,9 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="section" id="rft">
 <h3>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
 <p>Extract RFT data from Eclipse binary output files to CSV. Each row in the resulting table represents one point in a particular well at a particular time. If multisegment wells are found, associated data to a connection is merged onto the same row as additional columns. You need the Eclipse keyword WRFTPLT present in your DATA-file to get the data outputted.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">wellname</span> <span class="n">WELLNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">date</span> <span class="n">DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
+            <span class="n">DATAFILE</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments_repeat7">
@@ -613,12 +615,22 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="section" id="Named Arguments_repeat8">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
+<dt><kbd>--wellname</kbd></dt>
+<dd><p>Restrict data to one named well</p>
+</dd>
+<dt><kbd>--date</kbd></dt>
+<dd><p>Restrict data to one date, YYYY-MM-DD</p>
+</dd>
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output CSV file.</p>
 <p>Default: “rft.csv”</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--debug</kbd></dt>
+<dd><p>Debug mode</p>
 <p>Default: False</p>
 </dd>
 </dl>
@@ -832,7 +844,7 @@ If you want output to your terminal, use <code class="docutils literal notransla
 you also specify the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> argument with a list of wanted keywords, all
 supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to output file.</p>
-<p><p>csv2ecl (0.6.1.dev7+gc281a5b) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
+<p><p>csv2ecl (0.6.1.dev10+g3782c74) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv2ecl</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="p">{</span><span class="n">equil</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">satfunc</span><span class="p">}</span> <span class="o">...</span>
 </pre></div>

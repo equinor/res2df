@@ -13,5 +13,6 @@ This section will go through each module in more detail, with examples.
    usage/nnc
    usage/pillars
    usage/pvt
+   usage/rft
    usage/satfunc
    usage/trans

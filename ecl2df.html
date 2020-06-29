@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.6.1.dev7+gc281a5b documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.6.1.dev10+g3782c74 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.1.dev7+gc281a5b
+                0.6.1.dev10+g3782c74
               </div>
             
           
@@ -2285,9 +2285,53 @@ information for the conditions in the tubing).</p>
 <p>The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix <code class="docutils literal notranslate"><span class="pre">ICD_</span></code></p>
 <dl class="py function">
+<dt id="ecl2df.rft.add_extras">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">add_extras</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#add_extras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.add_extras" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add extra nice-to-have columns to the dataframe
+with tubing, icd-segments, and reservoir  connections matched
+on rows</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Dataframe typically obtained from merge_icd_seg()</p></li>
+<li><p><strong>inplace</strong> (<em>bool</em>) – Set to False if the original should not be modified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame - the (possibly) augmented incoming dataframe.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.count_wellbranches">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">count_wellbranches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seg_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#count_wellbranches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.count_wellbranches" title="Permalink to this definition">¶</a></dt>
+<dd><p>From a segment dataframe, coming from get_con_seg_data(…, “SEG”)
+determine the number of well branche.</p>
+<p>ICD segments must be split out first using split_seg_icd(), otherwise
+results are not reliable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>with at least the columns SEGIDX</strong><strong>, </strong><strong>SEGNXT and SEGBRNO</strong> (<em>pd.DataFrame</em><em>,</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="ecl2df.rft.df">
-<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct the final dataframe of RFT data</p>
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em>, <em class="sig-param"><span class="n">wellname</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">date</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over an RFT file and construct a dataframe representation
+of the data, ordered by well and date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Object used to locate the RFT file</p></li>
+<li><p><strong>wellname</strong> (<em>str</em>) – If provided, only wells matching this string exactly
+will be included</p></li>
+<li><p><strong>date</strong> (<em>str</em>) – If provided, all other dates will be ignored. YYYY-MM-DD.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2296,7 +2340,36 @@ by adding the prefix <code class="docutils literal notranslate"><span class="pre
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to fill with arguments</p>
+<dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser to
+fill with arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.get_con_seg_data">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">get_con_seg_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rftrecord</span></em>, <em class="sig-param"><span class="n">rftfile</span></em>, <em class="sig-param"><span class="n">datatype</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#get_con_seg_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.get_con_seg_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a dataframe of CON* or SEG* data for a specific RFT record,
+that is for one well at one date.</p>
+<p>Dataframe will for datatype==”CON” look like:</p>
+<blockquote>
+<div><p>DEPTH, SWAT, CONKH, CONIDX, ..
+2300,  0.3, 3000, 1
+2310, 0.2, 1231, 2</p>
+</div></blockquote>
+<p>and number of rows will equal the number of connected cells (COMPDAT lines)</p>
+<p>If it is for SEG data, all columns are prefixed by SEG
+and row count will be the number of segments defined in WELSEGS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rftrecord</strong> (<em>dict</em>) – Data for one RFT record, provided by rftrecords()</p></li>
+<li><p><strong>rftfile</strong> (<em>EclFile</em>) – </p></li>
+<li><p><strong>datatype</strong> (<em>str</em>) – Either “CON” or “SEG”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2305,6 +2378,66 @@ by adding the prefix <code class="docutils literal notranslate"><span class="pre
 <dt id="ecl2df.rft.main">
 <code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.merge_icd_seg_conseg">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">merge_icd_seg_conseg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">con_data</span></em>, <em class="sig-param"><span class="n">seg_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">icd_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#merge_icd_seg_conseg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.merge_icd_seg_conseg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge ICD segments to the CONxxxxx data. We will be
+connection-centric in the outputted rows, that is
+one row pr. connection. If the setup is with more
+than one segment pr. connection (e.g. reservoir
+cell), then we would have to be smarter. Either
+averaging the properties, or be segment-centric in
+the output.</p>
+<p>Petrel happily puts many ICD segments to the same
+connection. This setup is a bug, with partially
+unknown effects when simulated in Eclipse. Should we
+warn the user??</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>con_data</strong> (<em>pd.DataFrame</em>) – Connection data (CONxxxx columns). One
+row pr. reservoir connection</p></li>
+<li><p><strong>seg_data</strong> (<em>pd.DataFrame</em>) – Segment data, SEGxxxxx cols, one row pr. segment, and
+each segment should correspond to one ICD or to one reservoir connection.
+Supply empty or None if no segments found.</p></li>
+<li><p><strong>icd_data</strong> (<em>pd.DataFrame</em>) – ICD data, ICD_SEGxxxx columns. One row pr
+ICD segment. One-to-one correspondence to con_data through ICD_SEGBRNO
+and CONBRNO required. Can be empty or None if no ICD present.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.pretty_print_well">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">pretty_print_well</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seg_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#pretty_print_well"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.pretty_print_well" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a multiline string with the segment structure
+pretty printed as an ASCII tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seg_data</strong> (<em>pd.DataFrame</em>) – Segment dataframe</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str (multiline)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.process_seg_topology">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">process_seg_topology</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seg_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#process_seg_topology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.process_seg_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine and process the segment topology.</p>
+<p>The topology of the well segments are determined by the SEGNXT column in
+incoming dataframe, which corresponds to SEGIDX.</p>
+<p>SEGNXT points to the next segment downstream in a production well (and
+injector wells are treated as production here). Downstream is thus <em>upwards</em>
+in space, towards the sea.</p>
+<p>The last segment in a non-icd well gets the type TUBING.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2317,6 +2450,57 @@ by adding the prefix <code class="docutils literal notranslate"><span class="pre
 <dt id="ecl2df.rft.rft_main">
 <code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">rft_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#rft_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.rft_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.rftrecords">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">rftrecords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rftfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#rftrecords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.rftrecords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator for looping over RFT records in a EclFile object.</p>
+<dl class="simple">
+<dt>Each returned RFT record is represented as a dict with the keys:</dt><dd><p>headers: pd.DataFrame, indexed by recordname</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>made from a binary RFT file.</strong> (<em>EclFile</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.seg2dicttree">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">seg2dicttree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seg_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#seg2dicttree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.seg2dicttree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a nested dictionary representing the
+well through its segment topology</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seg_data</strong> (<em>pd.DataFrame</em>) – and SEGIDX_upstream</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nested dict,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.rft.split_seg_icd">
+<code class="sig-prename descclassname">ecl2df.rft.</code><code class="sig-name descname">split_seg_icd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seg_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/rft.html#split_seg_icd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.rft.split_seg_icd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a segment dataframe into a dataframe
+with non-ICD segments and one with.</p>
+<p>The segment properties (data) are merged into the downstream segments
+dataset, with the SEG prefixed switched to ICD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pd.DataFrame</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>pd.DataFrame with the ICD segments only. Empty if no ICDs found.</dt><dd><p>and wider.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

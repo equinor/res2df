@@ -1,0 +1,59 @@
+Vector,Description
+CONDEPTH,Depth at the centre of each connection in the well
+CONLENST,Length down the tubing from the BH reference point to the start of the connection
+CONLENEN,Length down the tubing from the BH reference point to the far end of the connection
+CONPRES,Pressure in the wellbore at the connection
+CONORAT,Oil production rate of the connection at surface conditions
+CONWRAT,Water production rate of the connection at surface conditions
+CONGRAT,Gas production rate of the connection at surface conditions
+CONOTUB,Oil flow rate through the tubing at the start of the connection at surface conditions
+CONWTUB,Water flow rate through the tubing at the start of the connection at surface conditions
+CONGTUB,Gas flow rate through the tubing at the start of the connection at surface conditions
+CONVTUB,Volumetric flow rate of the mixture at the start of the connection
+CONFAC,Connection transmissibility factor
+CONKH,Connection Kh value
+CONNXT,Number of the neighbouring connection towards the wellhead
+CONSEGNO,Segment number containing the connection
+CONBRNO,Branch number containing the connection
+CONIPOS,I location of the connection
+CONJPOS,J location of the connection
+CONKPOS,K location of the connection
+CONBDEPH,Depth of the grid block of the connection
+CONBPRES,Pressure of the grid block of the connection (Copy of the PRESSURE data)
+CONBSWAT,Water saturation of the grid block of the connection
+CONBSGAS,Gas saturation of the grid block of the connection
+CONBSOIL,Oil saturation of the grid block of the connection
+COMPLETION,Completion index of the connection
+CONMD,Measured depth of the connection
+CONLENTH,Length of the connection
+CONORATS,Scaled oil production rate at surface conditions
+CONWRATS,Scaled water production rate at surface conditions
+CONGRATS,Scaled gas production rate at surface conditions
+SEGDEPTH,Depth at the far end of each segment
+SEGLENST,Length down the tubing from the zero tubing length reference point to the start of the segment
+SEGLELEN,Length down the tubing from the zero tubing length reference point to the far end of the segment
+SEGXCORD,X-coordinate at the far end of the segment (as entered by the 11th item of the WELSEGS record)
+SEGXCORD,Y-coordinate at the far end of the segment (as entered by the 12th item of the WELSEGS record)
+SEGPRES,Pressure in the wellbore at the far end of the segment
+SEGORAT,Oil flow rate through the segment through its near end
+SEGWRAT,Water flow rate through the segment through its near end
+SEGGRAT,Gas flow rate through the segment through its near end
+SEGOVEL,Free oil phase velocity through the segment
+SEGWVEL,Water flow velocity through the segment
+SEGGVEL,Free gas phase flow velocity through the segment
+SEGOHF,Free oil phase holdup fraction in the segment
+SEGWHF,Water holdup fraction in the segment
+SEGGHF,Free gas phase holdup fraction in the segment
+SEGBRNO,Branch number of the segment
+SEGNXT,Number of the neighbouring segment towards the wellhead
+SEGMD,Segment measured depth
+SEGLENTH,Segment length
+SEGORATS,Scaled water flow rate through the segment
+SEGWRATS,Scaled water flow rate through the segment
+SEGGRATS,Scaled gas flow rate through the segment
+SEGCORAT,Summed connection oil flow rate through segment
+SEGCWRAT,Summed connection water flow rate through segment
+SEGCGRAT,Summer connection gas flow rate through segment
+SEGCORTS,Scaled summed connection oil flow rate through segment
+SEGCWRTS,Scaled summed connection water flow rate through segment
+SEGCGRTS,Scaled summed connection gas flow rate through segment

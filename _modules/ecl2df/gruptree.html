@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df 0.6.1.dev10+g3782c74 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.6.1.dev12+g44344a8 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.1.dev10+g3782c74
+                0.6.1.dev12+g44344a8
               </div>
             
           
@@ -331,7 +331,7 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<div class="viewcode-block" id="df2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.df2dict">[docs]</a><span class="k">def</span> <span class="nf">df2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+<div class="viewcode-block" id="edge_dataframe2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.edge_dataframe2dict">[docs]</a><span class="k">def</span> <span class="nf">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert list of edges in a dataframe into a</span>
 <span class="sd">    nested dictionary (tree).</span>
 
@@ -352,11 +352,11 @@
 <span class="sd">    Leaf nodes have empty dictionaries as their value.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        list of nested dictionary, as we in general</span>
-<span class="sd">        may have more than one root.</span>
+<span class="sd">        list of nested dictionaries, as we in general</span>
+<span class="sd">            may have more than one root.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">[{}]</span>
     <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only handle one date at a time&quot;</span><span class="p">)</span>
@@ -457,7 +457,7 @@
         <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Date: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;M8[D]&quot;</span><span class="p">)))</span>
-                <span class="n">trees</span> <span class="o">=</span> <span class="n">df2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
+                <span class="n">trees</span> <span class="o">=</span> <span class="n">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">date</span><span class="p">])</span>
                 <span class="c1"># Returns list of dicts, one for each root found</span>
                 <span class="c1"># (typically only one)</span>
                 <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>

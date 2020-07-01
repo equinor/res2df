@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.6.1.dev10+g3782c74 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.6.1.dev12+g44344a8 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.1.dev10+g3782c74
+                0.6.1.dev12+g44344a8
               </div>
             
           
@@ -1466,33 +1466,6 @@ information is found in deck.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="ecl2df.gruptree.df2dict">
-<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">df2dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#df2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.df2dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert list of edges in a dataframe into a
-nested dictionary (tree).</p>
-<p>The dataframe cannot have multiple DATEs, filter to the date you
-want prior to calling this function.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
-  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP_1&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_2&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_3&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_4&#39;</span><span class="p">:</span> <span class="p">{},</span>
-  <span class="s1">&#39;OP_5&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;WI_1&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">:</span> <span class="p">{}}}</span>
-<span class="p">}]</span>
-</pre></div>
-</div>
-<p>Leaf nodes have empty dictionaries as their value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list of nested dictionary, as we in general
-may have more than one root.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="ecl2df.gruptree.dict2treelib">
 <code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">dict2treelib</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">nested_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#dict2treelib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.dict2treelib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a nested dictonary to a treelib Tree
@@ -1511,6 +1484,36 @@ from this function.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>treelib.Tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.gruptree.edge_dataframe2dict">
+<code class="sig-prename descclassname">ecl2df.gruptree.</code><code class="sig-name descname">edge_dataframe2dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#edge_dataframe2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.gruptree.edge_dataframe2dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert list of edges in a dataframe into a
+nested dictionary (tree).</p>
+<p>The dataframe cannot have multiple DATEs, filter to the date you
+want prior to calling this function.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+  <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;OP_1&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_2&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_3&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_4&#39;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s1">&#39;OP_5&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+  <span class="s1">&#39;WI&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;WI_1&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_2&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;WI_3&#39;</span><span class="p">:</span> <span class="p">{}}}</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>Leaf nodes have empty dictionaries as their value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>list of nested dictionaries, as we in general</dt><dd><p>may have more than one root.</p>
+</dd>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2438,6 +2441,18 @@ incoming dataframe, which corresponds to SEGIDX.</p>
 injector wells are treated as production here). Downstream is thus <em>upwards</em>
 in space, towards the sea.</p>
 <p>The last segment in a non-icd well gets the type TUBING.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seg_data</strong> (<em>pd.DataFrame</em>) – Segment structure defined as a table with at least
+the columns SEGIDX, SEGNXT</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Augmented dataframe, extra columns and perhaps extra rows.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

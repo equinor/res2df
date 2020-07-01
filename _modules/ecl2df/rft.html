@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.rft &mdash; ecl2df 0.6.1.dev10+g3782c74 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.6.1.dev12+g44344a8 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.1.dev10+g3782c74
+                0.6.1.dev12+g44344a8
               </div>
             
           
@@ -397,10 +397,18 @@
 <span class="sd">    in space, towards the sea.</span>
 
 <span class="sd">    The last segment in a non-icd well gets the type TUBING.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seg_data (pd.DataFrame): Segment structure defined as a table with at least</span>
+<span class="sd">            the columns SEGIDX, SEGNXT</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Augmented dataframe, extra columns and perhaps extra rows.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGNXT&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Insufficient topology columns in dataframe&quot;</span><span class="p">)</span>
 
+    <span class="n">seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">)</span>
     <span class="c1"># For the first segment, None is allowed as SEGNXT, which excludes</span>
     <span class="c1"># int as a  Pandas type. Convert to 0 for the moment</span>
     <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>

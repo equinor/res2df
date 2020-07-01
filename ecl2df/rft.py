@@ -235,10 +235,18 @@ def process_seg_topology(seg_data):
     in space, towards the sea.
 
     The last segment in a non-icd well gets the type TUBING.
+
+    Args:
+        seg_data (pd.DataFrame): Segment structure defined as a table with at least
+            the columns SEGIDX, SEGNXT
+
+    Returns:
+        pd.DataFrame: Augmented dataframe, extra columns and perhaps extra rows.
     """
     if not {"SEGIDX", "SEGNXT"}.issubset(set(seg_data.columns)):
         raise ValueError("Insufficient topology columns in dataframe")
 
+    seg_data = seg_data.sort_values("SEGIDX")
     # For the first segment, None is allowed as SEGNXT, which excludes
     # int as a  Pandas type. Convert to 0 for the moment
     seg_data["SEGNXT"] = seg_data["SEGNXT"].fillna(value=0).astype(int)

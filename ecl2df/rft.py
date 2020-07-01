@@ -531,7 +531,7 @@ def df(eclfiles, wellname=None, date=None):
     """
     rftfile = eclfiles.get_rftfile()
 
-    rftdata = pd.DataFrame()
+    rftdata = []
     for rftrecord in rftrecords(rftfile):
         if wellname is not None and rftrecord["wellname"] != wellname:
             continue
@@ -620,29 +620,31 @@ def df(eclfiles, wellname=None, date=None):
         )
         con_icd_seg = con_icd_seg[set(con_icd_seg.columns) - delete_cols]
 
-        rftdata = rftdata.append(con_icd_seg, ignore_index=True, sort=False)
+        rftdata.append(con_icd_seg)
+
+    rftdata_df = pd.concat(rftdata, ignore_index=True, sort=False)
 
     # Fill empty cells with zeros. This is to avoid Spotfire
     # interpreting columns with numbers as strings. An alternative
     # solution that keeps NaN would be to add a second row in the
     # output containing the datatype
-    rftdata.fillna(0, inplace=True)
+    rftdata_df.fillna(0, inplace=True)
 
     # The HOSTGRID data seems often to be empty, check if it is and delete if so:
-    if "HOSTGRID" in rftdata.columns:
-        if len(rftdata.HOSTGRID.unique()) == 1:
-            if rftdata.HOSTGRID.unique()[0].strip() == "":
-                del rftdata["HOSTGRID"]
+    if "HOSTGRID" in rftdata_df.columns:
+        if len(rftdata_df.HOSTGRID.unique()) == 1:
+            if rftdata_df.HOSTGRID.unique()[0].strip() == "":
+                del rftdata_df["HOSTGRID"]
 
     zonemap = eclfiles.get_zonemap()
     if zonemap:
-        if "K" in rftdata:
+        if "K" in rftdata_df:
             kname = "K"
         else:
             kname = "CONKPOS"
-        rftdata = merge_zones(rftdata, zonemap, kname=kname)
+        rftdata_df = merge_zones(rftdata_df, zonemap, kname=kname)
 
-    return rftdata
+    return rftdata_df
 
 
 def fill_parser(parser):

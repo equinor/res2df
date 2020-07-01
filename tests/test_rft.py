@@ -287,6 +287,11 @@ def test_longer_branched_icd_well():
             "CONPRES": [291, 292, 392, 393],
         }
     )
+    seg_data = rft.process_seg_topology(wellseg)
+    assert sum(seg_data["LONELYSEG"]) == 4
+    assert sum(seg_data["LEAF"]) == 4
+    assert sum(seg_data["JUNCTION"]) == 6  # 1, 2 and 6 counted twice
+    assert sum(seg_data["LEAF"]) == 4
     (seg_data, icd_data) = rft.split_seg_icd(wellseg)
     print(rft.seg2dicttree(wellseg))
     print(rft.pretty_print_well(wellseg))

@@ -180,7 +180,6 @@ ecl2df.wcon module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

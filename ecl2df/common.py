@@ -54,9 +54,10 @@ for keyw in [
     "WELSEGS",
     "WELSPECS",
 ]:
-    OPMKEYWORDS[keyw] = json.load(
-        open(os.path.join(os.path.dirname(__file__), "opmkeywords", keyw))
-    )
+    with open(
+        os.path.join(os.path.dirname(__file__), "opmkeywords", keyw), "r"
+    ) as file_handle:
+        OPMKEYWORDS[keyw] = json.load(file_handle)
 
 
 logging.basicConfig()

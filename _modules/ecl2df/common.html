@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.6.1 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.6.2.dev1+g2962dcb documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.1
+                0.6.2.dev1+g2962dcb
               </div>
             
           
@@ -216,9 +216,10 @@
     <span class="s2">&quot;WELSEGS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WELSPECS&quot;</span><span class="p">,</span>
 <span class="p">]:</span>
-    <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyw</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-        <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;opmkeywords&quot;</span><span class="p">,</span> <span class="n">keyw</span><span class="p">))</span>
-    <span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;opmkeywords&quot;</span><span class="p">,</span> <span class="n">keyw</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
+        <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyw</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_handle</span><span class="p">)</span>
 
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>

@@ -229,8 +229,7 @@ def df(
 
 
 def nx(eclfiles, region="FIPNUM"):
-    """Construct a networkx graph for the transmissibilities.
-    """
+    """Construct a networkx graph for the transmissibilities."""
     try:
         import networkx
     except ImportError:

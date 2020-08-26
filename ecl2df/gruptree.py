@@ -273,8 +273,7 @@ def fill_parser(parser):
 
 
 def main():
-    """Entry-point for module, for command line utility
-    """
+    """Entry-point for module, for command line utility"""
     logger.warning("gruptree2csv is deprecated, use 'ecl2csv compdat <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)

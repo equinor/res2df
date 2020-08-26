@@ -70,7 +70,7 @@ def test_get_con_seg_data():
 def test_minimal_well():
     """Test a dummy well dataset
 
-        |    segidx 1
+    |    segidx 1
 
     """
     one_seg = pd.DataFrame(
@@ -97,8 +97,8 @@ def test_minimal_well():
 
 def test_minimal_branched_well():
     r"""
-        |       segidx 1
-       / \      segidx 2 and 3
+     |       segidx 1
+    / \      segidx 2 and 3
     """
     two_branch = pd.DataFrame(
         {"SEGIDX": [1, 2, 3], "SEGNXT": [None, 1, 1], "SEGBRNO": [1, 1, 2]}
@@ -224,8 +224,8 @@ def test_single_branch_partly_icd():
 def test_branched_icd_well():
     r"""Simplest possible branched well with ICD segments
 
-           |          segidx 1
-      * - / \ - *     segidx 2 and 3
+         |          segidx 1
+    * - / \ - *     segidx 2 and 3
     """
     wellseg = pd.DataFrame(
         {

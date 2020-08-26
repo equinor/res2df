@@ -21,7 +21,7 @@ def test_opmkeywords():
 
 
 def test_stack_on_colname():
-    """ Test that we can stack column with an implicit double level
+    """Test that we can stack column with an implicit double level
     in the column names indicated by a separator string"""
 
     dframe = pd.DataFrame(

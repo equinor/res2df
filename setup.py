@@ -27,7 +27,8 @@ REQUIREMENTS = [
     "treelib",
 ]
 TEST_REQUIREMENTS = [
-    "black; python_version >= '3'",
+    "black>=20.8b0; python_version >= '3'",
+    "flake8",
     "networkx",
     "pytest",
     "sphinx",

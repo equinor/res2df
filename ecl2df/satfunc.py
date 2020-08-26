@@ -280,8 +280,7 @@ def fill_reverse_parser(parser):
 
 
 def main():
-    """Entry-point for module, for command line utility
-    """
+    """Entry-point for module, for command line utility"""
     logger.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)

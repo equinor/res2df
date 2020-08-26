@@ -75,8 +75,7 @@ def fill_parser(parser):
 
 
 def main():
-    """Entry-point for module, for command line utility
-    """
+    """Entry-point for module, for command line utility"""
     logger.warning("faults2csv is deprecated, use 'ecl2csv faults <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)

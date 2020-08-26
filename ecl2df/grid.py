@@ -499,7 +499,7 @@ def drop_constant_columns(dframe, alwayskeep=None):
            anyway.
     Returns:
         pd.DataFrame with equal or less columns.
-   """
+    """
     if not alwayskeep:
         alwayskeep = []
     if isinstance(alwayskeep, str):
@@ -659,8 +659,7 @@ def df2ecl(
 
 
 def main():
-    """Entry-point for module, for command line utility. Deprecated to use
-    """
+    """Entry-point for module, for command line utility. Deprecated to use"""
     logger.warning("eclgrid2csv is deprecated, use 'ecl2csv grid <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)

@@ -367,8 +367,7 @@ def fill_parser(parser):
 
 
 def main():
-    """Entry-point for module, for command line utility
-    """
+    """Entry-point for module, for command line utility"""
     logger.warning("summary2csv is deprecated, use 'ecl2csv smry <args>' instead")
     parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
     parser = fill_parser(parser)

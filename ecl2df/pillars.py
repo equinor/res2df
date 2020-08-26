@@ -411,8 +411,7 @@ def fill_parser(parser):
 
 
 def main():
-    """Entry-point for module, for command line utility. Deprecated to use
-    """
+    """Entry-point for module, for command line utility. Deprecated to use"""
     logger.warning("oilcol2csv is deprecated, use 'ecl2csv pillarstats <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)

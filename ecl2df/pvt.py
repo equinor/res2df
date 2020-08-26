@@ -221,7 +221,7 @@ def fill_parser(parser):
         "-o",
         "--output",
         type=str,
-        help=("Name of output csv file, default pvt.csv. ", "Use '-' for stdout."),
+        help="Name of output csv file, default pvt.csv. Use '-' for stdout.",
         default="pvt.csv",
     )
     parser.add_argument(

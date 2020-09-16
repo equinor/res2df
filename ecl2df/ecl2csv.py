@@ -32,6 +32,14 @@ from ecl2df import (
 
 from ecl2df import __version__
 
+# String constants in use for generating ERT forward model documentation:
+DESCRIPTION = """Convert Eclipse input and output files into CSV files.
+Uses the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see
+which subcommands are supported. It is not possible to supply extra
+options to ecl2csv through this forward model."""
+CATEGORY = "utility.eclipse"
+EXAMPLES = "``FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)``"
+
 
 def get_parser():
     """Make parser"""

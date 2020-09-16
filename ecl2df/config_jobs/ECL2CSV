@@ -1,0 +1,5 @@
+EXECUTABLE ecl2csv
+
+ARGLIST <SUBCOMMAND> "--verbose" "--output" <OUTPUT> <ECLBASE>
+
+MIN_ARG 2

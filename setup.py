@@ -68,7 +68,8 @@ setup(
             "satfunc2csv=ecl2df.satfunc:main",
             "summary2csv=ecl2df.summary:main",
             "wcon2csv=ecl2df.wcon:main",
-        ]
+        ],
+        "ert": ["ecl2df_jobs = ecl2df.hook_implementations.jobs"],
     },
     test_suite="tests",
     install_requires=REQUIREMENTS,

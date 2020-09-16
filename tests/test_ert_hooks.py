@@ -54,6 +54,7 @@ def test_ecl2csv_through_ert(tmpdir):
         "pvt",
         "rft",
         "satfunc",
+        "summary",
     ]
 
     csv2ecl_subcommands = ["equil", "pvt", "satfunc"]

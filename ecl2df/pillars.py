@@ -394,7 +394,7 @@ def fill_parser(parser):
         "--group",
         action="store_true",
         help=(
-            "If set, output will not be pr. pillar, but grouped over"
+            "If set, output will not be pr. pillar, but grouped over "
             "all pillars. If --region is set, data will be grouped over that vector. "
             "The aggregation operator is sum or mean, depending on datatype."
         ),

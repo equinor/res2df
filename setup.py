@@ -2,7 +2,7 @@
 
 from os import path
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 try:
     from sphinx.setup_command import BuildDoc
@@ -48,9 +48,9 @@ setup(
     author="Håvard Berland",
     author_email="havb@equinor.com",
     license="GPLv3",
-    packages=["ecl2df"],
+    packages=find_packages("ecl2df"),
     package_dir={"ecl2df": "ecl2df"},
-    package_data={"ecl2df": ["opmkeywords/*"]},
+    package_data={"ecl2df": ["opmkeywords/*", "config_jobs/*"]},
     zip_safe=False,
     entry_points={
         "console_scripts": [

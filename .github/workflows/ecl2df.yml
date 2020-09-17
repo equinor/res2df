@@ -14,6 +14,10 @@ on:
     # Run CI every night and check that tests are working with latest dependencies
     - cron:  '0 0 * * *'
 
+env:
+  INSTALL_DIR: ${{ github.workspace }}/install
+  ERT_SHOW_BACKTRACE: 1
+
 jobs:
 
   ecl2df:
@@ -31,12 +35,6 @@ jobs:
             pandas-version: '1.*'
 
 
-    env:
-      PYTHONPATH: ${{ github.workspace }}/install/lib/python${{ matrix.python-version }}/site-packages:${{ github.workspace }}/install/lib/python${{ matrix.python-version }}/dist-packages
-      INSTALL_DIR: ${{ github.workspace }}/install
-      LD_LIBRARY_PATH: ${{ github.workspace }}/install/lib:${{ github.workspace }}/install/lib64
-      DYLD_LIBRARY_PATH: ${{ github.workspace }}/install/lib:${{ github.workspace }}/install/lib64
-
     steps:
       - name: Checkout commit locally
         uses: actions/checkout@v2
@@ -50,6 +48,13 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Setup environment
+        run: |
+          echo "::add-path::${{ env.INSTALL_DIR}}/bin"
+          echo "::set-env name=LD_LIBRARY_PATH::${{ env.INSTALL_DIR }}/lib:${{ env.INSTALL_DIR }}/lib64"
+          echo "::set-env name=DYLD_LIBRARY_PATH::${{ env.INSTALL_DIR }}/lib:${{ env.INSTALL_DIR }}/lib64"
+          echo "::set-env name=PYTHONPATH::${{ env.INSTALL_DIR }}/lib/python${{ matrix.python-version }}/site-packages:${{ env.INSTALL_DIR }}/lib/python${{ matrix.python-version }}/dist-packages"
 
       - name: Check code style
         if: matrix.python-version != '2.7'
@@ -80,22 +85,31 @@ jobs:
         if: matrix.python-version != '2.7'
         run: |
           git clone --branch master --depth 1 https://github.com/equinor/ert
-          pushd ert
-          source .libres_version
-          popd
+          source ert/.libres_version
           git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
-          pushd libres
-          pip install -r requirements.txt --prefix=$INSTALL_DIR
-          source .libecl_version
-          export LIBRES_TEST_DATA_DIR="$(pwd)/test-data"
-          popd
+          source libres/.libecl_version
           git clone --branch $LIBECL_VERSION --depth 1 https://github.com/equinor/libecl
-          bash ert/.build_install.sh libecl
-          bash ert/.build_install.sh libres
-          #export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
+          bash .build_install.sh libecl
+          bash .build_install.sh libres
+          pip install -r ert/dev-requirements.txt
+          pip install ert/
+          pip list
+          ert --help
+          #          source .libres_version
+          #popd
+          #git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
+          #pushd libres
+          #pip install -r requirements.txt --prefix=$INSTALL_DIR
+          #source .libecl_version
+          #export LIBRES_TEST_DATA_DIR="$(pwd)/test-data"
+          #popd
+          #git clone --branch $LIBECL_VERSION --depth 1 https://github.com/equinor/libecl
+          #bash ert/.build_install.sh libecl
+          #bash ert/.build_install.sh libres
+          ##export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
           #export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/site-packages:$PYTHONPATH
-          PATH=$INSTALL_DIR/bin:$PATH
-          pip install ert/ --prefix=$INSTALL_DIR
+          #PATH=$INSTALL_DIR/bin:$PATH
+          #pip install ert/ --prefix=$INSTALL_DIR
 
       - name: Install ecl2df with dependencies
         run: |
@@ -110,7 +124,6 @@ jobs:
 
       - name: Run tests
         run: |
-          export PATH=$INSTALL_DIR/bin:$PATH
           python -c "import ecl2df"
           pytest -s tests/test_ert_hooks.py
           pytest tests/

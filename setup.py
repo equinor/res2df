@@ -48,7 +48,7 @@ setup(
     author="Håvard Berland",
     author_email="havb@equinor.com",
     license="GPLv3",
-    packages=find_packages("ecl2df"),
+    packages=find_packages(include=["ecl2df*"]),
     package_dir={"ecl2df": "ecl2df"},
     package_data={"ecl2df": ["opmkeywords/*", "config_jobs/*"]},
     zip_safe=False,

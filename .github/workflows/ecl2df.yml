@@ -26,7 +26,7 @@ jobs:
       matrix:
         #python-version: ['2.7', '3.6', '3.7', '3.8']
         #pandas-version: ['0.24.2', '1.*']  # Necessary as long as RHEL6 is in use
-        python-version: ['3.6']
+        python-version: ['2.7' '3.6']
         pandas-version: ['1.*']
         exclude:
            # Skip Python 3.8 and Pandas 0.24.2 combination due to
@@ -67,7 +67,7 @@ jobs:
       - name: Compile and install opm-common
         if: matrix.python-version == '2.7'
         run: |
-          sudo apt-get install libboost-all-dev liblapack-dev
+          sudo apt-get install libboost-all-dev liblapack-dev libfmt-dev
           pushd ..
           git clone --recursive https://github.com/OPM/opm-common.git
           mkdir opm-common/build

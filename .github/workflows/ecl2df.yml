@@ -89,8 +89,8 @@ jobs:
           git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
           source libres/.libecl_version
           git clone --branch $LIBECL_VERSION --depth 1 https://github.com/equinor/libecl
-          bash .build_install.sh libecl
-          bash .build_install.sh libres
+          bash ert/.build_install.sh libecl
+          bash ert/.build_install.sh libres
           pip install -r ert/dev-requirements.txt
           pip install ert/
           pip list

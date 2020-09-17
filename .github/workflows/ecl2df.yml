@@ -110,6 +110,7 @@ jobs:
 
       - name: Run tests
         run: |
+          export PATH=$INSTALL_DIR/bin:$PATH
           python -c "import ecl2df"
           pytest tests/
 

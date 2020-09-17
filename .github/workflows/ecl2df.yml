@@ -112,6 +112,7 @@ jobs:
         run: |
           export PATH=$INSTALL_DIR/bin:$PATH
           python -c "import ecl2df"
+          pytest -s tests/test_ert_hooks.py
           pytest tests/
 
       - name: Build documentation

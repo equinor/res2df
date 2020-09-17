@@ -72,36 +72,10 @@ jobs:
           popd
           popd
 
-      - name: Install ERT (and libres)
-        if: matrix.python-version != '2.7'
-        run: |
-          export PATH=${{ github.workspace }}/install/bin:$PATH
-          export PYTHONPATH=${{ env.PYTHONPATH }}
-          export INSTALL_DIR=${{ github.workspace }}/install
-          pushd ..
-          git clone --branch master --depth 1 https://github.com/equinor/ert
-          pushd ert
-          popd
-          git clone --depth 1 https://github.com/equinor/libres
-          pushd libres
-          pip install -r requirements.txt --prefix=$INSTALL_DIR
-          popd
-          git clone --depth 1 https://github.com/equinor/libecl
-          bash ert/.build_install.sh libecl
-          bash ert/.build_install.sh libres
-          pip install ert/ --prefix=$INSTALL_DIR
-          popd
-          which ert
-          echo $PATH
-          echo $PYTHONPATH
-          python -c "import ert_shared"
-
       - name: Install ecl2df with dependencies
         run: |
           pip install --upgrade pip
           pip install .
-          export INSTALL_DIR=${{ github.workspace }}/install
-          pip install . --prefix=$INSTALL_DIR
 
       - name: Install test dependencies
         run: pip install .[tests]
@@ -109,21 +83,9 @@ jobs:
       - name: List all installed packages
         run: pip freeze
 
-      - name: Check ERT installation
-        if: matrix.python-version != '2.7'
-        run: |
-          PATH=${{ github.workspace }}/install/bin:$PATH
-          PYTHONPATH=${{ env.PYTHONPATH }}
-          python -c "import ert_shared"
-          which ert
-
       - name: Run tests
         run: |
-          PATH=${{ github.workspace }}/install//bin:$PATH
-          PYTHONPATH=${{ env.PYTHONPATH }}
-          echo $PYTHONPATH
           python -c "import ecl2df"
-          pytest -s tests/test_ert_hooks.py
           pytest tests/
 
       - name: Build documentation

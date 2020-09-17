@@ -117,7 +117,7 @@ jobs:
           pip install .
           python -c "import ecl2df"
           python -c "import ecl2df.hook_implementations"
-          python -c "import ecl2df.hook_implementations.jobs"
+          python -c "import ecl2df.hook_implementations.jobs as j; print(j.__file__)"
 
       - name: Install test dependencies
         run: pip install .[tests]
@@ -129,7 +129,7 @@ jobs:
         run: |
           python -c "import ecl2df"
           python -c "import ecl2df.hook_implementations"
-          python -c "import ecl2df.hook_implementations.jobs"
+          python -c "import ecl2df.hook_implementations.jobs as j; print(j.__file__)"
           pytest -s tests/test_ert_hooks.py
           pytest tests/
 

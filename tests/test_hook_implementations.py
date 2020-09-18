@@ -4,13 +4,13 @@ import shutil
 
 import pytest
 
-import ecl2df.hook_implementations.jobs
 
 try:
+    import ecl2df.hook_implementations.jobs
     from ert_shared.plugins.plugin_manager import ErtPluginManager
 except ImportError:
     pytest.skip(
-        "ERT is not installed, skipping hook implementations.", allow_module_level=True
+        "ERT is not installed, or Python2. Skipping hook implementations.", allow_module_level=True
     )
 
 

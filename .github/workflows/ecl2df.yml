@@ -95,29 +95,12 @@ jobs:
           pip install ert/
           pip list
           ert --help
-          #          source .libres_version
-          #popd
-          #git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
-          #pushd libres
-          #pip install -r requirements.txt --prefix=$INSTALL_DIR
-          #source .libecl_version
-          #export LIBRES_TEST_DATA_DIR="$(pwd)/test-data"
-          #popd
-          #git clone --branch $LIBECL_VERSION --depth 1 https://github.com/equinor/libecl
-          #bash ert/.build_install.sh libecl
-          #bash ert/.build_install.sh libres
-          ##export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
-          #export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/site-packages:$PYTHONPATH
-          #PATH=$INSTALL_DIR/bin:$PATH
-          #pip install ert/ --prefix=$INSTALL_DIR
 
       - name: Install ecl2df with dependencies
         run: |
           pip install --upgrade pip
           pip install .
           python -c "import ecl2df"
-          python -c "import ecl2df.hook_implementations"
-          python -c "import ecl2df.hook_implementations.jobs as j; print(j.__file__)"
 
       - name: Install test dependencies
         run: pip install .[tests]
@@ -128,9 +111,6 @@ jobs:
       - name: Run tests
         run: |
           python -c "import ecl2df"
-          python -c "import ecl2df.hook_implementations"
-          python -c "import ecl2df.hook_implementations.jobs as j; print(j.__file__)"
-          pytest -s tests/test_ert_hooks.py
           pytest tests/
 
       - name: Build documentation

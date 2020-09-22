@@ -14,6 +14,10 @@ on:
     # Run CI every night and check that tests are working with latest dependencies
     - cron:  '0 0 * * *'
 
+env:
+  INSTALL_DIR: ${{ github.workspace }}/install
+  ERT_SHOW_BACKTRACE: 1
+
 jobs:
 
   ecl2df:
@@ -31,9 +35,6 @@ jobs:
             pandas-version: '1.*'
 
 
-    env:
-      PYTHONPATH: ${{ github.workspace }}/install/lib/python${{ matrix.python-version }}/site-packages:${{ github.workspace }}/install/lib/python${{ matrix.python-version }}/dist-packages
-
     steps:
       - name: Checkout commit locally
         uses: actions/checkout@v2
@@ -48,6 +49,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Setup environment
+        run: |
+          echo "::add-path::${{ env.INSTALL_DIR}}/bin"
+          echo "::set-env name=LD_LIBRARY_PATH::${{ env.INSTALL_DIR }}/lib:${{ env.INSTALL_DIR }}/lib64"
+          echo "::set-env name=DYLD_LIBRARY_PATH::${{ env.INSTALL_DIR }}/lib:${{ env.INSTALL_DIR }}/lib64"
+          echo "::set-env name=PYTHONPATH::${{ env.INSTALL_DIR }}/lib/python${{ matrix.python-version }}/site-packages:${{ env.INSTALL_DIR }}/lib/python${{ matrix.python-version }}/dist-packages"
+
       - name: Check code style
         if: matrix.python-version != '2.7'
         run: |
@@ -57,7 +65,7 @@ jobs:
       - name: Compile and install opm-common
         if: matrix.python-version == '2.7'
         run: |
-          sudo apt-get install libboost-all-dev liblapack-dev
+          sudo apt-get install libboost-all-dev liblapack-dev libfmt-dev
           pushd ..
           git clone --recursive https://github.com/OPM/opm-common.git
           mkdir opm-common/build
@@ -72,10 +80,27 @@ jobs:
           popd
           popd
 
+
+      - name: Compile and install ERT and libres
+        if: matrix.python-version != '2.7'
+        run: |
+          git clone --branch master --depth 1 https://github.com/equinor/ert
+          source ert/.libres_version
+          git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
+          source libres/.libecl_version
+          git clone --branch $LIBECL_VERSION --depth 1 https://github.com/equinor/libecl
+          bash ert/.build_install.sh libecl
+          bash ert/.build_install.sh libres
+          pip install -r ert/dev-requirements.txt
+          pip install ert/
+          pip list
+          ert --help
+
       - name: Install ecl2df with dependencies
         run: |
           pip install --upgrade pip
           pip install .
+          python -c "import ecl2df"
 
       - name: Install test dependencies
         run: pip install .[tests]

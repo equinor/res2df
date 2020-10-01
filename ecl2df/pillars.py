@@ -7,7 +7,6 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-import sys
 import logging
 import argparse
 import datetime
@@ -16,6 +15,7 @@ import dateutil.parser
 import pandas as pd
 
 import ecl2df
+from ecl2df import common
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -142,7 +142,7 @@ def df(
                 grouped = pd.merge(grouped, contacts, how="left")
 
     if stackdates:
-        return ecl2df.common.stack_on_colnames(
+        return common.stack_on_colnames(
             grouped, sep="@", stackcolname="DATE", inplace=True
         )
     return grouped
@@ -447,13 +447,4 @@ def pillars_main(args):
     elif args.group:
         dframe = dframe.mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        dframe.to_csv(sys.stdout, index=False)
-    else:
-        logger.info("Writing output to disk")
-        dframe.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    common.write_dframe_stdout_file(dframe, args.output, index=False, logger=logger)

@@ -17,7 +17,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
 import datetime
 import argparse
 import logging
@@ -28,7 +27,7 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 from .gruptree import dict2treelib
-from .common import merge_zones
+from .common import merge_zones, write_dframe_stdout_file
 
 
 logging.basicConfig()
@@ -704,15 +703,7 @@ def rft_main(args):
         else:
             logger.error("No data found. Bug?")
         return
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        rft_df.to_csv(sys.stdout, index=False)
-    else:
-        rft_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    write_dframe_stdout_file(rft_df, args.output, index=False, logger=logger)
 
 
 def rft2df(eclfiles):

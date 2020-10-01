@@ -15,7 +15,6 @@ from __future__ import division
 from __future__ import absolute_import
 
 import os
-import sys
 import logging
 import argparse
 import fnmatch
@@ -542,7 +541,8 @@ def df2ecl(
             we want to export data, and also the a column with GLOBAL_INDEX.
             Without GLOBAL_INDEX, the output will likely be invalid.
             The grid can contain both active and inactive cells.
-        keywords (str or list of str): The keyword(s) to export, with one value for every cell.
+        keywords (str or list of str): The keyword(s) to export, with one
+            value for every cell.
         eclfiles (EclFiles): If provided, the total cell count for the grid
             will be requested from this object. If not, it will be *guessed*
             from the maximum number of GLOBAL_INDEX, which can be under-estimated
@@ -582,7 +582,8 @@ def df2ecl(
                 "Assumes all cells are active"
             )
         )
-        # Drop NaN rows for columns to be used (triggerd by stacked dates and no global index, unlikely)
+        # Drop NaN rows for columns to be used (triggerd by stacked
+        # dates and no global index, unlikely)
         # Also copy dataframe to avoid side-effects on incoming data.
         grid_df = grid_df.dropna(
             axis="rows", subset=[keyword for keyword in keywords if keyword in grid_df]
@@ -625,7 +626,10 @@ def df2ecl(
             vector = vector.astype(float)
         if len(vector) != global_size:
             logger.warning(
-                "Mismatch between dumped vector length %d from df2ecl and assumed grid size %d",
+                (
+                    "Mismatch between dumped vector length "
+                    "%d from df2ecl and assumed grid size %d"
+                ),
                 len(vector),
                 global_size,
             )
@@ -679,12 +683,4 @@ def grid_main(args):
         dropconstants=args.dropconstants,
         stackdates=args.stackdates,
     )
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        grid_df.to_csv(sys.stdout, index=False)
-    else:
-        grid_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    common.write_dframe_stdout_file(grid_df, args.output, index=False, logger=logger)

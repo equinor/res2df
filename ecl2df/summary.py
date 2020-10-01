@@ -11,6 +11,7 @@ from __future__ import division
 
 import os
 import sys
+import signal
 import logging
 import argparse
 import datetime
@@ -20,6 +21,7 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 from . import parameters
+from .common import write_dframe_stdout_file
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -391,13 +393,4 @@ def summary_main(args):
     )
     if sum_df.empty:
         logger.warning("Empty summary data being written to disk!")
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        sum_df.to_csv(sys.stdout, index=True)
-    else:
-        logger.info("Writing to file %s", str(args.output))
-        sum_df.to_csv(args.output, index=True)
-        print("Wrote to " + args.output)
+    write_dframe_stdout_file(sum_df, args.output, logger)

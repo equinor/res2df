@@ -16,7 +16,12 @@ import collections
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_opmio_date_rec, parse_opmio_deckrecord, parse_opmio_tstep_rec
+from .common import (
+    parse_opmio_date_rec,
+    parse_opmio_deckrecord,
+    parse_opmio_tstep_rec,
+    write_dframe_stdout_file,
+)
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -303,18 +308,10 @@ def gruptree_main(args):
                 print("")
         else:
             logger.warning("No tree data to prettyprint")
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        dframe.to_csv(sys.stdout, index=False)
+    if dframe.empty:
+        logger.error("Empty GRUPTREE dataframe, not written to disk!")
     elif args.output:
-        if dframe.empty:
-            logger.error("Empty GRUPTREE dataframe, not written to disk!")
-        else:
-            dframe.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
+        write_dframe_stdout_file(dframe, args.output, index=False, logger=logger)
 
 
 def deck2df(eclfiles, startdate=None):

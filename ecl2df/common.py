@@ -6,7 +6,9 @@ from __future__ import absolute_import
 from __future__ import division
 
 import os
+import sys
 import json
+import signal
 import logging
 import datetime
 import itertools
@@ -62,6 +64,31 @@ for keyw in [
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
+
+
+def write_dframe_stdout_file(dframe, output, index=False, logger=None, logstr=None):
+    """Write a dataframe to either stdout or a file
+
+    If output is the magic string "-", output is written
+    to stdout.
+
+    Arguments:
+        dframe (pd.DataFrame): Dataframe to write
+        output (str): Filename or "-"
+        index (bool): Passed to to_csv()
+        logger (logging): Used if not stdout
+        logstr (str): Logged if not stdout.
+    """
+    if output == "-":
+        # Ignore pipe errors when writing to stdout:
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+        dframe.to_csv(sys.stdout, index=index)
+    else:
+        if logger and not logstr:
+            logger.info("Writing to file %s", str(output))
+        elif logger and logstr:
+            logger.info(logstr)
+        dframe.to_csv(output, index=index)
 
 
 def parse_ecl_month(eclmonth):

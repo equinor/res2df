@@ -8,12 +8,11 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
 import logging
 
 import pandas as pd
 
-from ecl2df import inferdims, common, __version__
+from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
 logging.basicConfig()
@@ -266,20 +265,17 @@ def pvt_main(args):
         stringdeck = "".join(open(args.DATAFILE).readlines())
         pvt_df = df(stringdeck, keywords=args.keywords)
     if not pvt_df.empty:
-        if args.output == "-":
-            # Ignore pipe errors when writing to stdout.
-            from signal import signal, SIGPIPE, SIG_DFL
-
-            signal(SIGPIPE, SIG_DFL)
-            pvt_df.to_csv(sys.stdout, index=False)
-        else:
-            logger.info(
-                "Unique PVTNUMs: %d, PVT keywords: %s",
-                len(pvt_df["PVTNUM"].unique()),
-                str(pvt_df["KEYWORD"].unique()),
-            )
-            pvt_df.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
+        common.write_dframe_stdout_file(
+            pvt_df,
+            args.output,
+            index=False,
+            logger=logger,
+            logstr=(
+                "Unique PVTNUMs: {}, PVT keywords: {}".format(
+                    str(len(pvt_df["PVTNUM"].unique())), str(pvt_df["KEYWORD"].unique())
+                )
+            ),
+        )
     else:
         logger.error("Empty PVT data, not written to disk")
 

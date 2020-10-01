@@ -15,6 +15,13 @@ import pandas as pd
 import ecl2df
 from .eclfiles import EclFiles
 
+try:
+    import networkx
+
+    HAVE_NETWORKX = True
+except ImportError:
+    HAVE_NETWORKX = False
+
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
@@ -228,11 +235,9 @@ def df(
     return trans_df
 
 
-def nx(eclfiles, region="FIPNUM"):
+def make_nx_graph(eclfiles, region="FIPNUM"):
     """Construct a networkx graph for the transmissibilities."""
-    try:
-        import networkx
-    except ImportError:
+    if not HAVE_NETWORKX:
         logger.error("Please install networkx for this function to work")
         return None
     trans_df = df(eclfiles, vectors=[region], coords=True, group=True)

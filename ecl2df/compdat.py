@@ -18,6 +18,7 @@ from .common import (
     parse_opmio_deckrecord,
     parse_opmio_date_rec,
     parse_opmio_tstep_rec,
+    write_dframe_stdout_file,
 )
 from .grid import merge_initvectors
 
@@ -251,7 +252,8 @@ def fill_parser(parser):
     """Set up sys.argv parsers.
 
     Arguments:
-        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments
+        parser (argparse.ArgumentParser or argparse.subparser): parser
+            to fill with arguments
     """
     parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
     parser.add_argument(
@@ -288,8 +290,7 @@ def compdat_main(args):
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     if compdat_df.empty:
         logger.warning("Empty COMPDAT data being written to disk!")
-    compdat_df.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)
+    write_dframe_stdout_file(compdat_df, args.output, index=False, logger=logger)
 
 
 def df(eclfiles, initvectors=None):

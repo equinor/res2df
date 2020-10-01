@@ -18,13 +18,13 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
 import logging
 import argparse
 import pandas as pd
 
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
+from .common import write_dframe_stdout_file
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -306,20 +306,16 @@ def satfunc_main(args):
             "".join(open(args.DATAFILE).readlines()), keywords=args.keywords
         )
     if not satfunc_df.empty:
-        if args.output == "-":
-            # Ignore pipe errors when writing to stdout.
-            from signal import signal, SIGPIPE, SIG_DFL
-
-            signal(SIGPIPE, SIG_DFL)
-            satfunc_df.to_csv(sys.stdout, index=False)
-        else:
-            logger.info(
-                "Unique SATNUMs: %d, saturation keywords: %s",
-                len(satfunc_df["SATNUM"].unique()),
+        write_dframe_stdout_file(
+            satfunc_df,
+            args.output,
+            index=False,
+            logger=logger,
+            logstr="Unique SATNUMs: {}, saturation keywords: {}".format(
+                str(len(satfunc_df["SATNUM"].unique())),
                 str(satfunc_df["KEYWORD"].unique()),
-            )
-            satfunc_df.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
+            ),
+        )
     else:
         logger.error("Empty saturation functions data, not written to disk!")
 

@@ -7,12 +7,12 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
-import sys
 import logging
 
 import pandas as pd
 
 import ecl2df
+from ecl2df.common import write_dframe_stdout_file
 from .eclfiles import EclFiles
 
 try:
@@ -315,12 +315,5 @@ def trans_main(args):
         group=args.group,
         addnnc=args.nnc,
     )
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
 
-        signal(SIGPIPE, SIG_DFL)
-        trans_df.to_csv(sys.stdout, index=False)
-    else:
-        trans_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    write_dframe_stdout_file(trans_df, args.output, index=False, caller_logger=logger)

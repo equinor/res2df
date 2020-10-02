@@ -25,16 +25,16 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 
-from ecl2df import common, __version__
 
 from ecl.eclfile import EclFile
+from ecl2df import common, __version__
 from .eclfiles import EclFiles
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 
-def rstdates(eclfiles):
+def get_available_rst_dates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
     logger.info(
@@ -69,7 +69,7 @@ def dates2rstindices(eclfiles, dates):
     if not dates:
         return ([], [], [])
 
-    availabledates = rstdates(eclfiles)
+    availabledates = get_available_rst_dates(eclfiles)
 
     supportedmnemonics = ["first", "last", "all"]
 
@@ -81,11 +81,11 @@ def dates2rstindices(eclfiles, dates):
             try:
                 isodate = dateutil.parser.isoparse(dates).date()
             except ValueError:
+                # When Python 2 is dropped, use "raise from" syntax.
                 raise ValueError("date " + str(dates) + " not understood")
             if isodate not in availabledates:
                 raise ValueError("date " + str(isodate) + " not found in UNRST file")
-            else:
-                chosendates = [isodate]
+            chosendates = [isodate]
         else:
             if dates == "first":
                 chosendates = [availabledates[0]]
@@ -101,7 +101,7 @@ def dates2rstindices(eclfiles, dates):
         chosendates = [x for x in dates if x in availabledates]
         if not chosendates:
             raise ValueError("None of the requested dates were found")
-        elif len(chosendates) < len(availabledates):
+        if len(chosendates) < len(availabledates):
             logger.warning("Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")
@@ -683,4 +683,6 @@ def grid_main(args):
         dropconstants=args.dropconstants,
         stackdates=args.stackdates,
     )
-    common.write_dframe_stdout_file(grid_df, args.output, index=False, logger=logger)
+    common.write_dframe_stdout_file(
+        grid_df, args.output, index=False, caller_logger=logger
+    )

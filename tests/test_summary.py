@@ -13,6 +13,7 @@ import pandas as pd
 
 from ecl2df import summary, ecl2csv
 from ecl2df.eclfiles import EclFiles
+from ecl2df.summary import normalize_dates, resample_smry_dates
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -178,7 +179,6 @@ def test_main_subparser(tmpdir):
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
-    from ecl2df.summary import normalize_dates
 
     start = datetime.date(1997, 11, 5)
     end = datetime.date(2020, 3, 2)
@@ -213,7 +213,6 @@ def test_datenormalization():
 
 def test_resample_smry_dates():
     """Test resampling of summary dates"""
-    from ecl2df.summary import resample_smry_dates
 
     eclfiles = EclFiles(DATAFILE)
 

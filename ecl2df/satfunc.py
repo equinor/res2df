@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Extract saturation function data (SWOF, SGOF, SWFN, etc.)
@@ -18,6 +17,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import signal
 import logging
 import argparse
 import pandas as pd
@@ -310,7 +310,7 @@ def satfunc_main(args):
             satfunc_df,
             args.output,
             index=False,
-            logger=logger,
+            caller_logger=logger,
             logstr="Unique SATNUMs: {}, saturation keywords: {}".format(
                 str(len(satfunc_df["SATNUM"].unique())),
                 str(satfunc_df["KEYWORD"].unique()),
@@ -330,9 +330,7 @@ def satfunc_reverse_main(args):
 
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(inc_string)
     else:
         with open(args.output, "w") as f_handle:
@@ -345,8 +343,7 @@ def deck2df(eclfiles, satnumcount=None):
     logger.warning("Deprecated function call satfunc.deck2df(). Use satfunc.df()")
     if satnumcount is not None:
         return df(eclfiles, ntsfun=satnumcount)
-    else:
-        return df(eclfiles)
+    return df(eclfiles)
 
 
 def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):

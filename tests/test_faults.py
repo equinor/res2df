@@ -31,6 +31,7 @@ def test_faults2df():
 
 
 def test_str2df():
+    """Test making dataframe from a string"""
     deckstr = """
 FAULTS
   'A' 1 2 3 4 5 6 'I' /

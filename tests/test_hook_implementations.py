@@ -6,6 +6,8 @@ import pytest
 
 
 try:
+    # pylint: disable=unused-import
+
     import ert_shared  # noqa
 except ImportError:
     pytest.skip(
@@ -13,8 +15,9 @@ except ImportError:
         allow_module_level=True,
     )
 
-import ecl2df.hook_implementations.jobs
 from ert_shared.plugins.plugin_manager import ErtPluginManager
+
+import ecl2df.hook_implementations.jobs
 
 EXPECTED_JOBS = {
     "ECL2CSV": "ecl2df/config_jobs/ECL2CSV",
@@ -24,9 +27,10 @@ EXPECTED_JOBS = {
 
 @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 def test_hook_implementations():
-    pm = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
+    """Test that the expected jobs can be found using an ERT plugin manager"""
+    plugin_m = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
 
-    installable_jobs = pm.get_installable_jobs()
+    installable_jobs = plugin_m.get_installable_jobs()
     for wf_name, wf_location in EXPECTED_JOBS.items():
         assert wf_name in installable_jobs
         assert installable_jobs[wf_name].endswith(wf_location)
@@ -35,7 +39,7 @@ def test_hook_implementations():
     assert set(installable_jobs.keys()) == set(EXPECTED_JOBS.keys())
 
     expected_workflow_jobs = {}
-    installable_workflow_jobs = pm.get_installable_workflow_jobs()
+    installable_workflow_jobs = plugin_m.get_installable_workflow_jobs()
     for wf_name, wf_location in expected_workflow_jobs.items():
         assert wf_name in installable_workflow_jobs
         assert installable_workflow_jobs[wf_name].endswith(wf_location)
@@ -68,11 +72,12 @@ def test_executables():
 
 @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 def test_hook_implementations_job_docs():
-    pm = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
+    """Test extracting docs from ERT hooks"""
+    plugin_m = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
 
-    installable_jobs = pm.get_installable_jobs()
+    installable_jobs = plugin_m.get_installable_jobs()
 
-    docs = pm.get_documentation_for_jobs()
+    docs = plugin_m.get_documentation_for_jobs()
 
     assert set(docs.keys()) == set(installable_jobs.keys())
 

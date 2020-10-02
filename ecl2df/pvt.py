@@ -9,6 +9,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import logging
+import signal
 
 import pandas as pd
 
@@ -269,7 +270,7 @@ def pvt_main(args):
             pvt_df,
             args.output,
             index=False,
-            logger=logger,
+            caller_logger=logger,
             logstr=(
                 "Unique PVTNUMs: {}, PVT keywords: {}".format(
                     str(len(pvt_df["PVTNUM"].unique())), str(pvt_df["KEYWORD"].unique())
@@ -290,9 +291,7 @@ def pvt_reverse_main(args):
 
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(inc_string)
     else:
         with open(args.output, "w") as f_handle:
@@ -327,15 +326,12 @@ def df2ecl(pvt_df, keywords=None, comments=None, filename=None):
     )
 
 
-def df2ecl_rock(dframe, comment=None, filename=None):
+def df2ecl_rock(dframe, comment=None):
     """Print ROCK keyword with data
 
     Args:
         dframe (pd.DataFrame): Containing ROCK data
         comment (str): Text that will be included as a comment
-         filename (str): If supplied, the generated text will also be dumped
-            to file.
-
     """
     if dframe.empty:
         return "-- No data!"

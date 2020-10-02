@@ -32,7 +32,7 @@ def test_userapi():
     nnc = ecl2df.nnc.df(eclfiles)
     pillars = ecl2df.pillars.df(eclfiles)
     rft = ecl2df.rft.df(eclfiles)
-    satfund = ecl2df.satfunc.df(eclfiles)
+    satfunc = ecl2df.satfunc.df(eclfiles)
     smry = ecl2df.summary.df(eclfiles)
     trans = ecl2df.trans.df(eclfiles)
     wcon = ecl2df.wcon.df(eclfiles)
@@ -53,10 +53,15 @@ def test_userapi():
     print()
     print((hcpv_table / 1e6).round(2))
 
-    assert not nnc.empty
-    assert not rft.empty
-    assert not wcon.empty
-    assert not smry.empty
     assert not compdatdf.empty
     assert not equil.empty
+    assert not faults.empty
+    assert not fipreports.empty
     assert not gruptree.empty
+    assert not nnc.empty
+    assert not pillars.empty
+    assert not rft.empty
+    assert not satfunc.empty
+    assert not smry.empty
+    assert not trans.empty
+    assert not wcon.empty

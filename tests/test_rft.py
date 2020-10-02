@@ -20,6 +20,8 @@ from ecl2df.eclfiles import EclFiles
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
+# pylint: disable=protected-access
+
 
 def test_rftrecords2df():
     """Test that we can construct a dataframe for navigating in RFT
@@ -53,6 +55,7 @@ def test_rftrecords_generator():
 
 
 def test_get_con_seg_data():
+    """Get CON data. Later add more code here to defend the name"""
     rftfile = EclFiles(DATAFILE).get_rftfile()
 
     # Test the first record, it is a CON type (not multisegment)

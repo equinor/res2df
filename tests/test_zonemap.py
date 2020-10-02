@@ -5,9 +5,11 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import ecl2df
 
 import pytest
+
+import ecl2df
+
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")

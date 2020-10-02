@@ -4,7 +4,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
 import subprocess
 
 import pytest
@@ -25,7 +24,8 @@ def test_integration():
     with pytest.raises(subprocess.CalledProcessError) as exception:
         subprocess.check_output(["csv2ecl"])  # nosec
         assert exception.value.returncode == 2
-    # ref: https://stackoverflow.com/questions/23714542/why-does-pythons-argparse-use-an-error-code-of-2-for-systemexit
+    # ref: https://stackoverflow.com/questions/23714542/  \
+    #              why-does-pythons-argparse-use-an-error-code-of-2-for-systemexit
 
     # Also test the deprecated modules, remove later:
     assert subprocess.check_output(["compdat2csv", "-h"])  # nosec

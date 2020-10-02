@@ -7,6 +7,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import signal
 import logging
 import argparse
 import pandas as pd
@@ -337,7 +338,7 @@ def equil_main(args):
             equil_df,
             args.output,
             index=False,
-            logger=logger,
+            caller_logger=logger,
             logstr=(
                 "Unique EQLNUMs: {}, keywords: {}".format(
                     str(len(equil_df["EQLNUM"].unique())),
@@ -359,9 +360,7 @@ def equil_reverse_main(args):
 
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(inc_string)
     else:
         with open(args.output, "w") as f_handle:

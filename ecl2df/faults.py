@@ -10,7 +10,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import logging
-import argparse
 import pandas as pd
 
 from .eclfiles import EclFiles
@@ -72,15 +71,6 @@ def fill_parser(parser):
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
-
-
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("faults2csv is deprecated, use 'ecl2csv faults <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    faults_main(args)
 
 
 def faults_main(args):

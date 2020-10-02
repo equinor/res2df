@@ -9,7 +9,6 @@ from __future__ import division
 
 import signal
 import logging
-import argparse
 import pandas as pd
 
 from ecl2df import inferdims, common
@@ -68,12 +67,6 @@ RENAMERS["oil-gas"] = {
     "BLACK_OIL_INIT_WG": "IGNORE4",
     "OIP_INIT": "ACCURACY",
 }
-
-
-def deck2equildf(deck):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name, deck2equildf")
-    return deck2df(deck)
 
 
 def df(deck, keywords=None, ntequl=None):
@@ -270,12 +263,6 @@ def equil_fromdeck(deck, ntequl=None):
     return dataframe
 
 
-def deck2df(eclfiles, ntequl=None):
-    """Wrapper for deprecated syntax (does not support the keywords argument)"""
-    logger.warning("Deprecated function name equil.deck2df(). Use equil.df()")
-    return df(eclfiles, ntequl=ntequl)
-
-
 def fill_parser(parser):
     """Set up sys.argv parsers.
 
@@ -307,15 +294,6 @@ def fill_parser(parser):
 def fill_reverse_parser(parser):
     """Fill a parser for the operation dataframe -> eclipse include file"""
     return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
-
-
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("equil2csv is deprecated, use 'ecl2csv equil <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    equil_main(args)
 
 
 def equil_main(args):

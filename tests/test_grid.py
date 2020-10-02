@@ -294,7 +294,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
         "--rstdates",
         "first",
-        "--init",
+        "--vectors",
         "PORO",
     ]
     ecl2csv.main()
@@ -312,7 +312,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
         "--rstdates",
         "2001-02-01",
-        "--init",
+        "--vectors",
         "PORO",
     ]
     ecl2csv.main()

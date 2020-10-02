@@ -11,7 +11,6 @@ from __future__ import division
 
 import os
 import logging
-import argparse
 import datetime
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
@@ -364,15 +363,6 @@ def fill_parser(parser):
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
-
-
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("summary2csv is deprecated, use 'ecl2csv smry <args>' instead")
-    parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    summary_main(args)
 
 
 def summary_main(args):

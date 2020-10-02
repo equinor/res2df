@@ -19,7 +19,6 @@ from __future__ import division
 
 import signal
 import logging
-import argparse
 import pandas as pd
 
 from ecl2df import inferdims, common
@@ -279,15 +278,6 @@ def fill_reverse_parser(parser):
     return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
 
 
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    satfunc_main(args)
-
-
 def satfunc_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
@@ -336,14 +326,6 @@ def satfunc_reverse_main(args):
         with open(args.output, "w") as f_handle:
             f_handle.write(inc_string)
         print("Wrote to " + args.output)
-
-
-def deck2df(eclfiles, satnumcount=None):
-    """Deprecated Python API"""
-    logger.warning("Deprecated function call satfunc.deck2df(). Use satfunc.df()")
-    if satnumcount is not None:
-        return df(eclfiles, ntsfun=satnumcount)
-    return df(eclfiles)
 
 
 def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):

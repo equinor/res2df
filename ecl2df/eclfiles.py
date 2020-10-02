@@ -261,4 +261,4 @@ class EclFiles(object):
 
 def rreplace(pat, sub, string):
     """Variant of str.replace() that only replaces at the end of the string"""
-    return string[0 : -len(pat)] + sub if string.endswith(pat) else string
+    return string[0 : -len(pat)] + sub if string.endswith(pat) else string  # noqa

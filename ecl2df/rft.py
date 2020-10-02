@@ -18,7 +18,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import datetime
-import argparse
 import logging
 import collections
 
@@ -676,15 +675,6 @@ def fill_parser(parser):
     return parser
 
 
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("rft2csv is deprecated, use 'ecl2csv rft <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    rft_main(args)
-
-
 def rft_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
@@ -704,11 +694,6 @@ def rft_main(args):
             logger.error("No data found. Bug?")
         return
     write_dframe_stdout_file(rft_df, args.output, index=False, caller_logger=logger)
-
-
-def rft2df(eclfiles):
-    """Deprecated function"""
-    return df(eclfiles)
 
 
 # Vector  Description

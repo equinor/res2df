@@ -16,7 +16,6 @@ from __future__ import absolute_import
 
 import os
 import logging
-import argparse
 import fnmatch
 import textwrap
 import datetime
@@ -449,14 +448,12 @@ def fill_parser(parser):
     )
     parser.add_argument(
         "--vectors",
-        "--initkeys",  # --initkeys is deprecated
         nargs="+",
         help="INIT and/or restart wildcards for vectors to include",
         default="*",
     )
     parser.add_argument(
         "--rstdates",
-        "--rstdate",  # --rstdate is deprecated
         type=str,
         help="Point in time to grab restart data from, "
         + "either 'first' or 'last', 'all', or a date in "
@@ -660,15 +657,6 @@ def df2ecl(
             file_handle.write(string)
 
     return string
-
-
-def main():
-    """Entry-point for module, for command line utility. Deprecated to use"""
-    logger.warning("eclgrid2csv is deprecated, use 'ecl2csv grid <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    grid_main(args)
 
 
 def grid_main(args):

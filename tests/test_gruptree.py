@@ -56,7 +56,7 @@ WELSPECS
     # This is only available if GRUPNET is also there
     assert "TERMINAL_PRESSURE" not in grupdf
 
-    withstart = gruptree.gruptree2df(deck, startdate="2019-01-01")
+    withstart = gruptree.df(deck, startdate="2019-01-01")
     assert not withstart.dropna().empty
     assert len(withstart) == 5
 

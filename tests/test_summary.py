@@ -114,18 +114,6 @@ def test_summary2df_dates(tmpdir):
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
 
 
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
-    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile)]
-    summary.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-    assert "FOPT" in disk_df
-
-
 def test_paramsupport(tmpdir):
     """Test that we can merge in parameters.txt"""
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")
@@ -136,8 +124,8 @@ def test_paramsupport(tmpdir):
         os.remove(parameterstxt)
     with open(parameterstxt, "w") as pfile:
         pfile.write("FOO 1\nBAR 3")
-    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile), "-p"]
-    summary.main()
+    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
+    ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -151,8 +139,8 @@ def test_paramsupport(tmpdir):
         os.remove(parametersyml)
     with open(parametersyml, "w") as pfile:
         pfile.write(yaml.dump({"FOO": 1, "BAR": 3}))
-    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile), "-p"]
-    summary.main()
+    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
+    ecl2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
     assert "FOO" in disk_df

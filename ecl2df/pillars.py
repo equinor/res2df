@@ -8,7 +8,6 @@ from __future__ import division
 from __future__ import absolute_import
 
 import logging
-import argparse
 import datetime
 
 import dateutil.parser
@@ -407,14 +406,6 @@ def fill_parser(parser):
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
-
-
-def main():
-    """Entry-point for module, for command line utility. Deprecated to use"""
-    logger.warning("oilcol2csv is deprecated, use 'ecl2csv pillarstats <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    pillars_main(parser.parse_args())
 
 
 def pillars_main(args):

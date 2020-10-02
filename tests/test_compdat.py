@@ -250,17 +250,6 @@ def test_initmerging():
         compdat.df(eclfiles, initvectors=2)
 
 
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
-    sys.argv = ["compdat2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    compdat.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-
-
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join(".TMP-compdat.csv")

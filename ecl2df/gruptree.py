@@ -11,7 +11,6 @@ from __future__ import division
 import sys
 import logging
 import datetime
-import argparse
 import collections
 
 import treelib
@@ -27,12 +26,6 @@ from .common import (
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
-
-
-def gruptree2df(deck, startdate=None, welspecs=True):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name, gruptree2df")
-    return df(deck, startdate, welspecs)
 
 
 def df(deck, startdate=None, welspecs=True):
@@ -277,15 +270,6 @@ def fill_parser(parser):
     return parser
 
 
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("gruptree2csv is deprecated, use 'ecl2csv compdat <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    gruptree_main(args)
-
-
 def gruptree_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
@@ -294,7 +278,7 @@ def gruptree_main(args):
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
     eclfiles = EclFiles(args.DATAFILE)
-    dframe = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
+    dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
@@ -312,8 +296,3 @@ def gruptree_main(args):
         logger.error("Empty GRUPTREE dataframe, not written to disk!")
     elif args.output:
         write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
-
-
-def deck2df(eclfiles, startdate=None):
-    """Deprecated"""
-    return df(eclfiles, startdate=startdate)

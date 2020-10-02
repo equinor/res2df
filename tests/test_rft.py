@@ -365,7 +365,7 @@ def test_longer_branched_partly_icd_well():
 def test_rft2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    rftdf = rft.rft2df(eclfiles)
+    rftdf = rft.df(eclfiles)
     assert "ZONE" in rftdf
     assert "LEAF" not in rftdf  # Topology metadata should not be exported
     assert set(rftdf["WELLMODEL"]) == {"STANDARD"}
@@ -384,17 +384,6 @@ def test_rft2df():
     # Each well has 14 or 15 reservoir connections (14 layers in grid)
     assert set(rftdf.groupby("WELL")["CONIDX"].count().values) == {14, 15}
     assert not rftdf.columns.empty
-
-
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-rft.csv")
-    sys.argv = ["rft2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    rft.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
 
 
 def test_main_subparsers(tmpdir):

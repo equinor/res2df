@@ -9,7 +9,6 @@ from __future__ import division
 import os
 import logging
 import datetime
-import argparse
 import pandas as pd
 
 from ecl2df import common, EclFiles, grid, __version__
@@ -278,19 +277,6 @@ def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
             file_handle.write(string)
 
     return string
-
-
-def main():
-    """Entry-point for module, for command line utility
-
-    It may become deprecated to have a main() function
-    and command line utility for each module in ecl2df
-    """
-    logger.warning("nnc2csv is deprecated, use 'ecl2csv nnc <args>' instead")
-    parser = argparse.ArgumentParser()
-    fill_parser(parser)
-    args = parser.parse_args()
-    nnc_main(args)
 
 
 def nnc_main(args):

@@ -7,7 +7,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import argparse
 import datetime
 import logging
 import pandas as pd
@@ -47,12 +46,6 @@ COMPDAT_RENAMER = {
     "DIR": "DIR",
     "PR": "PEQVR",
 }
-
-
-def deck2compdatsegsdfs(deck, start_date=None):
-    """Deprecated function name"""
-    logger.warning("Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()")
-    return deck2dfs(deck, start_date)
 
 
 def deck2dfs(deck, start_date=None, unroll=True):
@@ -271,15 +264,6 @@ def fill_parser(parser):
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
-
-
-def main():
-    """Entry-point for module, for command line utility"""
-    logger.warning("compdat2csv is deprecated, use 'ecl2csv compdat <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    compdat_main(args)
 
 
 def compdat_main(args):

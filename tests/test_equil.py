@@ -326,7 +326,7 @@ EQUIL
     assert df["EQLNUM"].min() == 1
     assert df["EQLNUM"].max() == 2
     # Supply correct NTEQUL instead of estimating
-    df = equil.deck2df(deckstr, 2)
+    df = equil.df(deckstr, ntequl=2)
     assert len(df) == 2
 
     inc = equil.df2ecl(df, withphases=True)
@@ -334,12 +334,12 @@ EQUIL
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
 
     # Supplying wrong NTEQUIL:
-    df = equil.deck2df(deckstr, 1)
+    df = equil.df(deckstr, ntequl=1)
     # We are not able to catch this situation..
     assert len(df) == 1
     # But this will fail:
     with pytest.raises(ValueError):
-        equil.deck2df(deckstr, 3)
+        equil.df(deckstr, ntequl=3)
 
     deckstr = """
 GAS
@@ -359,17 +359,6 @@ EQUIL
     inc = equil.df2ecl(df, withphases=True)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
-
-
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-equil.csv")
-    sys.argv = ["equil2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    equil.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
 
 
 def test_main_subparser(tmpdir):

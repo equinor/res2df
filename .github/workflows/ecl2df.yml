@@ -61,6 +61,8 @@ jobs:
         run: |
           pip install black
           black --check ecl2df/*py tests/test_*py setup.py docs/conf.py
+          pip install flake8
+          flake8 ecl2df tests
 
       - name: Compile and install opm-common
         if: matrix.python-version == '2.7'

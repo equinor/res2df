@@ -703,7 +703,7 @@ def rft_main(args):
         else:
             logger.error("No data found. Bug?")
         return
-    write_dframe_stdout_file(rft_df, args.output, index=False, logger=logger)
+    write_dframe_stdout_file(rft_df, args.output, index=False, caller_logger=logger)
 
 
 def rft2df(eclfiles):

@@ -15,11 +15,6 @@ good-names=df,logger,rs,name,version
 
 [FORMAT]
 max-line-length=88
-max-module-lines=3000
-
-[DESIGN]
-max-attributes=25
-max-args=15
 
 [SIMILARITIES]
 min-similarity-lines=6

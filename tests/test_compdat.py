@@ -38,7 +38,7 @@ def test_comp2df():
     assert not compdfs["COMPDAT"].empty
     assert compdfs["WELSEGS"].empty  # REEK demo does not include multisegment wells
     assert compdfs["COMPSEGS"].empty
-    assert len(compdfs["COMPDAT"].columns)
+    assert not compdfs["COMPDAT"].columns.empty
 
 
 def test_schfile2df():
@@ -77,6 +77,7 @@ COMPDAT
 
 
 def test_str2df():
+    """Testing making a dataframe from an explicit string"""
     schstr = """
 WELSPECS
  'OP1' 'OPWEST' 41 125 1759.74 'OIL' 0.0 'STD' 'SHUT' 'YES'  0  'SEG' /

@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import signal
+import inspect
 import logging
 import datetime
 import itertools
@@ -66,7 +67,9 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 
-def write_dframe_stdout_file(dframe, output, index=False, logger=None, logstr=None):
+def write_dframe_stdout_file(
+    dframe, output, index=False, caller_logger=None, logstr=None
+):
     """Write a dataframe to either stdout or a file
 
     If output is the magic string "-", output is written
@@ -76,7 +79,7 @@ def write_dframe_stdout_file(dframe, output, index=False, logger=None, logstr=No
         dframe (pd.DataFrame): Dataframe to write
         output (str): Filename or "-"
         index (bool): Passed to to_csv()
-        logger (logging): Used if not stdout
+        caller_logger (logging): Used if not stdout
         logstr (str): Logged if not stdout.
     """
     if output == "-":
@@ -84,10 +87,10 @@ def write_dframe_stdout_file(dframe, output, index=False, logger=None, logstr=No
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         dframe.to_csv(sys.stdout, index=index)
     else:
-        if logger and not logstr:
-            logger.info("Writing to file %s", str(output))
-        elif logger and logstr:
-            logger.info(logstr)
+        if caller_logger and not logstr:
+            caller_logger.info("Writing to file %s", str(output))
+        elif caller_logger and logstr:
+            caller_logger.info(logstr)
         dframe.to_csv(output, index=index)
 
 
@@ -227,6 +230,7 @@ def parse_opmio_deckrecord(
 
         # Determine if there value is defaulted in the deck:
         defaulted = False
+        # pylint: disable=protected-access
         if hasattr(record[item_idx], "__defaulted"):
             try:
                 defaulted = record[item_idx].__defaulted(0)
@@ -448,8 +452,6 @@ def df2ecl(
     Returns:
         string that can be used as an include file for Eclipse.
     """
-    import inspect
-
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])
     if dataframe.empty:
@@ -528,8 +530,8 @@ def df2ecl(
         filenamedir = os.path.dirname(filename)
         if filenamedir and not os.path.exists(filenamedir):
             os.makedirs(filenamedir)
-        with open(filename, "w") as file_handle:
-            file_handle.write(string)
+        with open(filename, "w") as f_handle:
+            f_handle.write(string)
     return string
 
 

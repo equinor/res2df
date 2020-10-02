@@ -46,8 +46,10 @@ def test_gridgeometry2df():
 def test_wrongfile():
     """Test the EclFiles object on nonexistent files"""
     # pylint: disable=invalid-name,redefined-builtin
+
+    # Python 2 compatibility:
     try:
-        FileNotFoundError
+        FileNotFoundError  # noqa
     except NameError:
         FileNotFoundError = IOError
 
@@ -158,8 +160,10 @@ def test_df2ecl(tmpdir):
 
 def test_df2ecl_mock():
     """Test that we can use df2ecl for mocked minimal dataframes"""
-    gr = pd.DataFrame(columns=["FIPNUM"], data=[[1], [2], [3]])
-    simple_fipnum_inc = grid.df2ecl(gr, keywords="FIPNUM", dtype=int, nocomments=True)
+    a_grid = pd.DataFrame(columns=["FIPNUM"], data=[[1], [2], [3]])
+    simple_fipnum_inc = grid.df2ecl(
+        a_grid, keywords="FIPNUM", dtype=int, nocomments=True
+    )
     # (A warning is printed, that warning is warranted)
     assert "FIPNUM" in simple_fipnum_inc
     assert len(simple_fipnum_inc.replace("\n", " ").split()) == 5
@@ -328,12 +332,12 @@ def test_main(tmpdir):
     assert not disk_df.empty
 
 
-def test_rstdates():
+def test_get_available_rst_dates():
     """Test the support of dates in restart files"""
     eclfiles = EclFiles(DATAFILE)
     # rstfile = eclfiles.get_rstfile()
 
-    alldates = grid.rstdates(eclfiles)
+    alldates = grid.get_available_rst_dates(eclfiles)
     assert len(alldates) == 4
 
     didx = grid.dates2rstindices(eclfiles, "all")
@@ -350,7 +354,7 @@ def test_rstdates():
     last = grid.dates2rstindices(eclfiles, "last")
     assert last[1][0] == alldates[-1]
 
-    dates = grid.rstdates(eclfiles)
+    dates = grid.get_available_rst_dates(eclfiles)
     assert isinstance(dates, list)
 
     # Test with missing RST file:
@@ -375,7 +379,7 @@ def test_rst2df():
     assert "DATE" in rst_df
     assert rst_df["DATE"].unique()[0] == "2000-01-01"
     rst_df = grid.rst2df(eclfiles, "all", stackdates=True)
-    assert len(rst_df["DATE"].unique()) == len(grid.rstdates(eclfiles))
+    assert len(rst_df["DATE"].unique()) == len(grid.get_available_rst_dates(eclfiles))
     assert rst_df.shape == (4 * 35817, 23 + 1)  # "DATE" is now the extra column
 
     # Check vector slicing:

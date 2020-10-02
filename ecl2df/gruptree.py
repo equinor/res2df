@@ -13,6 +13,8 @@ import logging
 import datetime
 import argparse
 import collections
+
+import treelib
 import pandas as pd
 
 from .eclfiles import EclFiles
@@ -236,8 +238,6 @@ def dict2treelib(name, nested_dict):
     Return:
         treelib.Tree
     """
-    import treelib
-
     tree = treelib.Tree()
     tree.create_node(name, name)
     for child in nested_dict.keys():
@@ -311,7 +311,7 @@ def gruptree_main(args):
     if dframe.empty:
         logger.error("Empty GRUPTREE dataframe, not written to disk!")
     elif args.output:
-        write_dframe_stdout_file(dframe, args.output, index=False, logger=logger)
+        write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
 
 
 def deck2df(eclfiles, startdate=None):

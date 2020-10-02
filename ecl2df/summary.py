@@ -10,12 +10,11 @@ from __future__ import absolute_import
 from __future__ import division
 
 import os
-import sys
-import signal
 import logging
 import argparse
 import datetime
 import dateutil.parser
+from dateutil.relativedelta import relativedelta
 
 import pandas as pd
 
@@ -46,7 +45,6 @@ def normalize_dates(start_date, end_date, freq):
     Return:
         Tuple of normalized (start_date, end_date)
     """
-    from dateutil.relativedelta import relativedelta
 
     if freq == "monthly":
         start_date = start_date.replace(day=1)
@@ -188,7 +186,7 @@ def df(
     include_restart=True,
     params=False,
     paramfile=None,
-    datetime=False,
+    datetime=False,  # A very poor choice of argument name [pylint]
 ):
     """
     Extract data from UNSMRY as Pandas dataframes.

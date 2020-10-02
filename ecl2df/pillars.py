@@ -15,7 +15,6 @@ import dateutil.parser
 import pandas as pd
 
 import ecl2df
-from ecl2df import common
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -142,7 +141,7 @@ def df(
                 grouped = pd.merge(grouped, contacts, how="left")
 
     if stackdates:
-        return common.stack_on_colnames(
+        return ecl2df.common.stack_on_colnames(
             grouped, sep="@", stackcolname="DATE", inplace=True
         )
     return grouped
@@ -415,7 +414,7 @@ def main():
     logger.warning("oilcol2csv is deprecated, use 'ecl2csv pillarstats <args>' instead")
     parser = argparse.ArgumentParser()
     parser = fill_parser(parser)
-    pillarstats_main(parser.parse_args())
+    pillars_main(parser.parse_args())
 
 
 def pillars_main(args):
@@ -447,4 +446,6 @@ def pillars_main(args):
     elif args.group:
         dframe = dframe.mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    common.write_dframe_stdout_file(dframe, args.output, index=False, logger=logger)
+    ecl2df.common.write_dframe_stdout_file(
+        dframe, args.output, index=False, caller_logger=logger
+    )

@@ -38,6 +38,7 @@ OPMIOPARSER_RECOVERY = [
 try:
     FileNotFoundError
 except NameError:
+    # pylint: disable=redefined-builtin
     FileNotFoundError = IOError
 
 

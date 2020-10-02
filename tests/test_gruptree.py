@@ -102,6 +102,7 @@ WELSPECS
 
 
 def test_grupnetdf():
+    """Test making a dataframe from a GRUPTREE string"""
     schstr = """
 GRUPTREE
  'OPWEST' 'OP' /
@@ -139,6 +140,7 @@ def test_emptytree():
 
 
 def test_tstep():
+    """Test that we can parse a deck using TSTEP for timestepping"""
     schstr = """
 GRUPTREE
  'OPWEST' 'OP' /

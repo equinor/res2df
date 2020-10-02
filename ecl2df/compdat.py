@@ -290,7 +290,7 @@ def compdat_main(args):
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     if compdat_df.empty:
         logger.warning("Empty COMPDAT data being written to disk!")
-    write_dframe_stdout_file(compdat_df, args.output, index=False, logger=logger)
+    write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
 
 
 def df(eclfiles, initvectors=None):

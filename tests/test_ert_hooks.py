@@ -5,6 +5,8 @@ import subprocess
 import pytest
 
 try:
+    # pylint: disable=unused-import
+
     import ert_shared  # noqa
 except ImportError:
     pytest.skip(
@@ -19,6 +21,7 @@ DATADIR = os.path.join(TESTDIR, "data/reek/eclipse/model")
 
 @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 def test_ecl2csv_through_ert(tmpdir):
+    """Test running the ERT executable on a mocked config file"""
     tmpdir.chdir()
 
     # Symlink Eclipse output to our tmpdir:
@@ -61,16 +64,14 @@ def test_ecl2csv_through_ert(tmpdir):
 
     for subcommand in ecl2csv_subcommands:
         ert_config.append(
-            "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={}, <OUTPUT>={}.csv)".format(
-                subcommand, subcommand
+            "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={0}, <OUTPUT>={0}.csv)".format(
+                subcommand
             )
         )
     for subcommand in csv2ecl_subcommands:
         ert_config.append(
             "FORWARD_MODEL CSV2ECL("
-            + "<SUBCOMMAND>={}, <CSVFILE>={}.csv, <OUTPUT>={}.inc".format(
-                subcommand, subcommand, subcommand
-            )
+            + "<SUBCOMMAND>={0}, <CSVFILE>={0}.csv, <OUTPUT>={0}.inc".format(subcommand)
             + ")"
         )
 

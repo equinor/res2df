@@ -63,24 +63,59 @@ include file can be generated either with the Python API
 
   csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
 
-which should give a file `relperm.inc` that can be parsed by Eclipse. The command
+which should give a file ``relperm.inc`` that can be parsed by Eclipse. The command
 above will only pick the keywords ``SWOF`` and ``SGOF`` (in the case there are
 data for more keywords in the dataframe).
 
 There are no automated checks for validity of the dumped include files.
+
+Extracting properties pr. SATNUM
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you have an include file prepared (from any source), you might need to
+determine certain properties like endpoint. If you need to determine for
+example "SOWCR" - the largest oil saturation for which oil is immobile,
+because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
+
+.. code-block:: python
+
+    from ecl2df import satfunc
+
+    # Read an Eclipse include file directly into a DataFrame
+    with open("relperm.inc") as f_handle:
+        sat_df = satfunc.df(f_handle.read())
+
+    # Write a function that is to operate on each SATNUM:
+    def sowcr(df):
+        """Determine the largest oil saturation where
+        oil relperm is below 1e-7"""
+        return 1 - df[df["KROW"] > 1e-7]["SW"].max()
+
+    # Apply that function individually on each SATNUM:
+    sat_df.groupby("SATNUM").apply(sowcr)
+
+for an example include file, this could result in
+
+.. code-block:: console
+
+    SATNUM
+    1    0.15492
+    2    0.21002
+    3    0.05442
+    dtype: float64
 
 pyscal
 ^^^^^^
 
 Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
-ecl2df.satfunc, consider if it is better to implement the manipulations
+``ecl2df.satfunc``, consider if it is better to implement the manipulations
 through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
 Pyscal can create initialize its relperm objects from Eclipse include files
 though the parsing capabilities of ecl2df.satfunc.
 
-The function `pyscal.pyscallist.df()` is analogous to `ecl2df.satfunc.df()` in
+The function ``pyscal.pyscallist.df()`` is analogous to ``ecl2df.satfunc.df()`` in
 what it produces, and the :func:`ecl2df.satfunc.df2ecl()` can be used on both
 (potentially with some filtering needed.).

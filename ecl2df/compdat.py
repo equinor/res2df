@@ -255,7 +255,7 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
     return unrolled
 
 
-def applywelopen(compdat_df, wellopen_df):
+def applywelopen(compdat_df, welopen_df):
     """Apply WELLOPEN actions to the COMPDAT dataframe.
 
     Example: COMPDAT and WELOPEN keyword::
@@ -271,13 +271,14 @@ def applywelopen(compdat_df, wellopen_df):
 
     Args:
         compdat_df (pd.DataFrame): Dataframe with unrolled COMPDAT data
-        wellopen_df (pd.DataFrame): Dataframe with WELOPEN actions
+        welopen_df (pd.DataFrame): Dataframe with WELOPEN actions
 
     Returns:
         pd.Dataframe, compdat_df now including WELOPEN actions
 
     """
-    for _, row in wellopen_df.iterrows():
+    welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
+    for _, row in welopen_df.iterrows():
         if row["I"] and row["J"] and row["K"]:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])

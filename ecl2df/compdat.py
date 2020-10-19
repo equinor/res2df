@@ -112,8 +112,8 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 rec_data["DATE"] = date
                 if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO"]:
                     logger.warning(
-                        f"WELOPEN status {rec_data['STATUS']} is not a valid "
-                        f"COMPDAT state. Using 'SHUT' instead."
+                        "WELOPEN status %s is not a valid "
+                        "COMPDAT state. Using 'SHUT' instead." % rec_data["STATUS"]
                     )
                 welopenrecords.append(rec_data)
 
@@ -169,13 +169,13 @@ def deck2dfs(deck, start_date=None, unroll=True):
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(
-                f"The WELOPEN contains data that could not be parsed. "
-                f"(I={row['I']},J={row['J']},K={row['K']})"
+                "The WELOPEN contains data that could not be parsed. "
+                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
             )
         if previous_state.empty:
             raise ValueError(
-                f"WELOPEN keyword is not acting on any existing connection. "
-                f"(I={row['I']},J={row['J']},K={row['K']})"
+                "WELOPEN keyword is not acting on any existing connection. "
+                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
             )
 
         new_state = previous_state

@@ -278,9 +278,7 @@ def applywelopen(compdat_df, wellopen_df):
 
     """
     for _, row in wellopen_df.iterrows():
-        if (row["I"] and row["J"] and row["K"]) and (
-            row["I"] > 0 and row["J"] > 0 and row["K"] > 0
-        ):
+        if row["I"] and row["J"] and row["K"]:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["DATE"] <= row["DATE"])
@@ -290,28 +288,30 @@ def applywelopen(compdat_df, wellopen_df):
                 & (compdat_df["K2"] == row["K"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         elif row["C1"] or row["C2"]:
-            raise ValueError("Lumped connection are not supported in the WELOPEN.")
-        elif not (row["I"] and row["J"] and row["K"]) or not (
-            row["I"] > 0 and row["J"] > 0 and row["K"] > 0
-        ):
+            raise ValueError(
+                "Lumped connections are not supported in the a WELOPEN keyword."
+            )
+        elif not (row["I"] and row["J"] and row["K"]):
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["DATE"] <= row["DATE"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(
-                "The WELOPEN contains data that could not be parsed. "
+                "A WELOPEN keyword contains data that could not be parsed. "
                 "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
             )
+
         if previous_state.empty:
             raise ValueError(
-                "WELOPEN keyword is not acting on any existing connection. "
+                "A WELOPEN keyword is not acting on any existing connection. "
                 "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
             )
 
         new_state = previous_state
         new_state["OP/SH"] = row["STATUS"]
         new_state["DATE"] = row["DATE"]
+
         compdat_df = compdat_df.append(new_state)
 
     if not compdat_df.empty:

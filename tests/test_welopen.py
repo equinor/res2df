@@ -11,7 +11,7 @@ WELOPEN_CASES = [
     (
         """
     DATES
-       1 MAY 2001 /
+     1 MAY 2001 /
     /
 
     COMPDAT
@@ -23,17 +23,17 @@ WELOPEN_CASES = [
     /
 
     TSTEP
-      1 /
+     1 /
 
     COMPDAT
      'OP1' 34 111 32 32 'OPEN' /
     /
 
     TSTEP
-      2 3 /
+     2 3 /
 
     COMPDAT
-      'OP1' 35 111 33 33 'SHUT' /
+     'OP1' 35 111 33 33 'SHUT' /
     /
     """,
         pd.DataFrame(
@@ -55,7 +55,7 @@ WELOPEN_CASES = [
     (
         """
     DATES
-       1 MAY 2001 /
+     1 MAY 2001 /
     /
 
     COMPDAT
@@ -67,17 +67,17 @@ WELOPEN_CASES = [
     /
 
     TSTEP
-      1 /
+     1 /
 
     COMPDAT
      'OP1' 34 111 32 32 'OPEN' /
     /
 
     TSTEP
-      2 3 /
+     2 3 /
 
     COMPDAT
-      'OP1' 35 111 33 33 'SHUT' /
+     'OP1' 35 111 33 33 'SHUT' /
     /
     """,
         pd.DataFrame(
@@ -99,7 +99,7 @@ WELOPEN_CASES = [
     (
         """
     DATES
-       1 MAY 2001 /
+     1 MAY 2001 /
     /
 
     COMPDAT
@@ -112,7 +112,7 @@ WELOPEN_CASES = [
     /
 
     DATES
-       2 MAY 2001 /
+     2 MAY 2001 /
     /
 
     COMPDAT
@@ -123,7 +123,7 @@ WELOPEN_CASES = [
     /
 
     DATES
-       3 MAY 2001 /
+     3 MAY 2001 /
     /
 
     WELOPEN
@@ -170,7 +170,7 @@ WELOPEN_CASES = [
     (
         """
     DATES
-       1 MAY 2001 /
+     1 MAY 2001 /
     /
 
     COMPDAT
@@ -182,7 +182,7 @@ WELOPEN_CASES = [
     /
 
     DATES
-       2 MAY 2001 /
+     2 MAY 2001 /
     /
 
     WELOPEN
@@ -190,7 +190,7 @@ WELOPEN_CASES = [
     /
 
     DATES
-       3 MAY 2001 /
+     3 MAY 2001 /
     /
 
     WELOPEN

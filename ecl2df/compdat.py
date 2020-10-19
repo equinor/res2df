@@ -289,9 +289,12 @@ def applywelopen(compdat_df, welopen_df):
                 & (compdat_df["K2"] == row["K"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         elif row["C1"] or row["C2"]:
-            raise ValueError(
-                "Lumped connections are not supported in the a WELOPEN keyword."
+            logger.warning(
+                "Lumped connections are not supported in a WELOPEN keyword. "
+                "Skipping WELOPEN actions for lumped connections '%s' and/or '%s'"
+                % (row["C1"], row["C2"])
             )
+            continue
         elif not (row["I"] and row["J"] and row["K"]):
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])

@@ -256,7 +256,7 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
 
 
 def applywelopen(compdat_df, welopen_df):
-    """Apply WELLOPEN actions to the COMPDAT dataframe.
+    """Apply WELOPEN actions to the COMPDAT dataframe.
 
     Example: COMPDAT and WELOPEN keyword::
 

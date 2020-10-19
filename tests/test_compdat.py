@@ -191,6 +191,44 @@ def test_welopen(test_input, expected):
     assert all(compdf.dropna(axis=1) == expected.dropna(axis=1))
 
 
+def test_applywelopen():
+    schstr = """
+DATES
+   1 MAY 2001 /
+/
+
+COMPDAT
+ 'OP1' 33 110 31 31 'OPEN'  /
+/
+WELOPEN
+ 'OP1' 'SHUT' /
+/
+
+TSTEP
+  1 /
+
+COMPDAT
+ 'OP2' 66 110 31 31 'OPEN'  /
+/
+
+WELOPEN
+ 'OP1' 'OPEN' /
+/
+
+TSTEP
+  2 3 /
+
+WELOPEN
+ 'OP1' 'POPN' /
+ 'OP2' 'SHUT' /
+/
+"""
+    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    assert df.shape[0] == 5
+    assert df["OP/SH"].nunique() == 2
+    assert df["DATE"].nunique() == 3
+
+
 def test_unrollcompdatk1k2():
     """Test unrolling of k1-k2 ranges in COMPDAT"""
     schstr = """

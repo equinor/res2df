@@ -2,6 +2,11 @@ import datetime
 
 import pandas as pd
 
+import pytest
+
+from ecl2df import compdat
+from ecl2df import EclFiles
+
 WELOPEN_CASES = [
     (
         """
@@ -39,14 +44,6 @@ WELOPEN_CASES = [
                 "K1": {0: 31, 1: 32, 2: 33},
                 "K2": {0: 31, 1: 32, 2: 33},
                 "OP/SH": {0: "SHUT", 1: "OPEN", 2: "SHUT"},
-                "SATN": {0: 0, 1: 0, 2: 0},
-                "TRAN": {0: None, 1: None, 2: None},
-                "WBDIA": {0: None, 1: None, 2: None},
-                "KH": {0: -1, 1: -1, 2: -1},
-                "SKIN": {0: 0, 1: 0, 2: 0},
-                "DFACT": {0: None, 1: None, 2: None},
-                "DIR": {0: "Z", 1: "Z", 2: "Z"},
-                "PEQVR": {0: None, 1: None, 2: None},
                 "DATE": {
                     0: datetime.date(2001, 5, 1),
                     1: datetime.date(2001, 5, 2),
@@ -91,14 +88,6 @@ WELOPEN_CASES = [
                 "K1": {0: 31, 1: 32, 2: 33},
                 "K2": {0: 31, 1: 32, 2: 33},
                 "OP/SH": {0: "OPEN", 1: "OPEN", 2: "SHUT"},
-                "SATN": {0: 0, 1: 0, 2: 0},
-                "TRAN": {0: None, 1: None, 2: None},
-                "WBDIA": {0: None, 1: None, 2: None},
-                "KH": {0: -1, 1: -1, 2: -1},
-                "SKIN": {0: 0, 1: 0, 2: 0},
-                "DFACT": {0: None, 1: None, 2: None},
-                "DIR": {0: "Z", 1: "Z", 2: "Z"},
-                "PEQVR": {0: None, 1: None, 2: None},
                 "DATE": {
                     0: datetime.date(2001, 5, 1),
                     1: datetime.date(2001, 5, 2),
@@ -166,38 +155,6 @@ WELOPEN_CASES = [
                     5: "OPEN",
                     6: "SHUT",
                 },
-                "SATN": {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
-                "TRAN": {0: None, 1: None, 2: None, 3: None, 4: None, 5: None, 6: None},
-                "WBDIA": {
-                    0: None,
-                    1: None,
-                    2: None,
-                    3: None,
-                    4: None,
-                    5: None,
-                    6: None,
-                },
-                "KH": {0: -1, 1: -1, 2: -1, 3: -1, 4: -1, 5: -1, 6: -1},
-                "SKIN": {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0},
-                "DFACT": {
-                    0: None,
-                    1: None,
-                    2: None,
-                    3: None,
-                    4: None,
-                    5: None,
-                    6: None,
-                },
-                "DIR": {0: "Z", 1: "Z", 2: "Z", 3: "Z", 4: "Z", 5: "Z", 6: "Z"},
-                "PEQVR": {
-                    0: None,
-                    1: None,
-                    2: None,
-                    3: None,
-                    4: None,
-                    5: None,
-                    6: None,
-                },
                 "DATE": {
                     0: datetime.date(2001, 5, 1),
                     1: datetime.date(2001, 5, 1),
@@ -248,14 +205,6 @@ WELOPEN_CASES = [
                 "K1": {0: 2, 1: 1, 2: 2, 3: 1, 4: 2},
                 "K2": {0: 2, 1: 1, 2: 2, 3: 1, 4: 2},
                 "OP/SH": {0: "OPEN", 1: "SHUT", 2: "SHUT", 3: "OPEN", 4: "OPEN"},
-                "SATN": {0: 0, 1: 0, 2: 0, 3: 0, 4: 0},
-                "TRAN": {0: None, 1: None, 2: None, 3: None, 4: None},
-                "WBDIA": {0: None, 1: None, 2: None, 3: None, 4: None},
-                "KH": {0: -1, 1: -1, 2: -1, 3: -1, 4: -1},
-                "SKIN": {0: 0, 1: 0, 2: 0, 3: 0, 4: 0},
-                "DFACT": {0: None, 1: None, 2: None, 3: None, 4: None},
-                "DIR": {0: "Z", 1: "Z", 2: "Z", 3: "Z", 4: "Z"},
-                "PEQVR": {0: None, 1: None, 2: None, 3: None, 4: None},
                 "DATE": {
                     0: datetime.date(2001, 5, 1),
                     1: datetime.date(2001, 5, 1),
@@ -267,3 +216,13 @@ WELOPEN_CASES = [
         ),
     ),
 ]
+
+
+@pytest.mark.parametrize("test_input,expected", WELOPEN_CASES)
+def test_welopen(test_input, expected):
+    """Test with WELOPEN present"""
+    deck = EclFiles.str2deck(test_input)
+    compdf = compdat.deck2dfs(deck)["COMPDAT"]
+
+    columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
+    assert all(compdf[columns_to_check] == expected[columns_to_check])

@@ -11,7 +11,6 @@ import pandas as pd
 
 import pytest
 
-from test_welopen import WELOPEN_CASES
 from ecl2df import compdat, ecl2csv
 from ecl2df import EclFiles
 
@@ -180,15 +179,6 @@ COMPDAT
     assert "2001-05-01" in dates
     assert "2001-05-02" in dates
     assert "2001-05-07" in dates
-
-
-@pytest.mark.parametrize("test_input,expected", WELOPEN_CASES)
-def test_welopen(test_input, expected):
-    """Test with WELOPEN present"""
-    deck = EclFiles.str2deck(test_input)
-    compdf = compdat.deck2dfs(deck)["COMPDAT"]
-
-    assert all(compdf.dropna(axis=1) == expected.dropna(axis=1))
 
 
 def test_applywelopen():

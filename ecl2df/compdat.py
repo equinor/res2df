@@ -67,6 +67,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     """
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
+    welopenrecords = []
     welsegsrecords = []
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for kword in deck:
@@ -105,6 +106,17 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 rec_data["WELL"] = wellname
                 rec_data["DATE"] = date
                 compsegsrecords.append(rec_data)
+        elif kword.name == "WELOPEN":
+            for rec in kword:  # Loop over the lines inside WELOPEN record
+                rec_data = parse_opmio_deckrecord(rec, "WELOPEN")
+                rec_data["DATE"] = date
+                if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO"]:
+                    logger.warning(
+                        f"WELOPEN status {rec_data['STATUS']} is not a valid "
+                        f"COMPDAT state. Using 'SHUT' instead."
+                    )
+                welopenrecords.append(rec_data)
+
         elif kword.name == "WELSEGS":
             # First record contains meta-information for well
             # (opm deck returns default values for unspecified items.)
@@ -135,9 +147,56 @@ def deck2dfs(deck, start_date=None, unroll=True):
     if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
 
-    compsegs_df = pd.DataFrame(compsegsrecords)
+    welopen_df = pd.DataFrame(welopenrecords)
 
+    for _, row in welopen_df.iterrows():
+        if (row["I"] and row["J"] and row["K"]) and (
+            row["I"] > 0 and row["J"] > 0 and row["K"] > 0
+        ):
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["DATE"] <= row["DATE"])
+                & (compdat_df["I"] == row["I"])
+                & (compdat_df["J"] == row["J"])
+                & (compdat_df["K1"] == row["K"])
+                & (compdat_df["K2"] == row["K"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        elif row["C1"] or row["C2"]:
+            raise ValueError("Lumped connection are not supported in the WELOPEN.")
+        elif not (row["I"] and row["J"] and row["K"]) or not (
+            row["I"] > 0 and row["J"] > 0 and row["K"] > 0
+        ):
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["DATE"] <= row["DATE"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        else:
+            raise ValueError(
+                f"The WELOPEN contains data that could not be parsed. "
+                f"(I={row['I']},J={row['J']},K={row['K']})"
+            )
+        if previous_state.empty:
+            raise ValueError(
+                f"WELOPEN keyword is not acting on any existing connection. "
+                f"(I={row['I']},J={row['J']},K={row['K']})"
+            )
+
+        new_state = previous_state
+        new_state["OP/SH"] = row["STATUS"]
+        new_state["DATE"] = row["DATE"]
+        compdat_df = compdat_df.append(new_state)
+
+    if not compdat_df.empty:
+        compdat_df = (
+            compdat_df.sort_values(by=["DATE", "WELL"])
+            .replace({"STOP": "OPEN", "POPN": "SHUT"})
+            .drop_duplicates(subset=["I", "J", "K1", "K2", "DATE"], keep="last")
+            .reset_index(drop=True)
+        )
+
+    compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
+
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
 

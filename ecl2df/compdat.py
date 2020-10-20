@@ -313,7 +313,15 @@ def applywelopen(compdat_df, welopen_df):
             )
 
         new_state = previous_state
+
+        # The COMPDAT DataFrame uses COMPDAT_RENAMER and therefore uses "OP/SH" as a
+        # column name for the state of a well. WELOPEN uses "STATUS" for the state
+        # column name and therefore a translation step needs to be done. The
+        # underlying problem is that the opm-common definitions for the state of a
+        # well in COMPDAT and WELOPEN are not identical. These translation steps can
+        # be dropped when unity in the opm-common keyword definitions is reached.
         new_state["OP/SH"] = row["STATUS"]
+
         new_state["DATE"] = row["DATE"]
 
         compdat_df = compdat_df.append(new_state)

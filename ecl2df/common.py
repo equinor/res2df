@@ -54,6 +54,7 @@ for keyw in [
     "WCONINJE",
     "WCONINJH",
     "WCONPROD",
+    "WELOPEN",
     "WELSEGS",
     "WELSPECS",
 ]:

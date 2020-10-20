@@ -67,6 +67,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     """
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
+    welopenrecords = []
     welsegsrecords = []
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for kword in deck:
@@ -105,6 +106,18 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 rec_data["WELL"] = wellname
                 rec_data["DATE"] = date
                 compsegsrecords.append(rec_data)
+        elif kword.name == "WELOPEN":
+            for rec in kword:
+                rec_data = parse_opmio_deckrecord(rec, "WELOPEN")
+                rec_data["DATE"] = date
+                if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO"]:
+                    rec_data["STATUS"] = "SHUT"
+                    logger.warning(
+                        "WELOPEN status %s is not a valid "
+                        "COMPDAT state. Using 'SHUT' instead." % rec_data["STATUS"]
+                    )
+                welopenrecords.append(rec_data)
+
         elif kword.name == "WELSEGS":
             # First record contains meta-information for well
             # (opm deck returns default values for unspecified items.)
@@ -126,18 +139,19 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
                     rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
                 welsegsrecords.append(rec_data)
-        elif kword.name == "TSTEP":
-            logger.warning("Possible premature stop at first TSTEP")
-            break
 
     compdat_df = pd.DataFrame(compdatrecords)
+    welopen_df = pd.DataFrame(welopenrecords)
 
     if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
 
-    compsegs_df = pd.DataFrame(compsegsrecords)
+    if not welopen_df.empty:
+        compdat_df = applywelopen(compdat_df, welopen_df)
 
+    compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
+
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
 
@@ -239,6 +253,99 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
     if list_unrolled:
         unrolled = pd.concat([unrolled, pd.DataFrame(list_unrolled)], axis=0)
     return unrolled
+
+
+def applywelopen(compdat_df, welopen_df):
+    """Apply WELOPEN actions to the COMPDAT dataframe.
+
+    Each record in the WELOPEN keyword acts as an operator on existing connections
+    in existing wells.
+
+    Example: COMPDAT and WELOPEN keyword::
+
+      COMPDAT
+       'OP1' 33 44 10 11 'OPEN' /
+       'OP2' 66 44 10 11 'OPEN' /
+      /
+      WELOPEN
+       'OP1' SHUT /
+       'OP2' SHUT 66 44 10 /
+      /
+
+    This deck would define two wells where OP1 and OP2 have two connected grid cells
+    each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites
+    this: all connections in OP1 will be SHUT and in OP2 the upper connection will
+    be SHUT.
+
+    WELOPEN can also be used at different dates and changes therefore the state of
+    connections without explicit use of the COMPDAT keyword. This function translates
+    WELOPEN actions into explicit additional COMPDAT definitions in the exported df.
+
+    Args:
+        compdat_df (pd.DataFrame): Dataframe with unrolled COMPDAT data
+        welopen_df (pd.DataFrame): Dataframe with WELOPEN actions
+
+    Returns:
+        pd.Dataframe, compdat_df now including WELOPEN actions
+
+    """
+    welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
+    for _, row in welopen_df.iterrows():
+        if row["I"] and row["J"] and row["K"]:
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["DATE"] <= row["DATE"])
+                & (compdat_df["I"] == row["I"])
+                & (compdat_df["J"] == row["J"])
+                & (compdat_df["K1"] == row["K"])
+                & (compdat_df["K2"] == row["K"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        elif row["C1"] or row["C2"]:
+            logger.warning(
+                "Lumped connections are not supported in a WELOPEN keyword. "
+                "Skipping WELOPEN actions for lumped connections '%s' and/or '%s'"
+                % (row["C1"], row["C2"])
+            )
+            continue
+        elif not (row["I"] and row["J"] and row["K"]):
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["DATE"] <= row["DATE"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        else:
+            raise ValueError(
+                "A WELOPEN keyword contains data that could not be parsed. "
+                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+            )
+
+        if previous_state.empty:
+            raise ValueError(
+                "A WELOPEN keyword is not acting on any existing connection. "
+                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+            )
+
+        new_state = previous_state
+
+        # The COMPDAT DataFrame uses COMPDAT_RENAMER and therefore uses "OP/SH" as a
+        # column name for the state of a well. WELOPEN uses "STATUS" for the state
+        # column name and therefore a translation step needs to be done. The
+        # underlying problem is that the opm-common definitions for the state of a
+        # well in COMPDAT and WELOPEN are not identical. These translation steps can
+        # be dropped when unity in the opm-common keyword definitions is reached.
+        new_state["OP/SH"] = row["STATUS"]
+
+        new_state["DATE"] = row["DATE"]
+
+        compdat_df = compdat_df.append(new_state)
+
+    if not compdat_df.empty:
+        compdat_df = (
+            compdat_df.sort_values(by=["DATE", "WELL"])
+            .drop_duplicates(subset=["I", "J", "K1", "K2", "DATE"], keep="last")
+            .reset_index(drop=True)
+        )
+
+    return compdat_df
 
 
 def fill_parser(parser):

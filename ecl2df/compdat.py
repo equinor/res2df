@@ -258,16 +258,28 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
 def applywelopen(compdat_df, welopen_df):
     """Apply WELOPEN actions to the COMPDAT dataframe.
 
+    Each record in the WELOPEN keyword acts as an operator on existing connections
+    in existing wells.
+
     Example: COMPDAT and WELOPEN keyword::
 
       COMPDAT
-        'OP1' 33 44 10 11 'OPEN' /
+       'OP1' 33 44 10 11 'OPEN' /
+       'OP2' 66 44 10 11 'OPEN' /
       /
       WELOPEN
-        'OP1' SHUT /
+       'OP1' SHUT /
+       'OP2' SHUT 66 44 10 /
       /
 
-    will be equal to defining the connections SHUT within COMPDAT.
+    This deck would define two wells where OP1 and OP2 have two connected grid cells
+    each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites
+    this: all connections in OP1 will be SHUT and in OP2 the upper connection will
+    be SHUT.
+
+    WELOPEN can also be used at different dates and changes therefore the state of
+    connections without explicit use of the COMPDAT keyword. This function translates
+    WELOPEN actions into explicit additional COMPDAT definitions in the exported df.
 
     Args:
         compdat_df (pd.DataFrame): Dataframe with unrolled COMPDAT data

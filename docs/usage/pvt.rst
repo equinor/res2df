@@ -36,7 +36,7 @@ the entire deck, you have to merge the dataframes in Python like this:
 
    import pandas as pd
 
-   pvto = pvt.df(open("pvto.inc").read()))
+   pvto = pvt.df(open("pvto.inc").read())
    density = pvt.df(open("density.inc").read())
    pvt_df = pd.concat([pvto, density], ignore_index=True)
 

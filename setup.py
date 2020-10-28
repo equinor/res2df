@@ -31,11 +31,16 @@ TEST_REQUIREMENTS = [
     "flake8",
     "networkx",
     "pytest",
+]
+
+DOCS_REQUIREMENTS = [
+    "ipython",
+    "rstcheck",
     "sphinx",
     "sphinx-argparse",
     "sphinx_rtd_theme",
 ]
-EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS}
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS}
 
 setup(
     name="ecl2df",

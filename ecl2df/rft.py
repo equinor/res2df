@@ -146,11 +146,12 @@ def get_con_seg_data(rftrecord, rftfile, datatype):
     Build a dataframe of CON* or SEG* data for a specific RFT record,
     that is for one well at one date.
 
-    Dataframe will for datatype=="CON" look like:
+    Dataframe will for datatype=="CON" look like::
 
       DEPTH, SWAT, CONKH, CONIDX, ..
       2300,  0.3, 3000, 1
       2310, 0.2, 1231, 2
+
     and number of rows will equal the number of connected cells (COMPDAT lines)
 
     If it is for SEG data, all columns are prefixed by SEG

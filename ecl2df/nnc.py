@@ -201,7 +201,8 @@ def fill_parser(parser):
 def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
     """Write an EDITNNC keyword
 
-    This will write
+    This will write::
+
         EDITNNC
            IX IY IZ JX JY JZ TRANM /
            ...

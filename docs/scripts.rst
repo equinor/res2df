@@ -1,8 +1,6 @@
 ecl2csv
 =======
 
-.. _ecl2csv:
-
 Most of the functionality in ecl2df is exposed to the command line through
 the script *ecl2csv*. The first argument to this script is always
 the submodule (subcommand) from which you want functionality. Mandatory argument is
@@ -16,8 +14,6 @@ the CSV to. If you want output to your terminal, use ``-`` as the output filenam
 
 csv2ecl
 =======
-
-.. _csv2ecl:
 
 Some of the modules inside ecl2df is able to write Eclipse include files
 from dataframes (in the format dumped by ecl2df). This makes it possible

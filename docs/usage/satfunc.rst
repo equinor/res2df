@@ -104,8 +104,8 @@ for an example include file, this could result in
     3    0.05442
     dtype: float64
 
-pyscal
-^^^^^^
+The pyscal library
+^^^^^^^^^^^^^^^^^^
 
 Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in

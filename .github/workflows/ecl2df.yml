@@ -105,7 +105,7 @@ jobs:
           python -c "import ecl2df"
 
       - name: Install test dependencies
-        run: pip install .[tests]
+        run: pip install .[tests,docs]
 
       - name: List all installed packages
         run: pip freeze
@@ -115,9 +115,15 @@ jobs:
           python -c "import ecl2df"
           pytest tests/
 
-      - name: Build documentation
+      - name: Syntax check documentation
+        if: matrix.python-version != '2.7'
         run: |
-          sphinx-apidoc -H "API for ecl2df" -o docs ecl2df
+          rstcheck -r docs
+
+      - name: Build documentation
+        if: matrix.python-version != '2.7'
+        run: |
+          sphinx-apidoc -f -H "API for ecl2df" -o docs ecl2df
           python setup.py build_sphinx
 
       - name: Update GitHub pages

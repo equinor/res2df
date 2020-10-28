@@ -524,7 +524,7 @@ def df2ecl(
     FIPNUM etc, for the GRID section of the Eclipse deck.
 
     Output (returned as string and optionally written to file) will then
-    contain f.ex:
+    contain f.ex::
 
         PERMX
            3.3 4.1 500.1 8543.0 1223.0 5022.0

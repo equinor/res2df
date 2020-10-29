@@ -215,6 +215,71 @@ WELOPEN_CASES = [
             }
         ),
     ),
+    (
+        """
+    DATES
+     1 MAY 2001 /
+    /
+
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN'  /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            {
+                "WELL": {0: "OP1"},
+                "I": {0: 1},
+                "J": {0: 1},
+                "K1": {0: 1},
+                "K2": {0: 1},
+                "OP/SH": {0: "SHUT"},
+                "DATE": {
+                    0: datetime.date(2001, 5, 1)
+                },
+            }
+        ),
+    ),
+    (
+        """
+    DATES
+     1 MAY 2001 /
+    /
+    
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN'  /
+    /
+    
+    DATES
+     2 MAY 2001 /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' /
+    /
+
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN'  /
+    /
+    """,
+        pd.DataFrame(
+            {
+                "WELL": {0: "OP1", 1: "OP1"},
+                "I": {0: 1, 1: 1},
+                "J": {0: 1, 1: 1},
+                "K1": {0: 1, 1: 1},
+                "K2": {0: 1, 1: 1},
+                "OP/SH": {0: "OPEN",1 : "OPEN"},
+                "DATE": {
+                    0: datetime.date(2001, 5, 1),
+                    1: datetime.date(2001, 5, 2)
+                },
+            }
+        ),
+    ),
 ]
 
 

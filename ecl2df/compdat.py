@@ -346,9 +346,7 @@ def applywelopen(compdat_df, welopen_df):
     if not compdat_df.empty:
         compdat_df = (
             compdat_df.sort_values(by=["KEYWORD_ID"])
-            .drop_duplicates(
-                subset=["I", "J", "K1", "K2", "DATE", "KEYWORD_ID"], keep="last"
-            )
+            .drop_duplicates(subset=["I", "J", "K1", "K2", "DATE"], keep="last")
             .reset_index(drop=True)
         )
 

@@ -214,7 +214,7 @@ WELOPEN
 /
 """
     df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
-    assert df.shape[0] == 6
+    assert df.shape[0] == 5
     assert df["OP/SH"].nunique() == 2
     assert df["DATE"].nunique() == 3
 

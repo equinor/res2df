@@ -294,9 +294,9 @@ WELOPEN_CASES = [
                 "WELL": {0: "OP1", 1: "OP1"},
                 "I": {0: 1, 1: 1},
                 "J": {0: 1, 1: 1},
-                "K1": {0: 1, 1: 2},
-                "K2": {0: 1, 1: 2},
-                "OP/SH": {0: "SHUT", 1: "OPEN"},
+                "K1": {0: 2, 1: 1},
+                "K2": {0: 2, 1: 1},
+                "OP/SH": {0: "OPEN", 1: "SHUT"},
                 "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 1)},
             }
         ),
@@ -331,6 +331,60 @@ WELOPEN_CASES = [
             }
         ),
     ),
+    (
+        """
+    DATES
+     1 MAY 2001 /
+    /
+
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN'  /
+    /
+
+    WELOPEN
+     'OP1' 'OPEN' /
+     'OP1' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            {
+                "WELL": {0: "OP1"},
+                "I": {0: 1},
+                "J": {0: 1},
+                "K1": {0: 1},
+                "K2": {0: 1},
+                "OP/SH": {0: "SHUT"},
+                "DATE": {0: datetime.date(2001, 5, 1)},
+            }
+        ),
+    ),
+    (
+        """
+    DATES
+     1 MAY 2001 /
+    /
+
+    COMPDAT
+     'OP1' 1 1 1 2 'SHUT'  /
+    /
+
+    WELOPEN
+     'OP1' 'OPEN' /
+     'OP1' 'SHUT' 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            {
+                "WELL": {0: "OP1", 1: "OP1"},
+                "I": {0: 1, 1: 1},
+                "J": {0: 1, 1: 1},
+                "K1": {0: 2, 1: 1},
+                "K2": {0: 2, 1: 1},
+                "OP/SH": {0: "OPEN", 1: "SHUT"},
+                "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 1)},
+            }
+        ),
+    ),
 ]
 
 
@@ -341,4 +395,4 @@ def test_welopen(test_input, expected):
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
 
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
-    assert all(compdf[columns_to_check] == expected[columns_to_check])
+    assert (compdf[columns_to_check] == expected[columns_to_check]).all(axis=None)

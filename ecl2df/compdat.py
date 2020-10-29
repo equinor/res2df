@@ -51,7 +51,8 @@ COMPDAT_RENAMER = {
 def deck2dfs(deck, start_date=None, unroll=True):
     """Loop through the deck and pick up information found
 
-    The loop over the deck is a state machine, as it has to pick up dates
+    The loop over the deck is a state machine, as it has to pick up dates and
+    potential information from the WELSPECS keyword.
 
     Args:
         deck (opm.libopmcommon_python.Deck): A deck representing the schedule
@@ -69,6 +70,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     compsegsrecords = []
     welopenrecords = []
     welsegsrecords = []
+    welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
         if kword.name == "DATES" or kword.name == "START":
@@ -87,6 +89,16 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 logger.info(
                     "Advancing %s days to %s through TSTEP", str(days), str(date)
                 )
+        elif kword.name == "WELSPECS":
+            # Information from WELSPECS are to be used in case
+            # 0 or 1* is used in the I or J column in COMPDAT
+            # Only the latest information pr. well is stored.
+            for wellrec in kword:
+                welspecs_rec_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
+                welspecs[welspecs_rec_dict["WELL"]] = {
+                    "I": welspecs_rec_dict["HEAD_I"],
+                    "J": welspecs_rec_dict["HEAD_J"],
+                }
         elif kword.name == "COMPDAT":
             for rec in kword:  # Loop over the lines inside COMPDAT record
                 rec_data = parse_opmio_deckrecord(
@@ -94,6 +106,18 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 )
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
+                if rec_data["I"] == 0:
+                    if rec_data["WELL"] not in welspecs:
+                        raise ValueError(
+                            "WELSPECS must be provided when I is defaulted in COMPDAT"
+                        )
+                    rec_data["I"] = welspecs[rec_data["WELL"]]["I"]
+                if rec_data["J"] == 0:
+                    if rec_data["WELL"] not in welspecs:
+                        raise ValueError(
+                            "WELSPECS must be provided when J is defaulted in COMPDAT"
+                        )
+                    rec_data["J"] = welspecs[rec_data["WELL"]]["J"]
                 compdatrecords.append(rec_data)
         elif kword.name == "COMPSEGS":
             wellname = parse_opmio_deckrecord(

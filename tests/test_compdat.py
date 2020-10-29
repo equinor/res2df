@@ -346,3 +346,88 @@ def test_main_subparsers(tmpdir):
     assert "FIPNUM" in disk_df
     assert "EQLNUM" in disk_df
     assert not disk_df.empty
+
+
+def test_defaulted_compdat_i_j(tmpdir):
+    """I and J can be defaulted (that is 1* or 0) in COMPDAT records, then
+    that information should be fetched from the most recent WELSPECS keyword
+    """
+
+    welspecs_str = """
+WELSPECS
+  OP1 OPWEST 20 30 1000 /
+/
+"""
+    compdat_str = """
+COMPDAT
+  'OP1' 1* 0 10 11  /
+/
+"""
+    compdat_str_nodefaults = """
+COMPDAT
+  'OP1' 55 66 80 80  /
+/
+"""
+
+    with pytest.raises(ValueError, match="WELSPECS must be provided"):
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str))["COMPDAT"]
+
+    with pytest.raises(ValueError, match="WELSPECS must be provided"):
+        # Wrong order:
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str + welspecs_str))["COMPDAT"]
+
+    # Simplest example:
+    compdat_df = compdat.deck2dfs(EclFiles.str2deck(welspecs_str + compdat_str))[
+        "COMPDAT"
+    ]
+    assert compdat_df["I"].unique() == [20]
+    assert compdat_df["J"].unique() == [30]
+
+    # Two wells:
+    compdat_df = compdat.deck2dfs(
+        EclFiles.str2deck(
+            welspecs_str.replace("OP1", "OP2").replace("30", "99")
+            + welspecs_str
+            + compdat_str
+        )
+    )["COMPDAT"]
+
+    # Partial defaulting
+    compdat_df = compdat.deck2dfs(
+        EclFiles.str2deck(welspecs_str + compdat_str + compdat_str_nodefaults)
+    )["COMPDAT"]
+
+    assert set(compdat_df["I"].unique()) == {20, 55}
+    assert set(compdat_df["J"].unique()) == {30, 66}
+
+    compdat_df = compdat.deck2dfs(
+        EclFiles.str2deck(
+            welspecs_str.replace("OP1", "OP2").replace("30", "99")
+            + welspecs_str
+            + compdat_str
+            + compdat_str.replace("OP1", "OP2")
+        )
+    )["COMPDAT"]
+
+    assert compdat_df[compdat_df["WELL"] == "OP1"]["I"].unique() == [20]
+    assert compdat_df[compdat_df["WELL"] == "OP2"]["I"].unique() == [20]
+    assert compdat_df[compdat_df["WELL"] == "OP1"]["J"].unique() == [30]
+    assert compdat_df[compdat_df["WELL"] == "OP2"]["J"].unique() == [99]
+
+    # Same well redrilled to new location
+    compdat_df = compdat.deck2dfs(
+        EclFiles.str2deck(
+            "DATES\n  1 JAN 2030 /\n/\n"
+            + welspecs_str
+            + compdat_str
+            + "DATES\n  1 JAN 2040 /\n/\n"
+            + welspecs_str.replace("30", "33")
+            + compdat_str
+        )
+    )["COMPDAT"]
+    assert compdat_df[compdat_df["DATE"].astype(str) == "2030-01-01"]["J"].unique() == [
+        30
+    ]
+    assert compdat_df[compdat_df["DATE"].astype(str) == "2040-01-01"]["J"].unique() == [
+        33
+    ]

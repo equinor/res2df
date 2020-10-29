@@ -140,7 +140,6 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 )
                 if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
                     rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
-
                 welsegsrecords.append(rec_data)
 
     compdat_df = pd.DataFrame(compdatrecords)

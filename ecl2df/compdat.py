@@ -70,7 +70,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     welopenrecords = []
     welsegsrecords = []
     date = start_date  # DATE column will always be there, but can contain NaN/None
-    for kword in deck:
+    for idx, kword in enumerate(deck):
         if kword.name == "DATES" or kword.name == "START":
             for rec in kword:
                 date = parse_opmio_date_rec(rec)
@@ -93,6 +93,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
                     rec, "COMPDAT", renamer=COMPDAT_RENAMER
                 )
                 rec_data["DATE"] = date
+                rec_data["KEYWORD_IDX"] = idx
                 compdatrecords.append(rec_data)
         elif kword.name == "COMPSEGS":
             wellname = parse_opmio_deckrecord(
@@ -110,6 +111,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
             for rec in kword:
                 rec_data = parse_opmio_deckrecord(rec, "WELOPEN")
                 rec_data["DATE"] = date
+                rec_data["KEYWORD_IDX"] = idx
                 if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO"]:
                     rec_data["STATUS"] = "SHUT"
                     logger.warning(
@@ -154,6 +156,9 @@ def deck2dfs(deck, start_date=None, unroll=True):
 
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
+
+    if "KEYWORD_IDX" in compdat_df.columns:
+        compdat_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 
     return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df)
 
@@ -294,7 +299,7 @@ def applywelopen(compdat_df, welopen_df):
         if row["I"] and row["J"] and row["K"]:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
-                & (compdat_df["DATE"] <= row["DATE"])
+                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
                 & (compdat_df["I"] == row["I"])
                 & (compdat_df["J"] == row["J"])
                 & (compdat_df["K1"] == row["K"])
@@ -310,7 +315,7 @@ def applywelopen(compdat_df, welopen_df):
         elif not (row["I"] and row["J"] and row["K"]):
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
-                & (compdat_df["DATE"] <= row["DATE"])
+                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(
@@ -333,14 +338,14 @@ def applywelopen(compdat_df, welopen_df):
         # well in COMPDAT and WELOPEN are not identical. These translation steps can
         # be dropped when unity in the opm-common keyword definitions is reached.
         new_state["OP/SH"] = row["STATUS"]
-
+        new_state["KEYWORD_IDX"] = row["KEYWORD_IDX"]
         new_state["DATE"] = row["DATE"]
 
         compdat_df = compdat_df.append(new_state)
 
     if not compdat_df.empty:
         compdat_df = (
-            compdat_df.sort_values(by=["DATE", "WELL"])
+            compdat_df.sort_values(by=["KEYWORD_IDX"])
             .drop_duplicates(subset=["I", "J", "K1", "K2", "DATE"], keep="last")
             .reset_index(drop=True)
         )

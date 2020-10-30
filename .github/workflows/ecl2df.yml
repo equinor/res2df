@@ -150,7 +150,7 @@ jobs:
             fi
 
       - name: Build python package and publish to pypi
-        if: github.event_name == 'release' && matrix.python-version == '3.6'
+        if: github.event_name == 'release' && matrix.python-version == '3.6' && matrix.pandas-version != '0.24.2'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.ecl2df_pypi_token }}

@@ -65,11 +65,11 @@ jobs:
           flake8 ecl2df tests
 
       - name: Compile and install opm-common
-        if: matrix.python-version == '2.7'
+        #if: matrix.python-version == '2.7'
         run: |
           sudo apt-get install libboost-all-dev liblapack-dev libfmt-dev
           pushd ..
-          git clone --recursive --branch=release/2020.04/final https://github.com/OPM/opm-common.git
+          git clone --recursive --branch=release/2020.10/rc-4/final https://github.com/OPM/opm-common.git
           mkdir opm-common/build
           pushd opm-common/build
           cmake .. -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install \

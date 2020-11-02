@@ -21,7 +21,7 @@ with open(path.join(this_directory, "README.md")) as f_handle:
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
     "libecl",
-    "opm; python_version >= '3.5'",
+#    "opm; python_version >= '3.5'",
     "pandas",
     "pyyaml>=5.1",
     "treelib",

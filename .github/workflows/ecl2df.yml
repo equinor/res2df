@@ -24,15 +24,15 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        python-version: ['2.7', '3.6', '3.7', '3.8']
-        pandas-version: ['0.24.2', '1.*']  # Necessary as long as RHEL6 is in use
-        exclude:
-           # Skip Python 3.8 and Pandas 0.24.2 combination due to
-           # missing 3.8 wheel for that specific pandas version
-          - python-version: '3.8'
-            pandas-version: '0.24.2'
-          - python-version: '2.7'
-            pandas-version: '1.*'
+        python-version: ['3.6', '3.7', '3.8']
+        pandas-version: ['1.*']  # Necessary as long as RHEL6 is in use
+        #exclude:
+        #   # Skip Python 3.8 and Pandas 0.24.2 combination due to
+        #   # missing 3.8 wheel for that specific pandas version
+        #  - python-version: '3.8'
+        #    pandas-version: '0.24.2'
+        #  - python-version: '2.7'
+        #    pandas-version: '1.*'
 
 
     steps:

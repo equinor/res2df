@@ -15,7 +15,6 @@ on:
     - cron:  '0 0 * * *'
 
 env:
-  INSTALL_DIR: ${{ github.workspace }}/install
   ERT_SHOW_BACKTRACE: 1
 
 jobs:
@@ -24,16 +23,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        python-version: ['2.7', '3.6', '3.7', '3.8']
-        pandas-version: ['0.24.2', '1.*']  # Necessary as long as RHEL6 is in use
-        exclude:
-           # Skip Python 3.8 and Pandas 0.24.2 combination due to
-           # missing 3.8 wheel for that specific pandas version
-          - python-version: '3.8'
-            pandas-version: '0.24.2'
-          - python-version: '2.7'
-            pandas-version: '1.*'
-
+        python-version: ['3.6', '3.7', '3.8']
 
     steps:
       - name: Checkout commit locally
@@ -49,54 +39,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Setup environment
-        run: |
-          echo "::add-path::${{ env.INSTALL_DIR}}/bin"
-          echo "::set-env name=LD_LIBRARY_PATH::${{ env.INSTALL_DIR }}/lib:${{ env.INSTALL_DIR }}/lib64"
-          echo "::set-env name=DYLD_LIBRARY_PATH::${{ env.INSTALL_DIR }}/lib:${{ env.INSTALL_DIR }}/lib64"
-          echo "::set-env name=PYTHONPATH::${{ env.INSTALL_DIR }}/lib/python${{ matrix.python-version }}/site-packages:${{ env.INSTALL_DIR }}/lib/python${{ matrix.python-version }}/dist-packages"
-
       - name: Check code style
-        if: matrix.python-version != '2.7'
         run: |
-          pip install black
-          black --check ecl2df/*py tests/test_*py setup.py docs/conf.py
-          pip install flake8
+          pip install black flake8
+          black --check ecl2df tests setup.py docs/conf.py
           flake8 ecl2df tests
-
-      - name: Compile and install opm-common
-        if: matrix.python-version == '2.7'
-        run: |
-          sudo apt-get install libboost-all-dev liblapack-dev libfmt-dev
-          pushd ..
-          git clone --recursive --branch=release/2020.04/final https://github.com/OPM/opm-common.git
-          mkdir opm-common/build
-          pushd opm-common/build
-          cmake .. -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install \
-                   -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
-                   -DBUILD_TESTING=OFF \
-                   -DBUILD_SHARED_LIBS=ON \
-                   -DOPM_ENABLE_PYTHON=ON \
-                   -DOPM_INSTALL_PYTHON=ON
-          make -j2 install
-          popd
-          popd
-
-
-      - name: Compile and install ERT and libres
-        if: matrix.python-version != '2.7'
-        run: |
-          git clone --branch master --depth 1 https://github.com/equinor/ert
-          source ert/.libres_version
-          git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
-          source libres/.libecl_version
-          git clone --branch $LIBECL_VERSION --depth 1 https://github.com/equinor/libecl
-          bash ert/.build_install.sh libecl
-          bash ert/.build_install.sh libres
-          pip install -r ert/dev-requirements.txt
-          pip install ert/
-          pip list
-          ert --help
 
       - name: Install ecl2df with dependencies
         run: |
@@ -116,12 +63,10 @@ jobs:
           pytest tests/
 
       - name: Syntax check documentation
-        if: matrix.python-version != '2.7'
         run: |
           rstcheck -r docs
 
       - name: Build documentation
-        if: matrix.python-version != '2.7'
         run: |
           sphinx-apidoc -f -H "API for ecl2df" -o docs ecl2df
           python setup.py build_sphinx
@@ -150,7 +95,7 @@ jobs:
             fi
 
       - name: Build python package and publish to pypi
-        if: github.event_name == 'release' && matrix.python-version == '3.6' && matrix.pandas-version != '0.24.2'
+        if: github.event_name == 'release' && matrix.python-version == '3.6'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.ecl2df_pypi_token }}

@@ -20,14 +20,16 @@ with open(path.join(this_directory, "README.md")) as f_handle:
 
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
-    "libecl",
-    "opm; python_version >= '3.5'",
+    "ecl",
+    "equinor-libres",
+    "ert",
+    "opm",
     "pandas",
     "pyyaml>=5.1",
     "treelib",
 ]
 TEST_REQUIREMENTS = [
-    "black>=20.8b0; python_version >= '3'",
+    "black>=20.8b0",
     "flake8",
     "networkx",
     "pytest",
@@ -68,5 +70,5 @@ setup(
     install_requires=REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,
     extras_require=EXTRAS_REQUIRE,
-    python_requires=">=2.7",
+    python_requires=">=3.6",
 )

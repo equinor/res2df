@@ -76,7 +76,9 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
             )
             # If we succeed, then the dimcountguess was correct
             break
-        except ValueError:
+        except (ValueError, RuntimeError):
+            # ValueError in opm-common <= 2020.04
+            # RuntimeError in opm-common >= 2020.10
             # Typically we get the error PARSE_EXTRA_RECORDS because we did not guess
             # high enough dimnumcount
             continue

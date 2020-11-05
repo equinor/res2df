@@ -3,9 +3,6 @@ Extract the PVT data from an Eclipse (input) deck as Pandas Dataframes
 
 Data can be extracted from a full Eclipse deck or from individual files.
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import logging
 import signal

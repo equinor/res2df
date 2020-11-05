@@ -1,14 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)
 
 Code taken from fmu.ensemble.ScratchRealization
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import os
 import logging
 import datetime

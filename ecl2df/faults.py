@@ -1,14 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract the contents of the FAULTS keyword into
 a DataFrame
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import logging
 import pandas as pd
 

@@ -1,5 +1,4 @@
 import os
-import sys
 import shutil
 
 import pytest
@@ -11,7 +10,7 @@ try:
     import ert_shared  # noqa
 except ImportError:
     pytest.skip(
-        "ERT is not installed, or Python2. Skipping hook implementations.",
+        "ERT is not installed. Skipping hook implementations.",
         allow_module_level=True,
     )
 
@@ -25,7 +24,6 @@ EXPECTED_JOBS = {
 }
 
 
-@pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 def test_hook_implementations():
     """Test that the expected jobs can be found using an ERT plugin manager"""
     plugin_m = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
@@ -47,7 +45,6 @@ def test_hook_implementations():
     assert set(installable_workflow_jobs.keys()) == set(expected_workflow_jobs.keys())
 
 
-@pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 def test_job_config_syntax():
     """Check for syntax errors made in job configuration files"""
     src_path = os.path.join(os.path.dirname(__file__), "../")
@@ -59,7 +56,6 @@ def test_job_config_syntax():
                     assert '"--' in line and " --" not in line
 
 
-@pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 @pytest.mark.integration
 def test_executables():
     """Test executables listed in job configurations exist in $PATH"""
@@ -70,7 +66,6 @@ def test_executables():
             assert shutil.which(executable)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
 def test_hook_implementations_job_docs():
     """Test extracting docs from ERT hooks"""
     plugin_m = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])

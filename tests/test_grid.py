@@ -47,12 +47,6 @@ def test_wrongfile():
     """Test the EclFiles object on nonexistent files"""
     # pylint: disable=invalid-name,redefined-builtin
 
-    # Python 2 compatibility:
-    try:
-        FileNotFoundError  # noqa
-    except NameError:
-        FileNotFoundError = IOError
-
     # We can initalize this object with bogus:
     eclfiles = EclFiles("FOO.DATA")
     # but when we try to use it, things should fail:

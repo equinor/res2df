@@ -1,9 +1,5 @@
 """Test installation"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import subprocess
 
 import pytest
@@ -15,8 +11,7 @@ def test_integration():
     assert subprocess.check_output(["ecl2csv", "-h"])  # nosec
     assert subprocess.check_output(["csv2ecl", "-h"])  # nosec
 
-    # The subparsers is tricky between py2, py36 and py37
-    # and should exit cleanly with exit code 2 ("Incorrect usage")
+    # The subparsers should exit "cleanly" with exit code 2 ("Incorrect usage")
     # when no more options are provided on the command line
     with pytest.raises(subprocess.CalledProcessError) as exception:
         subprocess.check_output(["ecl2csv"])  # nosec

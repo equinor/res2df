@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.
@@ -13,10 +12,6 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import signal
 import logging
 import pandas as pd

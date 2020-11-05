@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract grid information from Eclipse output files as Dataframes.
 
@@ -10,10 +9,6 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os
 import logging
 import fnmatch
@@ -23,7 +18,6 @@ import dateutil.parser
 
 import numpy as np
 import pandas as pd
-
 
 from ecl.eclfile import EclFile
 from ecl2df import common, __version__
@@ -79,9 +73,10 @@ def dates2rstindices(eclfiles, dates):
             # Try to parse as ISO date:
             try:
                 isodate = dateutil.parser.isoparse(dates).date()
-            except ValueError:
-                # When Python 2 is dropped, use "raise from" syntax.
-                raise ValueError("date " + str(dates) + " not understood")
+            except ValueError as dateparser_error:
+                raise ValueError(
+                    "date " + str(dates) + " not understood"
+                ) from dateparser_error
             if isodate not in availabledates:
                 raise ValueError("date " + str(isodate) + " not found in UNRST file")
             chosendates = [isodate]

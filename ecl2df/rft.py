@@ -13,10 +13,6 @@ The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix ``ICD_``
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import datetime
 import logging
 import collections

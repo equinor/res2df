@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 Extract non-neighbour connection (NNC) information from Eclipse output files.
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import os
 import logging
 import datetime

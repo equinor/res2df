@@ -3,12 +3,8 @@ Support module for inferring EQLDIMS and TABDIMS from incomplete
 Eclipse 100 decks (typically single include-files)
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import logging
-import six
 
 import opm.io
 
@@ -160,7 +156,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
 
     if xxxdims in deck and ntxxx_value is None:
         # Then we have nothing to do, but ensure we parse a potential string to a deck
-        if isinstance(deck, six.string_types):
+        if isinstance(deck, str):
             deck = EclFiles.str2deck(deck)
         return deck
 
@@ -170,7 +166,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
         )
         return deck
 
-    if not isinstance(deck, six.string_types):
+    if not isinstance(deck, str):
         # The deck must be converted to a string deck in order
         # to estimate dimensions.
         deck = str(deck)
@@ -188,7 +184,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
     # Overwrite the deck object
     deck = EclFiles.str2deck(augmented_strdeck)
 
-    if isinstance(deck, six.string_types):
+    if isinstance(deck, str):
         # If a string is supplied as a deck, we always return a parsed Deck object
         deck = EclFiles.str2deck(deck)
 

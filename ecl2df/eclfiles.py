@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 Module to hold Eclipse input and output filenames
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import os
 import errno
@@ -33,13 +29,6 @@ OPMIOPARSER_RECOVERY = [
     ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
     ("PARSE_EXTRA_DATA", opm.io.action.ignore),
 ]
-
-# For Python2 compatibility:
-try:
-    FileNotFoundError
-except NameError:
-    # pylint: disable=redefined-builtin
-    FileNotFoundError = IOError
 
 
 class EclFiles(object):

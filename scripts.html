@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2csv &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2csv &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API for ecl2df" href="modules.html" />
-    <link rel="prev" title="trans" href="usage/trans.html" /> 
+    <link rel="prev" title="wcon" href="usage/wcon.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -262,13 +262,13 @@
             
   <div class="section" id="ecl2csv">
 <h1>ecl2csv<a class="headerlink" href="#ecl2csv" title="Permalink to this headline">¶</a></h1>
-<p id="id1">Most of the functionality in ecl2df is exposed to the command line through
+<p>Most of the functionality in ecl2df is exposed to the command line through
 the script <em>ecl2csv</em>. The first argument to this script is always
 the submodule (subcommand) from which you want functionality. Mandatory argument is
 always an Eclipse deck or sometimes individual Eclipse include files, and
 there is usually an <code class="docutils literal notranslate"><span class="pre">--output</span></code> option to specify which file to dump
 the CSV to. If you want output to your terminal, use <code class="docutils literal notranslate"><span class="pre">-</span></code> as the output filename.</p>
-<p><p>ecl2csv (0.6.2.dev3+g46bb92b) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
+<p><p>ecl2csv (0.8.3.dev5+g86ba618) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">fipreports</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
@@ -304,11 +304,11 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="section" id="Named Arguments_repeat1">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
-<dt><kbd>--vectors, --initkeys</kbd></dt>
+<dt><kbd>--vectors</kbd></dt>
 <dd><p>INIT and/or restart wildcards for vectors to include</p>
 <p>Default: “*”</p>
 </dd>
-<dt><kbd>--rstdates, --rstdate</kbd></dt>
+<dt><kbd>--rstdates</kbd></dt>
 <dd><p>Point in time to grab restart data from, either ‘first’ or ‘last’, ‘all’, or a date in YYYY-MM-DD format</p>
 <p>Default: “”</p>
 </dd>
@@ -552,7 +552,7 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: 0.5</p>
 </dd>
 <dt><kbd>--group</kbd></dt>
-<dd><p>If set, output will not be pr. pillar, but grouped overall pillars. If –region is set, data will be grouped over that vector. The aggregation operator is sum or mean, depending on datatype.</p>
+<dd><p>If set, output will not be pr. pillar, but grouped over all pillars. If –region is set, data will be grouped over that vector. The aggregation operator is sum or mean, depending on datatype.</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
@@ -831,7 +831,7 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 </div>
 <div class="section" id="csv2ecl">
 <h1>csv2ecl<a class="headerlink" href="#csv2ecl" title="Permalink to this headline">¶</a></h1>
-<p id="id2">Some of the modules inside ecl2df is able to write Eclipse include files
+<p>Some of the modules inside ecl2df is able to write Eclipse include files
 from dataframes (in the format dumped by ecl2df). This makes it possible
 to produce Eclipse input data in any application that can write CSV files,
 and use this tool to convert it into Eclipse include files, or it can
@@ -845,7 +845,7 @@ If you want output to your terminal, use <code class="docutils literal notransla
 you also specify the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> argument with a list of wanted keywords, all
 supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to output file.</p>
-<p><p>csv2ecl (0.6.2.dev3+g46bb92b) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
+<p><p>csv2ecl (0.8.3.dev5+g86ba618) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv2ecl</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="p">{</span><span class="n">equil</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">satfunc</span><span class="p">}</span> <span class="o">...</span>
 </pre></div>
@@ -967,7 +967,7 @@ will be dumped to output file.</p>
         <a href="modules.html" class="btn btn-neutral float-right" title="API for ecl2df" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="usage/trans.html" class="btn btn-neutral float-left" title="trans" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="usage/wcon.html" class="btn btn-neutral float-left" title="wcon" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

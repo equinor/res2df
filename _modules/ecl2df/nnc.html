@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.nnc &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -160,18 +160,12 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ecl2df.nnc</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract non-neighbour connection (NNC) information from Eclipse output files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">common</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">__version__</span>
@@ -364,7 +358,8 @@
 <div class="viewcode-block" id="df2ecl_editnnc"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.df2ecl_editnnc">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_editnnc</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nocomments</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write an EDITNNC keyword</span>
 
-<span class="sd">    This will write</span>
+<span class="sd">    This will write::</span>
+
 <span class="sd">        EDITNNC</span>
 <span class="sd">           IX IY IZ JX JY JZ TRANM /</span>
 <span class="sd">           ...</span>
@@ -440,19 +435,6 @@
             <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">string</span></div>
-
-
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
-
-<span class="sd">    It may become deprecated to have a main() function</span>
-<span class="sd">    and command line utility for each module in ecl2df</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;nnc2csv is deprecated, use &#39;ecl2csv nnc &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">nnc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="nnc_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.nnc.nnc_main">[docs]</a><span class="k">def</span> <span class="nf">nnc_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>

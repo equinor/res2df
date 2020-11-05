@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gruptree &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>gruptree &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compdat.html">compdat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">gruptree</a><ul>
@@ -104,7 +105,9 @@
 <li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
 <li class="toctree-l2"><a class="reference internal" href="satfunc.html">satfunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcon.html">wcon</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
@@ -205,6 +208,59 @@ many platforms). In the Eclipse deck it be as simple as this:</p>
 </pre></div>
 </div>
 <p>which will yield the dataframe</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">GRUPTREE as a dataframe</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>DATE</p></th>
+<th class="head"><p>CHILD</p></th>
+<th class="head"><p>PARENT</p></th>
+<th class="head"><p>KEYWORD</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>OPEAST</p></td>
+<td><p>OP</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>OPWEST</p></td>
+<td><p>OP</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>INJEAST</p></td>
+<td><p>WI</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>OP</p></td>
+<td><p>FIELD</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>WI</p></td>
+<td><p>FIELD</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+<tr class="row-odd"><td><p>2000-01-01</p></td>
+<td><p>FIELD</p></td>
+<td><p>AREA</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>AREA</p></td>
+<td><p>NORTHSEA</p></td>
+<td><p>GRUPTREE</p></td>
+</tr>
+</tbody>
+</table>
 <p>If you run this from the command line, a pretty printed ASCII graph is also
 available (here also wells from WELSPECS is included):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> ecl2csv gruptree --prettyprint MYDATADECK.DATA
@@ -244,8 +300,8 @@ information than in the example above.</p>
 </pre></div>
 </div>
 <p>the dataframe will get additional rows and columns:</p>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Dataframe from GRUPTREE, GRUPNET and WELSPECS</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Dataframe from GRUPTREE, GRUPNET and WELSPECS</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 10%" />

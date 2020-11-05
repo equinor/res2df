@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>trans &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>trans &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ecl2csv" href="../scripts.html" />
-    <link rel="prev" title="satfunc" href="satfunc.html" /> 
+    <link rel="next" title="wcon" href="wcon.html" />
+    <link rel="prev" title="summary" href="summary.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compdat.html">compdat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
@@ -101,12 +102,14 @@
 <li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
 <li class="toctree-l2"><a class="reference internal" href="satfunc.html">satfunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">trans</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#adding-more-data-for-each-connection">Adding more data for each connection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#filtering-connections">Filtering connections</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#aggregating-connection-data-over-region-interfaces">Aggregating connection data over region interfaces</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="wcon.html">wcon</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
@@ -192,7 +195,7 @@ connections</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">EclFiles</span>
 
 <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -324,7 +327,7 @@ where this region parameter <em>changes</em>, which implies the connection is ov
 a region boundary. This is accomplished by providing a vector to include, and the
 option <code class="docutils literal notranslate"><span class="pre">boundaryfilter</span></code>. It is recommmended to include NNC in applications
 like this. Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>which gives the dataframe</p>
@@ -481,7 +484,7 @@ over a region interface. This is accomplished by adding the <code class="docutil
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">EclFiles</span>
 
 <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id3">
@@ -582,10 +585,10 @@ over a region interface. This is accomplished by adding the <code class="docutil
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../scripts.html" class="btn btn-neutral float-right" title="ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="wcon.html" class="btn btn-neutral float-right" title="wcon" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="satfunc.html" class="btn btn-neutral float-left" title="satfunc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="summary.html" class="btn btn-neutral float-left" title="summary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

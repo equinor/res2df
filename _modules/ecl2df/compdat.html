@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -160,16 +160,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ecl2df.compdat</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -180,6 +175,7 @@
     <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
     <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
     <span class="n">parse_opmio_tstep_rec</span><span class="p">,</span>
+    <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">merge_initvectors</span>
 
@@ -210,16 +206,11 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="deck2compdatsegsdfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2compdatsegsdfs">[docs]</a><span class="k">def</span> <span class="nf">deck2compdatsegsdfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated method name: deck2compdatsegsdfs(), use deck2dfs()&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unroll</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
 
-<span class="sd">    The loop over the deck is a state machine, as it has to pick up dates</span>
+<span class="sd">    The loop over the deck is a state machine, as it has to pick up dates and</span>
+<span class="sd">    potential information from the WELSPECS keyword.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck (opm.libopmcommon_python.Deck): A deck representing the schedule</span>
@@ -235,9 +226,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">compdatrecords</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of dicts of every line in input file</span>
     <span class="n">compsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">welopenrecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">welsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">welspecs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">start_date</span>  <span class="c1"># DATE column will always be there, but can contain NaN/None</span>
-    <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">kword</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;DATES&quot;</span> <span class="ow">or</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                 <span class="n">date</span> <span class="o">=</span> <span class="n">parse_opmio_date_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
@@ -254,12 +247,35 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
                 <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">:</span>
+            <span class="c1"># Information from WELSPECS are to be used in case</span>
+            <span class="c1"># 0 or 1* is used in the I or J column in COMPDAT</span>
+            <span class="c1"># Only the latest information pr. well is stored.</span>
+            <span class="k">for</span> <span class="n">wellrec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                <span class="n">welspecs_rec_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">wellrec</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">)</span>
+                <span class="n">welspecs</span><span class="p">[</span><span class="n">welspecs_rec_dict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="n">welspecs_rec_dict</span><span class="p">[</span><span class="s2">&quot;HEAD_I&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;J&quot;</span><span class="p">:</span> <span class="n">welspecs_rec_dict</span><span class="p">[</span><span class="s2">&quot;HEAD_J&quot;</span><span class="p">],</span>
+                <span class="p">}</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside COMPDAT record</span>
                 <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
                     <span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">COMPDAT_RENAMER</span>
                 <span class="p">)</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+                <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">welspecs</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s2">&quot;WELSPECS must be provided when I is defaulted in COMPDAT&quot;</span>
+                        <span class="p">)</span>
+                    <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">welspecs</span><span class="p">[</span><span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]][</span><span class="s2">&quot;I&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">welspecs</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s2">&quot;WELSPECS must be provided when J is defaulted in COMPDAT&quot;</span>
+                        <span class="p">)</span>
+                    <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">welspecs</span><span class="p">[</span><span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]][</span><span class="s2">&quot;J&quot;</span><span class="p">]</span>
                 <span class="n">compdatrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">:</span>
             <span class="n">wellname</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
@@ -273,6 +289,19 @@
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wellname</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">compsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELOPEN&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WELOPEN&quot;</span><span class="p">)</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+                <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OPEN&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">,</span> <span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">]:</span>
+                    <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SHUT&quot;</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;WELOPEN status </span><span class="si">%s</span><span class="s2"> is not a valid &quot;</span>
+                        <span class="s2">&quot;COMPDAT state. Using &#39;SHUT&#39; instead.&quot;</span> <span class="o">%</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="n">welopenrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
             <span class="c1"># First record contains meta-information for well</span>
             <span class="c1"># (opm deck returns default values for unspecified items.)</span>
@@ -294,20 +323,24 @@
                 <span class="k">if</span> <span class="s2">&quot;INFO_TYPE&quot;</span> <span class="ow">in</span> <span class="n">rec_data</span> <span class="ow">and</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;INFO_TYPE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ABS&quot;</span><span class="p">:</span>
                     <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_MD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT_LENGTH&quot;</span><span class="p">]</span>
                 <span class="n">welsegsrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Possible premature stop at first TSTEP&quot;</span><span class="p">)</span>
-            <span class="k">break</span>
 
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compdatrecords</span><span class="p">)</span>
+    <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">welopenrecords</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">)</span>
 
-    <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compsegsrecords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">applywelopen</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">welopen_df</span><span class="p">)</span>
 
+    <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compsegsrecords</span><span class="p">)</span>
     <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">welsegsrecords</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">welsegs_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">welsegs_df</span><span class="p">,</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD_IDX&quot;</span> <span class="ow">in</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">compdat_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span> <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">)</span></div>
 
@@ -409,11 +442,105 @@
     <span class="k">return</span> <span class="n">unrolled</span></div>
 
 
+<div class="viewcode-block" id="applywelopen"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.applywelopen">[docs]</a><span class="k">def</span> <span class="nf">applywelopen</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">welopen_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply WELOPEN actions to the COMPDAT dataframe.</span>
+
+<span class="sd">    Each record in the WELOPEN keyword acts as an operator on existing connections</span>
+<span class="sd">    in existing wells.</span>
+
+<span class="sd">    Example: COMPDAT and WELOPEN keyword::</span>
+
+<span class="sd">      COMPDAT</span>
+<span class="sd">       &#39;OP1&#39; 33 44 10 11 &#39;OPEN&#39; /</span>
+<span class="sd">       &#39;OP2&#39; 66 44 10 11 &#39;OPEN&#39; /</span>
+<span class="sd">      /</span>
+<span class="sd">      WELOPEN</span>
+<span class="sd">       &#39;OP1&#39; SHUT /</span>
+<span class="sd">       &#39;OP2&#39; SHUT 66 44 10 /</span>
+<span class="sd">      /</span>
+
+<span class="sd">    This deck would define two wells where OP1 and OP2 have two connected grid cells</span>
+<span class="sd">    each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites</span>
+<span class="sd">    this: all connections in OP1 will be SHUT and in OP2 the upper connection will</span>
+<span class="sd">    be SHUT.</span>
+
+<span class="sd">    WELOPEN can also be used at different dates and changes therefore the state of</span>
+<span class="sd">    connections without explicit use of the COMPDAT keyword. This function translates</span>
+<span class="sd">    WELOPEN actions into explicit additional COMPDAT definitions in the exported df.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        compdat_df (pd.DataFrame): Dataframe with unrolled COMPDAT data</span>
+<span class="sd">        welopen_df (pd.DataFrame): Dataframe with WELOPEN actions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.Dataframe, compdat_df now including WELOPEN actions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]:</span>
+            <span class="n">previous_state</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[</span>
+                <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">])</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">])</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">])</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;K1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;K2&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;C2&quot;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Lumped connections are not supported in a WELOPEN keyword. &quot;</span>
+                <span class="s2">&quot;Skipping WELOPEN actions for lumped connections &#39;</span><span class="si">%s</span><span class="s2">&#39; and/or &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;C2&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]):</span>
+            <span class="n">previous_state</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[</span>
+                <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">])</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;A WELOPEN keyword contains data that could not be parsed. &quot;</span>
+                <span class="s2">&quot;(I=</span><span class="si">%s</span><span class="s2">,J=</span><span class="si">%s</span><span class="s2">,K=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">previous_state</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;A WELOPEN keyword is not acting on any existing connection. &quot;</span>
+                <span class="s2">&quot;(I=</span><span class="si">%s</span><span class="s2">,J=</span><span class="si">%s</span><span class="s2">,K=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+
+        <span class="n">new_state</span> <span class="o">=</span> <span class="n">previous_state</span>
+
+        <span class="c1"># The COMPDAT DataFrame uses COMPDAT_RENAMER and therefore uses &quot;OP/SH&quot; as a</span>
+        <span class="c1"># column name for the state of a well. WELOPEN uses &quot;STATUS&quot; for the state</span>
+        <span class="c1"># column name and therefore a translation step needs to be done. The</span>
+        <span class="c1"># underlying problem is that the opm-common definitions for the state of a</span>
+        <span class="c1"># well in COMPDAT and WELOPEN are not identical. These translation steps can</span>
+        <span class="c1"># be dropped when unity in the opm-common keyword definitions is reached.</span>
+        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span>
+        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span>
+        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span>
+
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_state</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">compdat_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">,</span> <span class="s2">&quot;DATE&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">compdat_df</span></div>
+
+
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser to fill with arguments</span>
+<span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser</span>
+<span class="sd">            to fill with arguments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file.&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -433,15 +560,6 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;compdat2csv is deprecated, use &#39;ecl2csv compdat &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">compdat_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="compdat_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.compdat_main">[docs]</a><span class="k">def</span> <span class="nf">compdat_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
@@ -450,8 +568,7 @@
     <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">initvectors</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty COMPDAT data being written to disk!&quot;</span><span class="p">)</span>
-    <span class="n">compdat_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

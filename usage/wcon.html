@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wcon &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ecl2csv" href="../scripts.html" />
+    <link rel="prev" title="trans" href="trans.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.3.dev5+g86ba618
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compdat.html">compdat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
+<li class="toctree-l2"><a class="reference internal" href="satfunc.html">satfunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">wcon</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>wcon</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/wcon.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="wcon">
+<h1>wcon<a class="headerlink" href="#wcon" title="Permalink to this headline">¶</a></h1>
+<p>This module extracts information from WCONHIST, WCONINJE, WCONINJH and
+WCONPROD from an Eclipse deck.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">wcon</span><span class="p">,</span> <span class="n">EclFiles</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">wcon</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Example WCON table</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>WELL</p></th>
+<th class="head"><p>STATUS</p></th>
+<th class="head"><p>CMODE</p></th>
+<th class="head"><p>ORAT</p></th>
+<th class="head"><p>WRAT</p></th>
+<th class="head"><p>GRAT</p></th>
+<th class="head"><p>DATE</p></th>
+<th class="head"><p>KEYWORD</p></th>
+<th class="head"><p>TYPE</p></th>
+<th class="head"><p>RATE</p></th>
+<th class="head"><p>BHP</p></th>
+<th class="head"><p>THP</p></th>
+<th class="head"><p>VFP_TABLE</p></th>
+<th class="head"><p>VAPOIL_C</p></th>
+<th class="head"><p>SURFACE_OIL_FRACTION</p></th>
+<th class="head"><p>SURFACE_WATER_FRACTION</p></th>
+<th class="head"><p>SURFACE_GAS_FRACTION</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>OP_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3862.069</p></td>
+<td><p>37.22932</p></td>
+<td><p>710620.7</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>OP_2</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3862.069</p></td>
+<td><p>94.14519</p></td>
+<td><p>710620.7</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>OP_3</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3862.069</p></td>
+<td><p>416.8665</p></td>
+<td><p>710620.7</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>WI_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RATE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>2000-02-01</p></td>
+<td><p>WCONINJH</p></td>
+<td><p>WATER</p></td>
+<td><p>4827.586</p></td>
+<td></td>
+<td></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3833.858</p></td>
+<td><p>50.36119</p></td>
+<td><p>705429.9</p></td>
+<td><p>2000-03-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>OP_2</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>4000.0</p></td>
+<td><p>136.0362</p></td>
+<td><p>736000.0</p></td>
+<td><p>2000-03-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>OP_3</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3949.519</p></td>
+<td><p>351.2726</p></td>
+<td><p>726711.5</p></td>
+<td><p>2000-03-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>WI_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RATE</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>2000-03-01</p></td>
+<td><p>WCONINJH</p></td>
+<td><p>WATER</p></td>
+<td><p>5000.0</p></td>
+<td></td>
+<td></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>2304.022</p></td>
+<td><p>61.591</p></td>
+<td><p>423940.2</p></td>
+<td><p>2000-04-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>OP_2</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>4000.0</p></td>
+<td><p>167.23</p></td>
+<td><p>736000.0</p></td>
+<td><p>2000-04-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>OP_3</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3732.473</p></td>
+<td><p>253.5067</p></td>
+<td><p>686775.1</p></td>
+<td><p>2000-04-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>OP_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>1664.161</p></td>
+<td><p>109.4469</p></td>
+<td><p>306205.6</p></td>
+<td><p>2000-05-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>OP_2</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3536.008</p></td>
+<td><p>167.7492</p></td>
+<td><p>650625.5</p></td>
+<td><p>2000-05-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>OP_3</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>3436.547</p></td>
+<td><p>192.7371</p></td>
+<td><p>632324.6</p></td>
+<td><p>2000-05-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>OP_1</p></td>
+<td><p>OPEN</p></td>
+<td><p>RESV</p></td>
+<td><p>1737.487</p></td>
+<td><p>225.4941</p></td>
+<td><p>319697.6</p></td>
+<td><p>2000-06-01</p></td>
+<td><p>WCONHIST</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../scripts.html" class="btn btn-neutral float-right" title="ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="trans.html" class="btn btn-neutral float-left" title="trans" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

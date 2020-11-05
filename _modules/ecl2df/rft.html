@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.rft &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -175,13 +175,7 @@
 <span class="sd">by adding the prefix ``ICD_``</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 
@@ -190,7 +184,7 @@
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.gruptree</span> <span class="kn">import</span> <span class="n">dict2treelib</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">merge_zones</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">merge_zones</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
 
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
@@ -310,11 +304,12 @@
 <span class="sd">    Build a dataframe of CON* or SEG* data for a specific RFT record,</span>
 <span class="sd">    that is for one well at one date.</span>
 
-<span class="sd">    Dataframe will for datatype==&quot;CON&quot; look like:</span>
+<span class="sd">    Dataframe will for datatype==&quot;CON&quot; look like::</span>
 
 <span class="sd">      DEPTH, SWAT, CONKH, CONIDX, ..</span>
 <span class="sd">      2300,  0.3, 3000, 1</span>
 <span class="sd">      2310, 0.2, 1231, 2</span>
+
 <span class="sd">    and number of rows will equal the number of connected cells (COMPDAT lines)</span>
 
 <span class="sd">    If it is for SEG data, all columns are prefixed by SEG</span>
@@ -839,15 +834,6 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;rft2csv is deprecated, use &#39;ecl2csv rft &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="rft_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft_main">[docs]</a><span class="k">def</span> <span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
@@ -866,20 +852,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No data found. Bug?&quot;</span><span class="p">)</span>
         <span class="k">return</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
-        <span class="c1"># Ignore pipe errors when writing to stdout.</span>
-        <span class="kn">from</span> <span class="nn">signal</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
-
-        <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
-        <span class="n">rft_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">rft_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="rft2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft2df">[docs]</a><span class="k">def</span> <span class="nf">rft2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated function&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span></div>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">rft_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
 <span class="c1"># Vector  Description</span>

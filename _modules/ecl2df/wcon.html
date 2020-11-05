@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.wcon &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.wcon &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -161,17 +161,12 @@
             
   <h1>Source code for ecl2df.wcon</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Extract WCON* from an Eclipse deck</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
@@ -244,12 +239,6 @@
     <span class="k">return</span> <span class="n">rec_dict</span></div>
 
 
-<div class="viewcode-block" id="deck2wcondf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.deck2wcondf">[docs]</a><span class="k">def</span> <span class="nf">deck2wcondf</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated function name&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Deprecated function name, deck2wcondf&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
 
@@ -317,15 +306,6 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;wcon2csv is deprecated, use &#39;ecl2csv wcon &lt;args&gt;&#39; instead&quot;</span><span class="p">)</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">wcon_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="wcon_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.wcon_main">[docs]</a><span class="k">def</span> <span class="nf">wcon_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
@@ -333,16 +313,11 @@
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
-    <span class="n">wcon_df</span> <span class="o">=</span> <span class="n">deck2df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="n">wcon_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">wcon_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty wcon dataframe being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">wcon_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="deck2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.wcon.deck2df">[docs]</a><span class="k">def</span> <span class="nf">deck2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated function call&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>satfunc &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>satfunc &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="trans" href="trans.html" />
+    <link rel="next" title="summary" href="summary.html" />
     <link rel="prev" title="rft" href="rft.html" /> 
 </head>
 
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compdat.html">compdat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
@@ -102,10 +103,13 @@
 <li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">satfunc</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#generating-eclipse-include-files-from-dataframes">Generating Eclipse include files from dataframes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyscal">pyscal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-properties-pr-satnum">Extracting properties pr. SATNUM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-pyscal-library">The pyscal library</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcon.html">wcon</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
@@ -195,8 +199,8 @@ column.</p>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
 </pre></div>
 </div>
-<table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Example satfunc table (only a subset of the rows are shown)</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Example satfunc table (only a subset of the rows are shown)</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 10%" />
@@ -419,21 +423,52 @@ include file can be generated either with the Python API
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose</span>
 </pre></div>
 </div>
-<p>which should give a file <cite>relperm.inc</cite> that can be parsed by Eclipse. The command
+<p>which should give a file <code class="docutils literal notranslate"><span class="pre">relperm.inc</span></code> that can be parsed by Eclipse. The command
 above will only pick the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code> and <code class="docutils literal notranslate"><span class="pre">SGOF</span></code> (in the case there are
 data for more keywords in the dataframe).</p>
 <p>There are no automated checks for validity of the dumped include files.</p>
 </div>
-<div class="section" id="pyscal">
-<h2>pyscal<a class="headerlink" href="#pyscal" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="extracting-properties-pr-satnum">
+<h2>Extracting properties pr. SATNUM<a class="headerlink" href="#extracting-properties-pr-satnum" title="Permalink to this headline">¶</a></h2>
+<p>If you have an include file prepared (from any source), you might need to
+determine certain properties like endpoint. If you need to determine for
+example “SOWCR” - the largest oil saturation for which oil is immobile,
+because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">satfunc</span>
+
+<span class="c1"># Read an Eclipse include file directly into a DataFrame</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
+    <span class="n">sat_df</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">f_handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="c1"># Write a function that is to operate on each SATNUM:</span>
+<span class="k">def</span> <span class="nf">sowcr</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine the largest oil saturation where</span>
+<span class="sd">    oil relperm is below 1e-7&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;KROW&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e-7</span><span class="p">][</span><span class="s2">&quot;SW&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+<span class="c1"># Apply that function individually on each SATNUM:</span>
+<span class="n">sat_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sowcr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for an example include file, this could result in</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">SATNUM</span>
+<span class="go">1    0.15492</span>
+<span class="go">2    0.21002</span>
+<span class="go">3    0.05442</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-pyscal-library">
+<h2>The pyscal library<a class="headerlink" href="#the-pyscal-library" title="Permalink to this headline">¶</a></h2>
 <p>Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
-ecl2df.satfunc, consider if it is better to implement the manipulations
+<code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code>, consider if it is better to implement the manipulations
 through the <a class="reference external" href="https://equinor.github.io/pyscal/">pyscal</a> library.
 Pyscal can create curves from parametrizations, and interpolate between curves.</p>
 <p>Pyscal can create initialize its relperm objects from Eclipse include files
 though the parsing capabilities of ecl2df.satfunc.</p>
-<p>The function <cite>pyscal.pyscallist.df()</cite> is analogous to <cite>ecl2df.satfunc.df()</cite> in
+<p>The function <code class="docutils literal notranslate"><span class="pre">pyscal.pyscallist.df()</span></code> is analogous to <code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc.df()</span></code> in
 what it produces, and the <a class="reference internal" href="../ecl2df.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> can be used on both
 (potentially with some filtering needed.).</p>
 </div>
@@ -447,7 +482,7 @@ what it produces, and the <a class="reference internal" href="../ecl2df.html#ecl
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="trans.html" class="btn btn-neutral float-right" title="trans" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="summary.html" class="btn btn-neutral float-right" title="summary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="rft.html" class="btn btn-neutral float-left" title="rft" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

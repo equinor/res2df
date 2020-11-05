@@ -1,6 +1,14 @@
 ecl2df package
 ==============
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ecl2df.hook_implementations
+
 Submodules
 ----------
 
@@ -16,14 +24,6 @@ ecl2df.compdat module
 ---------------------
 
 .. automodule:: ecl2df.compdat
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.compdat2df module
-------------------------
-
-.. automodule:: ecl2df.compdat2df
    :members:
    :undoc-members:
    :show-inheritance:
@@ -144,14 +144,6 @@ ecl2df.satfunc module
 ---------------------
 
 .. automodule:: ecl2df.satfunc
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ecl2df.satfunc2df module
-------------------------
-
-.. automodule:: ecl2df.satfunc2df
    :members:
    :undoc-members:
    :show-inheritance:

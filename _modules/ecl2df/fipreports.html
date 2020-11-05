@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.fipreports &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -167,13 +167,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -312,9 +311,11 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">sum</span><span class="p">([</span><span class="n">string</span> <span class="ow">in</span> <span class="n">line</span> <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">interesting_strings</span><span class="p">]):</span>
                     <span class="c1"># Skip if we are not on an interesting line.</span>
                     <span class="k">continue</span>
-                <span class="c1"># The colons in the report block are not reliably included (wtf!), even in the</span>
-                <span class="c1"># same PRT file. We insert them in fixed positions and hope for the best</span>
-                <span class="c1"># (if the ASCII table is actually dynamic with respect to content, this will fail)</span>
+                <span class="c1"># The colons in the report block are not reliably included</span>
+                <span class="c1"># (differs by Eclipse version), even in the same PRT file. We</span>
+                <span class="c1"># insert them in fixed positions and hope for the best (if the</span>
+                <span class="c1"># ASCII table is actually dynamic with respect to content, this</span>
+                <span class="c1"># will fail)</span>
                 <span class="n">linechars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="n">linechars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
                 <span class="n">linechars</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
@@ -350,16 +351,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">prtfile</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="p">)</span><span class="o">.</span><span class="n">get_prtfilename</span><span class="p">()</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">prtfile</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">fipname</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
-        <span class="c1"># Ignore pipe errors when writing to stdout.</span>
-        <span class="kn">from</span> <span class="nn">signal</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span>
-
-        <span class="n">signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">SIG_DFL</span><span class="p">)</span>
-        <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing output to disk&quot;</span><span class="p">)</span>
-        <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

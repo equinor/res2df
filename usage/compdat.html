@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>compdat &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="fipreports" href="fipreports.html" />
+    <link rel="prev" title="equil" href="equil.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.3.dev5+g86ba618
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">compdat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nnc.html">nnc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pillars.html">pillars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
+<li class="toctree-l2"><a class="reference internal" href="satfunc.html">satfunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcon.html">wcon</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
+        
+      <li>compdat</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/compdat.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="compdat">
+<h1>compdat<a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h1>
+<p>This module extracts COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck.</p>
+<p>Additionally, it will parse WELOPEN statements and emit new COMPDAT
+statements from the actions in WELOPEN.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">compdat</span><span class="p">,</span> <span class="n">EclFiles</span>
+
+<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">compdat</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Example COMPDAT table</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>WELL</p></th>
+<th class="head"><p>I</p></th>
+<th class="head"><p>J</p></th>
+<th class="head"><p>K1</p></th>
+<th class="head"><p>K2</p></th>
+<th class="head"><p>OP/SH</p></th>
+<th class="head"><p>SATN</p></th>
+<th class="head"><p>TRAN</p></th>
+<th class="head"><p>WBDIA</p></th>
+<th class="head"><p>KH</p></th>
+<th class="head"><p>SKIN</p></th>
+<th class="head"><p>DFACT</p></th>
+<th class="head"><p>DIR</p></th>
+<th class="head"><p>PEQVR</p></th>
+<th class="head"><p>DATE</p></th>
+<th class="head"><p>K</p></th>
+<th class="head"><p>ZONE</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>OP_1</p></td>
+<td><p>29</p></td>
+<td><p>28</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>176.9808</p></td>
+<td><p>0.311</p></td>
+<td><p>17180.93</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>28.21965</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP_2</p></td>
+<td><p>20</p></td>
+<td><p>15</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>25.76939</p></td>
+<td><p>0.311</p></td>
+<td><p>2495.092</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>27.83813</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_3</p></td>
+<td><p>28</p></td>
+<td><p>46</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>0.283</p></td>
+<td><p>0.311</p></td>
+<td><p>27.74475</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>29.57231</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>WI_1</p></td>
+<td><p>15</p></td>
+<td><p>36</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>0.0183</p></td>
+<td><p>0.311</p></td>
+<td><p>1.811187</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>31.1408</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>WI_2</p></td>
+<td><p>31</p></td>
+<td><p>11</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>24.27392</p></td>
+<td><p>0.311</p></td>
+<td><p>2335.728</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>26.95727</p></td>
+<td><p>2000-06-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP_4</p></td>
+<td><p>19</p></td>
+<td><p>28</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>86.50625</p></td>
+<td><p>0.311</p></td>
+<td><p>8538.829</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>30.79442</p></td>
+<td><p>2001-01-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_5</p></td>
+<td><p>25</p></td>
+<td><p>35</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>0.139</p></td>
+<td><p>0.311</p></td>
+<td><p>13.17639</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>25.36506</p></td>
+<td><p>2001-01-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>WI_3</p></td>
+<td><p>17</p></td>
+<td><p>8</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>0.187</p></td>
+<td><p>0.311</p></td>
+<td><p>17.92673</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>X</p></td>
+<td><p>26.80462</p></td>
+<td><p>2001-03-01</p></td>
+<td><p>1</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_1</p></td>
+<td><p>29</p></td>
+<td><p>28</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>140.7899</p></td>
+<td><p>0.311</p></td>
+<td><p>13633.68</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>27.85778</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP_2</p></td>
+<td><p>20</p></td>
+<td><p>15</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>10.1185</p></td>
+<td><p>0.311</p></td>
+<td><p>984.0146</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>28.47951</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_2</p></td>
+<td><p>19</p></td>
+<td><p>15</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>14.37509</p></td>
+<td><p>0.311</p></td>
+<td><p>1386.013</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>27.23884</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP_3</p></td>
+<td><p>28</p></td>
+<td><p>46</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>0.554</p></td>
+<td><p>0.311</p></td>
+<td><p>54.1335</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>29.32342</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>WI_1</p></td>
+<td><p>15</p></td>
+<td><p>36</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>0.0563</p></td>
+<td><p>0.311</p></td>
+<td><p>5.551739</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>30.65951</p></td>
+<td><p>2000-02-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-odd"><td><p>WI_2</p></td>
+<td><p>31</p></td>
+<td><p>11</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>31.9081</p></td>
+<td><p>0.311</p></td>
+<td><p>3066.631</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>26.79096</p></td>
+<td><p>2000-06-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+<tr class="row-even"><td><p>OP_4</p></td>
+<td><p>19</p></td>
+<td><p>28</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
+<td><p>0</p></td>
+<td><p>87.32273</p></td>
+<td><p>0.311</p></td>
+<td><p>8614.509</p></td>
+<td><p>0.0</p></td>
+<td></td>
+<td><p>Z</p></td>
+<td><p>30.70174</p></td>
+<td><p>2001-01-01</p></td>
+<td><p>2</p></td>
+<td><p>UpperReek</p></td>
+</tr>
+</tbody>
+</table>
+<p>If you need access to WELSEGS and COMPSEGS, you must use the <code class="docutils literal notranslate"><span class="pre">deck2dfs()</span></code>
+function which will return a dict with dataframes for each of COMPDAT,
+COMPSEGS and WELSEGS.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fipreports.html" class="btn btn-neutral float-right" title="fipreports" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="equil.html" class="btn btn-neutral float-left" title="equil" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright Equinor 2019-2020
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>Index &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -171,6 +171,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -188,11 +189,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.wcon.ad_hoc_wconparser">ad_hoc_wconparser() (in module ecl2df.wcon)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.rft.add_extras">add_extras() (in module ecl2df.rft)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.nnc.add_nnc_coords">add_nnc_coords() (in module ecl2df.nnc)</a>
+</li>
+      <li><a href="ecl2df.html#ecl2df.compdat.applywelopen">applywelopen() (in module ecl2df.compdat)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -220,23 +223,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.grid.dates2rstindices">dates2rstindices() (in module ecl2df.grid)</a>
 </li>
-      <li><a href="ecl2df.html#ecl2df.compdat.deck2compdatsegsdfs">deck2compdatsegsdfs() (in module ecl2df.compdat)</a>
-</li>
-      <li><a href="ecl2df.html#ecl2df.equil.deck2df">deck2df() (in module ecl2df.equil)</a>
-
-      <ul>
-        <li><a href="ecl2df.html#ecl2df.gruptree.deck2df">(in module ecl2df.gruptree)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.satfunc.deck2df">(in module ecl2df.satfunc)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.wcon.deck2df">(in module ecl2df.wcon)</a>
-</li>
-      </ul></li>
       <li><a href="ecl2df.html#ecl2df.compdat.deck2dfs">deck2dfs() (in module ecl2df.compdat)</a>
-</li>
-      <li><a href="ecl2df.html#ecl2df.equil.deck2equildf">deck2equildf() (in module ecl2df.equil)</a>
-</li>
-      <li><a href="ecl2df.html#ecl2df.wcon.deck2wcondf">deck2wcondf() (in module ecl2df.wcon)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.pvt.density_fromdeck">density_fromdeck() (in module ecl2df.pvt)</a>
 </li>
@@ -358,13 +345,6 @@
 </li>
       </ul></li>
       <li>
-    ecl2df.compdat2df
-
-      <ul>
-        <li><a href="ecl2df.html#module-ecl2df.compdat2df">module</a>
-</li>
-      </ul></li>
-      <li>
     ecl2df.csv2ecl
 
       <ul>
@@ -421,14 +401,28 @@
 </li>
       </ul></li>
       <li>
+    ecl2df.hook_implementations
+
+      <ul>
+        <li><a href="ecl2df.hook_implementations.html#module-ecl2df.hook_implementations">module</a>
+</li>
+      </ul></li>
+      <li>
+    ecl2df.hook_implementations.jobs
+
+      <ul>
+        <li><a href="ecl2df.hook_implementations.html#module-ecl2df.hook_implementations.jobs">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     ecl2df.inferdims
 
       <ul>
         <li><a href="ecl2df.html#module-ecl2df.inferdims">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ecl2df.nnc
 
@@ -568,6 +562,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ecl2df.html#ecl2df.grid.get_available_rst_dates">get_available_rst_dates() (in module ecl2df.grid)</a>
+</li>
       <li><a href="ecl2df.html#ecl2df.rft.get_con_seg_data">get_con_seg_data() (in module ecl2df.rft)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.eclfiles.EclFiles.get_ecldeck">get_ecldeck() (ecl2df.eclfiles.EclFiles method)</a>
@@ -586,10 +582,10 @@
         <li><a href="ecl2df.html#ecl2df.ecl2csv.get_parser">(in module ecl2df.ecl2csv)</a>
 </li>
       </ul></li>
-      <li><a href="ecl2df.html#ecl2df.eclfiles.EclFiles.get_path">get_path() (ecl2df.eclfiles.EclFiles method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ecl2df.html#ecl2df.eclfiles.EclFiles.get_path">get_path() (ecl2df.eclfiles.EclFiles method)</a>
+</li>
       <li><a href="ecl2df.html#ecl2df.eclfiles.EclFiles.get_prtfilename">get_prtfilename() (ecl2df.eclfiles.EclFiles method)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.eclfiles.EclFiles.get_rftfile">get_rftfile() (ecl2df.eclfiles.EclFiles method)</a>
@@ -603,8 +599,6 @@
       <li><a href="ecl2df.html#ecl2df.grid.grid_main">grid_main() (in module ecl2df.grid)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.grid.gridgeometry2df">gridgeometry2df() (in module ecl2df.grid)</a>
-</li>
-      <li><a href="ecl2df.html#ecl2df.gruptree.gruptree2df">gruptree2df() (in module ecl2df.gruptree)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.gruptree.gruptree_main">gruptree_main() (in module ecl2df.gruptree)</a>
 </li>
@@ -626,11 +620,21 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.grid.init2df">init2df() (in module ecl2df.grid)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.inferdims.inject_dimcount">inject_dimcount() (in module ecl2df.inferdims)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.inferdims.inject_xxxdims_ntxxx">inject_xxxdims_ntxxx() (in module ecl2df.inferdims)</a>
+</li>
+      <li><a href="ecl2df.hook_implementations.html#ecl2df.hook_implementations.jobs.installable_jobs">installable_jobs() (in module ecl2df.hook_implementations.jobs)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ecl2df.hook_implementations.html#ecl2df.hook_implementations.jobs.job_documentation">job_documentation() (in module ecl2df.hook_implementations.jobs)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -654,34 +658,14 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ecl2df.html#ecl2df.compdat.main">main() (in module ecl2df.compdat)</a>
+      <li><a href="ecl2df.html#ecl2df.csv2ecl.main">main() (in module ecl2df.csv2ecl)</a>
 
       <ul>
-        <li><a href="ecl2df.html#ecl2df.csv2ecl.main">(in module ecl2df.csv2ecl)</a>
-</li>
         <li><a href="ecl2df.html#ecl2df.ecl2csv.main">(in module ecl2df.ecl2csv)</a>
 </li>
-        <li><a href="ecl2df.html#ecl2df.equil.main">(in module ecl2df.equil)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.faults.main">(in module ecl2df.faults)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.grid.main">(in module ecl2df.grid)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.gruptree.main">(in module ecl2df.gruptree)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.nnc.main">(in module ecl2df.nnc)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.pillars.main">(in module ecl2df.pillars)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.rft.main">(in module ecl2df.rft)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.satfunc.main">(in module ecl2df.satfunc)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.summary.main">(in module ecl2df.summary)</a>
-</li>
-        <li><a href="ecl2df.html#ecl2df.wcon.main">(in module ecl2df.wcon)</a>
-</li>
       </ul></li>
+      <li><a href="ecl2df.html#ecl2df.trans.make_nx_graph">make_nx_graph() (in module ecl2df.trans)</a>
+</li>
       <li><a href="ecl2df.html#ecl2df.rft.merge_icd_seg_conseg">merge_icd_seg_conseg() (in module ecl2df.rft)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.grid.merge_initvectors">merge_initvectors() (in module ecl2df.grid)</a>
@@ -698,8 +682,6 @@
 </li>
         <li><a href="ecl2df.html#module-ecl2df.compdat">ecl2df.compdat</a>
 </li>
-        <li><a href="ecl2df.html#module-ecl2df.compdat2df">ecl2df.compdat2df</a>
-</li>
         <li><a href="ecl2df.html#module-ecl2df.csv2ecl">ecl2df.csv2ecl</a>
 </li>
         <li><a href="ecl2df.html#module-ecl2df.ecl2csv">ecl2df.ecl2csv</a>
@@ -715,6 +697,10 @@
         <li><a href="ecl2df.html#module-ecl2df.grid">ecl2df.grid</a>
 </li>
         <li><a href="ecl2df.html#module-ecl2df.gruptree">ecl2df.gruptree</a>
+</li>
+        <li><a href="ecl2df.hook_implementations.html#module-ecl2df.hook_implementations">ecl2df.hook_implementations</a>
+</li>
+        <li><a href="ecl2df.hook_implementations.html#module-ecl2df.hook_implementations.jobs">ecl2df.hook_implementations.jobs</a>
 </li>
         <li><a href="ecl2df.html#module-ecl2df.inferdims">ecl2df.inferdims</a>
 </li>
@@ -748,8 +734,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.summary.normalize_dates">normalize_dates() (in module ecl2df.summary)</a>
-</li>
-      <li><a href="ecl2df.html#ecl2df.trans.nx">nx() (in module ecl2df.trans)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -807,8 +791,6 @@
 </li>
       <li><a href="ecl2df.html#ecl2df.summary.resample_smry_dates">resample_smry_dates() (in module ecl2df.summary)</a>
 </li>
-      <li><a href="ecl2df.html#ecl2df.rft.rft2df">rft2df() (in module ecl2df.rft)</a>
-</li>
       <li><a href="ecl2df.html#ecl2df.rft.rft_main">rft_main() (in module ecl2df.rft)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.rft.rftrecords">rftrecords() (in module ecl2df.rft)</a>
@@ -820,8 +802,6 @@
       <li><a href="ecl2df.html#ecl2df.eclfiles.rreplace">rreplace() (in module ecl2df.eclfiles)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.grid.rst2df">rst2df() (in module ecl2df.grid)</a>
-</li>
-      <li><a href="ecl2df.html#ecl2df.grid.rstdates">rstdates() (in module ecl2df.grid)</a>
 </li>
       <li><a href="ecl2df.html#ecl2df.equil.rsvd_fromdeck">rsvd_fromdeck() (in module ecl2df.equil)</a>
 </li>
@@ -894,6 +874,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ecl2df.html#ecl2df.wcon.wcon_main">wcon_main() (in module ecl2df.wcon)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ecl2df.html#ecl2df.common.write_dframe_stdout_file">write_dframe_stdout_file() (in module ecl2df.common)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.ecl2csv &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.ecl2csv &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -161,16 +161,10 @@
             
   <h1>Source code for ecl2df.ecl2csv</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">End-user command line tool for accessing functionality</span>
 <span class="sd">in ecl2df</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -193,6 +187,14 @@
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="c1"># String constants in use for generating ERT forward model documentation:</span>
+<span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert Eclipse input and output files into CSV files.</span>
+<span class="s2">Uses the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see</span>
+<span class="s2">which subcommands are supported. It is not possible to supply extra</span>
+<span class="s2">options to ecl2csv through this forward model.&quot;&quot;&quot;</span>
+<span class="n">CATEGORY</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
+<span class="n">EXAMPLES</span> <span class="o">=</span> <span class="s2">&quot;``FORWARD_MODEL ECL2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)``&quot;</span>
 
 
 <div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.ecl2csv.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">():</span>

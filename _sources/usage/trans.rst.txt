@@ -14,7 +14,7 @@ connections
    from ecl2df import trans, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = ecl2df.trans(eclfiles)
+   dframe = ecl2df.trans.df(eclfiles)
 
 ..
    ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA")).sample(7)\
@@ -79,7 +79,7 @@ like this. Example:
 
 .. code-block:: python
 
-   dframe = ecl2df.trans(eclfiles, vectors="FIPNUM", boundaryfilter=True, addnnc=True)
+   dframe = ecl2df.trans.df(eclfiles, vectors="FIPNUM", boundaryfilter=True, addnnc=True)
 
 which gives the dataframe
 
@@ -108,7 +108,7 @@ over a region interface. This is accomplished by adding the ``group=True`` optio
    from ecl2df import trans, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = ecl2df.trans(eclfiles, vectors="FIPNUM", addnnc=True, group=True)
+   dframe = ecl2df.trans.df(eclfiles, vectors="FIPNUM", addnnc=True, group=True)
 
 ..
    ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", group=True).to_csv("trans-group.csv", index=False, float_format="%.2f")

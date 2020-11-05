@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.inferdims &mdash; ecl2df 0.6.2.dev3+g46bb92b documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df 0.8.3.dev5+g86ba618 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.6.2.dev3+g46bb92b
+                0.8.3.dev5+g86ba618
               </div>
             
           
@@ -165,12 +165,8 @@
 <span class="sd">Eclipse 100 decks (typically single include-files)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">import</span> <span class="nn">opm.io</span>
 
@@ -238,7 +234,9 @@
             <span class="p">)</span>
             <span class="c1"># If we succeed, then the dimcountguess was correct</span>
             <span class="k">break</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">):</span>
+            <span class="c1"># ValueError in opm-common &lt;= 2020.04</span>
+            <span class="c1"># RuntimeError in opm-common &gt;= 2020.10</span>
             <span class="c1"># Typically we get the error PARSE_EXTRA_RECORDS because we did not guess</span>
             <span class="c1"># high enough dimnumcount</span>
             <span class="k">continue</span>
@@ -320,7 +318,7 @@
 
     <span class="k">if</span> <span class="n">xxxdims</span> <span class="ow">in</span> <span class="n">deck</span> <span class="ow">and</span> <span class="n">ntxxx_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Then we have nothing to do, but ensure we parse a potential string to a deck</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">deck</span>
 
@@ -330,7 +328,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">deck</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># The deck must be converted to a string deck in order</span>
         <span class="c1"># to estimate dimensions.</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
@@ -348,7 +346,7 @@
     <span class="c1"># Overwrite the deck object</span>
     <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># If a string is supplied as a deck, we always return a parsed Deck object</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
 

@@ -14,11 +14,15 @@ import pytest
 from ecl2df import compdat, ecl2csv
 from ecl2df import EclFiles
 
+
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
 
+# Reek cases with multisegment well OP_6 including AICD and ICD completion from WellBuilder
+SCHFILE_AICD = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/op6_aicd1_gp.sch")
+SCHFILE_ICD = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/op6_icd1_gp.sch")
 
 def test_df():
     """Test main dataframe API, only testing that something comes out"""
@@ -431,3 +435,108 @@ COMPDAT
     assert compdat_df[compdat_df["DATE"].astype(str) == "2040-01-01"]["J"].unique() == [
         33
     ]
+
+
+# Multisegement well testing
+def test_msw_schfile2df():
+    """Test that we can process individual files with AICD and ICD MSW"""
+    deck = EclFiles.file2deck(SCHFILE_AICD)
+    compdfs = compdat.deck2dfs(deck)
+    assert not compdfs["COMPDAT"].empty
+    assert not compdfs["WELSEGS"].empty  
+    assert not compdfs["COMPSEGS"].empty
+    assert not compdfs["WSEGAICD"].empty
+    assert not compdfs["COMPDAT"].columns.empty
+    assert not compdfs["WELSEGS"].columns.empty
+    assert not compdfs["COMPSEGS"].columns.empty
+    assert not compdfs["WSEGAICD"].columns.empty
+
+    deck = EclFiles.file2deck(SCHFILE_ICD)
+    compdfs = compdat.deck2dfs(deck)
+    assert not compdfs["COMPDAT"].empty
+    assert not compdfs["WELSEGS"].empty  
+    assert not compdfs["COMPSEGS"].empty
+    assert not compdfs["WSEGSICD"].empty
+    assert not compdfs["COMPDAT"].columns.empty
+    assert not compdfs["WELSEGS"].columns.empty
+    assert not compdfs["COMPSEGS"].columns.empty
+    assert not compdfs["WSEGSICD"].columns.empty
+
+
+def test_msw_str2df():
+    """Testing making a dataframe from an explicit string including MSW"""
+    schstr = """
+WELSPECS
+   'OP_6' 'DUMMY'    28    37 1575.82   OIL         0.0    'STD'  'SHUT'    'YES'    0    'SEG' /
+/
+
+COMPDAT
+    'OP_6'  28  37   1   1  OPEN  0 1.27194551  0.311  114.88788  0.0   0.0    'X'  19.652259  /
+/
+
+WELSEGS
+-- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL   
+   'OP_6'  0.0         0.0        1.0E-5       'ABS'      'HF-'       'HO'      /
+--  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS   
+     2    2    1        1  2371.596 1577.726  0.15 0.00065    /
+/
+
+COMPSEGS
+   'OP_6' /
+--  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG   
+    28  37   1   2     2366.541 2376.651  1*  3*  31   /
+/
+
+WSEGAICD
+-- WELL   SEG  SEG2        ALPHA            SF     RHO  VIS EMU  DEF     X     Y  FLAG    A    B    C     D     E     F      
+   OP_6    31    31   1.7253e-05  -1.186915444  1000.0  1.0 0.5   4*  3.05  0.67  OPEN  1.0  1.0  1.0  2.43  1.18  10.0  /
+/
+"""
+    deck = EclFiles.str2deck(schstr)
+    compdfs = compdat.deck2dfs(deck)
+    compdat_df = compdfs["COMPDAT"]
+    welsegs = compdfs["WELSEGS"]
+    compsegs = compdfs["COMPSEGS"]
+    wsegaicd = compdfs["WSEGAICD"]
+    assert "WELL" in compdat_df
+    assert len(compdat_df) == 1
+    assert compdat_df["WELL"].unique()[0] == "OP_6"
+
+    # Check that we have not used the very long opm.io term here:
+    assert "CONNECTION_TRANSMISSIBILITY_FACTOR" not in compdat_df
+    assert "TRAN" in compdat_df
+
+    assert "Kh" not in compdat_df  # Mixed-case should not be used.
+    assert "KH" in compdat_df
+
+    # Make sure the ' are ignored:
+    assert compdat_df["OP/SH"].unique()[0] == "OPEN"
+
+    # Continue to WELSEGS
+    assert len(welsegs) == 1  # First record is appended to every row.
+
+    # Since we have 'ABS' in WELSEGS, there should be an extra
+    # column called 'SEGMENT_MD'
+    assert "SEGMENT_MD" in welsegs
+    assert welsegs["SEGMENT_MD"].max() == 2371.596
+
+    # Test COMPSEGS
+    assert len(compsegs) == 1
+    assert "WELL" in compsegs
+    assert compsegs["WELL"].unique()[0] == "OP_6"
+    assert len(compsegs.dropna(axis=1, how="all").iloc[0]) == 9
+
+    # Test WSEGAICD
+    assert len(wsegaicd) == 1
+    assert "WELL" in wsegaicd
+    assert wsegaicd["WELL"].unique()[0] == "OP_6"
+    assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 19
+
+    # Check date handling
+    assert "DATE" in compdat_df
+    assert not all(compdat_df["DATE"].notna())
+    compdat_date = compdat.deck2dfs(deck, start_date="2000-01-01")["COMPDAT"]
+    assert "DATE" in compdat_date
+    assert all(compdat_date["DATE"].notna())
+    assert len(compdat_date["DATE"].unique()) == 1
+    assert str(compdat_date["DATE"].unique()[0]) == "2000-01-01"

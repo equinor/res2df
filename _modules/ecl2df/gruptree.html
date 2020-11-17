@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.gruptree &mdash; ecl2df 0.8.3.dev6+gbdc6f2d documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.8.3.dev9+g4d29617 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3.dev6+gbdc6f2d
+                0.8.3.dev9+g4d29617
               </div>
             
           
@@ -245,22 +245,12 @@
             <span class="c1"># at every date with a change, not only the newfound edges.</span>
             <span class="k">if</span> <span class="n">currentedges</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_gruptree</span> <span class="ow">or</span> <span class="n">found_welspecs</span> <span class="ow">or</span> <span class="n">found_grupnet</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;WARNING: No date parsed, maybe you should pass --startdate&quot;</span>
-                    <span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;         Using 1900-01-01&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No date parsed, maybe you should pass --startdate&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using 1900-01-01&quot;</span><span class="p">)</span>
                     <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">1900</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                <span class="c1"># Store all edges in dataframe at the previous date.</span>
-                <span class="k">for</span> <span class="n">edgename</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">currentedges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
-                        <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                        <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
-                    <span class="p">}</span>
-                    <span class="k">if</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">grupnet_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-                        <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-                    <span class="n">gruptreerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+                <span class="n">gruptreerecords</span> <span class="o">+=</span> <span class="n">_currentedges_to_gruptreerecords</span><span class="p">(</span>
+                    <span class="n">currentedges</span><span class="p">,</span> <span class="n">grupnet_df</span><span class="p">,</span> <span class="n">date</span>
+                <span class="p">)</span>
                 <span class="n">found_gruptree</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">found_welspecs</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">found_grupnet</span> <span class="o">=</span> <span class="kc">False</span>
@@ -310,21 +300,53 @@
 
     <span class="c1"># Ensure we also store any tree information found after the last DATE statement</span>
     <span class="k">if</span> <span class="n">found_gruptree</span> <span class="ow">or</span> <span class="n">found_welspecs</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">edgename</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">currentedges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
-                <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">grupnet_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-                <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-            <span class="n">gruptreerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
-
+        <span class="n">gruptreerecords</span> <span class="o">+=</span> <span class="n">_currentedges_to_gruptreerecords</span><span class="p">(</span>
+            <span class="n">currentedges</span><span class="p">,</span> <span class="n">grupnet_df</span><span class="p">,</span> <span class="n">date</span>
+        <span class="p">)</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">gruptreerecords</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span></div>
+
+
+<span class="k">def</span> <span class="nf">_currentedges_to_gruptreerecords</span><span class="p">(</span><span class="n">currentedges</span><span class="p">,</span> <span class="n">grupnet_df</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Merge a list of edges with information from the GRUPNET dataframe.</span>
+
+<span class="sd">    Edges where there is no parent (root nodes) are identified and added</span>
+<span class="sd">    as special cases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        currentedges (list): List of tuples with (child, parent)</span>
+<span class="sd">        grupnet_df (pd.DataFrame): Containing data for each node to add.</span>
+<span class="sd">        date (datetime.date): Relevant date.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: list of dictionaries (that can be made into a dataframe)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gruptreerecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">childs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">edgename</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">currentedges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+            <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">childs</span> <span class="o">|=</span> <span class="p">{</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+        <span class="n">parents</span> <span class="o">|=</span> <span class="p">{</span><span class="n">edgename</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+        <span class="k">if</span> <span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">grupnet_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">edgename</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">gruptreerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+    <span class="n">roots</span> <span class="o">=</span> <span class="n">parents</span> <span class="o">-</span> <span class="n">childs</span>
+    <span class="n">rootrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>
+        <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">grupnet_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grupnet_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">root</span><span class="p">])</span>
+        <span class="n">rootrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rootrecords</span> <span class="o">+</span> <span class="n">gruptreerecords</span>
 
 
 <div class="viewcode-block" id="edge_dataframe2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.edge_dataframe2dict">[docs]</a><span class="k">def</span> <span class="nf">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
@@ -359,7 +381,8 @@
     <span class="n">subtrees</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;CHILD&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]):</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;CHILD&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]))</span>
     <span class="k">for</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
         <span class="n">subtrees</span><span class="p">[</span><span class="n">parent</span><span class="p">][</span><span class="n">child</span><span class="p">]</span> <span class="o">=</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">child</span><span class="p">]</span>
 

@@ -1,0 +1,107 @@
+{
+  "name": "WSEGAICD",
+  "sections": [
+    "SCHEDULE"
+  ],
+  "items": [
+    {
+      "name": "WELL",
+      "value_type": "STRING"
+    },
+    {
+      "name": "SEGMENT1",
+      "value_type": "INT"
+    },
+    {
+      "name": "SEGMENT2",
+      "value_type": "INT"
+    },
+    {
+      "name": "STRENGTH",
+      "value_type": "DOUBLE"
+    },
+    {
+      "name": "LENGTH",
+      "value_type": "DOUBLE",
+      "default": 12.0
+    },
+    {
+      "name": "RHO_CAL",
+      "value_type": "DOUBLE",
+      "default": 1000.25
+    },
+    {
+      "name": "MU_CAL",
+      "value_type": "DOUBLE",
+      "default": 1.45
+    },
+    {
+      "name": "CRIT_WATFRAC",
+      "value_type": "DOUBLE"
+    },
+    {
+      "name": "WIDTH_WATFRAC",
+      "value_type": "DOUBLE"
+    },
+    {
+      "name": "MAX_RATIO",
+      "value_type": "DOUBLE",
+      "default": 5.0
+    },
+    {
+      "name": "SCALING",
+      "value_type": "INT",
+      "dimension": -1,
+      "default": 0
+    },
+    {
+      "name": "MAX_RATE",
+      "value_type": "DOUBLE"
+    },
+    {
+      "name": "VOLUME_RATE_EXP",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "VISCOSITY_EXP",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "FLAG",
+      "value_type": "STRING",
+      "default": "OPEN"
+    },
+    {
+      "name": "OIL_FRAC_EXP_DENS",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "WATER_FRAC_EXP_DENS",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "GAS_FRAC_EXP_DENS",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "OIL_FRAC_EXP_VISC",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "WATER_FRAC_EXP_VISC",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    },
+    {
+      "name": "GAS_FRAC_EXP_VISC",
+      "value_type": "DOUBLE",
+      "default": 1.0
+    }
+  ]
+}

@@ -1,9 +1,5 @@
 """Test module for layer mapping to zone names"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 
 import pytest

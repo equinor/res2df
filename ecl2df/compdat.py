@@ -66,6 +66,8 @@ def deck2dfs(deck, start_date=None, unroll=True):
     compsegsrecords = []
     welopenrecords = []
     welsegsrecords = []
+    wsegsicdrecords = []
+    wsegaicdrecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
@@ -115,6 +117,18 @@ def deck2dfs(deck, start_date=None, unroll=True):
                         )
                     rec_data["J"] = welspecs[rec_data["WELL"]]["J"]
                 compdatrecords.append(rec_data)
+        elif kword.name == "WSEGSICD":
+            for rec in kword:  # Loop over the lines inside WSEGSICD record
+                rec_data = parse_opmio_deckrecord(rec, "WSEGSICD")
+                rec_data["DATE"] = date
+                rec_data["KEYWORD_IDX"] = idx
+                wsegsicdrecords.append(rec_data)
+        elif kword.name == "WSEGAICD":
+            for rec in kword:  # Loop over the lines inside WSEGAICD record
+                rec_data = parse_opmio_deckrecord(rec, "WSEGAICD")
+                rec_data["DATE"] = date
+                rec_data["KEYWORD_IDX"] = idx
+                wsegaicdrecords.append(rec_data)
         elif kword.name == "COMPSEGS":
             wellname = parse_opmio_deckrecord(
                 kword[0], "COMPSEGS", itemlistname="records", recordindex=0
@@ -139,7 +153,6 @@ def deck2dfs(deck, start_date=None, unroll=True):
                         "COMPDAT state. Using 'SHUT' instead." % rec_data["STATUS"]
                     )
                 welopenrecords.append(rec_data)
-
         elif kword.name == "WELSEGS":
             # First record contains meta-information for well
             # (opm deck returns default values for unspecified items.)
@@ -173,14 +186,29 @@ def deck2dfs(deck, start_date=None, unroll=True):
 
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
+    wsegsicd_df = pd.DataFrame(wsegsicdrecords)
+    wsegaicd_df = pd.DataFrame(wsegaicdrecords)
 
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
 
+    if unroll and not wsegsicd_df.empty:
+        wsegsicd_df = unrolldf(wsegsicd_df, "SEGMENT1", "SEGMENT2")
+
+    if unroll and not wsegaicd_df.empty:
+        wsegaicd_df = unrolldf(wsegaicd_df, "SEGMENT1", "SEGMENT2")
+
     if "KEYWORD_IDX" in compdat_df.columns:
         compdat_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 
-    return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df)
+    if "KEYWORD_IDX" in wsegsicd_df.columns:
+        wsegsicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+
+    if "KEYWORD_IDX" in wsegaicd_df.columns:
+        wsegaicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+
+    return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df, 
+                WSEGSICD=wsegsicd_df, WSEGAICD=wsegaicd_df)
 
 
 def postprocess():

@@ -151,6 +151,9 @@ def df(deck, startdate=None, welspecs=True):
 def _currentedges_to_gruptreerecords(currentedges, grupnet_df, date):
     """Merge a list of edges with information from the GRUPNET dataframe.
 
+    Edges where there is no parent (root nodes) are identified and added
+    as special cases.
+
     Args:
         currentedges (list): List of tuples with (child, parent)
         grupnet_df (pd.DataFrame): Containing data for each node to add.
@@ -160,6 +163,8 @@ def _currentedges_to_gruptreerecords(currentedges, grupnet_df, date):
         list: list of dictionaries (that can be made into a dataframe)
     """
     gruptreerecords = []
+    childs = set()
+    parents = set()
     for edgename, value in currentedges.items():
         rec_dict = {
             "DATE": date,
@@ -167,10 +172,19 @@ def _currentedges_to_gruptreerecords(currentedges, grupnet_df, date):
             "PARENT": edgename[1],
             "KEYWORD": value,
         }
+        childs |= {edgename[0]}
+        parents |= {edgename[1]}
         if edgename[0] in grupnet_df.index:
             rec_dict.update(grupnet_df.loc[edgename[0]])
         gruptreerecords.append(rec_dict)
-    return gruptreerecords
+    roots = parents - childs
+    rootrecords = []
+    for root in roots:
+        rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": "GRUPTREE"}
+        if root in grupnet_df.index:
+            rec_dict.update(grupnet_df.loc[root])
+        rootrecords.append(rec_dict)
+    return rootrecords + gruptreerecords
 
 
 def edge_dataframe2dict(dframe):
@@ -205,7 +219,8 @@ def edge_dataframe2dict(dframe):
     subtrees = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
-        edges.append((row["CHILD"], row["PARENT"]))
+        if not pd.isnull(row["PARENT"]):
+            edges.append((row["CHILD"], row["PARENT"]))
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
 

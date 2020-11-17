@@ -235,16 +235,23 @@ class EclFiles(object):
 
         zonelines = open(fullpath).readlines()
         zonelines = [line.strip() for line in zonelines]
-        zonelines = [line for line in zonelines if not line.startswith("--")]
+        zonelines = [line.split("--")[0] for line in zonelines]
         zonelines = [line for line in zonelines if not line.startswith("#")]
         zonelines = filter(len, zonelines)
 
         zonemap = {}
         for line in zonelines:
-            (layername, interval) = shlex.split(line)
-            (k_0, k_1) = interval.strip().split("-")
-            for k_idx in range(int(k_0), int(k_1) + 1):
-                zonemap[k_idx] = layername
+            try:
+                linesplit = shlex.split(line)
+                map(str.strip, linesplit)
+                filter(len, linesplit)
+                (k_0, k_1) = "".join(linesplit[1:]).split("-")
+                for k_idx in range(int(k_0), int(k_1) + 1):
+                    zonemap[k_idx] = linesplit[0]
+            except ValueError:
+                logger.error("Could not parse zonemapfile %s", filename)
+                logger.error("Failed on content: %s", line)
+                return
         return zonemap
 
 

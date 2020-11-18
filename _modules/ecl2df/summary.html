@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.summary &mdash; ecl2df 0.8.3.dev11+g109b967 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.8.3.dev13+g319ad1c documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3.dev11+g109b967
+                0.8.3.dev13+g319ad1c
               </div>
             
           
@@ -170,7 +170,6 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">dateutil.parser</span>
-<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -180,6 +179,36 @@
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="n">PD_FREQ_MNEMONICS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;YS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;daily&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;W-MON&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Mapping from ecl2df custom offset strings to Pandas DateOffset strings.</span>
+<span class="sd">See</span>
+<span class="sd">https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
+
+
+<div class="viewcode-block" id="date_range"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.date_range">[docs]</a><span class="k">def</span> <span class="nf">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics</span>
+<span class="sd">    &#39;yearly&#39;, &#39;daily&#39;, &#39;weekly&#39;, mapped over to pandas DateOffsets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        start_date (datetime.date):</span>
+<span class="sd">        end_date (datetime.date):</span>
+<span class="sd">        freq (str): monthly, daily, weekly, yearly, or a Pandas date offset</span>
+<span class="sd">            frequency.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of datetimes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">:</span>
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="normalize_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.normalize_dates">[docs]</a><span class="k">def</span> <span class="nf">normalize_dates</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
@@ -201,24 +230,10 @@
 <span class="sd">    Return:</span>
 <span class="sd">        Tuple of normalized (start_date, end_date)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;monthly&quot;</span><span class="p">:</span>
-        <span class="n">start_date</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="c1"># Avoid rolling forward if we are already at day 1 in a month</span>
-        <span class="k">if</span> <span class="n">end_date</span> <span class="o">!=</span> <span class="n">end_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;yearly&quot;</span><span class="p">:</span>
-        <span class="n">start_date</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="c1"># Avoid rolling forward if we are already at day 1 in a year</span>
-        <span class="k">if</span> <span class="n">end_date</span> <span class="o">!=</span> <span class="n">end_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">years</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;daily&quot;</span><span class="p">:</span>
-        <span class="c1"># This we don&#39;t need to normalize, but we should not give any warnings</span>
-        <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized frequency for date normalization: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">freq</span><span class="p">))</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">:</span>
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">to_offset</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">offset</span><span class="o">.</span><span class="n">rollback</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">offset</span><span class="o">.</span><span class="n">rollforward</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="resample_smry_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.resample_smry_dates">[docs]</a><span class="k">def</span> <span class="nf">resample_smry_dates</span><span class="p">(</span>
@@ -297,8 +312,6 @@
     <span class="n">start_smry</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span>
     <span class="n">end_smry</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span>
 
-    <span class="n">pd_freq_mnenomics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span> <span class="s2">&quot;yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;YS&quot;</span><span class="p">,</span> <span class="s2">&quot;daily&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">}</span>
-
     <span class="p">(</span><span class="n">start_n</span><span class="p">,</span> <span class="n">end_n</span><span class="p">)</span> <span class="o">=</span> <span class="n">normalize_dates</span><span class="p">(</span><span class="n">start_smry</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">end_smry</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">freq</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">start_date</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">normalize</span><span class="p">:</span>
@@ -315,11 +328,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">end_date_range</span> <span class="o">=</span> <span class="n">end_date</span>
 
-    <span class="k">if</span> <span class="n">freq</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pd_freq_mnenomics</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Requested frequency </span><span class="si">%s</span><span class="s2"> not supported&quot;</span> <span class="o">%</span> <span class="n">freq</span><span class="p">)</span>
-    <span class="n">datetimes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
-        <span class="n">start_date_range</span><span class="p">,</span> <span class="n">end_date_range</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">pd_freq_mnenomics</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="n">datetimes</span> <span class="o">=</span> <span class="n">date_range</span><span class="p">(</span><span class="n">start_date_range</span><span class="p">,</span> <span class="n">end_date_range</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+
     <span class="c1"># Convert from Pandas&#39; datetime64 to datetime.date:</span>
     <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datetimes</span><span class="p">]</span>
 

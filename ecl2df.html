@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.8.3.dev11+g109b967 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.8.3.dev13+g319ad1c documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.8.3.dev11+g109b967
+                0.8.3.dev13+g319ad1c
               </div>
             
           
@@ -2857,6 +2857,34 @@ the SWOF keyword).</p></li>
 <span id="ecl2df-summary-module"></span><h2>ecl2df.summary module<a class="headerlink" href="#module-ecl2df.summary" title="Permalink to this headline">¶</a></h2>
 <p>Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)</p>
 <p>Code taken from fmu.ensemble.ScratchRealization</p>
+<dl class="py data">
+<dt id="ecl2df.summary.PD_FREQ_MNEMONICS">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">PD_FREQ_MNEMONICS</code><em class="property"> = {'daily': 'D', 'monthly': 'MS', 'weekly': 'W-MON', 'yearly': 'YS'}</em><a class="headerlink" href="#ecl2df.summary.PD_FREQ_MNEMONICS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mapping from ecl2df custom offset strings to Pandas DateOffset strings.
+See
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects">https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.summary.date_range">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">date_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_date</span></em>, <em class="sig-param"><span class="n">end_date</span></em>, <em class="sig-param"><span class="n">freq</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#date_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.date_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics
+‘yearly’, ‘daily’, ‘weekly’, mapped over to pandas DateOffsets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<em>datetime.date</em>) – </p></li>
+<li><p><strong>end_date</strong> (<em>datetime.date</em>) – </p></li>
+<li><p><strong>freq</strong> (<em>str</em>) – monthly, daily, weekly, yearly, or a Pandas date offset
+frequency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of datetimes</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt id="ecl2df.summary.df">
 <code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em>, <em class="sig-param"><span class="n">time_index</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">column_keys</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">start_date</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end_date</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_restart</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">paramfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">datetime</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>

@@ -1,8 +1,8 @@
 """Support module for extra files with key-value information
 related to Eclipse runs"""
 
-import os
 import logging
+from pathlib import Path
 
 import json
 import yaml
@@ -33,9 +33,9 @@ def find_parameter_files(ecldeck_or_eclpath, filebase="parameters"):
            found
     """
     if isinstance(ecldeck_or_eclpath, EclFiles):
-        eclbasepath = ecldeck_or_eclpath.get_path()
+        eclbasepath = Path(ecldeck_or_eclpath.get_path())
     elif isinstance(ecldeck_or_eclpath, str):
-        eclbasepath = os.path.abspath(os.path.dirname(ecldeck_or_eclpath))
+        eclbasepath = Path(ecldeck_or_eclpath).parent.absolute()
     else:
         raise TypeError
     files_to_lookfor = [
@@ -44,12 +44,12 @@ def find_parameter_files(ecldeck_or_eclpath, filebase="parameters"):
         filebase + ".txt",
         filebase,
     ]
-    paths_to_check = [os.curdir, os.pardir, os.path.join(os.pardir, os.pardir)]
+    paths_to_check = [".", "..", Path("..") / Path("..")]
     foundfiles = []
     for path in paths_to_check:
         for fname in files_to_lookfor:
-            fullfname = os.path.join(eclbasepath, path, fname)
-            if os.path.exists(fullfname):
+            fullfname = eclbasepath / path / fname
+            if fullfname.is_file():
                 foundfiles.append(fullfname)
     return foundfiles
 

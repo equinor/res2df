@@ -1,8 +1,8 @@
 """Test module for ecl2df.grid"""
 
-import os
 import sys
 import datetime
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -13,8 +13,8 @@ from ecl2df import grid
 from ecl2df import ecl2csv
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_gridgeometry2df():
@@ -129,7 +129,7 @@ def test_df2ecl(tmpdir):
 
     tmpdir.chdir()
     grid.df2ecl(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
-    assert os.path.exists("perm.inc")
+    assert Path("perm.inc").is_file()
     incstring = open("perm.inc").readlines()
     assert sum([1 for line in incstring if "PERM" in line]) == 6
 
@@ -275,7 +275,7 @@ def test_df():
 
 def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-eclgrid.csv")
+    tmpcsvfile = tmpdir / "eclgrid.csv"
     sys.argv = [
         "ecl2csv",
         "grid",
@@ -288,10 +288,10 @@ def test_main(tmpdir):
         "PORO",
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(str(tmpcsvfile))
+    Path(tmpcsvfile).unlink()
 
     # Do again with also restarts:
     sys.argv = [
@@ -306,15 +306,15 @@ def test_main(tmpdir):
         "PORO",
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
-    os.remove(str(tmpcsvfile))
+    Path(tmpcsvfile).unlink()
 
     # Test with constants dropping
     sys.argv = ["ecl2csv", "grid", DATAFILE, "-o", str(tmpcsvfile), "--dropconstants"]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     # That PVTNUM is constant is a particular feature
     # of the test dataset.

@@ -1,7 +1,10 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import logging
-import datetime
 from pathlib import Path
+
+# The name 'datetime' is in use by a function argument:
+from datetime import date as datetime_date
+from datetime import datetime as datetime_datetime
 
 import dateutil.parser
 import pandas as pd
@@ -39,9 +42,7 @@ def date_range(start_date, end_date, freq):
     Returns:
         list of datetimes
     """
-    if freq in PD_FREQ_MNEMONICS:
-        freq = PD_FREQ_MNEMONICS[freq]
-    return pd.date_range(start_date, end_date, freq=freq)
+    return pd.date_range(start_date, end_date, freq=PD_FREQ_MNEMONICS.get(freq, freq))
 
 
 def normalize_dates(start_date, end_date, freq):
@@ -63,9 +64,7 @@ def normalize_dates(start_date, end_date, freq):
     Return:
         Tuple of normalized (start_date, end_date)
     """
-    if freq in PD_FREQ_MNEMONICS:
-        freq = PD_FREQ_MNEMONICS[freq]
-    offset = pd.tseries.frequencies.to_offset(freq)
+    offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
     return (offset.rollback(start_date).date(), offset.rollforward(end_date).date())
 
 
@@ -86,7 +85,7 @@ def resample_smry_dates(
             Options for timeresampling are
             'daily', 'monthly' and 'yearly'.
             'last' will give out the last date (maximum),
-            as a list with one element.
+            as a list with one element. Can also be a single date.
         normalize: Whether to normalize backwards at the start
             and forwards at the end to ensure the raw
             date range is covered when resampling time.
@@ -108,7 +107,7 @@ def resample_smry_dates(
     if start_date:
         if isinstance(start_date, str):
             start_date = dateutil.parser.parse(start_date).date()
-        elif isinstance(start_date, datetime.date):
+        elif isinstance(start_date, datetime_date):
             pass
         else:
             raise TypeError("start_date had unknown type")
@@ -116,7 +115,7 @@ def resample_smry_dates(
     if end_date:
         if isinstance(end_date, str):
             end_date = dateutil.parser.parse(end_date).date()
-        elif isinstance(end_date, datetime.date):
+        elif isinstance(end_date, datetime_date):
             pass
         else:
             raise TypeError("end_date had unknown type")
@@ -126,13 +125,13 @@ def resample_smry_dates(
         datetimes.sort()
         if start_date:
             # Convert to datetime (at 00:00:00)
-            start_date = datetime.datetime.combine(
-                start_date, datetime.datetime.min.time()
+            start_date = datetime_datetime.combine(
+                start_date, datetime_datetime.min.time()
             )
             datetimes = [x for x in datetimes if x > start_date]
             datetimes = [start_date] + datetimes
         if end_date:
-            end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
+            end_date = datetime_datetime.combine(end_date, datetime_datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
         return datetimes
@@ -140,6 +139,13 @@ def resample_smry_dates(
         return [min(eclsumsdates).date()]
     if freq == "last":
         return [max(eclsumsdates).date()]
+    if isinstance(freq, (datetime_date, datetime_datetime)):
+        return [freq]
+    try:
+        parseddate = dateutil.parser.isoparse(freq)
+        return [parseddate]
+    except ValueError:
+        pass
 
     # These are datetime.datetime, not datetime.date
     start_smry = min(eclsumsdates)
@@ -187,6 +193,7 @@ def df(
     paramfile=None,
     datetime=False,  # A very poor choice of argument name [pylint]
 ):
+    # pylint: disable=too-many-arguments
     """
     Extract data from UNSMRY as Pandas dataframes.
 
@@ -235,22 +242,38 @@ def df(
             eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
         )
     else:
+        # Can be None.
         time_index_arg = time_index
+
+    if isinstance(time_index_arg, list):
+        if len(time_index_arg) < 6:
+            time_index_str = str(time_index_arg)
+        else:
+            time_index_str = str(time_index_arg[0:3] + ["..."] + time_index_arg[-3:])
+    else:
+        time_index_str = time_index_arg
 
     if not column_keys or not column_keys[0]:
         column_keys_str = "*"
+        # column_keys = [column_keys_str]
     else:
-        column_keys_str = ",".join(column_keys)
+        column_keys_str = ",".join(filter(None, column_keys))
     logger.info(
         "Requesting columns_keys: %s at time_index: %s",
         column_keys_str,
-        str(time_index_arg or "raw"),
+        time_index_str or "raw",
     )
     if isinstance(eclfiles, EclSum):
         eclsum = eclfiles
     else:
         eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+
+    if eclsum is None:
+        # Warning is already logged by eclfiles.
+        return pd.DataFrame()
+
     dframe = eclsum.pandas_frame(time_index_arg, column_keys)
+
     # If time_index_arg was None, but start_date was set, we need to date-truncate
     # afterwards:
     logger.info(

@@ -1,5 +1,6 @@
 """Test module for nnc2df"""
 
+import os
 import sys
 import datetime
 import logging
@@ -10,6 +11,8 @@ import numpy as np
 import pandas as pd
 
 import pytest
+
+import ecl
 
 from ecl2df import summary, ecl2csv, csv2ecl
 from ecl2df.eclfiles import EclFiles
@@ -277,6 +280,15 @@ def test_resample_smry_dates():
     weekly = resample_smry_dates(ecldates, freq="weekly")
     assert len(weekly) == 159
 
+    assert resample_smry_dates(ecldates, freq="2001-04-05") == [
+        datetime.datetime(2001, 4, 5, 0, 0)
+    ]
+    assert resample_smry_dates(ecldates, freq=datetime.date(2001, 4, 5)) == [
+        datetime.date(2001, 4, 5)
+    ]
+    assert resample_smry_dates(ecldates, freq=datetime.datetime(2001, 4, 5, 0, 0)) == [
+        datetime.datetime(2001, 4, 5, 0, 0)
+    ]
     # start and end should be included:
     assert (
         len(
@@ -588,6 +600,23 @@ def test_df2eclsum_datetimeindex():
     assert isinstance(roundtrip.index, pd.DatetimeIndex)
     assert roundtrip["FOPR"].values == [100]
     assert roundtrip["FOPT"].values == [1000]
+
+
+def test_ecl2df_errors(tmpdir):
+    """Test error handling on bogus/corrupted summary files"""
+    tmpdir.chdir()
+    Path("FOO.UNSMRY").write_bytes(os.urandom(100))
+    Path("FOO.SMSPEC").write_bytes(os.urandom(100))
+    with pytest.raises(OSError, match="Failed to create summary instance"):
+        # This is how libecl reacts to bogus binary data
+        ecl.summary.EclSum("FOO.UNSMRY")
+
+    # But EclFiles should be more tolerant, as it should be possible
+    # to extract other data if SMRY is corrupted
+    assert EclFiles("FOO").get_eclsum() is None  # (a warning is printed)
+
+    # Getting a dataframe from bogus data should give empty data:
+    assert df(EclFiles("FOO")).empty
 
 
 def test_df2eclsum_errors():

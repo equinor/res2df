@@ -146,7 +146,15 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
             logger.info("Opening UNSMRY file: %s", smryfilename)
-            self._eclsum = EclSum(smryfilename, include_restart=include_restart)
+            try:
+                self._eclsum = EclSum(smryfilename, include_restart=include_restart)
+            except IOError:
+                # This can happen if there is something wrong with the file
+                # or if SMSPEC is missing.
+                logger.warning(
+                    "Failed to create summary instance from %s", smryfilename
+                )
+                return None
         return self._eclsum
 
     def get_initfile(self):

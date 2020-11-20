@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 Module to hold Eclipse input and output filenames
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import os
 import errno
@@ -33,12 +29,6 @@ OPMIOPARSER_RECOVERY = [
     ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
     ("PARSE_EXTRA_DATA", opm.io.action.ignore),
 ]
-
-# For Python2 compatibility:
-try:
-    FileNotFoundError
-except NameError:
-    FileNotFoundError = IOError
 
 
 class EclFiles(object):
@@ -245,19 +235,26 @@ class EclFiles(object):
 
         zonelines = open(fullpath).readlines()
         zonelines = [line.strip() for line in zonelines]
-        zonelines = [line for line in zonelines if not line.startswith("--")]
+        zonelines = [line.split("--")[0] for line in zonelines]
         zonelines = [line for line in zonelines if not line.startswith("#")]
         zonelines = filter(len, zonelines)
 
         zonemap = {}
         for line in zonelines:
-            (layername, interval) = shlex.split(line)
-            (k_0, k_1) = interval.strip().split("-")
-            for k_idx in range(int(k_0), int(k_1) + 1):
-                zonemap[k_idx] = layername
+            try:
+                linesplit = shlex.split(line)
+                map(str.strip, linesplit)
+                filter(len, linesplit)
+                (k_0, k_1) = "".join(linesplit[1:]).split("-")
+                for k_idx in range(int(k_0), int(k_1) + 1):
+                    zonemap[k_idx] = linesplit[0]
+            except ValueError:
+                logger.error("Could not parse zonemapfile %s", filename)
+                logger.error("Failed on content: %s", line)
+                return
         return zonemap
 
 
 def rreplace(pat, sub, string):
     """Variant of str.replace() that only replaces at the end of the string"""
-    return string[0 : -len(pat)] + sub if string.endswith(pat) else string
+    return string[0 : -len(pat)] + sub if string.endswith(pat) else string  # noqa

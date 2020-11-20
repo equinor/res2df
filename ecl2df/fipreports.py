@@ -5,13 +5,12 @@ Extract FIP region reports from Eclipse PRT file
 """
 
 import re
-import sys
 import logging
 import datetime
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_ecl_month
+from .common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -150,9 +149,11 @@ def df(prtfile, fipname="FIPNUM"):
                 if not sum([string in line for string in interesting_strings]):
                     # Skip if we are not on an interesting line.
                     continue
-                # The colons in the report block are not reliably included (wtf!), even in the
-                # same PRT file. We insert them in fixed positions and hope for the best
-                # (if the ASCII table is actually dynamic with respect to content, this will fail)
+                # The colons in the report block are not reliably included
+                # (differs by Eclipse version), even in the same PRT file. We
+                # insert them in fixed positions and hope for the best (if the
+                # ASCII table is actually dynamic with respect to content, this
+                # will fail)
                 linechars = list(line)
                 linechars[1] = ":"
                 linechars[27] = ":"
@@ -188,13 +189,4 @@ def fipreports_main(args):
     else:
         prtfile = EclFiles(args.PRTFILE).get_prtfilename()
     dframe = df(prtfile, args.fipname)
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        dframe.to_csv(sys.stdout, index=False)
-    else:
-        logger.info("Writing output to disk")
-        dframe.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)

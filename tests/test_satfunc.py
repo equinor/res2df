@@ -1,15 +1,11 @@
 """Test module for satfunc2df"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 
 import pandas as pd
 
-from ecl2df import satfunc, ecl2csv, inferdims, csv2ecl
+from ecl2df import satfunc, ecl2csv, inferdims
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +15,7 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_satfunc2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    satdf = satfunc.deck2df(eclfiles.get_ecldeck())
+    satdf = satfunc.df(eclfiles.get_ecldeck())
 
     assert not satdf.empty
     assert "KEYWORD" in satdf  # for all data
@@ -96,17 +92,17 @@ SWOF
     pd.testing.assert_frame_equal(satdf, df_from_inc)
 
     # Try empty/bogus data:
-    bogusdf = satfunc.deck2df("SWRF\n 0 /\n")
+    bogusdf = satfunc.df("SWRF\n 0 /\n")
     # (warnings should be issued)
     assert bogusdf.empty
 
     # Test with bogus E100 keywords:
-    tricky = satfunc.deck2df("FOO\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
+    tricky = satfunc.df("FOO\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
     assert not tricky.empty
     assert len(tricky["SATNUM"].unique()) == 1
 
     # Test with unsupported (for OPM) E100 keywords (trickier than bogus..)
-    # # tricky = satfunc.deck2df("CARFIN\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
+    # # tricky = satfunc.df("CARFIN\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
     # # assert not tricky.empty
     # # assert len(tricky["SATNUM"].unique()) == 1
     # ### It remains unsolved how to avoid an error here!
@@ -247,32 +243,6 @@ SGOF
     ecl2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
-
-
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpdir.chdir()
-    tmpcsvfile = ".TMP-satfunc.csv"
-    sys.argv = ["satfunc2csv", DATAFILE, "-o", tmpcsvfile]
-    satfunc.main()
-
-    assert os.path.exists(tmpcsvfile)
-    disk_df = pd.read_csv(tmpcsvfile)
-    assert not disk_df.empty
-
-    # Write back to include file:
-    incfile = str(tmpdir.join("relperm.inc"))
-    sys.argv = ["csv2ecl", "satfunc", "-v", tmpcsvfile, "-o", incfile]
-    csv2ecl.main()
-
-    # Reparse the include file on disk back to dataframe
-    # and check dataframe equality
-    assert os.path.exists(incfile)
-    disk_inc_df = satfunc.df(open(incfile).read())
-    pd.testing.assert_frame_equal(
-        disk_df.sort_values(["SATNUM", "KEYWORD"]).reset_index(drop=True),
-        disk_inc_df.sort_values(["SATNUM", "KEYWORD"]).reset_index(drop=True),
-    )
 
 
 def test_main_subparsers(tmpdir):

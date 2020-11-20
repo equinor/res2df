@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Convert dataframes (in ecl2df format) to Eclipse include files,
 for selected keywords
 """
-
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import sys
 
@@ -16,6 +11,18 @@ import argparse
 from ecl2df import pvt, equil, satfunc
 
 from ecl2df import __version__
+
+# String constants in use for generating ERT forward model documentation:
+DESCRIPTION = """Convert CSV files into Eclipse include files. Uses the command
+line utility ``csv2ecl``. Run ``csv2ecl --help`` to see which subcommands are supported.
+No options other than the output file is possible when
+used directly as a forward model."""
+CATEGORY = "utility.eclipse"
+EXAMPLES = (
+    "``FORWARD_MODEL "
+    "CSV2ECL(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
+    "<OUTPUT>=eclipse/include/equil.inc)``"
+)
 
 
 def get_parser():

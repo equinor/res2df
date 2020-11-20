@@ -1,12 +1,12 @@
 """
 Common functions for ecl2df modules
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import os
+import sys
 import json
+import signal
+import inspect
 import logging
 import datetime
 import itertools
@@ -51,16 +51,45 @@ for keyw in [
     "WCONINJE",
     "WCONINJH",
     "WCONPROD",
+    "WELOPEN",
     "WELSEGS",
     "WELSPECS",
 ]:
-    OPMKEYWORDS[keyw] = json.load(
-        open(os.path.join(os.path.dirname(__file__), "opmkeywords", keyw))
-    )
+    with open(
+        os.path.join(os.path.dirname(__file__), "opmkeywords", keyw), "r"
+    ) as file_handle:
+        OPMKEYWORDS[keyw] = json.load(file_handle)
 
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+def write_dframe_stdout_file(
+    dframe, output, index=False, caller_logger=None, logstr=None
+):
+    """Write a dataframe to either stdout or a file
+
+    If output is the magic string "-", output is written
+    to stdout.
+
+    Arguments:
+        dframe (pd.DataFrame): Dataframe to write
+        output (str): Filename or "-"
+        index (bool): Passed to to_csv()
+        caller_logger (logging): Used if not stdout
+        logstr (str): Logged if not stdout.
+    """
+    if output == "-":
+        # Ignore pipe errors when writing to stdout:
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+        dframe.to_csv(sys.stdout, index=index)
+    else:
+        if caller_logger and not logstr:
+            caller_logger.info("Writing to file %s", str(output))
+        elif caller_logger and logstr:
+            caller_logger.info(logstr)
+        dframe.to_csv(output, index=index)
+
 
 def parse_ecl_month(eclmonth):
     """Translate Eclipse month strings to integer months"""
@@ -198,6 +227,7 @@ def parse_opmio_deckrecord(
 
         # Determine if there value is defaulted in the deck:
         defaulted = False
+        # pylint: disable=protected-access
         if hasattr(record[item_idx], "__defaulted"):
             try:
                 defaulted = record[item_idx].__defaulted(0)
@@ -419,8 +449,6 @@ def df2ecl(
     Returns:
         string that can be used as an include file for Eclipse.
     """
-    import inspect
-
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])
     if dataframe.empty:
@@ -499,8 +527,8 @@ def df2ecl(
         filenamedir = os.path.dirname(filename)
         if filenamedir and not os.path.exists(filenamedir):
             os.makedirs(filenamedir)
-        with open(filename, "w") as file_handle:
-            file_handle.write(string)
+        with open(filename, "w") as f_handle:
+            f_handle.write(string)
     return string
 
 

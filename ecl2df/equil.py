@@ -1,17 +1,10 @@
-#!/usr/bin/env python
-
-# -*- coding: utf-8 -*-
 """
 Extract EQUIL from an Eclipse deck as Pandas DataFrame
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
-import sys
+import signal
 import logging
-import argparse
 import pandas as pd
 
 from ecl2df import inferdims, common
@@ -70,12 +63,6 @@ RENAMERS["oil-gas"] = {
     "BLACK_OIL_INIT_WG": "IGNORE4",
     "OIP_INIT": "ACCURACY",
 }
-
-
-def deck2equildf(deck):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name, deck2equildf")
-    return deck2df(deck)
 
 
 def df(deck, keywords=None, ntequl=None):
@@ -272,12 +259,6 @@ def equil_fromdeck(deck, ntequl=None):
     return dataframe
 
 
-def deck2df(eclfiles, ntequl=None):
-    """Wrapper for deprecated syntax (does not support the keywords argument)"""
-    logger.warning("Deprecated function name equil.deck2df(). Use equil.df()")
-    return df(eclfiles, ntequl=ntequl)
-
-
 def fill_parser(parser):
     """Set up sys.argv parsers.
 
@@ -311,16 +292,6 @@ def fill_reverse_parser(parser):
     return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
 
 
-def main():
-    """Entry-point for module, for command line utility
-    """
-    logger.warning("equil2csv is deprecated, use 'ecl2csv equil <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    equil_main(args)
-
-
 def equil_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
@@ -337,21 +308,18 @@ def equil_main(args):
         # EQLDIMS. Then we send it to df() as a string
         equil_df = df("".join(open(args.DATAFILE).readlines()))
     if not equil_df.empty:
-        if args.output == "-":
-            # Ignore pipe errors when writing to stdout.
-            from signal import signal, SIGPIPE, SIG_DFL
-
-            signal(SIGPIPE, SIG_DFL)
-            equil_df.to_csv(sys.stdout, index=False)
-        else:
-            logger.info(
-                "Unique EQLNUMs: %d, keywords: %s",
-                len(equil_df["EQLNUM"].unique()),
-                str(equil_df["KEYWORD"].unique()),
-            )
-            equil_df.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
-
+        common.write_dframe_stdout_file(
+            equil_df,
+            args.output,
+            index=False,
+            caller_logger=logger,
+            logstr=(
+                "Unique EQLNUMs: {}, keywords: {}".format(
+                    str(len(equil_df["EQLNUM"].unique())),
+                    str(equil_df["KEYWORD"].unique()),
+                )
+            ),
+        )
     else:
         logger.error("Empty EQUIL-data, not written to disk!")
 
@@ -366,9 +334,7 @@ def equil_reverse_main(args):
 
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(inc_string)
     else:
         with open(args.output, "w") as f_handle:

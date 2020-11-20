@@ -1,9 +1,5 @@
 """Test module for nnc2df"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 import datetime
@@ -13,6 +9,7 @@ import pandas as pd
 
 from ecl2df import summary, ecl2csv
 from ecl2df.eclfiles import EclFiles
+from ecl2df.summary import normalize_dates, resample_smry_dates
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -113,18 +110,6 @@ def test_summary2df_dates(tmpdir):
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
 
 
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
-    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile)]
-    summary.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
-    assert "FOPT" in disk_df
-
-
 def test_paramsupport(tmpdir):
     """Test that we can merge in parameters.txt"""
     tmpcsvfile = tmpdir.join(".TMP-sum.csv")
@@ -135,8 +120,8 @@ def test_paramsupport(tmpdir):
         os.remove(parameterstxt)
     with open(parameterstxt, "w") as pfile:
         pfile.write("FOO 1\nBAR 3")
-    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile), "-p"]
-    summary.main()
+    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
+    ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -150,8 +135,8 @@ def test_paramsupport(tmpdir):
         os.remove(parametersyml)
     with open(parametersyml, "w") as pfile:
         pfile.write(yaml.dump({"FOO": 1, "BAR": 3}))
-    sys.argv = ["summary2df", DATAFILE, "-o", str(tmpcsvfile), "-p"]
-    summary.main()
+    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
+    ecl2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -178,7 +163,6 @@ def test_main_subparser(tmpdir):
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
-    from ecl2df.summary import normalize_dates
 
     start = datetime.date(1997, 11, 5)
     end = datetime.date(2020, 3, 2)
@@ -210,10 +194,14 @@ def test_datenormalization():
     yearly = summary.df(eclfiles, column_keys="FOPT", time_index="yearly")
     assert str(yearly.index[-1]) == "2004-01-01"
 
+    # Map a tuesday-thursday range to monday-nextmonday:
+    assert normalize_dates(
+        datetime.date(2020, 11, 17), datetime.date(2020, 11, 19), "weekly"
+    ) == (datetime.date(2020, 11, 16), datetime.date(2020, 11, 23))
+
 
 def test_resample_smry_dates():
     """Test resampling of summary dates"""
-    from ecl2df.summary import resample_smry_dates
 
     eclfiles = EclFiles(DATAFILE)
 
@@ -228,6 +216,9 @@ def test_resample_smry_dates():
     assert len(resample_smry_dates(ecldates, freq="yearly")) == 5
     assert len(monthly) == 38
     assert len(resample_smry_dates(ecldates, freq="daily")) == 1098
+
+    weekly = resample_smry_dates(ecldates, freq="weekly")
+    assert len(weekly) == 159
 
     # start and end should be included:
     assert (

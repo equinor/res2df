@@ -1,9 +1,5 @@
 """Test module for nnc2df"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 
@@ -31,6 +27,7 @@ def test_faults2df():
 
 
 def test_str2df():
+    """Test making dataframe from a string"""
     deckstr = """
 FAULTS
   'A' 1 2 3 4 5 6 'I' /

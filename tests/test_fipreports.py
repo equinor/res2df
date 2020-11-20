@@ -1,9 +1,5 @@
 """Test module for fipreports"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 
@@ -11,6 +7,7 @@ import pandas as pd
 
 from ecl2df import fipreports, ecl2csv
 from ecl2df.eclfiles import EclFiles
+from ecl2df.fipreports import report_block_lineparser as parser
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -52,7 +49,6 @@ def test_report_block_lineparser():
     """
     Test the line-parser, which has to infer partly which phases are present.
     """
-    from ecl2df.fipreports import report_block_lineparser as parser
 
     tup = parser(
         " :OUTFLOW THROUGH WELLS    :                                         0.:"

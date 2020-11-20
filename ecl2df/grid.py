@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract grid information from Eclipse output files as Dataframes.
 
@@ -10,14 +9,8 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os
-import sys
 import logging
-import argparse
 import fnmatch
 import textwrap
 import datetime
@@ -26,15 +19,14 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 
-from ecl2df import common, __version__
-
 from ecl.eclfile import EclFile
+from ecl2df import common, __version__
 from .eclfiles import EclFiles
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
-def rstdates(eclfiles):
+def get_available_rst_dates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
     logger.info(
@@ -69,7 +61,7 @@ def dates2rstindices(eclfiles, dates):
     if not dates:
         return ([], [], [])
 
-    availabledates = rstdates(eclfiles)
+    availabledates = get_available_rst_dates(eclfiles)
 
     supportedmnemonics = ["first", "last", "all"]
 
@@ -80,12 +72,13 @@ def dates2rstindices(eclfiles, dates):
             # Try to parse as ISO date:
             try:
                 isodate = dateutil.parser.isoparse(dates).date()
-            except ValueError:
-                raise ValueError("date " + str(dates) + " not understood")
+            except ValueError as dateparser_error:
+                raise ValueError(
+                    "date " + str(dates) + " not understood"
+                ) from dateparser_error
             if isodate not in availabledates:
                 raise ValueError("date " + str(isodate) + " not found in UNRST file")
-            else:
-                chosendates = [isodate]
+            chosendates = [isodate]
         else:
             if dates == "first":
                 chosendates = [availabledates[0]]
@@ -101,7 +94,7 @@ def dates2rstindices(eclfiles, dates):
         chosendates = [x for x in dates if x in availabledates]
         if not chosendates:
             raise ValueError("None of the requested dates were found")
-        elif len(chosendates) < len(availabledates):
+        if len(chosendates) < len(availabledates):
             logger.warning("Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")
@@ -449,14 +442,12 @@ def fill_parser(parser):
     )
     parser.add_argument(
         "--vectors",
-        "--initkeys",  # --initkeys is deprecated
         nargs="+",
         help="INIT and/or restart wildcards for vectors to include",
         default="*",
     )
     parser.add_argument(
         "--rstdates",
-        "--rstdate",  # --rstdate is deprecated
         type=str,
         help="Point in time to grab restart data from, "
         + "either 'first' or 'last', 'all', or a date in "
@@ -498,7 +489,7 @@ def drop_constant_columns(dframe, alwayskeep=None):
            anyway.
     Returns:
         pd.DataFrame with equal or less columns.
-   """
+    """
     if not alwayskeep:
         alwayskeep = []
     if isinstance(alwayskeep, str):
@@ -527,7 +518,7 @@ def df2ecl(
     FIPNUM etc, for the GRID section of the Eclipse deck.
 
     Output (returned as string and optionally written to file) will then
-    contain f.ex:
+    contain f.ex::
 
         PERMX
            3.3 4.1 500.1 8543.0 1223.0 5022.0
@@ -541,7 +532,8 @@ def df2ecl(
             we want to export data, and also the a column with GLOBAL_INDEX.
             Without GLOBAL_INDEX, the output will likely be invalid.
             The grid can contain both active and inactive cells.
-        keywords (str or list of str): The keyword(s) to export, with one value for every cell.
+        keywords (str or list of str): The keyword(s) to export, with one
+            value for every cell.
         eclfiles (EclFiles): If provided, the total cell count for the grid
             will be requested from this object. If not, it will be *guessed*
             from the maximum number of GLOBAL_INDEX, which can be under-estimated
@@ -581,7 +573,8 @@ def df2ecl(
                 "Assumes all cells are active"
             )
         )
-        # Drop NaN rows for columns to be used (triggerd by stacked dates and no global index, unlikely)
+        # Drop NaN rows for columns to be used (triggerd by stacked
+        # dates and no global index, unlikely)
         # Also copy dataframe to avoid side-effects on incoming data.
         grid_df = grid_df.dropna(
             axis="rows", subset=[keyword for keyword in keywords if keyword in grid_df]
@@ -624,7 +617,10 @@ def df2ecl(
             vector = vector.astype(float)
         if len(vector) != global_size:
             logger.warning(
-                "Mismatch between dumped vector length %d from df2ecl and assumed grid size %d",
+                (
+                    "Mismatch between dumped vector length "
+                    "%d from df2ecl and assumed grid size %d"
+                ),
                 len(vector),
                 global_size,
             )
@@ -657,16 +653,6 @@ def df2ecl(
     return string
 
 
-def main():
-    """Entry-point for module, for command line utility. Deprecated to use
-    """
-    logger.warning("eclgrid2csv is deprecated, use 'ecl2csv grid <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    grid_main(args)
-
-
 def grid_main(args):
     """This is the command line API"""
     if args.verbose:
@@ -679,12 +665,6 @@ def grid_main(args):
         dropconstants=args.dropconstants,
         stackdates=args.stackdates,
     )
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        grid_df.to_csv(sys.stdout, index=False)
-    else:
-        grid_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    common.write_dframe_stdout_file(
+        grid_df, args.output, index=False, caller_logger=logger
+    )

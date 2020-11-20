@@ -2,7 +2,7 @@
 
 from os import path
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 try:
     from sphinx.setup_command import BuildDoc
@@ -20,21 +20,29 @@ with open(path.join(this_directory, "README.md")) as f_handle:
 
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
-    "libecl",
-    "opm; python_version >= '3.5'",
+    "ecl",
+    "equinor-libres",
+    "ert",
+    "opm",
     "pandas",
     "pyyaml>=5.1",
     "treelib",
 ]
 TEST_REQUIREMENTS = [
-    "black; python_version >= '3'",
+    "black>=20.8b0",
+    "flake8",
     "networkx",
     "pytest",
+]
+
+DOCS_REQUIREMENTS = [
+    "ipython",
+    "rstcheck",
     "sphinx",
     "sphinx-argparse",
     "sphinx_rtd_theme",
 ]
-EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS}
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS}
 
 setup(
     name="ecl2df",
@@ -47,31 +55,20 @@ setup(
     author="Håvard Berland",
     author_email="havb@equinor.com",
     license="GPLv3",
-    packages=["ecl2df"],
+    packages=find_packages(include=["ecl2df*"]),
     package_dir={"ecl2df": "ecl2df"},
-    package_data={"ecl2df": ["opmkeywords/*"]},
+    package_data={"ecl2df": ["opmkeywords/*", "config_jobs/*"]},
     zip_safe=False,
     entry_points={
         "console_scripts": [
-            "compdat2csv=ecl2df.compdat:main",
             "csv2ecl=ecl2df.csv2ecl:main",
             "ecl2csv=ecl2df.ecl2csv:main",
-            "eclgrid2csv=ecl2df.grid:main",
-            "equil2csv=ecl2df.equil:main",
-            "faults2csv=ecl2df.faults:main",
-            "grid2csv=ecl2df.grid:main",
-            "gruptree2csv=ecl2df.gruptree:main",
-            "nnc2csv=ecl2df.nnc:main",
-            "pvt2csv=ecl2df.pvt:main",
-            "rft2csv=ecl2df.rft:main",
-            "satfunc2csv=ecl2df.satfunc:main",
-            "summary2csv=ecl2df.summary:main",
-            "wcon2csv=ecl2df.wcon:main",
-        ]
+        ],
+        "ert": ["ecl2df_jobs = ecl2df.hook_implementations.jobs"],
     },
     test_suite="tests",
     install_requires=REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,
     extras_require=EXTRAS_REQUIRE,
-    python_requires=">=2.7",
+    python_requires=">=3.6",
 )

@@ -1,18 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)
 
 Code taken from fmu.ensemble.ScratchRealization
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import os
-import sys
 import logging
-import argparse
 import datetime
 import dateutil.parser
 
@@ -20,9 +13,40 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 from . import parameters
+from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+PD_FREQ_MNEMONICS = {
+    "monthly": "MS",
+    "yearly": "YS",
+    "daily": "D",
+    "weekly": "W-MON",
+}
+"""Mapping from ecl2df custom offset strings to Pandas DateOffset strings.
+See
+https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects
+"""  # noqa
+
+
+def date_range(start_date, end_date, freq):
+    """Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics
+    'yearly', 'daily', 'weekly', mapped over to pandas DateOffsets.
+
+    Args:
+        start_date (datetime.date):
+        end_date (datetime.date):
+        freq (str): monthly, daily, weekly, yearly, or a Pandas date offset
+            frequency.
+
+    Returns:
+        list of datetimes
+    """
+    if freq in PD_FREQ_MNEMONICS:
+        freq = PD_FREQ_MNEMONICS[freq]
+    return pd.date_range(start_date, end_date, freq=freq)
+
 
 def normalize_dates(start_date, end_date, freq):
     """
@@ -43,25 +67,10 @@ def normalize_dates(start_date, end_date, freq):
     Return:
         Tuple of normalized (start_date, end_date)
     """
-    from dateutil.relativedelta import relativedelta
-
-    if freq == "monthly":
-        start_date = start_date.replace(day=1)
-
-        # Avoid rolling forward if we are already at day 1 in a month
-        if end_date != end_date.replace(day=1):
-            end_date = end_date.replace(day=1) + relativedelta(months=1)
-    elif freq == "yearly":
-        start_date = start_date.replace(day=1, month=1)
-        # Avoid rolling forward if we are already at day 1 in a year
-        if end_date != end_date.replace(day=1, month=1):
-            end_date = end_date.replace(day=1, month=1) + relativedelta(years=1)
-    elif freq == "daily":
-        # This we don't need to normalize, but we should not give any warnings
-        pass
-    else:
-        raise ValueError("Unrecognized frequency for date normalization: " + str(freq))
-    return (start_date, end_date)
+    if freq in PD_FREQ_MNEMONICS:
+        freq = PD_FREQ_MNEMONICS[freq]
+    offset = pd.tseries.frequencies.to_offset(freq)
+    return (offset.rollback(start_date).date(), offset.rollforward(end_date).date())
 
 
 def resample_smry_dates(
@@ -140,8 +149,6 @@ def resample_smry_dates(
     start_smry = min(eclsumsdates)
     end_smry = max(eclsumsdates)
 
-    pd_freq_mnenomics = {"monthly": "MS", "yearly": "YS", "daily": "D"}
-
     (start_n, end_n) = normalize_dates(start_smry.date(), end_smry.date(), freq)
 
     if not start_date and not normalize:
@@ -158,11 +165,8 @@ def resample_smry_dates(
     else:
         end_date_range = end_date
 
-    if freq not in pd_freq_mnenomics:
-        raise ValueError("Requested frequency %s not supported" % freq)
-    datetimes = pd.date_range(
-        start_date_range, end_date_range, freq=pd_freq_mnenomics[freq]
-    )
+    datetimes = date_range(start_date_range, end_date_range, freq)
+
     # Convert from Pandas' datetime64 to datetime.date:
     datetimes = [x.date() for x in datetimes]
 
@@ -185,7 +189,7 @@ def df(
     include_restart=True,
     params=False,
     paramfile=None,
-    datetime=False,
+    datetime=False,  # A very poor choice of argument name [pylint]
 ):
     """
     Extract data from UNSMRY as Pandas dataframes.
@@ -365,16 +369,6 @@ def fill_parser(parser):
     return parser
 
 
-def main():
-    """Entry-point for module, for command line utility
-    """
-    logger.warning("summary2csv is deprecated, use 'ecl2csv smry <args>' instead")
-    parser = argparse.ArgumentParser(description="Convert Eclipse UNSMRY files to CSV")
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    summary_main(args)
-
-
 def summary_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
@@ -391,13 +385,4 @@ def summary_main(args):
     )
     if sum_df.empty:
         logger.warning("Empty summary data being written to disk!")
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        sum_df.to_csv(sys.stdout, index=True)
-    else:
-        logger.info("Writing to file %s", str(args.output))
-        sum_df.to_csv(args.output, index=True)
-        print("Wrote to " + args.output)
+    write_dframe_stdout_file(sum_df, args.output, logger)

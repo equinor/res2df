@@ -1,12 +1,9 @@
 """Test module for nnc2df"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 
+import pytest
 import pandas as pd
 
 from ecl2df import gruptree, ecl2csv
@@ -23,14 +20,14 @@ def test_gruptree2df():
 
     assert not grupdf.empty
     assert len(grupdf["DATE"].unique()) == 5
-    assert len(grupdf["CHILD"].unique()) == 10
-    assert len(grupdf["PARENT"].unique()) == 3
+    assert len(grupdf["CHILD"].unique()) == 11
+    assert len(grupdf["PARENT"].dropna().unique()) == 3
     assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
     grupdfnowells = gruptree.df(eclfiles.get_ecldeck(), welspecs=False)
 
     assert len(grupdfnowells["KEYWORD"].unique()) == 1
-    assert grupdf["PARENT"].unique()[0] == "FIELD"
+    assert grupdf["PARENT"].dropna().unique()[0] == "FIELD"
     assert grupdf["KEYWORD"].unique()[0] == "GRUPTREE"
 
 
@@ -56,9 +53,9 @@ WELSPECS
     # This is only available if GRUPNET is also there
     assert "TERMINAL_PRESSURE" not in grupdf
 
-    withstart = gruptree.gruptree2df(deck, startdate="2019-01-01")
+    withstart = gruptree.df(deck, startdate="2019-01-01")
     assert not withstart.dropna().empty
-    assert len(withstart) == 5
+    assert len(withstart) == 6
 
 
 def test_grupnet_rst_docs(tmpdir):
@@ -102,6 +99,7 @@ WELSPECS
 
 
 def test_grupnetdf():
+    """Test making a dataframe from a GRUPTREE string"""
     schstr = """
 GRUPTREE
  'OPWEST' 'OP' /
@@ -125,6 +123,105 @@ GRUPNET
     assert 100 in grupdf["TERMINAL_PRESSURE"].values
 
 
+@pytest.mark.parametrize(
+    "schstr, expected_dframe, expected_tree",
+    [
+        (
+            """
+GRUPTREE
+ 'OP' 'FIELD'/
+/
+
+GRUPNET
+  'FIELD' 90 /
+  'OP' 100 /
+/
+        """,
+            pd.DataFrame(
+                [
+                    {"CHILD": "FIELD", "PARENT": None, "TERMINAL_PRESSURE": 90},
+                    {"CHILD": "OP", "PARENT": "FIELD", "TERMINAL_PRESSURE": 100},
+                ]
+            ),
+            """
+└── FIELD
+    └── OP
+""",
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """
+GRUPTREE
+ 'OP' 'FIELDA'/
+/
+
+GRUPNET
+  'FIELDA' 90 /
+  'OP' 100 /
+  'FIELDB' 80 /   -- This is ignored when it is not in the GRUPTREE!
+/
+        """,
+            pd.DataFrame(
+                [
+                    {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
+                    {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
+                ]
+            ),
+            """
+└── FIELDA
+    └── OP
+""",
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """
+GRUPTREE
+ 'OP' 'FIELDA'/
+ 'OPX' 'FIELDB' /
+/
+
+GRUPNET
+  'FIELDA' 90 /
+  'OP' 100 /
+  'FIELDB' 80 /
+/
+        """,
+            pd.DataFrame(
+                [
+                    {"CHILD": "FIELDB", "PARENT": None, "TERMINAL_PRESSURE": 80},
+                    {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
+                    {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
+                    {"CHILD": "OPX", "PARENT": "FIELDB", "TERMINAL_PRESSURE": None},
+                ]
+            ),
+            """
+├── FIELDA
+│   └── OP
+└── FIELDB
+    └── OPX
+""",
+        )
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    ],
+)
+def test_grupnetroot(schstr, expected_dframe, expected_tree):
+    """Test that terminal pressure of the tree root can be
+    included in the dataframe (with an empty parent)"""
+    deck = EclFiles.str2deck(schstr)
+    grupdf = gruptree.df(deck, startdate="2000-01-01")
+    non_default_columns = ["CHILD", "PARENT", "TERMINAL_PRESSURE"]
+    pd.testing.assert_frame_equal(
+        grupdf[non_default_columns]
+        .sort_values(["CHILD", "PARENT"])
+        .reset_index(drop=True),
+        expected_dframe.sort_values(["CHILD", "PARENT"]).reset_index(drop=True),
+        check_dtype=False,
+    )
+    gruptreedict = gruptree.edge_dataframe2dict(grupdf)
+    treelibtree = gruptree.dict2treelib("", gruptreedict[0])
+    assert str(treelibtree).strip() == expected_tree.strip()
+
+
 def test_emptytree():
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
@@ -139,6 +236,7 @@ def test_emptytree():
 
 
 def test_tstep():
+    """Test that we can parse a deck using TSTEP for timestepping"""
     schstr = """
 GRUPTREE
  'OPWEST' 'OP' /

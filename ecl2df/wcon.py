@@ -1,15 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract WCON* from an Eclipse deck
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import re
-import argparse
 import logging
 import datetime
 import shlex
@@ -82,12 +77,6 @@ def ad_hoc_wconparser(record, keyword):
     return rec_dict
 
 
-def deck2wcondf(deck):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name, deck2wcondf")
-    return deck2df(deck)
-
-
 def df(deck):
     """Loop through the deck and pick up information found
 
@@ -155,16 +144,6 @@ def fill_parser(parser):
     return parser
 
 
-def main():
-    """Entry-point for module, for command line utility
-    """
-    logger.warning("wcon2csv is deprecated, use 'ecl2csv wcon <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    wcon_main(args)
-
-
 def wcon_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
@@ -172,13 +151,8 @@ def wcon_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
-    wcon_df = deck2df(deck)
+    wcon_df = df(deck)
     if wcon_df.empty:
         logger.warning("Empty wcon dataframe being written to disk!")
     wcon_df.to_csv(args.output, index=False)
     print("Wrote to " + args.output)
-
-
-def deck2df(eclfiles):
-    """Deprecated function call"""
-    return df(eclfiles)

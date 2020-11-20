@@ -1,4 +1,4 @@
-name = "ecl2df"
+"""ecl2df"""
 
 try:
     from .version import version
@@ -24,3 +24,5 @@ from . import (
     trans,
     wcon,
 )
+
+name = "ecl2df"

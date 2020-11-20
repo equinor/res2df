@@ -1,9 +1,5 @@
 """Test module for ecl2df.common"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import pandas as pd
 
 from ecl2df import common
@@ -21,7 +17,7 @@ def test_opmkeywords():
 
 
 def test_stack_on_colname():
-    """ Test that we can stack column with an implicit double level
+    """Test that we can stack column with an implicit double level
     in the column names indicated by a separator string"""
 
     dframe = pd.DataFrame(

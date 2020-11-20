@@ -1,9 +1,5 @@
 """Test module for ecl2df.trans"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 
@@ -75,7 +71,7 @@ def test_grouptrans():
 def test_nx(tmpdir):
     """Test graph generation"""
     eclfiles = EclFiles(DATAFILE)
-    network = trans.nx(eclfiles, region="FIPNUM")
+    network = trans.make_nx_graph(eclfiles, region="FIPNUM")
     assert network.number_of_nodes() == 6
     networkx.write_gexf(
         network, str(tmpdir.join("reek-fipnum-trans.gxf")), prettyprint=True

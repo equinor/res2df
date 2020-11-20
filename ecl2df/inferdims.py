@@ -3,12 +3,8 @@ Support module for inferring EQLDIMS and TABDIMS from incomplete
 Eclipse 100 decks (typically single include-files)
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import logging
-import six
 
 import opm.io
 
@@ -76,7 +72,9 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
             )
             # If we succeed, then the dimcountguess was correct
             break
-        except ValueError:
+        except (ValueError, RuntimeError):
+            # ValueError in opm-common <= 2020.04
+            # RuntimeError in opm-common >= 2020.10
             # Typically we get the error PARSE_EXTRA_RECORDS because we did not guess
             # high enough dimnumcount
             continue
@@ -158,7 +156,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
 
     if xxxdims in deck and ntxxx_value is None:
         # Then we have nothing to do, but ensure we parse a potential string to a deck
-        if isinstance(deck, six.string_types):
+        if isinstance(deck, str):
             deck = EclFiles.str2deck(deck)
         return deck
 
@@ -168,7 +166,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
         )
         return deck
 
-    if not isinstance(deck, six.string_types):
+    if not isinstance(deck, str):
         # The deck must be converted to a string deck in order
         # to estimate dimensions.
         deck = str(deck)
@@ -186,7 +184,7 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
     # Overwrite the deck object
     deck = EclFiles.str2deck(augmented_strdeck)
 
-    if isinstance(deck, six.string_types):
+    if isinstance(deck, str):
         # If a string is supplied as a deck, we always return a parsed Deck object
         deck = EclFiles.str2deck(deck)
 

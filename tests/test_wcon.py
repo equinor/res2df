@@ -1,9 +1,5 @@
 """Test module for wcon"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 
@@ -63,7 +59,7 @@ def test_ad_hoc_wconparser():
 def test_wcon2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    wcondf = wcon.deck2df(eclfiles.get_ecldeck())
+    wcondf = wcon.df(eclfiles.get_ecldeck())
 
     assert not wcondf.empty
     assert "DATE" in wcondf  # for all data
@@ -80,7 +76,7 @@ WCONHIST
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.deck2df(deck)
+    wcondf = wcon.df(deck)
     assert len(wcondf) == 1
 
     wconstr = """
@@ -89,7 +85,7 @@ WCONINJH
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.deck2df(deck)
+    wcondf = wcon.df(deck)
     assert len(wcondf) == 1
 
     wconstr = """
@@ -98,7 +94,7 @@ WCONINJE
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.deck2df(deck)
+    wcondf = wcon.df(deck)
     assert len(wcondf) == 1
 
     wconstr = """
@@ -107,7 +103,7 @@ WCONPROD
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.deck2df(deck)
+    wcondf = wcon.df(deck)
     assert len(wcondf) == 1
 
 
@@ -137,23 +133,12 @@ WCONHIST
 /
 """
     deck = EclFiles.str2deck(schstr)
-    wcondf = wcon.deck2df(deck)
+    wcondf = wcon.df(deck)
     dates = [str(x) for x in wcondf["DATE"].unique()]
     assert len(dates) == 3
     assert "2001-05-01" in dates
     assert "2001-05-02" in dates
     assert "2001-05-07" in dates
-
-
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-wcondf.csv")
-    sys.argv = ["wcon2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    wcon.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
 
 
 def test_main_subparsers(tmpdir):

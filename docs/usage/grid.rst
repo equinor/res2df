@@ -66,10 +66,10 @@ can be applied to the data. The Pandas `groupby()` operation can be used to get
 statistical measures pr. regions. All of the above examples can be rephrased to
 compute values for every SATNUM, EQLNUM or similar. Example:
 
-.. code-block:: python
+.. code-block:: ipython
 
    # Apex reservoir pr equilibriation zone
-   In[3]: dframe.groupby(["EQLNUM"])["Z"].min()
+   In [3]: dframe.groupby(["EQLNUM"])["Z"].min()
    Out[3]:
    EQLNUM
    1.0    1568.876251
@@ -83,7 +83,7 @@ As mentioned in :ref:`zone-names`, if the text file called `zones.lyr` is found
 alongside, zone information will automatically be merged into each row based on the `K`
 column. This can be used for statistics pr. zone,
 
-.. code-block:: python
+.. code-block:: ipython
 
    # Permeability (arithmetic average) pr. zone
    In [4]: dframe.groupby("ZONE")["PERMX"].mean()
@@ -105,9 +105,9 @@ the whereabouts of the file:
    # The filename with layers is relative to DATA-file location
    # or an absolute path.
    zonemap = eclfiles.get_zonemap("subzones.lyr")
-   dframe_with_subzones = common.merge_zones(dframe, zonemap,
-                                             zoneheader="SUBZONE")
-                                             kname="K")
+   dframe_with_subzones = common.merge_zones(
+       dframe, zonemap, zoneheader="SUBZONE", kname="K"
+   )
 
 For more control over merging of zones, check the documentation for
 the function :func:`ecl2df.common.merge_zones` and

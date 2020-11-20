@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from an Eclipse deck as Pandas DataFrame.
@@ -14,17 +12,13 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
-import sys
+import signal
 import logging
-import argparse
 import pandas as pd
 
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
+from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -279,16 +273,6 @@ def fill_reverse_parser(parser):
     return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
 
 
-def main():
-    """Entry-point for module, for command line utility
-    """
-    logger.warning("satfunc2csv is deprecated, use 'ecl2csv satfunc <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    satfunc_main(args)
-
-
 def satfunc_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
@@ -307,20 +291,16 @@ def satfunc_main(args):
             "".join(open(args.DATAFILE).readlines()), keywords=args.keywords
         )
     if not satfunc_df.empty:
-        if args.output == "-":
-            # Ignore pipe errors when writing to stdout.
-            from signal import signal, SIGPIPE, SIG_DFL
-
-            signal(SIGPIPE, SIG_DFL)
-            satfunc_df.to_csv(sys.stdout, index=False)
-        else:
-            logger.info(
-                "Unique SATNUMs: %d, saturation keywords: %s",
-                len(satfunc_df["SATNUM"].unique()),
+        write_dframe_stdout_file(
+            satfunc_df,
+            args.output,
+            index=False,
+            caller_logger=logger,
+            logstr="Unique SATNUMs: {}, saturation keywords: {}".format(
+                str(len(satfunc_df["SATNUM"].unique())),
                 str(satfunc_df["KEYWORD"].unique()),
-            )
-            satfunc_df.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
+            ),
+        )
     else:
         logger.error("Empty saturation functions data, not written to disk!")
 
@@ -335,23 +315,12 @@ def satfunc_reverse_main(args):
 
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(inc_string)
     else:
         with open(args.output, "w") as f_handle:
             f_handle.write(inc_string)
         print("Wrote to " + args.output)
-
-
-def deck2df(eclfiles, satnumcount=None):
-    """Deprecated Python API"""
-    logger.warning("Deprecated function call satfunc.deck2df(). Use satfunc.df()")
-    if satnumcount is not None:
-        return df(eclfiles, ntsfun=satnumcount)
-    else:
-        return df(eclfiles)
 
 
 def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):

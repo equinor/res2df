@@ -7,6 +7,7 @@ This section will go through each module in more detail, with examples.
    :maxdepth: 1
 
    usage/equil
+   usage/compdat
    usage/fipreports
    usage/grid
    usage/gruptree
@@ -15,4 +16,6 @@ This section will go through each module in more detail, with examples.
    usage/pvt
    usage/rft
    usage/satfunc
+   usage/summary
    usage/trans
+   usage/wcon

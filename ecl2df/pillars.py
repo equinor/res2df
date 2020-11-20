@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Extract statistics pr cornerpoint pillar (i,j)-pair
 
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
 
-import sys
 import logging
-import argparse
 import datetime
 
 import dateutil.parser
@@ -394,7 +388,7 @@ def fill_parser(parser):
         "--group",
         action="store_true",
         help=(
-            "If set, output will not be pr. pillar, but grouped over"
+            "If set, output will not be pr. pillar, but grouped over "
             "all pillars. If --region is set, data will be grouped over that vector. "
             "The aggregation operator is sum or mean, depending on datatype."
         ),
@@ -408,15 +402,6 @@ def fill_parser(parser):
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
-
-
-def main():
-    """Entry-point for module, for command line utility. Deprecated to use
-    """
-    logger.warning("oilcol2csv is deprecated, use 'ecl2csv pillarstats <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    pillarstats_main(parser.parse_args())
 
 
 def pillars_main(args):
@@ -448,13 +433,6 @@ def pillars_main(args):
     elif args.group:
         dframe = dframe.mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        dframe.to_csv(sys.stdout, index=False)
-    else:
-        logger.info("Writing output to disk")
-        dframe.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    ecl2df.common.write_dframe_stdout_file(
+        dframe, args.output, index=False, caller_logger=logger
+    )

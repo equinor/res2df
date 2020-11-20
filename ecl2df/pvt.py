@@ -1,19 +1,15 @@
 """
 Extract the PVT data from an Eclipse (input) deck as Pandas Dataframes
 
-Data can be extracted from a full Eclipse deck (*.DATA)
-or from individual files.
+Data can be extracted from a full Eclipse deck or from individual files.
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
-import sys
 import logging
+import signal
 
 import pandas as pd
 
-from ecl2df import inferdims, common, __version__
+from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
 logger = logging.getLogger(__name__)
@@ -221,7 +217,7 @@ def fill_parser(parser):
         "-o",
         "--output",
         type=str,
-        help=("Name of output csv file, default pvt.csv. ", "Use '-' for stdout."),
+        help="Name of output csv file, default pvt.csv. Use '-' for stdout.",
         default="pvt.csv",
     )
     parser.add_argument(
@@ -266,20 +262,17 @@ def pvt_main(args):
         stringdeck = "".join(open(args.DATAFILE).readlines())
         pvt_df = df(stringdeck, keywords=args.keywords)
     if not pvt_df.empty:
-        if args.output == "-":
-            # Ignore pipe errors when writing to stdout.
-            from signal import signal, SIGPIPE, SIG_DFL
-
-            signal(SIGPIPE, SIG_DFL)
-            pvt_df.to_csv(sys.stdout, index=False)
-        else:
-            logger.info(
-                "Unique PVTNUMs: %d, PVT keywords: %s",
-                len(pvt_df["PVTNUM"].unique()),
-                str(pvt_df["KEYWORD"].unique()),
-            )
-            pvt_df.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
+        common.write_dframe_stdout_file(
+            pvt_df,
+            args.output,
+            index=False,
+            caller_logger=logger,
+            logstr=(
+                "Unique PVTNUMs: {}, PVT keywords: {}".format(
+                    str(len(pvt_df["PVTNUM"].unique())), str(pvt_df["KEYWORD"].unique())
+                )
+            ),
+        )
     else:
         logger.error("Empty PVT data, not written to disk")
 
@@ -294,9 +287,7 @@ def pvt_reverse_main(args):
 
     if args.output == "-":
         # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(inc_string)
     else:
         with open(args.output, "w") as f_handle:
@@ -331,15 +322,12 @@ def df2ecl(pvt_df, keywords=None, comments=None, filename=None):
     )
 
 
-def df2ecl_rock(dframe, comment=None, filename=None):
+def df2ecl_rock(dframe, comment=None):
     """Print ROCK keyword with data
 
     Args:
         dframe (pd.DataFrame): Containing ROCK data
         comment (str): Text that will be included as a comment
-         filename (str): If supplied, the generated text will also be dumped
-            to file.
-
     """
     if dframe.empty:
         return "-- No data!"

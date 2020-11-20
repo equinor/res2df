@@ -13,13 +13,7 @@ The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix ``ICD_``
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
-import sys
 import datetime
-import argparse
 import logging
 import collections
 
@@ -28,7 +22,7 @@ import pandas as pd
 
 from .eclfiles import EclFiles
 from .gruptree import dict2treelib
-from .common import merge_zones
+from .common import merge_zones, write_dframe_stdout_file
 
 
 logger = logging.getLogger(__name__)
@@ -148,11 +142,12 @@ def get_con_seg_data(rftrecord, rftfile, datatype):
     Build a dataframe of CON* or SEG* data for a specific RFT record,
     that is for one well at one date.
 
-    Dataframe will for datatype=="CON" look like:
+    Dataframe will for datatype=="CON" look like::
 
       DEPTH, SWAT, CONKH, CONIDX, ..
       2300,  0.3, 3000, 1
       2310, 0.2, 1231, 2
+
     and number of rows will equal the number of connected cells (COMPDAT lines)
 
     If it is for SEG data, all columns are prefixed by SEG
@@ -677,16 +672,6 @@ def fill_parser(parser):
     return parser
 
 
-def main():
-    """Entry-point for module, for command line utility
-    """
-    logger.warning("rft2csv is deprecated, use 'ecl2csv rft <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    rft_main(args)
-
-
 def rft_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
@@ -705,20 +690,7 @@ def rft_main(args):
         else:
             logger.error("No data found. Bug?")
         return
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        rft_df.to_csv(sys.stdout, index=False)
-    else:
-        rft_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
-
-
-def rft2df(eclfiles):
-    """Deprecated function"""
-    return df(eclfiles)
+    write_dframe_stdout_file(rft_df, args.output, index=False, caller_logger=logger)
 
 
 # Vector  Description

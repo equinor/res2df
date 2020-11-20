@@ -1,9 +1,5 @@
 """Test module for rft"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 import random
@@ -19,6 +15,8 @@ from ecl2df.eclfiles import EclFiles
 
 TESTDIR = os.path.dirname(os.path.abspath(__file__))
 DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+
+# pylint: disable=protected-access
 
 
 def test_rftrecords2df():
@@ -53,6 +51,7 @@ def test_rftrecords_generator():
 
 
 def test_get_con_seg_data():
+    """Get CON data. Later add more code here to defend the name"""
     rftfile = EclFiles(DATAFILE).get_rftfile()
 
     # Test the first record, it is a CON type (not multisegment)
@@ -70,7 +69,7 @@ def test_get_con_seg_data():
 def test_minimal_well():
     """Test a dummy well dataset
 
-        |    segidx 1
+    |    segidx 1
 
     """
     one_seg = pd.DataFrame(
@@ -97,8 +96,8 @@ def test_minimal_well():
 
 def test_minimal_branched_well():
     r"""
-        |       segidx 1
-       / \      segidx 2 and 3
+     |       segidx 1
+    / \      segidx 2 and 3
     """
     two_branch = pd.DataFrame(
         {"SEGIDX": [1, 2, 3], "SEGNXT": [None, 1, 1], "SEGBRNO": [1, 1, 2]}
@@ -224,8 +223,8 @@ def test_single_branch_partly_icd():
 def test_branched_icd_well():
     r"""Simplest possible branched well with ICD segments
 
-           |          segidx 1
-      * - / \ - *     segidx 2 and 3
+         |          segidx 1
+    * - / \ - *     segidx 2 and 3
     """
     wellseg = pd.DataFrame(
         {
@@ -362,7 +361,7 @@ def test_longer_branched_partly_icd_well():
 def test_rft2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
-    rftdf = rft.rft2df(eclfiles)
+    rftdf = rft.df(eclfiles)
     assert "ZONE" in rftdf
     assert "LEAF" not in rftdf  # Topology metadata should not be exported
     assert set(rftdf["WELLMODEL"]) == {"STANDARD"}
@@ -381,17 +380,6 @@ def test_rft2df():
     # Each well has 14 or 15 reservoir connections (14 layers in grid)
     assert set(rftdf.groupby("WELL")["CONIDX"].count().values) == {14, 15}
     assert not rftdf.columns.empty
-
-
-def test_main(tmpdir):
-    """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-rft.csv")
-    sys.argv = ["rft2csv", DATAFILE, "-o", str(tmpcsvfile)]
-    rft.main()
-
-    assert os.path.exists(str(tmpcsvfile))
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert not disk_df.empty
 
 
 def test_main_subparsers(tmpdir):

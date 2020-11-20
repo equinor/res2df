@@ -1,19 +1,21 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract transmissibility information from Eclipse output files as Dataframes.
 """
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-import sys
 import logging
 
 import pandas as pd
 
 import ecl2df
+from ecl2df.common import write_dframe_stdout_file
 from .eclfiles import EclFiles
+
+try:
+    import networkx
+
+    HAVE_NETWORKX = True
+except ImportError:
+    HAVE_NETWORKX = False
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -227,12 +229,9 @@ def df(
     return trans_df
 
 
-def nx(eclfiles, region="FIPNUM"):
-    """Construct a networkx graph for the transmissibilities.
-    """
-    try:
-        import networkx
-    except ImportError:
+def make_nx_graph(eclfiles, region="FIPNUM"):
+    """Construct a networkx graph for the transmissibilities."""
+    if not HAVE_NETWORKX:
         logger.error("Please install networkx for this function to work")
         return None
     trans_df = df(eclfiles, vectors=[region], coords=True, group=True)
@@ -310,12 +309,5 @@ def trans_main(args):
         group=args.group,
         addnnc=args.nnc,
     )
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
 
-        signal(SIGPIPE, SIG_DFL)
-        trans_df.to_csv(sys.stdout, index=False)
-    else:
-        trans_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+    write_dframe_stdout_file(trans_df, args.output, index=False, caller_logger=logger)

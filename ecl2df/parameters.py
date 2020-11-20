@@ -115,7 +115,7 @@ def load(filename):
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
-    except Exception as yaml_error:
+    except Exception as yaml_error:  # noqa
         logger.debug("%s was not parseable with yaml, trying json.", filename)
 
     json_error = ""
@@ -125,7 +125,7 @@ def load(filename):
             params_dict = json.load(open(filename))
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as yaml")
-        except Exception as json_error:
+        except Exception as json_error:  # noqa
             logger.debug("%s was not parseable with json, trying txt.", filename)
 
     txt_error = ""
@@ -135,20 +135,20 @@ def load(filename):
             params_dict = load_parameterstxt(filename)
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as txt")
-        except Exception as txt_error:
+        except Exception as txt_error:  # noqa
             logger.debug("%s wat not parseable as txt, no more options", filename)
 
     if not params_dict:
         logger.warning("%s could not be parsed as yaml, json or txt", filename)
         logger.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
         raise ValueError("Could not parse {}".format(filename))
-    else:
-        # Filter to values that are NOT dict's. We can have dict as value when
-        # "grouped" keys are present in the json files, both as "group:key value"
-        # and in a dict called group
-        params_dict = {
-            key: value
-            for (key, value) in params_dict.items()
-            if not isinstance(value, dict)
-        }
-        return params_dict
+
+    # Filter to values that are NOT dict's. We can have dict as value when
+    # "grouped" keys are present in the json files, both as "group:key value"
+    # and in a dict called group
+    params_dict = {
+        key: value
+        for (key, value) in params_dict.items()
+        if not isinstance(value, dict)
+    }
+    return params_dict

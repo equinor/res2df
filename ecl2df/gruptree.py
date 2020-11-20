@@ -1,31 +1,27 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Extract GRUPTREE information from an Eclipse deck
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import sys
 import logging
 import datetime
-import argparse
 import collections
+
+import treelib
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_opmio_date_rec, parse_opmio_deckrecord, parse_opmio_tstep_rec
+from .common import (
+    parse_opmio_date_rec,
+    parse_opmio_deckrecord,
+    parse_opmio_tstep_rec,
+    write_dframe_stdout_file,
+)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
-
-def gruptree2df(deck, startdate=None, welspecs=True):
-    """Deprecated function name"""
-    logger.warning("Deprecated function name, gruptree2df")
-    return df(deck, startdate, welspecs)
-
 
 def df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck
@@ -86,22 +82,12 @@ def df(deck, startdate=None, welspecs=True):
             # at every date with a change, not only the newfound edges.
             if currentedges and (found_gruptree or found_welspecs or found_grupnet):
                 if date is None:
-                    logger.warning(
-                        "WARNING: No date parsed, maybe you should pass --startdate"
-                    )
-                    logger.warning("         Using 1900-01-01")
+                    logger.warning("No date parsed, maybe you should pass --startdate")
+                    logger.warning("Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
-                # Store all edges in dataframe at the previous date.
-                for edgename, value in currentedges.items():
-                    rec_dict = {
-                        "DATE": date,
-                        "CHILD": edgename[0],
-                        "PARENT": edgename[1],
-                        "KEYWORD": value,
-                    }
-                    if edgename[0] in grupnet_df.index:
-                        rec_dict.update(grupnet_df.loc[edgename[0]])
-                    gruptreerecords.append(rec_dict)
+                gruptreerecords += _currentedges_to_gruptreerecords(
+                    currentedges, grupnet_df, date
+                )
                 found_gruptree = False
                 found_welspecs = False
                 found_grupnet = False
@@ -151,21 +137,53 @@ def df(deck, startdate=None, welspecs=True):
 
     # Ensure we also store any tree information found after the last DATE statement
     if found_gruptree or found_welspecs:
-        for edgename, value in currentedges.items():
-            rec_dict = {
-                "DATE": date,
-                "CHILD": edgename[0],
-                "PARENT": edgename[1],
-                "KEYWORD": value,
-            }
-            if edgename[0] in grupnet_df.index:
-                rec_dict.update(grupnet_df.loc[edgename[0]])
-            gruptreerecords.append(rec_dict)
-
+        gruptreerecords += _currentedges_to_gruptreerecords(
+            currentedges, grupnet_df, date
+        )
     dframe = pd.DataFrame(gruptreerecords)
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    print(dframe)
     return dframe
+
+
+def _currentedges_to_gruptreerecords(currentedges, grupnet_df, date):
+    """Merge a list of edges with information from the GRUPNET dataframe.
+
+    Edges where there is no parent (root nodes) are identified and added
+    as special cases.
+
+    Args:
+        currentedges (list): List of tuples with (child, parent)
+        grupnet_df (pd.DataFrame): Containing data for each node to add.
+        date (datetime.date): Relevant date.
+
+    Returns:
+        list: list of dictionaries (that can be made into a dataframe)
+    """
+    gruptreerecords = []
+    childs = set()
+    parents = set()
+    for edgename, value in currentedges.items():
+        rec_dict = {
+            "DATE": date,
+            "CHILD": edgename[0],
+            "PARENT": edgename[1],
+            "KEYWORD": value,
+        }
+        childs |= {edgename[0]}
+        parents |= {edgename[1]}
+        if edgename[0] in grupnet_df.index:
+            rec_dict.update(grupnet_df.loc[edgename[0]])
+        gruptreerecords.append(rec_dict)
+    roots = parents - childs
+    rootrecords = []
+    for root in roots:
+        rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": "GRUPTREE"}
+        if root in grupnet_df.index:
+            rec_dict.update(grupnet_df.loc[root])
+        rootrecords.append(rec_dict)
+    return rootrecords + gruptreerecords
 
 
 def edge_dataframe2dict(dframe):
@@ -200,7 +218,8 @@ def edge_dataframe2dict(dframe):
     subtrees = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
-        edges.append((row["CHILD"], row["PARENT"]))
+        if not pd.isnull(row["PARENT"]):
+            edges.append((row["CHILD"], row["PARENT"]))
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
 
@@ -230,8 +249,6 @@ def dict2treelib(name, nested_dict):
     Return:
         treelib.Tree
     """
-    import treelib
-
     tree = treelib.Tree()
     tree.create_node(name, name)
     for child in nested_dict.keys():
@@ -271,16 +288,6 @@ def fill_parser(parser):
     return parser
 
 
-def main():
-    """Entry-point for module, for command line utility
-    """
-    logger.warning("gruptree2csv is deprecated, use 'ecl2csv compdat <args>' instead")
-    parser = argparse.ArgumentParser()
-    parser = fill_parser(parser)
-    args = parser.parse_args()
-    gruptree_main(args)
-
-
 def gruptree_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
@@ -289,7 +296,7 @@ def gruptree_main(args):
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
     eclfiles = EclFiles(args.DATAFILE)
-    dframe = deck2df(eclfiles.get_ecldeck(), startdate=args.startdate)
+    dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
@@ -303,20 +310,7 @@ def gruptree_main(args):
                 print("")
         else:
             logger.warning("No tree data to prettyprint")
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        from signal import signal, SIGPIPE, SIG_DFL
-
-        signal(SIGPIPE, SIG_DFL)
-        dframe.to_csv(sys.stdout, index=False)
+    if dframe.empty:
+        logger.error("Empty GRUPTREE dataframe, not written to disk!")
     elif args.output:
-        if dframe.empty:
-            logger.error("Empty GRUPTREE dataframe, not written to disk!")
-        else:
-            dframe.to_csv(args.output, index=False)
-            print("Wrote to " + args.output)
-
-
-def deck2df(eclfiles, startdate=None):
-    """Deprecated"""
-    return df(eclfiles, startdate=startdate)
+        write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)

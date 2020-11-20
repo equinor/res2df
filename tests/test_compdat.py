@@ -448,24 +448,12 @@ def test_msw_schfile2df():
     """Test that we can process individual files with AICD and ICD MSW"""
     deck = EclFiles.file2deck(SCHFILE_AICD)
     compdfs = compdat.deck2dfs(deck)
-    assert not compdfs["COMPDAT"].empty
-    assert not compdfs["WELSEGS"].empty
-    assert not compdfs["COMPSEGS"].empty
     assert not compdfs["WSEGAICD"].empty
-    assert not compdfs["COMPDAT"].columns.empty
-    assert not compdfs["WELSEGS"].columns.empty
-    assert not compdfs["COMPSEGS"].columns.empty
     assert not compdfs["WSEGAICD"].columns.empty
 
     deck = EclFiles.file2deck(SCHFILE_ICD)
     compdfs = compdat.deck2dfs(deck)
-    assert not compdfs["COMPDAT"].empty
-    assert not compdfs["WELSEGS"].empty
-    assert not compdfs["COMPSEGS"].empty
     assert not compdfs["WSEGSICD"].empty
-    assert not compdfs["COMPDAT"].columns.empty
-    assert not compdfs["WELSEGS"].columns.empty
-    assert not compdfs["COMPSEGS"].columns.empty
     assert not compdfs["WSEGSICD"].columns.empty
 
 
@@ -499,40 +487,16 @@ WSEGAICD
    OP_6  31   31 1.7e-05 -1.18 1000 1.0 0.5  4* 3.05 0.67
    OPEN 1.0 1.0 1.0 2.43 1.18 10.0  /
 /
+
+WSEGSICD
+-- WELL   SEG  SEG2 ALPHA  SF             RHO     VIS  WCT
+    OP_6  31   31   0.0001  -1.186915444  1000.0  1.0  0.5  /
+/
 """
     deck = EclFiles.str2deck(schstr)
     compdfs = compdat.deck2dfs(deck)
-    compdat_df = compdfs["COMPDAT"]
-    welsegs = compdfs["WELSEGS"]
-    compsegs = compdfs["COMPSEGS"]
     wsegaicd = compdfs["WSEGAICD"]
-    assert "WELL" in compdat_df
-    assert len(compdat_df) == 1
-    assert compdat_df["WELL"].unique()[0] == "OP_6"
-
-    # Check that we have not used the very long opm.io term here:
-    assert "CONNECTION_TRANSMISSIBILITY_FACTOR" not in compdat_df
-    assert "TRAN" in compdat_df
-
-    assert "Kh" not in compdat_df  # Mixed-case should not be used.
-    assert "KH" in compdat_df
-
-    # Make sure the ' are ignored:
-    assert compdat_df["OP/SH"].unique()[0] == "OPEN"
-
-    # Continue to WELSEGS
-    assert len(welsegs) == 1  # First record is appended to every row.
-
-    # Since we have 'ABS' in WELSEGS, there should be an extra
-    # column called 'SEGMENT_MD'
-    assert "SEGMENT_MD" in welsegs
-    assert welsegs["SEGMENT_MD"].max() == 2371.596
-
-    # Test COMPSEGS
-    assert len(compsegs) == 1
-    assert "WELL" in compsegs
-    assert compsegs["WELL"].unique()[0] == "OP_6"
-    assert len(compsegs.dropna(axis=1, how="all").iloc[0]) == 9
+    wsegsicd = compdfs["WSEGSICD"]
 
     # Test WSEGAICD
     assert len(wsegaicd) == 1
@@ -540,11 +504,8 @@ WSEGAICD
     assert wsegaicd["WELL"].unique()[0] == "OP_6"
     assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 19
 
-    # Check date handling
-    assert "DATE" in compdat_df
-    assert not all(compdat_df["DATE"].notna())
-    compdat_date = compdat.deck2dfs(deck, start_date="2000-01-01")["COMPDAT"]
-    assert "DATE" in compdat_date
-    assert all(compdat_date["DATE"].notna())
-    assert len(compdat_date["DATE"].unique()) == 1
-    assert str(compdat_date["DATE"].unique()[0]) == "2000-01-01"
+    # Test WSEGSICD
+    assert len(wsegsicd) == 1
+    assert "WELL" in wsegsicd
+    assert wsegsicd["WELL"].unique()[0] == "OP_6"
+    assert len(wsegsicd.dropna(axis=1, how="all").iloc[0]) == 11

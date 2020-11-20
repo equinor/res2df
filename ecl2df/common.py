@@ -54,8 +54,8 @@ for keyw in [
     "WELOPEN",
     "WELSEGS",
     "WELSPECS",
-    "WSEGSICD",
     "WSEGAICD",
+    "WSEGSICD",
 ]:
     with open(
         os.path.join(os.path.dirname(__file__), "opmkeywords", keyw), "r"

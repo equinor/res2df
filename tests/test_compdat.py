@@ -21,8 +21,13 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
 
 # Reek cases with multisegment well OP_6 including AICD and ICD completion from WellBuilder
-SCHFILE_AICD = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/op6_aicd1_gp.sch")
-SCHFILE_ICD = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/op6_icd1_gp.sch")
+SCHFILE_AICD = os.path.join(
+    TESTDIR, "./data/reek/eclipse/include/schedule/op6_aicd1_gp.sch"
+)
+SCHFILE_ICD = os.path.join(
+    TESTDIR, "./data/reek/eclipse/include/schedule/op6_icd1_gp.sch"
+)
+
 
 def test_df():
     """Test main dataframe API, only testing that something comes out"""
@@ -443,7 +448,7 @@ def test_msw_schfile2df():
     deck = EclFiles.file2deck(SCHFILE_AICD)
     compdfs = compdat.deck2dfs(deck)
     assert not compdfs["COMPDAT"].empty
-    assert not compdfs["WELSEGS"].empty  
+    assert not compdfs["WELSEGS"].empty
     assert not compdfs["COMPSEGS"].empty
     assert not compdfs["WSEGAICD"].empty
     assert not compdfs["COMPDAT"].columns.empty
@@ -454,7 +459,7 @@ def test_msw_schfile2df():
     deck = EclFiles.file2deck(SCHFILE_ICD)
     compdfs = compdat.deck2dfs(deck)
     assert not compdfs["COMPDAT"].empty
-    assert not compdfs["WELSEGS"].empty  
+    assert not compdfs["WELSEGS"].empty
     assert not compdfs["COMPSEGS"].empty
     assert not compdfs["WSEGSICD"].empty
     assert not compdfs["COMPDAT"].columns.empty

@@ -207,8 +207,13 @@ def deck2dfs(deck, start_date=None, unroll=True):
     if "KEYWORD_IDX" in wsegaicd_df.columns:
         wsegaicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 
-    return dict(COMPDAT=compdat_df, COMPSEGS=compsegs_df, WELSEGS=welsegs_df, 
-                WSEGSICD=wsegsicd_df, WSEGAICD=wsegaicd_df)
+    return dict(
+        COMPDAT=compdat_df,
+        COMPSEGS=compsegs_df,
+        WELSEGS=welsegs_df,
+        WSEGSICD=wsegsicd_df,
+        WSEGAICD=wsegaicd_df,
+    )
 
 
 def postprocess():

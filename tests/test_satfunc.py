@@ -1,15 +1,15 @@
 """Test module for satfunc2df"""
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
 from ecl2df import satfunc, ecl2csv, inferdims
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_satfunc2df():
@@ -124,7 +124,7 @@ SLGOF
     assert "KRO" in slgof_df
     assert "PCOG" in slgof_df
     inc = satfunc.df2ecl(slgof_df, filename="slgof.inc")
-    assert os.path.exists("slgof.inc")
+    assert Path("slgof.inc").is_file()
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(slgof_df, df_from_inc)
 
@@ -251,7 +251,7 @@ def test_main_subparsers(tmpdir):
     sys.argv = ["ecl2csv", "satfunc", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
 
@@ -268,6 +268,6 @@ def test_main_subparsers(tmpdir):
     ]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile2))
+    assert Path(tmpcsvfile2).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile2))
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}

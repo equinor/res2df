@@ -1,7 +1,7 @@
 """Test module for equil2df"""
 
-import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -10,8 +10,8 @@ import pandas as pd
 from ecl2df import equil, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_equil2df():
@@ -40,11 +40,11 @@ def test_df2ecl(tmpdir):
     eclfiles = EclFiles(DATAFILE)
     equildf = equil.df(eclfiles)
     equil.df2ecl(equildf, filename="equil.inc")
-    assert os.path.exists("equil.inc")
+    assert Path("equil.inc").is_file()
 
     # Test automatic directory creation:
     equil.df2ecl(equildf, filename="eclipse/include/equil.inc")
-    assert os.path.exists("eclipse/include/equil.inc")
+    assert Path("eclipse/include/equil.inc").is_file()
 
 
 def test_decks():
@@ -359,10 +359,10 @@ EQUIL
 
 def test_main_subparser(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-equil.csv")
+    tmpcsvfile = tmpdir / ".TMP-equil.csv"
     sys.argv = ["ecl2csv", "equil", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty

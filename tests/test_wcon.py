@@ -1,7 +1,7 @@
 """Test module for wcon"""
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -9,8 +9,8 @@ from ecl2df import wcon, ecl2csv
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wcon import unroll_defaulted_items, ad_hoc_wconparser
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_unroller():
@@ -143,10 +143,10 @@ WCONHIST
 
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-wcondf.csv")
+    tmpcsvfile = tmpdir / ".TMP-wcondf.csv"
     sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty

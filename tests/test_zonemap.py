@@ -1,14 +1,13 @@
 """Test module for layer mapping to zone names"""
 
-import os
-
 import pytest
+from pathlib import Path
 
 import ecl2df
 
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_stdzoneslyr():

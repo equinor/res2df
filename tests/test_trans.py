@@ -1,7 +1,7 @@
 """Test module for ecl2df.trans"""
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 import networkx
@@ -10,8 +10,8 @@ from ecl2df import trans
 from ecl2df import ecl2csv
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_trans():
@@ -76,14 +76,14 @@ def test_nx(tmpdir):
     networkx.write_gexf(
         network, str(tmpdir.join("reek-fipnum-trans.gxf")), prettyprint=True
     )
-    assert os.path.exists(str(tmpdir.join("reek-fipnum-trans.gxf")))
+    assert Path(tmpdir / "reek-fipnum-trans.gxf").is_file()
 
 
 def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-trans.csv")
+    tmpcsvfile = tmpdir / "trans.csv"
     sys.argv = ["ecl2csv", "trans", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty

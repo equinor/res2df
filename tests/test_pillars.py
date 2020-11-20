@@ -1,7 +1,7 @@
 """Test module for ecl2df.pillars"""
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -10,8 +10,8 @@ from ecl2df import grid
 from ecl2df import ecl2csv
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_pillars():
@@ -151,10 +151,10 @@ def test_contact():
 
 def test_main(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-pillars.csv")
+    tmpcsvfile = tmpdir / "pillars.csv"
     sys.argv = ["ecl2csv", "pillars", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
     assert not disk_df.empty
@@ -172,7 +172,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of grouping
     assert "FIPNUM" not in disk_df
@@ -192,7 +192,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
     assert "FIPNUM" in disk_df
@@ -211,7 +211,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of grouping
     assert "FIPNUM" in disk_df  # grouped by this.
@@ -231,7 +231,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
     assert "FIPNUM" not in disk_df
@@ -257,7 +257,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
     assert "FIPNUM" not in disk_df
@@ -283,7 +283,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
     assert "FIPNUM" not in disk_df
@@ -308,7 +308,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
     assert "FIPNUM" not in disk_df
@@ -334,7 +334,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
     assert "FIPNUM" in disk_df
@@ -356,7 +356,7 @@ def test_main(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
     assert "FIPNUM" not in disk_df

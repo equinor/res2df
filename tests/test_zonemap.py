@@ -1,9 +1,5 @@
 """Test module for layer mapping to zone names"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 
 import pytest
@@ -31,6 +27,63 @@ def test_stdzoneslyr():
     with pytest.raises(KeyError):
         assert zonemap[-10]
     assert len(zonemap) == 15
+
+
+def test_errors(tmpdir, caplog):
+    zonefile = tmpdir / "zonemap.lyr"
+    zonefile.write_text(
+        """
+foo
+""",
+        encoding="utf-8",
+    )
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(zonefile)) is None
+    assert "Could not parse zonemapfile" in caplog.text
+    assert "Failed on content: foo" in caplog.text
+
+    zonefile = tmpdir / "zonemap.lyr"
+    zonefile.write_text(
+        """
+valid 1-2
+foo 1 2 3
+""",
+        encoding="utf-8",
+    )
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(zonefile)) is None
+    assert "Failed on content: foo 1 2 3" in caplog.text
+
+    zonefile = tmpdir / "zonemap.lyr"
+    zonefile.write_text(
+        """
+valid 1-2 stray
+""",
+        encoding="utf-8",
+    )
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(zonefile)) is None
+    assert "Failed on content: valid 1-2 stray" in caplog.text
+
+
+def test_spaces_dashes(tmpdir):
+    """Ensure we support dashes around dashes"""
+    zonefile = tmpdir / "zonemap.lyr"
+    zonefile.write_text(
+        """
+-- Layer table for 83 layer simulation model xxxx
+'UT3_3'          1 -     15
+'UT3_2'          16 -   20
+'UT3_1'         21 -    21
+'UT2'           22 -   23
+'UT1_2'         24 -   37
+'UT1_1'         38 -   46 -- thistextisignored
+'MT2_2'         47 -   71
+""",
+        encoding="utf-8",
+    )
+    eclfiles = ecl2df.EclFiles(DATAFILE)
+    zonemap = eclfiles.get_zonemap(str(zonefile))
+    assert zonemap
+    assert len(zonemap) == 71
+    assert zonemap[25] == "UT1_2"
 
 
 def test_nonstandardzones(tmpdir):

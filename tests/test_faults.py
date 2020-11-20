@@ -1,15 +1,15 @@
 """Test module for nnc2df"""
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
 from ecl2df import faults, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_faults2df():
@@ -62,10 +62,10 @@ FAULTS
 
 def test_main_subparser(tmpdir):
     """Test command line interface with subparsers"""
-    tmpcsvfile = tmpdir.join(".TMP-faultsdf.csv")
+    tmpcsvfile = tmpdir / "faultsdf.csv"
     sys.argv = ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty

@@ -6,6 +6,7 @@ import os
 import errno
 import logging
 import shlex
+from pathlib import Path
 
 import opm.io
 
@@ -48,7 +49,7 @@ class EclFiles(object):
         eclbase = str(eclbase)
 
         # Hint about possible wrong filenames:
-        if ".DATA" in eclbase and not os.path.exists(eclbase):
+        if ".DATA" in eclbase and not Path(eclbase).is_file():
             logger.warning("File %s does not exist", eclbase)
             # (this is not an error, because it is possible
             # to obtain summary without the DATA file being present)
@@ -72,12 +73,12 @@ class EclFiles(object):
 
     def get_path(self):
         """Return the full path to the directory with the DATA file"""
-        return os.path.dirname(os.path.abspath(self._eclbase))
+        return Path(self._eclbase).absolute().parent
 
     def get_ecldeck(self):
         """Return a opm.io deck of the DATA file"""
         if not self._deck:
-            if os.path.exists(self._eclbase + ".DATA"):
+            if Path(self._eclbase + ".DATA").is_file():
                 deckfile = self._eclbase + ".DATA"
             else:
                 deckfile = self._eclbase  # Will be any filename
@@ -106,7 +107,7 @@ class EclFiles(object):
         """Find and return EGRID file as an EclGrid object"""
         if not self._egrid:
             egridfilename = self._eclbase + ".EGRID"
-            if not os.path.exists(egridfilename):
+            if not Path(egridfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
@@ -120,7 +121,7 @@ class EclFiles(object):
         This gives access to data vectors defined on the grid."""
         if not self._egridfile:
             egridfilename = self._eclbase + ".EGRID"
-            if not os.path.exists(egridfilename):
+            if not Path(egridfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
@@ -140,7 +141,7 @@ class EclFiles(object):
         """
         if not self._eclsum:
             smryfilename = self._eclbase + ".UNSMRY"
-            if not os.path.exists(smryfilename):
+            if not Path(smryfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
@@ -152,7 +153,7 @@ class EclFiles(object):
         """Find and return the INIT file as an EclFile object"""
         if not self._initfile:
             initfilename = self._eclbase + ".INIT"
-            if not os.path.exists(initfilename):
+            if not Path(initfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), initfilename
                 )
@@ -164,7 +165,7 @@ class EclFiles(object):
         """Find and return the RFT file as an EclFile object"""
         if not self._rftfile:
             rftfilename = self._eclbase + ".RFT"
-            if not os.path.exists(rftfilename):
+            if not Path(rftfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), rftfilename
                 )
@@ -176,7 +177,7 @@ class EclFiles(object):
         """Find and return the UNRST file as an EclFile object"""
         if not self._rstfile:
             rstfilename = self._eclbase + ".UNRST"
-            if not os.path.exists(rstfilename):
+            if not Path(rstfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), rstfilename
                 )
@@ -221,11 +222,11 @@ class EclFiles(object):
         else:
             filename_defaulted = False
         assert isinstance(filename, str)
-        if not os.path.isabs(filename):
-            fullpath = os.path.join(self.get_path(), filename)
+        if not Path(filename).is_absolute():
+            fullpath = Path(self.get_path()) / filename
         else:
             fullpath = filename
-        if not os.path.exists(fullpath):
+        if not Path(fullpath).is_file():
             if filename_defaulted:
                 # No warnings when the default filename is not there.
                 return {}

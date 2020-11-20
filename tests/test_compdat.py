@@ -1,8 +1,7 @@
 """Test module for nnc"""
 
-
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -11,10 +10,10 @@ import pytest
 from ecl2df import compdat, ecl2csv
 from ecl2df import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
-SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
+SCHFILE = str(TESTDIR / "./data/reek/eclipse/include/schedule/reek_history.sch")
 
 
 def test_df():
@@ -301,11 +300,11 @@ def test_initmerging():
 
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
+    tmpcsvfile = tmpdir / "compdat.csv"
     sys.argv = ["ecl2csv", "compdat", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "ZONE" in disk_df
     assert not disk_df.empty
@@ -321,7 +320,7 @@ def test_main_subparsers(tmpdir):
     ]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FIPNUM" in disk_df
     assert not disk_df.empty
@@ -338,7 +337,7 @@ def test_main_subparsers(tmpdir):
     ]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FIPNUM" in disk_df
     assert "EQLNUM" in disk_df

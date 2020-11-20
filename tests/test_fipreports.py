@@ -1,7 +1,7 @@
 """Test module for fipreports"""
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -9,9 +9,9 @@ from ecl2df import fipreports, ecl2csv
 from ecl2df.eclfiles import EclFiles
 from ecl2df.fipreports import report_block_lineparser as parser
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
-MOCKPRTFILE = os.path.join(TESTDIR, "data/fipreports/TEST1.PRT")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+MOCKPRTFILE = str(TESTDIR / "data/fipreports/TEST1.PRT")
 
 
 def test_fipreports2df():
@@ -81,11 +81,11 @@ def test_report_block_lineparser():
 
 def test_cmdline(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-fipreports.csv")
+    tmpcsvfile = tmpdir / "TMP-fipreports.csv"
     sys.argv = ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FIPNAME" in disk_df
     assert "STOIIP_OIL" in disk_df

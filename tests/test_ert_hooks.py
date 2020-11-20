@@ -1,5 +1,5 @@
-import os
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -14,8 +14,8 @@ except ImportError:
     )
 
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATADIR = os.path.join(TESTDIR, "data/reek/eclipse/model")
+TESTDIR = Path(__file__).absolute().parent
+DATADIR = TESTDIR / "data/reek/eclipse/model"
 
 
 def test_ecl2csv_through_ert(tmpdir):
@@ -37,7 +37,7 @@ def test_ecl2csv_through_ert(tmpdir):
 
     for ext in ecl_extensions:
         f_name = eclbase + "." + ext
-        os.symlink(os.path.join(DATADIR, f_name), f_name)
+        Path(f_name).symlink_to(DATADIR / f_name)
 
     ert_config = [
         "ECLBASE " + eclbase + ".DATA",
@@ -74,14 +74,13 @@ def test_ecl2csv_through_ert(tmpdir):
         )
 
     ert_config_filename = "ecl2csv_test.ert"
-    with open(ert_config_filename, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_filename).write_text("\n".join(ert_config), encoding="utf-8")
 
     subprocess.call(["ert", "test_run", ert_config_filename])
 
-    assert os.path.exists("OK")
+    assert Path("OK").is_file()
 
     for subcommand in ecl2csv_subcommands:
-        assert os.path.exists(subcommand + ".csv")
+        assert Path(subcommand + ".csv").is_file()
     for subcommand in csv2ecl_subcommands:
-        assert os.path.exists(subcommand + ".inc")
+        assert Path(subcommand + ".inc").is_file()

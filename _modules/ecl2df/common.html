@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.common &mdash; ecl2df 0.8.3.dev13+g319ad1c documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.8.3.dev14+g47c2fd0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3.dev13+g319ad1c
+                0.8.3.dev14+g47c2fd0
               </div>
             
           
@@ -164,7 +164,6 @@
 <span class="sd">Common functions for ecl2df modules</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">signal</span>
@@ -172,6 +171,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -217,10 +217,9 @@
     <span class="s2">&quot;WELSEGS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WELSPECS&quot;</span><span class="p">,</span>
 <span class="p">]:</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;opmkeywords&quot;</span><span class="p">,</span> <span class="n">keyw</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span>
-    <span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
-        <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyw</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_handle</span><span class="p">)</span>
+    <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyw</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;opmkeywords&quot;</span> <span class="o">/</span> <span class="n">keyw</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="p">)</span>
 
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
@@ -686,12 +685,8 @@
             <span class="n">string</span> <span class="o">+=</span> <span class="n">function</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Make directory if not present:</span>
-        <span class="n">filenamedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">filenamedir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filenamedir</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">filenamedir</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
-            <span class="n">f_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">string</span></div>
 
 

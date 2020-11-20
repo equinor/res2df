@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.parameters &mdash; ecl2df 0.8.3.dev13+g319ad1c documentation</title>
+  <title>ecl2df.parameters &mdash; ecl2df 0.8.3.dev14+g47c2fd0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3.dev13+g319ad1c
+                0.8.3.dev14+g47c2fd0
               </div>
             
           
@@ -163,8 +163,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;Support module for extra files with key-value information</span>
 <span class="sd">related to Eclipse runs&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
@@ -195,9 +195,9 @@
 <span class="sd">           found</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">):</span>
-        <span class="n">eclbasepath</span> <span class="o">=</span> <span class="n">ecldeck_or_eclpath</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span>
+        <span class="n">eclbasepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="o">.</span><span class="n">get_path</span><span class="p">())</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">eclbasepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">))</span>
+        <span class="n">eclbasepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span>
     <span class="n">files_to_lookfor</span> <span class="o">=</span> <span class="p">[</span>
@@ -206,12 +206,12 @@
         <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span>
         <span class="n">filebase</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="n">paths_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">)]</span>
+    <span class="n">paths_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)]</span>
     <span class="n">foundfiles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths_to_check</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">files_to_lookfor</span><span class="p">:</span>
-            <span class="n">fullfname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">eclbasepath</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullfname</span><span class="p">):</span>
+            <span class="n">fullfname</span> <span class="o">=</span> <span class="n">eclbasepath</span> <span class="o">/</span> <span class="n">path</span> <span class="o">/</span> <span class="n">fname</span>
+            <span class="k">if</span> <span class="n">fullfname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="n">foundfiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fullfname</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">foundfiles</span></div>
 

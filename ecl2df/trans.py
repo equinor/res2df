@@ -20,6 +20,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+
 def df(
     eclfiles,
     vectors=None,

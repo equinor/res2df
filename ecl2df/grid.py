@@ -26,6 +26,7 @@ from .eclfiles import EclFiles
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+
 def get_available_rst_dates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())

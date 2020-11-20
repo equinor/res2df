@@ -23,6 +23,7 @@ from .common import (
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+
 def df(deck, startdate=None, welspecs=True):
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.

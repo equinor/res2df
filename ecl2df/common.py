@@ -64,6 +64,7 @@ for keyw in [
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+
 def write_dframe_stdout_file(
     dframe, output, index=False, caller_logger=None, logstr=None
 ):

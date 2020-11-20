@@ -1,9 +1,5 @@
 """Test module for nnc2df"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import sys
 import datetime
@@ -198,6 +194,11 @@ def test_datenormalization():
     yearly = summary.df(eclfiles, column_keys="FOPT", time_index="yearly")
     assert str(yearly.index[-1]) == "2004-01-01"
 
+    # Map a tuesday-thursday range to monday-nextmonday:
+    assert normalize_dates(
+        datetime.date(2020, 11, 17), datetime.date(2020, 11, 19), "weekly"
+    ) == (datetime.date(2020, 11, 16), datetime.date(2020, 11, 23))
+
 
 def test_resample_smry_dates():
     """Test resampling of summary dates"""
@@ -215,6 +216,9 @@ def test_resample_smry_dates():
     assert len(resample_smry_dates(ecldates, freq="yearly")) == 5
     assert len(monthly) == 38
     assert len(resample_smry_dates(ecldates, freq="daily")) == 1098
+
+    weekly = resample_smry_dates(ecldates, freq="weekly")
+    assert len(weekly) == 159
 
     # start and end should be included:
     assert (

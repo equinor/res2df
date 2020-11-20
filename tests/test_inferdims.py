@@ -1,9 +1,5 @@
 """Test module for satfunc2df"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from ecl2df import inferdims
 
 

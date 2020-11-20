@@ -13,8 +13,8 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_ecl_month
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 REGION_REPORT_COLUMNS = [
     "DATE",

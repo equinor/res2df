@@ -59,9 +59,8 @@ for keyw in [
     )
 
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
+logger.addHandler(logging.NullHandler())
 
 def parse_ecl_month(eclmonth):
     """Translate Eclipse month strings to integer months"""

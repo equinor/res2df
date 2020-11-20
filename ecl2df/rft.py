@@ -31,8 +31,8 @@ from .gruptree import dict2treelib
 from .common import merge_zones
 
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 # In debug mode, these columns will be exported to three csv files.
 CON_TOPOLOGY_COLS = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}

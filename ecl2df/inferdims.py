@@ -14,8 +14,8 @@ import opm.io
 
 from ecl2df import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 # Constants to use for pointing to positions in the xxxDIMS keyword
 DIMS_POS = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)

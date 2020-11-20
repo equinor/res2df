@@ -21,9 +21,8 @@ import pandas as pd
 from .eclfiles import EclFiles
 from . import parameters
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
+logger.addHandler(logging.NullHandler())
 
 def normalize_dates(start_date, end_date, freq):
     """

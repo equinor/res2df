@@ -17,8 +17,8 @@ import pandas as pd
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 SUPPORTED_KEYWORDS = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
 RENAMERS = {}

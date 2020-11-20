@@ -16,9 +16,8 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_opmio_deckrecord
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
+logger.addHandler(logging.NullHandler())
 
 RECORD_COLUMNS = ["NAME", "IX1", "IX2", "IY1", "IY2", "IZ1", "IZ2", "FACE"]
 COLUMNS = ["NAME", "I", "J", "K", "FACE"]

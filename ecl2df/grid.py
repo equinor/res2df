@@ -31,9 +31,8 @@ from ecl2df import common, __version__
 from ecl.eclfile import EclFile
 from .eclfiles import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
+logger.addHandler(logging.NullHandler())
 
 def rstdates(eclfiles):
     """Return a list of datetime objects for the available dates in the RST file"""

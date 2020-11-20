@@ -26,8 +26,8 @@ import pandas as pd
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 SUPPORTED_KEYWORDS = ["SWOF", "SGOF", "SWFN", "SGWFN", "SOF2", "SGFN", "SOF3", "SLGOF"]
 

@@ -14,9 +14,8 @@ import pandas as pd
 
 from ecl2df import common, EclFiles, grid, __version__
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
+logger.addHandler(logging.NullHandler())
 
 def df(eclfiles, coords=False, pillars=False):
     """Produce a Pandas Dataframe with NNC information

@@ -15,9 +15,8 @@ import pandas as pd
 import ecl2df
 from .eclfiles import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
+logger.addHandler(logging.NullHandler())
 
 def df(
     eclfiles,

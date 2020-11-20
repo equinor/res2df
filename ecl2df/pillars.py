@@ -17,8 +17,8 @@ import pandas as pd
 
 import ecl2df
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 AGGREGATORS = {
     "VOLUME": "sum",

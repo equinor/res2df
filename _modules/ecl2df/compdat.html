@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.8.3.dev14+g47c2fd0 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.8.3.dev15+g74d32f6 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3.dev14+g47c2fd0
+                0.8.3.dev15+g74d32f6
               </div>
             
           
@@ -228,6 +228,8 @@
     <span class="n">compsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">welopenrecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">welsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wsegsicdrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wsegaicdrecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">welspecs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">start_date</span>  <span class="c1"># DATE column will always be there, but can contain NaN/None</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">kword</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deck</span><span class="p">):</span>
@@ -277,6 +279,18 @@
                         <span class="p">)</span>
                     <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">welspecs</span><span class="p">[</span><span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]][</span><span class="s2">&quot;J&quot;</span><span class="p">]</span>
                 <span class="n">compdatrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WSEGSICD&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside WSEGSICD record</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WSEGSICD&quot;</span><span class="p">)</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+                <span class="n">wsegsicdrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WSEGAICD&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside WSEGAICD record</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WSEGAICD&quot;</span><span class="p">)</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
+                <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+                <span class="n">wsegaicdrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">:</span>
             <span class="n">wellname</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span>
                 <span class="n">kword</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span> <span class="n">itemlistname</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="o">=</span><span class="mi">0</span>
@@ -301,7 +315,6 @@
                         <span class="s2">&quot;COMPDAT state. Using &#39;SHUT&#39; instead.&quot;</span> <span class="o">%</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span>
                     <span class="p">)</span>
                 <span class="n">welopenrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
-
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
             <span class="c1"># First record contains meta-information for well</span>
             <span class="c1"># (opm deck returns default values for unspecified items.)</span>
@@ -335,14 +348,34 @@
 
     <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">compsegsrecords</span><span class="p">)</span>
     <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">welsegsrecords</span><span class="p">)</span>
+    <span class="n">wsegsicd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wsegsicdrecords</span><span class="p">)</span>
+    <span class="n">wsegaicd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wsegaicdrecords</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">welsegs_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">welsegs_df</span><span class="p">,</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">wsegsicd_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">wsegsicd_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">wsegsicd_df</span><span class="p">,</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">unroll</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">wsegaicd_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">wsegaicd_df</span> <span class="o">=</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">wsegaicd_df</span><span class="p">,</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="s2">&quot;KEYWORD_IDX&quot;</span> <span class="ow">in</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">compdat_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span> <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD_IDX&quot;</span> <span class="ow">in</span> <span class="n">wsegsicd_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">wsegsicd_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD_IDX&quot;</span> <span class="ow">in</span> <span class="n">wsegaicd_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">wsegaicd_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span>
+        <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span>
+        <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">,</span>
+        <span class="n">WSEGSICD</span><span class="o">=</span><span class="n">wsegsicd_df</span><span class="p">,</span>
+        <span class="n">WSEGAICD</span><span class="o">=</span><span class="n">wsegaicd_df</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="postprocess"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.postprocess">[docs]</a><span class="k">def</span> <span class="nf">postprocess</span><span class="p">():</span>

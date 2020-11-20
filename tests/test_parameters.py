@@ -1,15 +1,14 @@
 """Test module for parameters"""
 
-import os
-
 import json
 import yaml
+from pathlib import Path
 
 from ecl2df.parameters import load, load_all, find_parameter_files
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_parameters():
@@ -19,59 +18,54 @@ def test_parameters():
     # NB: This test easily fails due to remnants of other test code..
     assert not find_parameter_files(eclfiles)
 
-    parameterstxt = os.path.join(eclfiles.get_path(), "parameters.txt")
-    if os.path.exists(parameterstxt):
-        # If this exists, it is a remnant from test code that has
-        # crashed. It should NOT be in git.
-        os.unlink(parameterstxt)
-    with open(parameterstxt, "w") as pfile:
-        pfile.write("FOO 1\nBAR 3")
-    assert os.path.exists(parameterstxt)
+    parameterstxt = Path(eclfiles.get_path()) / "parameters.txt"
+    # If this exists, it is a remnant from test code that has
+    # crashed. It should NOT be in git.
+    if parameterstxt.is_file():
+        parameterstxt.unlink()
+    parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
+    assert Path(parameterstxt).is_file()
     param_dict = load(parameterstxt)
     assert "FOO" in param_dict
     assert "BAR" in param_dict
 
     assert len(find_parameter_files(eclfiles)) == 1
-    os.unlink(parameterstxt)
+    parameterstxt.unlink()
 
-    parameterstxt = os.path.join(eclfiles.get_path(), os.pardir, "parameters.txt")
-    if os.path.exists(parameterstxt):
-        os.unlink(parameterstxt)
-    with open(parameterstxt, "w") as pfile:
-        pfile.write("FOO 1\nBAR 3\n")
-        pfile.write("CONTACT:BARF 2700")
-    assert os.path.exists(parameterstxt)
+    parameterstxt = Path(eclfiles.get_path()).parent / "parameters.txt"
+    if parameterstxt.is_file():
+        parameterstxt.unlink()
+    parameterstxt.write_text("FOO 1\nBAR 3\nCONTACT:BARF 2700", encoding="utf-8")
+    assert Path(parameterstxt).is_file()
     param_dict = load(parameterstxt)
     assert "FOO" in param_dict
     assert "BAR" in param_dict
     assert param_dict["BAR"] == 3
     assert param_dict["CONTACT:BARF"] == 2700
     assert len(find_parameter_files(eclfiles)) == 1
-    os.unlink(parameterstxt)
+    parameterstxt.unlink()
 
     # Typical parameters.json structure: The group "CONTACT" is assumed having
     # duplicate information, and is to be ignored
     dump_me = {"FOO": 1, "BAR": "com", "CONTACT:BARF": 2700, "CONTACT": {"BARF": 2700}}
 
-    parametersyml = os.path.join(eclfiles.get_path(), "parameters.yml")
-    if os.path.exists(parametersyml):
-        os.unlink(parametersyml)
-    with open(parametersyml, "w") as pfile:
-        pfile.write(yaml.dump(dump_me))
-    assert os.path.exists(parametersyml)
+    parametersyml = Path(eclfiles.get_path()) / "parameters.yml"
+    if parametersyml.is_file():
+        parametersyml.unlink()
+    parametersyml.write_text(yaml.dump(dump_me), encoding="utf-8")
+    assert Path(parametersyml).is_file()
     assert len(find_parameter_files(eclfiles)) == 1
     param_dict = load(parametersyml)
     assert "FOO" in param_dict
     assert "BAR" in param_dict
     assert param_dict["BAR"] == "com"
-    os.unlink(parametersyml)
+    parametersyml.unlink()
 
-    parametersjson = os.path.join(eclfiles.get_path(), "parameters.json")
-    if os.path.exists(parametersjson):
-        os.unlink(parametersjson)
-    with open(parametersjson, "w") as pfile:
-        pfile.write(json.dumps(dump_me))
-    assert os.path.exists(parametersjson)
+    parametersjson = Path(eclfiles.get_path()) / "parameters.json"
+    if parametersjson.is_file():
+        parametersjson.unlink()
+    parametersjson.write_text(json.dumps(dump_me), encoding="utf-8")
+    assert Path(parametersjson).is_file()
     assert len(find_parameter_files(eclfiles)) == 1
     param_dict = load(find_parameter_files(eclfiles)[0])
     param_dict_m = load_all(find_parameter_files(eclfiles))
@@ -79,20 +73,18 @@ def test_parameters():
     assert "BAR" in param_dict
     assert param_dict["BAR"] == "com"
     assert param_dict == param_dict_m
-    os.unlink(parametersjson)
+    parametersjson.unlink()
 
 
 def test_multiple_parameters():
     """Test what happens when we have duplicate parameter files"""
     eclfiles = EclFiles(DATAFILE)
-    parametersjson = os.path.join(eclfiles.get_path(), "parameters.json")
-    parameterstxt = os.path.join(eclfiles.get_path(), os.pardir, "parameters.txt")
-    with open(parameterstxt, "w") as pfile:
-        pfile.write("FOO 1\nBAR 4")
-    with open(parametersjson, "w") as pfile:
-        pfile.write(json.dumps({"BAR": 5, "COM": 6}))
+    parametersjson = Path(eclfiles.get_path()) / "parameters.json"
+    parameterstxt = Path(eclfiles.get_path()).parent / "parameters.txt"
+    parameterstxt.write_text("FOO 1\nBAR 4", encoding="utf-8")
+    parametersjson.write_text(json.dumps({"BAR": 5, "COM": 6}), encoding="utf-8")
     param_dict = load_all(find_parameter_files(eclfiles))
     assert len(param_dict) == 3
     assert param_dict["BAR"] == 5  # json has precedence over txt
-    os.unlink(parametersjson)
-    os.unlink(parameterstxt)
+    parametersjson.unlink()
+    parameterstxt.unlink()

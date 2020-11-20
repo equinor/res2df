@@ -1,5 +1,5 @@
-import os
 import shutil
+from pathlib import Path
 
 import pytest
 
@@ -32,7 +32,7 @@ def test_hook_implementations():
     for wf_name, wf_location in EXPECTED_JOBS.items():
         assert wf_name in installable_jobs
         assert installable_jobs[wf_name].endswith(wf_location)
-        assert os.path.isfile(installable_jobs[wf_name])
+        assert Path(installable_jobs[wf_name]).is_file()
 
     assert set(installable_jobs.keys()) == set(EXPECTED_JOBS.keys())
 
@@ -47,10 +47,10 @@ def test_hook_implementations():
 
 def test_job_config_syntax():
     """Check for syntax errors made in job configuration files"""
-    src_path = os.path.join(os.path.dirname(__file__), "../")
+    src_path = Path(__file__).parent.parent
     for _, job_config in EXPECTED_JOBS.items():
         # Check (loosely) that double-dashes are enclosed in quotes:
-        with open(os.path.join(src_path, job_config)) as f_handle:
+        with open(src_path / job_config) as f_handle:
             for line in f_handle.readlines():
                 if not line.strip().startswith("--") and "--" in line:
                     assert '"--' in line and " --" not in line
@@ -59,9 +59,9 @@ def test_job_config_syntax():
 @pytest.mark.integration
 def test_executables():
     """Test executables listed in job configurations exist in $PATH"""
-    src_path = os.path.join(os.path.dirname(__file__), "../")
+    src_path = Path(__file__).parent.parent
     for _, job_config in EXPECTED_JOBS.items():
-        with open(os.path.join(src_path, job_config)) as f_handle:
+        with open(src_path / job_config) as f_handle:
             executable = f_handle.readlines()[0].split()[1]
             assert shutil.which(executable)
 

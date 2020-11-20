@@ -5,6 +5,7 @@ import os
 import logging
 import datetime
 import pandas as pd
+from pathlib import Path
 
 from ecl2df import common, EclFiles, grid, __version__
 
@@ -265,13 +266,8 @@ def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
     string += "\n\n"
 
     if filename is not None:
-        # Make directory if not present:
-        filenamedir = os.path.dirname(filename)
-        if filenamedir and not os.path.exists(filenamedir):
-            os.makedirs(filenamedir)
-        with open(filename, "w") as file_handle:
-            file_handle.write(string)
-
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        Path(filename).write_text(string, encoding="utf-8")
     return string
 
 

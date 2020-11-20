@@ -4,10 +4,10 @@ Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)
 
 Code taken from fmu.ensemble.ScratchRealization
 """
-import os
 import logging
 import datetime
 import dateutil.parser
+from pathlib import Path
 
 import pandas as pd
 
@@ -267,7 +267,7 @@ def df(
             logger.info("Loading parameters from files: %s", str(param_files))
             param_dict = parameters.load_all(param_files)
         else:
-            if not os.path.isabs(paramfile):
+            if not Path(paramfile).is_absolute():
                 param_file = parameters.find_parameter_files(
                     eclfiles, filebase=paramfile
                 )

@@ -9,12 +9,12 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
-import os
 import logging
 import fnmatch
 import textwrap
 import datetime
 import dateutil.parser
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -644,13 +644,8 @@ def df2ecl(
         string += "\n"
 
     if filename is not None:
-        # Make directory if not present:
-        filenamedir = os.path.dirname(filename)
-        if filenamedir and not os.path.exists(filenamedir):
-            os.makedirs(filenamedir)
-        with open(filename, "w") as file_handle:
-            file_handle.write(string)
-
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        Path(filename).write_text(string, encoding="utf-8")
     return string
 
 

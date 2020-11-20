@@ -1,9 +1,9 @@
 """Test module for rft"""
 
-import os
 import sys
 import random
 import datetime
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -13,8 +13,8 @@ import pytest
 from ecl2df import rft, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 # pylint: disable=protected-access
 
@@ -384,15 +384,15 @@ def test_rft2df():
 
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-rft.csv")
+    tmpcsvfile = tmpdir / ".TMP-rft.csv"
     sys.argv = ["ecl2csv", "rft", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
 
-    tmpcsvfile = tmpdir.join(".TMP-rft2.csv")
+    tmpcsvfile = tmpdir / ".TMP-rft2.csv"
     # Test with RFT file as argument:
     sys.argv = [
         "ecl2cvsv",
@@ -403,6 +403,6 @@ def test_main_subparsers(tmpdir):
         str(tmpcsvfile),
     ]
     ecl2csv.main()
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty

@@ -20,7 +20,8 @@ DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
 
-# Reek cases with multisegment well OP_6 including AICD and ICD completion from WellBuilder
+# Reek cases with multisegment well OP_6 including
+# AICD and ICD completion from WellBuilder
 SCHFILE_AICD = os.path.join(
     TESTDIR, "./data/reek/eclipse/include/schedule/op6_aicd1_gp.sch"
 )
@@ -472,29 +473,31 @@ def test_msw_str2df():
     """Testing making a dataframe from an explicit string including MSW"""
     schstr = """
 WELSPECS
-   'OP_6' 'DUMMY'    28    37 1575.82   OIL         0.0    'STD'  'SHUT'    'YES'    0    'SEG' /
+   'OP_6' 'DUMMY' 28 37 1575.82 OIL 0.0 'STD' 'SHUT' 'YES' 0 'SEG' /
 /
 
 COMPDAT
-    'OP_6'  28  37   1   1  OPEN  0 1.27194551  0.311  114.88788  0.0   0.0    'X'  19.652259  /
+    'OP_6' 28 37 1 1 OPEN 0 1.2719 0.311 114.887 0.0 0.0 'X' 19.65 /
 /
 
 WELSEGS
--- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL   
-   'OP_6'  0.0         0.0        1.0E-5       'ABS'      'HF-'       'HO'      /
---  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS   
+-- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL
+   'OP_6'        0.0        0.0   1.0E-5    'ABS'     'HF-'    'HO' /
+--  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS
      2    2    1        1  2371.596 1577.726  0.15 0.00065    /
 /
 
 COMPSEGS
    'OP_6' /
---  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG   
+--  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG
     28  37   1   2     2366.541 2376.651  1*  3*  31   /
 /
 
 WSEGAICD
--- WELL   SEG  SEG2        ALPHA            SF     RHO  VIS EMU  DEF     X     Y  FLAG    A    B    C     D     E     F      
-   OP_6    31    31   1.7253e-05  -1.186915444  1000.0  1.0 0.5   4*  3.05  0.67  OPEN  1.0  1.0  1.0  2.43  1.18  10.0  /
+-- WELL SEG SEG2   ALPHA    SF  RHO VIS EMU DEF    X    Y
+-- FLAG   A   B   C    D    E    F
+   OP_6  31   31 1.7e-05 -1.18 1000 1.0 0.5  4* 3.05 0.67
+   OPEN 1.0 1.0 1.0 2.43 1.18 10.0  /
 /
 """
     deck = EclFiles.str2deck(schstr)

@@ -1,7 +1,7 @@
 """Test module for pvt"""
 
-import os
 import sys
+from pathlib import Path
 
 import logging
 import pandas as pd
@@ -11,8 +11,8 @@ import pytest
 from ecl2df import pvt, ecl2csv, csv2ecl
 from ecl2df.eclfiles import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
@@ -351,7 +351,7 @@ def test_main(tmpdir):
     sys.argv = ["ecl2csv", "pvt", "-v", DATAFILE, "-o", tmpcsvfile]
     ecl2csv.main()
 
-    assert os.path.exists(tmpcsvfile)
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "PVTNUM" in disk_df
     assert "KEYWORD" in disk_df
@@ -364,7 +364,7 @@ def test_main(tmpdir):
 
     # Reparse the include file on disk back to dataframe
     # and check dataframe equality
-    assert os.path.exists(incfile)
+    assert Path(incfile).is_file()
     disk_inc_df = pvt.df(open(incfile).read())
     pd.testing.assert_frame_equal(disk_df, disk_inc_df)
 
@@ -428,7 +428,7 @@ def test_df2ecl(tmpdir):
     assert "foo" not in rock_inc
 
     rock_inc = pvt.df2ecl(rock_df, comments=dict(ROCK="foo\nbar"), filename="foo.inc")
-    assert os.path.exists("foo.inc")
+    assert Path("foo.inc").is_file()
     assert "foo" in rock_inc
     assert "bar" in rock_inc
     # Multiline comments are tricky, is the output valid?

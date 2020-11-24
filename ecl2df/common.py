@@ -2,7 +2,6 @@
 Common functions for ecl2df modules
 """
 
-import os
 import sys
 import json
 import signal
@@ -10,6 +9,7 @@ import inspect
 import logging
 import datetime
 import itertools
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -54,11 +54,12 @@ for keyw in [
     "WELOPEN",
     "WELSEGS",
     "WELSPECS",
+    "WSEGAICD",
+    "WSEGSICD",
 ]:
-    with open(
-        os.path.join(os.path.dirname(__file__), "opmkeywords", keyw), "r"
-    ) as file_handle:
-        OPMKEYWORDS[keyw] = json.load(file_handle)
+    OPMKEYWORDS[keyw] = json.loads(
+        (Path(__file__).parent / "opmkeywords" / keyw).read_text()
+    )
 
 
 logger = logging.getLogger(__name__)
@@ -523,12 +524,8 @@ def df2ecl(
             string += function(dataframe)
 
     if filename is not None:
-        # Make directory if not present:
-        filenamedir = os.path.dirname(filename)
-        if filenamedir and not os.path.exists(filenamedir):
-            os.makedirs(filenamedir)
-        with open(filename, "w") as f_handle:
-            f_handle.write(string)
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        Path(filename).write_text(string, encoding="utf-8")
     return string
 
 

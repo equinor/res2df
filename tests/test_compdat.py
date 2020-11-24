@@ -1,8 +1,7 @@
-"""Test module for nnc"""
+"""Test module for compdat"""
 
-
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -11,10 +10,15 @@ import pytest
 from ecl2df import compdat, ecl2csv
 from ecl2df import EclFiles
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
-SCHFILE = os.path.join(TESTDIR, "./data/reek/eclipse/include/schedule/reek_history.sch")
+SCHFILE = str(TESTDIR / "data/reek/eclipse/include/schedule/reek_history.sch")
+
+# Reek cases with multisegment well OP_6 including
+# AICD and ICD completion from WellBuilder
+SCHFILE_AICD = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_aicd1_gp.sch")
+SCHFILE_ICD = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_icd1_gp.sch")
 
 
 def test_df():
@@ -301,11 +305,11 @@ def test_initmerging():
 
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-compdat.csv")
+    tmpcsvfile = tmpdir / "compdat.csv"
     sys.argv = ["ecl2csv", "compdat", "-v", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "ZONE" in disk_df
     assert not disk_df.empty
@@ -321,7 +325,7 @@ def test_main_subparsers(tmpdir):
     ]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FIPNUM" in disk_df
     assert not disk_df.empty
@@ -338,7 +342,7 @@ def test_main_subparsers(tmpdir):
     ]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FIPNUM" in disk_df
     assert "EQLNUM" in disk_df
@@ -428,3 +432,71 @@ COMPDAT
     assert compdat_df[compdat_df["DATE"].astype(str) == "2040-01-01"]["J"].unique() == [
         33
     ]
+
+
+# Multisegement well testing
+def test_msw_schfile2df():
+    """Test that we can process individual files with AICD and ICD MSW"""
+    deck = EclFiles.file2deck(SCHFILE_AICD)
+    compdfs = compdat.deck2dfs(deck)
+    assert not compdfs["WSEGAICD"].empty
+    assert not compdfs["WSEGAICD"].columns.empty
+
+    deck = EclFiles.file2deck(SCHFILE_ICD)
+    compdfs = compdat.deck2dfs(deck)
+    assert not compdfs["WSEGSICD"].empty
+    assert not compdfs["WSEGSICD"].columns.empty
+
+
+def test_msw_str2df():
+    """Testing making a dataframe from an explicit string including MSW"""
+    schstr = """
+WELSPECS
+   'OP_6' 'DUMMY' 28 37 1575.82 OIL 0.0 'STD' 'SHUT' 'YES' 0 'SEG' /
+/
+
+COMPDAT
+    'OP_6' 28 37 1 1 OPEN 0 1.2719 0.311 114.887 0.0 0.0 'X' 19.65 /
+/
+
+WELSEGS
+-- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL
+   'OP_6'        0.0        0.0   1.0E-5    'ABS'     'HF-'    'HO' /
+--  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS
+     2    2    1        1  2371.596 1577.726  0.15 0.00065    /
+/
+
+COMPSEGS
+   'OP_6' /
+--  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG
+    28  37   1   2     2366.541 2376.651  1*  3*  31   /
+/
+
+WSEGAICD
+-- WELL SEG SEG2   ALPHA    SF  RHO VIS EMU DEF    X    Y
+-- FLAG   A   B   C    D    E    F
+   OP_6  31   31 1.7e-05 -1.18 1000 1.0 0.5  4* 3.05 0.67
+   OPEN 1.0 1.0 1.0 2.43 1.18 10.0  /
+/
+
+WSEGSICD
+-- WELL   SEG  SEG2 ALPHA  SF             RHO     VIS  WCT
+    OP_6  31   31   0.0001  -1.186915444  1000.0  1.0  0.5  /
+/
+"""
+    deck = EclFiles.str2deck(schstr)
+    compdfs = compdat.deck2dfs(deck)
+    wsegaicd = compdfs["WSEGAICD"]
+    wsegsicd = compdfs["WSEGSICD"]
+
+    # Test WSEGAICD
+    assert len(wsegaicd) == 1
+    assert "WELL" in wsegaicd
+    assert wsegaicd["WELL"].unique()[0] == "OP_6"
+    assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 19
+
+    # Test WSEGSICD
+    assert len(wsegsicd) == 1
+    assert "WELL" in wsegsicd
+    assert wsegsicd["WELL"].unique()[0] == "OP_6"
+    assert len(wsegsicd.dropna(axis=1, how="all").iloc[0]) == 11

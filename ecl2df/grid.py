@@ -656,7 +656,7 @@ def df2ecl(
 def grid_main(args):
     """This is the command line API"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     grid_df = df(
         eclfiles,

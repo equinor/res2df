@@ -277,7 +277,7 @@ def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
 def nnc_main(args):
     """Command line access point from main() or from ecl2csv via subparser"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     if nncdf.empty:

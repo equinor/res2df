@@ -69,7 +69,7 @@ def fill_parser(parser):
 def faults_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()

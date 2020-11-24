@@ -275,7 +275,7 @@ def fill_reverse_parser(parser):
 def satfunc_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -307,7 +307,7 @@ def satfunc_main(args):
 def satfunc_reverse_main(args):
     """For command line utility for CSV to Eclipse"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(satfunc_df, keywords=args.keywords)

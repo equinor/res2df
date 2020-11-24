@@ -291,7 +291,7 @@ def fill_parser(parser):
 def gruptree_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)

@@ -182,7 +182,7 @@ def fill_parser(parser):
 def fipreports_main(args):
     """Command line API"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:

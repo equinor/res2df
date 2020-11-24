@@ -400,7 +400,7 @@ def fill_parser(parser):
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     if compdat_df.empty:

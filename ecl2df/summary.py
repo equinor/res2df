@@ -371,7 +371,7 @@ def fill_parser(parser):
 def summary_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     sum_df = df(
         eclfiles,

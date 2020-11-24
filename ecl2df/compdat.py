@@ -18,7 +18,6 @@ from .common import (
 from .grid import merge_initvectors
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 """OPM authors and Roxar RMS authors have interpreted the Eclipse
 documentation ever so slightly different when naming the data.

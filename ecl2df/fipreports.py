@@ -13,7 +13,6 @@ from .eclfiles import EclFiles
 from .common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 REGION_REPORT_COLUMNS = [
     "DATE",

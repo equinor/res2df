@@ -21,7 +21,6 @@ from .common import (
 )
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 def df(deck, startdate=None, welspecs=True):

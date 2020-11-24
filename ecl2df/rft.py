@@ -26,7 +26,6 @@ from .common import merge_zones, write_dframe_stdout_file
 
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 # In debug mode, these columns will be exported to three csv files.
 CON_TOPOLOGY_COLS = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}

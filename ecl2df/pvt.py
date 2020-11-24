@@ -13,7 +13,6 @@ from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 SUPPORTED_KEYWORDS = ["PVTO", "PVDO", "PVTG", "PVDG", "DENSITY", "ROCK", "PVTW"]
 

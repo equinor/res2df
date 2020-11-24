@@ -24,7 +24,6 @@ from ecl2df import common, __version__
 from .eclfiles import EclFiles
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 def get_available_rst_dates(eclfiles):

@@ -14,7 +14,6 @@ from ecl.grid import EclGrid
 from ecl.summary import EclSum
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 # Default parse option to opm.io for a very permissive parsing
 OPMIOPARSER_RECOVERY = [

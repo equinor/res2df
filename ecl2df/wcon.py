@@ -15,7 +15,6 @@ from .eclfiles import EclFiles
 from .common import parse_opmio_date_rec, OPMKEYWORDS
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 # The keywords supported in this module.
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]

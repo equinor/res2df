@@ -21,7 +21,6 @@ from .eclfiles import EclFiles
 from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 SUPPORTED_KEYWORDS = ["SWOF", "SGOF", "SWFN", "SGWFN", "SOF2", "SGFN", "SOF3", "SLGOF"]
 

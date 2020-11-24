@@ -11,7 +11,6 @@ import pandas as pd
 from ecl2df.eclfiles import EclFiles
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 def find_parameter_files(ecldeck_or_eclpath, filebase="parameters"):

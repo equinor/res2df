@@ -16,7 +16,6 @@ from . import parameters
 from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 PD_FREQ_MNEMONICS = {
     "monthly": "MS",

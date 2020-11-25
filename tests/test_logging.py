@@ -1,3 +1,4 @@
+import sys
 import subprocess
 
 import pytest
@@ -5,6 +6,7 @@ import pytest
 from test_grid import DATAFILE
 
 
+@pytest.mark.skipif(sys.version_info < (3, 7), reason="Requires Python 3.7 or higher")
 @pytest.mark.parametrize("verbose", [False, True])
 def test_grid_logging(tmp_path, verbose):
 
@@ -13,8 +15,6 @@ def test_grid_logging(tmp_path, verbose):
         commands.append("-v")
 
     result = subprocess.run(commands, check=True, capture_output=True)
+    output = result.stdout.decode() + result.stderr.decode()
 
-    if verbose:
-        assert "INFO:" in result.stderr.decode()
-    else:
-        assert "INFO:" not in result.stderr.decode()
+    assert "INFO:" in output if verbose else "INFO:" not in output

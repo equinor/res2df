@@ -1,4 +1,4 @@
-import argparse
+import subprocess
 
 import pytest
 
@@ -7,21 +7,15 @@ from test_grid import DATAFILE
 
 
 @pytest.mark.parametrize("verbose", [False, True])
-def test_grid_logging(caplog, tmp_path, verbose):
+def test_grid_logging(tmp_path, verbose):
 
-    args = argparse.Namespace(
-        verbose=verbose,
-        DATAFILE=DATAFILE,
-        vectors="*",
-        rstdates="",
-        dropconstants=False,
-        stackdates=False,
-        output=tmp_path / "eclgrid.csv",
-    )
+    commands = ["ecl2csv", "grid", DATAFILE, "--output", tmp_path / "eclgrid.csv"]
+    if verbose:
+        commands.append("-v")
 
-    grid_main(args)
+    result = subprocess.run(commands, check=True, capture_output=True)
 
     if verbose:
-        assert caplog.records
+        assert "INFO:" in result.stderr.decode()
     else:
-        assert caplog.records == []
+        assert "INFO:" not in result.stderr.decode()

@@ -1,0 +1,63 @@
+{
+  "name": "WSEGSICD",
+  "sections": [
+    "SCHEDULE"
+  ],
+  "items": [
+      {
+        "name": "WELL",
+        "value_type": "STRING"
+      },
+      {
+        "name": "SEGMENT1",
+        "value_type": "INT"
+      },
+      {
+        "name": "SEGMENT2",
+        "value_type": "INT"
+      },
+      {
+        "name": "STRENGTH",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "LENGTH",
+        "value_type": "DOUBLE",
+	"default": 12.0
+      },
+      {
+        "name": "RHO_CAL",
+        "value_type": "DOUBLE",
+        "default": 1000.25
+      },
+      {
+        "name": "MU_CAL",
+        "value_type": "DOUBLE",
+        "default": 1.45
+      },
+      {
+        "name": "CRIT_WATFRAC",
+        "value_type": "DOUBLE",
+        "default": 0.5
+      },
+      {
+        "name": "WIDTH_WATFRAC",
+        "value_type": "DOUBLE",
+        "default": 0.05
+      },
+      {
+        "name": "SCALING",
+        "value_type": "INT",
+	"default": -1
+      },
+      {
+        "name": "MAX_RATE",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "FLAG",
+        "value_type": "STRING",
+	"default": "OPEN"
+      }
+  ]
+}

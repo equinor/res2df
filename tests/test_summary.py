@@ -1,8 +1,8 @@
 """Test module for nnc2df"""
 
-import os
 import sys
 import datetime
+from pathlib import Path
 
 import yaml
 import pandas as pd
@@ -11,8 +11,8 @@ from ecl2df import summary, ecl2csv
 from ecl2df.eclfiles import EclFiles
 from ecl2df.summary import normalize_dates, resample_smry_dates
 
-TESTDIR = os.path.dirname(os.path.abspath(__file__))
-DATAFILE = os.path.join(TESTDIR, "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+TESTDIR = Path(__file__).absolute().parent
+DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_summary2df():
@@ -70,7 +70,7 @@ def test_summary2df_dates(tmpdir):
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
-    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    tmpcsvfile = tmpdir / "sum.csv"
     sys.argv = [
         "ecl2csv",
         "summary",
@@ -89,7 +89,7 @@ def test_summary2df_dates(tmpdir):
     assert str(disk_df["DATE"].values[0]) == "2002-01-02 00:00:00"
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02 00:00:00"
 
-    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    tmpcsvfile = tmpdir / "sum.csv"
     sys.argv = [
         "ecl2csv",
         "summary",
@@ -111,15 +111,21 @@ def test_summary2df_dates(tmpdir):
 
 
 def test_paramsupport(tmpdir):
-    """Test that we can merge in parameters.txt"""
-    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    """Test that we can merge in parameters.txt
+
+    This test code manipulates the paths in the checked out
+    repository (as it involves some pointing upwards in the directory structure)
+    It should not leave any extra files around, but requires certain filenames
+    not to be under version control.
+    """
+    tmpcsvfile = tmpdir / "sum.csv"
+
     eclfiles = EclFiles(DATAFILE)
 
-    parameterstxt = os.path.join(eclfiles.get_path(), "parameters.txt")
-    if os.path.exists(parameterstxt):
-        os.remove(parameterstxt)
-    with open(parameterstxt, "w") as pfile:
-        pfile.write("FOO 1\nBAR 3")
+    parameterstxt = Path(eclfiles.get_path()) / "parameters.txt"
+    if parameterstxt.is_file():
+        parameterstxt.unlink()
+    parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
     sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
@@ -127,14 +133,12 @@ def test_paramsupport(tmpdir):
     assert "FOO" in disk_df
     assert "BAR" in disk_df
     assert disk_df["BAR"].unique()[0] == 3
-    os.remove(parameterstxt)
-    os.remove(str(tmpcsvfile))
+    parameterstxt.unlink()
 
-    parametersyml = os.path.join(eclfiles.get_path(), "parameters.yml")
-    if os.path.exists(parametersyml):
-        os.remove(parametersyml)
-    with open(parametersyml, "w") as pfile:
-        pfile.write(yaml.dump({"FOO": 1, "BAR": 3}))
+    parametersyml = Path(eclfiles.get_path()) / "parameters.yml"
+    if parametersyml.is_file():
+        parametersyml.unlink()
+    parametersyml.write_text(yaml.dump({"FOO": 1, "BAR": 3}), encoding="utf-8")
     sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
     ecl2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -145,16 +149,16 @@ def test_paramsupport(tmpdir):
     assert "BAR" in disk_df
     assert len(disk_df["BAR"].unique()) == 1
     assert disk_df["BAR"].unique()[0] == 3
-    os.remove(parametersyml)
+    parametersyml.unlink()
 
 
 def test_main_subparser(tmpdir):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-sum.csv")
+    tmpcsvfile = tmpdir / "sum.csv"
     sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
-    assert os.path.exists(str(tmpcsvfile))
+    assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     assert "FOPT" in disk_df

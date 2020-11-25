@@ -2,7 +2,6 @@ import subprocess
 
 import pytest
 
-from ecl2df.grid import grid_main
 from test_grid import DATAFILE
 
 

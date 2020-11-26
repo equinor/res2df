@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.faults &mdash; ecl2df 0.8.3.dev15+g74d32f6 documentation</title>
+  <title>ecl2df.faults &mdash; ecl2df 0.8.3.dev16+gd42fcd0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3.dev15+g74d32f6
+                0.8.3.dev16+gd42fcd0
               </div>
             
           
@@ -172,9 +172,7 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_opmio_deckrecord</span>
 
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
 
 <span class="n">RECORD_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;IX1&quot;</span><span class="p">,</span> <span class="s2">&quot;IX2&quot;</span><span class="p">,</span> <span class="s2">&quot;IY1&quot;</span><span class="p">,</span> <span class="s2">&quot;IY2&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ1&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ2&quot;</span><span class="p">,</span> <span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
 <span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
@@ -233,7 +231,7 @@
 <div class="viewcode-block" id="faults_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.faults.faults_main">[docs]</a><span class="k">def</span> <span class="nf">faults_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>

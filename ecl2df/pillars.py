@@ -11,7 +11,6 @@ import pandas as pd
 
 import ecl2df
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 AGGREGATORS = {
@@ -407,7 +406,7 @@ def fill_parser(parser):
 def pillars_main(args):
     """This is the command line API"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = ecl2df.EclFiles(args.DATAFILE)
     dframe = df(
         eclfiles,

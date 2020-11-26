@@ -10,7 +10,6 @@ import pandas as pd
 
 from ecl2df.eclfiles import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 

@@ -17,7 +17,6 @@ try:
 except ImportError:
     HAVE_NETWORKX = False
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 
@@ -298,7 +297,7 @@ def fill_parser(parser):
 def trans_main(args):
     """This is the command line API"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     trans_df = df(
         eclfiles,

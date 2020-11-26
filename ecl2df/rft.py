@@ -25,7 +25,6 @@ from .gruptree import dict2treelib
 from .common import merge_zones, write_dframe_stdout_file
 
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 # In debug mode, these columns will be exported to three csv files.
@@ -675,9 +674,9 @@ def fill_parser(parser):
 def rft_main(args):
     """Entry-point for module, for command line utility"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     if args.debug:
-        logger.setLevel(logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
     if args.DATAFILE.endswith(".RFT"):
         # Support the RFT file as an argument also:
         eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")

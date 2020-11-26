@@ -10,7 +10,6 @@ import opm.io
 
 from ecl2df import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 # Constants to use for pointing to positions in the xxxDIMS keyword

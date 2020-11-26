@@ -15,9 +15,7 @@ from .eclfiles import EclFiles
 from . import parameters
 from .common import write_dframe_stdout_file
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
 
 PD_FREQ_MNEMONICS = {
     "monthly": "MS",
@@ -373,7 +371,7 @@ def fill_parser(parser):
 def summary_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     sum_df = df(
         eclfiles,

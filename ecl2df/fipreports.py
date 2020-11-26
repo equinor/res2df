@@ -12,7 +12,6 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_ecl_month, write_dframe_stdout_file
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 REGION_REPORT_COLUMNS = [
@@ -183,7 +182,7 @@ def fill_parser(parser):
 def fipreports_main(args):
     """Command line API"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:

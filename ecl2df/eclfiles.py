@@ -14,7 +14,6 @@ from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 # Default parse option to opm.io for a very permissive parsing

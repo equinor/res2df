@@ -12,7 +12,6 @@ import pandas as pd
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 SUPPORTED_KEYWORDS = ["PVTO", "PVDO", "PVTG", "PVDG", "DENSITY", "ROCK", "PVTW"]
@@ -246,7 +245,7 @@ def fill_reverse_parser(parser):
 def pvt_main(args):
     """Entry-point for module, for command line utility for Eclipse to CSV"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     logger.info("Parsed %s", args.DATAFILE)
     if eclfiles:
@@ -280,7 +279,7 @@ def pvt_main(args):
 def pvt_reverse_main(args):
     """Entry-point for module, for command line utility for CSV to Eclipse"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     pvt_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(pvt_df, keywords=args.keywords)

@@ -10,9 +10,7 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import parse_opmio_deckrecord
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-
 
 RECORD_COLUMNS = ["NAME", "IX1", "IX2", "IY1", "IY2", "IZ1", "IZ2", "FACE"]
 COLUMNS = ["NAME", "I", "J", "K", "FACE"]
@@ -71,7 +69,7 @@ def fill_parser(parser):
 def faults_main(args):
     """Read from disk and write CSV back to disk"""
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()

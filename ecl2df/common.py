@@ -62,7 +62,6 @@ for keyw in [
     )
 
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 

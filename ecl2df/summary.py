@@ -1,15 +1,12 @@
-#!/usr/bin/env python
-"""
-Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)
-
-Code taken from fmu.ensemble.ScratchRealization
-"""
+"""Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import logging
 import datetime
 import dateutil.parser
 from pathlib import Path
 
 import pandas as pd
+
+from ecl.summary import EclSum
 
 from .eclfiles import EclFiles
 from . import parameters
@@ -197,7 +194,8 @@ def df(
     support for string mnenomics for the time index.
 
     Arguments:
-        eclfiles: EclFiles object representing the Eclipse deck.
+        eclfiles: EclFiles object representing the Eclipse deck. Alternatively
+           an EclSum object.
         time_index: string indicating a resampling frequency,
            'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
            return the simulated report steps (also default).
@@ -248,9 +246,11 @@ def df(
         column_keys_str,
         str(time_index_arg or "raw"),
     )
-    dframe = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
-        time_index_arg, column_keys
-    )
+    if isinstance(eclfiles, EclSum):
+        eclsum = eclfiles
+    else:
+        eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+    dframe = eclsum.pandas_frame(time_index_arg, column_keys)
     # If time_index_arg was None, but start_date was set, we need to date-truncate
     # afterwards:
     logger.info(
@@ -285,6 +285,72 @@ def df(
         if dframe.index.dtype == "object":
             dframe.index = pd.to_datetime(dframe.index)
     return dframe
+
+
+def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
+    """Fix a dataframe making it ready for EclSum.from_pandas()
+
+    * Ensures that the index is always datetime, and sorted.
+    * Removes BLOCK vectors, these are currently not supported as
+      it requires knowledge of the grid dimensions. Warnings
+      will be emitted for skipped columns
+
+    Args:
+        dframe (pd.DataFrame): Dataframe to read. Will not be modified.
+
+    Returns:
+        pd.DataFrame: Modified copy of incoming dataframe.
+    """
+    dframe = dframe.copy()
+    if "DATE" in dframe.columns:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+        dframe = dframe.set_index("DATE", drop=True)
+    dframe.sort_index(axis=0, inplace=True)
+
+    # This column will appear if dataframes are naively written to CSV
+    # files and read back in again.
+    if "Unnamed: 0" in dframe:
+        dframe.drop("Unnamed: 0", axis="columns", inplace=True)
+
+    block_columns = [
+        col for col in dframe.columns if (col.startswith("B") or col.startswith("LB"))
+    ]
+    if block_columns:
+        dframe = dframe.drop(columns=block_columns)
+        logger.warning(
+            "Dropped columns with block data, not supported: %s",
+            str({colname.partition(":")[0] + ":*" for colname in block_columns}),
+        )
+
+    return dframe
+
+
+def df2eclsum(
+    dframe: pd.DataFrame,
+    casename: str = "SYNTHETIC",
+):
+    """Convert a dataframe to an EclSum object
+
+    Args:
+        dframe (pd.DataFrame): Dataframe with a DATE colum (or with the
+            dates/datetimes in the index).
+        casename: Name of Eclipse casename/basename to be used for the EclSum object
+            If the EclSum object is later written to disk, this will be used
+            to construct the filenames.
+
+    Returns:
+        EclSum
+    """
+    if dframe.empty:
+        return None
+
+    if casename.upper() != casename:
+        raise ValueError("casename {casename} must be UPPER CASE")
+    if "." in casename:
+        raise ValueError(f"Do not use dots in casename {casename}")
+
+    dframe = _fix_dframe_for_libecl(dframe)
+    return EclSum.from_pandas(casename, dframe)
 
 
 def fill_parser(parser):
@@ -368,11 +434,23 @@ def fill_parser(parser):
     return parser
 
 
+def fill_reverse_parser(parser):
+    """Fill a parser for the operation:  dataframe -> eclsum files"""
+    parser.add_argument("csvfile", help="Name of CSV file with summary data.")
+    parser.add_argument("ECLBASE", help="Basename for Eclipse output files")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument("--debug", action="store_true", help="Be verbose")
+    return parser
+
+
 def summary_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
-    eclfiles = EclFiles(args.DATAFILE)
+    eclbase = (
+        args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
+    )
+    eclfiles = EclFiles(eclbase)
     sum_df = df(
         eclfiles,
         time_index=args.time_index,
@@ -385,3 +463,20 @@ def summary_main(args):
     if sum_df.empty:
         logger.warning("Empty summary data being written to disk!")
     write_dframe_stdout_file(sum_df, args.output, logger)
+
+
+def summary_reverse_main(args):
+    """Entry point for usage with "csv2ecl summary" on the command line"""
+    if args.verbose and not args.debug:
+        logging.basicConfig(level=logging.INFO)
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    summary_df = pd.read_csv(args.csvfile)
+    logger.info("Parsed %s", args.csvfile)
+
+    eclsum = df2eclsum(summary_df, args.ECLBASE)
+    EclSum.fwrite(eclsum)
+    logger.info(
+        "Wrote to %s and %s", args.ECLBASE + ".UNSMRY", args.ECLBASE + ".SMSPEC"
+    )

@@ -2,17 +2,28 @@
 
 import sys
 import datetime
+import logging
 from pathlib import Path
 
 import yaml
 import pandas as pd
 
-from ecl2df import summary, ecl2csv
+import pytest
+
+from ecl2df import summary, ecl2csv, csv2ecl
 from ecl2df.eclfiles import EclFiles
-from ecl2df.summary import normalize_dates, resample_smry_dates
+from ecl2df.summary import (
+    normalize_dates,
+    resample_smry_dates,
+    df2eclsum,
+    df,
+    _fix_dframe_for_libecl,
+)
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+
+logging.basicConfig(level=logging.INFO)
 
 
 def test_summary2df():
@@ -70,6 +81,9 @@ def test_summary2df_dates(tmpdir):
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
+
+@pytest.mark.integration
+def test_ecl2csv_summary(tmpdir):
     tmpcsvfile = tmpdir / "sum.csv"
     sys.argv = [
         "ecl2csv",
@@ -320,3 +334,190 @@ def test_resample_smry_dates():
         )
         == 2
     )
+
+
+@pytest.mark.parametrize(
+    "dframe, expected_dframe",
+    [
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (pd.DataFrame(), pd.DataFrame()),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1}]),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[pd.to_datetime("2016-01-01")]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1}], index=[2]),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[pd.to_datetime("2016-01-01")]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": datetime.date(2016, 1, 1), "FOPT": 1}]),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[pd.to_datetime("2016-01-01")]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [{"DATE": pd.to_datetime(datetime.date(2016, 1, 1)), "FOPT": 1}]
+            ),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[pd.to_datetime("2016-01-01")]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": "2016-01-01", "RGIP:1": 1}]),
+            pd.DataFrame(
+                [{"RGIP:1": 1}], index=[pd.to_datetime("2016-01-01")]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": "2016-01-01", "BWPR:1": 1}]),
+            pd.DataFrame([], index=[pd.to_datetime("2016-01-01")]).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": "2016-01-01", "BWPR:100,100,100": 1}]),
+            pd.DataFrame([], index=[pd.to_datetime("2016-01-01")]).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": "2016-01-01", "LBPR_X:100,100,100": 1}]),
+            pd.DataFrame([], index=[pd.to_datetime("2016-01-01")]).rename_axis("DATE"),
+        ),
+    ],
+)
+def test_fix_dframe_for_libecl(dframe, expected_dframe):
+    pd.testing.assert_frame_equal(
+        _fix_dframe_for_libecl(dframe), expected_dframe, check_dtype=False
+    )
+
+
+@pytest.mark.parametrize(
+    "dframe",
+    [
+        (pd.DataFrame()),
+        (pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1000}])),
+        (pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100}])),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    {"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100},
+                    {"DATE": "2017-01-01", "FOPT": 1000, "FOPR": 100},
+                ]
+            )
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    {"DATE": "2016-01-01", "BPR:1,1,1": 100},
+                ]
+            )
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    {"DATE": "2016-01-01", "RWIP:1": 100},
+                ]
+            )
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    {"DATE": "2016-01-01", "BPR:11111": 100},
+                ]
+            )
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    # This is not allowed in Eclipse, but works here.
+                    {"DATE": "2016-01-01", "FOOBAR": 100},
+                ]
+            )
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    # This is not allowed in Eclipse, but works here.
+                    {"DATE": "2016-01-01", "FOOBARCOMBARCOM": 100},
+                ]
+            )
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    # This is not allowed in Eclipse, but works here.
+                    {"DATE": "2016-01-01", "foobarcombarcom": 100},
+                ]
+            )
+        ),
+    ],
+)
+def test_df2eclsum(dframe):
+    """Test that a dataframe can be converted to an EclSum object, and then read
+    back again"""
+
+    # Massage the dframe first so we can assert on equivalence after.
+    dframe = _fix_dframe_for_libecl(dframe)
+
+    eclsum = df2eclsum(dframe)
+    if dframe.empty:
+        assert eclsum is None
+        return
+
+    dframe_roundtrip = df(eclsum)
+    pd.testing.assert_frame_equal(
+        dframe.sort_index(axis=1),
+        dframe_roundtrip.sort_index(axis=1),
+        check_dtype=False,
+    )
+
+
+def test_df2eclsum_errors():
+    dframe = pd.DataFrame(
+        [
+            {"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100},
+        ]
+    )
+    with pytest.raises(ValueError):
+        df2eclsum(dframe, casename="foobar")
+    with pytest.raises(ValueError):
+        df2eclsum(dframe, casename="foobar.UNSMRY")
+
+
+@pytest.mark.integration
+def test_csv2ecl_summary(tmpdir):
+    dframe = pd.DataFrame(
+        [
+            {"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100},
+            {"DATE": "2017-01-01", "FOPT": 1000, "FOPR": 100},
+        ]
+    )
+    tmpdir.chdir()
+    dframe.to_csv("summary.csv")
+    sys.argv = [
+        "csv2ecl",
+        "summary",
+        "-v",
+        "summary.csv",
+        "SYNTHETIC",
+    ]
+    csv2ecl.main()
+    assert Path("SYNTHETIC.UNSMRY").is_file()
+    assert Path("SYNTHETIC.SMSPEC").is_file()

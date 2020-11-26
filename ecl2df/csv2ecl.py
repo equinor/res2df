@@ -8,7 +8,7 @@ import sys
 
 import argparse
 
-from ecl2df import pvt, equil, satfunc
+from ecl2df import pvt, equil, satfunc, summary
 
 from ecl2df import __version__
 
@@ -46,6 +46,14 @@ def get_parser():
         )
     else:
         subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
+
+    summary_parser = subparsers.add_parser(
+        "summary",
+        help="Write EclSum UNSMRY files",
+        description=("Write Eclipse UNSMRY files from CSV files."),
+    )
+    summary.fill_reverse_parser(summary_parser)
+    summary_parser.set_defaults(func=summary.summary_reverse_main)
 
     equil_parser = subparsers.add_parser(
         "equil",

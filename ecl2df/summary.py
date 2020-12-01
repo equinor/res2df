@@ -11,6 +11,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from ecl.summary  import EclSum
+
 from .eclfiles import EclFiles
 from . import parameters
 from .common import write_dframe_stdout_file
@@ -197,7 +199,8 @@ def df(
     support for string mnenomics for the time index.
 
     Arguments:
-        eclfiles: EclFiles object representing the Eclipse deck.
+        eclfiles: EclFiles object representing the Eclipse deck. Alternatively
+           an EclSum object.
         time_index: string indicating a resampling frequency,
            'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
            return the simulated report steps (also default).
@@ -248,9 +251,11 @@ def df(
         column_keys_str,
         str(time_index_arg or "raw"),
     )
-    dframe = eclfiles.get_eclsum(include_restart=include_restart).pandas_frame(
-        time_index_arg, column_keys
-    )
+    if isinstance(eclfiles, EclSum):
+        eclsum = eclfiles
+    else:
+        eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+    dframe = eclsum.pandas_frame(time_index_arg, column_keys)
     # If time_index_arg was None, but start_date was set, we need to date-truncate
     # afterwards:
     logger.info(
@@ -372,7 +377,11 @@ def summary_main(args):
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
-    eclfiles = EclFiles(args.DATAFILE)
+        #logger.setLevel(logging.INFO)
+    eclbase = (
+        args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
+    )
+    eclfiles = EclFiles(eclbase)
     sum_df = df(
         eclfiles,
         time_index=args.time_index,

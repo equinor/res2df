@@ -4,6 +4,7 @@ End-user command line tool for accessing functionality
 in ecl2df
 """
 import sys
+import logging
 
 import argparse
 

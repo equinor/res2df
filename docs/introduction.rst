@@ -1,6 +1,9 @@
 Introduction
 ============
 
+.. image:: images/ecl2df.png
+   :width: 200
+
 *ecl2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
 around `libecl <https://github.com/equinor/libecl/>`_ and `opm.io
 <https://github.com/OPM/opm-common/>`_, which are used to access

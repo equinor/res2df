@@ -360,8 +360,8 @@ def applywelopen(compdat_df, welopen_df):
         elif row["C1"] or row["C2"]:
             logger.warning(
                 "Lumped connections are not supported in a WELOPEN keyword. "
-                "Skipping WELOPEN actions for lumped connections '%s' and/or '%s'"
-                % (row["C1"], row["C2"])
+                "Skipping WELOPEN actions for lumped connections "
+                "'%s' and/or '%s' in well %s" % (row["C1"], row["C2"], row["WELL"])
             )
             continue
         elif not (row["I"] and row["J"] and row["K"]):
@@ -372,13 +372,15 @@ def applywelopen(compdat_df, welopen_df):
         else:
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
-                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+                "(WELL=%s, I=%s, J=%s, K=%s)"
+                % (row["WELL"], row["I"], row["J"], row["K"])
             )
 
         if previous_state.empty:
-            raise ValueError(
-                "A WELOPEN keyword is not acting on any existing connection. "
-                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+            logger.warning(
+                "A WELOPEN statement acts on a non-existing connection: "
+                "(WELL=%s, I=%s ,J=%s ,K=%s)"
+                % (row["WELL"], row["I"], row["J"], row["K"])
             )
 
         new_state = previous_state

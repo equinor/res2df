@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 import pandas as pd
 
@@ -7,7 +8,186 @@ import pytest
 from ecl2df import compdat
 from ecl2df import EclFiles
 
+logging.basicConfig()
+
 WELOPEN_CASES = [
+    # Simplest possible  WELOPEN case
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test the defaults handling in WELOPEN:
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' 5* /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test that explicit i,j,k in WELOPEN works:
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+
+    WELOPEN
+     -- This also specifies lumped connections, but is ignored
+     -- by ecl2df  since i,j,k is also specified.
+     'OP1' 'SHUT' 1 1 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test that wrong i,j,k in WELOPEN is ignored (warning is given)
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+
+    WELOPEN
+     -- I index is wrong here:
+     'OP1' 'SHUT' 2 1 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+    ),
+    # Test that wrong i,j,k in WELOPEN is ignored (warning is given)
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+
+    WELOPEN
+     -- J index is wrong here:
+     'OP1' 'SHUT' 1 2 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+    ),
+    # Test that overshooting K indices are accepted (warning is given)
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' 1 1 2  /  -- max K is 1 in COMPDAT
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+    ),
+    # Test J slicing
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 3 'OPEN' /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' 1 1 2  /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+            ],
+        ),
+    ),
+    # Lumped connections are not supported, nothing is shut:
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 3 'OPEN' /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' 3* 1 2 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+            ],
+        ),
+    ),
+    # Test multiple time steps
     (
         """
     DATES
@@ -392,7 +572,12 @@ WELOPEN_CASES = [
 def test_welopen(test_input, expected):
     """Test with WELOPEN present"""
     deck = EclFiles.str2deck(test_input)
-    compdf = compdat.deck2dfs(deck)["COMPDAT"]
+    compdf = (
+        compdat.deck2dfs(deck)["COMPDAT"]
+        .sort_values(["DATE", "WELL", "K1"])
+        .reset_index()
+    )
+    expected = expected.sort_values(["DATE", "WELL", "K1"]).reset_index()
 
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
     assert (compdf[columns_to_check] == expected[columns_to_check]).all(axis=None)

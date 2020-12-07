@@ -45,7 +45,7 @@ def test_summary2df():
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
 
-def test_summary2df_dates(tmpdir):
+def test_summary2df_dates():
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
 
@@ -84,6 +84,8 @@ def test_summary2df_dates(tmpdir):
 
 @pytest.mark.integration
 def test_ecl2csv_summary(tmpdir):
+    """Test that the command line utility ecl2csv is installed and
+    works with summary data"""
     tmpcsvfile = tmpdir / "sum.csv"
     sys.argv = [
         "ecl2csv",
@@ -396,6 +398,7 @@ def test_resample_smry_dates():
     ],
 )
 def test_fix_dframe_for_libecl(dframe, expected_dframe):
+    """Test the dataframe preprocessor/validator for df2eclsum works"""
     pd.testing.assert_frame_equal(
         _fix_dframe_for_libecl(dframe), expected_dframe, check_dtype=False
     )
@@ -489,20 +492,44 @@ def test_df2eclsum(dframe):
     )
 
 
-def test_df2eclsum_errors():
+def test_df2eclsum_datetimeindex():
+    """Test that providing a dataframe with a datetimeindex also works"""
     dframe = pd.DataFrame(
         [
             {"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100},
         ]
     )
-    with pytest.raises(ValueError):
+    dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    dframe.set_index("DATE")
+
+    roundtrip = df(df2eclsum(dframe))
+    assert isinstance(roundtrip.index, pd.DatetimeIndex)
+    assert roundtrip["FOPR"].values == [100]
+    assert roundtrip["FOPT"].values == [1000]
+
+
+def test_df2eclsum_errors():
+    """Test various error conditions, checking that the correct error message
+    is emitted"""
+    dframe = pd.DataFrame(
+        [
+            {"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100},
+        ]
+    )
+    with pytest.raises(ValueError, match="casename foobar must be UPPER CASE"):
         df2eclsum(dframe, casename="foobar")
-    with pytest.raises(ValueError):
-        df2eclsum(dframe, casename="foobar.UNSMRY")
+    with pytest.raises(ValueError, match="Do not use dots in casename"):
+        df2eclsum(dframe, casename="FOOBAR.UNSMRY")  # .UNSMRY should not be included
+
+    # No date included:
+    with pytest.raises(ValueError, match="dataframe must have a DatetimeIndex"):
+        df2eclsum(pd.DataFrame([{"FOPT": 1000}]))
 
 
 @pytest.mark.integration
 def test_csv2ecl_summary(tmpdir):
+    """Check that we can call df2eclsum through the csv2ecl command line
+    utility"""
     dframe = pd.DataFrame(
         [
             {"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100},

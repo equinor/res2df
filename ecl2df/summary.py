@@ -1,9 +1,9 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import logging
 import datetime
-import dateutil.parser
 from pathlib import Path
 
+import dateutil.parser
 import pandas as pd
 
 from ecl.summary import EclSum
@@ -301,10 +301,14 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Modified copy of incoming dataframe.
     """
+    if dframe.empty:
+        return dframe
     dframe = dframe.copy()
     if "DATE" in dframe.columns:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
         dframe = dframe.set_index("DATE", drop=True)
+    if not isinstance(dframe.index, pd.DatetimeIndex):
+        raise ValueError("dataframe must have a DatetimeIndex")
     dframe.sort_index(axis=0, inplace=True)
 
     # This column will appear if dataframes are naively written to CSV
@@ -345,7 +349,7 @@ def df2eclsum(
         return None
 
     if casename.upper() != casename:
-        raise ValueError("casename {casename} must be UPPER CASE")
+        raise ValueError(f"casename {casename} must be UPPER CASE")
     if "." in casename:
         raise ValueError(f"Do not use dots in casename {casename}")
 

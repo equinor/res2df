@@ -23,6 +23,7 @@ REQUIREMENTS = [
     "ecl",
     "equinor-libres",
     "ert",
+    "numpy",
     "opm",
     "pandas",
     "pyyaml>=5.1",

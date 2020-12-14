@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df package &mdash; ecl2df 0.8.4.dev1+g3aab40c documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.8.4.dev2+g44078fc documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.8.4.dev1+g3aab40c
+                0.8.4.dev2+g44078fc
               </div>
             
           
@@ -2855,8 +2855,7 @@ the SWOF keyword).</p></li>
 </div>
 <div class="section" id="module-ecl2df.summary">
 <span id="ecl2df-summary-module"></span><h2>ecl2df.summary module<a class="headerlink" href="#module-ecl2df.summary" title="Permalink to this headline">¶</a></h2>
-<p>Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)</p>
-<p>Code taken from fmu.ensemble.ScratchRealization</p>
+<p>Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)</p>
 <dl class="py data">
 <dt id="ecl2df.summary.PD_FREQ_MNEMONICS">
 <code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">PD_FREQ_MNEMONICS</code><em class="property"> = {'daily': 'D', 'monthly': 'MS', 'weekly': 'W-MON', 'yearly': 'YS'}</em><a class="headerlink" href="#ecl2df.summary.PD_FREQ_MNEMONICS" title="Permalink to this definition">¶</a></dt>
@@ -2894,7 +2893,8 @@ support for string mnenomics for the time index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eclfiles</strong> – EclFiles object representing the Eclipse deck.</p></li>
+<li><p><strong>eclfiles</strong> – EclFiles object representing the Eclipse deck. Alternatively
+an EclSum object.</p></li>
 <li><p><strong>time_index</strong> – string indicating a resampling frequency,
 ‘yearly’, ‘monthly’, ‘daily’, ‘last’ or ‘raw’, the latter will
 return the simulated report steps (also default).
@@ -2927,6 +2927,26 @@ column_keys are not existing.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="ecl2df.summary.df2eclsum">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">df2eclsum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span><span class="p">:</span> <span class="n">pandas.core.frame.DataFrame</span></em>, <em class="sig-param"><span class="n">casename</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'SYNTHETIC'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#df2eclsum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.df2eclsum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dataframe to an EclSum object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Dataframe with a DATE colum (or with the
+dates/datetimes in the index).</p></li>
+<li><p><strong>casename</strong> – Name of Eclipse casename/basename to be used for the EclSum object
+If the EclSum object is later written to disk, this will be used
+to construct the filenames.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>EclSum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="ecl2df.summary.fill_parser">
 <code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">fill_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parser</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#fill_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.fill_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up sys.argv parsers.</p>
@@ -2936,6 +2956,12 @@ column_keys are not existing.</p>
 with arguments</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.summary.fill_reverse_parser">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">fill_reverse_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parser</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#fill_reverse_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.fill_reverse_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill a parser for the operation:  dataframe -&gt; eclsum files</p>
 </dd></dl>
 
 <dl class="py function">
@@ -3002,6 +3028,12 @@ normalized dates. Overriden if freq is ‘last’.</p></li>
 <dt id="ecl2df.summary.summary_main">
 <code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">summary_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#summary_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.summary_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read summary data from disk and write CSV back to disk</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.summary.summary_reverse_main">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">summary_reverse_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#summary_reverse_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.summary_reverse_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry point for usage with “csv2ecl summary” on the command line</p>
 </dd></dl>
 
 </div>

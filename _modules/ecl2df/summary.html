@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ecl2df.summary &mdash; ecl2df 0.8.4.dev1+g3aab40c documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.8.4.dev2+g44078fc documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.4.dev1+g3aab40c
+                0.8.4.dev2+g44078fc
               </div>
             
           
@@ -160,18 +160,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ecl2df.summary</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Provide a Pandas DataFrame interface to Eclipse summary data (UNSMRY)</span>
-
-<span class="sd">Code taken from fmu.ensemble.ScratchRealization</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">dateutil.parser</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
+<span class="kn">import</span> <span class="nn">dateutil.parser</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="kn">import</span> <span class="n">EclSum</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">parameters</span>
@@ -359,7 +356,8 @@
 <span class="sd">    support for string mnenomics for the time index.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        eclfiles: EclFiles object representing the Eclipse deck.</span>
+<span class="sd">        eclfiles: EclFiles object representing the Eclipse deck. Alternatively</span>
+<span class="sd">           an EclSum object.</span>
 <span class="sd">        time_index: string indicating a resampling frequency,</span>
 <span class="sd">           &#39;yearly&#39;, &#39;monthly&#39;, &#39;daily&#39;, &#39;last&#39; or &#39;raw&#39;, the latter will</span>
 <span class="sd">           return the simulated report steps (also default).</span>
@@ -410,9 +408,11 @@
         <span class="n">column_keys_str</span><span class="p">,</span>
         <span class="nb">str</span><span class="p">(</span><span class="n">time_index_arg</span> <span class="ow">or</span> <span class="s2">&quot;raw&quot;</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">dframe</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">(</span><span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span>
-        <span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">EclSum</span><span class="p">):</span>
+        <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">(</span><span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>
     <span class="c1"># If time_index_arg was None, but start_date was set, we need to date-truncate</span>
     <span class="c1"># afterwards:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -447,6 +447,76 @@
         <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
             <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span></div>
+
+
+<span class="k">def</span> <span class="nf">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for EclSum.from_pandas()</span>
+
+<span class="sd">    * Ensures that the index is always datetime, and sorted.</span>
+<span class="sd">    * Removes BLOCK vectors, these are currently not supported as</span>
+<span class="sd">      it requires knowledge of the grid dimensions. Warnings</span>
+<span class="sd">      will be emitted for skipped columns</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe (pd.DataFrame): Dataframe to read. Will not be modified.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Modified copy of incoming dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dframe</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dataframe must have a DatetimeIndex&quot;</span><span class="p">)</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># This column will appear if dataframes are naively written to CSV</span>
+    <span class="c1"># files and read back in again.</span>
+    <span class="k">if</span> <span class="s2">&quot;Unnamed: 0&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Unnamed: 0&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">block_columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;LB&quot;</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">block_columns</span><span class="p">:</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">block_columns</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;Dropped columns with block data, not supported: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">({</span><span class="n">colname</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:*&quot;</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">block_columns</span><span class="p">}),</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dframe</span>
+
+
+<div class="viewcode-block" id="df2eclsum"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.df2eclsum">[docs]</a><span class="k">def</span> <span class="nf">df2eclsum</span><span class="p">(</span>
+    <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">casename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SYNTHETIC&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a dataframe to an EclSum object</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe (pd.DataFrame): Dataframe with a DATE colum (or with the</span>
+<span class="sd">            dates/datetimes in the index).</span>
+<span class="sd">        casename: Name of Eclipse casename/basename to be used for the EclSum object</span>
+<span class="sd">            If the EclSum object is later written to disk, this will be used</span>
+<span class="sd">            to construct the filenames.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        EclSum</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">casename</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="n">casename</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2"> must be UPPER CASE&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">casename</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Do not use dots in casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">casename</span><span class="p">,</span> <span class="n">dframe</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
@@ -530,11 +600,23 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fill a parser for the operation:  dataframe -&gt; eclsum files&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;csvfile&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of CSV file with summary data.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;ECLBASE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Basename for Eclipse output files&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
 <div class="viewcode-block" id="summary_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.summary_main">[docs]</a><span class="k">def</span> <span class="nf">summary_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-    <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="n">eclbase</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.DATA&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.UNSMRY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.SMSPEC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
     <span class="n">sum_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
         <span class="n">eclfiles</span><span class="p">,</span>
         <span class="n">time_index</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">time_index</span><span class="p">,</span>
@@ -547,6 +629,23 @@
     <span class="k">if</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty summary data being written to disk!&quot;</span><span class="p">)</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">sum_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="summary_reverse_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.summary_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Entry point for usage with &quot;csv2ecl summary&quot; on the command line&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+
+    <span class="n">eclsum</span> <span class="o">=</span> <span class="n">df2eclsum</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">ECLBASE</span><span class="p">)</span>
+    <span class="n">EclSum</span><span class="o">.</span><span class="n">fwrite</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Wrote to </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">ECLBASE</span> <span class="o">+</span> <span class="s2">&quot;.UNSMRY&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">ECLBASE</span> <span class="o">+</span> <span class="s2">&quot;.SMSPEC&quot;</span>
+    <span class="p">)</span></div>
 </pre></div>
 
            </div>

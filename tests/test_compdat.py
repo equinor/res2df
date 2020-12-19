@@ -483,12 +483,18 @@ WSEGSICD
 -- WELL   SEG  SEG2 ALPHA  SF             RHO     VIS  WCT
     OP_6  31   31   0.0001  -1.186915444  1000.0  1.0  0.5  /
 /
+
+WSEGVALV
+-- WELL   SEG CV             AC      L     
+    OP_6  31       0.0084252 0.00075  1*  /
+/
 """
     deck = EclFiles.str2deck(schstr)
     compdfs = compdat.deck2dfs(deck)
     wsegaicd = compdfs["WSEGAICD"]
     wsegsicd = compdfs["WSEGSICD"]
-
+    wsegvalv = compdfs["WSEGVALV"]
+    
     # Test WSEGAICD
     assert len(wsegaicd) == 1
     assert "WELL" in wsegaicd
@@ -500,3 +506,9 @@ WSEGSICD
     assert "WELL" in wsegsicd
     assert wsegsicd["WELL"].unique()[0] == "OP_6"
     assert len(wsegsicd.dropna(axis=1, how="all").iloc[0]) == 11
+
+    # Test WSEGVALV
+    assert len(wsegvalv) == 1
+    assert "WELL" in wsegvalv
+    assert wsegvalv["WELL"].unique()[0] == "OP_6"
+    assert len(wsegvalv.dropna(axis=1, how="all").iloc[0]) == 5

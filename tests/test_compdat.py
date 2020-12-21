@@ -485,7 +485,7 @@ WSEGSICD
 /
 
 WSEGVALV
--- WELL   SEG CV             AC      L     
+-- WELL   SEG CV             AC      L
     OP_6  31       0.0084252 0.00075  1*  /
 /
 """

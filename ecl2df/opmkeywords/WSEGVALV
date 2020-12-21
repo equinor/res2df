@@ -1,0 +1,49 @@
+{
+  "name": "WSEGVALV",
+  "sections": [
+    "SCHEDULE"
+  ],
+  "items": [
+      {
+        "name": "WELL",
+        "value_type": "STRING"
+      },
+      {
+        "name": "SEGMENT",
+        "value_type": "INT"
+      },
+      {
+        "name": "CV",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "CONSTRICT_AREA",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "FRICT_LENGTH",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "PIPE_DIAM",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "ABS_ROUGHNESS",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "PIPE_AREA",
+        "value_type": "DOUBLE"
+      },
+      {
+        "name": "FLAG",
+        "value_type": "STRING",
+	"default": "OPEN"
+      },
+      {
+        "name": "MAX_AREA",
+        "value_type": "DOUBLE"
+      }
+  ]
+}

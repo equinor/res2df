@@ -19,6 +19,7 @@ SCHFILE = str(TESTDIR / "data/reek/eclipse/include/schedule/reek_history.sch")
 # AICD and ICD completion from WellBuilder
 SCHFILE_AICD = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_aicd1_gp.sch")
 SCHFILE_ICD = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_icd1_gp.sch")
+SCHFILE_VALV = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_valve1_gp.sch")
 
 
 def test_df():
@@ -447,6 +448,11 @@ def test_msw_schfile2df():
     assert not compdfs["WSEGSICD"].empty
     assert not compdfs["WSEGSICD"].columns.empty
 
+    deck = EclFiles.file2deck(SCHFILE_VALV)
+    compdfs = compdat.deck2dfs(deck)
+    assert not compdfs["WSEGVALV"].empty
+    assert not compdfs["WSEGVALV"].columns.empty
+
 
 def test_msw_str2df():
     """Testing making a dataframe from an explicit string including MSW"""
@@ -485,7 +491,7 @@ WSEGSICD
 /
 
 WSEGVALV
--- WELL   SEG CV             AC      L
+-- WELL   SEG             CV      AC   L
     OP_6  31       0.0084252 0.00075  1*  /
 /
 """
@@ -512,3 +518,96 @@ WSEGVALV
     assert "WELL" in wsegvalv
     assert wsegvalv["WELL"].unique()[0] == "OP_6"
     assert len(wsegvalv.dropna(axis=1, how="all").iloc[0]) == 5
+
+    schstr_valv = """
+WELSPECS
+   'OP_6' 'DUMMY' 28 37 1575.82 OIL 0.0 'STD' 'SHUT' 'YES' 0 'SEG' /
+/
+
+COMPDAT
+    'OP_6' 28 37 1 1 OPEN 0 1.2719 0.311 114.887 0.0 0.0 'X' 19.65 /
+/
+
+WELSEGS
+-- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL
+   'OP_6'        0.0        0.0   1.0E-5    'ABS'     'HF-'    'HO' /
+--  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS
+     32    32    1       31  2371.596 1577.726  0.15 0.00065    /
+/
+
+COMPSEGS
+   'OP_6' /
+--  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG
+    28  37   1   2     2366.541 2376.651  1*  3*  32   /
+/
+
+-- Max defaulted
+WSEGVALV
+-- WELL   SEG
+    OP_6   31 /
+/
+"""
+
+    # Test WSEGVALV max defaulted
+    deck = EclFiles.str2deck(schstr_valv)
+    compdfs = compdat.deck2dfs(deck)
+    wsegvalv = compdfs["WSEGVALV"]
+    assert len(wsegvalv) == 1
+    assert "WELL" in wsegvalv
+    assert wsegvalv["WELL"].unique()[0] == "OP_6"
+    assert len(wsegvalv.dropna(axis=1, how="all").iloc[0]) == 3
+
+    schstr_valv_wlist = """
+WELSPECS
+   'OP_6' 'DUMMY' 28 37 1575.82 OIL 0.0 'STD' 'SHUT' 'YES' 0 'SEG' /
+   'OP_7' 'DUMMY' 51 15 1675.82 OIL 0.0 'STD' 'SHUT' 'YES' 0 'SEG' /
+/
+
+COMPDAT
+    'OP_6' 28 37 1 1 OPEN 0 1.2719 0.311 114.887 0.0 0.0 'X' 19.65 /
+    'OP_7' 51 15 1 1 OPEN 0 1.2719 0.311 114.887 0.0 0.0 'X' 19.65 /
+/
+
+WELSEGS
+-- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL
+   'OP_6'      1575.82      0.0   1.0E-5    'ABS'     'HF-'    'HO' /
+--  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS
+     2    2     1        1  2371.596 1577.726  0.15 0.00065    /
+/
+
+WELSEGS
+-- WELL   SEGMENTTVD  SEGMENTMD WBVOLUME INFOTYPE PDROPCOMP MPMODEL
+   'OP_7'      1575.82      0.0   1.0E-5    'ABS'     'HF-'    'HO' /
+--  SEG  SEG2  BRANCH  OUT MD       TVD       DIAM ROUGHNESS
+     2    2     1        1  2071.596 1577.726  0.15 0.00065    /
+/
+
+COMPSEGS
+   'OP_6' /
+--  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG
+    28  37   1   2     2366.541 2376.651  1*  3*   2   /
+/
+COMPSEGS
+   'OP_7' /
+--  I   J   K   BRANCH STARTMD  ENDMD    DIR DEF  SEG
+    51  15   1   2     2080.541 2099.651  1*  3*    2   /
+/
+
+WLIST
+-- NAME  OPERATION      WELLS
+ OPRODS        NEW  OP_6 OP_7
+/
+
+-- Max defaulted with well list
+WSEGVALV
+-- LIST   SEG
+ OPRODS   31 /
+/
+"""
+
+    # Test WSEGVALV max defaulted and wlist
+    deck = EclFiles.str2deck(schstr_valv_wlist)
+    compdfs = compdat.deck2dfs(deck)
+    wsegvalv = compdfs["WSEGVALV"]
+    assert len(wsegvalv) == 0
+    assert "WELL" not in wsegvalv

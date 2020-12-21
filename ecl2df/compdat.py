@@ -205,9 +205,6 @@ def deck2dfs(deck, start_date=None, unroll=True):
     if unroll and not wsegaicd_df.empty:
         wsegaicd_df = unrolldf(wsegaicd_df, "SEGMENT1", "SEGMENT2")
 
-    if unroll and not wsegvalv_df.empty:
-        wsegvalv_df = unrolldf(wsegvalv_df, "SEGMENT1", "SEGMENT2")
-
     if "KEYWORD_IDX" in compdat_df.columns:
         compdat_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 

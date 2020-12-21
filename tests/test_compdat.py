@@ -543,8 +543,8 @@ COMPSEGS
 
 -- Max defaulted
 WSEGVALV
--- WELL   SEG
-    OP_6   31 /
+-- WELL   SEG             CV      AC
+    OP_6  31       0.0084252 0.00075 /
 /
 """
 
@@ -555,7 +555,7 @@ WSEGVALV
     assert len(wsegvalv) == 1
     assert "WELL" in wsegvalv
     assert wsegvalv["WELL"].unique()[0] == "OP_6"
-    assert len(wsegvalv.dropna(axis=1, how="all").iloc[0]) == 3
+    assert len(wsegvalv.dropna(axis=1, how="all").iloc[0]) == 5
 
     schstr_valv_wlist = """
 WELSPECS
@@ -595,13 +595,13 @@ COMPSEGS
 
 WLIST
 -- NAME  OPERATION      WELLS
- OPRODS        NEW  OP_6 OP_7
+ OPRODS        NEW  OP_6 OP_7 /
 /
 
 -- Max defaulted with well list
 WSEGVALV
--- LIST   SEG
- OPRODS   31 /
+--   LIST SEG              CV      AC
+   OPRODS  31       0.0084252 0.00075 /
 /
 """
 
@@ -609,5 +609,6 @@ WSEGVALV
     deck = EclFiles.str2deck(schstr_valv_wlist)
     compdfs = compdat.deck2dfs(deck)
     wsegvalv = compdfs["WSEGVALV"]
-    assert len(wsegvalv) == 0
-    assert "WELL" not in wsegvalv
+    assert len(wsegvalv) == 1
+    assert "WELL" in wsegvalv
+    assert wsegvalv["WELL"].unique()[0] != "OP_6"

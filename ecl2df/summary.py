@@ -46,29 +46,6 @@ def date_range(start_date, end_date, freq):
     return pd.date_range(start_date, end_date, freq=PD_FREQ_MNEMONICS.get(freq, freq))
 
 
-def normalize_dates(start_date, end_date, freq):
-    """
-    Normalize start and end date according to frequency
-    by extending the time range.
-
-    So for [1997-11-05, 2020-03-02] and monthly frequency
-    this will transform your dates to
-    [1997-11-01, 2020-04-01]
-
-    For yearly frequency it will return [1997-01-01, 2021-01-01].
-
-    Args:
-        start_date: datetime.date
-        end_date: datetime.date
-        freq: string with either 'monthly' or 'yearly'.
-            Anything else will return the input as is
-    Return:
-        Tuple of normalized (start_date, end_date)
-    """
-    offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
-    return (offset.rollback(start_date).date(), offset.rollforward(end_date).date())
-
-
 def _ensure_date_or_none(some_date):
     """Ensures an object is either a date or None
 
@@ -174,7 +151,13 @@ def resample_smry_dates(
     start_smry = min(eclsumsdates)
     end_smry = max(eclsumsdates)
 
-    (start_n, end_n) = normalize_dates(start_smry.date(), end_smry.date(), freq)
+    # Normalize start and end date according to frequency by extending the time range.
+    # [1997-11-05, 2020-03-02] and monthly frequecy
+    # will be mapped to [1997-11-01, 2020-04-01]
+    # For yearly frequency it will return [1997-01-01, 2021-01-01].
+    offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
+    start_n = offset.rollback(start_smry.date()).date()
+    end_n = offset.rollforward(end_smry.date()).date()
 
     if not start_date and not normalize:
         start_date_range = start_smry.date()

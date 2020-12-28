@@ -17,7 +17,6 @@ import ecl
 from ecl2df import summary, ecl2csv, csv2ecl
 from ecl2df.eclfiles import EclFiles
 from ecl2df.summary import (
-    normalize_dates,
     resample_smry_dates,
     df2eclsum,
     df,
@@ -222,28 +221,6 @@ def test_main_subparser(tmpdir):
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
-
-    start = datetime.date(1997, 11, 5)
-    end = datetime.date(2020, 3, 2)
-
-    assert normalize_dates(start, end, "monthly") == (
-        datetime.date(1997, 11, 1),
-        datetime.date(2020, 4, 1),
-    )
-    assert normalize_dates(start, end, "yearly") == (
-        datetime.date(1997, 1, 1),
-        datetime.date(2021, 1, 1),
-    )
-
-    # Check it does not touch already aligned dates
-    assert normalize_dates(
-        datetime.date(1997, 11, 1), datetime.date(2020, 4, 1), "monthly"
-    ) == (datetime.date(1997, 11, 1), datetime.date(2020, 4, 1))
-    assert normalize_dates(
-        datetime.date(1997, 1, 1), datetime.date(2021, 1, 1), "yearly"
-    ) == (datetime.date(1997, 1, 1), datetime.date(2021, 1, 1))
-
-    # Check that we normalize correctly with get_smry():
     # realization-0 here has its last summary date at 2003-01-02
     eclfiles = EclFiles(DATAFILE)
     daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily", datetime=True)
@@ -256,11 +233,6 @@ def test_datenormalization():
         eclfiles, column_keys="FOPT", time_index="yearly", datetime=True
     )
     assert str(yearly.index[-1])[0:10] == "2004-01-01"
-
-    # Map a tuesday-thursday range to monday-nextmonday:
-    assert normalize_dates(
-        datetime.date(2020, 11, 17), datetime.date(2020, 11, 19), "weekly"
-    ) == (datetime.date(2020, 11, 16), datetime.date(2020, 11, 23))
 
 
 def test_resample_smry_dates():

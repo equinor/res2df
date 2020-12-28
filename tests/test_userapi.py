@@ -30,7 +30,7 @@ def test_userapi():
     pillars = ecl2df.pillars.df(eclfiles)
     rft = ecl2df.rft.df(eclfiles)
     satfunc = ecl2df.satfunc.df(eclfiles)
-    smry = ecl2df.summary.df(eclfiles)
+    smry = ecl2df.summary.df(eclfiles, datetime=True)
     trans = ecl2df.trans.df(eclfiles)
     wcon = ecl2df.wcon.df(eclfiles)
 

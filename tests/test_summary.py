@@ -45,7 +45,7 @@ def test_df():
     assert "FOPT" in sumdf.columns
 
     sumdf = summary.df(eclfiles, datetime=True)
-    # (datetime=True is superfluous when raw time reports are requested)
+    # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
@@ -85,31 +85,14 @@ def test_df_column_keys():
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
 
-def test_df_dates():
+def test_summary2df_dates(caplog):
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
 
-    sumdf = summary.df(
-        eclfiles,
-        start_date=datetime.date(2002, 1, 2),
-        end_date="2002-03-01",
-        time_index="daily",
-    )
-    assert sumdf.index.name == "DATE"
-    # This is the default when daily index is requested:
-    assert sumdf.index.dtype == "object"
-
-    assert len(sumdf) == 59
-    assert str(sumdf.index.values[0]) == "2002-01-02"
-    assert str(sumdf.index.values[-1]) == "2002-03-01"
-
-    sumdf = summary.df(eclfiles, time_index="last")
-    assert len(sumdf) == 1
-    assert str(sumdf.index.values[0]) == "2003-01-02"
-
-    sumdf = summary.df(eclfiles, time_index="first")
-    assert len(sumdf) == 1
-    assert str(sumdf.index.values[0]) == "2000-01-01"
+    # Later, ecl2df.summary will always return a datetime index.
+    with pytest.warns(FutureWarning) as fut_warn:
+        summary.df(eclfiles, time_index="yearly")
+        assert "Use datetime=True as argument" in str(fut_warn[0].message)
 
     sumdf = summary.df(
         eclfiles,
@@ -120,6 +103,20 @@ def test_df_dates():
     )
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
+
+    assert len(sumdf) == 59
+    assert str(sumdf.index.values[0])[0:10] == "2002-01-02"
+    assert sumdf.index.values[0] == np.datetime64("2002-01-02")
+    assert sumdf.index.values[-1] == np.datetime64("2002-03-01")
+
+    sumdf = summary.df(eclfiles, time_index="last", datetime=True)
+    assert len(sumdf) == 1
+    assert sumdf.index.values[0] == np.datetime64("2003-01-02")
+
+    # Leave this test for the datetime=False behaviour:
+    sumdf = summary.df(eclfiles, time_index="first")
+    assert len(sumdf) == 1
+    assert str(sumdf.index.values[0]) == "2000-01-01"
 
 
 @pytest.mark.integration
@@ -162,6 +159,8 @@ def test_ecl2csv_summary(tmpdir):
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 366
+    # Pandas' csv export writes datetime64 as pure date
+    # when there are no clock-times involved:
     assert str(disk_df["DATE"].values[0]) == "2002-01-02"
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
 
@@ -247,12 +246,16 @@ def test_datenormalization():
     # Check that we normalize correctly with get_smry():
     # realization-0 here has its last summary date at 2003-01-02
     eclfiles = EclFiles(DATAFILE)
-    daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily")
-    assert str(daily.index[-1]) == "2003-01-02"
-    monthly = summary.df(eclfiles, column_keys="FOPT", time_index="monthly")
-    assert str(monthly.index[-1]) == "2003-02-01"
-    yearly = summary.df(eclfiles, column_keys="FOPT", time_index="yearly")
-    assert str(yearly.index[-1]) == "2004-01-01"
+    daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily", datetime=True)
+    assert str(daily.index[-1])[0:10] == "2003-01-02"
+    monthly = summary.df(
+        eclfiles, column_keys="FOPT", time_index="monthly", datetime=True
+    )
+    assert str(monthly.index[-1])[0:10] == "2003-02-01"
+    yearly = summary.df(
+        eclfiles, column_keys="FOPT", time_index="yearly", datetime=True
+    )
+    assert str(yearly.index[-1])[0:10] == "2004-01-01"
 
     # Map a tuesday-thursday range to monday-nextmonday:
     assert normalize_dates(

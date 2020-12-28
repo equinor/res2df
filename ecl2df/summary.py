@@ -1,6 +1,7 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import logging
 from pathlib import Path
+import warnings
 
 # The name 'datetime' is in use by a function argument:
 from datetime import date as datetime_date
@@ -68,6 +69,57 @@ def normalize_dates(start_date, end_date, freq):
     return (offset.rollback(start_date).date(), offset.rollforward(end_date).date())
 
 
+def _ensure_date_or_none(some_date):
+    """Ensures an object is either a date or None
+
+    Args:
+        some_date: string or a datetime.date
+
+    Returns:
+        datetime.date: None if input is None.
+
+    Raises:
+        TypeError: if input is not None and not a date
+    """
+    if some_date:
+        if isinstance(some_date, str):
+            return dateutil.parser.parse(some_date).date()
+        if not isinstance(some_date, datetime_date):
+            raise TypeError(f"Not a date type: {str(some_date)}")
+    return some_date
+
+
+def _crop_datelist(eclsumsdates, freq, start_date, end_date):
+    """Helper function for resample_smry_dates, taking care of
+    the special cases where the list of dates should not be resampled, but
+    only cropped or returned as is.
+
+    Arguments are the same as for resample_smry_dates
+    """
+    if freq == "raw":
+        datetimes = eclsumsdates
+        datetimes.sort()
+        if start_date:
+            # Convert to datetime (at 00:00:00)
+            start_date = datetime_datetime.combine(
+                start_date, datetime_datetime.min.time()
+            )
+            datetimes = [x for x in datetimes if x > start_date]
+            datetimes = [start_date] + datetimes
+        if end_date:
+            end_date = datetime_datetime.combine(end_date, datetime_datetime.min.time())
+            datetimes = [x for x in datetimes if x < end_date]
+            datetimes = datetimes + [end_date]
+        return datetimes
+    if freq == "first":
+        return [min(eclsumsdates).date()]
+    if freq == "last":
+        return [max(eclsumsdates).date()]
+    if isinstance(freq, (datetime_date, datetime_datetime)):
+        return [freq]
+    raise ValueError("BUG: Wrong arguments to _crop_datelist()")
+
+
 def resample_smry_dates(
     eclsumsdates, freq="raw", normalize=True, start_date=None, end_date=None
 ):
@@ -104,43 +156,14 @@ def resample_smry_dates(
     if not eclsumsdates:
         return []
 
-    if start_date:
-        if isinstance(start_date, str):
-            start_date = dateutil.parser.parse(start_date).date()
-        elif isinstance(start_date, datetime_date):
-            pass
-        else:
-            raise TypeError("start_date had unknown type")
+    start_date = _ensure_date_or_none(start_date)
+    end_date = _ensure_date_or_none(end_date)
 
-    if end_date:
-        if isinstance(end_date, str):
-            end_date = dateutil.parser.parse(end_date).date()
-        elif isinstance(end_date, datetime_date):
-            pass
-        else:
-            raise TypeError("end_date had unknown type")
+    if freq in ["raw", "first", "last"] or isinstance(
+        freq, (datetime_date, datetime_datetime)
+    ):
+        return _crop_datelist(eclsumsdates, freq, start_date, end_date)
 
-    if freq == "raw":
-        datetimes = eclsumsdates
-        datetimes.sort()
-        if start_date:
-            # Convert to datetime (at 00:00:00)
-            start_date = datetime_datetime.combine(
-                start_date, datetime_datetime.min.time()
-            )
-            datetimes = [x for x in datetimes if x > start_date]
-            datetimes = [start_date] + datetimes
-        if end_date:
-            end_date = datetime_datetime.combine(end_date, datetime_datetime.min.time())
-            datetimes = [x for x in datetimes if x < end_date]
-            datetimes = datetimes + [end_date]
-        return datetimes
-    if freq == "first":
-        return [min(eclsumsdates).date()]
-    if freq == "last":
-        return [max(eclsumsdates).date()]
-    if isinstance(freq, (datetime_date, datetime_datetime)):
-        return [freq]
     try:
         parseddate = dateutil.parser.isoparse(freq)
         return [parseddate]
@@ -221,7 +244,7 @@ def df(
         params (bool): If set, parameters.txt will be attempted loaded
             and merged with the summary data.
         paramsfile (str): Explicit path to parameters file if autodiscovery is
-            not wanted.
+            not wanted. Implies params=True
         datetime (bool): If True, the time index of the returned DataFrame
             is always of datetime type. If not, it will be datetime
             if raw dates are requested (which are at second accuracy),
@@ -282,31 +305,8 @@ def df(
         len(dframe),
     )
     dframe.index.name = "DATE"
-    if params:
-        if not paramfile:
-            param_files = parameters.find_parameter_files(eclfiles)
-            logger.info("Loading parameters from files: %s", str(param_files))
-            param_dict = parameters.load_all(param_files)
-        else:
-            if not Path(paramfile).is_absolute():
-                param_file = parameters.find_parameter_files(
-                    eclfiles, filebase=paramfile
-                )
-                logger.info("Loading parameters from file: %s", str(param_file))
-                param_dict = parameters.load(param_file)
-            else:
-                logger.info("Loading parameter from file: %s", str(paramfile))
-                param_dict = parameters.load(paramfile)
-        logger.info("Loaded %d parameters", len(param_dict))
-        for key in param_dict:
-            # By converting to str we are more robust with respect to what objects are
-            # read from the parameters.json/txt/yml. Since we are only going
-            # to dump to csv, it should not cause side-effects that floats end up
-            # as strings in the dataframe.
-            dframe[key] = str(param_dict[key])
-    if datetime:
-        if dframe.index.dtype == "object":
-            dframe.index = pd.to_datetime(dframe.index)
+    if params or paramfile:
+        dframe = _merge_params(dframe, paramfile, eclfiles)
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
     meta = smry_meta(eclsum)
@@ -315,6 +315,42 @@ def df(
         column_key: meta[column_key] for column_key in dframe if column_key in meta
     }
 
+    if datetime is True:
+        if dframe.index.dtype == "object":
+            dframe.index = pd.to_datetime(dframe.index)
+    elif dframe.index.dtype == "object":
+        warnings.warn(
+            (
+                "Use datetime=True as argument to ecl2df.summary.df() "
+                "for future compatibility"
+            ),
+            FutureWarning,
+        )
+    return dframe
+
+
+def _merge_params(dframe, paramfile=None, eclfiles=None):
+    """Locate parameters in a <key> <value> file and add to the dataframe"""
+
+    if not paramfile:
+        param_files = parameters.find_parameter_files(eclfiles)
+        logger.info("Loading parameters from files: %s", str(param_files))
+        param_dict = parameters.load_all(param_files)
+    else:
+        if not Path(paramfile).is_absolute():
+            param_file = parameters.find_parameter_files(eclfiles, filebase=paramfile)
+            logger.info("Loading parameters from file: %s", str(param_file))
+            param_dict = parameters.load(param_file)
+        else:
+            logger.info("Loading parameter from file: %s", str(paramfile))
+            param_dict = parameters.load(paramfile)
+    logger.info("Loaded %d parameters", len(param_dict))
+    for key in param_dict:
+        # By converting to str we are more robust with respect to what objects are
+        # read from the parameters.json/txt/yml. Since we are only going
+        # to dump to csv, it should not cause side-effects that floats end up
+        # as strings in the dataframe.
+        dframe[key] = str(param_dict[key])
     return dframe
 
 
@@ -528,6 +564,7 @@ def summary_main(args):
         end_date=args.end_date,
         params=args.params,
         paramfile=args.paramfile,
+        datetime=True,
     )
     if sum_df.empty:
         logger.warning("Empty summary data being written to disk!")

@@ -229,6 +229,9 @@ EQUALS
 -------------------------------------------------------------------------
 
 SOLUTION
+
+RTEMP
+ 100 /
   
 INCLUDE                                
 '../include/solution/reek.equil' /    

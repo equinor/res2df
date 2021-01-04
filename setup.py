@@ -24,7 +24,7 @@ REQUIREMENTS = [
     "equinor-libres",
     "ert",
     "numpy",
-    "opm",
+    "opm>=2020.10.2",  # NB: Pypi versions.
     "pandas",
     "pyyaml>=5.1",
     "treelib",

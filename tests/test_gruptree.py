@@ -1,10 +1,12 @@
 """Test module for nnc2df"""
 
 import sys
+import subprocess
 from pathlib import Path
 
 import pytest
 import pandas as pd
+import treelib
 
 from ecl2df import gruptree, ecl2csv
 from ecl2df.eclfiles import EclFiles
@@ -95,7 +97,7 @@ WELSPECS
     grupdf.to_csv("gruptreenet.csv", index=False)
     grup_dict = gruptree.edge_dataframe2dict(grupdf)
     print("Copy and paste into RST files:")
-    print(str(gruptree.dict2treelib("", grup_dict[0])))
+    print(str(gruptree.dict2treelib(grup_dict[0])))
 
 
 def test_grupnetdf():
@@ -144,8 +146,8 @@ GRUPNET
                 ]
             ),
             """
-└── FIELD
-    └── OP
+FIELD
+└── OP
 """,
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -168,8 +170,8 @@ GRUPNET
                 ]
             ),
             """
-└── FIELDA
-    └── OP
+FIELDA
+└── OP
 """,
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -195,10 +197,10 @@ GRUPNET
                 ]
             ),
             """
-├── FIELDA
-│   └── OP
-└── FIELDB
-    └── OPX
+FIELDA
+└── OP
+FIELDB
+└── OPX
 """,
         )
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -217,12 +219,17 @@ def test_grupnetroot(schstr, expected_dframe, expected_tree):
         expected_dframe.sort_values(["CHILD", "PARENT"]).reset_index(drop=True),
         check_dtype=False,
     )
-    gruptreedict = gruptree.edge_dataframe2dict(grupdf)
-    treelibtree = gruptree.dict2treelib("", gruptreedict[0])
+    treelist = gruptree.edge_dataframe2dict(grupdf)
+
+    # Merge strings for all trees (if multiple roots)
+    strtrees = [str(gruptree.dict2treelib(tree)) for tree in treelist]
+    strtrees.sort()  # Avoid flaky test due to sorting
+    treelibtree = "".join(strtrees)
+
     assert str(treelibtree).strip() == expected_tree.strip()
 
 
-def test_emptytree():
+def test_emptytree(tmpdir):
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
     deck = EclFiles.str2deck(schstr)
@@ -230,9 +237,50 @@ def test_emptytree():
     assert grupdf.empty
     gruptreedict = gruptree.edge_dataframe2dict(grupdf)
     assert not gruptreedict[0]
-    treelibtree = gruptree.dict2treelib("", gruptreedict[0])
-    treestring = str(treelibtree)
-    assert not treestring.strip()  # Let it return whitespace
+    treelibtree = gruptree.dict2treelib(gruptreedict[0])
+    assert treelibtree.root is None
+
+    # This might get fixed in treelib if we are lucky, it would
+    # be better if treelib returned and empty string for an empty tree
+    with pytest.raises(treelib.exceptions.NodeIDAbsentError):
+        str(treelibtree)
+
+    tmpdir.chdir()
+    Path("EMPTY.DATA").write_text("")
+    commands = ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"]
+    result = subprocess.run(
+        commands, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    output = result.stdout.decode() + result.stderr.decode()
+    assert "No tree data to prettyprint" in output
+
+
+def test_multiple_roots():
+    """Test edge_dataframe2dict with multiple roots"""
+    edges = pd.DataFrame(
+        [
+            {"CHILD": "FIELDA", "PARENT": None},
+            {"CHILD": "FIELDB", "PARENT": None},
+            {"CHILD": "PLATA", "PARENT": "FIELDA"},
+            {"CHILD": "PLATB", "PARENT": "FIELDB"},
+        ]
+    )
+    list_of_treedicts = gruptree.edge_dataframe2dict(edges)
+    assert len(list_of_treedicts) == 2
+    assert {"FIELDA": {"PLATA": {}}} in list_of_treedicts
+    assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
+
+    # Same result if the dummy rows for the roots are omitted:
+    edges = pd.DataFrame(
+        [
+            {"CHILD": "PLATA", "PARENT": "FIELDA"},
+            {"CHILD": "PLATB", "PARENT": "FIELDB"},
+        ]
+    )
+    list_of_treedicts = gruptree.edge_dataframe2dict(edges)
+    assert len(list_of_treedicts) == 2
+    assert {"FIELDA": {"PLATA": {}}} in list_of_treedicts
+    assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
 
 
 def test_tstep():
@@ -272,8 +320,44 @@ def test_main(tmpdir):
 
 def test_prettyprint():
     """Test pretty printing via command line interface"""
-    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
-    ecl2csv.main()
+    commands = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
+    results = subprocess.run(commands, check=True, stdout=subprocess.PIPE)
+    stdout = results.stdout.decode()
+    assert (
+        """Date: 2000-01-01
+FIELD
+└── OP
+
+
+Date: 2000-02-01
+FIELD
+└── OP
+    ├── OP_1
+    └── WI_1
+
+
+Date: 2000-06-01
+FIELD
+└── OP
+    ├── OP_1
+    └── WI_1
+
+
+Date: 2001-01-01
+FIELD
+└── OP
+    ├── OP_1
+    └── WI_1
+
+
+Date: 2001-03-01
+FIELD
+└── OP
+    ├── OP_1
+    └── WI_1
+"""
+        in stdout
+    )
 
 
 def test_main_subparser(tmpdir):

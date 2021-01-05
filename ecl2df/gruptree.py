@@ -225,13 +225,10 @@ def edge_dataframe2dict(dframe):
 
     children, parents = zip(*edges)
     roots = set(parents).difference(children)
-    trees = []
-    for root in list(roots):
-        trees.append({root: subtrees[root] for root in roots})
-    return trees
+    return [{root: subtrees[root]} for root in roots]
 
 
-def dict2treelib(name, nested_dict):
+def dict2treelib(nested_dict):
     """Convert a nested dictonary to a treelib Tree
     object. This function is recursive.
 
@@ -243,16 +240,24 @@ def dict2treelib(name, nested_dict):
     See `https://treelib.readthedocs.io/`
 
     Args:
-        name: name of root node
-        nested_dict: nested dictonary of the children at the root.
+        nested_dict: Representing a tree. Empty dict
+            gives empty tree (do not str() an empty tree)
 
     Return:
         treelib.Tree
     """
+    assert isinstance(nested_dict, dict)
+
+    # Test for leaf node:
+    if not nested_dict:
+        # Warning: Don't str() this result, it will fail, bug in treelib
+        return treelib.Tree()
+
     tree = treelib.Tree()
+    name = str(list(nested_dict.keys())[0])
     tree.create_node(name, name)
     for child in nested_dict.keys():
-        tree.paste(name, dict2treelib(child, nested_dict[child]))
+        tree.paste(name, dict2treelib(nested_dict[child]))
     return tree
 
 
@@ -301,12 +306,10 @@ def gruptree_main(args):
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
                 print("Date: " + str(date.astype("M8[D]")))
-                trees = edge_dataframe2dict(dframe[dframe["DATE"] == date])
-                # Returns list of dicts, one for each root found
-                # (typically only one)
-                for tree in trees:
-                    rootname = list(tree.keys())[0]
-                    print(dict2treelib(rootname, tree[rootname]))
+                for tree in edge_dataframe2dict(dframe[dframe["DATE"] == date]):
+                    # Returns a list of dicts, one for each root found
+                    if tree:
+                        print(dict2treelib(tree))
                 print("")
         else:
             logger.warning("No tree data to prettyprint")

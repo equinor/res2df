@@ -7,11 +7,12 @@ import datetime
 import logging
 import pandas as pd
 
+
 from .eclfiles import EclFiles
 from .common import (
     merge_zones,
-    parse_opmio_deckrecord,
     parse_opmio_date_rec,
+    parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
 )
@@ -40,6 +41,12 @@ COMPDAT_RENAMER = {
     "D_FACTOR": "DFACT",
     "DIR": "DIR",
     "PR": "PEQVR",
+}
+
+# Workaround an inconsistency in JSON-files for OPM-common < 2021.04:
+WSEG_RENAMER = {
+    "SEG1": "SEGMENT1",
+    "SEG2": "SEGMENT2",
 }
 
 
@@ -118,13 +125,13 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 compdatrecords.append(rec_data)
         elif kword.name == "WSEGSICD":
             for rec in kword:  # Loop over the lines inside WSEGSICD record
-                rec_data = parse_opmio_deckrecord(rec, "WSEGSICD")
+                rec_data = parse_opmio_deckrecord(rec, "WSEGSICD", renamer=WSEG_RENAMER)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
                 wsegsicdrecords.append(rec_data)
         elif kword.name == "WSEGAICD":
             for rec in kword:  # Loop over the lines inside WSEGAICD record
-                rec_data = parse_opmio_deckrecord(rec, "WSEGAICD")
+                rec_data = parse_opmio_deckrecord(rec, "WSEGAICD", renamer=WSEG_RENAMER)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
                 wsegaicdrecords.append(rec_data)
@@ -190,10 +197,8 @@ def deck2dfs(deck, start_date=None, unroll=True):
 
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
-
     if unroll and not wsegsicd_df.empty:
         wsegsicd_df = unrolldf(wsegsicd_df, "SEGMENT1", "SEGMENT2")
-
     if unroll and not wsegaicd_df.empty:
         wsegaicd_df = unrolldf(wsegaicd_df, "SEGMENT1", "SEGMENT2")
 

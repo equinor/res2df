@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.9.1.dev1+g0df7696 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.9.1.dev2+gf351abb documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.1.dev1+g0df7696
+                0.9.1.dev2+gf351abb
               </div>
             
           
@@ -176,8 +176,8 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">merge_zones</span><span class="p">,</span>
-    <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
     <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
+    <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
     <span class="n">parse_opmio_tstep_rec</span><span class="p">,</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
 <span class="p">)</span>
@@ -206,6 +206,12 @@
     <span class="s2">&quot;D_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;DFACT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DIR&quot;</span><span class="p">:</span> <span class="s2">&quot;DIR&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PR&quot;</span><span class="p">:</span> <span class="s2">&quot;PEQVR&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Workaround an inconsistency in JSON-files for OPM-common &lt; 2021.04:</span>
+<span class="n">WSEG_RENAMER</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;SEG1&quot;</span><span class="p">:</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SEG2&quot;</span><span class="p">:</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -284,13 +290,13 @@
                 <span class="n">compdatrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WSEGSICD&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside WSEGSICD record</span>
-                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WSEGSICD&quot;</span><span class="p">)</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WSEGSICD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">WSEG_RENAMER</span><span class="p">)</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
                 <span class="n">wsegsicdrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WSEGAICD&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>  <span class="c1"># Loop over the lines inside WSEGAICD record</span>
-                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WSEGAICD&quot;</span><span class="p">)</span>
+                <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WSEGAICD&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">WSEG_RENAMER</span><span class="p">)</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
                 <span class="n">wsegaicdrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>

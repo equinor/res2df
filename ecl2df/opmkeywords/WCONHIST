@@ -42,7 +42,7 @@
       "comment": "The default is a state variable"
     },
     {
-      "name": "ALQ",
+      "name": "LIFT",
       "value_type": "DOUBLE",
       "default": 0,
       "comment": "The default is a state variable"

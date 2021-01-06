@@ -7,7 +7,6 @@ import datetime
 import logging
 import pandas as pd
 
-
 from .eclfiles import EclFiles
 from .common import (
     merge_zones,
@@ -197,8 +196,10 @@ def deck2dfs(deck, start_date=None, unroll=True):
 
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
+
     if unroll and not wsegsicd_df.empty:
         wsegsicd_df = unrolldf(wsegsicd_df, "SEGMENT1", "SEGMENT2")
+
     if unroll and not wsegaicd_df.empty:
         wsegaicd_df = unrolldf(wsegaicd_df, "SEGMENT1", "SEGMENT2")
 

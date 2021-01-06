@@ -38,6 +38,8 @@ WCONPROD
 WELOPEN
 WELSEGS
 WELSPECS
+WSEGAICD
+WSEGSICD
 "
 
 for keyword in $keywords; do

@@ -46,7 +46,7 @@ WCONHIST
                     "WRAT": 0,
                     "GRAT": 0,
                     "VFP_TABLE": 0,
-                    "LIFT": 0,
+                    "ALQ": 0,
                     "THP": 0,
                     "BHP": 0,
                     "NGLRAT": 0,

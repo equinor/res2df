@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .gruptree import dict2treelib
+from .gruptree import tree_from_dict
 from .common import merge_zones, write_dframe_stdout_file
 
 
@@ -324,7 +324,7 @@ def pretty_print_well(seg_data):
         str (multiline)
     """
     dicttree = seg2dicttree(seg_data)
-    return str(dict2treelib("SEGIDX", dicttree))
+    return str(tree_from_dict(dicttree))
 
 
 def split_seg_icd(seg_data):

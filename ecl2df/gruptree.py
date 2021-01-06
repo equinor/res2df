@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-"""
-Extract GRUPTREE information from an Eclipse deck
-
-"""
+"""Extract GRUPTREE information from an Eclipse deck"""
 
 import sys
 import logging
 import datetime
 import collections
+import warnings
 
 import treelib
 import pandas as pd
@@ -207,8 +204,9 @@ def edge_dataframe2dict(dframe):
     Leaf nodes have empty dictionaries as their value.
 
     Returns:
-        list of nested dictionaries, as we in general
-            may have more than one root.
+        List of nested dictionaries, as we in general
+        may have more than one root. The list sorted
+        alphabetically on the top level node name.
     """
     if dframe.empty:
         return [{}]
@@ -225,10 +223,44 @@ def edge_dataframe2dict(dframe):
 
     children, parents = zip(*edges)
     roots = set(parents).difference(children)
-    trees = []
-    for root in list(roots):
-        trees.append({root: subtrees[root] for root in roots})
-    return trees
+    return [{root: subtrees[root]} for root in sorted(roots)]
+
+
+def _sub_tree_from_dict(nested_dict, name):
+    """Internal recursive function for generating trees."""
+    assert isinstance(nested_dict, dict)
+    tree = treelib.Tree()
+    tree.create_node(name, name)
+    child_names = list(nested_dict.keys())
+    child_names.sort()
+    for child_name in child_names:
+        # The paste() function requires unique node names.
+        tree.paste(name, _sub_tree_from_dict(nested_dict[child_name], child_name))
+    return tree
+
+
+def tree_from_dict(nested_dict):
+    """Convert a dictonary to a treelib Tree
+
+    The treelib representation of the trees is used
+    for pretty-printing (in ASCII) of the tree, you
+    only need to do str() of the returned result
+    from this function.
+
+    See `https://treelib.readthedocs.io/`
+
+    Args:
+        nested_dict: nested dictonary representing a tree.
+
+    Returns:
+        treelib.Tree
+    """
+    if not nested_dict:
+        # Return an empty string, because str(treelib.Tree()) will error
+        return ""
+    assert len(nested_dict.keys()) == 1, "One tree at a time please"
+    root_name = list(nested_dict.keys())[0]
+    return _sub_tree_from_dict(nested_dict[root_name], root_name)
 
 
 def dict2treelib(name, nested_dict):
@@ -249,6 +281,11 @@ def dict2treelib(name, nested_dict):
     Return:
         treelib.Tree
     """
+    warnings.warn(
+        "dict2treelib() is deprecated and will be removed, use tree_from_dict()",
+        FutureWarning,
+    )
+
     tree = treelib.Tree()
     tree.create_node(name, name)
     for child in nested_dict.keys():
@@ -301,12 +338,8 @@ def gruptree_main(args):
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
                 print("Date: " + str(date.astype("M8[D]")))
-                trees = edge_dataframe2dict(dframe[dframe["DATE"] == date])
-                # Returns list of dicts, one for each root found
-                # (typically only one)
-                for tree in trees:
-                    rootname = list(tree.keys())[0]
-                    print(dict2treelib(rootname, tree[rootname]))
+                for tree in edge_dataframe2dict(dframe[dframe["DATE"] == date]):
+                    print(tree_from_dict(tree))
                 print("")
         else:
             logger.warning("No tree data to prettyprint")

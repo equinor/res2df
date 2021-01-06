@@ -1,6 +1,7 @@
 """Test module for nnc2df"""
 
 import sys
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -95,7 +96,24 @@ WELSPECS
     grupdf.to_csv("gruptreenet.csv", index=False)
     grup_dict = gruptree.edge_dataframe2dict(grupdf)
     print("Copy and paste into RST files:")
-    print(str(gruptree.dict2treelib("", grup_dict[0])))
+    print(str(gruptree.dict2treelib(grup_dict[0])))
+
+    assert (
+        str(gruptree.dict2treelib(grup_dict[0])).strip()
+        == """
+NORTHSEA
+└── AREA
+    └── FIELD
+        ├── OP
+        │   ├── OPEAST
+        │   │   └── OP2
+        │   └── OPWEST
+        │       └── OP1
+        └── WI
+            └── INJEAST
+                └── INJ1
+    """.strip()
+    )
 
 
 def test_grupnetdf():
@@ -124,6 +142,54 @@ GRUPNET
 
 
 @pytest.mark.parametrize(
+    "dicttree, expected_str",
+    [
+        ({}, ""),
+        ({"foo": {}}, "foo"),
+        ({"foo": {"bar": {}}}, "foo\n└── bar"),
+        ({"foo": {"bar": {}, "com": {}}}, "foo\n├── bar\n└── com"),
+        # Test sorting:
+        ({"foo": {"com": {}, "bar": {}}}, "foo\n├── bar\n└── com"),
+        # Two levels:
+        (
+            {"foo": {"bar": {}, "com": {"fjooo": {}}}},
+            """
+foo
+├── bar
+└── com
+    └── fjooo""",
+        ),
+        # Integers as node names:
+        ({1: {2: {}}}, "1\n└── 2"),
+        # More complex structure:
+        # Note: Node names cannot be duplicated, even on
+        # unique branches:
+        (
+            {
+                "foo": {
+                    "bar": {},
+                    "com": {"fjooo": {}},
+                    "bart": {},
+                    "comt": {"fjooot": {}},
+                }
+            },
+            """
+foo
+├── bar
+├── bart
+├── com
+│   └── fjooo
+└── comt
+    └── fjooot
+            """,
+        ),
+    ],
+)
+def test_dict2treelib(dicttree, expected_str):
+    assert str(gruptree.dict2treelib(dicttree)).strip() == expected_str.strip()
+
+
+@pytest.mark.parametrize(
     "schstr, expected_dframe, expected_tree",
     [
         (
@@ -144,8 +210,8 @@ GRUPNET
                 ]
             ),
             """
-└── FIELD
-    └── OP
+FIELD
+└── OP
 """,
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -168,8 +234,8 @@ GRUPNET
                 ]
             ),
             """
-└── FIELDA
-    └── OP
+FIELDA
+└── OP
 """,
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -195,10 +261,10 @@ GRUPNET
                 ]
             ),
             """
-├── FIELDA
-│   └── OP
-└── FIELDB
-    └── OPX
+FIELDA
+└── OP
+FIELDB
+└── OPX
 """,
         )
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -217,12 +283,43 @@ def test_grupnetroot(schstr, expected_dframe, expected_tree):
         expected_dframe.sort_values(["CHILD", "PARENT"]).reset_index(drop=True),
         check_dtype=False,
     )
-    gruptreedict = gruptree.edge_dataframe2dict(grupdf)
-    treelibtree = gruptree.dict2treelib("", gruptreedict[0])
-    assert str(treelibtree).strip() == expected_tree.strip()
+    treelist = gruptree.edge_dataframe2dict(grupdf)
+    # Merge strings for all trees (if multiple roots)
+    strtrees = [str(gruptree.dict2treelib(tree)) for tree in treelist]
+    strtrees.sort()  # Avoid flaky test due to sorting
+    treelibtree = "".join(strtrees)
+    assert treelibtree.strip() == expected_tree.strip()
 
 
-def test_emptytree():
+def test_multiple_roots():
+    """Test edge_dataframe2dict with multiple roots"""
+    edges = pd.DataFrame(
+        [
+            {"CHILD": "FIELDA", "PARENT": None},
+            {"CHILD": "FIELDB", "PARENT": None},
+            {"CHILD": "PLATA", "PARENT": "FIELDA"},
+            {"CHILD": "PLATB", "PARENT": "FIELDB"},
+        ]
+    )
+    list_of_treedicts = gruptree.edge_dataframe2dict(edges)
+    assert len(list_of_treedicts) == 2
+    assert {"FIELDA": {"PLATA": {}}} in list_of_treedicts
+    assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
+
+    # Same result if the dummy rows for the roots are omitted:
+    edges = pd.DataFrame(
+        [
+            {"CHILD": "PLATA", "PARENT": "FIELDA"},
+            {"CHILD": "PLATB", "PARENT": "FIELDB"},
+        ]
+    )
+    list_of_treedicts = gruptree.edge_dataframe2dict(edges)
+    assert len(list_of_treedicts) == 2
+    assert {"FIELDA": {"PLATA": {}}} in list_of_treedicts
+    assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
+
+
+def test_emptytree(tmpdir):
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
     deck = EclFiles.str2deck(schstr)
@@ -230,9 +327,20 @@ def test_emptytree():
     assert grupdf.empty
     gruptreedict = gruptree.edge_dataframe2dict(grupdf)
     assert not gruptreedict[0]
-    treelibtree = gruptree.dict2treelib("", gruptreedict[0])
-    treestring = str(treelibtree)
-    assert not treestring.strip()  # Let it return whitespace
+
+    treelibtree = gruptree.dict2treelib(gruptreedict[0])
+    # Returning an empty string and not a treelib.Tree() is
+    # a workaround for a limitation in treelib.
+    assert treelibtree == ""
+
+    tmpdir.chdir()
+    Path("EMPTY.DATA").write_text("")
+    commands = ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"]
+    result = subprocess.run(
+        commands, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    output = result.stdout.decode() + result.stderr.decode()
+    assert "No tree data to prettyprint" in output
 
 
 def test_tstep():
@@ -272,8 +380,67 @@ def test_main(tmpdir):
 
 def test_prettyprint():
     """Test pretty printing via command line interface"""
-    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
-    ecl2csv.main()
+    commands = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
+    results = subprocess.run(commands, check=True, stdout=subprocess.PIPE)
+    stdout = results.stdout.decode()
+    print(stdout)
+    assert (
+        """
+Date: 2000-01-01
+FIELD
+├── OP
+└── WI
+
+
+Date: 2000-02-01
+FIELD
+├── OP
+│   ├── OP_1
+│   ├── OP_2
+│   └── OP_3
+└── WI
+    └── WI_1
+
+
+Date: 2000-06-01
+FIELD
+├── OP
+│   ├── OP_1
+│   ├── OP_2
+│   └── OP_3
+└── WI
+    ├── WI_1
+    └── WI_2
+
+
+Date: 2001-01-01
+FIELD
+├── OP
+│   ├── OP_1
+│   ├── OP_2
+│   ├── OP_3
+│   ├── OP_4
+│   └── OP_5
+└── WI
+    ├── WI_1
+    └── WI_2
+
+
+Date: 2001-03-01
+FIELD
+├── OP
+│   ├── OP_1
+│   ├── OP_2
+│   ├── OP_3
+│   ├── OP_4
+│   └── OP_5
+└── WI
+    ├── WI_1
+    ├── WI_2
+    └── WI_3
+""".strip()
+        in stdout
+    )
 
 
 def test_main_subparser(tmpdir):

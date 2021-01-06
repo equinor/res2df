@@ -324,7 +324,7 @@ def pretty_print_well(seg_data):
         str (multiline)
     """
     dicttree = seg2dicttree(seg_data)
-    return str(dict2treelib("SEGIDX", dicttree))
+    return str(dict2treelib(dicttree))
 
 
 def split_seg_icd(seg_data):

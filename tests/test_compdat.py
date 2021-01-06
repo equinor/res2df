@@ -493,10 +493,90 @@ WSEGSICD
     assert len(wsegaicd) == 1
     assert "WELL" in wsegaicd
     assert wsegaicd["WELL"].unique()[0] == "OP_6"
-    assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 19
+    assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 20
 
     # Test WSEGSICD
     assert len(wsegsicd) == 1
     assert "WELL" in wsegsicd
     assert wsegsicd["WELL"].unique()[0] == "OP_6"
-    assert len(wsegsicd.dropna(axis=1, how="all").iloc[0]) == 11
+    assert len(wsegsicd.dropna(axis=1, how="all").iloc[0]) == 12
+
+
+def test_wsegaicd():
+    """Test the WSEGAICD parser for column names and default values"""
+    schstr = """WSEGAICD
+    OP_6  31   31 1.7e-05 -1.18 1000 1.0 0.5  4* 3.05 0.67
+   OPEN 1.0 1.0 1.0 2.43 1.18 10.0  /
+/
+    """
+    deck = EclFiles.str2deck(schstr)
+    wsegaicd = compdat.deck2dfs(deck)["WSEGAICD"]
+    pd.testing.assert_frame_equal(
+        wsegaicd,
+        pd.DataFrame(
+            data=[
+                {
+                    "WELL": "OP_6",
+                    "SEGMENT1": 31,
+                    "SEGMENT2": 31,
+                    "STRENGTH": 1.7e-05,
+                    "LENGTH": -1.18,
+                    "DENSITY_CALI": 1000.0,
+                    "VISCOSITY_CALI": 1.0,
+                    "CRITICAL_VALUE": 0.5,
+                    "WIDTH_TRANS": 0.05,
+                    "MAX_VISC_RATIO": 5,
+                    "METHOD_SCALING_FACTOR": -1,
+                    "MAX_ABS_RATE": None,
+                    "FLOW_RATE_EXPONENT": 3.05,
+                    "VISC_EXPONENT": 0.67,
+                    "STATUS": "OPEN",
+                    "OIL_FLOW_FRACTION": 1.0,
+                    "WATER_FLOW_FRACTION": 1.0,
+                    "GAS_FLOW_FRACTION": 1.0,
+                    "OIL_VISC_FRACTION": 2.43,
+                    "WATER_VISC_FRACTION": 1.18,
+                    "GAS_VISC_FRACTION": 10.0,
+                    "DATE": None,
+                }
+            ]
+        ),
+    )
+
+
+def test_wsegsicd():
+    """Test the WSEGSICD parser for column names and default values
+
+    Proves bug 232 is fixed.
+    """
+    schstr = """WSEGSICD
+        'WELL_A'              31    31    0.00178 0.57975861     1*   1*        0.7
+        1*         1*     1         1*
+                         OPEN /
+            /
+    """
+    deck = EclFiles.str2deck(schstr)
+    wsegsicd = compdat.deck2dfs(deck)["WSEGSICD"]
+    pd.testing.assert_frame_equal(
+        wsegsicd,
+        pd.DataFrame(
+            data=[
+                {
+                    "WELL": "WELL_A",
+                    "SEGMENT1": 31,
+                    "SEGMENT2": 31,
+                    "STRENGTH": 0.00178,
+                    "LENGTH": 0.57975861,
+                    "DENSITY_CALI": 1000.25,
+                    "VISCOSITY_CALI": 1.45,
+                    "CRITICAL_VALUE": 0.7,
+                    "WIDTH_TRANS": 0.05,
+                    "MAX_VISC_RATIO": 5,
+                    "METHOD_SCALING_FACTOR": 1,
+                    "MAX_ABS_RATE": None,
+                    "STATUS": "OPEN",
+                    "DATE": None,
+                }
+            ]
+        ),
+    )

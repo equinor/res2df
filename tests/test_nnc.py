@@ -1,12 +1,13 @@
 """Test module for nnc2df"""
 
-import sys
+import io
 from pathlib import Path
+import subprocess
 
 import pandas as pd
 import pytest
 
-from ecl2df import nnc, faults, ecl2csv, trans
+from ecl2df import nnc, faults, trans
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -100,11 +101,21 @@ def test_df2ecl_editnnc(tmpdir):
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("nnc.csv")
-    sys.argv = ["ecl2csv", "nnc", "-v", DATAFILE, "-o", str(tmpcsvfile)]
-    ecl2csv.main()
+    subprocess.run(
+        ["ecl2csv", "nnc", "-v", DATAFILE, "-o", str(tmpcsvfile)], check=True
+    )
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     assert "I1" in disk_df
     assert "TRAN" in disk_df
+
+
+def test_magic_stdout():
+    """Test that we can pipe the output into a dataframe"""
+    result = subprocess.run(
+        ["ecl2csv", "nnc", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+    )
+    df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
+    assert not df_stdout.empty

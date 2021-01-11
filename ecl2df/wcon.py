@@ -12,7 +12,7 @@ import shlex
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_opmio_date_rec, OPMKEYWORDS
+from .common import parse_opmio_date_rec, OPMKEYWORDS, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
@@ -153,5 +153,11 @@ def wcon_main(args):
     wcon_df = df(deck)
     if wcon_df.empty:
         logger.warning("Empty wcon dataframe being written to disk!")
-    wcon_df.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)
+        return
+    write_dframe_stdout_file(
+        wcon_df,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr="Wrote to {}".format(args.output),
+    )

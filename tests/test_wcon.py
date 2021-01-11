@@ -1,11 +1,12 @@
 """Test module for wcon"""
 
-import sys
+import io
 from pathlib import Path
+import subprocess
 
 import pandas as pd
 
-from ecl2df import wcon, ecl2csv
+from ecl2df import wcon
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wcon import unroll_defaulted_items, ad_hoc_wconparser
 
@@ -144,9 +145,17 @@ WCONHIST
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir / ".TMP-wcondf.csv"
-    sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)]
-    ecl2csv.main()
+    subprocess.run(["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)], check=True)
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+def test_magic_stdout():
+    """Test that we can pipe the output into a dataframe"""
+    result = subprocess.run(
+        ["ecl2csv", "wcon", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+    )
+    df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
+    assert not df_stdout.empty

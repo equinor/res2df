@@ -34,6 +34,7 @@ TEST_REQUIREMENTS = [
     "flake8",
     "networkx",
     "pytest",
+    "pytest-cov",
 ]
 
 DOCS_REQUIREMENTS = [

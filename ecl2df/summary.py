@@ -284,6 +284,14 @@ def df(
     if datetime:
         if dframe.index.dtype == "object":
             dframe.index = pd.to_datetime(dframe.index)
+
+    # Add metadata as an attribute the dataframe, using experimental Pandas features:
+    meta = smry_meta(eclsum)
+    # Slice meta to dataframe columns:
+    dframe.attrs["meta"] = {
+        column_key: meta[column_key] for column_key in dframe if column_key in meta
+    }
+
     return dframe
 
 

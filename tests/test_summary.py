@@ -28,7 +28,7 @@ DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 logging.basicConfig(level=logging.INFO)
 
 
-def test_summary2df():
+def test_df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
     sumdf = summary.df(eclfiles)
@@ -46,8 +46,43 @@ def test_summary2df():
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
+    # Metadata should be attached using the attrs attribute on a Pandas
+    # Dataframe (considered experimental by Pandas)
+    assert "meta" in sumdf.attrs
+    assert sumdf.attrs["meta"]["FOPR"]["unit"] == "SM3/DAY"
 
-def test_summary2df_dates():
+
+def test_df_column_keys():
+    """Test that we can slice the dataframe on columns"""
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys="FOPT")
+    assert set(sumdf.columns) == {"FOPT"}
+    assert set(sumdf.attrs["meta"].keys()) == {"FOPT"}
+
+    fop_cols = {
+        "FOPRS",
+        "FOPT",
+        "FOPRH",
+        "FOPTH",
+        "FOPRF",
+        "FOPR",
+        "FOPTS",
+        "FOPTF",
+        "FOPP",
+    }
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys="FOP*")
+    assert set(sumdf.columns) == fop_cols
+    assert set(sumdf.attrs["meta"].keys()) == fop_cols
+
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys=["FOP*"])
+    assert set(sumdf.columns) == fop_cols
+    assert set(sumdf.attrs["meta"].keys()) == fop_cols
+
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys=["FOPR", "FOPT"])
+    assert set(sumdf.columns) == {"FOPT", "FOPR"}
+    assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
+
+
+def test_df_dates():
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
 

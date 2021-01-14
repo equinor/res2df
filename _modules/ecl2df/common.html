@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.9.2.dev1+gd1df313 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.9.2.dev2+g3023f1c documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev1+gd1df313
+                0.9.2.dev2+g3023f1c
               </div>
             
           
@@ -179,6 +179,10 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># This import is seemingly not used, but necessary for some attributes</span>
+<span class="c1"># to be included in DeckItem objects.</span>
+<span class="kn">from</span> <span class="nn">opm.io.deck</span> <span class="kn">import</span> <span class="n">DeckKeyword</span>  <span class="c1"># noqa</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
 
@@ -297,7 +301,7 @@
 <span class="sd">            with consecutive rows enumerated from 1. Use this to assign</span>
 <span class="sd">            EQLNUM or similar when this should be consecutive pr. row (not</span>
 <span class="sd">            the case for all keywords).</span>
-<span class="sd">        emptyrecordname (str): If supplied, an index is added to every parsed</span>
+<span class="sd">        emptyrecordcountername (str): If supplied, an index is added to every parsed</span>
 <span class="sd">            row based on how many empty records is encountered. For PVTO f.ex,</span>
 <span class="sd">            this gives the PVTNUM indexing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -306,15 +310,14 @@
     <span class="n">record_counter</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">emptyrecord_counter</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">deckrecord</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">[</span><span class="n">keyword</span><span class="p">]:</span>
-        <span class="n">recdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
-        <span class="c1"># If all values are None, this is an empty record, and for some</span>
-        <span class="c1"># keywords this signifies that we jump to the next table, e.g. for PVTO</span>
-        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">recdict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)]</span>
-        <span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;DATA&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recdict</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;DATA&quot;</span> <span class="ow">in</span> <span class="n">recdict</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">]):</span>
-                <span class="n">emptyrecord_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="c1"># For some keywords, at least PVTO, an empty record like</span>
+            <span class="c1"># this signifies that we jump to the next table, and</span>
+            <span class="c1"># for PVTO, this counter variable will be used as PVTNUM</span>
+            <span class="n">emptyrecord_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">recdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">emptyrecordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">recdict</span><span class="p">[</span><span class="n">emptyrecordcountername</span><span class="p">]</span> <span class="o">=</span> <span class="n">emptyrecord_counter</span>
         <span class="k">if</span> <span class="n">recordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -367,15 +370,8 @@
 <span class="sd">        dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">keyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">OPMKEYWORDS</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Keyword </span><span class="si">%s</span><span class="s2"> not supported by common.py&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">keyword</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keyword </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> not supported by common.py&quot;</span><span class="p">)</span>
 
-    <span class="c1"># opm.io deckitem access functions, depending on value_type in json data for item:</span>
-    <span class="n">deckitem_fn</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;STRING&quot;</span><span class="p">:</span> <span class="s2">&quot;get_str&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;INT&quot;</span><span class="p">:</span> <span class="s2">&quot;get_int&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DOUBLE&quot;</span><span class="p">:</span> <span class="s2">&quot;get_raw&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;UDA&quot;</span><span class="p">:</span> <span class="s2">&quot;get_raw&quot;</span><span class="p">,</span>  <span class="c1"># Does not work. Is UDA unsupported in opm.io??</span>
-    <span class="p">}</span>
     <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">if</span> <span class="n">recordindex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Beware, 0 is different from None here.</span>
@@ -383,47 +379,23 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">itemlist</span> <span class="o">=</span> <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="n">itemlistname</span><span class="p">][</span><span class="n">recordindex</span><span class="p">]</span>
 
-    <span class="c1"># Loop over the items in the &quot;items&quot; section of the json keyword</span>
-    <span class="c1"># description.</span>
+    <span class="c1"># Loop over the items in the &quot;items&quot; section of the json keyword description.</span>
     <span class="c1"># Usually these items refer to one number/value in the deck record (&quot;one line&quot;)</span>
     <span class="c1"># but for some keywords there are more values, like for PVTO</span>
     <span class="k">for</span> <span class="n">item_idx</span><span class="p">,</span> <span class="n">jsonitem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">itemlist</span><span class="p">):</span>
         <span class="n">item_name</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="c1"># Cleanup after 2020.03 for opm-common is released</span>
-        <span class="c1"># to not use the private property __defaulted</span>
-
-        <span class="c1"># Determine if there value is defaulted in the deck:</span>
-        <span class="n">defaulted</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="c1"># pylint: disable=protected-access</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="s2">&quot;__defaulted&quot;</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">defaulted</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">__defaulted</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                <span class="c1"># Code this better, ask for defaulted propertiies properly</span>
-                <span class="c1"># (we end here for items which are lists, e.g. the</span>
-                <span class="c1"># DATA item of the PVTO keyword)</span>
-                <span class="k">pass</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">defaulted</span><span class="p">:</span>
-            <span class="c1"># Do the data extraction from the record:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">defaulted</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
-                    <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="n">deckitem_fn</span><span class="p">[</span><span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]]</span>
-                <span class="p">)(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="c1"># The DeckItem attribute .value is only present if there is an</span>
+                <span class="c1"># explicit statement &quot;from opm.io.deck import DeckKeyword&quot;</span>
+                <span class="c1"># in this file.</span>
+                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># items -&gt; size_type is set to ALL in json in these cases,</span>
-                <span class="c1"># means that the deck record consists of arbitrary sized lists</span>
-                <span class="c1"># (but multiple of len(items -&gt; dimension))</span>
-                <span class="c1"># Currently only PVT* ends here:</span>
-                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">],</span> <span class="s2">&quot;get_raw_data_list&quot;</span><span class="p">)()</span>
-                <span class="c1"># This data must then be unrolled somewhere.</span>
+                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_raw_data_list</span><span class="p">()</span>
+                <span class="c1"># (the caller is responsible for unrolling this list with</span>
+                <span class="c1"># correct naming of elements)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">jsonitem</span><span class="p">:</span>
-                <span class="c1"># Use the default value provided in the json file for</span>
-                <span class="c1"># the keyword.</span>
-                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Give up giving a sensible default value.</span>
-                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">renamer</span><span class="p">:</span>
         <span class="n">renamed_dict</span> <span class="o">=</span> <span class="p">{}</span>

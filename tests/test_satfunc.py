@@ -3,6 +3,8 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 import pandas as pd
 
 from ecl2df import satfunc, ecl2csv, inferdims
@@ -243,6 +245,68 @@ SGOF
     ecl2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
+
+
+def test_wrong_columns():
+    """Test some error situations"""
+    # SWFN data given as SWOF:
+    satnumstr = """
+SWOF
+0 0 0
+1 1 0
+/
+"""
+    with pytest.raises(ValueError, match="Wrong number count for keyword SWOF"):
+        satfunc.df(satnumstr)
+    satnumstr = """
+SWFN
+0 0 0 0
+1 1 0 0
+/
+"""
+    with pytest.raises(ValueError, match="Wrong number count for keyword SWFN"):
+        satfunc.df(satnumstr)
+
+    # The following error is parseable into a dataframe, but gives
+    # four saturation points, this error can not be detected while parsing.
+    satnumstr = """
+SWFN
+0 0 0 0
+0.5 0.5 0.5 0
+1 1 0 0
+/
+"""
+    wrongdf = satfunc.df(satnumstr)
+    # We see the error as the saturation points are not unique:
+    assert len(wrongdf["SW"]) == 4
+    assert len(wrongdf["SW"].unique()) == 3
+
+
+def test_multiple_keywords_family2():
+
+    satnumstr = """
+SWFN
+-- Sw           Krw           Pcow
+  0 0 2
+  1.   1.000   0.00000e+00
+/
+
+SOF3
+-- So           Krow          Krog
+   0.00000e+00   0.00000e+00   0.00000e+00
+   0.581051658   1.000000000   1.000000000
+/
+
+SGFN
+-- Sg    Krg      Pcog
+  0.000  0.00000  0.000
+  0.800  1.00000  0.000
+/
+    """
+    satnum_df = satfunc.df(satnumstr)
+    assert set(satnum_df["SATNUM"]) == {1}
+    assert set(satnum_df["KEYWORD"]) == {"SWFN", "SOF3", "SGFN"}
+    assert len(satnum_df) == 6
 
 
 def test_main_subparsers(tmpdir):

@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 
 import yaml
+import numpy as np
 import pandas as pd
 
 import pytest
@@ -17,6 +18,7 @@ from ecl2df.summary import (
     resample_smry_dates,
     df2eclsum,
     df,
+    smry_meta,
     _fix_dframe_for_libecl,
 )
 
@@ -26,7 +28,7 @@ DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 logging.basicConfig(level=logging.INFO)
 
 
-def test_summary2df():
+def test_df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
     sumdf = summary.df(eclfiles)
@@ -44,8 +46,43 @@ def test_summary2df():
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
+    # Metadata should be attached using the attrs attribute on a Pandas
+    # Dataframe (considered experimental by Pandas)
+    assert "meta" in sumdf.attrs
+    assert sumdf.attrs["meta"]["FOPR"]["unit"] == "SM3/DAY"
 
-def test_summary2df_dates():
+
+def test_df_column_keys():
+    """Test that we can slice the dataframe on columns"""
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys="FOPT")
+    assert set(sumdf.columns) == {"FOPT"}
+    assert set(sumdf.attrs["meta"].keys()) == {"FOPT"}
+
+    fop_cols = {
+        "FOPRS",
+        "FOPT",
+        "FOPRH",
+        "FOPTH",
+        "FOPRF",
+        "FOPR",
+        "FOPTS",
+        "FOPTF",
+        "FOPP",
+    }
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys="FOP*")
+    assert set(sumdf.columns) == fop_cols
+    assert set(sumdf.attrs["meta"].keys()) == fop_cols
+
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys=["FOP*"])
+    assert set(sumdf.columns) == fop_cols
+    assert set(sumdf.attrs["meta"].keys()) == fop_cols
+
+    sumdf = summary.df(EclFiles(DATAFILE), column_keys=["FOPR", "FOPT"])
+    assert set(sumdf.columns) == {"FOPT", "FOPR"}
+    assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
+
+
+def test_df_dates():
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
 
@@ -336,6 +373,51 @@ def test_resample_smry_dates():
         )
         == 2
     )
+
+
+def test_smry_meta():
+    """Test obtaining metadata dictionary for summary vectors from an EclSum object"""
+    meta = smry_meta(EclFiles(DATAFILE))
+
+    assert isinstance(meta, dict)
+    assert "FOPT" in meta
+    assert "FOPTH" in meta
+    assert meta["FOPT"]["unit"] == "SM3"
+    assert meta["FOPR"]["unit"] == "SM3/DAY"
+    assert meta["FOPT"]["is_total"]
+    assert not meta["FOPR"]["is_total"]
+    assert not meta["FOPT"]["is_rate"]
+    assert meta["FOPR"]["is_rate"]
+    assert not meta["FOPT"]["is_historical"]
+    assert meta["FOPTH"]["is_historical"]
+
+    assert meta["WOPR:OP_1"]["wgname"] == "OP_1"
+    assert meta["WOPR:OP_1"]["keyword"] == "WOPR"
+    if "wgname" in meta["FOPT"]:
+        # Not enforced yet to have None fields actually included
+        assert meta["FOPT"]["wgname"] is None
+
+    # Can create dataframes like this:
+    meta_df = pd.DataFrame.from_dict(meta, orient="index")
+    hist_keys = meta_df[meta_df["is_historical"]].index
+    assert all([key.split(":")[0].endswith("H") for key in hist_keys])
+
+
+def test_smry_meta_synthetic():
+    """What does meta look like when we start from a synthetic summary?
+
+    ecl2df currently does not try to set the units to anything when
+    making synthetic summary.
+    """
+    dframe = pd.DataFrame(
+        [
+            {"DATE": np.datetime64("2016-01-01"), "FOPT": 1000, "FOPR": 100},
+        ]
+    ).set_index("DATE")
+    synt_meta = smry_meta(df2eclsum(dframe))
+
+    # Dummy unit provided by EclSum:
+    assert synt_meta["FOPT"]["unit"] == "UNIT"
 
 
 @pytest.mark.parametrize(

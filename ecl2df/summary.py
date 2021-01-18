@@ -284,7 +284,49 @@ def df(
     if datetime:
         if dframe.index.dtype == "object":
             dframe.index = pd.to_datetime(dframe.index)
+
+    # Add metadata as an attribute the dataframe, using experimental Pandas features:
+    meta = smry_meta(eclsum)
+    # Slice meta to dataframe columns:
+    dframe.attrs["meta"] = {
+        column_key: meta[column_key] for column_key in dframe if column_key in meta
+    }
+
     return dframe
+
+
+def smry_meta(eclfiles):
+    """Provide metadata for summary data vectors.
+
+    A dictionary indexed by summary vector name is returned, and each
+    value is dictionary with the metadata types provided by the underlying
+    EclSum object:
+
+    * unit (string)
+    * is_total (bool)
+    * is_rate (bool)
+    * is_historical (bool)
+    * get_num (int) (only provided if not None)
+    * keyword (str)
+    * wgname (str or None)
+    """
+    if isinstance(eclfiles, EclSum):
+        eclsum = eclfiles
+    else:
+        eclsum = eclfiles.get_eclsum()
+    meta = {}
+    for col in eclsum.keys():
+        meta[col] = {}
+        meta[col]["unit"] = eclsum.unit(col)
+        meta[col]["is_total"] = eclsum.is_total(col)
+        meta[col]["is_rate"] = eclsum.is_rate(col)
+        meta[col]["is_historical"] = eclsum.smspec_node(col).is_historical()
+        meta[col]["keyword"] = eclsum.smspec_node(col).keyword
+        meta[col]["wgname"] = eclsum.smspec_node(col).wgname
+        num = eclsum.smspec_node(col).get_num()
+        if num is not None:
+            meta[col]["get_num"] = num
+    return meta
 
 
 def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:

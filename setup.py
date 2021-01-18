@@ -35,6 +35,7 @@ TEST_REQUIREMENTS = [
     "networkx",
     "pre-commit",
     "pytest",
+    "pytest-cov",
 ]
 
 DOCS_REQUIREMENTS = [

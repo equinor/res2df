@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.9.2.dev2+g3023f1c documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.9.2.dev3+g502f220 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.9.2.dev2+g3023f1c
+                0.9.2.dev3+g502f220
               </div>
             
           
@@ -3026,6 +3026,24 @@ normalized dates. Overriden if freq is ‘last’.</p></li>
 <dd class="field-even"><p>list of datetimes.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.summary.smry_meta">
+<code class="sig-prename descclassname">ecl2df.summary.</code><code class="sig-name descname">smry_meta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eclfiles</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/summary.html#smry_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.summary.smry_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide metadata for summary data vectors.</p>
+<p>A dictionary indexed by summary vector name is returned, and each
+value is dictionary with the metadata types provided by the underlying
+EclSum object:</p>
+<ul class="simple">
+<li><p>unit (string)</p></li>
+<li><p>is_total (bool)</p></li>
+<li><p>is_rate (bool)</p></li>
+<li><p>is_historical (bool)</p></li>
+<li><p>get_num (int) (only provided if not None)</p></li>
+<li><p>keyword (str)</p></li>
+<li><p>wgname (str or None)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py function">

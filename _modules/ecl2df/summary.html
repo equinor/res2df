@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.summary &mdash; ecl2df 0.9.2.dev2+g3023f1c documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.9.2.dev3+g502f220 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev2+g3023f1c
+                0.9.2.dev3+g502f220
               </div>
             
           
@@ -450,7 +450,49 @@
     <span class="k">if</span> <span class="n">datetime</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
             <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># Add metadata as an attribute the dataframe, using experimental Pandas features:</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">smry_meta</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
+    <span class="c1"># Slice meta to dataframe columns:</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">column_key</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="n">column_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">if</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">meta</span>
+    <span class="p">}</span>
+
     <span class="k">return</span> <span class="n">dframe</span></div>
+
+
+<div class="viewcode-block" id="smry_meta"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.smry_meta">[docs]</a><span class="k">def</span> <span class="nf">smry_meta</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Provide metadata for summary data vectors.</span>
+
+<span class="sd">    A dictionary indexed by summary vector name is returned, and each</span>
+<span class="sd">    value is dictionary with the metadata types provided by the underlying</span>
+<span class="sd">    EclSum object:</span>
+
+<span class="sd">    * unit (string)</span>
+<span class="sd">    * is_total (bool)</span>
+<span class="sd">    * is_rate (bool)</span>
+<span class="sd">    * is_historical (bool)</span>
+<span class="sd">    * get_num (int) (only provided if not None)</span>
+<span class="sd">    * keyword (str)</span>
+<span class="sd">    * wgname (str or None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">EclSum</span><span class="p">):</span>
+        <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">()</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">unit</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;is_total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">is_total</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;is_rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">is_rate</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;is_historical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">is_historical</span><span class="p">()</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;keyword&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">keyword</span>
+        <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;wgname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">wgname</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">smspec_node</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">get_num</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">meta</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="s2">&quot;get_num&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="k">return</span> <span class="n">meta</span></div>
 
 
 <span class="k">def</span> <span class="nf">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>

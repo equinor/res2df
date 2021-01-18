@@ -14,6 +14,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# This import is seemingly not used, but necessary for some attributes
+# to be included in DeckItem objects.
+from opm.io.deck import DeckKeyword  # noqa
+
 from ecl2df import __version__
 
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
@@ -131,7 +135,7 @@ def ecl_keyworddata_to_df(
             with consecutive rows enumerated from 1. Use this to assign
             EQLNUM or similar when this should be consecutive pr. row (not
             the case for all keywords).
-        emptyrecordname (str): If supplied, an index is added to every parsed
+        emptyrecordcountername (str): If supplied, an index is added to every parsed
             row based on how many empty records is encountered. For PVTO f.ex,
             this gives the PVTNUM indexing.
     """
@@ -140,15 +144,14 @@ def ecl_keyworddata_to_df(
     record_counter = 1
     emptyrecord_counter = 1
     for deckrecord in deck[keyword]:
-        recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
-        # If all values are None, this is an empty record, and for some
-        # keywords this signifies that we jump to the next table, e.g. for PVTO
-        if all(
-            [value is None for value in recdict.values() if not isinstance(value, list)]
-        ):
-            if "DATA" not in recdict or ("DATA" in recdict and not recdict["DATA"]):
-                emptyrecord_counter += 1
-                continue
+        if str(deckrecord).strip() == "/":
+            # For some keywords, at least PVTO, an empty record like
+            # this signifies that we jump to the next table, and
+            # for PVTO, this counter variable will be used as PVTNUM
+            emptyrecord_counter += 1
+            continue
+        else:
+            recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
         if emptyrecordcountername is not None:
             recdict[emptyrecordcountername] = emptyrecord_counter
         if recordcountername is not None:
@@ -201,15 +204,8 @@ def parse_opmio_deckrecord(
         dict
     """
     if keyword not in OPMKEYWORDS:
-        logging.error("Keyword %s not supported by common.py", str(keyword))
+        raise ValueError(f"Keyword {keyword} not supported by common.py")
 
-    # opm.io deckitem access functions, depending on value_type in json data for item:
-    deckitem_fn = {
-        "STRING": "get_str",
-        "INT": "get_int",
-        "DOUBLE": "get_raw",
-        "UDA": "get_raw",  # Does not work. Is UDA unsupported in opm.io??
-    }
     rec_dict = {}
 
     if recordindex is None:  # Beware, 0 is different from None here.
@@ -217,47 +213,23 @@ def parse_opmio_deckrecord(
     else:
         itemlist = OPMKEYWORDS[keyword][itemlistname][recordindex]
 
-    # Loop over the items in the "items" section of the json keyword
-    # description.
+    # Loop over the items in the "items" section of the json keyword description.
     # Usually these items refer to one number/value in the deck record ("one line")
     # but for some keywords there are more values, like for PVTO
     for item_idx, jsonitem in enumerate(itemlist):
         item_name = jsonitem["name"]
-        # Cleanup after 2020.03 for opm-common is released
-        # to not use the private property __defaulted
-
-        # Determine if there value is defaulted in the deck:
-        defaulted = False
-        # pylint: disable=protected-access
-        if hasattr(record[item_idx], "__defaulted"):
-            try:
-                defaulted = record[item_idx].__defaulted(0)
-            except IndexError:
-                # Code this better, ask for defaulted propertiies properly
-                # (we end here for items which are lists, e.g. the
-                # DATA item of the PVTO keyword)
-                pass
-        if not defaulted:
-            # Do the data extraction from the record:
+        if not record[item_idx].defaulted:
             if len(record[item_idx]) == 1:
-                rec_dict[item_name] = getattr(
-                    record[item_idx], deckitem_fn[jsonitem["value_type"]]
-                )(0)
+                # The DeckItem attribute .value is only present if there is an
+                # explicit statement "from opm.io.deck import DeckKeyword"
+                # in this file.
+                rec_dict[item_name] = record[item_idx].value
             else:
-                # items -> size_type is set to ALL in json in these cases,
-                # means that the deck record consists of arbitrary sized lists
-                # (but multiple of len(items -> dimension))
-                # Currently only PVT* ends here:
-                rec_dict[item_name] = getattr(record[item_idx], "get_raw_data_list")()
-                # This data must then be unrolled somewhere.
+                rec_dict[item_name] = record[item_idx].get_raw_data_list()
+                # (the caller is responsible for unrolling this list with
+                # correct naming of elements)
         else:
-            if "default" in jsonitem:
-                # Use the default value provided in the json file for
-                # the keyword.
-                rec_dict[item_name] = jsonitem["default"]
-            else:
-                # Give up giving a sensible default value.
-                rec_dict[item_name] = None
+            rec_dict[item_name] = jsonitem.get("default", None)
 
     if renamer:
         renamed_dict = {}

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.9.2.dev5+gdee8bad documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.9.2.dev6+gcc96c37 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev5+gdee8bad
+                0.9.2.dev6+gcc96c37
               </div>
             
           
@@ -330,7 +330,15 @@
             <span class="c1"># If DATA is sometimes used for something else in the jsons, redo this.</span>
             <span class="n">data_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">renamer</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span>  <span class="c1"># The renamers must be in sync with json!</span>
             <span class="n">data_chunks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">data_dim</span><span class="p">)</span>
-            <span class="n">data_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">data_chunks</span><span class="p">,</span> <span class="n">data_dim</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">data_chunks</span><span class="p">,</span> <span class="n">data_dim</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Wrong number count for keyword </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">. </span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Either your keyword is wrong, or your data is wrong&quot;</span>
+                    <span class="p">)</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
             <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">renamer</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="n">data_reshaped</span><span class="p">)</span>
             <span class="c1"># Assign the remaining items from the parsed dict to the dataframe:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">recdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

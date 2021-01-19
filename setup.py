@@ -33,6 +33,7 @@ TEST_REQUIREMENTS = [
     "black>=20.8b0",
     "flake8",
     "networkx",
+    "pre-commit",
     "pytest",
     "pytest-cov",
 ]

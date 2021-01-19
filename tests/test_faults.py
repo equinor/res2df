@@ -6,7 +6,7 @@ import subprocess
 
 import pandas as pd
 
-from ecl2df import faults
+from ecl2df import faults, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -61,10 +61,11 @@ FAULTS
     assert len(faultsdf.loc["C"]) == 6
 
 
-def test_main_subparser(tmpdir):
+def test_main_subparser(tmpdir, mocker):
     """Test command line interface with subparsers"""
     tmpcsvfile = tmpdir / "faultsdf.csv"
-    subprocess.run(["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)], check=True)
+    mocker.patch("sys.argv", ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)])
+    ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

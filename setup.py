@@ -35,6 +35,7 @@ TEST_REQUIREMENTS = [
     "networkx",
     "pytest",
     "pytest-cov",
+    "pytest-mock",
 ]
 
 DOCS_REQUIREMENTS = [

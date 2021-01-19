@@ -6,7 +6,7 @@ import subprocess
 
 import pandas as pd
 
-from ecl2df import wcon
+from ecl2df import wcon, ecl2csv
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wcon import unroll_defaulted_items, ad_hoc_wconparser
 
@@ -142,10 +142,11 @@ WCONHIST
     assert "2001-05-07" in dates
 
 
-def test_main_subparsers(tmpdir):
+def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / ".TMP-wcondf.csv"
-    subprocess.run(["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)], check=True)
+    mocker.patch("sys.argv", ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)])
+    ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

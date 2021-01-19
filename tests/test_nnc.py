@@ -7,7 +7,7 @@ import subprocess
 import pandas as pd
 import pytest
 
-from ecl2df import nnc, faults, trans
+from ecl2df import nnc, faults, trans, ecl2csv
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -98,12 +98,11 @@ def test_df2ecl_editnnc(tmpdir):
     print(nnc.df2ecl_editnnc(nnc.df(eclfiles).head(4).assign(TRANM=0.1)))
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("nnc.csv")
-    subprocess.run(
-        ["ecl2csv", "nnc", "-v", DATAFILE, "-o", str(tmpcsvfile)], check=True
-    )
+    mocker.patch("sys.argv", ["ecl2csv", "nnc", "-v", DATAFILE, "-o", str(tmpcsvfile)])
+    ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

@@ -291,6 +291,10 @@ def test_grupnetroot(schstr, expected_dframe, expected_tree):
 
 def test_multiple_roots():
     """Test edge_dataframe2dict with multiple roots"""
+    answer = [
+        {"FIELDA": {"PLATA": {}}},
+        {"FIELDB": {"PLATB": {}}},
+    ]
     edges = pd.DataFrame(
         [
             {"CHILD": "FIELDA", "PARENT": None},
@@ -299,22 +303,16 @@ def test_multiple_roots():
             {"CHILD": "PLATB", "PARENT": "FIELDB"},
         ]
     )
-    list_of_treedicts = gruptree.edge_dataframe2dict(edges)
-    assert len(list_of_treedicts) == 2
-    assert {"FIELDA": {"PLATA": {}}} in list_of_treedicts
-    assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
+    assert gruptree.edge_dataframe2dict(edges) == answer
 
     # Same result if the dummy rows for the roots are omitted:
-    edges = pd.DataFrame(
+    edges_noroots = pd.DataFrame(
         [
             {"CHILD": "PLATA", "PARENT": "FIELDA"},
             {"CHILD": "PLATB", "PARENT": "FIELDB"},
         ]
     )
-    list_of_treedicts = gruptree.edge_dataframe2dict(edges)
-    assert len(list_of_treedicts) == 2
-    assert {"FIELDA": {"PLATA": {}}} in list_of_treedicts
-    assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
+    assert gruptree.edge_dataframe2dict(edges_noroots) == answer
 
 
 def test_emptytree(tmpdir, mocker, caplog):

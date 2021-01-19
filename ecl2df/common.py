@@ -164,7 +164,15 @@ def ecl_keyworddata_to_df(
             # If DATA is sometimes used for something else in the jsons, redo this.
             data_dim = len(renamer["DATA"])  # The renamers must be in sync with json!
             data_chunks = int(len(recdict["DATA"]) / data_dim)
-            data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
+            try:
+                data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
+            except ValueError as err:
+                raise ValueError(
+                    (
+                        f"Wrong number count for keyword {keyword}. \n"
+                        "Either your keyword is wrong, or your data is wrong"
+                    )
+                ) from err
             data_df = pd.DataFrame(columns=renamer["DATA"], data=data_reshaped)
             # Assign the remaining items from the parsed dict to the dataframe:
             for key, value in recdict.items():

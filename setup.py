@@ -36,6 +36,7 @@ TEST_REQUIREMENTS = [
     "pre-commit",
     "pytest",
     "pytest-cov",
+    "pytest-mock",
 ]
 
 DOCS_REQUIREMENTS = [

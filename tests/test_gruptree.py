@@ -1,7 +1,5 @@
 """Test module for nnc2df"""
 
-import sys
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -319,7 +317,7 @@ def test_multiple_roots():
     assert {"FIELDB": {"PLATB": {}}} in list_of_treedicts
 
 
-def test_emptytree(tmpdir):
+def test_emptytree(tmpdir, mocker, caplog):
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
     deck = EclFiles.str2deck(schstr)
@@ -335,12 +333,9 @@ def test_emptytree(tmpdir):
 
     tmpdir.chdir()
     Path("EMPTY.DATA").write_text("")
-    commands = ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"]
-    result = subprocess.run(
-        commands, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    output = result.stdout.decode() + result.stderr.decode()
-    assert "No tree data to prettyprint" in output
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
+    ecl2csv.main()
+    assert "No tree data to prettyprint" in caplog.text
 
 
 def test_tstep():
@@ -367,10 +362,10 @@ WELSPECS
     print(grupdf)
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("gruptree.csv")
-    sys.argv = ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)]
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -378,11 +373,11 @@ def test_main(tmpdir):
     assert not disk_df.empty
 
 
-def test_prettyprint():
+def test_prettyprint(mocker, capsys):
     """Test pretty printing via command line interface"""
-    commands = ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"]
-    results = subprocess.run(commands, check=True, stdout=subprocess.PIPE)
-    stdout = results.stdout.decode()
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"])
+    ecl2csv.main()
+    stdout = capsys.readouterr().out.strip()
     print(stdout)
     assert (
         """
@@ -443,10 +438,12 @@ FIELD
     )
 
 
-def test_main_subparser(tmpdir):
+def test_main_subparser(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("gruptree.csv")
-    sys.argv = ["ecl2csv", "gruptree", "-v", DATAFILE, "-o", str(tmpcsvfile)]
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "gruptree", "-v", DATAFILE, "-o", str(tmpcsvfile)]
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()

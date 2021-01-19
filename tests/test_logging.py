@@ -3,7 +3,7 @@ import subprocess
 
 import pytest
 
-from test_grid import DATAFILE
+from .test_grid import DATAFILE
 
 
 @pytest.mark.skipif(sys.version_info < (3, 7), reason="Requires Python 3.7 or higher")

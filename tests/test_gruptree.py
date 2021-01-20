@@ -314,6 +314,15 @@ def test_multiple_roots():
     )
     assert gruptree.edge_dataframe2dict(edges_noroots) == answer
 
+    # And order does not matter, should be sorted on root node label:
+    edges_noroots = pd.DataFrame(
+        [
+            {"CHILD": "PLATB", "PARENT": "FIELDB"},
+            {"CHILD": "PLATA", "PARENT": "FIELDA"},
+        ]
+    )
+    assert gruptree.edge_dataframe2dict(edges_noroots) == answer
+
 
 def test_emptytree(tmpdir, mocker, caplog):
     """Test empty schedule sections. Don't want to crash"""

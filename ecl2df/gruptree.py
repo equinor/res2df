@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-"""
-Extract GRUPTREE information from an Eclipse deck
-
-"""
+"""Extract GRUPTREE information from an Eclipse deck"""
 
 import sys
 import logging
@@ -208,8 +204,9 @@ def edge_dataframe2dict(dframe):
     Leaf nodes have empty dictionaries as their value.
 
     Returns:
-        list of nested dictionaries, as we in general
-            may have more than one root.
+        List of nested dictionaries, as we in general
+        may have more than one root. The list sorted
+        alphabetically on the top level node name.
     """
     if dframe.empty:
         return [{}]
@@ -226,7 +223,7 @@ def edge_dataframe2dict(dframe):
 
     children, parents = zip(*edges)
     roots = set(parents).difference(children)
-    return [{root: subtrees[root]} for root in roots]
+    return [{root: subtrees[root]} for root in sorted(roots)]
 
 
 def _subdict2treelib(nested_dict, name):

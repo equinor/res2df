@@ -26,3 +26,21 @@ from . import (
 )
 
 name = "ecl2df"
+
+# List of submodules, at least in use by tests to loop over all.
+SUBMODULES = [
+    "grid",
+    "summary",
+    "nnc",
+    "faults",
+    "trans",
+    "pillars",
+    "pvt",
+    "rft",
+    "fipreports",
+    "satfunc",
+    "compdat",
+    "equil",
+    "gruptree",
+    "wcon",
+]

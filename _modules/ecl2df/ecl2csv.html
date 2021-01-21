@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.ecl2csv &mdash; ecl2df 0.9.2.dev7+ga4909ec documentation</title>
+  <title>ecl2df.ecl2csv &mdash; ecl2df 0.9.2.dev8+g4828541 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev7+ga4909ec
+                0.9.2.dev8+g4828541
               </div>
             
           
@@ -170,35 +170,39 @@
 <span class="sd">in ecl2df</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
-
-<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">compdat</span><span class="p">,</span>
-    <span class="n">equil</span><span class="p">,</span>
-    <span class="n">faults</span><span class="p">,</span>
-    <span class="n">fipreports</span><span class="p">,</span>
-    <span class="n">grid</span><span class="p">,</span>
-    <span class="n">gruptree</span><span class="p">,</span>
-    <span class="n">nnc</span><span class="p">,</span>
-    <span class="n">pillars</span><span class="p">,</span>
-    <span class="n">pvt</span><span class="p">,</span>
-    <span class="n">rft</span><span class="p">,</span>
-    <span class="n">satfunc</span><span class="p">,</span>
-    <span class="n">summary</span><span class="p">,</span>
-    <span class="n">trans</span><span class="p">,</span>
-    <span class="n">wcon</span><span class="p">,</span>
-<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
 
 <span class="c1"># String constants in use for generating ERT forward model documentation:</span>
-<span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert Eclipse input and output files into CSV files.</span>
-<span class="s2">Uses the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see</span>
-<span class="s2">which subcommands are supported. It is not possible to supply extra</span>
-<span class="s2">options to ecl2csv through this forward model.&quot;&quot;&quot;</span>
+<span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert Eclipse input and output files into CSV files,</span>
+<span class="s2">with the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see</span>
+<span class="s2">which subcommands are supported.</span>
+
+<span class="s2">For supplying options to subcommands, you can use the arguments ``&lt;XARGn&gt;``</span>
+<span class="s2">where ``n`` goes from 1 to 10.</span>
+
+<span class="s2">For more documentation, see https://equinor.github.io/ecl2df/.</span>
+<span class="s2">&quot;&quot;&quot;</span>
 <span class="n">CATEGORY</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
-<span class="n">EXAMPLES</span> <span class="o">=</span> <span class="s2">&quot;``FORWARD_MODEL ECL2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)``&quot;</span>
+<span class="n">EXAMPLES</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Outputting the EQUIL data from an Eclipse deck. The ECLBASE variable from your</span>
+<span class="s2">ERT config is supplied implicitly::</span>
+
+<span class="s2">   FORWARD_MODEL ECL2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)</span>
+
+<span class="s2">For a yearly summary export of the realization, options have to be supplied</span>
+<span class="s2">with the XARG options::</span>
+
+<span class="s2">  FORWARD_MODEL ECL2CSV(&lt;SUBCOMMAND&gt;=summary, &lt;OUTPUT&gt;=yearly.csv, &lt;XARG1&gt;=&quot;--time_index&quot;, &lt;XARG2&gt;=&quot;yearly&quot;)</span>
+
+<span class="s2">The quotes around double-dashed options are critical to avoid ERT taking for a</span>
+<span class="s2">comment. For more options, use ``&lt;XARG3&gt;`` etc.</span>
+<span class="s2">&quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
 
 
 <div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.ecl2csv.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">():</span>
@@ -223,8 +227,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span>
 
-    <span class="c1"># Eclipse output files:</span>
-    <span class="n">grid_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;grid&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract grid data with properties&quot;</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
@@ -235,10 +239,7 @@
         <span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">grid</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">grid_parser</span><span class="p">)</span>
-    <span class="n">grid_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">grid_main</span><span class="p">)</span>
-
-    <span class="n">summary_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;summary&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract summary data&quot;</span><span class="p">),</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
@@ -248,10 +249,7 @@
         <span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">summary</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
-    <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary</span><span class="o">.</span><span class="n">summary_main</span><span class="p">)</span>
-
-    <span class="n">nnc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;nnc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;nnc&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract NNC data from EGRID file&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -263,10 +261,7 @@
             <span class="s2">&quot;See also the trans subcommand.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">nnc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">nnc_parser</span><span class="p">)</span>
-    <span class="n">nnc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">nnc</span><span class="o">.</span><span class="n">nnc_main</span><span class="p">)</span>
-
-    <span class="n">faults_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;faults&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;faults&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract data from the FAULTS keyword&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
@@ -274,10 +269,7 @@
         <span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">faults</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">faults_parser</span><span class="p">)</span>
-    <span class="n">faults_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">faults</span><span class="o">.</span><span class="n">faults_main</span><span class="p">)</span>
-
-    <span class="n">trans_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;trans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;trans&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract transmissibilities from EGRID file&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -290,10 +282,7 @@
             <span class="s2">&quot;FIPNUM change&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">trans</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">trans_parser</span><span class="p">)</span>
-    <span class="n">trans_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">trans</span><span class="o">.</span><span class="n">trans_main</span><span class="p">)</span>
-
-    <span class="n">pillars_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;pillars&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;pillars&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Compute data pr. cornerpoint pillar&quot;</span><span class="p">,</span>
@@ -303,10 +292,7 @@
             <span class="s2">&quot;and contacts.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">pillars</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">pillars_parser</span><span class="p">)</span>
-    <span class="n">pillars_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pillars</span><span class="o">.</span><span class="n">pillars_main</span><span class="p">)</span>
-
-    <span class="n">pvt_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;pvt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;pvt&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract PVT data&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
@@ -321,10 +307,7 @@
             <span class="s2">&quot;data row stems from. &quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">pvt</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">pvt_parser</span><span class="p">)</span>
-    <span class="n">pvt_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pvt</span><span class="o">.</span><span class="n">pvt_main</span><span class="p">)</span>
-
-    <span class="n">rft_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;rft&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;rft&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract RFT data from Eclipse binary output files.&quot;</span><span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -338,10 +321,7 @@
             <span class="s2">&quot;the data outputted.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">rft</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">rft_parser</span><span class="p">)</span>
-    <span class="n">rft_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rft</span><span class="o">.</span><span class="n">rft_main</span><span class="p">)</span>
-
-    <span class="n">fipreports_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;fipreports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file.&quot;</span><span class="p">),</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -351,11 +331,7 @@
             <span class="s2">&quot;material balance errors&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">fipreports</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">fipreports_parser</span><span class="p">)</span>
-    <span class="n">fipreports_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">fipreports</span><span class="o">.</span><span class="n">fipreports_main</span><span class="p">)</span>
-
-    <span class="c1"># Eclipse input files:</span>
-    <span class="n">satfunc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;satfunc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract SWOF/SGOF/etc data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -366,11 +342,17 @@
             <span class="s2">&quot;are empty and vice versa&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-
-    <span class="n">satfunc</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
-    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc</span><span class="o">.</span><span class="n">satfunc_main</span><span class="p">)</span>
-
-    <span class="n">compdat_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;fipreports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file.&quot;</span><span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
+            <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and &quot;</span>
+            <span class="s2">&quot;material balance errors&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;compdat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;compdat&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -379,28 +361,19 @@
             <span class="s2">&quot;Only COMPDAT data is exposed in CSV output currently.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">compdat</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">compdat_parser</span><span class="p">)</span>
-    <span class="n">compdat_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">compdat</span><span class="o">.</span><span class="n">compdat_main</span><span class="p">)</span>
-
-    <span class="n">equil_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;equil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract EQUIL data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row contains the equilibriation data for one EQLNUM.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">equil</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
-    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil</span><span class="o">.</span><span class="n">equil_main</span><span class="p">)</span>
-
-    <span class="n">gruptree_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;gruptree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;gruptree&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract GRUPTREE data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row represents an edge in the GRUPTREE at a specific date.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">gruptree</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">gruptree_parser</span><span class="p">)</span>
-    <span class="n">gruptree_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">gruptree</span><span class="o">.</span><span class="n">gruptree_main</span><span class="p">)</span>
-
-    <span class="n">wcon_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;wcon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;wcon&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well control data&quot;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
@@ -409,10 +382,65 @@
             <span class="s2">&quot;well or well wildcard at a specific date&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">wcon</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">wcon_parser</span><span class="p">)</span>
-    <span class="n">wcon_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">wcon</span><span class="o">.</span><span class="n">wcon_main</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">submodule</span><span class="p">,</span> <span class="n">subparser</span> <span class="ow">in</span> <span class="n">subparsers_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Use the submodule&#39;s fill_parser() to add the submodule specific</span>
+        <span class="c1"># arguments:</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;ecl2df.&quot;</span> <span class="o">+</span> <span class="n">submodule</span><span class="p">)</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">subparser</span><span class="p">)</span>
+
+        <span class="c1"># Add empty placeholders, this looks strange but is needed for the</span>
+        <span class="c1"># ERT forward model frontend, where non-used options must be supplied</span>
+        <span class="c1"># as empty string arguments (which we should ignore)</span>
+        <span class="n">subparser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;hiddenemptyplaceholders&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Tell argparse which main() function to use for each</span>
+        <span class="c1"># subparser/submodule:</span>
+        <span class="n">subparser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+                <span class="n">run_subparser_main</span><span class="p">,</span> <span class="n">submodule</span><span class="o">=</span><span class="n">submodule</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="n">subparser</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="run_subparser_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.ecl2csv.run_subparser_main">[docs]</a><span class="k">def</span> <span class="nf">run_subparser_main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">submodule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper for running the subparsers main() function, with</span>
+<span class="sd">    custom argument handling.</span>
+
+<span class="sd">    In order to support ERT forward model syntax, empty positional</span>
+<span class="sd">    arguments must be allowed, but ignored. This function takes</span>
+<span class="sd">    care of shuffling the single required positional argument into</span>
+<span class="sd">    args.DATAFILE, and will error if more than one positional</span>
+<span class="sd">    argument is supplied</span>
+
+<span class="sd">    This function is to be supplied to argsparse&#39;s set_default()</span>
+<span class="sd">    function, by use of functools.partial so that the submodule_name</span>
+<span class="sd">    argument can be set.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args (Namespace): argparse argument namespace</span>
+<span class="sd">        submodule (str): One of ecl2df&#39;s submodules. That module</span>
+<span class="sd">            must have a function called &lt;submodule&gt;_main()</span>
+<span class="sd">        parser (argparse.ArgumentParser): Used for raising errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">submodule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="s2">&quot;DATAFILE&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">positionals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">))</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;PRTFILE&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="c1"># Special treatment for the fipreports submodule</span>
+        <span class="n">positionals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">))</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">positionals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown argument in </span><span class="si">{</span><span class="n">positionals</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;ecl2df.&quot;</span> <span class="o">+</span> <span class="n">submodule</span><span class="p">)</span>
+
+    <span class="n">main_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">submodule</span> <span class="o">+</span> <span class="s2">&quot;_main&quot;</span><span class="p">)</span>
+    <span class="n">main_func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.ecl2csv.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>

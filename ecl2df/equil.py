@@ -301,7 +301,7 @@ def equil_main(args):
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS
         # is supplied:
-        equil_df = df(deck)
+        equil_df = df(deck, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string

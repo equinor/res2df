@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.faults &mdash; ecl2df 0.9.2.dev8+g4828541 documentation</title>
+  <title>ecl2df.faults &mdash; ecl2df 0.9.2.dev9+g5213f4e documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev8+g4828541
+                0.9.2.dev9+g5213f4e
               </div>
             
           
@@ -174,7 +174,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_opmio_deckrecord</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">parse_opmio_deckrecord</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -242,9 +242,14 @@
     <span class="n">faults_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">faults_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty FAULT data, not written to disk!&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">faults_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+        <span class="k">return</span>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+        <span class="n">faults_df</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="s2">&quot;Wrote to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">),</span>
+    <span class="p">)</span></div>
 </pre></div>
 
            </div>

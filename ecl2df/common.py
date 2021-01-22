@@ -64,8 +64,10 @@ for keyw in [
     )
 
 
-# This is a magic filename that means read/write from/to stdout:
-__MAGIC_STDOUT__ = "-"
+# This is a magic filename that means read/write from/to stdout
+# This makes it impossible to write to a file called "-" on disk
+# but that would anyway create a lot of other problems in the shell.
+MAGIC_STDOUT = "-"
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +87,7 @@ def write_dframe_stdout_file(
         caller_logger (logging): Used if not stdout
         logstr (str): Logged if not stdout.
     """
-    if output == __MAGIC_STDOUT__:
+    if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         dframe.to_csv(sys.stdout, index=index)
@@ -97,16 +99,16 @@ def write_dframe_stdout_file(
         dframe.to_csv(output, index=index)
 
 
-def write_inc_stdout_file(string, output):
+def write_inc_stdout_file(string, outputfilename):
     """Write a string (typically an include file string) to stdout
     or to a named file"""
-    if output == __MAGIC_STDOUT__:
+    if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(string)
     else:
-        Path(output).write_text(string)
-        print(f"Wrote to {output}")
+        Path(outputfilename).write_text(string)
+        print(f"Wrote to {outputfilename}")
 
 
 def parse_ecl_month(eclmonth):

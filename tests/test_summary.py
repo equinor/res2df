@@ -588,7 +588,10 @@ def test_ecl2df_errors(tmpdir):
 
     # But EclFiles should be more tolerant, as it should be possible
     # to extract other data if SMRY is corrupted
-    assert EclFiles("FOO").get_eclsum() is None  # (a warning is printed)
+    Path("FOO.DATA").write_text("RUNSPEC")
+    assert str(EclFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
+    with pytest.raises(OSError):
+        EclFiles("FOO").get_eclsum()
 
     # Getting a dataframe from bogus data should give empty data:
     assert df(EclFiles("FOO")).empty

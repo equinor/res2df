@@ -4,8 +4,7 @@ from pathlib import Path
 import warnings
 
 # The name 'datetime' is in use by a function argument:
-from datetime import date as datetime_date
-from datetime import datetime as datetime_datetime
+import datetime as dt
 
 import dateutil.parser
 import pandas as pd
@@ -61,7 +60,7 @@ def _ensure_date_or_none(some_date):
     if some_date:
         if isinstance(some_date, str):
             return dateutil.parser.parse(some_date).date()
-        if not isinstance(some_date, datetime_date):
+        if not isinstance(some_date, dt.date):
             raise TypeError(f"Not a date type: {str(some_date)}")
     return some_date
 
@@ -78,13 +77,11 @@ def _crop_datelist(eclsumsdates, freq, start_date, end_date):
         datetimes.sort()
         if start_date:
             # Convert to datetime (at 00:00:00)
-            start_date = datetime_datetime.combine(
-                start_date, datetime_datetime.min.time()
-            )
+            start_date = dt.datetime.combine(start_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x > start_date]
             datetimes = [start_date] + datetimes
         if end_date:
-            end_date = datetime_datetime.combine(end_date, datetime_datetime.min.time())
+            end_date = dt.datetime.combine(end_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
         return datetimes
@@ -92,7 +89,7 @@ def _crop_datelist(eclsumsdates, freq, start_date, end_date):
         return [min(eclsumsdates).date()]
     if freq == "last":
         return [max(eclsumsdates).date()]
-    if isinstance(freq, (datetime_date, datetime_datetime)):
+    if isinstance(freq, (dt.date, dt.datetime)):
         return [freq]
     raise ValueError("BUG: Wrong arguments to _crop_datelist()")
 
@@ -136,15 +133,15 @@ def resample_smry_dates(
     start_date = _ensure_date_or_none(start_date)
     end_date = _ensure_date_or_none(end_date)
 
-    if freq in ["raw", "first", "last"] or isinstance(
-        freq, (datetime_date, datetime_datetime)
-    ):
+    if freq in ["raw", "first", "last"] or isinstance(freq, (dt.date, dt.datetime)):
         return _crop_datelist(eclsumsdates, freq, start_date, end_date)
 
+    # In case freq is an ISO-date(time)-string, interpret as such:
     try:
         parseddate = dateutil.parser.isoparse(freq)
         return [parseddate]
     except ValueError:
+        # freq is a frequency string or datetime.date (or similar)
         pass
 
     # These are datetime.datetime, not datetime.date
@@ -255,7 +252,7 @@ def df(
         if len(time_index_arg) < 6:
             time_index_str = str(time_index_arg)
         else:
-            time_index_str = str(time_index_arg[0:3] + ["..."] + time_index_arg[-3:])
+            time_index_str = f"{time_index_arg[0:3]} … {time_index_arg[-3:]}"
     else:
         time_index_str = time_index_arg
 
@@ -272,7 +269,11 @@ def df(
     if isinstance(eclfiles, EclSum):
         eclsum = eclfiles
     else:
-        eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+        try:
+            eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+        except OSError:
+            logger.warning("Error reading summary instance, returning empty dataframe")
+            return pd.DataFrame()
 
     if eclsum is None:
         # Warning is already logged by eclfiles.

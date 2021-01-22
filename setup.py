@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from os import path
 
 from setuptools import setup, find_packages
@@ -36,6 +34,7 @@ TEST_REQUIREMENTS = [
     "pre-commit",
     "pytest",
     "pytest-cov",
+    "pytest-mock",
 ]
 
 DOCS_REQUIREMENTS = [

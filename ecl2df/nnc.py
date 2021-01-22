@@ -8,6 +8,7 @@ import pandas as pd
 from pathlib import Path
 
 from ecl2df import common, EclFiles, grid, __version__
+from ecl2df.common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
@@ -278,5 +279,12 @@ def nnc_main(args):
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     if nncdf.empty:
         logger.warning("Empty NNC dataframe being written to disk!")
+        return
+    write_dframe_stdout_file(
+        nncdf,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr="Wrote to {}".format(args.output),
+    )
     nncdf.to_csv(args.output, index=False)
-    print("Wrote to " + args.output)

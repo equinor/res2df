@@ -1,13 +1,13 @@
 """Test module for satfunc2df"""
 
-import sys
+import subprocess
 from pathlib import Path
 
 import pytest
 
 import pandas as pd
 
-from ecl2df import satfunc, ecl2csv, inferdims
+from ecl2df import satfunc, ecl2csv, csv2ecl, inferdims
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -210,7 +210,7 @@ def test_sgwfn():
     )
 
 
-def test_sgof_satnuminferrer(tmpdir):
+def test_sgof_satnuminferrer(tmpdir, mocker):
     """Test inferring of SATNUMS in SGOF strings"""
     sgofstr = """
 SGOF
@@ -238,10 +238,10 @@ SGOF
 
     # Write to file and try to parse it with command line:
     sgoffile = "__sgof_tmp.txt"
-    with open(sgoffile, "w") as sgof_f:
-        sgof_f.write(sgofstr)
-
-    sys.argv = ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
+    Path(sgoffile).write_text(sgofstr)
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
+    )
     ecl2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
@@ -309,10 +309,10 @@ SGFN
     assert len(satnum_df) == 6
 
 
-def test_main_subparsers(tmpdir):
+def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join(".TMP-satfunc.csv")
-    sys.argv = ["ecl2csv", "satfunc", DATAFILE, "-o", str(tmpcsvfile)]
+    tmpcsvfile = tmpdir.join("satfunc.csv")
+    mocker.patch("sys.argv", ["ecl2csv", "satfunc", DATAFILE, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -321,17 +321,49 @@ def test_main_subparsers(tmpdir):
 
     tmpcsvfile2 = tmpdir.join(".TMP-satfunc-swof.csv")
     print(tmpcsvfile2)
-    sys.argv = [
-        "ecl2csv",
-        "satfunc",
-        DATAFILE,
-        "--keywords",
-        "SWOF",
-        "--output",
-        str(tmpcsvfile2),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "satfunc",
+            DATAFILE,
+            "--keywords",
+            "SWOF",
+            "--output",
+            str(tmpcsvfile2),
+        ],
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile2).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile2))
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}
+
+
+def test_csv2ecl(tmpdir, mocker):
+    """Test command line interface for csv to Eclipse include files"""
+    tmpdir.chdir()
+    tmpcsvfile = "satfunc.csv"
+
+    swof_df = pd.DataFrame(
+        columns=["KEYWORD", "SW", "KRW", "KROW", "PCOW"],
+        data=[["SWOF", 0.0, 0.0, 1.0, 0.0], ["SWOF", 1.0, 1.0, 0.0, 0.0]],
+    )
+    swof_df.to_csv(tmpcsvfile, index=False)
+    mocker.patch("sys.argv", ["csv2ecl", "satfunc", "--output", "swof.inc", tmpcsvfile])
+    csv2ecl.main()
+    pd.testing.assert_frame_equal(
+        satfunc.df(open("swof.inc").read()).drop("SATNUM", axis="columns"),
+        swof_df,
+        check_like=True,
+    )
+
+    # Test writing to stdout:
+    result = subprocess.run(
+        ["csv2ecl", "satfunc", "--output", "-", tmpcsvfile], stdout=subprocess.PIPE
+    )
+    pd.testing.assert_frame_equal(
+        satfunc.df(result.stdout.decode()).drop("SATNUM", axis="columns"),
+        swof_df,
+        check_like=True,
+    )

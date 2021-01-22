@@ -17,11 +17,17 @@ from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
+# Frequency mnemonics for the API consumer to use:
+FREQ_RAW = "raw"
+FREQ_FIRST = "first"
+FREQ_LAST = "last"
 PD_FREQ_MNEMONICS = {
-    "monthly": "MS",
-    "yearly": "YS",
     "daily": "D",
     "weekly": "W-MON",
+    "monthly": "MS",
+    "yearly": "YS",
+    # Any frequency mnemonics not mentioned here will be
+    # passed on to Pandas.
 }
 """Mapping from ecl2df custom offset strings to Pandas DateOffset strings.
 See
@@ -65,14 +71,22 @@ def _ensure_date_or_none(some_date):
     return some_date
 
 
-def _crop_datelist(eclsumsdates, freq, start_date, end_date):
+def _crop_datelist(eclsumsdates, freq, start_date=None, end_date=None):
     """Helper function for resample_smry_dates, taking care of
     the special cases where the list of dates should not be resampled, but
     only cropped or returned as is.
 
-    Arguments are the same as for resample_smry_dates
+    Args:
+        eclsumsdates: list of datetimes, typically coming from EclSum.dates
+        freq: Either a date or datetime, or a frequency string
+            "raw", "first" or "last".
+        start_date: Dates prior to this date will be cropped.
+        end_date: Dates after this date will be cropped.
+
+    Returns:
+        list of datetimes.
     """
-    if freq == "raw":
+    if freq == FREQ_RAW:
         datetimes = eclsumsdates
         datetimes.sort()
         if start_date:
@@ -85,17 +99,17 @@ def _crop_datelist(eclsumsdates, freq, start_date, end_date):
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
         return datetimes
-    if freq == "first":
+    if freq == FREQ_FIRST:
         return [min(eclsumsdates).date()]
-    if freq == "last":
+    if freq == FREQ_LAST:
         return [max(eclsumsdates).date()]
     if isinstance(freq, (dt.date, dt.datetime)):
         return [freq]
-    raise ValueError("BUG: Wrong arguments to _crop_datelist()")
+    raise ValueError(f"Expected freq to an accepted string or datetime type was {freq}")
 
 
 def resample_smry_dates(
-    eclsumsdates, freq="raw", normalize=True, start_date=None, end_date=None
+    eclsumsdates, freq=FREQ_RAW, normalize=True, start_date=None, end_date=None
 ):
     """
     Resample (optionally) a list of date(time)s to a new datelist according to options.
@@ -109,9 +123,9 @@ def resample_smry_dates(
             the returned list of datetime. 'raw' will
             return the input datetimes (no resampling).
             Options for timeresampling are
-            'daily', 'monthly' and 'yearly'.
-            'last' will give out the last date (maximum),
-            as a list with one element. Can also be a single date.
+            'daily', 'weekly', 'monthly' and 'yearly'. 'first' will give
+            the first date (minimum),  'last' will give out the last
+            date (maximum), as a list with one element. Can also be a single date.
         normalize: Whether to normalize backwards at the start
             and forwards at the end to ensure the raw
             date range is covered when resampling time.
@@ -122,10 +136,10 @@ def resample_smry_dates(
         end_date: str or date with last date to be included.
             Dates past this date will be dropped, supplied
             end_date will always be included. Overrides
-            normalized dates. Overriden if freq is 'last'.
+            normalized dates. Overridden if freq is 'last'.
+
     Returns:
         list of datetimes.
-
     """
     if not eclsumsdates:
         return []
@@ -133,7 +147,9 @@ def resample_smry_dates(
     start_date = _ensure_date_or_none(start_date)
     end_date = _ensure_date_or_none(end_date)
 
-    if freq in ["raw", "first", "last"] or isinstance(freq, (dt.date, dt.datetime)):
+    if freq in [FREQ_RAW, FREQ_FIRST, FREQ_LAST] or isinstance(
+        freq, (dt.date, dt.datetime)
+    ):
         return _crop_datelist(eclsumsdates, freq, start_date, end_date)
 
     # In case freq is an ISO-date(time)-string, interpret as such:

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.pvt &mdash; ecl2df 0.9.2.dev9+g5213f4e documentation</title>
+  <title>ecl2df.pvt &mdash; ecl2df 0.9.2.dev10+g7b6f005 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev9+g5213f4e
+                0.9.2.dev10+g7b6f005
               </div>
             
           
@@ -584,9 +584,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pvtg"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pvt.df2ecl_pvtg">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pvtg</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print DENSITY keyword with data</span>
-
-<span class="sd">    DENSITY is one line (one record) of data pr. PVTNUM</span>
+    <span class="sd">&quot;&quot;&quot;Print PVTG keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing PVTG data</span>
@@ -594,25 +592,56 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;DENSITY</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVTG</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2"> </span><span class="si">{:^21}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="s2">&quot;OILDENSITY&quot;</span><span class="p">,</span> <span class="s2">&quot;WATERDENSITY&quot;</span><span class="p">,</span> <span class="s2">&quot;GASDENSITY&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;OGR&quot;</span><span class="p">,</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span>
+    <span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="s2"> </span><span class="si">{:^22}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;OGR&quot;</span><span class="p">,</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="c1"># Use everything..</span>
         <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DENSITY&quot;</span><span class="p">]</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTG&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;  </span><span class="si">{OILDENSITY:20.7f}</span><span class="s2"> </span><span class="si">{WATERDENSITY:20.7f}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{GASDENSITY:20.7f}</span><span class="s2"> /</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
+
+    <span class="k">def</span> <span class="nf">_pvtg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print PVTG-data for a specific PVTNUM&quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">pg</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print PVTG-data for a particular gas phase pressure&quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">pg</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{:20.7f}</span><span class="s2">  &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pg</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rowidx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="n">indent</span>
+                <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{OGR:20.7f}</span><span class="s2">  </span><span class="si">{VOLUMEFACTOR:20.7f}</span><span class="s2">  </span><span class="si">{VISCOSITY:20.7f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="o">**</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot; /</span><span class="se">\n</span><span class="s2">-- End PRESSURE=</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span>
+
+    <span class="k">for</span> <span class="n">pvtnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvtg_pvtnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">pvtnum</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 

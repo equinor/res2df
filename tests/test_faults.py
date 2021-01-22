@@ -1,7 +1,8 @@
 """Test module for nnc2df"""
 
-import sys
+import io
 from pathlib import Path
+import subprocess
 
 import pandas as pd
 
@@ -60,12 +61,21 @@ FAULTS
     assert len(faultsdf.loc["C"]) == 6
 
 
-def test_main_subparser(tmpdir):
+def test_main_subparser(tmpdir, mocker):
     """Test command line interface with subparsers"""
     tmpcsvfile = tmpdir / "faultsdf.csv"
-    sys.argv = ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)]
+    mocker.patch("sys.argv", ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+def test_magic_stdout():
+    """Test that we can pipe the output into a dataframe"""
+    result = subprocess.run(
+        ["ecl2csv", "faults", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+    )
+    df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
+    assert not df_stdout.empty

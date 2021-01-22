@@ -8,7 +8,7 @@ import logging
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_opmio_deckrecord
+from .common import parse_opmio_deckrecord, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +76,11 @@ def faults_main(args):
     faults_df = df(deck)
     if faults_df.empty:
         logger.warning("Empty FAULT data, not written to disk!")
-    else:
-        faults_df.to_csv(args.output, index=False)
-        print("Wrote to " + args.output)
+        return
+    write_dframe_stdout_file(
+        faults_df,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr="Wrote to {}".format(args.output),
+    )

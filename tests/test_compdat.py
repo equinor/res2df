@@ -630,3 +630,70 @@ WSEGVALV
             ]
         ),
     )
+
+
+def test_wsegvalv_max_blank():
+    """Test the WSEGVALV parser for column names and blank values. NB: Blank
+    values are taken from other keywords in Eclipse except STATUS, which is OPEN
+    by default. Combination of keywords is not tested here."""
+    schstr = """
+WSEGVALV
+-- WELL    SEG         CV      AC  
+   WELL_A   31  0.0084252 0.00075  /
+/
+    """
+    deck = EclFiles.str2deck(schstr)
+    wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
+    pd.testing.assert_frame_equal(
+        wsegvalv,
+        pd.DataFrame(
+            data=[
+                {
+                    "WELL": "WELL_A",
+                    "SEGMENT_NUMBER": 31,
+                    "CV": 0.0084252,
+                    "AREA": 0.00075,
+                    "EXTRA_LENGTH": None,
+                    "PIPE_D": None,
+                    "ROUGHNESS": None,
+                    "PIPE_A": None,
+                    "STATUS": "OPEN",
+                    "MAX_A": None,
+                    "DATE": None,
+                }
+            ]
+        ),
+    )
+
+def test_wsegvalv_max_default():
+    """Test the WSEGVALV parser for column names and default values. NB: Default
+    values are taken from other keywords in Eclipse except STATUS, which is OPEN
+    by default. Combination of keywords is not tested here."""
+    schstr = """
+WSEGVALV
+-- WELL    SEG         CV      AC  
+   WELL_A   31  0.0084252 0.00075  6* /
+/
+    """
+    deck = EclFiles.str2deck(schstr)
+    wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
+    pd.testing.assert_frame_equal(
+        wsegvalv,
+        pd.DataFrame(
+            data=[
+                {
+                    "WELL": "WELL_A",
+                    "SEGMENT_NUMBER": 31,
+                    "CV": 0.0084252,
+                    "AREA": 0.00075,
+                    "EXTRA_LENGTH": None,
+                    "PIPE_D": None,
+                    "ROUGHNESS": None,
+                    "PIPE_A": None,
+                    "STATUS": "OPEN",
+                    "MAX_A": None,
+                    "DATE": None,
+                }
+            ]
+        ),
+    )

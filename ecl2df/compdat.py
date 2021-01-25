@@ -136,7 +136,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 rec_data["KEYWORD_IDX"] = idx
                 wsegaicdrecords.append(rec_data)
         elif kword.name == "WSEGVALV":
-            for rec in kword:  # Loop over the lines inside WSEGAICD record
+            for rec in kword:  # Loop over the lines inside WSEGVALV record
                 rec_data = parse_opmio_deckrecord(rec, "WSEGVALV")
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx

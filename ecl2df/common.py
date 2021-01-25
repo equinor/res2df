@@ -58,6 +58,7 @@ for keyw in [
     "WELSPECS",
     "WSEGAICD",
     "WSEGSICD",
+    "WSEGVALV",
 ]:
     OPMKEYWORDS[keyw] = json.loads(
         (Path(__file__).parent / "opmkeywords" / keyw).read_text()

@@ -19,6 +19,7 @@ SCHFILE = str(TESTDIR / "data/reek/eclipse/include/schedule/reek_history.sch")
 # AICD and ICD completion from WellBuilder
 SCHFILE_AICD = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_aicd1_gp.sch")
 SCHFILE_ICD = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_icd1_gp.sch")
+SCHFILE_VALV = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_valve1_gp.sch")
 
 
 def test_df():
@@ -447,6 +448,11 @@ def test_msw_schfile2df():
     assert not compdfs["WSEGSICD"].empty
     assert not compdfs["WSEGSICD"].columns.empty
 
+    deck = EclFiles.file2deck(SCHFILE_VALV)
+    compdfs = compdat.deck2dfs(deck)
+    assert not compdfs["WSEGVALV"].empty
+    assert not compdfs["WSEGVALV"].columns.empty
+
 
 def test_msw_str2df():
     """Testing making a dataframe from an explicit string including MSW"""
@@ -483,11 +489,17 @@ WSEGSICD
 -- WELL   SEG  SEG2 ALPHA  SF             RHO     VIS  WCT
     OP_6  31   31   0.0001  -1.186915444  1000.0  1.0  0.5  /
 /
+
+WSEGVALV
+-- WELL   SEG             CV      AC   L
+    OP_6  31       0.0084252 0.00075  1*  /
+/
 """
     deck = EclFiles.str2deck(schstr)
     compdfs = compdat.deck2dfs(deck)
     wsegaicd = compdfs["WSEGAICD"]
     wsegsicd = compdfs["WSEGSICD"]
+    wsegvalv = compdfs["WSEGVALV"]
 
     # Test WSEGAICD
     assert len(wsegaicd) == 1
@@ -500,6 +512,12 @@ WSEGSICD
     assert "WELL" in wsegsicd
     assert wsegsicd["WELL"].unique()[0] == "OP_6"
     assert len(wsegsicd.dropna(axis=1, how="all").iloc[0]) == 12
+
+    # Test WSEGVALV
+    assert len(wsegvalv) == 1
+    assert "WELL" in wsegvalv
+    assert wsegvalv["WELL"].unique()[0] == "OP_6"
+    assert len(wsegvalv.dropna(axis=1, how="all").iloc[0]) == 5
 
 
 def test_wsegaicd():
@@ -575,6 +593,38 @@ def test_wsegsicd():
                     "METHOD_SCALING_FACTOR": 1,
                     "MAX_ABS_RATE": None,
                     "STATUS": "OPEN",
+                    "DATE": None,
+                }
+            ]
+        ),
+    )
+
+
+def test_wsegvalv():
+    """Test the WSEGVALV parser for column names and default values"""
+    schstr = """
+WSEGVALV
+-- WELL    SEG         CV      AC  Lex     Dp    ROUGH      Ap  STATUS     A_MAX
+   WELL_A   31  0.0084252 0.00075  0.5  0.216   0.0005  0.0366    SHUT    0.0008 /
+/
+    """
+    deck = EclFiles.str2deck(schstr)
+    wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
+    pd.testing.assert_frame_equal(
+        wsegvalv,
+        pd.DataFrame(
+            data=[
+                {
+                    "WELL": "WELL_A",
+                    "SEGMENT_NUMBER": 31,
+                    "CV": 0.0084252,
+                    "AREA": 0.00075,
+                    "EXTRA_LENGTH": 0.5,
+                    "PIPE_D": 0.216,
+                    "ROUGHNESS": 0.0005,
+                    "PIPE_A": 0.0366,
+                    "STATUS": "SHUT",
+                    "MAX_A": 0.0008,
                     "DATE": None,
                 }
             ]

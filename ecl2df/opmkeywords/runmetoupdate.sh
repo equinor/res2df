@@ -40,6 +40,7 @@ WELSEGS
 WELSPECS
 WSEGAICD
 WSEGSICD
+WSEGVALV
 "
 
 for keyword in $keywords; do

@@ -1,13 +1,13 @@
 """Test module for equil2df"""
 
-import sys
+import subprocess
 from pathlib import Path
 
 import pytest
 
 import pandas as pd
 
-from ecl2df import equil, ecl2csv
+from ecl2df import equil, ecl2csv, csv2ecl
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -287,7 +287,7 @@ PDVD
     pd.testing.assert_frame_equal(pdvd_df.drop("KEYWORD", axis="columns"), pdvd_df2)
 
 
-def test_rsvd_via_file(tmpdir):
+def test_rsvd_via_file(tmpdir, mocker):
     """Test that we can reparse RSVD with unknown TABDIMS
     from a file using the command line utility"""
     tmpdir.chdir()
@@ -300,7 +300,7 @@ RSVD
     rsvd_df = equil.df(deckstr)
     with open("rsvd.inc", "w") as filehandle:
         filehandle.write(deckstr)
-    sys.argv = ["ecl2csv", "equil", "-v", "rsvd.inc", "-o", "rsvd.csv"]
+    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "rsvd.inc", "-o", "rsvd.csv"])
     ecl2csv.main()
     rsvd_df_fromcsv = pd.read_csv("rsvd.csv")
     pd.testing.assert_frame_equal(rsvd_df, rsvd_df_fromcsv)
@@ -357,12 +357,36 @@ EQUIL
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
 
 
-def test_main_subparser(tmpdir):
+def test_main_subparser(tmpdir, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / ".TMP-equil.csv"
-    sys.argv = ["ecl2csv", "equil", "-v", DATAFILE, "-o", str(tmpcsvfile)]
+    tmpdir.chdir()
+    tmpcsvfile = "equil.csv"
+    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", DATAFILE, "-o", tmpcsvfile])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(str(tmpcsvfile))
+    disk_df = pd.read_csv(tmpcsvfile)
     assert not disk_df.empty
+
+    # Test the reverse operation:
+    mocker.patch(
+        "sys.argv", ["csv2ecl", "equil", "-v", "--output", "equil.inc", tmpcsvfile]
+    )
+    csv2ecl.main()
+    # NB: cvs2ecl does not output the phase configuration!
+    phases = "WATER\nGAS\nOIL\n\n"
+    ph_equil_inc = Path("phasesequil.inc")
+    ph_equil_inc.write_text(phases + Path("equil.inc").read_text())
+
+    pd.testing.assert_frame_equal(equil.df(ph_equil_inc.read_text()), disk_df)
+
+    # Test via stdout:
+    result = subprocess.run(
+        ["csv2ecl", "equil", "--output", "-", tmpcsvfile],
+        stdout=subprocess.PIPE,
+    )
+    pd.testing.assert_frame_equal(
+        equil.df(phases + result.stdout.decode()),
+        disk_df,
+        check_like=True,
+    )

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.summary &mdash; ecl2df 0.9.2.dev12+g42bed06 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.9.2.dev13+g2ed6f7e documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev12+g42bed06
+                0.9.2.dev13+g2ed6f7e
               </div>
             
           
@@ -166,8 +166,11 @@
   <h1>Source code for ecl2df.summary</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># The name &#39;datetime&#39; is in use by a function argument:</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
 
 <span class="kn">import</span> <span class="nn">dateutil.parser</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -180,11 +183,17 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+<span class="c1"># Frequency mnemonics for the API consumer to use:</span>
+<span class="n">FREQ_RAW</span> <span class="o">=</span> <span class="s2">&quot;raw&quot;</span>
+<span class="n">FREQ_FIRST</span> <span class="o">=</span> <span class="s2">&quot;first&quot;</span>
+<span class="n">FREQ_LAST</span> <span class="o">=</span> <span class="s2">&quot;last&quot;</span>
 <span class="n">PD_FREQ_MNEMONICS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;YS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;daily&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
     <span class="s2">&quot;weekly&quot;</span><span class="p">:</span> <span class="s2">&quot;W-MON&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;monthly&quot;</span><span class="p">:</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yearly&quot;</span><span class="p">:</span> <span class="s2">&quot;YS&quot;</span><span class="p">,</span>
+    <span class="c1"># Any frequency mnemonics not mentioned here will be</span>
+    <span class="c1"># passed on to Pandas.</span>
 <span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Mapping from ecl2df custom offset strings to Pandas DateOffset strings.</span>
 <span class="sd">See</span>
@@ -205,38 +214,68 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        list of datetimes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">:</span>
-        <span class="n">freq</span> <span class="o">=</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">PD_FREQ_MNEMONICS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">freq</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="normalize_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.normalize_dates">[docs]</a><span class="k">def</span> <span class="nf">normalize_dates</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Normalize start and end date according to frequency</span>
-<span class="sd">    by extending the time range.</span>
-
-<span class="sd">    So for [1997-11-05, 2020-03-02] and monthly frequency</span>
-<span class="sd">    this will transform your dates to</span>
-<span class="sd">    [1997-11-01, 2020-04-01]</span>
-
-<span class="sd">    For yearly frequency it will return [1997-01-01, 2021-01-01].</span>
+<span class="k">def</span> <span class="nf">_ensure_date_or_none</span><span class="p">(</span><span class="n">some_date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ensures an object is either a date or None</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        start_date: datetime.date</span>
-<span class="sd">        end_date: datetime.date</span>
-<span class="sd">        freq: string with either &#39;monthly&#39; or &#39;yearly&#39;.</span>
-<span class="sd">            Anything else will return the input as is</span>
-<span class="sd">    Return:</span>
-<span class="sd">        Tuple of normalized (start_date, end_date)</span>
+<span class="sd">        some_date: string or a datetime.date</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        datetime.date: None if input is None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: if input is not None and not a date</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">:</span>
-        <span class="n">freq</span> <span class="o">=</span> <span class="n">PD_FREQ_MNEMONICS</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">to_offset</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">offset</span><span class="o">.</span><span class="n">rollback</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">offset</span><span class="o">.</span><span class="n">rollforward</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">())</span></div>
+    <span class="k">if</span> <span class="n">some_date</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">some_date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">some_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">some_date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not a date type: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">some_date</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">some_date</span>
+
+
+<span class="k">def</span> <span class="nf">_crop_datelist</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function for resample_smry_dates, taking care of</span>
+<span class="sd">    the special cases where the list of dates should not be resampled, but</span>
+<span class="sd">    only cropped or returned as is.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        eclsumsdates: list of datetimes, typically coming from EclSum.dates</span>
+<span class="sd">        freq: Either a date or datetime, or a frequency string</span>
+<span class="sd">            &quot;raw&quot;, &quot;first&quot; or &quot;last&quot;.</span>
+<span class="sd">        start_date: Dates prior to this date will be cropped.</span>
+<span class="sd">        end_date: Dates after this date will be cropped.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of datetimes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="n">FREQ_RAW</span><span class="p">:</span>
+        <span class="n">datetimes</span> <span class="o">=</span> <span class="n">eclsumsdates</span>
+        <span class="n">datetimes</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">start_date</span><span class="p">:</span>
+            <span class="c1"># Convert to datetime (at 00:00:00)</span>
+            <span class="n">start_date</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+            <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datetimes</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">start_date</span><span class="p">]</span>
+            <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">start_date</span><span class="p">]</span> <span class="o">+</span> <span class="n">datetimes</span>
+        <span class="k">if</span> <span class="n">end_date</span><span class="p">:</span>
+            <span class="n">end_date</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+            <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datetimes</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">end_date</span><span class="p">]</span>
+            <span class="n">datetimes</span> <span class="o">=</span> <span class="n">datetimes</span> <span class="o">+</span> <span class="p">[</span><span class="n">end_date</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">datetimes</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="n">FREQ_FIRST</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()]</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="n">FREQ_LAST</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">freq</span><span class="p">]</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected freq to an accepted string or datetime type was </span><span class="si">{</span><span class="n">freq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="resample_smry_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.resample_smry_dates">[docs]</a><span class="k">def</span> <span class="nf">resample_smry_dates</span><span class="p">(</span>
-    <span class="n">eclsumsdates</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">eclsumsdates</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">FREQ_RAW</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resample (optionally) a list of date(time)s to a new datelist according to options.</span>
@@ -250,9 +289,9 @@
 <span class="sd">            the returned list of datetime. &#39;raw&#39; will</span>
 <span class="sd">            return the input datetimes (no resampling).</span>
 <span class="sd">            Options for timeresampling are</span>
-<span class="sd">            &#39;daily&#39;, &#39;monthly&#39; and &#39;yearly&#39;.</span>
-<span class="sd">            &#39;last&#39; will give out the last date (maximum),</span>
-<span class="sd">            as a list with one element.</span>
+<span class="sd">            &#39;daily&#39;, &#39;weekly&#39;, &#39;monthly&#39; and &#39;yearly&#39;. &#39;first&#39; will give</span>
+<span class="sd">            the first date (minimum),  &#39;last&#39; will give out the last</span>
+<span class="sd">            date (maximum), as a list with one element. Can also be a single date.</span>
 <span class="sd">        normalize: Whether to normalize backwards at the start</span>
 <span class="sd">            and forwards at the end to ensure the raw</span>
 <span class="sd">            date range is covered when resampling time.</span>
@@ -263,55 +302,41 @@
 <span class="sd">        end_date: str or date with last date to be included.</span>
 <span class="sd">            Dates past this date will be dropped, supplied</span>
 <span class="sd">            end_date will always be included. Overrides</span>
-<span class="sd">            normalized dates. Overriden if freq is &#39;last&#39;.</span>
+<span class="sd">            normalized dates. Overridden if freq is &#39;last&#39;.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        list of datetimes.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">eclsumsdates</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
 
-    <span class="k">if</span> <span class="n">start_date</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">start_date</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;start_date had unknown type&quot;</span><span class="p">)</span>
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">_ensure_date_or_none</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span>
+    <span class="n">end_date</span> <span class="o">=</span> <span class="n">_ensure_date_or_none</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">end_date</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">end_date</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;end_date had unknown type&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="ow">in</span> <span class="p">[</span><span class="n">FREQ_RAW</span><span class="p">,</span> <span class="n">FREQ_FIRST</span><span class="p">,</span> <span class="n">FREQ_LAST</span><span class="p">]</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">freq</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">_crop_datelist</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
-        <span class="n">datetimes</span> <span class="o">=</span> <span class="n">eclsumsdates</span>
-        <span class="n">datetimes</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">start_date</span><span class="p">:</span>
-            <span class="c1"># Convert to datetime (at 00:00:00)</span>
-            <span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
-                <span class="n">start_date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="p">)</span>
-            <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datetimes</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">start_date</span><span class="p">]</span>
-            <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">start_date</span><span class="p">]</span> <span class="o">+</span> <span class="n">datetimes</span>
-        <span class="k">if</span> <span class="n">end_date</span><span class="p">:</span>
-            <span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-            <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datetimes</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">end_date</span><span class="p">]</span>
-            <span class="n">datetimes</span> <span class="o">=</span> <span class="n">datetimes</span> <span class="o">+</span> <span class="p">[</span><span class="n">end_date</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">datetimes</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;first&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()]</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">==</span> <span class="s2">&quot;last&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()]</span>
+    <span class="c1"># In case freq is an ISO-date(time)-string, interpret as such:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parseddate</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">isoparse</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">parseddate</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c1"># freq is a frequency string or datetime.date (or similar)</span>
+        <span class="k">pass</span>
 
     <span class="c1"># These are datetime.datetime, not datetime.date</span>
     <span class="n">start_smry</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span>
     <span class="n">end_smry</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">eclsumsdates</span><span class="p">)</span>
 
-    <span class="p">(</span><span class="n">start_n</span><span class="p">,</span> <span class="n">end_n</span><span class="p">)</span> <span class="o">=</span> <span class="n">normalize_dates</span><span class="p">(</span><span class="n">start_smry</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">end_smry</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">freq</span><span class="p">)</span>
+    <span class="c1"># Normalize start and end date according to frequency by extending the time range.</span>
+    <span class="c1"># [1997-11-05, 2020-03-02] and monthly frequecy</span>
+    <span class="c1"># will be mapped to [1997-11-01, 2020-04-01]</span>
+    <span class="c1"># For yearly frequency it will return [1997-01-01, 2021-01-01].</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">to_offset</span><span class="p">(</span><span class="n">PD_FREQ_MNEMONICS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">freq</span><span class="p">))</span>
+    <span class="n">start_n</span> <span class="o">=</span> <span class="n">offset</span><span class="o">.</span><span class="n">rollback</span><span class="p">(</span><span class="n">start_smry</span><span class="o">.</span><span class="n">date</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="n">end_n</span> <span class="o">=</span> <span class="n">offset</span><span class="o">.</span><span class="n">rollforward</span><span class="p">(</span><span class="n">end_smry</span><span class="o">.</span><span class="n">date</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">start_date</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">normalize</span><span class="p">:</span>
         <span class="n">start_date_range</span> <span class="o">=</span> <span class="n">start_smry</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
@@ -353,6 +378,7 @@
     <span class="n">paramfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># A very poor choice of argument name [pylint]</span>
 <span class="p">):</span>
+    <span class="c1"># pylint: disable=too-many-arguments</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract data from UNSMRY as Pandas dataframes.</span>
 
@@ -380,7 +406,7 @@
 <span class="sd">        params (bool): If set, parameters.txt will be attempted loaded</span>
 <span class="sd">            and merged with the summary data.</span>
 <span class="sd">        paramsfile (str): Explicit path to parameters file if autodiscovery is</span>
-<span class="sd">            not wanted.</span>
+<span class="sd">            not wanted. Implies params=True</span>
 <span class="sd">        datetime (bool): If True, the time index of the returned DataFrame</span>
 <span class="sd">            is always of datetime type. If not, it will be datetime</span>
 <span class="sd">            if raw dates are requested (which are at second accuracy),</span>
@@ -401,22 +427,42 @@
             <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">()</span><span class="o">.</span><span class="n">dates</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Can be None.</span>
         <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">time_index</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">time_index_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">time_index_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2"> … </span><span class="si">{</span><span class="n">time_index_arg</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">time_index_str</span> <span class="o">=</span> <span class="n">time_index_arg</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">column_keys</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">column_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+        <span class="c1"># column_keys = [column_keys_str]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">column_keys</span><span class="p">)</span>
+        <span class="n">column_keys_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">))</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;Requesting columns_keys: </span><span class="si">%s</span><span class="s2"> at time_index: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="n">column_keys_str</span><span class="p">,</span>
-        <span class="nb">str</span><span class="p">(</span><span class="n">time_index_arg</span> <span class="ow">or</span> <span class="s2">&quot;raw&quot;</span><span class="p">),</span>
+        <span class="n">time_index_str</span> <span class="ow">or</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">EclSum</span><span class="p">):</span>
         <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">(</span><span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">(</span><span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Error reading summary instance, returning empty dataframe&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">eclsum</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Warning is already logged by eclfiles.</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>
+
     <span class="c1"># If time_index_arg was None, but start_date was set, we need to date-truncate</span>
     <span class="c1"># afterwards:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -425,31 +471,8 @@
         <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DATE&quot;</span>
-    <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">paramfile</span><span class="p">:</span>
-            <span class="n">param_files</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">find_parameter_files</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from files: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_files</span><span class="p">))</span>
-            <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load_all</span><span class="p">(</span><span class="n">param_files</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-                <span class="n">param_file</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">find_parameter_files</span><span class="p">(</span>
-                    <span class="n">eclfiles</span><span class="p">,</span> <span class="n">filebase</span><span class="o">=</span><span class="n">paramfile</span>
-                <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_file</span><span class="p">))</span>
-                <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">param_file</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameter from file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">paramfile</span><span class="p">))</span>
-                <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> parameters&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="p">:</span>
-            <span class="c1"># By converting to str we are more robust with respect to what objects are</span>
-            <span class="c1"># read from the parameters.json/txt/yml. Since we are only going</span>
-            <span class="c1"># to dump to csv, it should not cause side-effects that floats end up</span>
-            <span class="c1"># as strings in the dataframe.</span>
-            <span class="n">dframe</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">datetime</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
-            <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params</span> <span class="ow">or</span> <span class="n">paramfile</span><span class="p">:</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">_merge_params</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">paramfile</span><span class="p">,</span> <span class="n">eclfiles</span><span class="p">)</span>
 
     <span class="c1"># Add metadata as an attribute the dataframe, using experimental Pandas features:</span>
     <span class="n">meta</span> <span class="o">=</span> <span class="n">smry_meta</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
@@ -458,7 +481,43 @@
         <span class="n">column_key</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="n">column_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">if</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">meta</span>
     <span class="p">}</span>
 
+    <span class="k">if</span> <span class="n">datetime</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
+            <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Use datetime=True as argument to ecl2df.summary.df() &quot;</span>
+                <span class="s2">&quot;for future compatibility&quot;</span>
+            <span class="p">),</span>
+            <span class="ne">FutureWarning</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span></div>
+
+
+<span class="k">def</span> <span class="nf">_merge_params</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">paramfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eclfiles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Locate parameters in a &lt;key&gt; &lt;value&gt; file and add to the dataframe&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">paramfile</span><span class="p">:</span>
+        <span class="n">param_files</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">find_parameter_files</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from files: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_files</span><span class="p">))</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load_all</span><span class="p">(</span><span class="n">param_files</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">param_file</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">find_parameter_files</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">filebase</span><span class="o">=</span><span class="n">paramfile</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameters from file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_file</span><span class="p">))</span>
+            <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">param_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading parameter from file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">paramfile</span><span class="p">))</span>
+            <span class="n">param_dict</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">paramfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded </span><span class="si">%d</span><span class="s2"> parameters&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="p">:</span>
+        <span class="c1"># By converting to str we are more robust with respect to what objects are</span>
+        <span class="c1"># read from the parameters.json/txt/yml. Since we are only going</span>
+        <span class="c1"># to dump to csv, it should not cause side-effects that floats end up</span>
+        <span class="c1"># as strings in the dataframe.</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">dframe</span>
 
 
 <div class="viewcode-block" id="smry_meta"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.smry_meta">[docs]</a><span class="k">def</span> <span class="nf">smry_meta</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
@@ -671,6 +730,7 @@
         <span class="n">end_date</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span>
         <span class="n">params</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
         <span class="n">paramfile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">paramfile</span><span class="p">,</span>
+        <span class="n">datetime</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty summary data being written to disk!&quot;</span><span class="p">)</span>

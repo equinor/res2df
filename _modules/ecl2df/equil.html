@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.equil &mdash; ecl2df 0.9.2.dev10+g7b6f005 documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.9.2.dev11+g0a6aff0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2.dev10+g7b6f005
+                0.9.2.dev11+g0a6aff0
               </div>
             
           
@@ -169,7 +169,6 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -496,15 +495,7 @@
     <span class="n">equil_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2ecl</span><span class="p">(</span><span class="n">equil_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
-        <span class="c1"># Ignore pipe errors when writing to stdout.</span>
-        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_DFL</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">inc_string</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
-            <span class="n">f_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">inc_string</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote to &quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="n">common</span><span class="o">.</span><span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">equil_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">withphases</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

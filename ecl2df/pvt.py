@@ -5,7 +5,6 @@ Data can be extracted from a full Eclipse deck or from individual files.
 """
 
 import logging
-import signal
 
 import pandas as pd
 
@@ -283,19 +282,7 @@ def pvt_reverse_main(args):
     pvt_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(pvt_df, keywords=args.keywords)
-
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        print(inc_string)
-    else:
-        with open(args.output, "w") as f_handle:
-            f_handle.write(inc_string)
-        print("Wrote to " + args.output)
-
-
-# Now comes functionality for the reverse operation, from a dataframe to
-# Eclipse include files:
+    common.write_inc_stdout_file(inc_string, args.output)
 
 
 def df2ecl(pvt_df, keywords=None, comments=None, filename=None):
@@ -418,9 +405,7 @@ def df2ecl_pvtw(dframe, comment=None):
 
 
 def df2ecl_pvtg(dframe, comment=None):
-    """Print DENSITY keyword with data
-
-    DENSITY is one line (one record) of data pr. PVTNUM
+    """Print PVTG keyword with data
 
     Args:
         dframe (pd.DataFrame): Containing PVTG data
@@ -428,25 +413,56 @@ def df2ecl_pvtg(dframe, comment=None):
     """
     if dframe.empty:
         return "-- No data!"
-    string = "DENSITY\n"
+    string = "PVTG\n"
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} {:^21}  \n".format(
-        "OILDENSITY", "WATERDENSITY", "GASDENSITY"
+    string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
+        "PRESSURE", "OGR", "VOLUMEFACTOR", "VISCOSITY"
+    )
+    string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
+        "*", "OGR", "VOLUMEFACTOR", "VISCOSITY"
     )
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
     else:
-        subset = dframe[dframe["KEYWORD"] == "DENSITY"]
+        subset = dframe[dframe["KEYWORD"] == "PVTG"]
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
             return ""
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
-    for _, row in subset.iterrows():
-        string += "  {OILDENSITY:20.7f} {WATERDENSITY:20.7f} ".format(**(row.to_dict()))
-        string += "{GASDENSITY:20.7f} /\n".format(**(row.to_dict()))
+
+    def _pvtg_pvtnum(dframe):
+        """Print PVTG-data for a specific PVTNUM"""
+        string = ""
+        dframe = dframe.set_index("PRESSURE").sort_index()
+        for pg in dframe.index.unique():
+            string += _pvtg_pvtnum_pg(dframe[dframe.index == pg])
+        return string + "/\n"
+
+    def _pvtg_pvtnum_pg(dframe):
+        """Print PVTG-data for a particular gas phase pressure"""
+        string = ""
+        assert len(dframe.index.unique()) == 1
+        pg = dframe.index.values[0]
+        string += "{:20.7f}  ".format(pg)
+        for rowidx, row in dframe.reset_index().iterrows():
+            if rowidx > 0:
+                indent = "\n" + " " * 22
+            else:
+                indent = ""
+            string += (
+                indent
+                + "{OGR:20.7f}  {VOLUMEFACTOR:20.7f}  {VISCOSITY:20.7f}".format(
+                    **(row.to_dict())
+                )
+            )
+        string += " /\n-- End PRESSURE={}\n".format(pg)
+        return string
+
+    for pvtnum in subset.index.unique():
+        string += _pvtg_pvtnum(subset[subset.index == pvtnum])
     return string + "\n"
 
 

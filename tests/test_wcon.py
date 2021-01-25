@@ -1,7 +1,8 @@
 """Test module for wcon"""
 
-import sys
+import io
 from pathlib import Path
+import subprocess
 
 import pandas as pd
 
@@ -141,12 +142,21 @@ WCONHIST
     assert "2001-05-07" in dates
 
 
-def test_main_subparsers(tmpdir):
+def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / ".TMP-wcondf.csv"
-    sys.argv = ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)]
+    mocker.patch("sys.argv", ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+def test_magic_stdout():
+    """Test that we can pipe the output into a dataframe"""
+    result = subprocess.run(
+        ["ecl2csv", "wcon", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+    )
+    df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
+    assert not df_stdout.empty

@@ -12,7 +12,6 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
-import signal
 import logging
 import pandas as pd
 
@@ -311,15 +310,7 @@ def satfunc_reverse_main(args):
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(satfunc_df, keywords=args.keywords)
-
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        print(inc_string)
-    else:
-        with open(args.output, "w") as f_handle:
-            f_handle.write(inc_string)
-        print("Wrote to " + args.output)
+    common.write_inc_stdout_file(inc_string, args.output)
 
 
 def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):

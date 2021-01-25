@@ -603,10 +603,10 @@ def test_wsegsicd():
 def test_wsegvalv():
     """Test the WSEGVALV parser for column names and default values"""
     schstr = """
-WSEGVALV
--- WELL    SEG         CV      AC  Lex     Dp    ROUGH      Ap  STATUS     A_MAX
-   WELL_A   31  0.0084252 0.00075  0.5  0.216   0.0005  0.0366    SHUT    0.0008 /
-/
+    WSEGVALV
+    -- WELL    SEG         CV      AC  Lex     Dp    ROUGH      Ap  STATUS     A_MAX
+    WELL_A   31  0.0084252 0.00075  0.5  0.216   0.0005  0.0366    SHUT    0.0008 /
+    /
     """
     deck = EclFiles.str2deck(schstr)
     wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
@@ -637,10 +637,10 @@ def test_wsegvalv_max_blank():
     values are taken from other keywords in Eclipse except STATUS, which is OPEN
     by default. Combination of keywords is not tested here."""
     schstr = """
-WSEGVALV
--- WELL    SEG         CV      AC  
-   WELL_A   31  0.0084252 0.00075  /
-/
+    WSEGVALV
+    -- WELL    SEG         CV      AC
+    WELL_A   31  0.0084252 0.00075  /
+    /
     """
     deck = EclFiles.str2deck(schstr)
     wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
@@ -665,15 +665,16 @@ WSEGVALV
         ),
     )
 
+
 def test_wsegvalv_max_default():
     """Test the WSEGVALV parser for column names and default values. NB: Default
     values are taken from other keywords in Eclipse except STATUS, which is OPEN
     by default. Combination of keywords is not tested here."""
     schstr = """
-WSEGVALV
--- WELL    SEG         CV      AC  
-   WELL_A   31  0.0084252 0.00075  6* /
-/
+    WSEGVALV
+    -- WELL    SEG         CV      AC
+    WELL_A   31  0.0084252 0.00075  6* /
+    /
     """
     deck = EclFiles.str2deck(schstr)
     wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]

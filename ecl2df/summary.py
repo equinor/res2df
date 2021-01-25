@@ -1,7 +1,10 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import logging
-import datetime
 from pathlib import Path
+import warnings
+
+# The name 'datetime' is in use by a function argument:
+import datetime as dt
 
 import dateutil.parser
 import pandas as pd
@@ -14,11 +17,17 @@ from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
+# Frequency mnemonics for the API consumer to use:
+FREQ_RAW = "raw"
+FREQ_FIRST = "first"
+FREQ_LAST = "last"
 PD_FREQ_MNEMONICS = {
-    "monthly": "MS",
-    "yearly": "YS",
     "daily": "D",
     "weekly": "W-MON",
+    "monthly": "MS",
+    "yearly": "YS",
+    # Any frequency mnemonics not mentioned here will be
+    # passed on to Pandas.
 }
 """Mapping from ecl2df custom offset strings to Pandas DateOffset strings.
 See
@@ -39,38 +48,68 @@ def date_range(start_date, end_date, freq):
     Returns:
         list of datetimes
     """
-    if freq in PD_FREQ_MNEMONICS:
-        freq = PD_FREQ_MNEMONICS[freq]
-    return pd.date_range(start_date, end_date, freq=freq)
+    return pd.date_range(start_date, end_date, freq=PD_FREQ_MNEMONICS.get(freq, freq))
 
 
-def normalize_dates(start_date, end_date, freq):
-    """
-    Normalize start and end date according to frequency
-    by extending the time range.
-
-    So for [1997-11-05, 2020-03-02] and monthly frequency
-    this will transform your dates to
-    [1997-11-01, 2020-04-01]
-
-    For yearly frequency it will return [1997-01-01, 2021-01-01].
+def _ensure_date_or_none(some_date):
+    """Ensures an object is either a date or None
 
     Args:
-        start_date: datetime.date
-        end_date: datetime.date
-        freq: string with either 'monthly' or 'yearly'.
-            Anything else will return the input as is
-    Return:
-        Tuple of normalized (start_date, end_date)
+        some_date: string or a datetime.date
+
+    Returns:
+        datetime.date: None if input is None.
+
+    Raises:
+        TypeError: if input is not None and not a date
     """
-    if freq in PD_FREQ_MNEMONICS:
-        freq = PD_FREQ_MNEMONICS[freq]
-    offset = pd.tseries.frequencies.to_offset(freq)
-    return (offset.rollback(start_date).date(), offset.rollforward(end_date).date())
+    if some_date:
+        if isinstance(some_date, str):
+            return dateutil.parser.parse(some_date).date()
+        if not isinstance(some_date, dt.date):
+            raise TypeError(f"Not a date type: {str(some_date)}")
+    return some_date
+
+
+def _crop_datelist(eclsumsdates, freq, start_date=None, end_date=None):
+    """Helper function for resample_smry_dates, taking care of
+    the special cases where the list of dates should not be resampled, but
+    only cropped or returned as is.
+
+    Args:
+        eclsumsdates: list of datetimes, typically coming from EclSum.dates
+        freq: Either a date or datetime, or a frequency string
+            "raw", "first" or "last".
+        start_date: Dates prior to this date will be cropped.
+        end_date: Dates after this date will be cropped.
+
+    Returns:
+        list of datetimes.
+    """
+    if freq == FREQ_RAW:
+        datetimes = eclsumsdates
+        datetimes.sort()
+        if start_date:
+            # Convert to datetime (at 00:00:00)
+            start_date = dt.datetime.combine(start_date, dt.datetime.min.time())
+            datetimes = [x for x in datetimes if x > start_date]
+            datetimes = [start_date] + datetimes
+        if end_date:
+            end_date = dt.datetime.combine(end_date, dt.datetime.min.time())
+            datetimes = [x for x in datetimes if x < end_date]
+            datetimes = datetimes + [end_date]
+        return datetimes
+    if freq == FREQ_FIRST:
+        return [min(eclsumsdates).date()]
+    if freq == FREQ_LAST:
+        return [max(eclsumsdates).date()]
+    if isinstance(freq, (dt.date, dt.datetime)):
+        return [freq]
+    raise ValueError(f"Expected freq to an accepted string or datetime type was {freq}")
 
 
 def resample_smry_dates(
-    eclsumsdates, freq="raw", normalize=True, start_date=None, end_date=None
+    eclsumsdates, freq=FREQ_RAW, normalize=True, start_date=None, end_date=None
 ):
     """
     Resample (optionally) a list of date(time)s to a new datelist according to options.
@@ -84,9 +123,9 @@ def resample_smry_dates(
             the returned list of datetime. 'raw' will
             return the input datetimes (no resampling).
             Options for timeresampling are
-            'daily', 'monthly' and 'yearly'.
-            'last' will give out the last date (maximum),
-            as a list with one element.
+            'daily', 'weekly', 'monthly' and 'yearly'. 'first' will give
+            the first date (minimum),  'last' will give out the last
+            date (maximum), as a list with one element. Can also be a single date.
         normalize: Whether to normalize backwards at the start
             and forwards at the end to ensure the raw
             date range is covered when resampling time.
@@ -97,55 +136,41 @@ def resample_smry_dates(
         end_date: str or date with last date to be included.
             Dates past this date will be dropped, supplied
             end_date will always be included. Overrides
-            normalized dates. Overriden if freq is 'last'.
+            normalized dates. Overridden if freq is 'last'.
+
     Returns:
         list of datetimes.
-
     """
     if not eclsumsdates:
         return []
 
-    if start_date:
-        if isinstance(start_date, str):
-            start_date = dateutil.parser.parse(start_date).date()
-        elif isinstance(start_date, datetime.date):
-            pass
-        else:
-            raise TypeError("start_date had unknown type")
+    start_date = _ensure_date_or_none(start_date)
+    end_date = _ensure_date_or_none(end_date)
 
-    if end_date:
-        if isinstance(end_date, str):
-            end_date = dateutil.parser.parse(end_date).date()
-        elif isinstance(end_date, datetime.date):
-            pass
-        else:
-            raise TypeError("end_date had unknown type")
+    if freq in [FREQ_RAW, FREQ_FIRST, FREQ_LAST] or isinstance(
+        freq, (dt.date, dt.datetime)
+    ):
+        return _crop_datelist(eclsumsdates, freq, start_date, end_date)
 
-    if freq == "raw":
-        datetimes = eclsumsdates
-        datetimes.sort()
-        if start_date:
-            # Convert to datetime (at 00:00:00)
-            start_date = datetime.datetime.combine(
-                start_date, datetime.datetime.min.time()
-            )
-            datetimes = [x for x in datetimes if x > start_date]
-            datetimes = [start_date] + datetimes
-        if end_date:
-            end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
-            datetimes = [x for x in datetimes if x < end_date]
-            datetimes = datetimes + [end_date]
-        return datetimes
-    if freq == "first":
-        return [min(eclsumsdates).date()]
-    if freq == "last":
-        return [max(eclsumsdates).date()]
+    # In case freq is an ISO-date(time)-string, interpret as such:
+    try:
+        parseddate = dateutil.parser.isoparse(freq)
+        return [parseddate]
+    except ValueError:
+        # freq is a frequency string or datetime.date (or similar)
+        pass
 
     # These are datetime.datetime, not datetime.date
     start_smry = min(eclsumsdates)
     end_smry = max(eclsumsdates)
 
-    (start_n, end_n) = normalize_dates(start_smry.date(), end_smry.date(), freq)
+    # Normalize start and end date according to frequency by extending the time range.
+    # [1997-11-05, 2020-03-02] and monthly frequecy
+    # will be mapped to [1997-11-01, 2020-04-01]
+    # For yearly frequency it will return [1997-01-01, 2021-01-01].
+    offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
+    start_n = offset.rollback(start_smry.date()).date()
+    end_n = offset.rollforward(end_smry.date()).date()
 
     if not start_date and not normalize:
         start_date_range = start_smry.date()
@@ -187,6 +212,7 @@ def df(
     paramfile=None,
     datetime=False,  # A very poor choice of argument name [pylint]
 ):
+    # pylint: disable=too-many-arguments
     """
     Extract data from UNSMRY as Pandas dataframes.
 
@@ -214,7 +240,7 @@ def df(
         params (bool): If set, parameters.txt will be attempted loaded
             and merged with the summary data.
         paramsfile (str): Explicit path to parameters file if autodiscovery is
-            not wanted.
+            not wanted. Implies params=True
         datetime (bool): If True, the time index of the returned DataFrame
             is always of datetime type. If not, it will be datetime
             if raw dates are requested (which are at second accuracy),
@@ -235,22 +261,42 @@ def df(
             eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
         )
     else:
+        # Can be None.
         time_index_arg = time_index
+
+    if isinstance(time_index_arg, list):
+        if len(time_index_arg) < 6:
+            time_index_str = str(time_index_arg)
+        else:
+            time_index_str = f"{time_index_arg[0:3]} … {time_index_arg[-3:]}"
+    else:
+        time_index_str = time_index_arg
 
     if not column_keys or not column_keys[0]:
         column_keys_str = "*"
+        # column_keys = [column_keys_str]
     else:
-        column_keys_str = ",".join(column_keys)
+        column_keys_str = ",".join(filter(None, column_keys))
     logger.info(
         "Requesting columns_keys: %s at time_index: %s",
         column_keys_str,
-        str(time_index_arg or "raw"),
+        time_index_str or "raw",
     )
     if isinstance(eclfiles, EclSum):
         eclsum = eclfiles
     else:
-        eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+        try:
+            eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+        except OSError:
+            logger.warning("Error reading summary instance, returning empty dataframe")
+            return pd.DataFrame()
+
+    if eclsum is None:
+        # Warning is already logged by eclfiles.
+        return pd.DataFrame()
+
     dframe = eclsum.pandas_frame(time_index_arg, column_keys)
+
     # If time_index_arg was None, but start_date was set, we need to date-truncate
     # afterwards:
     logger.info(
@@ -259,31 +305,8 @@ def df(
         len(dframe),
     )
     dframe.index.name = "DATE"
-    if params:
-        if not paramfile:
-            param_files = parameters.find_parameter_files(eclfiles)
-            logger.info("Loading parameters from files: %s", str(param_files))
-            param_dict = parameters.load_all(param_files)
-        else:
-            if not Path(paramfile).is_absolute():
-                param_file = parameters.find_parameter_files(
-                    eclfiles, filebase=paramfile
-                )
-                logger.info("Loading parameters from file: %s", str(param_file))
-                param_dict = parameters.load(param_file)
-            else:
-                logger.info("Loading parameter from file: %s", str(paramfile))
-                param_dict = parameters.load(paramfile)
-        logger.info("Loaded %d parameters", len(param_dict))
-        for key in param_dict:
-            # By converting to str we are more robust with respect to what objects are
-            # read from the parameters.json/txt/yml. Since we are only going
-            # to dump to csv, it should not cause side-effects that floats end up
-            # as strings in the dataframe.
-            dframe[key] = str(param_dict[key])
-    if datetime:
-        if dframe.index.dtype == "object":
-            dframe.index = pd.to_datetime(dframe.index)
+    if params or paramfile:
+        dframe = _merge_params(dframe, paramfile, eclfiles)
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
     meta = smry_meta(eclsum)
@@ -292,6 +315,42 @@ def df(
         column_key: meta[column_key] for column_key in dframe if column_key in meta
     }
 
+    if datetime is True:
+        if dframe.index.dtype == "object":
+            dframe.index = pd.to_datetime(dframe.index)
+    elif dframe.index.dtype == "object":
+        warnings.warn(
+            (
+                "Use datetime=True as argument to ecl2df.summary.df() "
+                "for future compatibility"
+            ),
+            FutureWarning,
+        )
+    return dframe
+
+
+def _merge_params(dframe, paramfile=None, eclfiles=None):
+    """Locate parameters in a <key> <value> file and add to the dataframe"""
+
+    if not paramfile:
+        param_files = parameters.find_parameter_files(eclfiles)
+        logger.info("Loading parameters from files: %s", str(param_files))
+        param_dict = parameters.load_all(param_files)
+    else:
+        if not Path(paramfile).is_absolute():
+            param_file = parameters.find_parameter_files(eclfiles, filebase=paramfile)
+            logger.info("Loading parameters from file: %s", str(param_file))
+            param_dict = parameters.load(param_file)
+        else:
+            logger.info("Loading parameter from file: %s", str(paramfile))
+            param_dict = parameters.load(paramfile)
+    logger.info("Loaded %d parameters", len(param_dict))
+    for key in param_dict:
+        # By converting to str we are more robust with respect to what objects are
+        # read from the parameters.json/txt/yml. Since we are only going
+        # to dump to csv, it should not cause side-effects that floats end up
+        # as strings in the dataframe.
+        dframe[key] = str(param_dict[key])
     return dframe
 
 
@@ -505,6 +564,7 @@ def summary_main(args):
         end_date=args.end_date,
         params=args.params,
         paramfile=args.paramfile,
+        datetime=True,
     )
     if sum_df.empty:
         logger.warning("Empty summary data being written to disk!")

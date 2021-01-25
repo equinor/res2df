@@ -1,5 +1,6 @@
 """Test module for nnc2df"""
 
+import os
 import sys
 import datetime
 import logging
@@ -11,10 +12,11 @@ import pandas as pd
 
 import pytest
 
+import ecl
+
 from ecl2df import summary, ecl2csv, csv2ecl
 from ecl2df.eclfiles import EclFiles
 from ecl2df.summary import (
-    normalize_dates,
     resample_smry_dates,
     df2eclsum,
     df,
@@ -42,7 +44,7 @@ def test_df():
     assert "FOPT" in sumdf.columns
 
     sumdf = summary.df(eclfiles, datetime=True)
-    # (datetime=True is superfluous when raw time reports are requested)
+    # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
 
@@ -82,31 +84,14 @@ def test_df_column_keys():
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
 
-def test_df_dates():
+def test_summary2df_dates(caplog):
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
 
-    sumdf = summary.df(
-        eclfiles,
-        start_date=datetime.date(2002, 1, 2),
-        end_date="2002-03-01",
-        time_index="daily",
-    )
-    assert sumdf.index.name == "DATE"
-    # This is the default when daily index is requested:
-    assert sumdf.index.dtype == "object"
-
-    assert len(sumdf) == 59
-    assert str(sumdf.index.values[0]) == "2002-01-02"
-    assert str(sumdf.index.values[-1]) == "2002-03-01"
-
-    sumdf = summary.df(eclfiles, time_index="last")
-    assert len(sumdf) == 1
-    assert str(sumdf.index.values[0]) == "2003-01-02"
-
-    sumdf = summary.df(eclfiles, time_index="first")
-    assert len(sumdf) == 1
-    assert str(sumdf.index.values[0]) == "2000-01-01"
+    # Later, ecl2df.summary will always return a datetime index.
+    with pytest.warns(FutureWarning) as fut_warn:
+        summary.df(eclfiles, time_index="yearly")
+        assert "Use datetime=True as argument" in str(fut_warn[0].message)
 
     sumdf = summary.df(
         eclfiles,
@@ -117,6 +102,20 @@ def test_df_dates():
     )
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
+
+    assert len(sumdf) == 59
+    assert str(sumdf.index.values[0])[0:10] == "2002-01-02"
+    assert sumdf.index.values[0] == np.datetime64("2002-01-02")
+    assert sumdf.index.values[-1] == np.datetime64("2002-03-01")
+
+    sumdf = summary.df(eclfiles, time_index="last", datetime=True)
+    assert len(sumdf) == 1
+    assert sumdf.index.values[0] == np.datetime64("2003-01-02")
+
+    # Leave this test for the datetime=False behaviour:
+    sumdf = summary.df(eclfiles, time_index="first")
+    assert len(sumdf) == 1
+    assert str(sumdf.index.values[0]) == "2000-01-01"
 
 
 @pytest.mark.integration
@@ -159,6 +158,8 @@ def test_ecl2csv_summary(tmpdir):
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 366
+    # Pandas' csv export writes datetime64 as pure date
+    # when there are no clock-times involved:
     assert str(disk_df["DATE"].values[0]) == "2002-01-02"
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
 
@@ -220,41 +221,18 @@ def test_main_subparser(tmpdir):
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
-
-    start = datetime.date(1997, 11, 5)
-    end = datetime.date(2020, 3, 2)
-
-    assert normalize_dates(start, end, "monthly") == (
-        datetime.date(1997, 11, 1),
-        datetime.date(2020, 4, 1),
-    )
-    assert normalize_dates(start, end, "yearly") == (
-        datetime.date(1997, 1, 1),
-        datetime.date(2021, 1, 1),
-    )
-
-    # Check it does not touch already aligned dates
-    assert normalize_dates(
-        datetime.date(1997, 11, 1), datetime.date(2020, 4, 1), "monthly"
-    ) == (datetime.date(1997, 11, 1), datetime.date(2020, 4, 1))
-    assert normalize_dates(
-        datetime.date(1997, 1, 1), datetime.date(2021, 1, 1), "yearly"
-    ) == (datetime.date(1997, 1, 1), datetime.date(2021, 1, 1))
-
-    # Check that we normalize correctly with get_smry():
     # realization-0 here has its last summary date at 2003-01-02
     eclfiles = EclFiles(DATAFILE)
-    daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily")
-    assert str(daily.index[-1]) == "2003-01-02"
-    monthly = summary.df(eclfiles, column_keys="FOPT", time_index="monthly")
-    assert str(monthly.index[-1]) == "2003-02-01"
-    yearly = summary.df(eclfiles, column_keys="FOPT", time_index="yearly")
-    assert str(yearly.index[-1]) == "2004-01-01"
-
-    # Map a tuesday-thursday range to monday-nextmonday:
-    assert normalize_dates(
-        datetime.date(2020, 11, 17), datetime.date(2020, 11, 19), "weekly"
-    ) == (datetime.date(2020, 11, 16), datetime.date(2020, 11, 23))
+    daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily", datetime=True)
+    assert str(daily.index[-1])[0:10] == "2003-01-02"
+    monthly = summary.df(
+        eclfiles, column_keys="FOPT", time_index="monthly", datetime=True
+    )
+    assert str(monthly.index[-1])[0:10] == "2003-02-01"
+    yearly = summary.df(
+        eclfiles, column_keys="FOPT", time_index="yearly", datetime=True
+    )
+    assert str(yearly.index[-1])[0:10] == "2004-01-01"
 
 
 def test_resample_smry_dates():
@@ -277,6 +255,15 @@ def test_resample_smry_dates():
     weekly = resample_smry_dates(ecldates, freq="weekly")
     assert len(weekly) == 159
 
+    assert resample_smry_dates(ecldates, freq="2001-04-05") == [
+        datetime.datetime(2001, 4, 5, 0, 0)
+    ]
+    assert resample_smry_dates(ecldates, freq=datetime.date(2001, 4, 5)) == [
+        datetime.date(2001, 4, 5)
+    ]
+    assert resample_smry_dates(ecldates, freq=datetime.datetime(2001, 4, 5, 0, 0)) == [
+        datetime.datetime(2001, 4, 5, 0, 0)
+    ]
     # start and end should be included:
     assert (
         len(
@@ -588,6 +575,26 @@ def test_df2eclsum_datetimeindex():
     assert isinstance(roundtrip.index, pd.DatetimeIndex)
     assert roundtrip["FOPR"].values == [100]
     assert roundtrip["FOPT"].values == [1000]
+
+
+def test_ecl2df_errors(tmpdir):
+    """Test error handling on bogus/corrupted summary files"""
+    tmpdir.chdir()
+    Path("FOO.UNSMRY").write_bytes(os.urandom(100))
+    Path("FOO.SMSPEC").write_bytes(os.urandom(100))
+    with pytest.raises(OSError, match="Failed to create summary instance"):
+        # This is how libecl reacts to bogus binary data
+        ecl.summary.EclSum("FOO.UNSMRY")
+
+    # But EclFiles should be more tolerant, as it should be possible
+    # to extract other data if SMRY is corrupted
+    Path("FOO.DATA").write_text("RUNSPEC")
+    assert str(EclFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
+    with pytest.raises(OSError):
+        EclFiles("FOO").get_eclsum()
+
+    # Getting a dataframe from bogus data should give empty data:
+    assert df(EclFiles("FOO")).empty
 
 
 def test_df2eclsum_errors():

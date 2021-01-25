@@ -320,7 +320,8 @@ def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):
     Args:
         satfunc_df (pd.DataFrame): Dataframe with data on ecl2df format.
         keywords (list of str): List of keywords to include. Must be
-            supported and present in the incoming dataframe.
+            supported and present in the incoming dataframe. Keywords
+            are printed in the order defined by this list.
         comments (dict): Dictionary indexed by keyword with comments to be
             included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.

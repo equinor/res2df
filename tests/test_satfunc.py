@@ -40,6 +40,23 @@ def test_satfunc2df():
     )
 
 
+def test_df2ecl_order():
+    """Test that we can control the keyword order in generated
+    strings by the list supplied in keywords argument"""
+    eclfiles = EclFiles(DATAFILE)
+    satdf = satfunc.df(eclfiles.get_ecldeck())
+
+    swof_sgof = satfunc.df2ecl(satdf, keywords=["SWOF", "SGOF"])
+    assert swof_sgof.find("SWOF") < swof_sgof.find("SGOF")
+    sgof_swof = satfunc.df2ecl(satdf, keywords=["SGOF", "SWOF"])
+    assert sgof_swof.find("SGOF") < sgof_swof.find("SWOF")
+
+    only_swof = satfunc.df2ecl(satdf, keywords=["SWOF"])
+    assert "SGOF" not in only_swof
+    only_sgof = satfunc.df2ecl(satdf, keywords="SGOF")
+    assert "SWOF" not in only_sgof
+
+
 def test_nodata():
     """Test when no data is found"""
     swofstr = ""

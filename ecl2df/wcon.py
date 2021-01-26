@@ -1,79 +1,21 @@
-#!/usr/bin/env python
-"""
-Extract WCON* from an Eclipse deck
+"""Extract WCON* from an Eclipse deck"""
 
-"""
-
-import re
 import logging
 import datetime
-import shlex
 
 import pandas as pd
 
 from .eclfiles import EclFiles
-from .common import parse_opmio_date_rec, OPMKEYWORDS, write_dframe_stdout_file
+from .common import (
+    parse_opmio_date_rec,
+    parse_opmio_deckrecord,
+    write_dframe_stdout_file,
+)
 
 logger = logging.getLogger(__name__)
 
 # The keywords supported in this module.
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
-
-# Rename some of the opm-common column names:
-COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
-
-
-def unroll_defaulted_items(itemlist):
-    """
-    Expand list if list contains <int>* string elements
-
-    so ['a', '2*', 'b'] becomes ['a', '1*', '1*', 'b']
-    """
-    multipledefaults_matcher = re.compile(r"(\d+)\*")
-    unrolled_items = []
-    for item in itemlist:
-        def_matches = multipledefaults_matcher.match(item)
-        if def_matches:
-            unrolled_items.extend(["1*"] * int(def_matches.group(1)))
-        else:
-            unrolled_items.extend([item])
-    return unrolled_items
-
-
-def ad_hoc_wconparser(record, keyword):
-    """This is a band-aid solution awaiting support for UDA-values in opm-common
-
-    Replace this with common.parse_opmio_deckrecord when ready.
-
-    Args:
-        record (str): a string representation of a record with wcon data
-        keyword (str): The E100 keyword this record is valid for.
-    """
-    assert isinstance(record, str)
-    assert keyword in WCONKEYS  # Avoid using this function for too much else.
-    rec_items = unroll_defaulted_items(shlex.split(record))
-    meta_and_data = zip(OPMKEYWORDS[keyword]["items"], rec_items)
-    rec_dict = {}
-    for item in meta_and_data:
-        if item[1] == "/":
-            break
-        itemname = item[0]["name"]
-        if item[0]["value_type"].lower() in ["uda", "double"]:
-            dataconv = float
-        elif item[0]["value_type"].lower() in ["int"]:
-            dataconv = int
-        else:
-            dataconv = str
-        if itemname in COLUMN_RENAMER:
-            itemname = COLUMN_RENAMER[itemname]
-        if item[1] == "1*":
-            if "default" in item[0]:
-                rec_dict[itemname] = dataconv(item[0]["default"])
-            else:
-                rec_dict[itemname] = None
-        else:
-            rec_dict[itemname] = dataconv(item[1])
-    return rec_dict
 
 
 def df(deck):
@@ -112,7 +54,7 @@ def df(deck):
                 )
         elif kword.name in WCONKEYS:
             for rec in kword:  # Loop over the lines inside WCON* record
-                rec_data = ad_hoc_wconparser(str(rec), kword.name)
+                rec_data = parse_opmio_deckrecord(rec, kword.name)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD"] = kword.name
                 wconrecords.append(rec_data)

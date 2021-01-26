@@ -8,53 +8,9 @@ import pandas as pd
 
 from ecl2df import wcon, ecl2csv
 from ecl2df.eclfiles import EclFiles
-from ecl2df.wcon import unroll_defaulted_items, ad_hoc_wconparser
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
-
-
-def test_unroller():
-    """Test that the defaults unroller is correct"""
-    assert len(unroll_defaulted_items(["3*"])) == 3
-    assert not unroll_defaulted_items(["0*"])
-    assert len(unroll_defaulted_items(["1*"])) == 1
-    assert len(unroll_defaulted_items(["99*"])) == 99
-    assert len(unroll_defaulted_items(["-1*"])) == 1
-    assert len(unroll_defaulted_items(["foo", "2*", "bar"])) == 4
-    assert unroll_defaulted_items(["foo", "2*", "bar"])[1] == "1*"
-    assert unroll_defaulted_items(["foo", "2*", "bar"])[2] == "1*"
-
-
-def test_ad_hoc_wconparser():
-    """This is the temporary parser that we need until opm-common is
-    up to speed"""
-    items = ad_hoc_wconparser(
-        (
-            "'OP_2'  OPEN  RESV 3862.069 94.14519 710620.7 "
-            "   1*       1*       1*       1* "
-        ),
-        "WCONPROD",
-    )
-    print(items)
-    assert items["WELL"] == "OP_2"
-    assert items["STATUS"] == "OPEN"
-    assert items["CMODE"] == "RESV"
-    assert int(items["ORAT"]) == 3862
-    assert int(items["WRAT"]) == 94
-    assert int(items["GRAT"]) == 710620
-    assert int(items["RESV"]) == 0  # default value exists.
-    assert items["BHP"] == 1.01325  # default value
-    # VFP_TABLE is not here, because it was not mentioned.
-    # Not sure if we should have the default value
-    # in the returned data or just ignore it.
-
-    items = ad_hoc_wconparser(
-        "'OP_1'  OPEN  RESV 3833.858 50.36119 705429.9 ", "WCONHIST"
-    )
-    print(items)
-    assert items["WELL"] == "OP_1"
-    assert items["GRAT"] == 705429.9
 
 
 def test_wcon2df():
@@ -69,43 +25,152 @@ def test_wcon2df():
         assert col == col.upper()
 
 
-def test_str2df():
-    """Test dataframe extraction from strings"""
+def test_wconhist():
+    """Test WCONHIST parsing and column names"""
     wconstr = """
 WCONHIST
   'FOO' 0 1 /
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.df(deck)
-    assert len(wcondf) == 1
+    wconhist_df = wcon.df(deck)
+    pd.testing.assert_frame_equal(
+        wconhist_df,
+        pd.DataFrame(
+            [
+                {
+                    "WELL": "FOO",
+                    "STATUS": "0",
+                    "CMODE": "1",
+                    "ORAT": 0,
+                    "WRAT": 0,
+                    "GRAT": 0,
+                    "VFP_TABLE": 0,
+                    "ALQ": 0,
+                    "THP": 0,
+                    "BHP": 0,
+                    "NGLRAT": 0,
+                    "DATE": None,
+                    "KEYWORD": "WCONHIST",
+                }
+            ]
+        ),
+    )
 
+
+def test_wconinjh():
+    """Test WCONINJH parsing and column names"""
     wconstr = """
 WCONINJH
   'FOO' 0 1 /
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.df(deck)
-    assert len(wcondf) == 1
+    wconinjh_df = wcon.df(deck)
+    pd.testing.assert_frame_equal(
+        wconinjh_df,
+        pd.DataFrame(
+            [
+                {
+                    "WELL": "FOO",
+                    "TYPE": "0",
+                    "STATUS": "1",
+                    "RATE": None,
+                    "BHP": None,
+                    "THP": None,
+                    "VFP_TABLE": 0,
+                    "VAPOIL_C": 0,
+                    "SURFACE_OIL_FRACTION": 0,
+                    "SURFACE_WATER_FRACTION": 0,
+                    "SURFACE_GAS_FRACTION": 0,
+                    "CMODE": "RATE",
+                    "DATE": None,
+                    "KEYWORD": "WCONINJH",
+                }
+            ]
+        ),
+    )
 
+
+def test_wconinje():
+    """Test WCONINJE parsing and column names"""
     wconstr = """
 WCONINJE
   'FOO' 0 1 /
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.df(deck)
-    assert len(wcondf) == 1
+    wconinje_df = wcon.df(deck)
+    pd.testing.assert_frame_equal(
+        wconinje_df,
+        pd.DataFrame(
+            [
+                {
+                    "WELL": "FOO",
+                    "TYPE": "0",
+                    "STATUS": "1",
+                    "CMODE": None,
+                    "RATE": None,
+                    "RESV": None,
+                    "BHP": 6895,
+                    "THP": None,
+                    "VFP_TABLE": 0,
+                    "VAPOIL_C": 0,
+                    "GAS_STEAM_RATIO": 0,
+                    "SURFACE_OIL_FRACTION": 0,
+                    "SURFACE_WATER_FRACTION": 0,
+                    "SURFACE_GAS_FRACTION": 0,
+                    "OIL_STEAM_RATIO": 0,
+                    "DATE": None,
+                    "KEYWORD": "WCONINJE",
+                }
+            ]
+        ),
+    )
 
+
+def test_wconprod():
+    """Test WCONPROD parsing and column names"""
     wconstr = """
 WCONPROD
   'FOO' 0 1 /
  /
 """
     deck = EclFiles.str2deck(wconstr)
-    wcondf = wcon.df(deck)
-    assert len(wcondf) == 1
+    wconprod_df = wcon.df(deck)
+    pd.testing.assert_frame_equal(
+        wconprod_df,
+        pd.DataFrame(
+            [
+                {
+                    "WELL": "FOO",
+                    "STATUS": "0",
+                    "CMODE": "1",
+                    "ORAT": 0,
+                    "WRAT": 0,
+                    "GRAT": 0,
+                    "LRAT": 0,
+                    "RESV": 0,
+                    "BHP": 1.01325,
+                    "THP": 0,
+                    "VFP_TABLE": 0,
+                    "ALQ": 0,
+                    # These E300 columns should not
+                    # be regarded critical for API.
+                    "E300_ITEM13": None,
+                    "E300_ITEM14": None,
+                    "E300_ITEM15": None,
+                    "E300_ITEM16": None,
+                    "E300_ITEM17": None,
+                    "E300_ITEM18": None,
+                    "E300_ITEM19": None,
+                    "E300_ITEM20": None,
+                    "DATE": None,
+                    "KEYWORD": "WCONPROD",
+                }
+            ]
+        ),
+    )
 
 
 def test_tstep():

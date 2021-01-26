@@ -73,6 +73,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     welsegsrecords = []
     wsegsicdrecords = []
     wsegaicdrecords = []
+    wsegvalvrecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
@@ -134,6 +135,12 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
                 wsegaicdrecords.append(rec_data)
+        elif kword.name == "WSEGVALV":
+            for rec in kword:  # Loop over the lines inside WSEGVALV record
+                rec_data = parse_opmio_deckrecord(rec, "WSEGVALV")
+                rec_data["DATE"] = date
+                rec_data["KEYWORD_IDX"] = idx
+                wsegvalvrecords.append(rec_data)
         elif kword.name == "COMPSEGS":
             wellname = parse_opmio_deckrecord(
                 kword[0], "COMPSEGS", itemlistname="records", recordindex=0
@@ -193,6 +200,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     welsegs_df = pd.DataFrame(welsegsrecords)
     wsegsicd_df = pd.DataFrame(wsegsicdrecords)
     wsegaicd_df = pd.DataFrame(wsegaicdrecords)
+    wsegvalv_df = pd.DataFrame(wsegvalvrecords)
 
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
@@ -212,12 +220,16 @@ def deck2dfs(deck, start_date=None, unroll=True):
     if "KEYWORD_IDX" in wsegaicd_df.columns:
         wsegaicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 
+    if "KEYWORD_IDX" in wsegvalv_df.columns:
+        wsegvalv_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+
     return dict(
         COMPDAT=compdat_df,
         COMPSEGS=compsegs_df,
         WELSEGS=welsegs_df,
         WSEGSICD=wsegsicd_df,
         WSEGAICD=wsegaicd_df,
+        WSEGVALV=wsegvalv_df,
     )
 
 

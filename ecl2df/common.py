@@ -483,15 +483,17 @@ def df2ecl(
                 calling_module.__name__,
                 str(not_supported),
             )
-        # Reduce to only supported keywords:
-        keywords = list(set(keywords) - set(not_supported))
         # Warn if some requested keywords are not in frame:
         not_in_frame = set(keywords) - keywords_in_frame
         if not_in_frame:
             logger.warning(
                 "Requested keyword(s) not present in dataframe: %s", str(not_in_frame)
             )
-    keywords = keywords_in_frame.intersection(keywords).intersection(set(supported))
+    keywords = [
+        keyword
+        for keyword in keywords  # user supplied list defines the print order
+        if keyword in supported and keyword in keywords_in_frame
+    ]
     if not keywords:
         # Nothing to do
 

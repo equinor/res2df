@@ -19,6 +19,6 @@ statements from the actions in WELOPEN.
    :file: compdat.csv
    :header-rows: 1
 
-If you need access to WELSEGS and COMPSEGS, you must use the ``deck2dfs()``
-function which will return a dict with dataframes for each of COMPDAT,
-COMPSEGS and WELSEGS.
+If you need access to WELSEGS, COMPSEGS, WSEGSICD, WSEGAICD or WSEGVALV, you
+must use the ``deck2dfs()`` function which will return a dict with dataframes
+for each of COMPDAT, and the segmentation keywords.

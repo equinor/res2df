@@ -12,6 +12,9 @@ Clone the master repository from Github::
 
   git clone https://github.com/equinor/ecl2df
 
+After cloning, change to the newly created ``ecl2df`` directory. The commands
+below assume you are in this directory.
+
 It is recommended that you also fork the repository on Github, in order to push
 your branches to your fork. After forking, add the fork to your cloned copy::
 
@@ -21,8 +24,8 @@ This requires a valid login setup with SSH keys for you github account, needed
 for write access.
 
 After cloning, you should make a Python virtual environment in which you install
-ecl2df and its dependencies. If you want to create a new for ecl2df, you can
-do something like the following::
+ecl2df and its dependencies. If you want to create a new virtual environment for
+ecl2df, you can do something like the following::
 
   virtualenv venv-ecl2df
   source venv-ecl2df/bin/activate
@@ -72,7 +75,7 @@ If you have a feature or bugfix, a typical procedure is to:
 
 * Consider writing an issue on https://github.com/equinor/ecl2df/issues describing
   what is not working or what is not present.
-* Make a new git branch for you contribution, from an updated master branch.
+* Make a new git branch for your contribution, from an updated master branch.
 * Write a test for the feature or a test proving the bug. Verify that ``pytest``
   now fails. Either append to an existing test-file in ``tests/`` or make
   a new file.

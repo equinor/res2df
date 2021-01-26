@@ -1,0 +1,125 @@
+======================
+Contributing to ecl2df
+======================
+
+Contributing to ecl2df is easiest on Linux computers. Windows has not been
+tested, and for Mac you will have to compile OPM yourself.
+
+Getting started as a developer
+------------------------------
+
+Clone the master repository from Github::
+
+  git clone https://github.com/equinor/ecl2df
+
+It is recommended that you also fork the repository on Github, in order to push
+your branches to your fork. After forking, add the fork to your cloned copy::
+
+  git remote add fork git@github.com:<youruser>/ecl2df
+
+This requires a valid login setup with SSH keys for you github account, needed
+for write access.
+
+After cloning, you should make a Python virtual environment in which you install
+ecl2df and its dependencies. If you want to create a new for ecl2df, you can
+do something like the following::
+
+  virtualenv venv-ecl2df
+  source venv-ecl2df/bin/activate
+
+and then run ``pip`` ::
+
+  pip install -e .[tests,docs]
+
+to install ecl2df in "edit"-mode together will all dependencies for ecl2df, its
+test suite and documentation.
+
+A good start is to verify that all tests pass after having cloned the
+repository, which you can do by running::
+
+  pytest
+
+
+Getting started on Equinor Linux computers
+------------------------------------------
+
+On Equinor Linux computers, is is recommended to run with the Komodo
+environment, which will provide an analogue to ``virtualenv`` for
+making the virtual environment.
+
+The git operations are the same as above.
+
+First source komodo stable::
+
+  source /prog/res/komodo/stable/enable
+
+From your command line prompt, you see the exact name of the Komodo release
+you have activated, f.ex. ``2021.01.06-py36``. You can then make a virtual
+environment named ``kenv`` on top of Komodo stable with the command::
+
+  komodoenv -r 2021.01.06-py36 kenv
+
+after which you can ``pip``-install ecl2df and dependencies.
+
+See https://fmu-docs.equinor.com/docs/komodo/ for more information on Komodo.
+
+NB: For every monthly Komodo release, you might have to remake your komodo-venv.
+
+Development workflow
+--------------------
+
+If you have a feature or bugfix, a typical procedure is to:
+
+* Consider writing an issue on https://github.com/equinor/ecl2df/issues describing
+  what is not working or what is not present.
+* Make a new git branch for you contribution, from an updated master branch.
+* Write a test for the feature or a test proving the bug. Verify that ``pytest``
+  now fails. Either append to an existing test-file in ``tests/`` or make
+  a new file.
+* Implement the feature, or fix the bug, and verify that ``pytest`` succeeds.
+* Consider if you should write RST documentation in ``docs/`` in addition to
+  docstrings.
+* Commit your changes, remember to add any new files.
+* Push your branch to your fork on github, and go to github.com/equinor/ecl2df
+  and make a pull request from your branch. Link your pull request to any
+  relevant issue.
+* Fix any errors that pop up from automated checks.
+* Wait for or ask for a code review
+* Follow up your pull request by merging in changes from the master branch
+  as other pull requests are being merged.
+* When your PR is ready for merge, it should usually be "squashed" into a single
+  commit that is rebased on top of the current master.
+
+Continuous integration
+----------------------
+
+A pull request that has been pushed to Github will be subject to automatic
+testing, for code style, ``pytest`` and for documentation validity. If your code
+does not pass ``black`` or ``flake8`` verification it will fail the CI workflows.
+
+The exact requirements for CI can be deduced from files in ``.github/workflows/``.
+The commands in these files can be run manually on your command line, and if
+they fail, you will have to fix before pushing your branch.
+
+Some of the requirements can be added to your editor, but you can also integrate
+the tool ``pre-commit``  to your cloned copy in order to force certain checks to be
+in place before a commit is accepted. Issue the command ``pre-commit install``
+in your copy to get started with this.
+
+
+Writing documentation
+---------------------
+
+Write good docstrings for each function, and use Google style for arguments.
+
+Add RST (reStructuredText) documentation to files in the ``docs/`` directory.
+
+Your RST files must pass validity through the ``rstcheck`` tool. Use ``sphinx``
+to build HTML documentation::
+
+  sphinx-apidoc -f -H "API for ecl2df" -o docs ecl2df
+  python setup.py build_sphinx
+
+and check the generated HTML visually by running f.ex firefox::
+
+  firefox build/sphinx/html/index.html &

@@ -1,26 +1,16 @@
 Installation
 ============
 
-Internally in Equinor, ecl2df is distributed through Komodo.
+Internally in Equinor, ecl2df is distributed through Komodo and
+nothing is needed besides activating Komodo, typically through::
 
-You need opm-common installed upfront.
+  source /prog/res/komodo/stable/enable
 
-Either install a released version from pypi by
-
-.. code-block:: console
-
-    > pip install ecl2df
-
-or install the latest development version from source by the commands
+On Linux computers outside Equinor, ecl2df should be installed from pypi:
 
 .. code-block:: console
 
-    > git clone https://github.com/equinor/ecl2df
-    > cd ecl2df
-    > pip install -r requirements.txt
-    > pip install -e .
+  pip install ecl2df
 
-For the opm-common installation, you can get hints from the
-file `.travis.yml <https://github.com/equinor/ecl2df/blob/master/.travis.yml>`_
-in the ecl2df repository. This describes a working installation for a given
-Linux release, but it might require some adjustments on other systems.
+For MacOS, the OPM dependency is not available from pypi, and OPM must be
+compiled manually.

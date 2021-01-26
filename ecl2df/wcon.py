@@ -17,9 +17,6 @@ logger = logging.getLogger(__name__)
 # The keywords supported in this module.
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
-# Rename some of the opm-common column names:
-COLUMN_RENAMER = {"VFPTable": "VFP_TABLE", "Lift": "ALQ"}
-
 
 def df(deck):
     """Loop through the deck and pick up information found

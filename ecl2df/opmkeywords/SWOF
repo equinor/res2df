@@ -7,6 +7,10 @@
     "keyword": "TABDIMS",
     "item": "NTSFUN"
   },
+  "requires": [
+    "OIL",
+    "WATER"
+  ],
   "items": [
     {
       "name": "DATA",

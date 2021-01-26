@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.9.2.dev15+g55ff284 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.9.2.dev16+g54d8235 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.9.2.dev15+g55ff284
+                0.9.2.dev16+g54d8235
               </div>
             
           
@@ -3146,21 +3146,6 @@ the dataframe</p></li>
 <span id="ecl2df-wcon-module"></span><h2>ecl2df.wcon module<a class="headerlink" href="#module-ecl2df.wcon" title="Permalink to this headline">¶</a></h2>
 <p>Extract WCON* from an Eclipse deck</p>
 <dl class="py function">
-<dt id="ecl2df.wcon.ad_hoc_wconparser">
-<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">ad_hoc_wconparser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em>, <em class="sig-param"><span class="n">keyword</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#ad_hoc_wconparser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.ad_hoc_wconparser" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a band-aid solution awaiting support for UDA-values in opm-common</p>
-<p>Replace this with common.parse_opmio_deckrecord when ready.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>record</strong> (<em>str</em>) – a string representation of a record with wcon data</p></li>
-<li><p><strong>keyword</strong> (<em>str</em>) – The E100 keyword this record is valid for.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="ecl2df.wcon.df">
 <code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deck</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loop through the deck and pick up information found</p>
@@ -3185,13 +3170,6 @@ the dataframe</p></li>
 fill with arguments</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="ecl2df.wcon.unroll_defaulted_items">
-<code class="sig-prename descclassname">ecl2df.wcon.</code><code class="sig-name descname">unroll_defaulted_items</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">itemlist</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/wcon.html#unroll_defaulted_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ecl2df.wcon.unroll_defaulted_items" title="Permalink to this definition">¶</a></dt>
-<dd><p>Expand list if list contains &lt;int&gt;* string elements</p>
-<p>so [‘a’, ‘2*’, ‘b’] becomes [‘a’, ‘1*’, ‘1*’, ‘b’]</p>
 </dd></dl>
 
 <dl class="py function">

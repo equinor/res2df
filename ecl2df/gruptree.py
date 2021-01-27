@@ -240,7 +240,7 @@ def _sub_tree_from_dict(nested_dict, name):
 
 
 def tree_from_dict(nested_dict):
-    """Convert a dictonary to a treelib Tree
+    """Convert a dictonary to a treelib Tree.
 
     The treelib representation of the trees is used
     for pretty-printing (in ASCII) of the tree, you
@@ -326,7 +326,7 @@ def fill_parser(parser):
 
 
 def gruptree_main(args):
-    """Entry-point for module, for command line utility"""
+    """Entry-point for module, for command line utility."""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     if not args.output and not args.prettyprint:

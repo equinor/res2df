@@ -8,17 +8,18 @@ tested, and for Mac you will have to compile OPM yourself.
 Getting started as a developer
 ------------------------------
 
-Clone the master repository from Github::
+The first thing to do, is to create a fork of ecl2df to your personal
+github account. Go to https://github.com/equinor/ecl2df and click the Fork
+button.
 
-  git clone https://github.com/equinor/ecl2df
+Clone your fork to your local computer::
 
-After cloning, change to the newly created ``ecl2df`` directory. The commands
-below assume you are in this directory.
+  git clone git@github.com:<youraccount>/ecl2df
 
-It is recommended that you also fork the repository on Github, in order to push
-your branches to your fork. After forking, add the fork to your cloned copy::
+Then add the upstream repository::
 
-  git remote add fork git@github.com:<youruser>/ecl2df
+  cd ecl2df
+  git remote add upstream git@github.com:equinor/ecl2df
 
 This requires a valid login setup with SSH keys for you github account, needed
 for write access.

@@ -16,7 +16,7 @@ data format.
 The reverse operation, from a Pandas DataFrame to Eclipse include files,
 is provided for some of the modules.
 
-The package consists of a module pr. datatype, e.g. one module for summary 
+The package consists of a module pr. datatype, e.g. one module for summary
 files (.UNSMRY), one for completion data etc.
 
 There is a command line frontend for almost all functionality, called
@@ -32,6 +32,6 @@ This library is released under GPLv3.
 
 ## Copyright
 
-The code is Copyright Equinor ASA 2019-2020.
+The code is Copyright Equinor ASA 2019-2021.
 
 Contributions without copyright transfer are welcome.

@@ -21,9 +21,3 @@ repos:
   rev: 3.8.4
   hooks:
   - id: flake8
-
-- repo: https://github.com/lorman/pre-commit-rstcheck
-  rev: ''
-  hooks:
-  - id: rstcheck
-    args: ['-r', 'docs']

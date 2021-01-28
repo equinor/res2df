@@ -14,7 +14,7 @@ data format.
    scripts
    modules
    installation
-   authors
+   contribution
    history
 
 Indices and tables

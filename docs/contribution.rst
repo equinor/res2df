@@ -12,13 +12,17 @@ The first thing to do, is to create a fork of ecl2df to your personal
 github account. Go to https://github.com/equinor/ecl2df and click the Fork
 button.
 
-Clone your fork to your local computer::
+Clone your fork to your local computer:
+
+.. code-block:: console
 
   git clone git@github.com:<youraccount>/ecl2df
-
-Then add the upstream repository::
-
   cd ecl2df
+
+Then add the upstream repository:
+
+.. code-block:: console
+
   git remote add upstream git@github.com:equinor/ecl2df
 
 This requires a valid login setup with SSH keys for you github account, needed
@@ -26,12 +30,16 @@ for write access.
 
 After cloning, you should make a Python virtual environment in which you install
 ecl2df and its dependencies. If you want to create a new virtual environment for
-ecl2df, you can do something like the following::
+ecl2df, you can do something like the following:
+
+.. code-block:: console
 
   python3 -m venv venv-ecl2df
   source venv-ecl2df/bin/activate
 
-and then run ``pip`` ::
+and then run ``pip`` :
+
+.. code-block:: console
 
   pip install -e .[tests,docs]
 
@@ -39,7 +47,9 @@ to install ecl2df in "edit"-mode together will all dependencies for ecl2df, its
 test suite and documentation.
 
 A good start is to verify that all tests pass after having cloned the
-repository, which you can do by running::
+repository, which you can do by running:
+
+.. code-block:: console
 
   pytest
 
@@ -53,19 +63,13 @@ making the virtual environment.
 
 The git operations are the same as above.
 
-First source komodo stable::
+Follow instructions on https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html
+for activating a Komodo release, and perform the instructions for extending
+Komodo in order to prepare for the command:
 
-  source /prog/res/komodo/stable/enable
+.. code-block:: console
 
-From your command line prompt, you see the exact name of the Komodo release
-you have activated, f.ex. ``2021.01.06-py36``. You can then make a virtual
-environment named ``kenv`` on top of Komodo stable with the command::
-
-  komodoenv -r 2021.01.06-py36 kenv
-
-after which you can ``pip``-install ecl2df and dependencies.
-
-See https://fmu-docs.equinor.com/docs/komodo/ for more information on Komodo.
+  pip install -e .[tests,docs]
 
 NB: For every monthly Komodo release, you might have to remake your komodo-venv.
 
@@ -83,6 +87,8 @@ If you have a feature or bugfix, a typical procedure is to:
 * Implement the feature, or fix the bug, and verify that ``pytest`` succeeds.
 * Consider if you should write RST documentation in ``docs/`` in addition to
   docstrings.
+* Check your code quality with pylint. New code should aim for maximal pylint
+  score. Pylint exceptions should only be used when warranted.
 * Commit your changes, remember to add any new files.
 * Push your branch to your fork on github, and go to github.com/equinor/ecl2df
   and make a pull request from your branch. Link your pull request to any
@@ -121,10 +127,14 @@ for specification.
 Add RST (reStructuredText) documentation to files in the ``docs/`` directory.
 
 Your RST files must pass validity through the ``rstcheck`` tool. Use ``sphinx``
-to build HTML documentation::
+to build HTML documentation:
+
+.. code-block:: console
 
   python setup.py build_sphinx
 
-and check the generated HTML visually by running f.ex firefox::
+and check the generated HTML visually by running f.ex firefox:
+
+.. code-block:: console
 
   firefox build/sphinx/html/index.html &

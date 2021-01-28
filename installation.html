@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Installation &mdash; ecl2df 0.10.0 documentation</title>
+  <title>Installation &mdash; ecl2df 0.10.1.dev1+g84cc2bf documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Credits" href="authors.html" />
+    <link rel="next" title="Contributing to ecl2df" href="contribution.html" />
     <link rel="prev" title="ecl2df.hook_implementations package" href="ecl2df.hook_implementations.html" /> 
 </head>
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.1.dev1+g84cc2bf
               </div>
             
           
@@ -98,7 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="scripts.html#csv2ecl">csv2ecl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">API for ecl2df</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
 </ul>
 
@@ -169,23 +169,17 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Internally in Equinor, ecl2df is distributed through Komodo.</p>
-<p>You need opm-common installed upfront.</p>
-<p>Either install a released version from pypi by</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> pip install ecl2df
+<p>Internally in Equinor, ecl2df is distributed through Komodo and
+nothing is needed besides activating Komodo.</p>
+<p>See <a class="reference external" href="https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html">https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html</a>
+for Komodo instructions.</p>
+<p>On Linux computers outside Equinor, ecl2df should be installed from
+<a class="reference external" href="https://pypi.org">https://pypi.org</a>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install ecl2df</span>
 </pre></div>
 </div>
-<p>or install the latest development version from source by the commands</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> git clone https://github.com/equinor/ecl2df
-<span class="gp">&gt;</span> <span class="nb">cd</span> ecl2df
-<span class="gp">&gt;</span> pip install -r requirements.txt
-<span class="gp">&gt;</span> pip install -e .
-</pre></div>
-</div>
-<p>For the opm-common installation, you can get hints from the
-file <a class="reference external" href="https://github.com/equinor/ecl2df/blob/master/.travis.yml">.travis.yml</a>
-in the ecl2df repository. This describes a working installation for a given
-Linux release, but it might require some adjustments on other systems.</p>
+<p>For MacOS, the OPM dependency is not available from pypi, and OPM must be
+compiled manually.</p>
 </div>
 
 
@@ -194,7 +188,7 @@ Linux release, but it might require some adjustments on other systems.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="authors.html" class="btn btn-neutral float-right" title="Credits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="contribution.html" class="btn btn-neutral float-right" title="Contributing to ecl2df" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="ecl2df.hook_implementations.html" class="btn btn-neutral float-left" title="ecl2df.hook_implementations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

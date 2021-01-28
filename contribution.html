@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Contributing to ecl2df &mdash; ecl2df 0.10.1.dev1+g84cc2bf documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="History" href="history.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.10.1.dev1+g84cc2bf
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html#csv2ecl">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API for ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to ecl2df</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started-as-a-developer">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started-on-equinor-linux-computers">Getting started on Equinor Linux computers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-workflow">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-documentation">Writing documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Contributing to ecl2df</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/contribution.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="contributing-to-ecl2df">
+<h1>Contributing to ecl2df<a class="headerlink" href="#contributing-to-ecl2df" title="Permalink to this headline">¶</a></h1>
+<p>Contributing to ecl2df is easiest on Linux computers. Windows has not been
+tested, and for Mac you will have to compile OPM yourself.</p>
+<div class="section" id="getting-started-as-a-developer">
+<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this headline">¶</a></h2>
+<p>The first thing to do, is to create a fork of ecl2df to your personal
+github account. Go to <a class="reference external" href="https://github.com/equinor/ecl2df">https://github.com/equinor/ecl2df</a> and click the Fork
+button.</p>
+<p>Clone your fork to your local computer:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone git@github.com:&lt;youraccount&gt;/ecl2df</span>
+<span class="go">cd ecl2df</span>
+</pre></div>
+</div>
+<p>Then add the upstream repository:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git remote add upstream git@github.com:equinor/ecl2df</span>
+</pre></div>
+</div>
+<p>This requires a valid login setup with SSH keys for you github account, needed
+for write access.</p>
+<p>After cloning, you should make a Python virtual environment in which you install
+ecl2df and its dependencies. If you want to create a new virtual environment for
+ecl2df, you can do something like the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv venv-ecl2df</span>
+<span class="go">source venv-ecl2df/bin/activate</span>
+</pre></div>
+</div>
+<p>and then run <code class="docutils literal notranslate"><span class="pre">pip</span></code> :</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e .[tests,docs]</span>
+</pre></div>
+</div>
+<p>to install ecl2df in “edit”-mode together will all dependencies for ecl2df, its
+test suite and documentation.</p>
+<p>A good start is to verify that all tests pass after having cloned the
+repository, which you can do by running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-started-on-equinor-linux-computers">
+<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this headline">¶</a></h2>
+<p>On Equinor Linux computers, is is recommended to run with the Komodo
+environment, which will provide an analogue to <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> for
+making the virtual environment.</p>
+<p>The git operations are the same as above.</p>
+<p>Follow instructions on <a class="reference external" href="https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html">https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html</a>
+for activating a Komodo release, and perform the instructions for extending
+Komodo in order to prepare for the command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e .[tests,docs]</span>
+</pre></div>
+</div>
+<p>NB: For every monthly Komodo release, you might have to remake your komodo-venv.</p>
+</div>
+<div class="section" id="development-workflow">
+<h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this headline">¶</a></h2>
+<p>If you have a feature or bugfix, a typical procedure is to:</p>
+<ul class="simple">
+<li><p>Consider writing an issue on <a class="reference external" href="https://github.com/equinor/ecl2df/issues">https://github.com/equinor/ecl2df/issues</a> describing
+what is not working or what is not present.</p></li>
+<li><p>Make a new git branch for your contribution, from an updated master branch.</p></li>
+<li><p>Write a test for the feature or a test proving the bug. Verify that <code class="docutils literal notranslate"><span class="pre">pytest</span></code>
+now fails. Either append to an existing test-file in <code class="docutils literal notranslate"><span class="pre">tests/</span></code> or make
+a new file.</p></li>
+<li><p>Implement the feature, or fix the bug, and verify that <code class="docutils literal notranslate"><span class="pre">pytest</span></code> succeeds.</p></li>
+<li><p>Consider if you should write RST documentation in <code class="docutils literal notranslate"><span class="pre">docs/</span></code> in addition to
+docstrings.</p></li>
+<li><p>Check your code quality with pylint. New code should aim for maximal pylint
+score. Pylint exceptions should only be used when warranted.</p></li>
+<li><p>Commit your changes, remember to add any new files.</p></li>
+<li><p>Push your branch to your fork on github, and go to github.com/equinor/ecl2df
+and make a pull request from your branch. Link your pull request to any
+relevant issue.</p></li>
+<li><p>Fix any errors that pop up from automated checks.</p></li>
+<li><p>Wait for or ask for a code review</p></li>
+<li><p>Follow up your pull request by merging in changes from the master branch
+as other pull requests are being merged.</p></li>
+<li><p>When your PR is ready for merge, it should usually be “squashed” into a single
+commit that is rebased on top of the current master.</p></li>
+</ul>
+</div>
+<div class="section" id="continuous-integration">
+<h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline">¶</a></h2>
+<p>A pull request that has been pushed to Github will be subject to automatic
+testing, for code style, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and for documentation validity. If your code
+does not pass <code class="docutils literal notranslate"><span class="pre">black</span></code> or <code class="docutils literal notranslate"><span class="pre">flake8</span></code> verification it will fail the CI workflows.</p>
+<p>The exact requirements for CI can be deduced from files in <code class="docutils literal notranslate"><span class="pre">.github/workflows/</span></code>.
+The commands in these files can be run manually on your command line, and if
+they fail, you will have to fix before pushing your branch.</p>
+<p>Some of the requirements can be added to your editor, but you can also integrate
+the tool <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>  to your cloned copy in order to force certain checks to be
+in place before a commit is accepted. Issue the command <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code>
+in your copy to get started with this.</p>
+</div>
+<div class="section" id="writing-documentation">
+<h2>Writing documentation<a class="headerlink" href="#writing-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Write good docstrings for each function, and use Google style for arguments.
+See <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html</a>
+for specification.</p>
+<p>Add RST (reStructuredText) documentation to files in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> directory.</p>
+<p>Your RST files must pass validity through the <code class="docutils literal notranslate"><span class="pre">rstcheck</span></code> tool. Use <code class="docutils literal notranslate"><span class="pre">sphinx</span></code>
+to build HTML documentation:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py build_sphinx</span>
+</pre></div>
+</div>
+<p>and check the generated HTML visually by running f.ex firefox:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">firefox build/sphinx/html/index.html &amp;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="history.html" class="btn btn-neutral float-right" title="History" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Equinor 2019-2020.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

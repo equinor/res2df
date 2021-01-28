@@ -27,7 +27,7 @@ After cloning, you should make a Python virtual environment in which you install
 ecl2df and its dependencies. If you want to create a new virtual environment for
 ecl2df, you can do something like the following::
 
-  virtualenv venv-ecl2df
+  python3 -m venv venv-ecl2df
   source venv-ecl2df/bin/activate
 
 and then run ``pip`` ::
@@ -114,13 +114,14 @@ Writing documentation
 ---------------------
 
 Write good docstrings for each function, and use Google style for arguments.
+See https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
+for specification.
 
 Add RST (reStructuredText) documentation to files in the ``docs/`` directory.
 
 Your RST files must pass validity through the ``rstcheck`` tool. Use ``sphinx``
 to build HTML documentation::
 
-  sphinx-apidoc -f -H "API for ecl2df" -o docs ecl2df
   python setup.py build_sphinx
 
 and check the generated HTML visually by running f.ex firefox::

@@ -250,7 +250,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logger.info("Extracting grjd geometry from %s", str(egrid_file))
+    logger.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 

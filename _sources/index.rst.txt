@@ -11,7 +11,8 @@ data format.
 
    introduction
    usage
-   scripts
+   ecl2csv
+   csv2ecl
    modules
    installation
    contribution

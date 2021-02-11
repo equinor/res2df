@@ -1,15 +1,16 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import logging
 from pathlib import Path
-import warnings
 
 # The name 'datetime' is in use by a function argument:
 import datetime as dt
 
 import dateutil.parser
+import numpy as np
 import pandas as pd
 
-from ecl.summary import EclSum
+import ctypes
+from ecl.summary import EclSum, EclSumKeyWordVector
 
 from .eclfiles import EclFiles
 from . import parameters
@@ -188,7 +189,7 @@ def resample_smry_dates(
 
     datetimes = date_range(start_date_range, end_date_range, freq)
 
-    # Convert from Pandas' datetime64 to datetime.date:
+    # Convert from numpys datetime64 to datetime.date:
     datetimes = [x.date() for x in datetimes]
 
     # pd.date_range will not include random dates that do not
@@ -218,6 +219,12 @@ def df(
 
     This is a thin wrapper for EclSum.pandas_frame, by adding
     support for string mnenomics for the time index.
+
+    The dataframe is always indexed by DATE, and the datatype for the
+    index will be usually be datetime64[ns] as long as all dates are
+    before year 2262. If a longer time range is detected, the index.dtype
+    will be object, and consisting of datetime.datetime() objects. The index
+    is always named "DATE".
 
     Arguments:
         eclfiles: EclFiles object representing the Eclipse deck. Alternatively
@@ -264,7 +271,7 @@ def df(
         # Can be None.
         time_index_arg = time_index
 
-    if isinstance(time_index_arg, list):
+    if isinstance(time_index_arg, (list, np.ndarray)):
         if len(time_index_arg) < 6:
             time_index_str = str(time_index_arg)
         else:
@@ -295,10 +302,9 @@ def df(
         # Warning is already logged by eclfiles.
         return pd.DataFrame()
 
-    dframe = eclsum.pandas_frame(time_index_arg, column_keys)
+    # dframe = eclsum.pandas_frame(time_index_arg, column_keys)
+    dframe = _libecl_eclsum_pandas_frame(eclsum, time_index_arg, column_keys)
 
-    # If time_index_arg was None, but start_date was set, we need to date-truncate
-    # afterwards:
     logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",
         len(dframe.columns),
@@ -318,14 +324,6 @@ def df(
     if datetime is True:
         if dframe.index.dtype == "object":
             dframe.index = pd.to_datetime(dframe.index)
-    elif dframe.index.dtype == "object":
-        warnings.warn(
-            (
-                "Use datetime=True as argument to ecl2df.summary.df() "
-                "for future compatibility"
-            ),
-            FutureWarning,
-        )
     return dframe
 
 
@@ -406,10 +404,35 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
         return dframe
     dframe = dframe.copy()
     if "DATE" in dframe.columns:
-        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
-        dframe = dframe.set_index("DATE", drop=True)
-    if not isinstance(dframe.index, pd.DatetimeIndex):
-        raise ValueError("dataframe must have a DatetimeIndex")
+        # Infer datatype (Pandas cannot answer it) based on the first element:
+        if isinstance(dframe["DATE"].values[0], pd.Timestamp):
+            dframe["DATE"] = pd.Series(pd.to_pydatetime(dframe["DATE"]), dtype="object")
+        if isinstance(dframe["DATE"].values[0], str):
+            # Do not use pd.Series.apply() here, Pandas would try to convert it to
+            # datetime64[ns] which is limited at year 2262.
+            dframe["DATE"] = pd.Series(
+                [dateutil.parser.parse(datestr) for datestr in dframe["DATE"]],
+                dtype="object",
+                index=dframe.index,
+            )
+        if isinstance(dframe["DATE"].values[0], dt.date):
+            dframe["DATE"] = pd.Series(
+                [
+                    dt.datetime.combine(dateobj, dt.datetime.min.time())
+                    for dateobj in dframe["DATE"]
+                ],
+                dtype="object",
+                index=dframe.index,
+            )
+
+        dframe.set_index(dframe["DATE"], inplace=True)
+    if not isinstance(
+        dframe.index.values[0], (dt.datetime, np.datetime64, pd.Timestamp)
+    ):
+        raise ValueError(
+            "dataframe must have a datetime index, got %s of type %s"
+            % (dframe.index.values[0], type(dframe.index.values[0]))
+        )
     dframe.sort_index(axis=0, inplace=True)
 
     # This column will appear if dataframes are naively written to CSV
@@ -427,7 +450,7 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
             str({colname.partition(":")[0] + ":*" for colname in block_columns}),
         )
 
-    return dframe
+    return dframe.drop("DATE", axis="columns", errors="ignore")
 
 
 def df2eclsum(
@@ -455,7 +478,90 @@ def df2eclsum(
         raise ValueError(f"Do not use dots in casename {casename}")
 
     dframe = _fix_dframe_for_libecl(dframe)
-    return EclSum.from_pandas(casename, dframe)
+    return _libecl_eclsum_from_pandas(casename, dframe)
+    # return EclSum.from_pandas(casename, dframe)
+
+
+def _libecl_eclsum_pandas_frame(eclsum, time_index=None, column_keys=None):
+    """Build a Pandas dataframe from an EclSum object.
+
+    Temporarily copied from libecl to circumvent bug
+
+    https://github.com/equinor/ecl/issues/802
+    """
+    if column_keys is None:
+        keywords = EclSumKeyWordVector(eclsum, add_keywords=True)
+    else:
+        keywords = EclSumKeyWordVector(eclsum)
+        for key in column_keys:
+            keywords.add_keywords(key)
+
+    if len(keywords) == 0:
+        raise ValueError("No valid key")
+
+    if time_index is None:
+        time_index = eclsum.dates  # Changed from libecl
+        data = np.zeros([len(time_index), len(keywords)])
+        EclSum._init_pandas_frame(
+            eclsum, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+        )
+    else:
+        time_points = eclsum._make_time_vector(time_index)
+        data = np.zeros([len(time_points), len(keywords)])
+        EclSum._init_pandas_frame_interp(
+            eclsum,
+            keywords,
+            time_points,
+            data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+        )
+
+    # Do not give datetime64[ms] to Pandas, it will try to convert it
+    # to datetime64[ns] and error hard if it is out of bounds (year 2262)
+    assert isinstance(time_index[0], (dt.date, dt.datetime))
+    frame = pd.DataFrame(
+        index=time_index,
+        columns=list(keywords),
+        data=data,
+    )
+
+    # frame.index.type is now either datetime64[ns] or datetime.datetime (object)
+    # depending on whether the date range ended before 2262.
+    return frame
+
+
+def _libecl_eclsum_from_pandas(case, frame, dims=None, headers=None):
+    """Build an EclSum object from a Pandas dataframe.
+
+    Temporarily copied from libecl to circumvent bug
+
+    https://github.com/equinor/ecl/issues/802
+    """
+    start_time = frame.index[0]
+
+    # Avoid Pandas or numpy timestamps, to avoid limitations
+    # to timestamp64[ns] date boundaries (year 2262)
+    if isinstance(start_time, pd.Timestamp):
+        start_time = start_time.to_pydatetime()
+
+    var_list = []
+    if headers is None:
+        header_list = EclSum._compile_headers_list(frame.columns.values, dims)
+    else:
+        header_list = EclSum._compile_headers_list(headers, dims)
+    if dims is None:
+        dims = [1, 1, 1]
+    ecl_sum = EclSum.writer(case, start_time, dims[0], dims[1], dims[2])
+    for kw, wgname, num, unit in header_list:
+        var_list.append(
+            ecl_sum.addVariable(kw, wgname=wgname, num=num, unit=unit).getKey1()
+        )
+
+    for i, time in enumerate(frame.index):
+        days = (time - start_time).days
+        t_step = ecl_sum.addTStep(i + 1, days)
+        for var in var_list:
+            t_step[var] = frame.iloc[i][var]
+    return ecl_sum
 
 
 def fill_parser(parser):
@@ -564,7 +670,7 @@ def summary_main(args):
         end_date=args.end_date,
         params=args.params,
         paramfile=args.paramfile,
-        datetime=True,
+        datetime=False,
     )
     if sum_df.empty:
         logger.warning("Empty summary data being written to disk!")

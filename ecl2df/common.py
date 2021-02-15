@@ -12,9 +12,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-# This import is seemingly not used, but necessary for some attributes
-# to be included in DeckItem objects.
-from opm.io.deck import DeckKeyword  # noqa
+try:
+    # This import is seemingly not used, but necessary for some attributes
+    # to be included in DeckItem objects.
+    from opm.io.deck import DeckKeyword  # noqa
+except ImportError:
+    # Allow parts of ecl2df to work without OPM:
+    pass
 
 from ecl2df import __version__
 

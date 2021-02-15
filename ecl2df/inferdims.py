@@ -6,7 +6,11 @@ Eclipse 100 decks (typically single include-files)
 
 import logging
 
-import opm.io
+try:
+    import opm.io
+except ImportError:
+    # Let parts of ecl2df work without OPM:
+    pass
 
 from ecl2df import EclFiles
 

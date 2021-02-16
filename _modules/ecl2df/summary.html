@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.summary &mdash; ecl2df 0.10.1.dev3+g4d82138 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.10.1.dev4+g5259cb9 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.10.1.dev3+g4d82138
+                0.10.1.dev4+g5259cb9
               </div>
             
           
@@ -734,7 +734,7 @@
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty summary data being written to disk!&quot;</span><span class="p">)</span>
-    <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">sum_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">sum_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="summary_reverse_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.summary_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>

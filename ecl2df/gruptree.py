@@ -226,21 +226,15 @@ def edge_dataframe2dict(dframe):
     return [{root: subtrees[root]} for root in sorted(roots)]
 
 
-def _sub_tree_from_dict(nested_dict, name):
-    """Internal recursive function for generating trees."""
+def _add_to_tree_from_dict(nested_dict, name, tree, parent=None):
     assert isinstance(nested_dict, dict)
-    tree = treelib.Tree()
-    tree.create_node(name, name)
-    child_names = list(nested_dict.keys())
-    child_names.sort()
-    for child_name in child_names:
-        # The paste() function requires unique node names.
-        tree.paste(name, _sub_tree_from_dict(nested_dict[child_name], child_name))
-    return tree
+    tree.create_node(name, name, parent=parent)
+    for key, value in sorted(nested_dict.items()):
+        _add_to_tree_from_dict(nested_dict=value, name=key, tree=tree, parent=name)
 
 
 def tree_from_dict(nested_dict):
-    """Convert a dictonary to a treelib Tree.
+    """Convert a dictionary to a treelib Tree.
 
     The treelib representation of the trees is used
     for pretty-printing (in ASCII) of the tree, you
@@ -264,7 +258,9 @@ def tree_from_dict(nested_dict):
             "exactly one top level key, representing a single tree."
         )
     root_name = list(nested_dict.keys())[0]
-    return _sub_tree_from_dict(nested_dict[root_name], root_name)
+    tree = treelib.Tree()
+    _add_to_tree_from_dict(nested_dict[root_name], root_name, tree)
+    return tree
 
 
 def dict2treelib(name, nested_dict):

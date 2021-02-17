@@ -329,8 +329,12 @@ def test_multiple_roots():
     )
     assert gruptree.edge_dataframe2dict(edges_noroots) == answer
 
+    # The function tree_from_dict should be called with one tree at a time:
+    with pytest.raises(ValueError, match="single tree"):
+        gruptree.tree_from_dict({"foo": 1, "bar": 2})
 
-def test_emptytree(tmpdir, mocker, caplog):
+
+def test_emptytree_strdeck():
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
     deck = EclFiles.str2deck(schstr)
@@ -344,6 +348,8 @@ def test_emptytree(tmpdir, mocker, caplog):
     # a workaround for a limitation in treelib.
     assert treelibtree == ""
 
+
+def test_emptytree_commandlinetool(tmpdir, mocker, caplog):
     tmpdir.chdir()
     Path("EMPTY.DATA").write_text("")
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])

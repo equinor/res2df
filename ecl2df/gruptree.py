@@ -255,10 +255,14 @@ def tree_from_dict(nested_dict):
     Returns:
         treelib.Tree
     """
-    if not nested_dict:
+    if not nested_dict.keys():
         # Return an empty string, because str(treelib.Tree()) will error
         return ""
-    assert len(nested_dict.keys()) == 1, "One tree at a time please"
+    if not len(nested_dict.keys()) == 1:
+        raise ValueError(
+            "The dict given to tree_from_dict() must have "
+            "exactly one top level key, representing a single tree."
+        )
     root_name = list(nested_dict.keys())[0]
     return _sub_tree_from_dict(nested_dict[root_name], root_name)
 

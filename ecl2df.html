@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.10.1.dev4+g5259cb9 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.10.1.dev5+g3e3b0f5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.10.1.dev4+g5259cb9
+                0.10.1.dev5+g3e3b0f5
               </div>
             
           
@@ -1565,11 +1565,9 @@ want prior to calling this function.</p>
 <p>Leaf nodes have empty dictionaries as their value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>list of nested dictionaries, as we in general</dt><dd><p>may have more than one root.</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p>List of nested dictionaries, as we in general
+may have more than one root. The list sorted
+alphabetically on the top level node name.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1589,7 +1587,26 @@ to fill with arguments</p>
 <dl class="py function">
 <dt id="ecl2df.gruptree.gruptree_main">
 <code class="sig-prename descclassname"><span class="pre">ecl2df.gruptree.</span></code><code class="sig-name descname"><span class="pre">gruptree_main</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#gruptree_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.gruptree.gruptree_main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entry-point for module, for command line utility</p>
+<dd><p>Entry-point for module, for command line utility.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.gruptree.tree_from_dict">
+<code class="sig-prename descclassname"><span class="pre">ecl2df.gruptree.</span></code><code class="sig-name descname"><span class="pre">tree_from_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nested_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/gruptree.html#tree_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.gruptree.tree_from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dictionary to a treelib Tree.</p>
+<p>The treelib representation of the trees is used
+for pretty-printing (in ASCII) of the tree, you
+only need to do str() of the returned result
+from this function.</p>
+<p>See <cite>https://treelib.readthedocs.io/</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nested_dict</strong> – nested dictonary representing a tree.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>treelib.Tree</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

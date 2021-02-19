@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.rft &mdash; ecl2df 0.10.1.dev4+g5259cb9 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.10.1.dev5+g3e3b0f5 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.10.1.dev4+g5259cb9
+                0.10.1.dev5+g3e3b0f5
               </div>
             
           
@@ -187,7 +187,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.gruptree</span> <span class="kn">import</span> <span class="n">dict2treelib</span>
+<span class="kn">from</span> <span class="nn">.gruptree</span> <span class="kn">import</span> <span class="n">tree_from_dict</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">merge_zones</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
 
 
@@ -490,7 +490,7 @@
 <span class="sd">        str (multiline)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dicttree</span> <span class="o">=</span> <span class="n">seg2dicttree</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">dict2treelib</span><span class="p">(</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span> <span class="n">dicttree</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree_from_dict</span><span class="p">(</span><span class="n">dicttree</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="split_seg_icd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.split_seg_icd">[docs]</a><span class="k">def</span> <span class="nf">split_seg_icd</span><span class="p">(</span><span class="n">seg_data</span><span class="p">):</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.10.1.dev6+gf9a92a2 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.10.1.dev7+g21cf1f7 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.10.1.dev6+gf9a92a2
+                0.10.1.dev7+g21cf1f7
               </div>
             
           
@@ -2943,6 +2943,11 @@ frequency.</p></li>
 <dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
 <p>This is a thin wrapper for EclSum.pandas_frame, by adding
 support for string mnenomics for the time index.</p>
+<p>The dataframe is always indexed by DATE, and the datatype for the
+index will usually be datetime64[ns] as long as all dates are
+before year 2262. If a longer time range is detected, the index.dtype
+will be object, and consisting of datetime.datetime() objects. The index
+is always named “DATE”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

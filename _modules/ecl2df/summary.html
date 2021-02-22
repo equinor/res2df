@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.summary &mdash; ecl2df 0.10.1.dev6+gf9a92a2 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.10.1.dev7+g21cf1f7 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.10.1.dev6+gf9a92a2
+                0.10.1.dev7+g21cf1f7
               </div>
             
           
@@ -167,15 +167,16 @@
 <span></span><span class="sd">&quot;&quot;&quot;Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="c1"># The name &#39;datetime&#39; is in use by a function argument:</span>
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
 
 <span class="kn">import</span> <span class="nn">dateutil.parser</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="kn">import</span> <span class="n">EclSum</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="kn">import</span> <span class="n">EclSum</span><span class="p">,</span> <span class="n">EclSumKeyWordVector</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">parameters</span>
@@ -354,7 +355,7 @@
 
     <span class="n">datetimes</span> <span class="o">=</span> <span class="n">date_range</span><span class="p">(</span><span class="n">start_date_range</span><span class="p">,</span> <span class="n">end_date_range</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
 
-    <span class="c1"># Convert from Pandas&#39; datetime64 to datetime.date:</span>
+    <span class="c1"># Convert from numpys datetime64 to datetime.date:</span>
     <span class="n">datetimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datetimes</span><span class="p">]</span>
 
     <span class="c1"># pd.date_range will not include random dates that do not</span>
@@ -384,6 +385,12 @@
 
 <span class="sd">    This is a thin wrapper for EclSum.pandas_frame, by adding</span>
 <span class="sd">    support for string mnenomics for the time index.</span>
+
+<span class="sd">    The dataframe is always indexed by DATE, and the datatype for the</span>
+<span class="sd">    index will usually be datetime64[ns] as long as all dates are</span>
+<span class="sd">    before year 2262. If a longer time range is detected, the index.dtype</span>
+<span class="sd">    will be object, and consisting of datetime.datetime() objects. The index</span>
+<span class="sd">    is always named &quot;DATE&quot;.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        eclfiles: EclFiles object representing the Eclipse deck. Alternatively</span>
@@ -430,7 +437,7 @@
         <span class="c1"># Can be None.</span>
         <span class="n">time_index_arg</span> <span class="o">=</span> <span class="n">time_index</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
             <span class="n">time_index_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -461,10 +468,9 @@
         <span class="c1"># Warning is already logged by eclfiles.</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-    <span class="n">dframe</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">pandas_frame</span><span class="p">(</span><span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>
+    <span class="c1"># dframe = eclsum.pandas_frame(time_index_arg, column_keys)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">_libecl_eclsum_pandas_frame</span><span class="p">(</span><span class="n">eclsum</span><span class="p">,</span> <span class="n">time_index_arg</span><span class="p">,</span> <span class="n">column_keys</span><span class="p">)</span>
 
-    <span class="c1"># If time_index_arg was None, but start_date was set, we need to date-truncate</span>
-    <span class="c1"># afterwards:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;Dataframe with smry data ready, </span><span class="si">%d</span><span class="s2"> columns and </span><span class="si">%d</span><span class="s2"> rows&quot;</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
@@ -484,14 +490,6 @@
     <span class="k">if</span> <span class="n">datetime</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
             <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="p">(</span>
-                <span class="s2">&quot;Use datetime=True as argument to ecl2df.summary.df() &quot;</span>
-                <span class="s2">&quot;for future compatibility&quot;</span>
-            <span class="p">),</span>
-            <span class="ne">FutureWarning</span><span class="p">,</span>
-        <span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
@@ -572,10 +570,35 @@
         <span class="k">return</span> <span class="n">dframe</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dataframe must have a DatetimeIndex&quot;</span><span class="p">)</span>
+        <span class="c1"># Infer datatype (Pandas cannot answer it) based on the first element:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">):</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># Do not use pd.Series.apply() here, Pandas would try to convert it to</span>
+            <span class="c1"># datetime64[ns] which is limited at year 2262.</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">datestr</span><span class="p">)</span> <span class="k">for</span> <span class="n">datestr</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+            <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">dateobj</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+                    <span class="k">for</span> <span class="n">dateobj</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span>
+                <span class="p">],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;dataframe must have a datetime index, got </span><span class="si">%s</span><span class="s2"> of type </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="p">)</span>
     <span class="n">dframe</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># This column will appear if dataframes are naively written to CSV</span>
@@ -621,7 +644,90 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Do not use dots in casename </span><span class="si">{</span><span class="n">casename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">casename</span><span class="p">,</span> <span class="n">dframe</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_libecl_eclsum_from_pandas</span><span class="p">(</span><span class="n">casename</span><span class="p">,</span> <span class="n">dframe</span><span class="p">)</span></div>
+    <span class="c1"># return EclSum.from_pandas(casename, dframe)</span>
+
+
+<span class="k">def</span> <span class="nf">_libecl_eclsum_pandas_frame</span><span class="p">(</span><span class="n">eclsum</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build a Pandas dataframe from an EclSum object.</span>
+
+<span class="sd">    Temporarily copied from libecl to circumvent bug</span>
+
+<span class="sd">    https://github.com/equinor/ecl/issues/802</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">column_keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">EclSumKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">,</span> <span class="n">add_keywords</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">EclSumKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">column_keys</span><span class="p">:</span>
+            <span class="n">keywords</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No valid key&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">time_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">time_index</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">dates</span>  <span class="c1"># Changed from libecl</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">time_index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)])</span>
+        <span class="n">EclSum</span><span class="o">.</span><span class="n">_init_pandas_frame</span><span class="p">(</span>
+            <span class="n">eclsum</span><span class="p">,</span> <span class="n">keywords</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_double</span><span class="p">))</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">time_points</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">_make_time_vector</span><span class="p">(</span><span class="n">time_index</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">time_points</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)])</span>
+        <span class="n">EclSum</span><span class="o">.</span><span class="n">_init_pandas_frame_interp</span><span class="p">(</span>
+            <span class="n">eclsum</span><span class="p">,</span>
+            <span class="n">keywords</span><span class="p">,</span>
+            <span class="n">time_points</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_double</span><span class="p">)),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Do not give datetime64[ms] to Pandas, it will try to convert it</span>
+    <span class="c1"># to datetime64[ns] and error hard if it is out of bounds (year 2262)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">))</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">time_index</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">keywords</span><span class="p">),</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># frame.index.type is now either datetime64[ns] or datetime.datetime (object)</span>
+    <span class="c1"># depending on whether the date range ended before 2262.</span>
+    <span class="k">return</span> <span class="n">frame</span>
+
+
+<span class="k">def</span> <span class="nf">_libecl_eclsum_from_pandas</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build an EclSum object from a Pandas dataframe.</span>
+
+<span class="sd">    Temporarily copied from libecl to circumvent bug</span>
+
+<span class="sd">    https://github.com/equinor/ecl/issues/802</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Avoid Pandas or numpy timestamps, to avoid limitations</span>
+    <span class="c1"># to timestamp64[ns] date boundaries (year 2262)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">):</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">()</span>
+
+    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">header_list</span> <span class="o">=</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">_compile_headers_list</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">header_list</span> <span class="o">=</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">_compile_headers_list</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ecl_sum</span> <span class="o">=</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">kw</span><span class="p">,</span> <span class="n">wgname</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">header_list</span><span class="p">:</span>
+        <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">ecl_sum</span><span class="o">.</span><span class="n">addVariable</span><span class="p">(</span><span class="n">kw</span><span class="p">,</span> <span class="n">wgname</span><span class="o">=</span><span class="n">wgname</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span><span class="o">.</span><span class="n">getKey1</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+        <span class="n">t_step</span> <span class="o">=</span> <span class="n">ecl_sum</span><span class="o">.</span><span class="n">addTStep</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
+            <span class="n">t_step</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">var</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">ecl_sum</span>
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.summary.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
@@ -730,7 +836,7 @@
         <span class="n">end_date</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span>
         <span class="n">params</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
         <span class="n">paramfile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">paramfile</span><span class="p">,</span>
-        <span class="n">datetime</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty summary data being written to disk!&quot;</span><span class="p">)</span>

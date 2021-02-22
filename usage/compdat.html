@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compdat &mdash; ecl2df 0.10.1.dev7+g21cf1f7 documentation</title>
+  <title>compdat &mdash; ecl2df 0.10.1.dev8+g840bf75 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.10.1.dev7+g21cf1f7
+                0.10.1.dev8+g840bf75
               </div>
             
           
@@ -95,7 +95,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../usage.html">Usage and examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="equil.html">equil</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">compdat</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">compdat</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-init-data">Adding INIT data</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="fipreports.html">fipreports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gruptree.html">gruptree</a></li>
@@ -512,6 +515,15 @@ statements from the actions in WELOPEN.</p>
 <p>If you need access to WELSEGS, COMPSEGS, WSEGSICD, WSEGAICD or WSEGVALV, you
 must use the <code class="docutils literal notranslate"><span class="pre">deck2dfs()</span></code> function which will return a dict with dataframes
 for each of COMPDAT, and the segmentation keywords.</p>
+<div class="section" id="adding-init-data">
+<h2>Adding INIT data<a class="headerlink" href="#adding-init-data" title="Permalink to this headline">¶</a></h2>
+<p>Additional information from the grid for each connection (based on i, j, k) can
+be added to the returned data through the option <code class="docutils literal notranslate"><span class="pre">--initvectors</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX</span>
+<span class="gp"># </span><span class="o">(</span>put the DATA file first, <span class="k">if</span> not it will be interpreted as a vector<span class="o">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

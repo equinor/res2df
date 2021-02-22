@@ -221,7 +221,7 @@ def df(
     support for string mnenomics for the time index.
 
     The dataframe is always indexed by DATE, and the datatype for the
-    index will be usually be datetime64[ns] as long as all dates are
+    index will usually be datetime64[ns] as long as all dates are
     before year 2262. If a longer time range is detected, the index.dtype
     will be object, and consisting of datetime.datetime() objects. The index
     is always named "DATE".
@@ -425,7 +425,7 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
                 index=dframe.index,
             )
 
-        dframe.set_index(dframe["DATE"], inplace=True)
+        dframe.set_index("DATE", inplace=True)
     if not isinstance(
         dframe.index.values[0], (dt.datetime, np.datetime64, pd.Timestamp)
     ):
@@ -450,7 +450,7 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
             str({colname.partition(":")[0] + ":*" for colname in block_columns}),
         )
 
-    return dframe.drop("DATE", axis="columns", errors="ignore")
+    return dframe
 
 
 def df2eclsum(

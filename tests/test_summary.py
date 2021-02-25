@@ -747,7 +747,7 @@ def test_df2eclsum_errors():
 
 
 @pytest.mark.integration
-def test_csv2ecl_summary(tmpdir):
+def test_csv2ecl_summary(tmpdir, mocker):
     """Check that we can call df2eclsum through the csv2ecl command line
     utility"""
     dframe = pd.DataFrame(
@@ -758,14 +758,34 @@ def test_csv2ecl_summary(tmpdir):
     )
     tmpdir.chdir()
     dframe.to_csv("summary.csv")
-    sys.argv = [
-        "csv2ecl",
-        "summary",
-        "-v",
-        "summary.csv",
-        "--output",
-        "SYNTHETIC",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv2ecl",
+            "summary",
+            "-v",
+            "summary.csv",
+            "--output",
+            "SYNTHETIC",
+        ],
+    )
     csv2ecl.main()
     assert Path("SYNTHETIC.UNSMRY").is_file()
     assert Path("SYNTHETIC.SMSPEC").is_file()
+
+    # Check that we can write to a subdirectory
+    Path("foo").mkdir()
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv2ecl",
+            "summary",
+            "-v",
+            "summary.csv",
+            "--output",
+            str(Path("foo") / Path("SYNTHETIC")),
+        ],
+    )
+    csv2ecl.main()
+    assert ("foo" / Path("SYNTHETIC.UNSMRY")).is_file()
+    assert ("foo" / Path("SYNTHETIC.SMSPEC")).is_file()

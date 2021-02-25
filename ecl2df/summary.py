@@ -647,8 +647,15 @@ def fill_parser(parser):
 
 def fill_reverse_parser(parser):
     """Fill a parser for the operation:  dataframe -> eclsum files"""
+
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help="Basename for Eclipse output files",
+        default="SYNTSMRY",
+    )
     parser.add_argument("csvfile", help="Name of CSV file with summary data.")
-    parser.add_argument("ECLBASE", help="Basename for Eclipse output files")
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Be verbose")
     return parser
@@ -687,8 +694,6 @@ def summary_reverse_main(args):
     summary_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
 
-    eclsum = df2eclsum(summary_df, args.ECLBASE)
+    eclsum = df2eclsum(summary_df, args.output)
     EclSum.fwrite(eclsum)
-    logger.info(
-        "Wrote to %s and %s", args.ECLBASE + ".UNSMRY", args.ECLBASE + ".SMSPEC"
-    )
+    logger.info("Wrote to %s and %s", args.output + ".UNSMRY", args.output + ".SMSPEC")

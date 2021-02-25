@@ -1,5 +1,3 @@
-"""Test module for nnc2df"""
-
 import os
 import sys
 import datetime
@@ -765,6 +763,7 @@ def test_csv2ecl_summary(tmpdir):
         "summary",
         "-v",
         "summary.csv",
+        "--output",
         "SYNTHETIC",
     ]
     csv2ecl.main()

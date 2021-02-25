@@ -1,4 +1,5 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
+import os
 import logging
 from pathlib import Path
 
@@ -694,6 +695,14 @@ def summary_reverse_main(args):
     summary_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
 
-    eclsum = df2eclsum(summary_df, args.output)
+    outputdir = Path(args.output).parent
+    eclbase = Path(args.output).name
+
+    # EclSum.fwrite can only write to current directory:
+    cwd = os.getcwd()
+    os.chdir(outputdir)
+    eclsum = df2eclsum(summary_df, eclbase)
     EclSum.fwrite(eclsum)
+    os.chdir(cwd)
+
     logger.info("Wrote to %s and %s", args.output + ".UNSMRY", args.output + ".SMSPEC")

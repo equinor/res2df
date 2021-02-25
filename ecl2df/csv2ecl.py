@@ -24,7 +24,7 @@ EXAMPLES = (
     "CSV2ECL(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
     "<OUTPUT>=eclipse/include/equil.inc)``"
     "CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-monthly.csv, "
-    "<OUTPUT>=MONTHLYSUMMARY)``"
+    "<OUTPUT>=eclipse/model/MONTHLYSUMMARY)``"
 )
 
 

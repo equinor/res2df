@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.csv2ecl &mdash; ecl2df 0.11.0 documentation</title>
+  <title>ecl2df.csv2ecl &mdash; ecl2df 0.11.1.dev2+g9ec0e0d documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.11.1.dev2+g9ec0e0d
               </div>
             
           
@@ -181,13 +181,16 @@
 <span class="c1"># String constants in use for generating ERT forward model documentation:</span>
 <span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert CSV files into Eclipse include files. Uses the command</span>
 <span class="s2">line utility ``csv2ecl``. Run ``csv2ecl --help`` to see which subcommands are supported.</span>
-<span class="s2">No options other than the output file is possible when</span>
-<span class="s2">used directly as a forward model.&quot;&quot;&quot;</span>
+<span class="s2">No options other than the output file is possible when used directly as a forward model.</span>
+<span class="s2">When writing synthetic summary files, the ECLBASE with no filename suffix is expected</span>
+<span class="s2">as the OUTPUT argument.&quot;&quot;&quot;</span>
 <span class="n">CATEGORY</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
 <span class="n">EXAMPLES</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;``FORWARD_MODEL &quot;</span>
     <span class="s2">&quot;CSV2ECL(&lt;SUBCOMMAND&gt;=equil, &lt;CSVFILE&gt;=equil.csv, &quot;</span>
     <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/include/equil.inc)``&quot;</span>
+    <span class="s2">&quot;CSV2ECL(&lt;SUBCOMMAND&gt;=summary, &lt;CSVFILE&gt;=summary-monthly.csv, &quot;</span>
+    <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/model/MONTHLYSUMMARY)``&quot;</span>
 <span class="p">)</span>
 
 

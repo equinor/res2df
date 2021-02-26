@@ -698,11 +698,13 @@ def summary_reverse_main(args):
     outputdir = Path(args.output).parent
     eclbase = Path(args.output).name
 
-    # EclSum.fwrite can only write to current directory:
+    # EclSum.fwrite() can only write to current directory:
     cwd = os.getcwd()
-    os.chdir(outputdir)
     eclsum = df2eclsum(summary_df, eclbase)
-    EclSum.fwrite(eclsum)
-    os.chdir(cwd)
+    try:
+        os.chdir(outputdir)
+        EclSum.fwrite(eclsum)
+    finally:
+        os.chdir(cwd)
 
     logger.info("Wrote to %s and %s", args.output + ".UNSMRY", args.output + ".SMSPEC")

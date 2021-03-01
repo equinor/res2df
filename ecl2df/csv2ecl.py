@@ -15,13 +15,16 @@ from ecl2df import __version__
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION = """Convert CSV files into Eclipse include files. Uses the command
 line utility ``csv2ecl``. Run ``csv2ecl --help`` to see which subcommands are supported.
-No options other than the output file is possible when
-used directly as a forward model."""
+No options other than the output file is possible when used directly as a forward model.
+When writing synthetic summary files, the ECLBASE with no filename suffix is expected
+as the OUTPUT argument."""
 CATEGORY = "utility.eclipse"
 EXAMPLES = (
     "``FORWARD_MODEL "
     "CSV2ECL(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
     "<OUTPUT>=eclipse/include/equil.inc)``"
+    "CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-monthly.csv, "
+    "<OUTPUT>=eclipse/model/MONTHLYSUMMARY)``"
 )
 
 

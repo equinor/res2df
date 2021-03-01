@@ -2,8 +2,10 @@
 
 import sys
 from pathlib import Path
+import datetime
 
 import pandas as pd
+import numpy as np
 
 from ecl2df import fipreports, ecl2csv
 from ecl2df.eclfiles import EclFiles
@@ -43,6 +45,153 @@ def test_mockprtfile():
     dframe = fipreports.df(MOCKPRTFILE, fipname="FIPOWG")
     assert dframe["FIPNAME"].unique() == "FIPOWG"
     assert len(dframe["DATE"].unique()) == 1
+
+
+def test_prtstring(tmpdir):
+    """Test a PRT from string, verifying every detail of the dataframe"""
+    prtstring = """
+  REPORT   0     1 JAN 2000
+                                                =================================
+                                                : FIPNUM  REPORT REGION    2    :
+                                                :     PAV =        139.76  BARSA:
+                                                :     PORV=     27777509.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :     21091398.                    21091398.:       4590182. :           -0.    483594842.     483594842.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :        76266.                       76266.:         75906. :            0.      1818879.       1818879.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :     21136892.                    21136892.:       4641214. :            0.    484657561.     484657561.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO REGION   1    :       143128.                      143128.:       -161400. :            0.      3017075.       3017075.:
+ :OUTFLOW TO REGION   3    :       -66862.                      -66862.:        198900. :           -0.     -1198195.      -1198195.:
+ :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.:
+ ====================================================================================================================================
+"""  # noqa
+    tmpdir.chdir()
+    Path("FOO.PRT").write_text(prtstring)
+    dframe = fipreports.df("FOO.PRT")
+    expected_dframe = pd.DataFrame(
+        [
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "CURRENTLY IN PLACE",
+                "TO_REGION": np.nan,
+                "STOIIP_OIL": 21091398.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 21091398.0,
+                "WIIP_TOTAL": 4590182.0,
+                "GIIP_GAS": -0.0,
+                "ASSOCIATEDGAS_OIL": 483594842.0,
+                "GIIP_TOTAL": 483594842.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "OUTFLOW TO OTHER REGIONS",
+                "TO_REGION": np.nan,
+                "STOIIP_OIL": 76266.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 76266.0,
+                "WIIP_TOTAL": 75906.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 1818879.0,
+                "GIIP_TOTAL": 1818879.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "OUTFLOW THROUGH WELLS",
+                "TO_REGION": np.nan,
+                "STOIIP_OIL": np.nan,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 0.0,
+                "WIIP_TOTAL": 0.0,
+                "GIIP_GAS": np.nan,
+                "ASSOCIATEDGAS_OIL": np.nan,
+                "GIIP_TOTAL": 0.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "MATERIAL BALANCE ERROR.",
+                "TO_REGION": np.nan,
+                "STOIIP_OIL": np.nan,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 0.0,
+                "WIIP_TOTAL": 0.0,
+                "GIIP_GAS": np.nan,
+                "ASSOCIATEDGAS_OIL": np.nan,
+                "GIIP_TOTAL": 0.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "ORIGINALLY IN PLACE",
+                "TO_REGION": np.nan,
+                "STOIIP_OIL": 21136892.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 21136892.0,
+                "WIIP_TOTAL": 4641214.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 484657561.0,
+                "GIIP_TOTAL": 484657561.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "OUTFLOW TO REGION",
+                "TO_REGION": 1.0,
+                "STOIIP_OIL": 143128.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 143128.0,
+                "WIIP_TOTAL": -161400.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 3017075.0,
+                "GIIP_TOTAL": 3017075.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "OUTFLOW TO REGION",
+                "TO_REGION": 3.0,
+                "STOIIP_OIL": -66862.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": -66862.0,
+                "WIIP_TOTAL": 198900.0,
+                "GIIP_GAS": -0.0,
+                "ASSOCIATEDGAS_OIL": -1198195.0,
+                "GIIP_TOTAL": -1198195.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 1),
+                "FIPNAME": "FIPNUM",
+                "REGION": 2,
+                "DATATYPE": "OUTFLOW TO REGION",
+                "TO_REGION": 8.0,
+                "STOIIP_OIL": 0.0,
+                "ASSOCIATEDOIL_GAS": None,
+                "STOIIP_TOTAL": 0.0,
+                "WIIP_TOTAL": 38405.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 0.0,
+                "GIIP_TOTAL": 0.0,
+            },
+        ]
+    )
+
+    pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
 def test_report_block_lineparser():

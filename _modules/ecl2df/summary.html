@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.summary &mdash; ecl2df 0.12.0 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.12.1.dev1+g78fa3e6 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1.dev1+g78fa3e6
               </div>
             
           
@@ -864,12 +864,14 @@
     <span class="n">outputdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
     <span class="n">eclbase</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="c1"># EclSum.fwrite can only write to current directory:</span>
+    <span class="c1"># EclSum.fwrite() can only write to current directory:</span>
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">outputdir</span><span class="p">)</span>
     <span class="n">eclsum</span> <span class="o">=</span> <span class="n">df2eclsum</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
-    <span class="n">EclSum</span><span class="o">.</span><span class="n">fwrite</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">outputdir</span><span class="p">)</span>
+        <span class="n">EclSum</span><span class="o">.</span><span class="n">fwrite</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Wrote to </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">+</span> <span class="s2">&quot;.UNSMRY&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="o">+</span> <span class="s2">&quot;.SMSPEC&quot;</span><span class="p">)</span></div>
 </pre></div>

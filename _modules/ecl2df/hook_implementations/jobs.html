@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.hook_implementations.jobs &mdash; ecl2df 0.12.1.dev1+g78fa3e6 documentation</title>
+  <title>ecl2df.hook_implementations.jobs &mdash; ecl2df 0.12.1.dev2+g3ff2153 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.1.dev1+g78fa3e6
+                0.12.1.dev2+g3ff2153
               </div>
             
           
@@ -165,7 +165,7 @@
             
   <h1>Source code for ecl2df.hook_implementations.jobs</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">resource_filename</span>
 
 <span class="kn">from</span> <span class="nn">ert_shared.plugins.plugin_manager</span> <span class="kn">import</span> <span class="n">hook_implementation</span>
@@ -173,14 +173,14 @@
 
 
 <span class="k">def</span> <span class="nf">_get_jobs_from_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-    <span class="n">resource_directory</span> <span class="o">=</span> <span class="n">resource_filename</span><span class="p">(</span><span class="s2">&quot;ecl2df&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+    <span class="n">resource_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">resource_filename</span><span class="p">(</span><span class="s2">&quot;ecl2df&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
 
     <span class="n">all_files</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">resource_directory</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">resource_directory</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">resource_directory</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+        <span class="n">resource_directory</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">resource_directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">resource_directory</span> <span class="o">/</span> <span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="p">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">):</span> <span class="n">path</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="installable_jobs"><a class="viewcode-back" href="../../../ecl2df.hook_implementations.html#ecl2df.hook_implementations.jobs.installable_jobs">[docs]</a><span class="nd">@hook_implementation</span>

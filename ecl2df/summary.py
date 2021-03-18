@@ -262,11 +262,19 @@ def df(
         column_keys = [column_keys]
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = resample_smry_dates(
-            eclfiles.get_eclsum().dates, "raw", False, start_date, end_date
+            eclfiles.get_eclsum(include_restart=include_restart).dates,
+            "raw",
+            False,
+            start_date,
+            end_date,
         )
     elif isinstance(time_index, str):
         time_index_arg = resample_smry_dates(
-            eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
+            eclfiles.get_eclsum(include_restart=include_restart).dates,
+            time_index,
+            True,
+            start_date,
+            end_date,
         )
     else:
         # Can be None.

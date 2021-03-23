@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.inferdims &mdash; ecl2df 0.12.1.dev3+g9aad2b4 documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df 0.12.1.dev4+g39559a4 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.1.dev3+g9aad2b4
+                0.12.1.dev4+g39559a4
               </div>
             
           
@@ -172,7 +172,11 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">import</span> <span class="nn">opm.io</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Let parts of ecl2df work without OPM:</span>
+    <span class="k">pass</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 

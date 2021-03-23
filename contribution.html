@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Contributing to ecl2df &mdash; ecl2df 0.12.1.dev3+g9aad2b4 documentation</title>
+  <title>Contributing to ecl2df &mdash; ecl2df 0.12.1.dev4+g39559a4 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.1.dev3+g9aad2b4
+                0.12.1.dev4+g39559a4
               </div>
             
           
@@ -101,6 +101,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to ecl2df</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#getting-started-as-a-developer">Getting started as a developer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#getting-started-on-equinor-linux-computers">Getting started on Equinor Linux computers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-ecl2df-without-opm">Using ecl2df without OPM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#development-workflow">Development workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#continuous-integration">Continuous integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-documentation">Writing documentation</a></li>
@@ -226,6 +227,15 @@ Komodo in order to prepare for the command:</p>
 </pre></div>
 </div>
 <p>NB: For every monthly Komodo release, you might have to remake your komodo-venv.</p>
+</div>
+<div class="section" id="using-ecl2df-without-opm">
+<h2>Using ecl2df without OPM<a class="headerlink" href="#using-ecl2df-without-opm" title="Permalink to this headline">¶</a></h2>
+<p>OPM is only pip-installable on Linux. To use the non-OPM dependent ecl2df
+modules on something else than Linux (but with libecl installed), you should
+install all the dependencies (except OPM) using <code class="docutils literal notranslate"><span class="pre">pip</span></code> (see <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> for
+list of dependencies), and then install ecl2df with the <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> option
+to <code class="docutils literal notranslate"><span class="pre">pip</span></code>. After this, the non-OPM dependent modules should work, and others will
+fail with import errors.</p>
 </div>
 <div class="section" id="development-workflow">
 <h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this headline">¶</a></h2>

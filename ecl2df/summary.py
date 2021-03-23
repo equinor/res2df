@@ -260,13 +260,31 @@ def df(
     """
     if not isinstance(column_keys, list):
         column_keys = [column_keys]
+
+    if isinstance(eclfiles, EclSum):
+        eclsum = eclfiles
+    else:
+        try:
+            eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+        except OSError:
+            logger.warning("Error reading summary instance, returning empty dataframe")
+            return pd.DataFrame()
+
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = resample_smry_dates(
-            eclfiles.get_eclsum().dates, "raw", False, start_date, end_date
+            eclsum.dates,
+            "raw",
+            False,
+            start_date,
+            end_date,
         )
     elif isinstance(time_index, str):
         time_index_arg = resample_smry_dates(
-            eclfiles.get_eclsum().dates, time_index, True, start_date, end_date
+            eclsum.dates,
+            time_index,
+            True,
+            start_date,
+            end_date,
         )
     else:
         # Can be None.
@@ -290,14 +308,6 @@ def df(
         column_keys_str,
         time_index_str or "raw",
     )
-    if isinstance(eclfiles, EclSum):
-        eclsum = eclfiles
-    else:
-        try:
-            eclsum = eclfiles.get_eclsum(include_restart=include_restart)
-        except OSError:
-            logger.warning("Error reading summary instance, returning empty dataframe")
-            return pd.DataFrame()
 
     if eclsum is None:
         # Warning is already logged by eclfiles.

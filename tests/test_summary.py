@@ -1,5 +1,3 @@
-"""Test module for nnc2df"""
-
 import os
 import sys
 import datetime
@@ -87,11 +85,6 @@ def test_df_column_keys():
 def test_summary2df_dates(caplog):
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
-
-    # Later, ecl2df.summary will always return a datetime index.
-    with pytest.warns(FutureWarning) as fut_warn:
-        summary.df(eclfiles, time_index="yearly")
-        assert "Use datetime=True as argument" in str(fut_warn[0].message)
 
     sumdf = summary.df(
         eclfiles,
@@ -233,6 +226,105 @@ def test_datenormalization():
         eclfiles, column_keys="FOPT", time_index="yearly", datetime=True
     )
     assert str(yearly.index[-1])[0:10] == "2004-01-01"
+
+
+def test_extrapolation():
+    """Summary data should be possible to extrapolate into
+    the future, rates should be zero, cumulatives should be constant"""
+    eclfiles = EclFiles(DATAFILE)
+    lastfopt = summary.df(
+        eclfiles, column_keys="FOPT", time_index="last", datetime=True
+    )["FOPT"].values[0]
+    answer = pd.DataFrame(
+        # This is the maximal date for datetime64[ns]
+        index=[np.datetime64("2262-04-11")],
+        columns=["FOPT", "FOPR"],
+        data=[[lastfopt, 0.0]],
+    ).rename_axis("DATE")
+
+    pd.testing.assert_frame_equal(
+        summary.df(
+            eclfiles,
+            column_keys=["FOPT", "FOPR"],
+            time_index="2262-04-11",
+            datetime=True,
+        ),
+        answer,
+    )
+    pd.testing.assert_frame_equal(
+        summary.df(
+            eclfiles,
+            column_keys=["FOPT", "FOPR"],
+            time_index=[datetime.date(2262, 4, 11)],
+            # NB: df() does not support datetime64 for time_index
+            datetime=True,
+        ),
+        answer,
+    )
+
+    # Pandas does not support DatetimeIndex beyound 2262:
+    with pytest.raises(pd.errors.OutOfBoundsDatetime):
+        summary.df(
+            eclfiles,
+            column_keys=["FOPT"],
+            time_index=[datetime.date(2300, 1, 1)],
+            datetime=True,
+        )
+
+    # But without datetime, we can get it extrapolated by libecl:
+    assert summary.df(
+        eclfiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
+    )["FOPT"].values == [lastfopt]
+
+
+def test_foreseeable_future(tmpdir):
+    """The foreseeable future in reservoir simulation is "defined" as 500 years.
+
+    Check that we support summary files with this timespan"""
+    tmpdir.chdir()
+    src_dframe = pd.DataFrame(
+        [
+            {"DATE": "2000-01-01", "FPR": 200},
+            {"DATE": "2500-01-01", "FPR": 180},
+        ]
+    )
+    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+
+    dframe = summary.df(eclsum)
+    assert (
+        dframe.index
+        == [
+            datetime.datetime(2000, 1, 1),
+            # This discrepancy is due to seconds as a 32-bit float
+            # having an accuracy limit (roundoff-error)
+            # https://github.com/equinor/ecl/issues/803
+            datetime.datetime(2499, 12, 31, 23, 55, 44),
+        ]
+    ).all()
+
+    # Try with one-year timesteps:
+    src_dframe = pd.DataFrame(
+        {
+            "DATE": pd.date_range("2000-01-01", "2069-01-01", freq="YS"),
+            "FPR": range(70),
+        }
+    )
+    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+    dframe = summary.df(eclsum)
+    # Still buggy:
+    assert dframe.index[-1] == datetime.datetime(2068, 12, 31, 23, 57, 52)
+
+    # Try with one-year timesteps, starting late:
+    src_dframe = pd.DataFrame(
+        {
+            "DATE": [datetime.date(2400 + year, 1, 1) for year in range(69)],
+            "FPR": range(69),
+        }
+    )
+    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+    dframe = summary.df(eclsum)
+    # Works fine when stepping only 68 years:
+    assert dframe.index[-1] == datetime.datetime(2468, 1, 1, 0, 0, 0)
 
 
 def test_resample_smry_dates():
@@ -414,9 +506,39 @@ def test_smry_meta_synthetic():
         (pd.DataFrame(), pd.DataFrame()),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
-            pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1}]),
+            pd.DataFrame([{"DATE": "2516-01-01", "FOPT": 1}]),
             pd.DataFrame(
-                [{"FOPT": 1}], index=[pd.to_datetime("2016-01-01")]
+                [{"FOPT": 1}], index=[datetime.datetime(2516, 1, 1)]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame([{"DATE": np.datetime64("2016-01-01"), "FOPT": 1}]),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[datetime.datetime(2016, 1, 1)]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [{"DATE": pd.Timestamp(datetime.date(2016, 1, 1)), "FOPT": 1}]
+            ),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[datetime.datetime(2016, 1, 1)]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "DATE": datetime.datetime(2016, 1, 1, 12, 34, 56),
+                        "FOPT": 1,
+                    }
+                ]
+            ),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[datetime.datetime(2016, 1, 1, 12, 34, 56)]
             ).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
@@ -428,9 +550,17 @@ def test_smry_meta_synthetic():
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
-            pd.DataFrame([{"DATE": datetime.date(2016, 1, 1), "FOPT": 1}]),
+            pd.DataFrame([{"DATE": datetime.date(2017, 1, 1), "FOPT": 1}]),
             pd.DataFrame(
-                [{"FOPT": 1}], index=[pd.to_datetime("2016-01-01")]
+                [{"FOPT": 1}], index=[datetime.datetime(2017, 1, 1)]
+            ).rename_axis("DATE"),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            # Dates that go beyond Pandas' datetime64[ns] limits:
+            pd.DataFrame([{"DATE": datetime.date(2517, 1, 1), "FOPT": 1}]),
+            pd.DataFrame(
+                [{"FOPT": 1}], index=[datetime.datetime(2517, 1, 1)]
             ).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
@@ -469,7 +599,7 @@ def test_smry_meta_synthetic():
 def test_fix_dframe_for_libecl(dframe, expected_dframe):
     """Test the dataframe preprocessor/validator for df2eclsum works"""
     pd.testing.assert_frame_equal(
-        _fix_dframe_for_libecl(dframe), expected_dframe, check_dtype=False
+        _fix_dframe_for_libecl(dframe), expected_dframe, check_index_type=False
     )
 
 
@@ -479,6 +609,7 @@ def test_fix_dframe_for_libecl(dframe, expected_dframe):
         (pd.DataFrame()),
         (pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1000}])),
         (pd.DataFrame([{"DATE": "2016-01-01", "FOPT": 1000, "FOPR": 100}])),
+        (pd.DataFrame([{"DATE": "3016-01-01", "FOPT": 1000}])),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             pd.DataFrame(
@@ -611,12 +742,12 @@ def test_df2eclsum_errors():
         df2eclsum(dframe, casename="FOOBAR.UNSMRY")  # .UNSMRY should not be included
 
     # No date included:
-    with pytest.raises(ValueError, match="dataframe must have a DatetimeIndex"):
+    with pytest.raises(ValueError, match="dataframe must have a datetime index"):
         df2eclsum(pd.DataFrame([{"FOPT": 1000}]))
 
 
 @pytest.mark.integration
-def test_csv2ecl_summary(tmpdir):
+def test_csv2ecl_summary(tmpdir, mocker):
     """Check that we can call df2eclsum through the csv2ecl command line
     utility"""
     dframe = pd.DataFrame(
@@ -627,13 +758,34 @@ def test_csv2ecl_summary(tmpdir):
     )
     tmpdir.chdir()
     dframe.to_csv("summary.csv")
-    sys.argv = [
-        "csv2ecl",
-        "summary",
-        "-v",
-        "summary.csv",
-        "SYNTHETIC",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv2ecl",
+            "summary",
+            "-v",
+            "summary.csv",
+            "--output",
+            "SYNTHETIC",
+        ],
+    )
     csv2ecl.main()
     assert Path("SYNTHETIC.UNSMRY").is_file()
     assert Path("SYNTHETIC.SMSPEC").is_file()
+
+    # Check that we can write to a subdirectory
+    Path("foo").mkdir()
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv2ecl",
+            "summary",
+            "-v",
+            "summary.csv",
+            "--output",
+            str(Path("foo") / Path("SYNTHETIC")),
+        ],
+    )
+    csv2ecl.main()
+    assert ("foo" / Path("SYNTHETIC.UNSMRY")).is_file()
+    assert ("foo" / Path("SYNTHETIC.SMSPEC")).is_file()

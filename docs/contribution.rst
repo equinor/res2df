@@ -73,6 +73,16 @@ Komodo in order to prepare for the command:
 
 NB: For every monthly Komodo release, you might have to remake your komodo-venv.
 
+Using ecl2df without OPM
+------------------------
+
+OPM is only pip-installable on Linux. To use the non-OPM dependent ecl2df
+modules on something else than Linux (but with libecl installed), you should
+install all the dependencies (except OPM) using ``pip`` (see ``setup.py`` for
+list of dependencies), and then install ecl2df with the ``--no-deps`` option
+to ``pip``. After this, the non-OPM dependent modules should work, and others will
+fail with import errors.
+
 Development workflow
 --------------------
 

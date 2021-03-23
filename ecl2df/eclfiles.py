@@ -1,6 +1,4 @@
-"""
-Module to hold Eclipse input and output filenames
-"""
+"""Module to hold Eclipse input and output filenames"""
 
 import os
 import errno
@@ -8,7 +6,12 @@ import logging
 import shlex
 from pathlib import Path
 
-import opm.io
+try:
+    import opm.io
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
@@ -16,19 +19,20 @@ from ecl.summary import EclSum
 
 logger = logging.getLogger(__name__)
 
-# Default parse option to opm.io for a very permissive parsing
-OPMIOPARSER_RECOVERY = [
-    ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
-    ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
-    ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
-    ("UNSUPPORTED_*", opm.io.action.ignore),
-    ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
-    ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
-    ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
-    ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
-    ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
-    ("PARSE_EXTRA_DATA", opm.io.action.ignore),
-]
+if HAVE_OPM:
+    # Default parse option to opm.io for a very permissive parsing
+    OPMIOPARSER_RECOVERY = [
+        ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
+        ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
+        ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
+        ("UNSUPPORTED_*", opm.io.action.ignore),
+        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+        ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
+        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
+        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
+        ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
+        ("PARSE_EXTRA_DATA", opm.io.action.ignore),
+    ]
 
 
 class EclFiles(object):

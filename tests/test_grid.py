@@ -293,7 +293,7 @@ def test_main(tmpdir):
     assert not disk_df.empty
     Path(tmpcsvfile).unlink()
 
-    # Do again with also restarts:
+    # Do again with also restarts and multiple vectors:
     sys.argv = [
         "ecl2csv",
         "grid",
@@ -304,11 +304,14 @@ def test_main(tmpdir):
         "2001-02-01",
         "--vectors",
         "PORO",
+        "PERMX",
     ]
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+    assert "PORO" in disk_df
+    assert "PERMX" in disk_df
     Path(tmpcsvfile).unlink()
 
     # Test with constants dropping

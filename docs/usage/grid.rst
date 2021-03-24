@@ -34,7 +34,11 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
 
 Select which vectors to include (INIT and/or restart vectors) with the
-``vectors`` argument.
+``vectors`` argument, as in the example:
+
+.. code-block:: console
+
+  ecl2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX
 
 Example computations on a grid dataframe
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -49,7 +53,7 @@ the topmost example):
    dframe["PORO"].mean()
 
    # Bulk volume in Gm3:
-   dframe["VOUME"].sum() / 1e9
+   dframe["VOLUME"].sum() / 1e9
 
    # Total pore volume:
    dframe["PORV"].sum()

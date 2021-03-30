@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>grid &mdash; ecl2df 0.12.1.dev7+gc437b27 documentation</title>
+  <title>grid &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.1.dev7+gc437b27
+                0.12.1.dev8+ge3a4954
               </div>
             
           
@@ -733,7 +733,10 @@ in a returned dataframe represents one cell.</p>
 </pre></div>
 </div>
 <p>Select which vectors to include (INIT and/or restart vectors) with the
-<code class="docutils literal notranslate"><span class="pre">vectors</span></code> argument.</p>
+<code class="docutils literal notranslate"><span class="pre">vectors</span></code> argument, as in the example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX</span>
+</pre></div>
+</div>
 <div class="section" id="example-computations-on-a-grid-dataframe">
 <h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this headline">¶</a></h2>
 <p>Some grid statistic operations are very neatly expressed using Python and
@@ -743,7 +746,7 @@ the topmost example):</p>
 <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
 <span class="c1"># Bulk volume in Gm3:</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOUME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
+<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
 
 <span class="c1"># Total pore volume:</span>
 <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>

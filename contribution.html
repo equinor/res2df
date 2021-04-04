@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Contributing to ecl2df &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -175,11 +176,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="contributing-to-ecl2df">
+  <section id="contributing-to-ecl2df">
 <h1>Contributing to ecl2df<a class="headerlink" href="#contributing-to-ecl2df" title="Permalink to this headline">¶</a></h1>
 <p>Contributing to ecl2df is easiest on Linux computers. Windows has not been
 tested, and for Mac you will have to compile OPM yourself.</p>
-<div class="section" id="getting-started-as-a-developer">
+<section id="getting-started-as-a-developer">
 <h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this headline">¶</a></h2>
 <p>The first thing to do, is to create a fork of ecl2df to your personal
 github account. Go to <a class="reference external" href="https://github.com/equinor/ecl2df">https://github.com/equinor/ecl2df</a> and click the Fork
@@ -213,8 +214,8 @@ repository, which you can do by running:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="getting-started-on-equinor-linux-computers">
+</section>
+<section id="getting-started-on-equinor-linux-computers">
 <h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this headline">¶</a></h2>
 <p>On Equinor Linux computers, is is recommended to run with the Komodo
 environment, which will provide an analogue to <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> for
@@ -227,8 +228,8 @@ Komodo in order to prepare for the command:</p>
 </pre></div>
 </div>
 <p>NB: For every monthly Komodo release, you might have to remake your komodo-venv.</p>
-</div>
-<div class="section" id="using-ecl2df-without-opm">
+</section>
+<section id="using-ecl2df-without-opm">
 <h2>Using ecl2df without OPM<a class="headerlink" href="#using-ecl2df-without-opm" title="Permalink to this headline">¶</a></h2>
 <p>OPM is only pip-installable on Linux. To use the non-OPM dependent ecl2df
 modules on something else than Linux (but with libecl installed), you should
@@ -236,8 +237,8 @@ install all the dependencies (except OPM) using <code class="docutils literal no
 list of dependencies), and then install ecl2df with the <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> option
 to <code class="docutils literal notranslate"><span class="pre">pip</span></code>. After this, the non-OPM dependent modules should work, and others will
 fail with import errors.</p>
-</div>
-<div class="section" id="development-workflow">
+</section>
+<section id="development-workflow">
 <h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this headline">¶</a></h2>
 <p>If you have a feature or bugfix, a typical procedure is to:</p>
 <ul class="simple">
@@ -263,8 +264,8 @@ as other pull requests are being merged.</p></li>
 <li><p>When your PR is ready for merge, it should usually be “squashed” into a single
 commit that is rebased on top of the current master.</p></li>
 </ul>
-</div>
-<div class="section" id="continuous-integration">
+</section>
+<section id="continuous-integration">
 <h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline">¶</a></h2>
 <p>A pull request that has been pushed to Github will be subject to automatic
 testing, for code style, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and for documentation validity. If your code
@@ -276,8 +277,8 @@ they fail, you will have to fix before pushing your branch.</p>
 the tool <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>  to your cloned copy in order to force certain checks to be
 in place before a commit is accepted. Issue the command <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code>
 in your copy to get started with this.</p>
-</div>
-<div class="section" id="writing-documentation">
+</section>
+<section id="writing-documentation">
 <h2>Writing documentation<a class="headerlink" href="#writing-documentation" title="Permalink to this headline">¶</a></h2>
 <p>Write good docstrings for each function, and use Google style for arguments.
 See <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html</a>
@@ -292,8 +293,8 @@ to build HTML documentation:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">firefox build/sphinx/html/index.html &amp;</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

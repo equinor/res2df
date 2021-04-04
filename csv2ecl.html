@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>csv2ecl &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -193,7 +194,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="csv2ecl">
+  <section id="csv2ecl">
 <h1>csv2ecl<a class="headerlink" href="#csv2ecl" title="Permalink to this headline">¶</a></h1>
 <p>Some of the modules inside ecl2df is able to write Eclipse include files
 from dataframes (in the format dumped by ecl2df). This makes it possible
@@ -214,31 +215,31 @@ will be dumped to output file.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv2ecl</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="p">{</span><span class="n">summary</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">satfunc</span><span class="p">}</span> <span class="o">...</span>
 </pre></div>
 </div>
-<div class="section" id="Named Arguments">
+<section id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Sub-commands:">
+</section>
+<section id="Sub-commands:">
 <h2>Sub-commands:<a class="headerlink" href="#Sub-commands:" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="summary">
+<section id="summary">
 <h3>summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
 <p>Write Eclipse UNSMRY files from CSV files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments">
+<section id="Positional Arguments">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with summary data.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments_repeat1">
+</section>
+<section id="Named Arguments_repeat1">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -254,27 +255,27 @@ will be dumped to output file.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="equil">
+</section>
+</section>
+<section id="equil">
 <h3>equil<a class="headerlink" href="#equil" title="Permalink to this headline">¶</a></h3>
 <p>Write SOLUTION keywords (EQUIL, RSVD, RVVD) to Eclipse include files from CSV in ecl2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat1">
+<section id="Positional Arguments_repeat1">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with EQUIL, RSVD++ data on ecl2df format</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments_repeat2">
+</section>
+<section id="Named Arguments_repeat2">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output Eclipse include file file, default solution.inc. Use ‘-‘ for stdout.</p>
+<dd><p>Name of output Eclipse include file file, default solution.inc. Use ‘-’ for stdout.</p>
 <p>Default: “solution.inc”</p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
@@ -285,27 +286,27 @@ will be dumped to output file.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="pvt">
+</section>
+</section>
+<section id="pvt">
 <h3>pvt<a class="headerlink" href="#pvt" title="Permalink to this headline">¶</a></h3>
 <p>Write Eclipse include files from CSV files on the ecl2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">pvt</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat2">
+<section id="Positional Arguments_repeat2">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with PVT data on ecl2df format</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments_repeat3">
+</section>
+<section id="Named Arguments_repeat3">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat3" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output Eclipse include file file, default pvt.inc. Use ‘-‘ for stdout.</p>
+<dd><p>Name of output Eclipse include file file, default pvt.inc. Use ‘-’ for stdout.</p>
 <p>Default: “pvt.inc”</p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
@@ -316,27 +317,27 @@ will be dumped to output file.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="satfunc">
+</section>
+</section>
+<section id="satfunc">
 <h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
 <p>Write saturation function include files from CSV files on the ecl2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments_repeat3">
+<section id="Positional Arguments_repeat3">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat3" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with SWOF, SGOF++ data on ecl2df format</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments_repeat4">
+</section>
+<section id="Named Arguments_repeat4">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output Eclipse include file file, default relperm.inc. Use ‘-‘ for stdout.</p>
+<dd><p>Name of output Eclipse include file file, default relperm.inc. Use ‘-’ for stdout.</p>
 <p>Default: “relperm.inc”</p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
@@ -347,10 +348,10 @@ will be dumped to output file.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>

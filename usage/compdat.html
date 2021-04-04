@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>compdat &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -187,7 +188,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compdat">
+  <section id="compdat">
 <h1>compdat<a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h1>
 <p>This module extracts COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck.</p>
 <p>Additionally, it will parse WELOPEN statements and emit new COMPDAT
@@ -515,7 +516,7 @@ statements from the actions in WELOPEN.</p>
 <p>If you need access to WELSEGS, COMPSEGS, WSEGSICD, WSEGAICD or WSEGVALV, you
 must use the <code class="docutils literal notranslate"><span class="pre">deck2dfs()</span></code> function which will return a dict with dataframes
 for each of COMPDAT, and the segmentation keywords.</p>
-<div class="section" id="adding-init-data">
+<section id="adding-init-data">
 <h2>Adding INIT data<a class="headerlink" href="#adding-init-data" title="Permalink to this headline">¶</a></h2>
 <p>Additional information from the grid for each connection (based on i, j, k) can
 be added to the returned data through the option <code class="docutils literal notranslate"><span class="pre">--initvectors</span></code>:</p>
@@ -523,8 +524,8 @@ be added to the returned data through the option <code class="docutils literal n
 <span class="gp"># </span><span class="o">(</span>put the DATA file first, <span class="k">if</span> not it will be interpreted as a vector<span class="o">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

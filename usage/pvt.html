@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>pvt &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -188,7 +189,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pvt">
+  <section id="pvt">
 <h1>pvt<a class="headerlink" href="#pvt" title="Permalink to this headline">¶</a></h1>
 <p>Extracts PVT related keyword data from the PROPS section in an Eclipse deck,
 typically the keywords <code class="docutils literal notranslate"><span class="pre">PVTO</span></code>, <code class="docutils literal notranslate"><span class="pre">PVDG</span></code>, <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> and <code class="docutils literal notranslate"><span class="pre">ROCK</span></code>. Data from
@@ -426,7 +427,7 @@ the entire deck, you have to merge the dataframes in Python like this:</p>
 <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pvto</span><span class="p">,</span> <span class="n">density</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="transforming-pvt-data">
+<section id="transforming-pvt-data">
 <h2>Transforming PVT data<a class="headerlink" href="#transforming-pvt-data" title="Permalink to this headline">¶</a></h2>
 <p>Care should be taken when perturbing PVT data, as a lot
 of the data values depend on each other for physical consistency.</p>
@@ -445,8 +446,8 @@ some scalar amount:</p>
 </div>
 <p>(there are many ways of doing operation on specific PVTNUMs in Pandas, pick your favourite).</p>
 <p>Density values are easier to scale up or down to whatever is needed.</p>
-</div>
-<div class="section" id="re-exporting-tables-to-eclipse-include-files">
+</section>
+<section id="re-exporting-tables-to-eclipse-include-files">
 <h2>Re-exporting tables to Eclipse include files<a class="headerlink" href="#re-exporting-tables-to-eclipse-include-files" title="Permalink to this headline">¶</a></h2>
 <p>When you are done with the table, you can generate new include files for
 Eclipse from your modified data by issuing</p>
@@ -459,8 +460,8 @@ check which keywords have been written out, compared to what you gave in to
 and need to be catered for outside ecl2df.</p>
 <p>The last step can also be done using the <code class="docutils literal notranslate"><span class="pre">csv2ecl</span></code> command line utility
 if you dump to CSV from your Python code instead.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

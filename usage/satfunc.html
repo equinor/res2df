@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>satfunc &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -189,7 +190,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="satfunc">
+  <section id="satfunc">
 <h1>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h1>
 <p>satfunc will extract saturation functions from Eclipse decks or from Eclipse
 include files, these are the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGWFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SWFN</span></code>,
@@ -406,7 +407,7 @@ column.</p>
 line option.</p>
 <p>Instead of Eclipse data decks, individual include files may also be parsed, but
 only one at a time.</p>
-<div class="section" id="generating-eclipse-include-files-from-dataframes">
+<section id="generating-eclipse-include-files-from-dataframes">
 <h2>Generating Eclipse include files from dataframes<a class="headerlink" href="#generating-eclipse-include-files-from-dataframes" title="Permalink to this headline">¶</a></h2>
 <p>When a dataframe of saturation function data is loaded into Python, any operation
 may be applied on the data. Simple operations would typically be scaling, perhaps
@@ -431,8 +432,8 @@ include file can be generated either with the Python API
 above will only pick the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code> and <code class="docutils literal notranslate"><span class="pre">SGOF</span></code> (in the case there are
 data for more keywords in the dataframe).</p>
 <p>There are no automated checks for validity of the dumped include files.</p>
-</div>
-<div class="section" id="extracting-properties-pr-satnum">
+</section>
+<section id="extracting-properties-pr-satnum">
 <h2>Extracting properties pr. SATNUM<a class="headerlink" href="#extracting-properties-pr-satnum" title="Permalink to this headline">¶</a></h2>
 <p>If you have an include file prepared (from any source), you might need to
 determine certain properties like endpoint. If you need to determine for
@@ -462,8 +463,8 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
 <span class="go">dtype: float64</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="the-pyscal-library">
+</section>
+<section id="the-pyscal-library">
 <h2>The pyscal library<a class="headerlink" href="#the-pyscal-library" title="Permalink to this headline">¶</a></h2>
 <p>Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
@@ -475,8 +476,8 @@ though the parsing capabilities of ecl2df.satfunc.</p>
 <p>The function <code class="docutils literal notranslate"><span class="pre">pyscal.pyscallist.df()</span></code> is analogous to <code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc.df()</span></code> in
 what it produces, and the <a class="reference internal" href="../ecl2df.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> can be used on both
 (potentially with some filtering needed.).</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

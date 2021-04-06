@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>pillars &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -191,11 +190,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="pillars">
+  <div class="section" id="pillars">
 <span id="usage-pillars"></span><h1>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h1>
 <p>pillars is a module to compute data on “pillars” in the grid from an
 Eclipse simulation, including both static and dynamic data from the grid.</p>
-<section id="static-data">
+<div class="section" id="static-data">
 <h2>Static data<a class="headerlink" href="#static-data" title="Permalink to this headline">¶</a></h2>
 <p>Typical usage is to obtain property statistics, and compute contacts pr.
 pillar (and optionally pr some region parameter).</p>
@@ -290,8 +289,8 @@ belonging to a particular pillar.</p>
 <p>If you provide a region parameter (like <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>), the value for the region
 will be added in an extra column called <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>. Each pillar will then be
 repeated for each region value where it exists.</p>
-</section>
-<section id="dynamic-data-volumes-and-fluid-contacts">
+</div>
+<div class="section" id="dynamic-data-volumes-and-fluid-contacts">
 <h2>Dynamic data, volumes and fluid contacts<a class="headerlink" href="#dynamic-data-volumes-and-fluid-contacts" title="Permalink to this headline">¶</a></h2>
 <p>The API <a class="reference internal" href="../ecl2df.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a> and command line client allows specifying
 dates if dynamic data should be included through the <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> option to the
@@ -324,16 +323,16 @@ you should add a constance distance to all computed contacts. Beware that shale
 cells with little oil, but in the oil zone necessarily will affect the
 computation (sometimes that explains the need for calibration to initial
 contacts).</p>
-</section>
-<section id="grouping-data">
+</div>
+<div class="section" id="grouping-data">
 <h2>Grouping data<a class="headerlink" href="#grouping-data" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to aggregate data over all pillars after computation. Activate
 using <code class="docutils literal notranslate"><span class="pre">--group</span></code> to the command line client, and add optionally a <code class="docutils literal notranslate"><span class="pre">--region</span></code>
 parameter to group over a particular region, typically <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>.</p>
 <p>The Python API will group over any data that is supplied via the <code class="docutils literal notranslate"><span class="pre">region</span></code>
 option, check <a class="reference internal" href="../ecl2df.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a></p>
-</section>
-<section id="stacked-version">
+</div>
+<div class="section" id="stacked-version">
 <h2>Stacked version<a class="headerlink" href="#stacked-version" title="Permalink to this headline">¶</a></h2>
 <p>By default, dynamic data are added as a set of columns for every date, like in
 this example:</p>
@@ -657,8 +656,8 @@ obtained by triggering the stacking option in <a class="reference internal" href
 </tr>
 </tbody>
 </table>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

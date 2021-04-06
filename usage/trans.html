@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>trans &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -190,7 +189,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="trans">
+  <div class="section" id="trans">
 <h1>trans<a class="headerlink" href="#trans" title="Permalink to this headline">¶</a></h1>
 <p>The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
 from a simulation grid.</p>
@@ -300,7 +299,7 @@ command line:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv trans MYDATADECK.DATA --verbose --output trans.csv</span>
 </pre></div>
 </div>
-<section id="adding-more-data-for-each-connection">
+<div class="section" id="adding-more-data-for-each-connection">
 <h2>Adding more data for each connection<a class="headerlink" href="#adding-more-data-for-each-connection" title="Permalink to this headline">¶</a></h2>
 <p>You can add <code class="docutils literal notranslate"><span class="pre">coords=True</span></code> to the <code class="docutils literal notranslate"><span class="pre">df()</span></code> call, which will add the columns <code class="docutils literal notranslate"><span class="pre">X</span></code>,
 <code class="docutils literal notranslate"><span class="pre">Y</span></code>, <code class="docutils literal notranslate"><span class="pre">Z</span></code> (which will be the average of the coordinates for the two cell
@@ -315,8 +314,8 @@ see below.</p>
 <p>Non-neighbour connections can be added the dataframe by supplying the option
 <code class="docutils literal notranslate"><span class="pre">addnnc=True</span></code>. These connections will have the string <code class="docutils literal notranslate"><span class="pre">NNC</span></code> in the <code class="docutils literal notranslate"><span class="pre">DIR</span></code>
 column.</p>
-</section>
-<section id="filtering-connections">
+</div>
+<div class="section" id="filtering-connections">
 <h2>Filtering connections<a class="headerlink" href="#filtering-connections" title="Permalink to this headline">¶</a></h2>
 <p>The API supports some filtering directly in the <code class="docutils literal notranslate"><span class="pre">df()</span></code> function call for
 convenience.</p>
@@ -478,8 +477,8 @@ like this. Example:</p>
 </table>
 <p>If you also append coordinates to this dataframe, it would be possible to visualize
 all your region connections in 3D, coloured by transmissibility.</p>
-</section>
-<section id="aggregating-connection-data-over-region-interfaces">
+</div>
+<div class="section" id="aggregating-connection-data-over-region-interfaces">
 <h2>Aggregating connection data over region interfaces<a class="headerlink" href="#aggregating-connection-data-over-region-interfaces" title="Permalink to this headline">¶</a></h2>
 <p>The example above with filtering to wherever for example <code class="docutils literal notranslate"><span class="pre">FIPNUM</span></code> is changing,
 naturally leads over to an application where transmissibility data is aggregated
@@ -579,8 +578,8 @@ over a region interface. This is accomplished by adding the <code class="docutil
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

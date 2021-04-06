@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>grid &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -191,7 +190,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="grid">
+  <div class="section" id="grid">
 <h1>grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h1>
 <p>The grid module will extract static and dynamic cell properties from
 an Eclipse grid (from the binary output files from Eclipse). Each row
@@ -738,7 +737,7 @@ in a returned dataframe represents one cell.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX</span>
 </pre></div>
 </div>
-<section id="example-computations-on-a-grid-dataframe">
+<div class="section" id="example-computations-on-a-grid-dataframe">
 <h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this headline">¶</a></h2>
 <p>Some grid statistic operations are very neatly expressed using Python and
 Pandas. Some examples (provided that the <code class="docutils literal notranslate"><span class="pre">drame</span></code> object is initialized as in
@@ -772,8 +771,8 @@ compute values for every SATNUM, EQLNUM or similar. Example:</p>
 <span class="n">Name</span><span class="p">:</span> <span class="n">Z</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
 </pre></div>
 </div>
-</section>
-<section id="zone-information">
+</div>
+<div class="section" id="zone-information">
 <h2>Zone information<a class="headerlink" href="#zone-information" title="Permalink to this headline">¶</a></h2>
 <p>As mentioned in <a class="reference internal" href="../introduction.html#zone-names"><span class="std std-ref">Zone names</span></a>, if the text file called <cite>zones.lyr</cite> is found
 alongside, zone information will automatically be merged into each row based on the <cite>K</cite>
@@ -804,8 +803,8 @@ the whereabouts of the file:</p>
 <p>For more control over merging of zones, check the documentation for
 the function <a class="reference internal" href="../ecl2df.html#ecl2df.common.merge_zones" title="ecl2df.common.merge_zones"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.common.merge_zones()</span></code></a> and
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">ecl2df.EclFiles.get_zonemap()</span></code></p>
-</section>
-<section id="dynamic-data">
+</div>
+<div class="section" id="dynamic-data">
 <h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this headline">¶</a></h2>
 <p>By adding a restart date, dynamic data for one particular restart date can be
 added, through the API option <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> or the command line option
@@ -817,8 +816,8 @@ controlled via the <code class="docutils literal notranslate"><span class="pre">
 <p>See also the <a class="reference internal" href="pillars.html#usage-pillars"><span class="std std-ref">pillars</span></a> module for an application of the grid data.
 Calculating volumes of dynamic data (pr. some region parameter) can be obtained
 from that module as a by-product of the pillar computations.</p>
-</section>
-<section id="generating-eclipse-include-files-from-grid-data">
+</div>
+<div class="section" id="generating-eclipse-include-files-from-grid-data">
 <h2>Generating Eclipse include files from grid data<a class="headerlink" href="#generating-eclipse-include-files-from-grid-data" title="Permalink to this headline">¶</a></h2>
 <p>If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
@@ -856,8 +855,8 @@ it to FIPNUM 5. This can be accomplished using</p>
 </div>
 <p>It is recommended to supply the <code class="docutils literal notranslate"><span class="pre">eclfiles</span></code> object to <code class="docutils literal notranslate"><span class="pre">df2ecl</span></code>, if not, correct grid
 size can not be ensured.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

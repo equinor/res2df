@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>rft &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -192,7 +191,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="rft">
+  <div class="section" id="rft">
 <h1>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h1>
 <p>rft will convert the binary RFT files from Eclipse to dataframes or CSV files,
 facilitating analysis of inflow and pressure for each connection the well
@@ -205,7 +204,7 @@ has to the reservoir grid.</p>
 through <code class="docutils literal notranslate"><span class="pre">--debug</span></code>, more information is printed, including an ASCII representation
 of each wells topology, and also three extra CSV files printed for the last
 processed well.</p>
-<section id="eclipse-usage">
+<div class="section" id="eclipse-usage">
 <h2>Eclipse usage<a class="headerlink" href="#eclipse-usage" title="Permalink to this headline">¶</a></h2>
 <p>In order to get RFT files emitted from Eclipse, you need the <code class="docutils literal notranslate"><span class="pre">WRFTPLT</span></code> keyword
 in your DATA-file, example:</p>
@@ -221,8 +220,8 @@ in your DATA-file, example:</p>
 </div>
 <p>into your events files to obtain the same (input a date in your
 specified date format).</p>
-</section>
-<section id="segment-and-icd-analysis">
+</div>
+<div class="section" id="segment-and-icd-analysis">
 <h2>Segment and ICD analysis<a class="headerlink" href="#segment-and-icd-analysis" title="Permalink to this headline">¶</a></h2>
 <p>For multisegment wells, reservoir connections (<code class="docutils literal notranslate"><span class="pre">CONxxxxx</span></code> data) are matched
 to their corresponding well segment (<code class="docutils literal notranslate"><span class="pre">SEGxxxxx</span></code> data) and the matched data is
@@ -232,15 +231,15 @@ branch), these data are tagged with an <code class="docutils literal notranslate
 columns, and also matched to the row with the connection and segment data.
 This facilitates analysis of f.ex. pressure drop from the reservoir, in the ICD,
 and in the tubing.</p>
-</section>
-<section id="limitations">
+</div>
+<div class="section" id="limitations">
 <h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
 <p>Each segment must correspond to no more than one reservoir connection. This is the
 recommended way to model multisegment wells.</p>
 <p>Segments not related to a reservoir connection are not included in the outputted
 CSV file.</p>
-</section>
-<section id="analysis-examples">
+</div>
+<div class="section" id="analysis-examples">
 <h2>Analysis examples<a class="headerlink" href="#analysis-examples" title="Permalink to this headline">¶</a></h2>
 <p>Example illustrating inflow analysis of a two-branch well in a visual tool for
 tabular data. From the data in the emitted CSV, branch lengths can be computed,
@@ -253,8 +252,8 @@ to a producer for the blowdown period (date indicated by colour). Gas inflow/out
 plotted versus grid <code class="docutils literal notranslate"><span class="pre">k</span></code>-index. This if for a non-multisegment well, and
 no segment data is available.</p>
 <a class="reference internal image-reference" href="../_images/injectoranalysis.png"><img alt="../_images/injectoranalysis.png" src="../_images/injectoranalysis.png" style="width: 200px;" /></a>
-</section>
-<section id="column-names">
+</div>
+<div class="section" id="column-names">
 <h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Column names and explanations</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
@@ -449,8 +448,8 @@ to represent ICD segments. The corresponding <code class="docutils literal notra
 will be joined to the segment they are connected to, and have their <code class="docutils literal notranslate"><span class="pre">SEG*</span></code> data
 renamed to <code class="docutils literal notranslate"><span class="pre">ICD*</span></code>. For understanding your <code class="docutils literal notranslate"><span class="pre">ICD*</span></code> data, look at the description of
 the analogue <code class="docutils literal notranslate"><span class="pre">SEG*</span></code> data above.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

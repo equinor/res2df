@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>ecl2csv &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
@@ -244,7 +243,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="ecl2csv">
+  <div class="section" id="ecl2csv">
 <h1>ecl2csv<a class="headerlink" href="#ecl2csv" title="Permalink to this headline">¶</a></h1>
 <p>Most of the functionality in ecl2df is exposed to the command line through
 the script <em>ecl2csv</em>. The first argument to this script is always
@@ -259,17 +258,17 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
                <span class="o">...</span>
 </pre></div>
 </div>
-<section id="Named Arguments">
+<div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
-</section>
-<section id="Sub-commands:">
+</div>
+<div class="section" id="Sub-commands:">
 <h2>Sub-commands:<a class="headerlink" href="#Sub-commands:" title="Permalink to this headline">¶</a></h2>
-<section id="grid">
+<div class="section" id="grid">
 <h3>grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h3>
 <p>Each cell is represented by one row of data. The coordinates are in the X, Y, and Z columns and represent the grid centre. Volume pr. cell is added and all INIT and UNRST data can be added to the rows</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">grid</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vectors</span> <span class="n">VECTORS</span> <span class="p">[</span><span class="n">VECTORS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">rstdates</span> <span class="n">RSTDATES</span><span class="p">]</span>
@@ -277,15 +276,15 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
              <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
+<div class="section" id="Positional Arguments">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat1">
+</div>
+<div class="section" id="Named Arguments_repeat1">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--vectors</kbd></dt>
@@ -297,7 +296,7 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: “”</p>
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output csv file. Use ‘-’ for stdout.</p>
+<dd><p>Name of output csv file. Use ‘-‘ for stdout.</p>
 <p>Default: “eclgrid.csv”</p>
 </dd>
 <dt><kbd>--stackdates</kbd></dt>
@@ -313,9 +312,9 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="summary">
+</div>
+</div>
+<div class="section" id="summary">
 <h3>summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
 <p>This is the time-dependent data for field production data, well profiles etc. Each row contains data for one point in time</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">time_index</span> <span class="n">TIME_INDEX</span><span class="p">]</span>
@@ -325,15 +324,15 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
                 <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat1">
+<div class="section" id="Positional Arguments_repeat1">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat1" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file. UNSMRY file must lie alongside.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat2">
+</div>
+<div class="section" id="Named Arguments_repeat2">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--time_index</kbd></dt>
@@ -359,7 +358,7 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <dd><p>Filename of key-value parameter file to look for if -p is set, relative to Eclipse DATA file or an absolute filename If not supplied, parameters.{json,yml,txt} in {., .. and ../..} will be merged in.</p>
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output csv file. Use ‘-’ to write to stdout. Default ‘summary.csv’</p>
+<dd><p>Name of output csv file. Use ‘-‘ to write to stdout. Default ‘summary.csv’</p>
 <p>Default: “summary.csv”</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
@@ -367,23 +366,23 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="nnc">
+</div>
+</div>
+<div class="section" id="nnc">
 <h3>nnc<a class="headerlink" href="#nnc" title="Permalink to this headline">¶</a></h3>
 <p>Extract NNC (Non-Neighbour Connection) data from the EGRID file. Each row is one connection, with the columns I1, J1, K1 for the first cell in the cell pair, and I2, J2, K2 for the second. The transmissibility for the cell pair is in the TRAN column. See also the trans subcommand.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">nnc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat2">
+<div class="section" id="Positional Arguments_repeat2">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat2" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat3">
+</div>
+<div class="section" id="Named Arguments_repeat3">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat3" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-c, --coords</kbd></dt>
@@ -403,23 +402,23 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="faults">
+</div>
+</div>
+<div class="section" id="faults">
 <h3>faults<a class="headerlink" href="#faults" title="Permalink to this headline">¶</a></h3>
 <p>Each row represents a particular cell and a face and the name of the fault</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">faults</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat3">
+<div class="section" id="Positional Arguments_repeat3">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat3" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat4">
+</div>
+<div class="section" id="Named Arguments_repeat4">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -431,9 +430,9 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="trans">
+</div>
+</div>
+<div class="section" id="trans">
 <h3>trans<a class="headerlink" href="#trans" title="Permalink to this headline">¶</a></h3>
 <p>Extract transmissibilities (TRANX, TRANY, TRANZ) from Eclipse binary output files. Each row represent a connection between a cell pair (I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 and FIPNUM2, and it is possible to filter to connections where f.ex FIPNUM change</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">trans</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vectors</span> <span class="n">VECTORS</span> <span class="p">[</span><span class="n">VECTORS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">boundaryfilter</span><span class="p">]</span>
@@ -442,15 +441,15 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
               <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat4">
+<div class="section" id="Positional Arguments_repeat4">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat4" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat5">
+</div>
+<div class="section" id="Named Arguments_repeat5">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--vectors</kbd></dt>
@@ -485,13 +484,13 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output csv file. Use ‘-’ for stdout</p>
+<dd><p>Name of output csv file. Use ‘-‘ for stdout</p>
 <p>Default: “trans.csv”</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="pillars">
+</div>
+</div>
+<div class="section" id="pillars">
 <h3>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline">¶</a></h3>
 <p>Compute statistics pr. pillar in a cornerpoint grid, or alternatively by region parameter. Volumetrics, in-place, and contacts.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">pillars</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">region</span> <span class="n">REGION</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">rstdates</span> <span class="n">RSTDATES</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">stackdates</span><span class="p">]</span>
@@ -500,15 +499,15 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
                 <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat5">
+<div class="section" id="Positional Arguments_repeat5">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat5" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file. INIT and EGRID file must lie alongside.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat6">
+</div>
+<div class="section" id="Named Arguments_repeat6">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--region</kbd></dt>
@@ -548,27 +547,27 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="pvt">
+</div>
+</div>
+<div class="section" id="pvt">
 <h3>pvt<a class="headerlink" href="#pvt" title="Permalink to this headline">¶</a></h3>
 <p>Extract data for the PVT keywords in an Eclipse deck and merge all data into a single dataframe. Supported keywords are PVTO, PVDO, PVTG, PVDG, PVTW, ROCK and DENSITY. Gas phase pressure and oil phase pressure are both called PRESSURE in the resulting dataframe, similar for volume factors and viscosity. Deduce meaning for column names from the Eclipse manual. The column KEYWORD denotes which PVT keyword a particular data row stems from.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">pvt</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat6">
+<div class="section" id="Positional Arguments_repeat6">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat6" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or file with PVT keywords.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat7">
+</div>
+<div class="section" id="Named Arguments_repeat7">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output csv file, default pvt.csv. Use ‘-’ for stdout.</p>
+<dd><p>Name of output csv file, default pvt.csv. Use ‘-‘ for stdout.</p>
 <p>Default: “pvt.csv”</p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
@@ -579,9 +578,9 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="rft">
+</div>
+</div>
+<div class="section" id="rft">
 <h3>rft<a class="headerlink" href="#rft" title="Permalink to this headline">¶</a></h3>
 <p>Extract RFT data from Eclipse binary output files to CSV. Each row in the resulting table represents one point in a particular well at a particular time. If multisegment wells are found, associated data to a connection is merged onto the same row as additional columns. You need the Eclipse keyword WRFTPLT present in your DATA-file to get the data outputted.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">rft</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">wellname</span> <span class="n">WELLNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">date</span> <span class="n">DATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
@@ -589,15 +588,15 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
             <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat7">
+<div class="section" id="Positional Arguments_repeat7">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat7" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or RFT file. If DATA file is provided, it will look for the associated DATA file</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat8">
+</div>
+<div class="section" id="Named Arguments_repeat8">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--wellname</kbd></dt>
@@ -619,23 +618,23 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="fipreports">
+</div>
+</div>
+<div class="section" id="fipreports">
 <h3>fipreports<a class="headerlink" href="#fipreports" title="Permalink to this headline">¶</a></h3>
 <p>Extract FIPxxxxx REPORT REGION data from PRT file. This parses currently in-place, outflows to wells and regions, and material balance errors</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">fipreports</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">fipname</span> <span class="n">FIPNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="n">PRTFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat8">
+<div class="section" id="Positional Arguments_repeat8">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat8" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>PRTFILE</kbd></dt>
 <dd><p>Eclipse PRT file (or DATA file)</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat9">
+</div>
+<div class="section" id="Named Arguments_repeat9">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>--fipname</kbd></dt>
@@ -655,23 +654,23 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="satfunc">
+</div>
+</div>
+<div class="section" id="satfunc">
 <h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline">¶</a></h3>
 <p>Data for all saturation functions are merged into one dataframe for all SATNUMs. Each row has data for a saturation point. For SWOF data, all columns related to SGOF are empty and vice versa</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat9">
+<div class="section" id="Positional Arguments_repeat9">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat9" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or file with saturation functions.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat10">
+</div>
+<div class="section" id="Named Arguments_repeat10">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -686,9 +685,9 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="compdat">
+</div>
+</div>
+<div class="section" id="compdat">
 <h3>compdat<a class="headerlink" href="#compdat" title="Permalink to this headline">¶</a></h3>
 <p>Each row represents a cell connection to a well. Only COMPDAT data is exposed in CSV output currently.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">compdat</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">initvectors</span> <span class="n">INITVECTORS</span> <span class="p">[</span><span class="n">INITVECTORS</span> <span class="o">...</span><span class="p">]]</span>
@@ -696,15 +695,15 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
                 <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat10">
+<div class="section" id="Positional Arguments_repeat10">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat10" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat11">
+</div>
+<div class="section" id="Named Arguments_repeat11">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -719,27 +718,27 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="equil">
+</div>
+</div>
+<div class="section" id="equil">
 <h3>equil<a class="headerlink" href="#equil" title="Permalink to this headline">¶</a></h3>
 <p>Each row contains the equilibriation data for one EQLNUM.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat11">
+<div class="section" id="Positional Arguments_repeat11">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat11" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat12">
+</div>
+<div class="section" id="Named Arguments_repeat12">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat12" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output csv file. Use ‘-’ for stdout.</p>
+<dd><p>Name of output csv file. Use ‘-‘ for stdout.</p>
 <p>Default: “equil.csv”</p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
@@ -750,23 +749,23 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="gruptree">
+</div>
+</div>
+<div class="section" id="gruptree">
 <h3>gruptree<a class="headerlink" href="#gruptree" title="Permalink to this headline">¶</a></h3>
 <p>Each row represents an edge in the GRUPTREE at a specific date.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">gruptree</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">startdate</span> <span class="n">STARTDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat12">
+<div class="section" id="Positional Arguments_repeat12">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat12" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat13">
+</div>
+<div class="section" id="Named Arguments_repeat13">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat13" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -785,23 +784,23 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-<section id="wcon">
+</div>
+</div>
+<div class="section" id="wcon">
 <h3>wcon<a class="headerlink" href="#wcon" title="Permalink to this headline">¶</a></h3>
 <p>Each row represents the control data for a certain well or well wildcard at a specific date</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wcon</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat13">
+<div class="section" id="Positional Arguments_repeat13">
 <h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat13" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or Eclipse include file.</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments_repeat14">
+</div>
+<div class="section" id="Named Arguments_repeat14">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat14" title="Permalink to this headline">¶</a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -813,10 +812,10 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
+</div>
 
 
            </div>

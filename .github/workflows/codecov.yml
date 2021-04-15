@@ -34,4 +34,5 @@ jobs:
 
     - name: Upload coverage to Codecov
       run: |
+        env
         bash <(curl -s https://codecov.io/bash)

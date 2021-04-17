@@ -8,6 +8,7 @@ import logging
 import datetime
 import itertools
 from pathlib import Path
+import shlex
 
 import numpy as np
 import pandas as pd
@@ -621,3 +622,48 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     del dframe["level_0"]
     dframe.index.name = ""
     return dframe
+
+def read_zonemap(filename):
+    """Return a dictionary from (int) K layers in the simgrid to strings
+
+        Typical usage is to map from grid layer to zone names.
+
+        The layer filename must currently follow format::
+
+          'ZoneA' 1-4
+          'ZoneB' 5-10
+
+        where the single quotes are optional for zones without spaces.
+        Write single layer zones as 11-11. NB: ResInsight requires single
+        quotes always.
+
+        Args:
+            filename (str): Absolute path to a zone map file
+
+        Returns:
+            dict, integer keys which are the K layers. Every layer mentioned
+                in the interval in the input file is present. Can be empty.
+    """
+    assert isinstance(filename, str), "'filename' must be a string."
+    if not Path(filename).is_file():
+        return {}
+    zonelines = open(filename).readlines()
+    zonelines = [line.strip() for line in zonelines]
+    zonelines = [line.split("--")[0] for line in zonelines]
+    zonelines = [line for line in zonelines if not line.startswith("#")]
+    zonelines = filter(len, zonelines)
+
+    zonemap = {}
+    for line in zonelines:
+        try:
+            linesplit = shlex.split(line)
+            map(str.strip, linesplit)
+            filter(len, linesplit)
+            (k_0, k_1) = "".join(linesplit[1:]).split("-")
+            for k_idx in range(int(k_0), int(k_1) + 1):
+                zonemap[k_idx] = linesplit[0]
+        except ValueError:
+            logger.error("Could not parse zonemapfile %s", filename)
+            logger.error("Failed on content: %s", line)
+            return
+    return zonemap

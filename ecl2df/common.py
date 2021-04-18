@@ -638,16 +638,15 @@ def read_zonemap(filename):
         quotes always.
 
         Args:
-            filename (str): Absolute path to a zone map file
+            filename (str): Absolute path to a zone map file (lyr format)
 
         Returns:
             dict, integer keys which are the K layers. Every layer mentioned
                 in the interval in the input file is present. Can be empty.
     """
-    assert isinstance(filename, str), "'filename' must be a string."
-    if not Path(filename).is_file():
-        return {}
-    zonelines = open(filename).readlines()
+    assert isinstance(filename, str)
+    with open(filename, "r") as fin:
+        zonelines = fin.readlines()
     zonelines = [line.strip() for line in zonelines]
     zonelines = [line.split("--")[0] for line in zonelines]
     zonelines = [line for line in zonelines if not line.startswith("#")]

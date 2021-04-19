@@ -623,6 +623,7 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     dframe.index.name = ""
     return dframe
 
+
 def read_zonemap(filename):
     """Return a dictionary from (int) K layers in the simgrid to strings
 
@@ -664,5 +665,5 @@ def read_zonemap(filename):
         except ValueError:
             logger.error("Could not parse zonemapfile %s", filename)
             logger.error("Failed on content: %s", line)
-            return
+            return {}
     return zonemap

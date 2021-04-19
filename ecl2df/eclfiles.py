@@ -3,7 +3,6 @@
 import os
 import errno
 import logging
-import shlex
 from pathlib import Path
 
 try:

@@ -627,23 +627,23 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
 def read_zonemap(filename):
     """Return a dictionary from (int) K layers in the simgrid to strings
 
-        Typical usage is to map from grid layer to zone names.
+    Typical usage is to map from grid layer to zone names.
 
-        The layer filename must currently follow format::
+    The layer filename must currently follow format::
 
-          'ZoneA' 1-4
-          'ZoneB' 5-10
+      'ZoneA' 1-4
+      'ZoneB' 5-10
 
-        where the single quotes are optional for zones without spaces.
-        Write single layer zones as 11-11. NB: ResInsight requires single
-        quotes always.
+    where the single quotes are optional for zones without spaces.
+    Write single layer zones as 11-11. NB: ResInsight requires single
+    quotes always.
 
-        Args:
-            filename (str): Absolute path to a zone map file (lyr format)
+    Args:
+        filename (str): Absolute path to a zone map file (lyr format)
 
-        Returns:
-            dict, integer keys which are the K layers. Every layer mentioned
-                in the interval in the input file is present. Can be empty.
+    Returns:
+        dict, integer keys which are the K layers. Every layer mentioned
+            in the interval in the input file is present. Can be empty.
     """
     assert isinstance(filename, str)
     with open(filename, "r") as fin:

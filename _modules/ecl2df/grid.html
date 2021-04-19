@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.12.1.dev8+ge3a4954 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.12.1.dev9+gd707fe2 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.1.dev8+ge3a4954
+                0.12.1.dev9+gd707fe2
               </div>
             
           
@@ -305,7 +305,6 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectors</span><span class="p">]</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting vectors </span><span class="si">%s</span><span class="s2"> from RST file&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vectors</span><span class="p">))</span>
 
     <span class="c1"># First task is to determine the restart index to extract</span>
     <span class="c1"># data for:</span>
@@ -381,6 +380,13 @@
         <span class="n">datestr</span> <span class="o">=</span> <span class="n">chosendates</span><span class="p">[</span><span class="n">rstindices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rstindex</span><span class="p">)]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">dateinheaders</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rstindices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stackdates</span><span class="p">:</span>
             <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">colname</span> <span class="o">+</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">datestr</span> <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+        <span class="c1"># libecl emits a number around -1.0000000200408773e+20 which</span>
+        <span class="c1"># should be considered Not-a-number</span>
+        <span class="n">rst_df</span> <span class="o">=</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rst_df</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1e20</span> <span class="o">+</span> <span class="mf">1e13</span><span class="p">)</span>  <span class="c1"># some trial and error</span>
+
+        <span class="c1"># Remove columns that are all NaN:</span>
+        <span class="n">rst_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">rst_dfs</span><span class="p">[</span><span class="n">datestr</span><span class="p">]</span> <span class="o">=</span> <span class="n">rst_df</span>
 
@@ -501,7 +507,6 @@
         <span class="n">vectors</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>  <span class="c1"># This will include everything</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectors</span><span class="p">]</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting vectors </span><span class="si">%s</span><span class="s2"> from INIT file&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vectors</span><span class="p">))</span>
 
     <span class="n">init</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_initfile</span><span class="p">()</span>
     <span class="n">egrid</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span>
@@ -536,6 +541,8 @@
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">init_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>  <span class="c1"># empty</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracted </span><span class="si">%s</span><span class="s2"> from INIT file&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">init_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
 
     <span class="c1"># PORV is indexed by active_index, not global, needs special treatment:</span>
     <span class="k">if</span> <span class="n">include_porv</span><span class="p">:</span>
@@ -739,7 +746,7 @@
                 <span class="s2">&quot;Assumes all cells are active&quot;</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="c1"># Drop NaN rows for columns to be used (triggerd by stacked</span>
+        <span class="c1"># Drop NaN rows for columns to be used (triggered by stacked</span>
         <span class="c1"># dates and no global index, unlikely)</span>
         <span class="c1"># Also copy dataframe to avoid side-effects on incoming data.</span>
         <span class="n">grid_df</span> <span class="o">=</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span>

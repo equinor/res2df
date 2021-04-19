@@ -624,7 +624,7 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     return dframe
 
 
-def read_zonemap(filename):
+def parse_zonemapfile(filename: str):
     """Return a dictionary from (int) K layers in the simgrid to strings
 
     Typical usage is to map from grid layer to zone names.
@@ -645,9 +645,7 @@ def read_zonemap(filename):
         dict, integer keys which are the K layers. Every layer mentioned
             in the interval in the input file is present. Can be empty.
     """
-    assert isinstance(filename, str)
-    with open(filename, "r") as fin:
-        zonelines = fin.readlines()
+    zonelines = Path(filename).read_text().splitlines()
     zonelines = [line.strip() for line in zonelines]
     zonelines = [line.split("--")[0] for line in zonelines]
     zonelines = [line for line in zonelines if not line.startswith("#")]
@@ -665,5 +663,5 @@ def read_zonemap(filename):
         except ValueError:
             logger.error("Could not parse zonemapfile %s", filename)
             logger.error("Failed on content: %s", line)
-            return {}
+            return None
     return zonemap

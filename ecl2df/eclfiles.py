@@ -237,7 +237,7 @@ class EclFiles(object):
             logger.warning("Zonefile %s not found, ignoring", fullpath)
             return {}
 
-        return common.read_zonemap(fullpath)
+        return common.parse_zonemapfile(fullpath)
 
 
 def rreplace(pat, sub, string):

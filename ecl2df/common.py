@@ -629,7 +629,7 @@ def parse_zonemapfile(filename: str):
 
     Typical usage is to map from grid layer to zone names.
 
-    The layer filename must currently follow format::
+    The layer filename must currently follow format:
 
       'ZoneA' 1-4
       'ZoneB' 5-10
@@ -637,6 +637,8 @@ def parse_zonemapfile(filename: str):
     where the single quotes are optional for zones without spaces.
     Write single layer zones as 11-11. NB: ResInsight requires single
     quotes always.
+
+    Either "--" or "#" can be used to denote comments.
 
     Args:
         filename (str): Absolute path to a zone map file (lyr format)
@@ -646,20 +648,17 @@ def parse_zonemapfile(filename: str):
             in the interval in the input file is present. Can be empty.
     """
     zonelines = Path(filename).read_text().splitlines()
-    zonelines = [line.strip() for line in zonelines]
-    zonelines = [line.split("--")[0] for line in zonelines]
-    zonelines = [line for line in zonelines if not line.startswith("#")]
-    zonelines = filter(len, zonelines)
+
+    # Remove comments, support both "--" and "#":
+    zonelines = [line.split("--")[0].strip() for line in zonelines]
+    zonelines = [line for line in zonelines if line and not line.startswith("#")]
 
     zonemap = {}
     for line in zonelines:
         try:
             linesplit = shlex.split(line)
-            map(str.strip, linesplit)
-            filter(len, linesplit)
             (k_0, k_1) = "".join(linesplit[1:]).split("-")
-            for k_idx in range(int(k_0), int(k_1) + 1):
-                zonemap[k_idx] = linesplit[0]
+            zonemap.update(dict.fromkeys(range(int(k_0), int(k_1) + 1), linesplit[0]))
         except ValueError:
             logger.error("Could not parse zonemapfile %s", filename)
             logger.error("Failed on content: %s", line)

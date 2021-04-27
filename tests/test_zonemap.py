@@ -104,9 +104,17 @@ def test_nonstandardzones(tmpdir):
 -- foo
 # foo
 'Eiriksson'  1-10
-Raude    20-30
+ Raude    20-30
+
 # Difficult quote parsing above, might not run in ResInsight.
 """
     zonefile.write(zonefilecontent)
     zonemap = ecl2df.common.parse_zonemapfile(zonefile)
+    assert 0 not in zonemap
     assert zonemap[1] == "Eiriksson"
+    assert zonemap[10] == "Eiriksson"
+    assert 11 not in zonemap
+    assert 19 not in zonemap
+    assert zonemap[20] == "Raude"
+    assert zonemap[30] == "Raude"
+    assert len(zonemap) == 21

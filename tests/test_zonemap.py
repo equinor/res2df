@@ -11,7 +11,11 @@ DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_stdzoneslyr():
-    """Test that we can read zones if the zonemap is in a standard location"""
+    """Test that we can read zones if the zonemap is in a standard location.
+
+    The eclfiles object defines what is the standard location for the file, while
+    the actual parsing is done in ecl2df.common.parse_zonemapfile()
+    """
     eclfiles = ecl2df.EclFiles(DATAFILE)
 
     zonemap = eclfiles.get_zonemap()
@@ -28,6 +32,15 @@ def test_stdzoneslyr():
     assert len(zonemap) == 15
 
 
+def test_nonexistingzones():
+    """Test an Eclipse case with non-existing zonemap (i.e. no zonemap file
+    in the standard location)"""
+    eclfiles = ecl2df.EclFiles(DATAFILE)
+    zonemap = eclfiles.get_zonemap("foobar")
+    # (we got a warning and an empty dict)
+    assert not zonemap
+
+
 def test_errors(tmpdir, caplog):
     zonefile = tmpdir / "zonemap.lyr"
     zonefile.write_text(
@@ -36,7 +49,7 @@ foo
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(zonefile)) is None
+    assert ecl2df.common.parse_zonemapfile(zonefile) is None
     assert "Could not parse zonemapfile" in caplog.text
     assert "Failed on content: foo" in caplog.text
 
@@ -48,7 +61,7 @@ foo 1 2 3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(zonefile)) is None
+    assert ecl2df.common.parse_zonemapfile(zonefile) is None
     assert "Failed on content: foo 1 2 3" in caplog.text
 
     zonefile = tmpdir / "zonemap.lyr"
@@ -78,8 +91,7 @@ def test_spaces_dashes(tmpdir):
 """,
         encoding="utf-8",
     )
-    eclfiles = ecl2df.EclFiles(DATAFILE)
-    zonemap = eclfiles.get_zonemap(str(zonefile))
+    zonemap = ecl2df.common.parse_zonemapfile(zonefile)
     assert zonemap
     assert len(zonemap) == 71
     assert zonemap[25] == "UT1_2"
@@ -92,18 +104,17 @@ def test_nonstandardzones(tmpdir):
 -- foo
 # foo
 'Eiriksson'  1-10
-Raude    20-30
+ Raude    20-30
+
 # Difficult quote parsing above, might not run in ResInsight.
 """
     zonefile.write(zonefilecontent)
-    eclfiles = ecl2df.EclFiles(DATAFILE)
-    zonemap = eclfiles.get_zonemap(str(zonefile))
+    zonemap = ecl2df.common.parse_zonemapfile(zonefile)
+    assert 0 not in zonemap
     assert zonemap[1] == "Eiriksson"
-
-
-def test_nonexistingzones():
-    """Test with non-existing zonemap"""
-    eclfiles = ecl2df.EclFiles(DATAFILE)
-    zonemap = eclfiles.get_zonemap("foobar")
-    # (we got a warning and an empty dict)
-    assert not zonemap
+    assert zonemap[10] == "Eiriksson"
+    assert 11 not in zonemap
+    assert 19 not in zonemap
+    assert zonemap[20] == "Raude"
+    assert zonemap[30] == "Raude"
+    assert len(zonemap) == 21

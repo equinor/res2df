@@ -18,90 +18,97 @@
     },
     {
       "name": "STRENGTH",
-      "value_type": "DOUBLE"
+      "value_type": "DOUBLE",
+      "dimension": "Pressure*Time*Time/GeometricVolume*GeometricVolume*Density"
     },
     {
       "name": "LENGTH",
       "value_type": "DOUBLE",
-      "default": 12.0
+      "dimension": "Length",
+      "default": 12
     },
     {
-      "name": "RHO_CAL",
+      "name": "DENSITY_CALI",
       "value_type": "DOUBLE",
+      "dimension": "Density",
       "default": 1000.25
     },
     {
-      "name": "MU_CAL",
+      "name": "VISCOSITY_CALI",
       "value_type": "DOUBLE",
+      "dimension": "Viscosity",
       "default": 1.45
     },
     {
-      "name": "CRIT_WATFRAC",
-      "value_type": "DOUBLE"
-    },
-    {
-      "name": "WIDTH_WATFRAC",
-      "value_type": "DOUBLE"
-    },
-    {
-      "name": "MAX_RATIO",
+      "name": "CRITICAL_VALUE",
       "value_type": "DOUBLE",
-      "default": 5.0
+      "dimension": "1",
+      "default": 0.5
     },
     {
-      "name": "SCALING",
+      "name": "WIDTH_TRANS",
+      "value_type": "DOUBLE",
+      "dimension": "1",
+      "default": 0.05
+    },
+    {
+      "name": "MAX_VISC_RATIO",
+      "value_type": "DOUBLE",
+      "dimension": "1",
+      "default": 5
+    },
+    {
+      "name": "METHOD_SCALING_FACTOR",
       "value_type": "INT",
-      "dimension": -1,
-      "default": 0
+      "default": -1
     },
     {
-      "name": "MAX_RATE",
+      "name": "MAX_ABS_RATE",
+      "value_type": "DOUBLE",
+      "dimension": "GeometricVolume/Time"
+    },
+    {
+      "name": "FLOW_RATE_EXPONENT",
       "value_type": "DOUBLE"
     },
     {
-      "name": "VOLUME_RATE_EXP",
-      "value_type": "DOUBLE",
-      "default": 1.0
+      "name": "VISC_EXPONENT",
+      "value_type": "DOUBLE"
     },
     {
-      "name": "VISCOSITY_EXP",
-      "value_type": "DOUBLE",
-      "default": 1.0
-    },
-    {
-      "name": "FLAG",
+      "name": "STATUS",
       "value_type": "STRING",
       "default": "OPEN"
     },
     {
-      "name": "OIL_FRAC_EXP_DENS",
+      "name": "OIL_FLOW_FRACTION",
       "value_type": "DOUBLE",
-      "default": 1.0
+      "default": 1
     },
     {
-      "name": "WATER_FRAC_EXP_DENS",
+      "name": "WATER_FLOW_FRACTION",
       "value_type": "DOUBLE",
-      "default": 1.0
+      "default": 1
     },
     {
-      "name": "GAS_FRAC_EXP_DENS",
+      "name": "GAS_FLOW_FRACTION",
       "value_type": "DOUBLE",
-      "default": 1.0
+      "default": 1
     },
     {
-      "name": "OIL_FRAC_EXP_VISC",
+      "name": "OIL_VISC_FRACTION",
       "value_type": "DOUBLE",
-      "default": 1.0
+      "default": 1
     },
     {
-      "name": "WATER_FRAC_EXP_VISC",
+      "name": "WATER_VISC_FRACTION",
       "value_type": "DOUBLE",
-      "default": 1.0
+      "default": 1
     },
     {
-      "name": "GAS_FRAC_EXP_VISC",
+      "name": "GAS_VISC_FRACTION",
       "value_type": "DOUBLE",
-      "default": 1.0
+      "default": 1
     }
   ]
 }

@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from os import path
+from pathlib import Path
 
 from setuptools import setup, find_packages
 
@@ -14,26 +12,21 @@ except ImportError:
     cmdclass = {}
 
 # Read the contents of README.md, for PyPI
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, "README.md")) as f_handle:
-    LONG_DESCRIPTION = f_handle.read()
+LONG_DESCRIPTION = (Path(__file__).parent / "README.md").read_text()
 
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
     "ecl",
     "equinor-libres",
     "ert",
-    "opm",
+    "numpy",
+    "opm>=2020.10.2",  # NB: Pypi versions.
     "pandas",
     "pyyaml>=5.1",
     "treelib",
 ]
-TEST_REQUIREMENTS = [
-    "black>=20.8b0",
-    "flake8",
-    "networkx",
-    "pytest",
-]
+
+TEST_REQUIREMENTS = Path("test_requirements.txt").read_text().splitlines()
 
 DOCS_REQUIREMENTS = [
     "ipython",

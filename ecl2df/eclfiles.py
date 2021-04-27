@@ -1,34 +1,38 @@
-"""
-Module to hold Eclipse input and output filenames
-"""
+"""Module to hold Eclipse input and output filenames"""
 
 import os
 import errno
 import logging
-import shlex
 from pathlib import Path
 
-import opm.io
+try:
+    import opm.io
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
 
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
+from ecl2df import common
 
 logger = logging.getLogger(__name__)
 
-# Default parse option to opm.io for a very permissive parsing
-OPMIOPARSER_RECOVERY = [
-    ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
-    ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
-    ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
-    ("UNSUPPORTED_*", opm.io.action.ignore),
-    ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
-    ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
-    ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
-    ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
-    ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
-    ("PARSE_EXTRA_DATA", opm.io.action.ignore),
-]
+if HAVE_OPM:
+    # Default parse option to opm.io for a very permissive parsing
+    OPMIOPARSER_RECOVERY = [
+        ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
+        ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
+        ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
+        ("UNSUPPORTED_*", opm.io.action.ignore),
+        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+        ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
+        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
+        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
+        ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
+        ("PARSE_EXTRA_DATA", opm.io.action.ignore),
+    ]
 
 
 class EclFiles(object):
@@ -233,26 +237,7 @@ class EclFiles(object):
             logger.warning("Zonefile %s not found, ignoring", fullpath)
             return {}
 
-        zonelines = open(fullpath).readlines()
-        zonelines = [line.strip() for line in zonelines]
-        zonelines = [line.split("--")[0] for line in zonelines]
-        zonelines = [line for line in zonelines if not line.startswith("#")]
-        zonelines = filter(len, zonelines)
-
-        zonemap = {}
-        for line in zonelines:
-            try:
-                linesplit = shlex.split(line)
-                map(str.strip, linesplit)
-                filter(len, linesplit)
-                (k_0, k_1) = "".join(linesplit[1:]).split("-")
-                for k_idx in range(int(k_0), int(k_1) + 1):
-                    zonemap[k_idx] = linesplit[0]
-            except ValueError:
-                logger.error("Could not parse zonemapfile %s", filename)
-                logger.error("Failed on content: %s", line)
-                return
-        return zonemap
+        return common.parse_zonemapfile(fullpath)
 
 
 def rreplace(pat, sub, string):

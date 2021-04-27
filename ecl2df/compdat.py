@@ -10,8 +10,8 @@ import pandas as pd
 from .eclfiles import EclFiles
 from .common import (
     merge_zones,
-    parse_opmio_deckrecord,
     parse_opmio_date_rec,
+    parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
 )
@@ -42,6 +42,12 @@ COMPDAT_RENAMER = {
     "PR": "PEQVR",
 }
 
+# Workaround an inconsistency in JSON-files for OPM-common < 2021.04:
+WSEG_RENAMER = {
+    "SEG1": "SEGMENT1",
+    "SEG2": "SEGMENT2",
+}
+
 
 def deck2dfs(deck, start_date=None, unroll=True):
     """Loop through the deck and pick up information found
@@ -67,6 +73,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     welsegsrecords = []
     wsegsicdrecords = []
     wsegaicdrecords = []
+    wsegvalvrecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
@@ -118,16 +125,22 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 compdatrecords.append(rec_data)
         elif kword.name == "WSEGSICD":
             for rec in kword:  # Loop over the lines inside WSEGSICD record
-                rec_data = parse_opmio_deckrecord(rec, "WSEGSICD")
+                rec_data = parse_opmio_deckrecord(rec, "WSEGSICD", renamer=WSEG_RENAMER)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
                 wsegsicdrecords.append(rec_data)
         elif kword.name == "WSEGAICD":
             for rec in kword:  # Loop over the lines inside WSEGAICD record
-                rec_data = parse_opmio_deckrecord(rec, "WSEGAICD")
+                rec_data = parse_opmio_deckrecord(rec, "WSEGAICD", renamer=WSEG_RENAMER)
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
                 wsegaicdrecords.append(rec_data)
+        elif kword.name == "WSEGVALV":
+            for rec in kword:  # Loop over the lines inside WSEGVALV record
+                rec_data = parse_opmio_deckrecord(rec, "WSEGVALV")
+                rec_data["DATE"] = date
+                rec_data["KEYWORD_IDX"] = idx
+                wsegvalvrecords.append(rec_data)
         elif kword.name == "COMPSEGS":
             wellname = parse_opmio_deckrecord(
                 kword[0], "COMPSEGS", itemlistname="records", recordindex=0
@@ -187,6 +200,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
     welsegs_df = pd.DataFrame(welsegsrecords)
     wsegsicd_df = pd.DataFrame(wsegsicdrecords)
     wsegaicd_df = pd.DataFrame(wsegaicdrecords)
+    wsegvalv_df = pd.DataFrame(wsegvalvrecords)
 
     if unroll and not welsegs_df.empty:
         welsegs_df = unrolldf(welsegs_df, "SEGMENT1", "SEGMENT2")
@@ -206,12 +220,16 @@ def deck2dfs(deck, start_date=None, unroll=True):
     if "KEYWORD_IDX" in wsegaicd_df.columns:
         wsegaicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 
+    if "KEYWORD_IDX" in wsegvalv_df.columns:
+        wsegvalv_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+
     return dict(
         COMPDAT=compdat_df,
         COMPSEGS=compsegs_df,
         WELSEGS=welsegs_df,
         WSEGSICD=wsegsicd_df,
         WSEGAICD=wsegaicd_df,
+        WSEGVALV=wsegvalv_df,
     )
 
 

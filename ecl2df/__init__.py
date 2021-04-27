@@ -1,4 +1,5 @@
 """ecl2df"""
+import importlib
 
 try:
     from .version import version
@@ -9,20 +10,24 @@ except ImportError:
 
 from .eclfiles import EclFiles
 
-from . import (
-    ecl2csv,
-    equil,
-    faults,
-    grid,
-    gruptree,
-    nnc,
-    pillars,
-    pvt,
-    rft,
-    satfunc,
-    summary,
-    trans,
-    wcon,
-)
-
 name = "ecl2df"
+
+SUBMODULES = [
+    "compdat",
+    "equil",
+    "faults",
+    "fipreports",
+    "grid",
+    "gruptree",
+    "nnc",
+    "pillars",
+    "pvt",
+    "rft",
+    "satfunc",
+    "summary",
+    "trans",
+    "wcon",
+]
+
+for submodule in SUBMODULES + ["ecl2csv", "csv2ecl"]:
+    importlib.import_module("ecl2df." + submodule)

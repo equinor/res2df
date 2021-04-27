@@ -139,7 +139,6 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
 
     if not isinstance(vectors, list):
         vectors = [vectors]
-    logger.info("Extracting vectors %s from RST file", str(vectors))
 
     # First task is to determine the restart index to extract
     # data for:
@@ -216,6 +215,13 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
         if dateinheaders or len(rstindices) > 1 and not stackdates:
             rst_df.columns = [colname + "@" + datestr for colname in rst_df.columns]
 
+        # libecl emits a number around -1.0000000200408773e+20 which
+        # should be considered Not-a-number
+        rst_df = rst_df.where(rst_df > -1e20 + 1e13)  # some trial and error
+
+        # Remove columns that are all NaN:
+        rst_df.dropna(axis="columns", how="all", inplace=True)
+
         rst_dfs[datestr] = rst_df
 
     if not rst_dfs:
@@ -250,7 +256,7 @@ def gridgeometry2df(eclfiles):
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logger.info("Extracting grjd geometry from %s", str(egrid_file))
+    logger.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
 
@@ -335,7 +341,6 @@ def init2df(eclfiles, vectors=None):
         vectors = "*"  # This will include everything
     if not isinstance(vectors, list):
         vectors = [vectors]
-    logger.info("Extracting vectors %s from INIT file", str(vectors))
 
     init = eclfiles.get_initfile()
     egrid = eclfiles.get_egrid()
@@ -370,6 +375,8 @@ def init2df(eclfiles, vectors=None):
 
     else:
         init_df = pd.DataFrame()  # empty
+
+    logger.info("Extracted %s from INIT file", str(init_df.columns.values))
 
     # PORV is indexed by active_index, not global, needs special treatment:
     if include_porv:
@@ -573,7 +580,7 @@ def df2ecl(
                 "Assumes all cells are active"
             )
         )
-        # Drop NaN rows for columns to be used (triggerd by stacked
+        # Drop NaN rows for columns to be used (triggered by stacked
         # dates and no global index, unlikely)
         # Also copy dataframe to avoid side-effects on incoming data.
         grid_df = grid_df.dropna(

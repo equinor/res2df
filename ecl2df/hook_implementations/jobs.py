@@ -1,5 +1,5 @@
 import importlib
-import os
+from pathlib import Path
 from pkg_resources import resource_filename
 
 from ert_shared.plugins.plugin_manager import hook_implementation
@@ -7,14 +7,14 @@ from ert_shared.plugins.plugin_response import plugin_response
 
 
 def _get_jobs_from_directory(directory):
-    resource_directory = resource_filename("ecl2df", directory)
+    resource_directory = Path(resource_filename("ecl2df", directory))
 
     all_files = [
-        os.path.join(resource_directory, f)
-        for f in os.listdir(resource_directory)
-        if os.path.isfile(os.path.join(resource_directory, f))
+        resource_directory / filename
+        for filename in resource_directory.glob("*")
+        if (resource_directory / filename).exists()
     ]
-    return {os.path.basename(path): path for path in all_files}
+    return {path.name: str(path) for path in all_files}
 
 
 @hook_implementation

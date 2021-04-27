@@ -3,7 +3,6 @@ Extract EQUIL from an Eclipse deck as Pandas DataFrame
 
 """
 
-import signal
 import logging
 import pandas as pd
 
@@ -301,7 +300,7 @@ def equil_main(args):
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS
         # is supplied:
-        equil_df = df(deck)
+        equil_df = df(deck, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string
@@ -330,15 +329,7 @@ def equil_reverse_main(args):
     equil_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(equil_df, keywords=args.keywords)
-
-    if args.output == "-":
-        # Ignore pipe errors when writing to stdout.
-        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        print(inc_string)
-    else:
-        with open(args.output, "w") as f_handle:
-            f_handle.write(inc_string)
-        print("Wrote to " + args.output)
+    common.write_inc_stdout_file(inc_string, args.output)
 
 
 def df2ecl(equil_df, keywords=None, comments=None, withphases=False, filename=None):

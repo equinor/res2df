@@ -19,6 +19,17 @@ statements from the actions in WELOPEN.
    :file: compdat.csv
    :header-rows: 1
 
-If you need access to WELSEGS and COMPSEGS, you must use the ``deck2dfs()``
-function which will return a dict with dataframes for each of COMPDAT,
-COMPSEGS and WELSEGS.
+If you need access to WELSEGS, COMPSEGS, WSEGSICD, WSEGAICD or WSEGVALV, you
+must use the ``deck2dfs()`` function which will return a dict with dataframes
+for each of COMPDAT, and the segmentation keywords.
+
+Adding INIT data
+----------------
+
+Additional information from the grid for each connection (based on i, j, k) can
+be added to the returned data through the option ``--initvectors``:
+
+.. code-block:: console
+
+   ecl2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX
+   # (put the DATA file first, if not it will be interpreted as a vector)

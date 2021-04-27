@@ -1,7 +1,8 @@
 [![Build Status](https://img.shields.io/github/workflow/status/equinor/ecl2df/ecl2df)](https://github.com/equinor/ecl2df/actions?query=workflow%3Aecl2df)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/equinor/ecl2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/ecl2df/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/equinor/ecl2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/ecl2df/alerts/)
-[![Python 3.6-3.8](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-blue.svg)](https://www.python.org)
+[![codecov](https://codecov.io/gh/equinor/ecl2df/branch/master/graph/badge.svg)](https://codecov.io/gh/equinor/ecl2df)
+[![Python 3.6-3.9](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8%20|%203.9-blue.svg)](https://www.python.org)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -15,7 +16,7 @@ data format.
 The reverse operation, from a Pandas DataFrame to Eclipse include files,
 is provided for some of the modules.
 
-The package consists of a module pr. datatype, e.g. one module for summary 
+The package consists of a module pr. datatype, e.g. one module for summary
 files (.UNSMRY), one for completion data etc.
 
 There is a command line frontend for almost all functionality, called
@@ -31,6 +32,6 @@ This library is released under GPLv3.
 
 ## Copyright
 
-The code is Copyright Equinor ASA 2019-2020.
+The code is Copyright Equinor ASA 2019-2021.
 
 Contributions without copyright transfer are welcome.

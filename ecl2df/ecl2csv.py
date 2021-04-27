@@ -4,35 +4,39 @@ End-user command line tool for accessing functionality
 in ecl2df
 """
 import sys
+import functools
+import importlib
 
 import argparse
-
-from ecl2df import (
-    compdat,
-    equil,
-    faults,
-    fipreports,
-    grid,
-    gruptree,
-    nnc,
-    pillars,
-    pvt,
-    rft,
-    satfunc,
-    summary,
-    trans,
-    wcon,
-)
 
 from ecl2df import __version__
 
 # String constants in use for generating ERT forward model documentation:
-DESCRIPTION = """Convert Eclipse input and output files into CSV files.
-Uses the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see
-which subcommands are supported. It is not possible to supply extra
-options to ecl2csv through this forward model."""
+DESCRIPTION = """Convert Eclipse input and output files into CSV files,
+with the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see
+which subcommands are supported.
+
+For supplying options to subcommands, you can use the arguments ``<XARGn>``
+where ``n`` goes from 1 to 10.
+
+For more documentation, see https://equinor.github.io/ecl2df/.
+"""
 CATEGORY = "utility.eclipse"
-EXAMPLES = "``FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)``"
+EXAMPLES = """
+
+Outputting the EQUIL data from an Eclipse deck. The ECLBASE variable from your
+ERT config is supplied implicitly::
+
+   FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
+
+For a yearly summary export of the realization, options have to be supplied
+with the XARG options::
+
+  FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=summary, <OUTPUT>=yearly.csv, <XARG1>="--time_index", <XARG2>="yearly")
+
+The quotes around double-dashed options are critical to avoid ERT taking for a
+comment. For more options, use ``<XARG3>`` etc.
+"""  # noqa
 
 
 def get_parser():
@@ -57,8 +61,8 @@ def get_parser():
     else:
         subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
 
-    # Eclipse output files:
-    grid_parser = subparsers.add_parser(
+    subparsers_dict = {}
+    subparsers_dict["grid"] = subparsers.add_parser(
         "grid",
         help=("Extract grid data with properties"),
         description=(
@@ -69,10 +73,7 @@ def get_parser():
         ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    grid.fill_parser(grid_parser)
-    grid_parser.set_defaults(func=grid.grid_main)
-
-    summary_parser = subparsers.add_parser(
+    subparsers_dict["summary"] = subparsers.add_parser(
         "summary",
         help=("Extract summary data"),
         description=(
@@ -82,10 +83,7 @@ def get_parser():
         ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    summary.fill_parser(summary_parser)
-    summary_parser.set_defaults(func=summary.summary_main)
-
-    nnc_parser = subparsers.add_parser(
+    subparsers_dict["nnc"] = subparsers.add_parser(
         "nnc",
         help="Extract NNC data from EGRID file",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -97,10 +95,7 @@ def get_parser():
             "See also the trans subcommand."
         ),
     )
-    nnc.fill_parser(nnc_parser)
-    nnc_parser.set_defaults(func=nnc.nnc_main)
-
-    faults_parser = subparsers.add_parser(
+    subparsers_dict["faults"] = subparsers.add_parser(
         "faults",
         help="Extract data from the FAULTS keyword",
         description=(
@@ -108,10 +103,7 @@ def get_parser():
         ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    faults.fill_parser(faults_parser)
-    faults_parser.set_defaults(func=faults.faults_main)
-
-    trans_parser = subparsers.add_parser(
+    subparsers_dict["trans"] = subparsers.add_parser(
         "trans",
         help="Extract transmissibilities from EGRID file",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -124,10 +116,7 @@ def get_parser():
             "FIPNUM change"
         ),
     )
-    trans.fill_parser(trans_parser)
-    trans_parser.set_defaults(func=trans.trans_main)
-
-    pillars_parser = subparsers.add_parser(
+    subparsers_dict["pillars"] = subparsers.add_parser(
         "pillars",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         help="Compute data pr. cornerpoint pillar",
@@ -137,10 +126,7 @@ def get_parser():
             "and contacts."
         ),
     )
-    pillars.fill_parser(pillars_parser)
-    pillars_parser.set_defaults(func=pillars.pillars_main)
-
-    pvt_parser = subparsers.add_parser(
+    subparsers_dict["pvt"] = subparsers.add_parser(
         "pvt",
         help="Extract PVT data",
         description=(
@@ -155,10 +141,7 @@ def get_parser():
             "data row stems from. "
         ),
     )
-    pvt.fill_parser(pvt_parser)
-    pvt_parser.set_defaults(func=pvt.pvt_main)
-
-    rft_parser = subparsers.add_parser(
+    subparsers_dict["rft"] = subparsers.add_parser(
         "rft",
         help=("Extract RFT data from Eclipse binary output files."),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -172,10 +155,7 @@ def get_parser():
             "the data outputted."
         ),
     )
-    rft.fill_parser(rft_parser)
-    rft_parser.set_defaults(func=rft.rft_main)
-
-    fipreports_parser = subparsers.add_parser(
+    subparsers_dict["fipreports"] = subparsers.add_parser(
         "fipreports",
         help=("Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file."),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -185,11 +165,7 @@ def get_parser():
             "material balance errors"
         ),
     )
-    fipreports.fill_parser(fipreports_parser)
-    fipreports_parser.set_defaults(func=fipreports.fipreports_main)
-
-    # Eclipse input files:
-    satfunc_parser = subparsers.add_parser(
+    subparsers_dict["satfunc"] = subparsers.add_parser(
         "satfunc",
         help="Extract SWOF/SGOF/etc data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -200,11 +176,17 @@ def get_parser():
             "are empty and vice versa"
         ),
     )
-
-    satfunc.fill_parser(satfunc_parser)
-    satfunc_parser.set_defaults(func=satfunc.satfunc_main)
-
-    compdat_parser = subparsers.add_parser(
+    subparsers_dict["fipreports"] = subparsers.add_parser(
+        "fipreports",
+        help=("Extract FIPxxxxx REPORT REGION data from Eclipse PRT output file."),
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Extract FIPxxxxx REPORT REGION data from PRT file. "
+            "This parses currently in-place, outflows to wells and regions, and "
+            "material balance errors"
+        ),
+    )
+    subparsers_dict["compdat"] = subparsers.add_parser(
         "compdat",
         help="Extract COMPDAT data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -213,28 +195,19 @@ def get_parser():
             "Only COMPDAT data is exposed in CSV output currently."
         ),
     )
-    compdat.fill_parser(compdat_parser)
-    compdat_parser.set_defaults(func=compdat.compdat_main)
-
-    equil_parser = subparsers.add_parser(
+    subparsers_dict["equil"] = subparsers.add_parser(
         "equil",
         help="Extract EQUIL data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=("Each row contains the equilibriation data for one EQLNUM."),
     )
-    equil.fill_parser(equil_parser)
-    equil_parser.set_defaults(func=equil.equil_main)
-
-    gruptree_parser = subparsers.add_parser(
+    subparsers_dict["gruptree"] = subparsers.add_parser(
         "gruptree",
         help="Extract GRUPTREE data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=("Each row represents an edge in the GRUPTREE at a specific date."),
     )
-    gruptree.fill_parser(gruptree_parser)
-    gruptree_parser.set_defaults(func=gruptree.gruptree_main)
-
-    wcon_parser = subparsers.add_parser(
+    subparsers_dict["wcon"] = subparsers.add_parser(
         "wcon",
         help="Extract well control data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -243,10 +216,65 @@ def get_parser():
             "well or well wildcard at a specific date"
         ),
     )
-    wcon.fill_parser(wcon_parser)
-    wcon_parser.set_defaults(func=wcon.wcon_main)
+
+    for submodule, subparser in subparsers_dict.items():
+        # Use the submodule's fill_parser() to add the submodule specific
+        # arguments:
+        importlib.import_module("ecl2df." + submodule).fill_parser(subparser)
+
+        # Add empty placeholders, this looks strange but is needed for the
+        # ERT forward model frontend, where non-used options must be supplied
+        # as empty string arguments (which we should ignore)
+        subparser.add_argument(
+            "hiddenemptyplaceholders", nargs="*", help=argparse.SUPPRESS
+        )
+
+        # Tell argparse which main() function to use for each
+        # subparser/submodule:
+        subparser.set_defaults(
+            func=functools.partial(
+                run_subparser_main, submodule=submodule, parser=subparser
+            )
+        )
 
     return parser
+
+
+def run_subparser_main(args, submodule=None, parser=None):
+    """Wrapper for running the subparsers main() function, with
+    custom argument handling.
+
+    In order to support ERT forward model syntax, empty positional
+    arguments must be allowed, but ignored. This function takes
+    care of shuffling the single required positional argument into
+    args.DATAFILE, and will error if more than one positional
+    argument is supplied
+
+    This function is to be supplied to argsparse's set_default()
+    function, by use of functools.partial so that the submodule_name
+    argument can be set.
+
+    Args:
+        args (Namespace): argparse argument namespace
+        submodule (str): One of ecl2df's submodules. That module
+            must have a function called <submodule>_main()
+        parser (argparse.ArgumentParser): Used for raising errors.
+    """
+    assert submodule is not None
+    if "DATAFILE" in args:
+        positionals = list(filter(len, [args.DATAFILE] + args.hiddenemptyplaceholders))
+        args.DATAFILE = "".join([args.DATAFILE] + args.hiddenemptyplaceholders)
+    elif "PRTFILE" in args:
+        # Special treatment for the fipreports submodule
+        positionals = list(filter(len, [args.PRTFILE] + args.hiddenemptyplaceholders))
+        args.PRTFILE = "".join([args.PRTFILE] + args.hiddenemptyplaceholders)
+    if len(positionals) > 1:
+        parser.error(f"Unknown argument in {positionals}")
+
+    mod = importlib.import_module("ecl2df." + submodule)
+
+    main_func = getattr(mod, submodule + "_main")
+    main_func(args)
 
 
 def main():

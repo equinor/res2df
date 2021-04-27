@@ -1,6 +1,4 @@
-"""
-Common functions for ecl2df modules
-"""
+"""Common functions for ecl2df modules"""
 
 import sys
 import json
@@ -10,9 +8,18 @@ import logging
 import datetime
 import itertools
 from pathlib import Path
+import shlex
 
 import numpy as np
 import pandas as pd
+
+try:
+    # This import is seemingly not used, but necessary for some attributes
+    # to be included in DeckItem objects.
+    from opm.io.deck import DeckKeyword  # noqa
+except ImportError:
+    # Allow parts of ecl2df to work without OPM:
+    pass
 
 from ecl2df import __version__
 
@@ -56,11 +63,17 @@ for keyw in [
     "WELSPECS",
     "WSEGAICD",
     "WSEGSICD",
+    "WSEGVALV",
 ]:
     OPMKEYWORDS[keyw] = json.loads(
         (Path(__file__).parent / "opmkeywords" / keyw).read_text()
     )
 
+
+# This is a magic filename that means read/write from/to stdout
+# This makes it impossible to write to a file called "-" on disk
+# but that would anyway create a lot of other problems in the shell.
+MAGIC_STDOUT = "-"
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +93,7 @@ def write_dframe_stdout_file(
         caller_logger (logging): Used if not stdout
         logstr (str): Logged if not stdout.
     """
-    if output == "-":
+    if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         dframe.to_csv(sys.stdout, index=index)
@@ -90,6 +103,18 @@ def write_dframe_stdout_file(
         elif caller_logger and logstr:
             caller_logger.info(logstr)
         dframe.to_csv(output, index=index)
+
+
+def write_inc_stdout_file(string, outputfilename):
+    """Write a string (typically an include file string) to stdout
+    or to a named file"""
+    if outputfilename == MAGIC_STDOUT:
+        # Ignore pipe errors when writing to stdout:
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+        print(string)
+    else:
+        Path(outputfilename).write_text(string)
+        print(f"Wrote to {outputfilename}")
 
 
 def parse_ecl_month(eclmonth):
@@ -131,7 +156,7 @@ def ecl_keyworddata_to_df(
             with consecutive rows enumerated from 1. Use this to assign
             EQLNUM or similar when this should be consecutive pr. row (not
             the case for all keywords).
-        emptyrecordname (str): If supplied, an index is added to every parsed
+        emptyrecordcountername (str): If supplied, an index is added to every parsed
             row based on how many empty records is encountered. For PVTO f.ex,
             this gives the PVTNUM indexing.
     """
@@ -140,15 +165,14 @@ def ecl_keyworddata_to_df(
     record_counter = 1
     emptyrecord_counter = 1
     for deckrecord in deck[keyword]:
-        recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
-        # If all values are None, this is an empty record, and for some
-        # keywords this signifies that we jump to the next table, e.g. for PVTO
-        if all(
-            [value is None for value in recdict.values() if not isinstance(value, list)]
-        ):
-            if "DATA" not in recdict or ("DATA" in recdict and not recdict["DATA"]):
-                emptyrecord_counter += 1
-                continue
+        if str(deckrecord).strip() == "/":
+            # For some keywords, at least PVTO, an empty record like
+            # this signifies that we jump to the next table, and
+            # for PVTO, this counter variable will be used as PVTNUM
+            emptyrecord_counter += 1
+            continue
+        else:
+            recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
         if emptyrecordcountername is not None:
             recdict[emptyrecordcountername] = emptyrecord_counter
         if recordcountername is not None:
@@ -161,7 +185,15 @@ def ecl_keyworddata_to_df(
             # If DATA is sometimes used for something else in the jsons, redo this.
             data_dim = len(renamer["DATA"])  # The renamers must be in sync with json!
             data_chunks = int(len(recdict["DATA"]) / data_dim)
-            data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
+            try:
+                data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
+            except ValueError as err:
+                raise ValueError(
+                    (
+                        f"Wrong number count for keyword {keyword}. \n"
+                        "Either your keyword is wrong, or your data is wrong"
+                    )
+                ) from err
             data_df = pd.DataFrame(columns=renamer["DATA"], data=data_reshaped)
             # Assign the remaining items from the parsed dict to the dataframe:
             for key, value in recdict.items():
@@ -201,15 +233,8 @@ def parse_opmio_deckrecord(
         dict
     """
     if keyword not in OPMKEYWORDS:
-        logging.error("Keyword %s not supported by common.py", str(keyword))
+        raise ValueError(f"Keyword {keyword} not supported by common.py")
 
-    # opm.io deckitem access functions, depending on value_type in json data for item:
-    deckitem_fn = {
-        "STRING": "get_str",
-        "INT": "get_int",
-        "DOUBLE": "get_raw",
-        "UDA": "get_raw",  # Does not work. Is UDA unsupported in opm.io??
-    }
     rec_dict = {}
 
     if recordindex is None:  # Beware, 0 is different from None here.
@@ -217,47 +242,23 @@ def parse_opmio_deckrecord(
     else:
         itemlist = OPMKEYWORDS[keyword][itemlistname][recordindex]
 
-    # Loop over the items in the "items" section of the json keyword
-    # description.
+    # Loop over the items in the "items" section of the json keyword description.
     # Usually these items refer to one number/value in the deck record ("one line")
     # but for some keywords there are more values, like for PVTO
     for item_idx, jsonitem in enumerate(itemlist):
         item_name = jsonitem["name"]
-        # Cleanup after 2020.03 for opm-common is released
-        # to not use the private property __defaulted
-
-        # Determine if there value is defaulted in the deck:
-        defaulted = False
-        # pylint: disable=protected-access
-        if hasattr(record[item_idx], "__defaulted"):
-            try:
-                defaulted = record[item_idx].__defaulted(0)
-            except IndexError:
-                # Code this better, ask for defaulted propertiies properly
-                # (we end here for items which are lists, e.g. the
-                # DATA item of the PVTO keyword)
-                pass
-        if not defaulted:
-            # Do the data extraction from the record:
+        if not record[item_idx].defaulted:
             if len(record[item_idx]) == 1:
-                rec_dict[item_name] = getattr(
-                    record[item_idx], deckitem_fn[jsonitem["value_type"]]
-                )(0)
+                # The DeckItem attribute .value is only present if there is an
+                # explicit statement "from opm.io.deck import DeckKeyword"
+                # in this file.
+                rec_dict[item_name] = record[item_idx].value
             else:
-                # items -> size_type is set to ALL in json in these cases,
-                # means that the deck record consists of arbitrary sized lists
-                # (but multiple of len(items -> dimension))
-                # Currently only PVT* ends here:
-                rec_dict[item_name] = getattr(record[item_idx], "get_raw_data_list")()
-                # This data must then be unrolled somewhere.
+                rec_dict[item_name] = record[item_idx].get_raw_data_list()
+                # (the caller is responsible for unrolling this list with
+                # correct naming of elements)
         else:
-            if "default" in jsonitem:
-                # Use the default value provided in the json file for
-                # the keyword.
-                rec_dict[item_name] = jsonitem["default"]
-            else:
-                # Give up giving a sensible default value.
-                rec_dict[item_name] = None
+            rec_dict[item_name] = jsonitem.get("default", None)
 
     if renamer:
         renamed_dict = {}
@@ -487,15 +488,17 @@ def df2ecl(
                 calling_module.__name__,
                 str(not_supported),
             )
-        # Reduce to only supported keywords:
-        keywords = list(set(keywords) - set(not_supported))
         # Warn if some requested keywords are not in frame:
         not_in_frame = set(keywords) - keywords_in_frame
         if not_in_frame:
             logger.warning(
                 "Requested keyword(s) not present in dataframe: %s", str(not_in_frame)
             )
-    keywords = keywords_in_frame.intersection(keywords).intersection(set(supported))
+    keywords = [
+        keyword
+        for keyword in keywords  # user supplied list defines the print order
+        if keyword in supported and keyword in keywords_in_frame
+    ]
     if not keywords:
         # Nothing to do
 
@@ -619,3 +622,45 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     del dframe["level_0"]
     dframe.index.name = ""
     return dframe
+
+
+def parse_zonemapfile(filename: str):
+    """Return a dictionary from (int) K layers in the simgrid to strings
+
+    Typical usage is to map from grid layer to zone names.
+
+    The layer filename must currently follow format:
+
+      'ZoneA' 1-4
+      'ZoneB' 5-10
+
+    where the single quotes are optional for zones without spaces.
+    Write single layer zones as 11-11. NB: ResInsight requires single
+    quotes always.
+
+    Either "--" or "#" can be used to denote comments.
+
+    Args:
+        filename (str): Absolute path to a zone map file (lyr format)
+
+    Returns:
+        dict, integer keys which are the K layers. Every layer mentioned
+            in the interval in the input file is present. Can be empty.
+    """
+    zonelines = Path(filename).read_text().splitlines()
+
+    # Remove comments, support both "--" and "#":
+    zonelines = [line.split("--")[0].strip() for line in zonelines]
+    zonelines = [line for line in zonelines if line and not line.startswith("#")]
+
+    zonemap = {}
+    for line in zonelines:
+        try:
+            linesplit = shlex.split(line)
+            (k_0, k_1) = "".join(linesplit[1:]).split("-")
+            zonemap.update(dict.fromkeys(range(int(k_0), int(k_1) + 1), linesplit[0]))
+        except ValueError:
+            logger.error("Could not parse zonemapfile %s", filename)
+            logger.error("Failed on content: %s", line)
+            return None
+    return zonemap

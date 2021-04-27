@@ -9,8 +9,8 @@ import logging
 import datetime
 import pandas as pd
 
-from .eclfiles import EclFiles
-from .common import parse_ecl_month, write_dframe_stdout_file
+from ecl2df import EclFiles
+from ecl2df.common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ REGION_REPORT_COLUMNS = [
     "STOIIP_OIL",
     "ASSOCIATEDOIL_GAS",
     "STOIIP_TOTAL",
-    "WATER_TOTAL",
+    "WIIP_TOTAL",
     "GIIP_GAS",
     "ASSOCIATEDGAS_OIL",
     "GIIP_TOTAL",
@@ -131,13 +131,13 @@ def df(prtfile, fipname="FIPNUM"):
                 )
                 if newdate != date:
                     date = newdate
-                    logger.info("Found date: %s", str(date))
+                    logger.debug("Found date: %s", str(date))
                 continue
             matchedreportblock = re.match(reportblockmatcher, line)
             if matchedreportblock:
                 in_report_block = True
                 region_index = int(matchedreportblock.group(1))
-                logger.info("  Region report for region %s", str(region_index))
+                logger.debug("  Region report for region %s", str(region_index))
                 continue
             if line.startswith(" ============================"):
                 in_report_block = False
@@ -176,6 +176,7 @@ def fill_parser(parser):
         "-o", "--output", type=str, help="Output CSV filename", default="outflow.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument("--debug", action="store_true", help="Debug mode for logging")
     return parser
 
 
@@ -183,6 +184,8 @@ def fipreports_main(args):
     """Command line API"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:

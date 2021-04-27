@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.12.1.dev9+gd707fe2 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.12.1.dev10+g5ee2aaf documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.1.dev9+gd707fe2
+                0.12.1.dev10+g5ee2aaf
               </div>
             
           
@@ -400,6 +400,34 @@ each subitem.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>list of floats or ints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ecl2df.common.parse_zonemapfile">
+<code class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></code><code class="sig-name descname"><span class="pre">parse_zonemapfile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_zonemapfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.parse_zonemapfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary from (int) K layers in the simgrid to strings</p>
+<p>Typical usage is to map from grid layer to zone names.</p>
+<p>The layer filename must currently follow format:</p>
+<blockquote>
+<div><p>‘ZoneA’ 1-4
+‘ZoneB’ 5-10</p>
+</div></blockquote>
+<p>where the single quotes are optional for zones without spaces.
+Write single layer zones as 11-11. NB: ResInsight requires single
+quotes always.</p>
+<p>Either “–” or “#” can be used to denote comments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Absolute path to a zone map file (lyr format)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dict, integer keys which are the K layers. Every layer mentioned</dt><dd><p>in the interval in the input file is present. Can be empty.</p>
+</dd>
+</dl>
+</p>
 </dd>
 </dl>
 </dd></dl>

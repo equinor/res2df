@@ -8,6 +8,113 @@ from ecl2df import compdat
 from ecl2df import EclFiles
 
 WELOPEN_CASES = [
+    # Simplest possible  WELOPEN case
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test the defaults handling in WELOPEN:
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 5* /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test that explicit i,j,k in WELOPEN works:
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     -- This also specifies lumped connections, but is ignored
+     -- by ecl2df  since i,j,k is also specified.
+     'OP1' 'SHUT' 1 1 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test J slicing
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 3 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 1 1 2  /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+            ],
+        ),
+    ),
+    # Lumped connections are not supported, nothing is shut:
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 3 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 3* 1 2 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+            ],
+        ),
+    ),
+    # Test multiple time steps
     (
         """
     DATES
@@ -385,6 +492,33 @@ WELOPEN_CASES = [
             }
         ),
     ),
+    # Test 0 values for ijk-connections
+    (
+        """
+    DATES
+     1 MAY 2001 /
+    /
+
+    COMPDAT
+     'OP1' 1 1 1 2 'OPEN'  /
+    /
+
+    WELOPEN
+     'OP1' 'SHUT' 0 0 0 2* /
+    /
+    """,
+        pd.DataFrame(
+            {
+                "WELL": {0: "OP1", 1: "OP1"},
+                "I": {0: 1, 1: 1},
+                "J": {0: 1, 1: 1},
+                "K1": {0: 2, 1: 1},
+                "K2": {0: 2, 1: 1},
+                "OP/SH": {0: "SHUT", 1: "SHUT"},
+                "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 1)},
+            }
+        ),
+    ),
 ]
 
 
@@ -395,4 +529,11 @@ def test_welopen(test_input, expected):
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
 
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
-    assert (compdf[columns_to_check] == expected[columns_to_check]).all(axis=None)
+    assert (
+        compdf[columns_to_check]
+        .sort_values(by=columns_to_check, axis=0)
+        .reset_index()[columns_to_check]
+        == expected[columns_to_check]
+        .sort_values(by=columns_to_check, axis=0)
+        .reset_index()[columns_to_check]
+    ).all(axis=None)

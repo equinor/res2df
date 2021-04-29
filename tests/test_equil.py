@@ -18,14 +18,50 @@ def test_equil2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
     equildf = equil.df(eclfiles)
-    assert not equildf.empty
-    assert "KEYWORD" in equildf
-    assert "Z" in equildf
-    assert "RS" in equildf
-    assert "RSVD" in equildf["KEYWORD"].values
-    assert "EQUIL" in equildf["KEYWORD"].values
-    # RVVD is not present in the Reek deck:
-    assert "RVVD" not in equildf["KEYWORD"].values
+    expected = {}
+    expected["EQUIL"] = pd.DataFrame(
+        [
+            {
+                "Z": 2469.0,
+                "PRESSURE": 382.4,
+                "OWC": 1700.0,
+                "PCOWC": 0.0,
+                "GOC": 0.0,
+                "PCGOC": 0.0,
+                "INITRS": 1.0,
+                "INITRV": 0.0,
+                "OIP_INIT": 20.0,
+                "EQLNUM": 1,
+                "KEYWORD": "EQUIL",
+            },
+            {
+                "Z": 2469.0,
+                "PRESSURE": 382.4,
+                "OWC": 1000.0,
+                "PCOWC": 0.0,
+                "GOC": 0.0,
+                "PCGOC": 0.0,
+                "INITRS": 2.0,
+                "INITRV": 0.0,
+                "OIP_INIT": 20.0,
+                "EQLNUM": 2,
+                "KEYWORD": "EQUIL",
+            },
+        ]
+    )
+    expected["RSVD"] = pd.DataFrame(
+        [
+            {"Z": 1500.0, "EQLNUM": 1, "KEYWORD": "RSVD", "RS": 184.0},
+            {"Z": 4000.0, "EQLNUM": 1, "KEYWORD": "RSVD", "RS": 184.0},
+            {"Z": 1500.0, "EQLNUM": 2, "KEYWORD": "RSVD", "RS": 184.0},
+            {"Z": 4000.0, "EQLNUM": 2, "KEYWORD": "RSVD", "RS": 184.0},
+        ]
+    )
+
+    for keyword, df in equildf.groupby("KEYWORD"):
+        pd.testing.assert_frame_equal(
+            df.dropna(axis=1).reset_index(drop=True), expected[keyword]
+        )
 
     # Check that we can dump from dataframe to include file
     # and reparse to the same dataframe:

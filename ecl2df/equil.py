@@ -26,7 +26,6 @@ RENAMERS["oil-water-gas"] = {
     "PC_GOC": "PCGOC",
     "BLACK_OIL_INIT": "INITRS",
     "BLACK_OIL_INIT_WG": "INITRV",
-    "OIP_INIT": "ACCURACY",
 }
 RENAMERS["gas-water"] = {
     "DATUM_DEPTH": "Z",
@@ -37,7 +36,6 @@ RENAMERS["gas-water"] = {
     "PC_GOC": "IGNORE2",
     "BLACK_OIL_INIT": "IGNORE3",
     "BLACK_OIL_INIT_WG": "IGNORE4",
-    "OIP_INIT": "ACCURACY",
 }
 RENAMERS["oil-water"] = {
     "DATUM_DEPTH": "Z",
@@ -48,7 +46,6 @@ RENAMERS["oil-water"] = {
     "PC_GOC": "IGNORE2",
     "BLACK_OIL_INIT": "IGNORE3",
     "BLACK_OIL_INIT_WG": "IGNORE4",
-    "OIP_INIT": "ACCURACY",
 }
 RENAMERS["oil-gas"] = {
     "DATUM_DEPTH": "Z",
@@ -59,7 +56,6 @@ RENAMERS["oil-gas"] = {
     "PC_GOC": "PCGOC",
     "BLACK_OIL_INIT": "IGNORE3",
     "BLACK_OIL_INIT_WG": "IGNORE4",
-    "OIP_INIT": "ACCURACY",
 }
 
 

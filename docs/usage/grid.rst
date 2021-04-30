@@ -108,14 +108,14 @@ the whereabouts of the file:
    dframe = grid.df(eclfiles)
    # The filename with layers is relative to DATA-file location
    # or an absolute path.
-   zonemap = eclfiles.get_zonemap("subzones.lyr")
+   subzonemap = ecl2df.common.parse_zonemapfile("subzones.lyr")
    dframe_with_subzones = common.merge_zones(
-       dframe, zonemap, zoneheader="SUBZONE", kname="K"
+       dframe, subzonemap, zoneheader="SUBZONE", kname="K"
    )
 
 For more control over merging of zones, check the documentation for
 the function :func:`ecl2df.common.merge_zones` and
-:meth:`ecl2df.EclFiles.get_zonemap`
+:meth:`ecl2df.common.parse_zonemapfile`
 
 Dynamic data
 ^^^^^^^^^^^^

@@ -9,7 +9,7 @@ import pandas as pd
 
 import pytest
 
-from ecl2df import grid
+from ecl2df import grid, common
 from ecl2df import ecl2csv
 from ecl2df.eclfiles import EclFiles
 
@@ -48,6 +48,46 @@ def test_wrongfile():
     # but when we try to use it, things should fail:
     with pytest.raises(FileNotFoundError):
         grid.init2df(eclfiles)
+
+
+def test_gridzonemap():
+    """Check that zonemap can be merged automatically be default, and also
+    that there is some API for supplying the zonemap directly as a dictionary"""
+    eclfiles = EclFiles(DATAFILE)
+    grid_geom = grid.gridgeometry2df(eclfiles, zonemap=None)
+
+    default_zonemap = grid_geom["ZONE"]
+
+    grid_no_zone = grid.gridgeometry2df(eclfiles, zonemap={})
+    assert "ZONE" not in grid_no_zone
+
+    assert (grid.df(eclfiles, zonemap=None)["ZONE"] == default_zonemap).all()
+
+    df_no_zone = grid.df(eclfiles, zonemap={})
+    assert "ZONE" not in df_no_zone
+
+    df_custom_zone = grid.gridgeometry2df(eclfiles, zonemap={1: "FIRSTLAYER"})
+    assert "ZONE" in df_custom_zone
+    assert set(df_custom_zone[df_custom_zone["K"] == 1]["ZONE"].unique()) == set(
+        ["FIRSTLAYER"]
+    )
+    assert len(df_custom_zone) == len(grid_no_zone)
+
+    df_bogus_zones = grid.gridgeometry2df(
+        eclfiles, zonemap={999999: "nonexistinglayer"}
+    )
+    assert pd.isnull(df_bogus_zones["ZONE"]).all()
+
+    # Test a custom "subzone" map via direct usage of merge_zone on an dataframe
+    # where ZONE already exists:
+
+    dframe = grid.df(eclfiles)
+    subzonemap = {1: "SUBZONE1", 2: "SUBZONE2"}
+    dframe = common.merge_zones(dframe, subzonemap, zoneheader="SUBZONE", kname="K")
+    assert (dframe["ZONE"] == default_zonemap).all()
+    assert set(dframe[dframe["K"] == 1]["SUBZONE"].unique()) == set(["SUBZONE1"])
+    assert set(dframe[dframe["K"] == 2]["SUBZONE"].unique()) == set(["SUBZONE2"])
+    assert len(dframe) == len(grid_no_zone)
 
 
 def test_init2df():

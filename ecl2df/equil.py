@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from ecl2df import common, inferdims
+from ecl2df import common, getLogger_ecl2csv, inferdims
 
 from .eclfiles import EclFiles
 
@@ -118,7 +118,14 @@ def df(
         frames.append(dframe.assign(KEYWORD=keyword))
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:
-        return pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
+        dframe = pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
+        logger.info(
+            "Extracted keywords %s for %g EQLNUMs",
+            dframe["KEYWORD"].unique(),
+            len(dframe["EQLNUM"].unique()),
+        )
+        return dframe
+    logger.warning("No equil data found")
     return pd.DataFrame()
 
 
@@ -306,8 +313,8 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def equil_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
+
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -337,8 +344,7 @@ def equil_main(args) -> None:
 
 def equil_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     equil_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(equil_df, keywords=args.keywords)

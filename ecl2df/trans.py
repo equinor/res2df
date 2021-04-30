@@ -10,6 +10,7 @@ import pandas as pd
 
 import ecl2df.grid
 import ecl2df.nnc
+from ecl2df import getLogger_ecl2csv
 from ecl2df.common import write_dframe_stdout_file
 
 from .eclfiles import EclFiles
@@ -300,8 +301,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def trans_main(args):
     """This is the command line API"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     trans_df = df(
         eclfiles,

@@ -10,7 +10,7 @@ from typing import Union
 
 import pandas as pd
 
-from ecl2df import EclFiles
+from ecl2df import EclFiles, getLogger_ecl2csv
 from ecl2df.common import parse_opmio_deckrecord, write_dframe_stdout_file
 
 try:
@@ -58,7 +58,9 @@ def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
                     for j_idx in range(frec_dict["IY1"], frec_dict["IY2"] + 1):
                         for k_idx in range(frec_dict["IZ1"], frec_dict["IZ2"] + 1):
                             data.append([faultname, i_idx, j_idx, k_idx, faultface])
-    return pd.DataFrame(columns=COLUMNS, data=data)
+    dframe = pd.DataFrame(columns=COLUMNS, data=data)
+    logger.info("Extracted %i faults", len(dframe["NAME"].unique()))
+    return dframe
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -81,8 +83,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def faults_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()

@@ -10,7 +10,7 @@ from typing import Optional
 
 import pandas as pd
 
-from ecl2df import EclFiles, __version__, common, grid
+from ecl2df import EclFiles, __version__, common, getLogger_ecl2csv, grid
 from ecl2df.common import write_dframe_stdout_file
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -278,8 +278,7 @@ def df2ecl_editnnc(
 
 def nnc_main(args) -> None:
     """Command line access point from main() or from ecl2csv via subparser"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(

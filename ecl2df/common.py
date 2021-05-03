@@ -295,7 +295,8 @@ def parse_opmio_tstep_rec(record):
 
 def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
     """Merge in a column with zone names, from a dictionary mapping
-    k-index to zone name
+    k-index to zone name. If the zonemap is not covering all
+    zones, cells will be filled with NaN.
 
     Args:
         df (pd.DataFrame): Dataframe where we should augment a column
@@ -324,7 +325,9 @@ def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
     zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
     zone_df.index.name = "K"
     zone_df.reset_index(inplace=True)
-    return pd.merge(df, zone_df, left_on=kname, right_on="K")
+
+    df[zoneheader] = df[kname].map(zonedict)
+    return df
 
 
 def comment_formatter(multiline, prefix="-- "):

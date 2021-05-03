@@ -1,7 +1,10 @@
 """Test module for layer mapping to zone names"""
 
-import pytest
 from pathlib import Path
+
+import pandas as pd
+
+import pytest
 
 import ecl2df
 
@@ -118,3 +121,72 @@ def test_nonstandardzones(tmpdir):
     assert zonemap[20] == "Raude"
     assert zonemap[30] == "Raude"
     assert len(zonemap) == 21
+
+
+@pytest.mark.parametrize(
+    "dframe, zonedict, zoneheader, kname, expected_df",
+    [
+        (
+            pd.DataFrame([{}]),
+            {},
+            "ZONE",
+            "K",
+            pd.DataFrame([{}]),
+        ),
+        (
+            pd.DataFrame([{"K": 1}]),
+            {},
+            "ZONE",
+            "K",
+            pd.DataFrame([{"K": 1}]),
+        ),
+        (
+            pd.DataFrame([{"K": 1}]),
+            {1: "FOO"},
+            "ZONE",
+            "K",
+            pd.DataFrame([{"K": 1, "ZONE": "FOO"}]),
+        ),
+        (
+            pd.DataFrame([{"KK": 1}]),
+            {1: "FOO"},
+            "ZONE",
+            "KK",
+            pd.DataFrame([{"KK": 1, "ZONE": "FOO"}]),
+        ),
+        (
+            pd.DataFrame([{"K": 1}]),
+            {1: "FOO"},
+            "ZONE",
+            "KK",
+            pd.DataFrame([{"K": 1}]),
+        ),
+        (
+            pd.DataFrame([{"K": 1}]),
+            {1: "FOO"},
+            "SUBZONE",
+            "K",
+            pd.DataFrame([{"K": 1, "SUBZONE": "FOO"}]),
+        ),
+        (
+            pd.DataFrame([{"K": 1}]),
+            {2: "FOO"},
+            "ZONE",
+            "K",
+            pd.DataFrame([{"K": 1, "ZONE": None}]),
+        ),
+        (
+            pd.DataFrame([{"K": 1}, {"K": 2}]),
+            {2: "FOO"},
+            "ZONE",
+            "K",
+            pd.DataFrame([{"K": 1, "ZONE": None}, {"K": 2, "ZONE": "FOO"}]),
+        ),
+    ],
+)
+def test_merge_zones(dframe, zonedict, zoneheader, kname, expected_df):
+    pd.testing.assert_frame_equal(
+        ecl2df.common.merge_zones(dframe, zonedict, zoneheader, kname),
+        expected_df,
+        check_like=True,
+    )

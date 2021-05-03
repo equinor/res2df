@@ -235,7 +235,7 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
     return rststack
 
 
-def gridgeometry2df(eclfiles):
+def gridgeometry2df(eclfiles, zonemap=None):
     """Produce a Pandas Dataframe with Eclipse gridgeometry
 
     Order is significant, and is determined by the order from libecl, and used
@@ -243,10 +243,16 @@ def gridgeometry2df(eclfiles):
 
     Args:
         eclfiles (EclFiles): object holding the Eclipse output files.
+        zonemap (dict): A zonemap dictionary mapping every K index to a
+            string, which will be put in a column ZONE. If none is provided,
+            a zonemap from a default file will be looked for. Provide an empty
+            dictionary to avoid looking for the default file, and no ZONE
+            column will be added.
 
     Returns:
-        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell. The
-        index of the dataframe are the global indices
+        DataFrame with at least the columns I, J, K, X, Y, Z and VOLUME. One row
+        pr. cell. The index of the dataframe are the global indices. If a zonemap
+        is provided, zone information will be in the column ZONE.
     """
     if not eclfiles:
         raise ValueError
@@ -278,7 +284,9 @@ def gridgeometry2df(eclfiles):
     # Column names should be uppercase
     grid_df.columns = [x.upper() for x in grid_df.columns]
 
-    zonemap = eclfiles.get_zonemap()
+    if zonemap is None:
+        # Look for default zonemap file:
+        zonemap = eclfiles.get_zonemap()
     if zonemap:
         logger.info("Merging zonemap into grid")
         grid_df = common.merge_zones(grid_df, zonemap, kname="K")
@@ -396,6 +404,7 @@ def df(
     rstdates=None,
     dateinheaders=False,
     stackdates=False,
+    zonemap=None,
 ):
     """Produce a dataframe with grid information
 
@@ -419,8 +428,13 @@ def df(
             called DATE will be added and data for all restart
             dates will be added in a stacked manner. Implies
             dateinheaders False.
+        zonemap (dict): A zonemap dictionary mapping every K index to a
+            string, which will be put in a column ZONE. If none is provided,
+            a zonemap from a default file will be looked for. Provide an empty
+            dictionary to avoid looking for the default file, and no ZONE
+            column will be added.
     """
-    gridgeom = gridgeometry2df(eclfiles)
+    gridgeom = gridgeometry2df(eclfiles, zonemap)
     initdf = init2df(eclfiles, vectors=vectors)
     rst_df = None
     if rstdates:

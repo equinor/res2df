@@ -366,7 +366,14 @@ def applywelopen(compdat_df, welopen_df):
     """
     welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
     for _, row in welopen_df.iterrows():
-        if row["I"] and row["J"] and row["K"]:
+        if (row["I"] is None and row["J"] is None and row["K"] is None) or (
+            row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
+        ):
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        elif row["I"] and row["J"] and row["K"]:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
@@ -375,14 +382,12 @@ def applywelopen(compdat_df, welopen_df):
                 & (compdat_df["K1"] == row["K"])
                 & (compdat_df["K2"] == row["K"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
-        elif row["C1"] or row["C2"]:
-            logger.warning(
-                "Lumped connections are not supported in a WELOPEN keyword. "
-                "Skipping WELOPEN actions for lumped connections '%s' and/or '%s'"
-                % (row["C1"], row["C2"])
-            )
-            continue
-        elif not (row["I"] and row["J"] and row["K"]):
+        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
@@ -390,13 +395,21 @@ def applywelopen(compdat_df, welopen_df):
         else:
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
-                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+                f"\n {str(row)} "
+            )
+
+        if (row["C1"] is not None and row["C1"] > 0) or (
+            row["C2"] is not None and row["C2"]
+        ) > 0:
+            raise ValueError(
+                "Lumped connections are not supported by ecl2df in a WELOPEN keyword. "
+                f"\n{str(row)} "
             )
 
         if previous_state.empty:
             raise ValueError(
                 "A WELOPEN keyword is not acting on any existing connection. "
-                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+                f"\n {str(row)} "
             )
 
         new_state = previous_state

@@ -68,6 +68,7 @@ for keyw in [
     "WELOPEN",
     "WELSEGS",
     "WELSPECS",
+    "WLIST",
     "WSEGAICD",
     "WSEGSICD",
     "WSEGVALV",
@@ -271,14 +272,23 @@ def parse_opmio_deckrecord(
     # but for some keywords there are more values, like for PVTO
     for item_idx, jsonitem in enumerate(itemlist):
         item_name = jsonitem["name"]
-        if not record[item_idx].defaulted:
+        try:
+            defaulted = record[item_idx].defaulted
+        except IndexError:
+            # Workaround for missing default in json for WLIST item WELLS (empty string)
+            defaulted = True
+        if not defaulted:
             if len(record[item_idx]) == 1:
                 # The DeckItem attribute .value is only present if there is an
                 # explicit statement "from opm.io.deck import DeckKeyword"
                 # in this file.
                 rec_dict[item_name] = record[item_idx].value
             else:
-                rec_dict[item_name] = record[item_idx].get_raw_data_list()
+                try:
+                    rec_dict[item_name] = record[item_idx].get_raw_data_list()
+                except ValueError:
+                    # Will get here for string lists:
+                    rec_dict[item_name] = record[item_idx].get_data_list()
                 # (the caller is responsible for unrolling this list with
                 # correct naming of elements)
         else:

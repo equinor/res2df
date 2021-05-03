@@ -6,7 +6,6 @@ import datetime
 from pathlib import Path
 
 import pandas as pd
-import numpy as np
 
 import pytest
 
@@ -27,8 +26,8 @@ def test_rftrecords2df():
         rftrecs["timeindex"].unique()
     )
     assert set(rftrecs["recordtype"].unique()) == set(["REAL", "INTE", "CHAR"])
-    assert rftrecs["timeindex"].dtype == np.int
-    assert rftrecs["recordidx"].dtype == np.int
+    assert rftrecs["timeindex"].dtype == int
+    assert rftrecs["recordidx"].dtype == int
 
     # Test that we have a consecutive index in "recordidx"
     assert (rftrecs["recordidx"] == rftrecs.index).all()

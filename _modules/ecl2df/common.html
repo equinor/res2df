@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.12.2.dev2+g601955f documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.12.2.dev3+gd709895 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2.dev2+g601955f
+                0.12.2.dev3+gd709895
               </div>
             
           
@@ -461,7 +461,8 @@
 
 <div class="viewcode-block" id="merge_zones"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.merge_zones">[docs]</a><span class="k">def</span> <span class="nf">merge_zones</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zonedict</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;ZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Merge in a column with zone names, from a dictionary mapping</span>
-<span class="sd">    k-index to zone name</span>
+<span class="sd">    k-index to zone name. If the zonemap is not covering all</span>
+<span class="sd">    zones, cells will be filled with NaN.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): Dataframe where we should augment a column</span>
@@ -490,7 +491,9 @@
     <span class="n">zone_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">zonedict</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">zoneheader</span><span class="p">])</span>
     <span class="n">zone_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span>
     <span class="n">zone_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zone_df</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">kname</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span></div>
+
+    <span class="n">df</span><span class="p">[</span><span class="n">zoneheader</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">kname</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">zonedict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
 
 
 <div class="viewcode-block" id="comment_formatter"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.comment_formatter">[docs]</a><span class="k">def</span> <span class="nf">comment_formatter</span><span class="p">(</span><span class="n">multiline</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;-- &quot;</span><span class="p">):</span>

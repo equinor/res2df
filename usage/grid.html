@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>grid &mdash; ecl2df 0.12.2.dev2+g601955f documentation</title>
+  <title>grid &mdash; ecl2df 0.12.2.dev3+gd709895 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.2.dev2+g601955f
+                0.12.2.dev3+gd709895
               </div>
             
           
@@ -794,15 +794,15 @@ the whereabouts of the file:</p>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
 <span class="c1"># The filename with layers is relative to DATA-file location</span>
 <span class="c1"># or an absolute path.</span>
-<span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">(</span><span class="s2">&quot;subzones.lyr&quot;</span><span class="p">)</span>
+<span class="n">subzonemap</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">parse_zonemapfile</span><span class="p">(</span><span class="s2">&quot;subzones.lyr&quot;</span><span class="p">)</span>
 <span class="n">dframe_with_subzones</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">merge_zones</span><span class="p">(</span>
-    <span class="n">dframe</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;SUBZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K&quot;</span>
+    <span class="n">dframe</span><span class="p">,</span> <span class="n">subzonemap</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;SUBZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>For more control over merging of zones, check the documentation for
 the function <a class="reference internal" href="../ecl2df.html#ecl2df.common.merge_zones" title="ecl2df.common.merge_zones"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.common.merge_zones()</span></code></a> and
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">ecl2df.EclFiles.get_zonemap()</span></code></p>
+<a class="reference internal" href="../ecl2df.html#ecl2df.common.parse_zonemapfile" title="ecl2df.common.parse_zonemapfile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ecl2df.common.parse_zonemapfile()</span></code></a></p>
 </div>
 <div class="section" id="dynamic-data">
 <h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this headline">¶</a></h2>

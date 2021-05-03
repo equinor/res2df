@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.12.2.dev2+g601955f documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.12.2.dev3+gd709895 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2.dev2+g601955f
+                0.12.2.dev3+gd709895
               </div>
             
           
@@ -401,7 +401,7 @@
     <span class="k">return</span> <span class="n">rststack</span></div>
 
 
-<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">):</span>
+<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">zonemap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with Eclipse gridgeometry</span>
 
 <span class="sd">    Order is significant, and is determined by the order from libecl, and used</span>
@@ -409,10 +409,16 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles (EclFiles): object holding the Eclipse output files.</span>
+<span class="sd">        zonemap (dict): A zonemap dictionary mapping every K index to a</span>
+<span class="sd">            string, which will be put in a column ZONE. If none is provided,</span>
+<span class="sd">            a zonemap from a default file will be looked for. Provide an empty</span>
+<span class="sd">            dictionary to avoid looking for the default file, and no ZONE</span>
+<span class="sd">            column will be added.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell. The</span>
-<span class="sd">        index of the dataframe are the global indices</span>
+<span class="sd">        DataFrame with at least the columns I, J, K, X, Y, Z and VOLUME. One row</span>
+<span class="sd">        pr. cell. The index of the dataframe are the global indices. If a zonemap</span>
+<span class="sd">        is provided, zone information will be in the column ZONE.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span>
@@ -444,7 +450,9 @@
     <span class="c1"># Column names should be uppercase</span>
     <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
-    <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zonemap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Look for default zonemap file:</span>
+        <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zonemap into grid&quot;</span><span class="p">)</span>
         <span class="n">grid_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">merge_zones</span><span class="p">(</span><span class="n">grid_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
@@ -562,6 +570,7 @@
     <span class="n">rstdates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">stackdates</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">zonemap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
 
@@ -585,8 +594,13 @@
 <span class="sd">            called DATE will be added and data for all restart</span>
 <span class="sd">            dates will be added in a stacked manner. Implies</span>
 <span class="sd">            dateinheaders False.</span>
+<span class="sd">        zonemap (dict): A zonemap dictionary mapping every K index to a</span>
+<span class="sd">            string, which will be put in a column ZONE. If none is provided,</span>
+<span class="sd">            a zonemap from a default file will be looked for. Provide an empty</span>
+<span class="sd">            dictionary to avoid looking for the default file, and no ZONE</span>
+<span class="sd">            column will be added.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+    <span class="n">gridgeom</span> <span class="o">=</span> <span class="n">gridgeometry2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">)</span>
     <span class="n">initdf</span> <span class="o">=</span> <span class="n">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">)</span>
     <span class="n">rst_df</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">rstdates</span><span class="p">:</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.12.2.dev2+g601955f documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.12.2.dev3+gd709895 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.2.dev2+g601955f
+                0.12.2.dev3+gd709895
               </div>
             
           
@@ -334,7 +334,8 @@ to produce Eclipse include files from a CSV file.</p>
 <dt id="ecl2df.common.merge_zones">
 <code class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></code><code class="sig-name descname"><span class="pre">merge_zones</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonedict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoneheader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ZONE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'K1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#merge_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.merge_zones" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge in a column with zone names, from a dictionary mapping
-k-index to zone name</p>
+k-index to zone name. If the zonemap is not covering all
+zones, cells will be filled with NaN.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1318,7 +1319,7 @@ is an ISO-8601 representation of the dates.</p>
 
 <dl class="py function">
 <dt id="ecl2df.grid.df">
-<code class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></code><code class="sig-name descname"><span class="pre">df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropconstants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rstdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateinheaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></code><code class="sig-name descname"><span class="pre">df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropconstants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rstdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateinheaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a dataframe with grid information</p>
 <p>Grid information (center coordinates x, y, z), cell
 indices (i, j, k) (indices follow the Eclipse convention starting
@@ -1341,6 +1342,11 @@ should always have the ISO-date embedded in the column header.</p></li>
 called DATE will be added and data for all restart
 dates will be added in a stacked manner. Implies
 dateinheaders False.</p></li>
+<li><p><strong>zonemap</strong> (<em>dict</em>) – A zonemap dictionary mapping every K index to a
+string, which will be put in a column ZONE. If none is provided,
+a zonemap from a default file will be looked for. Provide an empty
+dictionary to avoid looking for the default file, and no ZONE
+column will be added.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1428,20 +1434,25 @@ anyway.</p></li>
 
 <dl class="py function">
 <dt id="ecl2df.grid.gridgeometry2df">
-<code class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></code><code class="sig-name descname"><span class="pre">gridgeometry2df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#gridgeometry2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.gridgeometry2df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></code><code class="sig-name descname"><span class="pre">gridgeometry2df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/grid.html#gridgeometry2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.gridgeometry2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a Pandas Dataframe with Eclipse gridgeometry</p>
 <p>Order is significant, and is determined by the order from libecl, and used
 when merging with other dataframes with cell-data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – object holding the Eclipse output files.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – object holding the Eclipse output files.</p></li>
+<li><p><strong>zonemap</strong> (<em>dict</em>) – A zonemap dictionary mapping every K index to a
+string, which will be put in a column ZONE. If none is provided,
+a zonemap from a default file will be looked for. Provide an empty
+dictionary to avoid looking for the default file, and no ZONE
+column will be added.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell. The
-index of the dataframe are the global indices</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>DataFrame</p>
+<dd class="field-even"><p>DataFrame with at least the columns I, J, K, X, Y, Z and VOLUME. One row
+pr. cell. The index of the dataframe are the global indices. If a zonemap
+is provided, zone information will be in the column ZONE.</p>
 </dd>
 </dl>
 </dd></dl>

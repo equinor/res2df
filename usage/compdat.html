@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compdat &mdash; ecl2df 0.12.2.dev3+gd709895 documentation</title>
+  <title>compdat &mdash; ecl2df 0.12.2.dev4+gbf8493e documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.2.dev3+gd709895
+                0.12.2.dev4+gbf8493e
               </div>
             
           
@@ -515,6 +515,16 @@ statements from the actions in WELOPEN.</p>
 <p>If you need access to WELSEGS, COMPSEGS, WSEGSICD, WSEGAICD or WSEGVALV, you
 must use the <code class="docutils literal notranslate"><span class="pre">deck2dfs()</span></code> function which will return a dict with dataframes
 for each of COMPDAT, and the segmentation keywords.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When WELOPEN is in use, the dataframe can differ from Eclipse
+behaviour in certain circumstances. The dataframe representation from
+<code class="docutils literal notranslate"><span class="pre">compdat</span></code> does not separate from a “shut” well and the open-ness of its
+connections. So in an Eclipse deck it is possible to shut a well, and then
+reopen it, and get back the original open/shut state of individual
+connections prior to well shut.  The dataframe format will display <cite>all</cite>
+connections as open if a well is opened with defaulted indices.</p>
+</div>
 <div class="section" id="adding-init-data">
 <h2>Adding INIT data<a class="headerlink" href="#adding-init-data" title="Permalink to this headline">¶</a></h2>
 <p>Additional information from the grid for each connection (based on i, j, k) can

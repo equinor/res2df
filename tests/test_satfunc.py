@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+import numpy as np
 import pandas as pd
 
 from ecl2df import satfunc, ecl2csv, csv2ecl, inferdims
@@ -14,24 +15,38 @@ TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
-def test_satfunc2df():
-    """Test that dataframes are produced"""
+def test_ecldeck_to_satfunc_dframe():
+    """Test that dataframes can be produced from a full Eclipse deck (the
+    example Reek case)"""
     eclfiles = EclFiles(DATAFILE)
     satdf = satfunc.df(eclfiles.get_ecldeck())
 
-    assert not satdf.empty
-    assert "KEYWORD" in satdf  # for all data
-    assert "SATNUM" in satdf  # for all data
+    assert set(satdf["KEYWORD"]) == {"SWOF", "SGOF"}
+    assert set(satdf["SATNUM"]) == {1}
 
-    assert "SWOF" in satdf["KEYWORD"].unique()
-    assert "SGOF" in satdf["KEYWORD"].unique()
-    assert "SW" in satdf
-    assert "KRW" in satdf
-    assert "KROW" in satdf
-    assert "SG" in satdf
-    assert "KROG" in satdf
-    assert satdf["SATNUM"].unique() == [1]
+    assert np.isclose(satdf["SW"].min(), 0.32)
+    assert np.isclose(satdf["SW"].max(), 1.0)
 
+    assert np.isclose(satdf["SG"].min(), 0.0)
+    assert np.isclose(satdf["SG"].max(), 1 - 0.32)
+
+    assert np.isclose(satdf["KRW"].min(), 0.0)
+    assert np.isclose(satdf["KRW"].max(), 1.0)
+
+    assert np.isclose(satdf["KROW"].min(), 0.0)
+    assert np.isclose(satdf["KROW"].max(), 1.0)
+
+    assert np.isclose(satdf["KROG"].min(), 0.0)
+    assert np.isclose(satdf["KROG"].max(), 1.0)
+
+    assert len(satdf) == 76
+
+
+def test_satfunc_roundtrip():
+    """Test that we can produce a SATNUM dataframe from the Reek case, convert
+    it back to an include file, and then reinterpret it to the same"""
+    eclfiles = EclFiles(DATAFILE)
+    satdf = satfunc.df(eclfiles.get_ecldeck())
     inc = satfunc.df2ecl(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(
@@ -70,122 +85,111 @@ def test_nodata():
     assert df_from_inc.empty
 
 
-def test_str2df():
-    """Test parsing of a direct string"""
-    swofstr = """
-SWOF
- 0 0 1 1
- 1 1 0 0
- /
-"""
-    satdf = satfunc.df(swofstr)
-    assert len(satdf) == 2
-    inc = satfunc.df2ecl_swof(satdf)
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(satdf, df_from_inc)
-
-    swofstr2 = """
--- RUNSPEC -- (this line is optional)
+@pytest.mark.parametrize(
+    "string, expected_df",
+    [
+        ("", pd.DataFrame()),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """SWOF
+  0 0 1 1
+  1 1 0 0
+/
+""",
+            pd.DataFrame(
+                columns=["SW", "KRW", "KROW", "PCOW", "SATNUM", "KEYWORD"],
+                data=[[0.0, 0.0, 1.0, 1.0, 1, "SWOF"], [1.0, 1.0, 0.0, 0.0, 1, "SWOF"]],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """
+RUNSPEC -- (this line is optional)
 
 TABDIMS
-  2 /
+  2/
 
--- PROPS -- (optional)
+PROPS -- (optional)
 
 SWOF
- 0 0 1 1
- 1 1 0 0
+  0 0 1 1
+  1 1 0 0
 /
- 0 0 1 1
- 0.5 0.5 0.5 0.5
- 1 1 0 0
+  0 0 1 1
+  0.5 0.5 0.5 0.5
+  1 1 0 0
 /
-"""
-    satdf2 = satfunc.df(swofstr2)
-    assert "SATNUM" in satdf
-    assert len(satdf2["SATNUM"].unique()) == 2
-    assert len(satdf2) == 5
-
-    inc = satfunc.df2ecl(satdf)
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(satdf, df_from_inc)
-
-    # Try empty/bogus data:
-    bogusdf = satfunc.df("SWRF\n 0 /\n")
-    # (warnings should be issued)
-    assert bogusdf.empty
-
-    # Test with bogus E100 keywords:
-    tricky = satfunc.df("FOO\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
-    assert not tricky.empty
-    assert len(tricky["SATNUM"].unique()) == 1
-
-    # Test with unsupported (for OPM) E100 keywords (trickier than bogus..)
-    # # tricky = satfunc.df("CARFIN\n\nSWOF\n 0 0 0 1/ 1 1 1 0\n/\n")
-    # # assert not tricky.empty
-    # # assert len(tricky["SATNUM"].unique()) == 1
-    # ### It remains unsolved how to avoid an error here!
-
-
-def test_slgof(tmpdir):
-    """Test parsing of SLGOF"""
-    tmpdir.chdir()
-    string = """
-SLGOF
+""",
+            pd.DataFrame(
+                columns=["SW", "KRW", "KROW", "PCOW", "SATNUM", "KEYWORD"],
+                data=[
+                    [0.0, 0.0, 1.0, 1.0, 1, "SWOF"],
+                    [1.0, 1.0, 0.0, 0.0, 1, "SWOF"],
+                    [0.0, 0.0, 1.0, 1.0, 2, "SWOF"],
+                    [0.5, 0.5, 0.5, 0.5, 2, "SWOF"],
+                    [1.0, 1.0, 0.0, 0.0, 2, "SWOF"],
+                ],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        ("SWRF\n0 / \n", pd.DataFrame()),  # a warning will be printed
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            # Bogus E100 keywords, will be accepted:
+            "FOO\n\nSWOF\n 0 0 1 1\n 1 1  0 0\n/\n",
+            pd.DataFrame(
+                columns=["SW", "KRW", "KROW", "PCOW", "SATNUM", "KEYWORD"],
+                data=[[0.0, 0.0, 1.0, 1.0, 1, "SWOF"], [1.0, 1.0, 0.0, 0.0, 1, "SWOF"]],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """SLGOF
   0 1 1 0
   1 0 0 0
 /
-"""
-    slgof_df = satfunc.df(string)
-    assert len(slgof_df) == 2
-    assert "SL" in slgof_df
-    assert "KRG" in slgof_df
-    assert "KRO" in slgof_df
-    assert "PCOG" in slgof_df
-    inc = satfunc.df2ecl(slgof_df, filename="slgof.inc")
-    assert Path("slgof.inc").is_file()
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(slgof_df, df_from_inc)
-
-
-def test_sof2():
-    """Test parsing of SOF2"""
-    string = """
-SOF2
+    """,
+            pd.DataFrame(
+                columns=["SL", "KRG", "KRO", "PCOG", "SATNUM", "KEYWORD"],
+                data=[
+                    [0.0, 1.0, 1.0, 0.0, 1, "SLGOF"],
+                    [1.0, 0.0, 0.0, 0.0, 1, "SLGOF"],
+                ],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """SOF2
   0 1
   1 0
 /
-"""
-    sof2_df = satfunc.df(string)
-    assert len(sof2_df) == 2
-    assert "SO" in sof2_df
-    assert "KRO" in sof2_df
-    inc = satfunc.df2ecl(sof2_df)
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(sof2_df, df_from_inc)
-
-
-def test_sof3():
-    """Test parsing of SOF3"""
-    string = """
-SOF3
+""",
+            pd.DataFrame(
+                columns=["SO", "KRO", "SATNUM", "KEYWORD"],
+                data=[
+                    [0.0, 1.0, 1, "SOF2"],
+                    [1.0, 0.0, 1, "SOF2"],
+                ],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """SOF3
   0 1 1
   1 0 0
 /
-"""
-    sof3_df = satfunc.df(string)
-    assert len(sof3_df) == 2
-    assert "SO" in sof3_df
-    assert "KROW" in sof3_df
-    assert "KROG" in sof3_df
-    inc = satfunc.df2ecl(sof3_df)
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(sof3_df, df_from_inc)
-
-
-def test_sgfn():
-    """Test parsing of SGFN"""
-    string = """
+""",
+            pd.DataFrame(
+                columns=["SO", "KROW", "KROG", "SATNUM", "KEYWORD"],
+                data=[
+                    [0.0, 1.0, 1.0, 1, "SOF3"],
+                    [1.0, 0.0, 0.0, 1, "SOF3"],
+                ],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """
 SGFN
   0 1 0
   1 0 0
@@ -193,38 +197,46 @@ SGFN
   0 1 0
   1 0.1 1
 /
-"""
-    sgfn_df = satfunc.df(string)
-    assert len(sgfn_df) == 4
-    assert len(sgfn_df["SATNUM"].unique()) == 2
-    assert "SG" in sgfn_df
-    assert "KRG" in sgfn_df
-    assert "PCOG" in sgfn_df
-    inc = satfunc.df2ecl(sgfn_df)
-    df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(sgfn_df, df_from_inc)
-
-
-def test_sgwfn():
-    """Test parsing of SGWFN"""
-    string = """
- SGWFN
+""",
+            pd.DataFrame(
+                columns=["SG", "KRG", "PCOG", "SATNUM", "KEYWORD"],
+                data=[
+                    [0.0, 1.0, 0.0, 1, "SGFN"],
+                    [1.0, 0.0, 0.0, 1, "SGFN"],
+                    [0.0, 1.0, 0.0, 2, "SGFN"],
+                    [1.0, 0.1, 1.0, 2, "SGFN"],
+                ],
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            """SGWFN
   0 1 1 0
   1 0 0 0
  /
- """
-    sgwfn_df = satfunc.df(string)
-    assert len(sgwfn_df) == 2
-    assert "SG" in sgwfn_df
-    assert "KRG" in sgwfn_df
-    assert "KRW" in sgwfn_df
-    assert "PCGW" in sgwfn_df
-    inc = satfunc.df2ecl(sgwfn_df)
+ """,
+            pd.DataFrame(
+                columns=["SG", "KRG", "KRW", "PCGW", "SATNUM", "KEYWORD"],
+                data=[
+                    [0.0, 1.0, 1.0, 0.0, 1, "SGWFN"],
+                    [1.0, 0.0, 0.0, 0.0, 1, "SGWFN"],
+                ],
+            ),
+        ),
+    ],
+)
+def test_str2df(string, expected_df):
+    """Test that we can parse a string into a DataFrame,
+    back to string, and to DataFrame again"""
+    satdf = satfunc.df(string)
+    pd.testing.assert_frame_equal(satdf, expected_df)
+
+    if expected_df.empty:
+        return
+
+    inc = satfunc.df2ecl(satdf)
     df_from_inc = satfunc.df(inc)
-    pd.testing.assert_frame_equal(
-        sgwfn_df.sort_values(["SATNUM", "KEYWORD"]),
-        df_from_inc.sort_values(["SATNUM", "KEYWORD"]),
-    )
+    pd.testing.assert_frame_equal(df_from_inc, expected_df)
 
 
 def test_sgof_satnuminferrer(tmpdir, mocker):

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.inferdims &mdash; ecl2df 0.12.2.dev4+gbf8493e documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df 0.12.2.dev6+g3996200 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2.dev4+gbf8493e
+                0.12.2.dev6+g3996200
               </div>
             
           
@@ -218,12 +218,13 @@
     <span class="c1"># this one opm.io will fail if there are extra records</span>
     <span class="c1"># in tables (if NTSFUN in TABDIMS is wrong f.ex):</span>
     <span class="n">opmioparser_recovery_fail_extra_records</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_INVALID_KEYWORD_COMBINATION&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;PARSE_UNKNOWN_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;SUMMARY_UNKNOWN_GROUP&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;UNSUPPORTED_*&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
     <span class="p">]</span>
 
     <span class="n">max_guess</span> <span class="o">=</span> <span class="mi">640</span>  <span class="c1"># This ought to be enough for everybody</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.12.2.dev4+gbf8493e documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.12.2.dev6+g3996200 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2.dev4+gbf8493e
+                0.12.2.dev6+g3996200
               </div>
             
           
@@ -188,16 +188,17 @@
 <span class="k">if</span> <span class="n">HAVE_OPM</span><span class="p">:</span>
     <span class="c1"># Default parse option to opm.io for a very permissive parsing</span>
     <span class="n">OPMIOPARSER_RECOVERY</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_DATA&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_RECORDS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_INVALID_KEYWORD_COMBINATION&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_DIMS_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_SLASH&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;PARSE_UNKNOWN_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;SUMMARY_UNKNOWN_GROUP&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_SLASH&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;UNSUPPORTED_*&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_SECTIONS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_DIMS_KEYWORD&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_RANDOM_TEXT&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_MISSING_INCLUDE&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_RECORDS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_DATA&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
     <span class="p">]</span>
 
 

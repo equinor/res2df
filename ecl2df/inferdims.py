@@ -52,12 +52,13 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     # this one opm.io will fail if there are extra records
     # in tables (if NTSFUN in TABDIMS is wrong f.ex):
     opmioparser_recovery_fail_extra_records = [
+        ("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore),
+        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
+        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
         ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
         ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
         ("UNSUPPORTED_*", opm.io.action.ignore),
-        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
-        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
-        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
     ]
 
     max_guess = 640  # This ought to be enough for everybody

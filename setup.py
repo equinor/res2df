@@ -51,7 +51,9 @@ setup(
     license="GPLv3",
     packages=find_packages(include=["ecl2df*"]),
     package_dir={"ecl2df": "ecl2df"},
-    package_data={"ecl2df": ["opmkeywords/*", "config_jobs/*", "py.typed"]},
+    package_data={
+        "ecl2df": ["opmkeywords/*", "config_jobs/*", "py.typed", "svg_color_keyword_names.txt"]
+    },
     zip_safe=False,
     entry_points={
         "console_scripts": [

@@ -3,10 +3,14 @@
 Extract transmissibility information from Eclipse output files as Dataframes.
 """
 import logging
+import argparse
+from typing import Union, List
 
 import pandas as pd
 
-import ecl2df
+import ecl2df.grid
+import ecl2df.nnc
+
 from ecl2df.common import write_dframe_stdout_file
 from .eclfiles import EclFiles
 
@@ -21,15 +25,15 @@ logger = logging.getLogger(__name__)
 
 
 def df(
-    eclfiles,
-    vectors=None,
-    boundaryfilter=False,
-    group=False,
-    coords=False,
-    onlykdir=False,
-    onlyijdir=False,
-    addnnc=False,
-):
+    eclfiles: EclFiles,
+    vectors: Union[str, List[str]] = None,
+    boundaryfilter: bool = False,
+    group: bool = False,
+    coords: bool = False,
+    onlykdir: bool = False,
+    onlyijdir: bool = False,
+    addnnc: bool = False,
+) -> pd.DataFrame:
     """Make a dataframe of the neighbour transmissibilities.
 
     The TRANX, TRANY and TRANZ (whenever nonzero) will be used
@@ -52,25 +56,25 @@ def df(
     you will get a corresponding FIPNUM1 and FIPNUM2 added.
 
     Args:
-        eclfiles (EclFiles): An object representing your Eclipse run
-        vectors (str or list): Eclipse INIT vectors that you want to include
-        boundaryfilter (bool): Set to true if you want to filter where one INIT
+        eclfiles: An object representing your Eclipse run
+        vectors: Eclipse INIT vectors that you want to include
+        boundaryfilter: Set to true if you want to filter where one INIT
             vector change. Only use for integer INIT vectors.
-        group (bool): Set to true if you want to sum transmissibilities over
+        group: Set to true if you want to sum transmissibilities over
             boundary interfaces. Implies boundaryfilter and requires only one integer
             INIT vector.
-        coords (bool): Set to true if you want to add coordinates for the
+        coords: Set to true if you want to add coordinates for the
             average of the two cells centerpoint and the distance between
             the two cells centerpoints (X, Y, Z, DX, DY, DZ)
-        onlykdir (bool): Set to true if you only want transmissibilities in
+        onlykdir: Set to true if you only want transmissibilities in
             K direction
-        onlyijdir (bool): Set to true if you only want transmissibilities
+        onlyijdir: Set to true if you only want transmissibilities
             in the IJ-plane
-        addnnc (bool): Set to true if NNC connection should be concatenated to
+        addnnc: Set to true if NNC connection should be concatenated to
             the dataframe
 
     Returns:
-        pd.DataFrame: with one cell-pair pr. row. Empty dataframe if error.
+        Dataframe with one cell-pair pr. row. Empty dataframe if error.
     """
     if not vectors:
         vectors = []
@@ -96,7 +100,7 @@ def df(
             "Filtering to both k and to ij simultaneously " "results in empty dataframe"
         )
 
-    grid_df = ecl2df.grid.df(eclfiles)  # .set_index(["I", "J", "K"])
+    grid_df = ecl2df.grid.df(eclfiles)
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
         logger.warning(
@@ -229,7 +233,7 @@ def df(
     return trans_df
 
 
-def make_nx_graph(eclfiles, region="FIPNUM"):
+def make_nx_graph(eclfiles: EclFiles, region: str = "FIPNUM") -> "networkx.Graph":
     """Construct a networkx graph for the transmissibilities."""
     if not HAVE_NETWORKX:
         logger.error("Please install networkx for this function to work")
@@ -244,7 +248,7 @@ def make_nx_graph(eclfiles, region="FIPNUM"):
     return graph
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parser.
 
     Arguments:

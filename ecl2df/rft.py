@@ -13,23 +13,27 @@ The columns representing SEGxxxxx data on ICD segments are renamed
 by adding the prefix ``ICD_``
 """
 
+import argparse
 import datetime
 import logging
 import collections
+from typing import Set, Iterable, Dict, Any, Optional
 
 import numpy as np
 import pandas as pd
+
+from ecl.eclfile import EclFile
 
 from .eclfiles import EclFiles
 from .gruptree import tree_from_dict
 from .common import merge_zones, write_dframe_stdout_file
 
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 # In debug mode, these columns will be exported to three csv files.
-CON_TOPOLOGY_COLS = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}
-SEG_TOPOLOGY_COLS = {
+CON_TOPOLOGY_COLS: Set = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}
+SEG_TOPOLOGY_COLS: Set = {
     "SEGIDX",
     "SEGIDX_upstream",
     "SEGBRNO",
@@ -42,7 +46,7 @@ SEG_TOPOLOGY_COLS = {
     "LEAF",
     "SEGDEPTH",
 }
-ICD_TOPOLOGY_COLS = {
+ICD_TOPOLOGY_COLS: Set = {
     "ICD_SEGBRNO_upstream",
     "ICD_SEGIDX_upstream",
     "ICD_LEAF",
@@ -56,7 +60,7 @@ ICD_TOPOLOGY_COLS = {
 }
 
 
-def _rftrecords2df(rftfile):
+def _rftrecords2df(rftfile: EclFile) -> pd.DataFrame:
     """Construct a dataframe just for navigation on the RFT records,
     from the attribute 'headers' in EclFile object constructed from the
     binary RFT file
@@ -76,10 +80,7 @@ def _rftrecords2df(rftfile):
         rftfile[89] = EclKW(size=14, name="SWAT", ...)
 
     Args:
-        eclfiles (EclFiles)
-
-    Returns:
-        pd.DataFrame
+        rftfile (EclFile)
     """
     nav_df = pd.DataFrame(rftfile.headers)
     nav_df.columns = ["recordname", "recordlength", "recordtype"]
@@ -103,7 +104,7 @@ def _rftrecords2df(rftfile):
     return nav_df.reset_index()
 
 
-def rftrecords(rftfile):
+def rftrecords(rftfile: EclFile) -> Iterable[Dict[str, Any]]:
     """Generator for looping over RFT records in a EclFile object.
 
     Each returned RFT record is represented as a dict with the keys:
@@ -136,7 +137,9 @@ def rftrecords(rftfile):
         yield rftrecord
 
 
-def get_con_seg_data(rftrecord, rftfile, datatype):
+def get_con_seg_data(
+    rftrecord: Dict[str, Any], rftfile: EclFile, datatype: str
+) -> pd.DataFrame:
     """
     Build a dataframe of CON* or SEG* data for a specific RFT record,
     that is for one well at one date.
@@ -153,12 +156,9 @@ def get_con_seg_data(rftrecord, rftfile, datatype):
     and row count will be the number of segments defined in WELSEGS
 
     Args:
-        rftrecord (dict): Data for one RFT record, provided by rftrecords()
-        rftfile (EclFile):
-        datatype (str): Either "CON" or "SEG"
-
-    Returns:
-        pd.DataFrame
+        rftrecord: Data for one RFT record, provided by rftrecords()
+        rftfile:
+        datatype: Either "CON" or "SEG"
     """
     if datatype not in ["CON", "SEG"]:
         raise ValueError("datatype must equal CON or SEG")
@@ -195,7 +195,7 @@ def get_con_seg_data(rftrecord, rftfile, datatype):
     return data
 
 
-def count_wellbranches(seg_data):
+def count_wellbranches(seg_data: pd.DataFrame) -> int:
     """From a segment dataframe, coming from get_con_seg_data(..., "SEG")
     determine the number of well branche.
 
@@ -218,7 +218,7 @@ def count_wellbranches(seg_data):
     return max(1, branchcount)
 
 
-def process_seg_topology(seg_data):
+def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
     """Determine and process the segment topology.
 
     The topology of the well segments are determined by the SEGNXT column in
@@ -231,11 +231,11 @@ def process_seg_topology(seg_data):
     The last segment in a non-icd well gets the type TUBING.
 
     Args:
-        seg_data (pd.DataFrame): Segment structure defined as a table with at least
+        seg_data: Segment structure defined as a table with at least
             the columns SEGIDX, SEGNXT
 
     Returns:
-        pd.DataFrame: Augmented dataframe, extra columns and perhaps extra rows.
+        Augmented dataframe, extra columns and perhaps extra rows.
     """
     if not {"SEGIDX", "SEGNXT"}.issubset(set(seg_data.columns)):
         raise ValueError("Insufficient topology columns in dataframe")
@@ -279,12 +279,12 @@ def process_seg_topology(seg_data):
     return merged
 
 
-def seg2dicttree(seg_data):
+def seg2dicttree(seg_data: pd.DataFrame) -> dict:
     """Generate a nested dictionary representing the
     well through its segment topology
 
     Args:
-        seg_data (pd.DataFrame), topology determined by SEGIDX
+        seg_data: topology determined by SEGIDX
             and SEGIDX_upstream
 
     Returns:
@@ -293,7 +293,7 @@ def seg2dicttree(seg_data):
     if "LEAF" not in seg_data:
         seg_data = process_seg_topology(seg_data)
 
-    subtrees = collections.defaultdict(dict)
+    subtrees: dict = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in seg_data.iterrows():
         if "SEGIDX_upstream" in row and row["SEGIDX_upstream"] > 0:
@@ -309,37 +309,34 @@ def seg2dicttree(seg_data):
     trees.append({root: subtrees[root] for root in roots})
     if len(trees) > 1:
         logger.warning("BUG: Multiple roots detected in well topology")
-        return trees
+        return trees[0]
     return trees[0]
 
 
-def pretty_print_well(seg_data):
+def pretty_print_well(seg_data: pd.DataFrame) -> str:
     """Return a multiline string with the segment structure
     pretty printed as an ASCII tree.
 
     Args:
-        seg_data (pd.DataFrame): Segment dataframe
+        seg_data: Segment dataframe
 
     Returns:
-        str (multiline)
+        Multiline string
     """
     dicttree = seg2dicttree(seg_data)
     return str(tree_from_dict(dicttree))
 
 
-def split_seg_icd(seg_data):
+def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
     """Split a segment dataframe into a dataframe
     with non-ICD segments and one with.
 
     The segment properties (data) are merged into the downstream segments
     dataset, with the SEG prefixed switched to ICD.
 
-    Args:
-        pd.DataFrame
-
     Returns:
-        pd.DataFrame with the ICD segments only. Empty if no ICDs found.
-            and wider.
+        Dataframe with the ICD segments only. Empty if no ICDs found.
+        and wider.
     """
 
     # Ensure we have some topology data present:
@@ -378,7 +375,11 @@ def split_seg_icd(seg_data):
     return (seg_data, icd_seg_data)
 
 
-def merge_icd_seg_conseg(con_data, seg_data=None, icd_data=None):
+def merge_icd_seg_conseg(
+    con_data: pd.DataFrame,
+    seg_data: Optional[pd.DataFrame] = None,
+    icd_data: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
     """
     Merge ICD segments to the CONxxxxx data. We will be
     connection-centric in the outputted rows, that is
@@ -394,19 +395,20 @@ def merge_icd_seg_conseg(con_data, seg_data=None, icd_data=None):
     warn the user??
 
     Args:
-        con_data (pd.DataFrame): Connection data (CONxxxx columns). One
+        con_data: Connection data (CONxxxx columns). One
             row pr. reservoir connection
-        seg_data (pd.DataFrame): Segment data, SEGxxxxx cols, one row pr. segment, and
+        seg_data: Segment data, SEGxxxxx cols, one row pr. segment, and
             each segment should correspond to one ICD or to one reservoir connection.
             Supply empty or None if no segments found.
-        icd_data  (pd.DataFrame): ICD data, ICD_SEGxxxx columns. One row pr
+        icd_data: ICD data, ICD_SEGxxxx columns. One row pr
             ICD segment. One-to-one correspondence to con_data through ICD_SEGBRNO
             and CONBRNO required. Can be empty or None if no ICD present.
-
-    Returns:
-        pd.DataFrame
-
     """
+    if seg_data is None:
+        seg_data = pd.DataFrame()
+    if icd_data is None:
+        icd_data = pd.DataFrame()
+
     if logger.level >= logging.DEBUG:
         con_data[CON_TOPOLOGY_COLS.intersection(con_data.columns)].to_csv(
             "con.csv", index=False
@@ -417,10 +419,6 @@ def merge_icd_seg_conseg(con_data, seg_data=None, icd_data=None):
         icd_data[ICD_TOPOLOGY_COLS.intersection(icd_data.columns)].to_csv(
             "icd.csv", index=False
         )
-    if seg_data is None:
-        seg_data = pd.DataFrame()
-    if icd_data is None:
-        icd_data = pd.DataFrame()
 
     data = pd.DataFrame()
     if not icd_data.empty:
@@ -466,17 +464,17 @@ def merge_icd_seg_conseg(con_data, seg_data=None, icd_data=None):
     return data
 
 
-def add_extras(dframe, inplace=True):
+def add_extras(dframe: pd.DataFrame, inplace: bool = True) -> pd.DataFrame:
     """Add extra nice-to-have columns to the dataframe
     with tubing, icd-segments, and reservoir  connections matched
     on rows
 
     Args:
-        dframe (pd.DataFrame): Dataframe typically obtained from merge_icd_seg()
-        inplace (bool): Set to False if the original should not be modified.
+        dframe: Dataframe typically obtained from merge_icd_seg()
+        inplace: Set to False if the original should not be modified.
 
     Returns:
-        pd.DataFrame - the (possibly) augmented incoming dataframe.
+        The (possibly) augmented incoming dataframe.
     """
     if not inplace:
         dframe = dframe.copy()
@@ -513,15 +511,17 @@ def add_extras(dframe, inplace=True):
     return dframe
 
 
-def df(eclfiles, wellname=None, date=None):
+def df(
+    eclfiles: EclFiles, wellname: Optional[str] = None, date: Optional[str] = None
+) -> pd.DataFrame:
     """Loop over an RFT file and construct a dataframe representation
     of the data, ordered by well and date.
 
     Args:
-        eclfiles (EclFiles): Object used to locate the RFT file
-        wellname (str): If provided, only wells matching this string exactly
+        eclfiles: Object used to locate the RFT file
+        wellname: If provided, only wells matching this string exactly
             will be included
-        date (str): If provided, all other dates will be ignored. YYYY-MM-DD.
+        date: If provided, all other dates will be ignored. YYYY-MM-DD.
     """
     rftfile = eclfiles.get_rftfile()
 
@@ -641,12 +641,11 @@ def df(eclfiles, wellname=None, date=None):
     return rftdata_df
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
-        parser (argparse.ArgumentParser or argparse.subparser): parser to
-            fill with arguments
+        parser to fill with arguments
     """
     parser.add_argument(
         "DATAFILE",
@@ -671,7 +670,7 @@ def fill_parser(parser):
     return parser
 
 
-def rft_main(args):
+def rft_main(args) -> None:
     """Entry-point for module, for command line utility"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

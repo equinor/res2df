@@ -4,13 +4,23 @@ import sys
 import logging
 import datetime
 import collections
+import argparse
 import warnings
+from typing import Optional, Union, List, Dict
 
 import treelib
 import pandas as pd
 
-from .eclfiles import EclFiles
-from .common import (
+try:
+    # Needed for mypy
+
+    # pylint: disable=unused-import
+    import opm.io
+except ImportError:
+    pass
+
+from ecl2df import EclFiles
+from ecl2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
@@ -20,7 +30,11 @@ from .common import (
 logger = logging.getLogger(__name__)
 
 
-def df(deck, startdate=None, welspecs=True):
+def df(
+    deck: Union[EclFiles, "opm.libopmcommon_python.Deck"],
+    startdate: Optional[datetime.date] = None,
+    welspecs: bool = True,
+) -> pd.DataFrame:
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.
 
@@ -48,6 +62,7 @@ def df(deck, startdate=None, welspecs=True):
         information is found in deck.
     """
 
+    date: Optional[datetime.date]
     if startdate is not None:
         date = startdate
     else:
@@ -63,9 +78,9 @@ def df(deck, startdate=None, welspecs=True):
     # store the edges as a dictionary indexed by the edge
     # (which is a tuple of child and parent).
     # The value of the dictionary is GRUPTREE or WELSPECS
-    currentedges = dict()
+    currentedges: Dict[tuple, str] = dict()
 
-    grupnet_df = pd.DataFrame()
+    grupnet_df: pd.DataFrame = pd.DataFrame()
 
     found_gruptree = False  # Flags which will tell when a new GRUPTREE or
     found_welspecs = False  # WELSPECS have been encountered.
@@ -95,6 +110,7 @@ def df(deck, startdate=None, welspecs=True):
                     date = parse_opmio_date_rec(rec)
                     logging.info("Parsing at date %s", str(date))
             elif kword.name == "TSTEP":
+                assert date is not None
                 for rec in kword:
                     steplist = parse_opmio_tstep_rec(rec)
                     # Assuming not LAB units, then the unit is days.
@@ -144,19 +160,23 @@ def df(deck, startdate=None, welspecs=True):
     return dframe
 
 
-def _currentedges_to_gruptreerecords(currentedges, grupnet_df, date):
+def _currentedges_to_gruptreerecords(
+    currentedges: Dict[tuple, str],
+    grupnet_df: pd.DataFrame,
+    date: Optional[datetime.date],
+) -> List[dict]:
     """Merge a list of edges with information from the GRUPNET dataframe.
 
     Edges where there is no parent (root nodes) are identified and added
     as special cases.
 
     Args:
-        currentedges (list): List of tuples with (child, parent)
-        grupnet_df (pd.DataFrame): Containing data for each node to add.
-        date (datetime.date): Relevant date.
+        currentedges:
+        grupnet_df: Containing data for each node to add.
+        date: Relevant date.
 
     Returns:
-        list: list of dictionaries (that can be made into a dataframe)
+        List of dictionaries (that can be made into a dataframe)
     """
     gruptreerecords = []
     childs = set()
@@ -183,7 +203,7 @@ def _currentedges_to_gruptreerecords(currentedges, grupnet_df, date):
     return rootrecords + gruptreerecords
 
 
-def edge_dataframe2dict(dframe):
+def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:
     """Convert list of edges in a dataframe into a
     nested dictionary (tree).
 
@@ -213,7 +233,7 @@ def edge_dataframe2dict(dframe):
     if "DATE" in dframe:
         if len(dframe["DATE"].unique()) > 1:
             raise ValueError("Can only handle one date at a time")
-    subtrees = collections.defaultdict(dict)
+    subtrees: dict = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
         if not pd.isnull(row["PARENT"]):
@@ -226,14 +246,16 @@ def edge_dataframe2dict(dframe):
     return [{root: subtrees[root]} for root in sorted(roots)]
 
 
-def _add_to_tree_from_dict(nested_dict, name, tree, parent=None):
+def _add_to_tree_from_dict(
+    nested_dict: dict, name: str, tree: treelib.Tree, parent: Optional[str] = None
+) -> None:
     assert isinstance(nested_dict, dict)
     tree.create_node(name, name, parent=parent)
     for key, value in sorted(nested_dict.items()):
         _add_to_tree_from_dict(nested_dict=value, name=key, tree=tree, parent=name)
 
 
-def tree_from_dict(nested_dict):
+def tree_from_dict(nested_dict: dict) -> treelib.Tree:
     """Convert a dictionary to a treelib Tree.
 
     The treelib representation of the trees is used
@@ -245,9 +267,6 @@ def tree_from_dict(nested_dict):
 
     Args:
         nested_dict: nested dictonary representing a tree.
-
-    Returns:
-        treelib.Tree
     """
     if not nested_dict.keys():
         # Return an empty string, because str(treelib.Tree()) will error
@@ -263,7 +282,7 @@ def tree_from_dict(nested_dict):
     return tree
 
 
-def dict2treelib(name, nested_dict):
+def dict2treelib(name: str, nested_dict: dict) -> treelib.Tree:
     """Convert a nested dictonary to a treelib Tree
     object. This function is recursive.
 
@@ -277,9 +296,6 @@ def dict2treelib(name, nested_dict):
     Args:
         name: name of root node
         nested_dict: nested dictonary of the children at the root.
-
-    Return:
-        treelib.Tree
     """
     warnings.warn(
         "dict2treelib() is deprecated and will be removed, use tree_from_dict()",
@@ -293,7 +309,7 @@ def dict2treelib(name, nested_dict):
     return tree
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
@@ -325,7 +341,7 @@ def fill_parser(parser):
     return parser
 
 
-def gruptree_main(args):
+def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

@@ -1,8 +1,9 @@
 """ecl2df"""
 import importlib
+from typing import List
 
 try:
-    from .version import version
+    from .version import version  # type: ignore
 
     __version__ = version
 except ImportError:
@@ -10,9 +11,9 @@ except ImportError:
 
 from .eclfiles import EclFiles
 
-name = "ecl2df"
+name: str = "ecl2df"
 
-SUBMODULES = [
+SUBMODULES: List[str] = [
     "compdat",
     "equil",
     "faults",

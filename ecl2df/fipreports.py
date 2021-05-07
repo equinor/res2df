@@ -1,12 +1,12 @@
 # pylint: disable=c0301
-
-"""
-Extract FIP region reports from Eclipse PRT file
-"""
+"""Extract FIP region reports from Eclipse PRT file"""
 
 import re
 import logging
+import argparse
 import datetime
+from typing import Union, List, Optional
+
 import pandas as pd
 
 from ecl2df import EclFiles
@@ -14,7 +14,7 @@ from ecl2df.common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
-REGION_REPORT_COLUMNS = [
+REGION_REPORT_COLUMNS: List[str] = [
     "DATE",
     "FIPNAME",
     "REGION",
@@ -30,7 +30,7 @@ REGION_REPORT_COLUMNS = [
 ]
 
 
-def report_block_lineparser(line):
+def report_block_lineparser(line: str) -> tuple:
     """
     Parses single lines within region reports, splits data into a tuple.
 
@@ -39,16 +39,21 @@ def report_block_lineparser(line):
 
     allowed_line_starts = [" :CURRENTLY", " :OUTFLOW", " :MATERIAL", " :ORIGINALLY"]
     if not any([line.startswith(x) for x in allowed_line_starts]):
-        return None
+        return tuple()
 
     colonsections = line.split(":")
+    to_index: Optional[int]
     if "OUTFLOW TO REGION" in line:
         to_index = int(colonsections[1].split()[3])
         row_name = "OUTFLOW TO REGION"
     else:
         to_index = None
         row_name = colonsections[1].strip()
+
     # Oil section:
+    liquid_oil: Optional[float]
+    vapour_oil: Optional[float]
+    total_oil: Optional[float]
     if len(colonsections[2].split()) == 3:
         # yes we have:
         (liquid_oil, vapour_oil, total_oil) = map(float, colonsections[2].split())
@@ -79,7 +84,7 @@ def report_block_lineparser(line):
     )
 
 
-def df(prtfile, fipname="FIPNUM"):
+def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
     """
     Parses a PRT file from Eclipse and finds FIPXXXX REGION REPORT blocks and
     organizes those numbers into a dataframe
@@ -88,14 +93,10 @@ def df(prtfile, fipname="FIPNUM"):
     DATE and region index added.
 
     Args:
-        prtfile (string or EclFiles): filename (PRT) or an EclFiles object
-
-        fipname (string): The name of the regport regions, FIPNUM, FIPZON or whatever
+        prtfile: filename (PRT) or an EclFiles object
+        fipname: The name of the regport regions, FIPNUM, FIPZON or whatever
             Max length of the string is 8, the first three characters must be FIP,
             and the next 3 characters must be unique for a given Eclipse deck.
-
-    Returns:
-        pd.DataFrame
     """
     if isinstance(prtfile, EclFiles):
         prtfile = prtfile.get_prtfilename()
@@ -163,7 +164,7 @@ def df(prtfile, fipname="FIPNUM"):
     return pd.DataFrame(data=records, columns=REGION_REPORT_COLUMNS)
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill parser with command line arguments"""
     parser.add_argument("PRTFILE", type=str, help="Eclipse PRT file (or DATA file)")
     parser.add_argument(
@@ -180,7 +181,7 @@ def fill_parser(parser):
     return parser
 
 
-def fipreports_main(args):
+def fipreports_main(args) -> None:
     """Command line API"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

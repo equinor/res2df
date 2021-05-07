@@ -6,14 +6,19 @@ import signal
 import inspect
 import logging
 import datetime
+import argparse
 import itertools
 from pathlib import Path
 import shlex
+from typing import Dict, Optional, List, Union, Set
 
 import numpy as np
 import pandas as pd
 
+
 try:
+    import opm.io.deck  # lgtm [py/import-and-import-from]
+
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
     from opm.io.deck import DeckKeyword  # noqa
@@ -25,7 +30,7 @@ from ecl2df import __version__
 
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
 # of supported Eclipse keyword data
-OPMKEYWORDS = {}
+OPMKEYWORDS: Dict[str, dict] = {}
 for keyw in [
     "COMPDAT",
     "COMPSEGS",
@@ -73,25 +78,29 @@ for keyw in [
 # This is a magic filename that means read/write from/to stdout
 # This makes it impossible to write to a file called "-" on disk
 # but that would anyway create a lot of other problems in the shell.
-MAGIC_STDOUT = "-"
+MAGIC_STDOUT: str = "-"
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 def write_dframe_stdout_file(
-    dframe, output, index=False, caller_logger=None, logstr=None
-):
+    dframe: pd.DataFrame,
+    output: str,
+    index: bool = False,
+    caller_logger: logging.Logger = None,
+    logstr: Optional[str] = None,
+) -> None:
     """Write a dataframe to either stdout or a file
 
     If output is the magic string "-", output is written
     to stdout.
 
     Arguments:
-        dframe (pd.DataFrame): Dataframe to write
-        output (str): Filename or "-"
-        index (bool): Passed to to_csv()
-        caller_logger (logging): Used if not stdout
-        logstr (str): Logged if not stdout.
+        dframe: Dataframe to write
+        output: Filename or "-"
+        index: Passed to to_csv()
+        caller_logger: Used if not stdout
+        logstr: Logged if not stdout.
     """
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
@@ -105,7 +114,7 @@ def write_dframe_stdout_file(
         dframe.to_csv(output, index=index)
 
 
-def write_inc_stdout_file(string, outputfilename):
+def write_inc_stdout_file(string: str, outputfilename: str) -> None:
     """Write a string (typically an include file string) to stdout
     or to a named file"""
     if outputfilename == MAGIC_STDOUT:
@@ -117,7 +126,7 @@ def write_inc_stdout_file(string, outputfilename):
         print(f"Wrote to {outputfilename}")
 
 
-def parse_ecl_month(eclmonth):
+def parse_ecl_month(eclmonth: str) -> int:
     """Translate Eclipse month strings to integer months"""
     eclmonth2num = {
         "JAN": 1,
@@ -138,25 +147,29 @@ def parse_ecl_month(eclmonth):
 
 
 def ecl_keyworddata_to_df(
-    deck, keyword, renamer=None, recordcountername=None, emptyrecordcountername=None
-):
+    deck,
+    keyword: str,
+    renamer: Optional[Dict[str, Union[str, List[str]]]] = None,
+    recordcountername: Optional[str] = None,
+    emptyrecordcountername: Optional[str] = None,
+) -> pd.DataFrame:
     """Extract data associated to an Eclipse keyword into a tabular form.
 
-    Two modes of enueration of tables in the keyworddata is supported, you
+    Two modes of enumeration of tables in the keyworddata is supported, you
     will have to find out which one fits your particular keyword. Activate
     by setting recordcountername or emptyrecordcountername to some string, which
     will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.
 
     Arguments:
-        deck (opm.common.Deck): Parsed deck
-        keyword (str): Name of the keyword for which to extract data.
-        renamer (dict): Mapping of names present in OPM json files for the
+        deck: Parsed deck
+        keyword: Name of the keyword for which to extract data.
+        renamer: Mapping of names present in OPM json files for the
             keyword to desired column names in returned dataframe
-        recordcountername (str): If present, an extra column is added with this name
+        recordcountername: If present, an extra column is added with this name
             with consecutive rows enumerated from 1. Use this to assign
             EQLNUM or similar when this should be consecutive pr. row (not
             the case for all keywords).
-        emptyrecordcountername (str): If supplied, an index is added to every parsed
+        emptyrecordcountername: If supplied, an index is added to every parsed
             row based on how many empty records is encountered. For PVTO f.ex,
             this gives the PVTNUM indexing.
     """
@@ -182,6 +195,7 @@ def ecl_keyworddata_to_df(
         # to unroll this data. We detect this situation by the item name "DATA" in
         # the json files, and that its value is of list type:
         if "DATA" in recdict and isinstance(recdict["DATA"], list):
+            assert renamer is not None
             # If DATA is sometimes used for something else in the jsons, redo this.
             data_dim = len(renamer["DATA"])  # The renamers must be in sync with json!
             data_chunks = int(len(recdict["DATA"]) / data_dim)
@@ -212,25 +226,27 @@ def ecl_keyworddata_to_df(
 
 
 def parse_opmio_deckrecord(
-    record, keyword, itemlistname="items", recordindex=None, renamer=None
-):
+    record: "opm.libopmcommon_python.DeckRecord",
+    keyword: str,
+    itemlistname: str = "items",
+    recordindex: int = None,
+    renamer: Optional[Union[Dict[str, str], Dict[str, Union[str, List[str]]]]] = None,
+) -> dict:
     """
     Parse an opm.io.DeckRecord belonging to a certain keyword
 
     Args:
-        record (opm.libopmcommon_python.DeckRecord): Record be parsed
-        keyword (string): Which Eclipse keyword this belongs to
-        itemlistname (string): The key in the json dict that describes the items,
+        record: Record be parsed
+        keyword: Which Eclipse keyword this belongs to
+        itemlistname: The key in the json dict that describes the items,
             typically 'items' or 'records'
-        recordindex (int): For keywords where itemlistname is 'records', this is a
-            list index to the "record"
+        recordindex: For keywords where itemlistname is 'records', this is a
+            list index to the "record".
             Beware, there are multiple concepts here for what we call a record.
-        renamer (dict): If supplied, this dictionary will be used to remap
+        renamer: If supplied, this dictionary will be used to remap
             the keys in returned dict. For items with name DATA, the dict
             value is assumed to be a list of strings to be mapped to
             each subitem.
-    Returns:
-        dict
     """
     if keyword not in OPMKEYWORDS:
         raise ValueError(f"Keyword {keyword} not supported by common.py")
@@ -271,20 +287,15 @@ def parse_opmio_deckrecord(
     return rec_dict
 
 
-def parse_opmio_date_rec(record):
-    """
-    Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.
-
-    Return:
-        datetime.date
-    """
+def parse_opmio_date_rec(record: "opm.io.DeckRecord") -> datetime.date:
+    """Parse a opm.io.DeckRecord under a DATES or START keyword in a deck."""
     day = record[0].get_int(0)
     month = record[1].get_str(0)
     year = record[2].get_int(0)
     return datetime.date(year=year, month=parse_ecl_month(month), day=day)
 
 
-def parse_opmio_tstep_rec(record):
+def parse_opmio_tstep_rec(record: "opm.io.DeckRecord") -> List[Union[float, int]]:
     """Parse a record with TSTEP data
 
     Return:
@@ -293,18 +304,20 @@ def parse_opmio_tstep_rec(record):
     return record[0].get_raw_data_list()
 
 
-def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
+def merge_zones(
+    df: pd.DataFrame, zonedict: dict, zoneheader: str = "ZONE", kname: str = "K1"
+) -> pd.DataFrame:
     """Merge in a column with zone names, from a dictionary mapping
     k-index to zone name. If the zonemap is not covering all
     zones, cells will be filled with NaN.
 
     Args:
-        df (pd.DataFrame): Dataframe where we should augment a column
-        zonedict (dict): Dictionary with integer keys pointing to strings
+        df: Dataframe where we should augment a column
+        zonedict: Dictionary with integer keys pointing to strings
             with zone names.
-        zoneheader (str): Name of the result column merged in,
+        zoneheader: Name of the result column merged in,
             default: ZONE
-        kname (str): Column header in your dataframe that maps to dictionary keys.
+        kname: Column header in your dataframe that maps to dictionary keys.
             default K1
     """
     assert isinstance(zonedict, dict)
@@ -330,14 +343,14 @@ def merge_zones(df, zonedict, zoneheader="ZONE", kname="K1"):
     return df
 
 
-def comment_formatter(multiline, prefix="-- "):
+def comment_formatter(multiline: Optional[str], prefix: str = "-- ") -> str:
     """Prepends comment characters to every line in input
 
     If nothing is supplied, an empty string is returned.
 
     Args:
-        multiline (str): String that can contain newlines
-        prefix (str): Comment characters to prepend every line with
+        multiline: String that can contain newlines
+        prefix: Comment characters to prepend every line with
             Default is the Eclipse comment syntax '-- '
 
     Returns:
@@ -352,23 +365,28 @@ def comment_formatter(multiline, prefix="-- "):
     )
 
 
-def handle_wanted_keywords(wanted, deck, supported, modulename=""):
+def handle_wanted_keywords(
+    wanted: Optional[List[str]],
+    deck: "opm.io.Deck",
+    supported: List[str],
+    modulename: str = "",
+) -> List[str]:
     """Handle three list of keywords, wanted, available and supported
 
     Args:
-        keywords (list of str): None, or list of strings of user-requested keywords
-        deck (opm.common Deck): Used to query which data is available
-        supported (list of str): Keywords that are supported by the module
-        modulename (str): Name of the module calling this function, used in logging
+        keywords: None, or list of strings of user-requested keywords
+        deck: Used to query which data is available
+        supported: Keywords that are supported by the module
+        modulename: Name of the module calling this function, used in logging
     """
-    if not isinstance(wanted, list):
+    if isinstance(wanted, str):
         wanted = [wanted]
-    if wanted[0] is None and len(wanted) == 1:
+    if wanted is None or (wanted[0] is None and len(wanted) == 1):
         # By default, select all supported keywords:
         keywords = supported
     else:
         # Warn if some keywords are unsupported:
-        not_supported = set(wanted) - set(supported)
+        not_supported: Set[str] = set(wanted) - set(supported)
         if not_supported:
             logger.warning(
                 "Requested keyword(s) not supported by ecl2df.%s: %s",
@@ -390,14 +408,16 @@ def handle_wanted_keywords(wanted, deck, supported, modulename=""):
     return keywords
 
 
-def fill_reverse_parser(parser, modulename, defaultoutputfile):
+def fill_reverse_parser(
+    parser: argparse.ArgumentParser, modulename: str, defaultoutputfile: str
+):
     """A standardized submodule parser for the command line utility
     to produce Eclipse include files from a CSV file.
 
     Arguments:
-        parser (ArgumentParser or subparser): parser to fill with arguments
-        modulename (str): Will be included in the help text
-        defaultoutputfile (str): Default output filename
+        parser: parser to fill with arguments
+        modulename: Will be included in the help text
+        defaultoutputfile: Default output filename
     """
     parser.add_argument(
         "csvfile", help="Name of CSV file with " + modulename + " data on ecl2df format"
@@ -428,27 +448,27 @@ def fill_reverse_parser(parser, modulename, defaultoutputfile):
 
 
 def df2ecl(
-    dataframe,
-    keywords=None,
-    comments=None,
-    supported=None,
-    consecutive=None,
-    filename=None,
-):
+    dataframe: pd.DataFrame,
+    keywords: Optional[Union[str, List[str], List[Optional[str]]]] = None,
+    comments: Optional[Dict[str, str]] = None,
+    supported: Optional[List[str]] = None,
+    consecutive: Optional[str] = None,
+    filename: Optional[str] = None,
+) -> str:
     """Generate Eclipse include strings from dataframes in ecl2df format
 
     Args:
-        dataframe (pd.DataFrame): Dataframe with Eclipse data on ecl2df format.
-        keywords (list of str): List of keywords to include. Will be reduced
+        dataframe: Dataframe with Eclipse data on ecl2df format.
+        keywords: List of keywords to include. Will be reduced
             to the set of keywords available in dataframe and to those supported
-        comments (dict): Dictionary indexed by keyword with comments to be
-            included pr.  keyword. If a key named "master" is present
+        comments: Dictionary indexed by keyword with comments to be
+            included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.
-        supported (list): List of strings of keywords which are
+        supported: List of strings of keywords which are
             supported in this invocation of this function.
-        consecutive (str): Column name for which we require the
+        consecutive: Column name for which we require the
             numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.
-        filename (str): If supplied, the generated text will also be dumped
+        filename: If supplied, the generated text will also be dumped
             to file.
 
     Returns:
@@ -476,19 +496,21 @@ def df2ecl(
 
     if comments is None:
         comments = {}
-    if not isinstance(keywords, list):
-        keywords = [keywords]  # Can still be None
+    if keywords is None or isinstance(keywords, str):
+        keywords = [keywords]
     keywords_in_frame = set(dataframe["KEYWORD"])
     if keywords[0] is None and len(keywords) == 1:
-        # By default, select all supported PVT keywords:
+        assert supported is not None
         keywords = supported
     else:
         # Warn if some keywords are unsupported:
-        not_supported = set(keywords) - set(supported)
+        assert keywords is not None
+        assert supported is not None
+        not_supported: Set[Optional[str]] = set(keywords) - set(supported)
         if not_supported:
             logger.warning(
                 "Requested keyword(s) not supported by %s: %s",
-                calling_module.__name__,
+                calling_module.__name__,  # type: ignore
                 str(not_supported),
             )
         # Warn if some requested keywords are not in frame:
@@ -509,7 +531,7 @@ def df2ecl(
     string = ""
     ecl2df_header = (
         "Output file printed by "
-        + calling_module.__name__
+        + calling_module.__name__  # type: ignore
         + " "
         + __version__
         + "\n"
@@ -535,7 +557,7 @@ def df2ecl(
     return string
 
 
-def runlength_eclcompress(string, sep="  "):
+def runlength_eclcompress(string: str, sep: str = "  ") -> str:
     """Compress a string of space-separated elements so that
 
        2 2 2 2 2 3 3 4
@@ -569,7 +591,12 @@ def runlength_eclcompress(string, sep="  "):
     return sep.join(compresseddata)
 
 
-def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
+def stack_on_colnames(
+    dframe: pd.DataFrame,
+    sep: str = "@",
+    stackcolname: str = "DATE",
+    inplace: bool = True,
+) -> pd.DataFrame:
     """For a dataframe where some columns are multilevel, but where
     the second level is encoded in the column name, this function
     will stack the dataframe by putting the second level of the column
@@ -597,14 +624,11 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     Column order is not guaranteed
 
     Args:
-        dframe (pd.DataFrame): A dataframe to stack
-        sep (str): The separator that is used in dframe.columns to define
+        dframe: A dataframe to stack
+        sep: The separator that is used in dframe.columns to define
             the multilevel column names.
-        stackcolname (str): Used as column name for the second level
+        stackcolname: Used as column name for the second level
             of the column multiindex
-
-    Returns:
-        pd.DataFrame
     """
     if not inplace:
         dframe = pd.DataFrame(dframe)
@@ -627,7 +651,7 @@ def stack_on_colnames(dframe, sep="@", stackcolname="DATE", inplace=True):
     return dframe
 
 
-def parse_zonemapfile(filename: str):
+def parse_zonemapfile(filename: str) -> Optional[dict]:
     """Return a dictionary from (int) K layers in the simgrid to strings
 
     Typical usage is to map from grid layer to zone names.

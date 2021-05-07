@@ -1,18 +1,27 @@
 """
 Extract EQUIL from an Eclipse deck as Pandas DataFrame
-
 """
 
 import logging
+import argparse
+from typing import List, Dict, Union, Optional
+
 import pandas as pd
 
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
+try:
+    import opm.io
+
+except ImportError:
+    pass
+
+
 logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
-RENAMERS = {}
+SUPPORTED_KEYWORDS: List[str] = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
+RENAMERS: Dict[str, Dict[str, Union[str, List[str]]]] = {}
 RENAMERS["PBVD"] = {"DATA": ["Z", "PB"]}
 RENAMERS["PDVD"] = {"DATA": ["Z", "PD"]}
 RENAMERS["RSVD"] = {"DATA": ["Z", "RS"]}
@@ -63,7 +72,11 @@ RENAMERS["oil-gas"] = {
 }
 
 
-def df(deck, keywords=None, ntequl=None):
+def df(
+    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
+    keywords: Optional[List[str]] = None,
+    ntequl: Optional[int] = None,
+) -> pd.DataFrame:
     """Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
     PBVD and PDVD.
 
@@ -80,11 +93,10 @@ def df(deck, keywords=None, ntequl=None):
     are possibly already removed by the OPM parser in eclfiles.str2deck().
 
     Arguments:
-        deck (opm.io deck or str): Eclipse deck or string with deck. If
+        deck: Eclipse deck or string with deck. If
            not string, EQLDIMS must be present in the deck.
-        keywords (list of str): Requested keywords for which to extract
-            data.
-        ntequl (int): If not None, should state the NTEQUL in EQLDIMS. If
+        keywords: Requested keywords for which to extract data.
+        ntequl: If not None, should state the NTEQUL in EQLDIMS. If
             None and EQLDIMS is not present, it will be inferred.
 
     Return:
@@ -96,10 +108,10 @@ def df(deck, keywords=None, ntequl=None):
     deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     ntequl = deck["EQLDIMS"][0][inferdims.DIMS_POS["NTEQUL"]].get_int(0)
 
-    keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
-    for keyword in keywords:
+    for keyword in wanted_keywords:
         # Construct the associated function names
         function_name = keyword.lower() + "_fromdeck"
         function = globals()[function_name]
@@ -111,12 +123,14 @@ def df(deck, keywords=None, ntequl=None):
     return pd.DataFrame()
 
 
-def rsvd_fromdeck(deck, ntequl=None):
+def rsvd_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+) -> pd.DataFrame:
     """Extract RSVD data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntequl (int): Number of EQLNUM regions in deck. Will
+        deck
+        ntequl: Number of EQLNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
@@ -126,12 +140,14 @@ def rsvd_fromdeck(deck, ntequl=None):
     )
 
 
-def rvvd_fromdeck(deck, ntequl=None):
+def rvvd_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+) -> pd.DataFrame:
     """Extract RVVD data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntequl (int): Number of EQLNUM regions in deck. Will
+        deck
+        ntequl: Number of EQLNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
@@ -141,12 +157,14 @@ def rvvd_fromdeck(deck, ntequl=None):
     )
 
 
-def pbvd_fromdeck(deck, ntequl=None):
+def pbvd_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PBVD data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntequl (int): Number of EQLNUM regions in deck. Will
+        deck
+        ntequl: Number of EQLNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
@@ -156,12 +174,14 @@ def pbvd_fromdeck(deck, ntequl=None):
     )
 
 
-def pdvd_fromdeck(deck, ntequl=None):
+def pdvd_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PDVD data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntequl (int): Number of EQLNUM regions in deck. Will
+        deck
+        ntequl: Number of EQLNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
@@ -171,17 +191,16 @@ def pdvd_fromdeck(deck, ntequl=None):
     )
 
 
-def phases_from_deck(deck):
+def phases_from_deck(deck: Union[str, "opm.libopmcommon_python.Deck"]) -> str:
     """Determined the set of phases from a deck, as
     a string with values "oil-water-gas", "gas-water", "oil-water",
     or "oil-gas"
 
     Args:
-        deck (opm.common deck): A parsed deck (or any container
-        which can answer questions like "OIL" in deck)
+        deck: A parsed deck or DATA-file as a string
 
     Returns:
-        str. Empty string if inconclusive.
+        String with phase configuration. Empty string if inconclusive.
     """
     if "OIL" in deck and "GAS" in deck and "WATER" in deck:
         return "oil-water-gas"
@@ -191,12 +210,10 @@ def phases_from_deck(deck):
         return "oil-water"
     if "OIL" in deck and "GAS" in deck and "WATER" not in deck:
         return "oil-gas"
-    print("HELP!")
-    print(deck)
     return ""
 
 
-def phases_from_columns(columns):
+def phases_from_columns(columns: List[str]) -> str:
     """Determine the set of phases available in an
     equil dataframe, based on which columns are there.
     Returns "oil-water-gas", "gas-water", "oil-water",
@@ -205,11 +222,10 @@ def phases_from_columns(columns):
     By this, we can pick the correct RENAMER to use.
 
     Args:
-        columns (list of str): list of strings we can use for
-            the determination
+        columns: list of strings we can use for the determination
 
     Returns:
-        str with phase configuration. Empty string if inconclusive.
+        String with phase configuration. Empty string if inconclusive.
     """
     if "OWC" in columns and "GOC" in columns:
         return "oil-water-gas"
@@ -222,12 +238,14 @@ def phases_from_columns(columns):
     return ""
 
 
-def equil_fromdeck(deck, ntequl=None):
+def equil_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+) -> pd.DataFrame:
     """Extract EQUIL data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntequl (int): Number of EQLNUM regions in deck. Will
+        deck
+        ntequl: Number of EQLNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "EQLDIMS" not in deck:
@@ -257,7 +275,7 @@ def equil_fromdeck(deck, ntequl=None):
     return dataframe
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
@@ -285,12 +303,12 @@ def fill_parser(parser):
     return parser
 
 
-def fill_reverse_parser(parser):
+def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> eclipse include file"""
     return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
 
 
-def equil_main(args):
+def equil_main(args) -> None:
     """Read from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -322,7 +340,7 @@ def equil_main(args):
         logger.error("Empty EQUIL-data, not written to disk!")
 
 
-def equil_reverse_main(args):
+def equil_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -332,21 +350,27 @@ def equil_reverse_main(args):
     common.write_inc_stdout_file(inc_string, args.output)
 
 
-def df2ecl(equil_df, keywords=None, comments=None, withphases=False, filename=None):
+def df2ecl(
+    equil_df: pd.DataFrame,
+    keywords: Optional[List[str]] = None,
+    comments: Optional[Dict[str, str]] = None,
+    withphases: bool = False,
+    filename: Optional[str] = None,
+) -> str:
     """Generate Eclipse include strings from dataframes with
     solution (EQUIL, RSVD++) data.
 
     Args:
-        equil_df (pd.DataFrame): Dataframe with data on ecl2df format.
-        keywords (list of str): List of keywords to include. Must be
+        equil_df: Dataframe with data on ecl2df format.
+        keywords: List of keywords to include. Must be
             supported and present in the incoming dataframe.
-        comments (dict): Dictionary indexed by keyword with comments to be
+        comments: Dictionary indexed by keyword with comments to be
             included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.
-        withphases (boolean): If True, the phase configuration keywords
+        withphases: If True, the phase configuration keywords
             will be outputted. This is mostly for testing, and should
             not be necessary in production.
-        filename (str): If supplied, the generated text will also be dumped
+        filename: If supplied, the generated text will also be dumped
             to file.
 
     """
@@ -366,12 +390,12 @@ def df2ecl(equil_df, keywords=None, comments=None, withphases=False, filename=No
     return string
 
 
-def df2ecl_equil(dframe, comment=None):
+def df2ecl_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print EQUIL keyword with data
 
     Args:
-        dframe (pd.DataFrame): Containing EQUIL data
-        comment (str): Text that will be included as a comment
+        dframe: Containing EQUIL data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -429,39 +453,33 @@ def df2ecl_equil(dframe, comment=None):
     return string + "\n\n"
 
 
-def df2ecl_rsvd(dframe, comment=None):
+def df2ecl_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print RSVD keyword with data
 
     This data consists of one table (rs as a function
     of depth) for each EQLNUM
 
     Args:
-        dframe (pd.DataFrame): Containing RSVD data
-        comment (str): Text that will be included as a comment
-
-    Returns:
-        string
+        dframe: Containing RSVD data
+        comment Text that will be included as a comment
     """
     return _df2ecl_equilfuncs("RSVD", dframe, comment)
 
 
-def df2ecl_rvvd(dframe, comment=None):
+def df2ecl_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print RVVD keyword with data
 
     This data consists of one table (rv as a function
     of depth) for each EQLNUM
 
     Args:
-        dframe (pd.DataFrame): Containing RVVD data
-        comment (str): Text that will be included as a comment
-
-    Returns:
-        string
+        dframe: Containing RVVD data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_equilfuncs("RVVD", dframe, comment)
 
 
-def df2ecl_pbvd(dframe, comment=None):
+def df2ecl_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PBVD keyword with data
 
     Bubble-point versus depth
@@ -470,16 +488,13 @@ def df2ecl_pbvd(dframe, comment=None):
     of depth) for each EQLNUM
 
     Args:
-        dframe (pd.DataFrame): Containing PBVD data
-        comment (str): Text that will be included as a comment
-
-    Returns:
-        string
+        dframe: Containing PBVD data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_equilfuncs("PBVD", dframe, comment)
 
 
-def df2ecl_pdvd(dframe, comment=None):
+def df2ecl_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
     """Print PDVD keyword with data.
 
     Dew-point versus depth.
@@ -488,16 +503,15 @@ def df2ecl_pdvd(dframe, comment=None):
     of depth) for each EQLNUM
 
     Args:
-        dframe (pd.DataFrame): Containing PDVD data
-        comment (str): Text that will be included as a comment
-
-    Returns:
-        string
+        dframe: Containing PDVD data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_equilfuncs("PDVD", dframe, comment)
 
 
-def _df2ecl_equilfuncs(keyword, dframe, comment=None):
+def _df2ecl_equilfuncs(
+    keyword: str, dframe: pd.DataFrame, comment: Optional[str] = None
+) -> str:
     """Internal function to be used by df2ecl_<keyword>() functions"""
     if dframe.empty:
         return "-- No data!"
@@ -514,7 +528,7 @@ def _df2ecl_equilfuncs(keyword, dframe, comment=None):
     if "EQLNUM" not in subset:
         subset["EQLNUM"] = 1
 
-    def _df2ecl_equilfuncs_eqlnum(dframe):
+    def _df2ecl_equilfuncs_eqlnum(dframe: pd.DataFrame) -> str:
         """Print one equilibriation function table for a specific
         EQLNUM
 

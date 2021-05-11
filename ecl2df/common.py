@@ -17,7 +17,7 @@ import pandas as pd
 
 
 try:
-    import opm.io.deck  # lgtm [py/import-and-import-from]
+    import opm.io.deck  # noqa
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.

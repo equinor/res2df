@@ -87,7 +87,7 @@ def write_dframe_stdout_file(
     dframe: pd.DataFrame,
     output: str,
     index: bool = False,
-    caller_logger: logging.Logger = None,
+    caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
 ) -> None:
     """Write a dataframe to either stdout or a file
@@ -229,7 +229,7 @@ def parse_opmio_deckrecord(
     record: "opm.libopmcommon_python.DeckRecord",
     keyword: str,
     itemlistname: str = "items",
-    recordindex: int = None,
+    recordindex: Optional[int] = None,
     renamer: Optional[Union[Dict[str, str], Dict[str, Union[str, List[str]]]]] = None,
 ) -> dict:
     """

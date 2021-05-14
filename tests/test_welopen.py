@@ -48,7 +48,7 @@ WELOPEN_CASES = [
             ],
         ),
     ),
-    # Test that explicit i,j,k in WELOPEN works:
+    # Test the defaults handling in WELOPEN (zero value means apply to all)
     (
         """
     DATES
@@ -58,8 +58,47 @@ WELOPEN_CASES = [
      'OP1' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     -- This also specifies lumped connections, but is ignored
-     -- by ecl2df  since i,j,k is also specified.
+     'OP1' 'SHUT' 0 0 0 0 0 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Test the defaults handling in WELOPEN (default values are negative)
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' -1 -1 -1 -1 -1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
+    # Fail with ValueError when lumped connections are specified
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     -- This also specifies lumped connections, which will give crash
      'OP1' 'SHUT' 1 1 1 1 1 /
     /
     """,
@@ -69,6 +108,7 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
+        marks=pytest.mark.xfail(raises=ValueError),
     ),
     # Test J slicing
     (
@@ -92,8 +132,8 @@ WELOPEN_CASES = [
             ],
         ),
     ),
-    # Lumped connections are not supported, nothing is shut:
-    (
+    # Lumped connections are not supported will crash.
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -113,6 +153,7 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
             ],
         ),
+        marks=pytest.mark.xfail(raises=ValueError),
     ),
     # Test multiple time steps
     (

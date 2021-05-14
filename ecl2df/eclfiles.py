@@ -4,6 +4,7 @@ import os
 import errno
 import logging
 from pathlib import Path
+from typing import List, Tuple, Any, Optional, Union
 
 try:
     import opm.io
@@ -21,17 +22,18 @@ logger = logging.getLogger(__name__)
 
 if HAVE_OPM:
     # Default parse option to opm.io for a very permissive parsing
-    OPMIOPARSER_RECOVERY = [
+    OPMIOPARSER_RECOVERY: List[Tuple[str, Any]] = [
+        ("PARSE_EXTRA_DATA", opm.io.action.ignore),
+        ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
+        ("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore),
+        ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
+        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
+        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+        ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
+        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
         ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
         ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
-        ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
         ("UNSUPPORTED_*", opm.io.action.ignore),
-        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
-        ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
-        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
-        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
-        ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
-        ("PARSE_EXTRA_DATA", opm.io.action.ignore),
     ]
 
 
@@ -75,11 +77,11 @@ class EclFiles(object):
 
         self._deck = None
 
-    def get_path(self):
+    def get_path(self) -> Path:
         """Return the full path to the directory with the DATA file"""
         return Path(self._eclbase).absolute().parent
 
-    def get_ecldeck(self):
+    def get_ecldeck(self) -> "opm.libopmcommon_python.Deck":
         """Return a opm.io deck of the DATA file"""
         if not self._deck:
             if Path(self._eclbase + ".DATA").is_file():
@@ -93,21 +95,23 @@ class EclFiles(object):
         return self._deck
 
     @staticmethod
-    def str2deck(string, parsecontext=None):
+    def str2deck(
+        string: str, parsecontext: Optional[List[Tuple[str, Any]]] = None
+    ) -> "opm.libopmcommon_python.Deck":
         """Produce a opm.io deck from a string, using permissive
         parsing by default"""
-        if not parsecontext:
+        if parsecontext is None:
             parsecontext = opm.io.ParseContext(OPMIOPARSER_RECOVERY)
         return opm.io.Parser().parse_string(string, parsecontext)
 
     @staticmethod
-    def file2deck(filename):
+    def file2deck(filename: Union[str, Path]) -> "opm.libopmcommon_python.Deck":
         """Try to convert standalone files into opm.io Deck objects"""
         with open(filename) as fhandle:
             filestring = "".join(fhandle.readlines())
             return EclFiles.str2deck(filestring)
 
-    def get_egrid(self):
+    def get_egrid(self) -> EclGrid:
         """Find and return EGRID file as an EclGrid object"""
         if not self._egrid:
             egridfilename = self._eclbase + ".EGRID"
@@ -119,7 +123,7 @@ class EclFiles(object):
             self._egrid = EclGrid(egridfilename)
         return self._egrid
 
-    def get_egridfile(self):
+    def get_egridfile(self) -> EclFile:
         """Find and return the EGRID file as a EclFile object
 
         This gives access to data vectors defined on the grid."""
@@ -133,15 +137,13 @@ class EclFiles(object):
             self._egridfile = EclFile(egridfilename)
         return self._egridfile
 
-    def get_eclsum(self, include_restart=True):
+    def get_eclsum(self, include_restart: bool = True) -> EclSum:
         """Find and return the summary file and
         return as EclSum object
 
         Args:
-            include_restart: boolean sent to libecl for whether restart files
+            include_restart: Sent to libecl for whether restart files
                 should be traversed.
-        Returns:
-            ecl.summary.EclSum
         """
         if not self._eclsum:
             smryfilename = self._eclbase + ".UNSMRY"
@@ -153,7 +155,7 @@ class EclFiles(object):
             self._eclsum = EclSum(smryfilename, include_restart=include_restart)
         return self._eclsum
 
-    def get_initfile(self):
+    def get_initfile(self) -> EclFile:
         """Find and return the INIT file as an EclFile object"""
         if not self._initfile:
             initfilename = self._eclbase + ".INIT"
@@ -165,7 +167,7 @@ class EclFiles(object):
             self._initfile = EclFile(initfilename)
         return self._initfile
 
-    def get_rftfile(self):
+    def get_rftfile(self) -> EclFile:
         """Find and return the RFT file as an EclFile object"""
         if not self._rftfile:
             rftfilename = self._eclbase + ".RFT"
@@ -177,7 +179,7 @@ class EclFiles(object):
             self._rftfile = EclFile(rftfilename)
         return self._rftfile
 
-    def get_rstfile(self):
+    def get_rstfile(self) -> EclFile:
         """Find and return the UNRST file as an EclFile object"""
         if not self._rstfile:
             rstfilename = self._eclbase + ".UNRST"
@@ -189,11 +191,11 @@ class EclFiles(object):
             self._rstfile = EclFile(rstfilename)
         return self._rstfile
 
-    def get_rstfilename(self):
+    def get_rstfilename(self) -> str:
         """Return the inferred name of the UNRST file"""
         return self._eclbase + ".UNRST"
 
-    def get_prtfilename(self):
+    def get_prtfilename(self) -> str:
         """Return the inferred name of the PRT file"""
         return self._eclbase + ".PRT"
 
@@ -240,6 +242,6 @@ class EclFiles(object):
         return common.parse_zonemapfile(fullpath)
 
 
-def rreplace(pat, sub, string):
+def rreplace(pat: str, sub: str, string: str) -> str:
     """Variant of str.replace() that only replaces at the end of the string"""
     return string[0 : -len(pat)] + sub if string.endswith(pat) else string  # noqa

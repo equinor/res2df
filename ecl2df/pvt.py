@@ -5,21 +5,39 @@ Data can be extracted from a full Eclipse deck or from individual files.
 """
 
 import logging
+import argparse
+from typing import List, Dict, Union, Optional
 
 import pandas as pd
 
-from ecl2df import inferdims, common
-from .eclfiles import EclFiles
+from ecl2df import inferdims, common, EclFiles
 
-logger = logging.getLogger(__name__)
+try:
+    # Needed for mypy
 
-SUPPORTED_KEYWORDS = ["PVTO", "PVDO", "PVTG", "PVDG", "DENSITY", "ROCK", "PVTW"]
+    # pylint: disable=unused-import
+    import opm.io
+except ImportError:
+    pass
+
+
+logger: logging.Logger = logging.getLogger(__name__)
+
+SUPPORTED_KEYWORDS: List[str] = [
+    "PVTO",
+    "PVDO",
+    "PVTG",
+    "PVDG",
+    "DENSITY",
+    "ROCK",
+    "PVTW",
+]
 
 # The renamers listed here map from opm-common json item names to
 # desired column names in produced dataframes. They also to a certain
 # extent determine the structure of the dataframe, in particular
 # for keywords with arbitrary data amount pr. record (PVTO f.ex)
-RENAMERS = {}
+RENAMERS: Dict[str, Dict[str, Union[str, List[str]]]] = {}
 
 # P_bub (bubble point pressure) is called PRESSURE for ability to merge with
 # other pressure data from other frames.
@@ -50,12 +68,14 @@ RENAMERS["DENSITY"] = {
 RENAMERS["ROCK"] = {"PREF": "PRESSURE", "COMPRESSIBILITY": "COMPRESSIBILITY"}
 
 
-def pvtw_fromdeck(deck, ntpvt=None):
+def pvtw_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PVTW from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -65,12 +85,14 @@ def pvtw_fromdeck(deck, ntpvt=None):
     )
 
 
-def density_fromdeck(deck, ntpvt=None):
+def density_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract DENSITY from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -80,12 +102,14 @@ def density_fromdeck(deck, ntpvt=None):
     )
 
 
-def rock_fromdeck(deck, ntpvt=None):
+def rock_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract ROCK from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -95,12 +119,14 @@ def rock_fromdeck(deck, ntpvt=None):
     )
 
 
-def pvto_fromdeck(deck, ntpvt=None):
+def pvto_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PVTO from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -111,12 +137,14 @@ def pvto_fromdeck(deck, ntpvt=None):
     return pvto_df
 
 
-def pvdo_fromdeck(deck, ntpvt=None):
+def pvdo_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PVDO from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -127,12 +155,14 @@ def pvdo_fromdeck(deck, ntpvt=None):
     return pvdg_df
 
 
-def pvdg_fromdeck(deck, ntpvt=None):
+def pvdg_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PVDG from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -143,12 +173,14 @@ def pvdg_fromdeck(deck, ntpvt=None):
     return pvdg_df
 
 
-def pvtg_fromdeck(deck, ntpvt=None):
+def pvtg_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+) -> pd.DataFrame:
     """Extract PVTG from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntpvt (int): Number of PVT regions in deck. Will
+        deck
+        ntpvt: Number of PVT regions in deck. Will
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
@@ -159,7 +191,11 @@ def pvtg_fromdeck(deck, ntpvt=None):
     return pvtg_df
 
 
-def df(deck, keywords=None, ntpvt=None):
+def df(
+    deck: Union[str, "opm.libopmcommon_python.Deck"],
+    keywords: Optional[List[str]] = None,
+    ntpvt: Optional[int] = None,
+) -> pd.DataFrame:
     """Extract all (most) PVT data from a deck.
 
     If you want to call this function on Eclipse include files,
@@ -168,11 +204,11 @@ def df(deck, keywords=None, ntpvt=None):
     > pvt_df = pvt.df(open("pvt.inc").read())
 
     Arguments:
-        deck (opm.io deck or str): Incoming data deck. Always
+        deck: Incoming data deck. Always
             supply as a string if you don't know TABDIMS-NTSFUN.
-        keywords (list of str): List of keywords for which data is
+        keywords: List of keywords for which data is
             wanted. All data will be merged into one dataframe.
-        pvtnumcount (int): Number of PVTNUMs defined in the deck, only
+        pvtnumcount: Number of PVTNUMs defined in the deck, only
             needed if TABDIMS with NTPVT is not found in the deck.
             If not supplied (or None) and NTPVT is not defined,
             it will be attempted inferred.
@@ -186,10 +222,10 @@ def df(deck, keywords=None, ntpvt=None):
     deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     ntpvt = deck["TABDIMS"][0][inferdims.DIMS_POS["NTPVT"]].get_int(0)
 
-    keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
-    for keyword in keywords:
+    for keyword in wanted_keywords:
         # Construct the associated function names
         function_name = keyword.lower() + "_fromdeck"
         function = globals()[function_name]
@@ -201,7 +237,7 @@ def df(deck, keywords=None, ntpvt=None):
     return pd.DataFrame()
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers for parsing Eclipse deck or
     include files into dataframes
 
@@ -231,7 +267,7 @@ def fill_parser(parser):
     return parser
 
 
-def fill_reverse_parser(parser):
+def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers for writing Eclipse include files from
     dataframes (as CSV files)
 
@@ -241,7 +277,7 @@ def fill_reverse_parser(parser):
     return common.fill_reverse_parser(parser, "PVT", "pvt.inc")
 
 
-def pvt_main(args):
+def pvt_main(args) -> None:
     """Entry-point for module, for command line utility for Eclipse to CSV"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -275,7 +311,7 @@ def pvt_main(args):
         logger.error("Empty PVT data, not written to disk")
 
 
-def pvt_reverse_main(args):
+def pvt_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -285,17 +321,22 @@ def pvt_reverse_main(args):
     common.write_inc_stdout_file(inc_string, args.output)
 
 
-def df2ecl(pvt_df, keywords=None, comments=None, filename=None):
+def df2ecl(
+    pvt_df: pd.DataFrame,
+    keywords: Optional[Union[str, List[str]]] = None,
+    comments: Optional[Dict[str, str]] = None,
+    filename: Optional[str] = None,
+) -> str:
     """Generate Eclipse include strings from PVT dataframes
 
     Args:
-        pvt_df (pd.DataFrame): Dataframe with PVT data on ecl2df format.
-        keywords (list of str): List of keywords to include. Must be
+        pvt_df: Dataframe with PVT data on ecl2df format.
+        keywords: List of keywords to include. Must be
             supported and present in the incoming dataframe.
-        comments (dict): Dictionary indexed by keyword with comments to be
+        comments: Dictionary indexed by keyword with comments to be
             included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.
-        filename (str): If supplied, the generated text will also be dumped
+        filename: If supplied, the generated text will also be dumped
             to file.
     """
     return common.df2ecl(
@@ -308,7 +349,7 @@ def df2ecl(pvt_df, keywords=None, comments=None, filename=None):
     )
 
 
-def df2ecl_rock(dframe, comment=None):
+def df2ecl_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print ROCK keyword with data
 
     Args:
@@ -338,12 +379,12 @@ def df2ecl_rock(dframe, comment=None):
     return string + "\n"
 
 
-def df2ecl_density(dframe, comment=None):
+def df2ecl_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print DENSITY keyword with data
 
     Args:
-        dframe (pd.DataFrame): Containing DENSITY data
-        comment (str): Text that will be included as a comment
+        dframe: Containing DENSITY data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -369,15 +410,15 @@ def df2ecl_density(dframe, comment=None):
     return string + "\n"
 
 
-def df2ecl_pvtw(dframe, comment=None):
+def df2ecl_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVTW keyword with data
 
     PVTW is one line/record with data for a reference pressure
     for each PVTNUM.
 
     Args:
-        dframe (pd.DataFrame): Containing PVTW data
-        comment (str): Text that will be included as a comment
+        dframe: Containing PVTW data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -404,12 +445,12 @@ def df2ecl_pvtw(dframe, comment=None):
     return string + "\n"
 
 
-def df2ecl_pvtg(dframe, comment=None):
+def df2ecl_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVTG keyword with data
 
     Args:
-        dframe (pd.DataFrame): Containing PVTG data
-        comment (str): Text that will be included as a comment
+        dframe: Containing PVTG data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -437,16 +478,16 @@ def df2ecl_pvtg(dframe, comment=None):
         """Print PVTG-data for a specific PVTNUM"""
         string = ""
         dframe = dframe.set_index("PRESSURE").sort_index()
-        for pg in dframe.index.unique():
-            string += _pvtg_pvtnum_pg(dframe[dframe.index == pg])
+        for p_gas in dframe.index.unique():
+            string += _pvtg_pvtnum_pg(dframe[dframe.index == p_gas])
         return string + "/\n"
 
     def _pvtg_pvtnum_pg(dframe):
         """Print PVTG-data for a particular gas phase pressure"""
         string = ""
         assert len(dframe.index.unique()) == 1
-        pg = dframe.index.values[0]
-        string += "{:20.7f}  ".format(pg)
+        p_gas = dframe.index.values[0]
+        string += "{:20.7f}  ".format(p_gas)
         for rowidx, row in dframe.reset_index().iterrows():
             if rowidx > 0:
                 indent = "\n" + " " * 22
@@ -458,7 +499,7 @@ def df2ecl_pvtg(dframe, comment=None):
                     **(row.to_dict())
                 )
             )
-        string += " /\n-- End PRESSURE={}\n".format(pg)
+        string += " /\n-- End PRESSURE={}\n".format(p_gas)
         return string
 
     for pvtnum in subset.index.unique():
@@ -466,15 +507,15 @@ def df2ecl_pvtg(dframe, comment=None):
     return string + "\n"
 
 
-def df2ecl_pvdg(dframe, comment=None):
+def df2ecl_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVDG keyword with data
 
     This data consists of one table (volumefactor and visosity
     as a function of pressure) pr. PVTNUM.
 
     Args:
-        dframe (pd.DataFrame): Containing PVDG data
-        comment (str): Text that will be included as a comment
+        dframe: Containing PVDG data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -517,12 +558,12 @@ def df2ecl_pvdg(dframe, comment=None):
     return string + "\n"
 
 
-def df2ecl_pvdo(dframe, comment=None):
+def df2ecl_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVDO keyword with data
 
     Args:
-        dframe (pd.DataFrame): Containing PVDO data
-        comment (str): Text that will be included as a comment
+        dframe: Containing PVDO data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -542,7 +583,7 @@ def df2ecl_pvdo(dframe, comment=None):
             return ""
         subset["PVTNUM"] = 1
 
-    def _pvdo_pvtnum(dframe):
+    def _pvdo_pvtnum(dframe: pd.DataFrame) -> str:
         """Print PVDO-data for a specific PVTNUM
 
         Args:
@@ -568,12 +609,12 @@ def df2ecl_pvdo(dframe, comment=None):
     return string + "\n"
 
 
-def df2ecl_pvto(dframe, comment=None):
+def df2ecl_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVTO-data from a dataframe
 
     Args:
-        dframe (pd.DataFrame): Containing PVTO data
-        comment (str): Text that will be included as a comment
+        dframe: Containing PVTO data
+        comment: Text that will be included as a comment
     """
     if dframe.empty:
         return "-- No data!"
@@ -597,7 +638,7 @@ def df2ecl_pvto(dframe, comment=None):
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
 
-    def _pvto_pvtnum(dframe):
+    def _pvto_pvtnum(dframe: pd.DataFrame) -> str:
         """Print PVTO-data for a specific PVTNUM"""
         string = ""
         dframe = dframe.set_index("RS").sort_index()
@@ -605,7 +646,7 @@ def df2ecl_pvto(dframe, comment=None):
             string += _pvto_pvtnum_rs(dframe[dframe.index == rs])
         return string + "/\n"
 
-    def _pvto_pvtnum_rs(dframe):
+    def _pvto_pvtnum_rs(dframe: pd.DataFrame) -> str:
         """Print PVTO-data for a particular RS"""
         string = ""
         assert len(dframe.index.unique()) == 1

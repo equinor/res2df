@@ -5,7 +5,16 @@ Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck
 
 import datetime
 import logging
+import argparse
+from typing import Dict, Optional, Union, List
+
 import pandas as pd
+
+try:
+    import opm.io.deck
+except ImportError:
+    # Allow parts of ecl2df to work without OPM:
+    pass
 
 from .eclfiles import EclFiles
 from .common import (
@@ -25,7 +34,7 @@ documentation ever so slightly different when naming the data.
 For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
 one very long one, and mixed-case in opm
 """
-COMPDAT_RENAMER = {
+COMPDAT_RENAMER: Dict[str, str] = {
     "WELL": "WELL",
     "I": "I",
     "J": "J",
@@ -43,29 +52,33 @@ COMPDAT_RENAMER = {
 }
 
 # Workaround an inconsistency in JSON-files for OPM-common < 2021.04:
-WSEG_RENAMER = {
+WSEG_RENAMER: Dict[str, str] = {
     "SEG1": "SEGMENT1",
     "SEG2": "SEGMENT2",
 }
 
 
-def deck2dfs(deck, start_date=None, unroll=True):
+def deck2dfs(
+    deck: "opm.io.Deck",
+    start_date: Optional[Union[str, datetime.date]] = None,
+    unroll: bool = True,
+) -> Dict[str, pd.DataFrame]:
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates and
     potential information from the WELSPECS keyword.
 
     Args:
-        deck (opm.libopmcommon_python.Deck): A deck representing the schedule
+        deck: A deck representing the schedule
             Does not have to be a full Eclipse deck, an include file is sufficient
-        start_date (datetime.date or str): The default date to use for
+        start_date: The default date to use for
             events where the DATE or START keyword is not found in advance.
             Default: None
-        unroll (bool): Whether to unroll rows that cover a range,
+        unroll: Whether to unroll rows that cover a range,
             like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.
 
     Returns:
-        Dictionary with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.
+        Dictionary with dataframes, at least for COMPDAT, COMPSEGS and WELSEGS.
     """
     compdatrecords = []  # List of dicts of every line in input file
     compsegsrecords = []
@@ -89,6 +102,7 @@ def deck2dfs(deck, start_date=None, unroll=True):
                 steplist = parse_opmio_tstep_rec(rec)
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
+                assert isinstance(date, datetime.date)
                 date += datetime.timedelta(days=days)
                 logger.info(
                     "Advancing %s days to %s through TSTEP", str(days), str(date)
@@ -274,7 +288,9 @@ def postprocess():
     # )
 
 
-def unrolldf(dframe, start_column="K1", end_column="K2"):
+def unrolldf(
+    dframe: pd.DataFrame, start_column: str = "K1", end_column: str = "K2"
+) -> pd.DataFrame:
     """Unroll dataframes, where some column pairs indicate
     a range where data applies.
 
@@ -297,15 +313,15 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
     The latter is easier to work with in Pandas dataframes
 
     Args:
-        dframe (pd.DataFrame): Dataframe to be unrolled
-        start_column (str): Column name that contains the start of
+        dframe: Dataframe to be unrolled
+        start_column: Column name that contains the start of
             a range.
-        end_column (str): Column name that contains the corresponding end
+        end_column Column name that contains the corresponding end
             of the range.
 
     Returns:
-        pd.Dataframe, Unrolled version. Identical to input if none of
-            rows had any ranges.
+        Dataframe, unrolled version. Identical to input if none of
+        rows had any ranges.
     """
     if dframe.empty:
         return dframe
@@ -330,7 +346,7 @@ def unrolldf(dframe, start_column="K1", end_column="K2"):
     return unrolled
 
 
-def applywelopen(compdat_df, welopen_df):
+def applywelopen(compdat_df: pd.DataFrame, welopen_df: pd.DataFrame) -> pd.DataFrame:
     """Apply WELOPEN actions to the COMPDAT dataframe.
 
     Each record in the WELOPEN keyword acts as an operator on existing connections
@@ -357,16 +373,23 @@ def applywelopen(compdat_df, welopen_df):
     WELOPEN actions into explicit additional COMPDAT definitions in the exported df.
 
     Args:
-        compdat_df (pd.DataFrame): Dataframe with unrolled COMPDAT data
-        welopen_df (pd.DataFrame): Dataframe with WELOPEN actions
+        compdat_df: Dataframe with unrolled COMPDAT data
+        welopen_df: Dataframe with WELOPEN actions
 
     Returns:
-        pd.Dataframe, compdat_df now including WELOPEN actions
+        Dataframe, compdat_df now including WELOPEN actions
 
     """
     welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
     for _, row in welopen_df.iterrows():
-        if row["I"] and row["J"] and row["K"]:
+        if (row["I"] is None and row["J"] is None and row["K"] is None) or (
+            row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
+        ):
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        elif row["I"] and row["J"] and row["K"]:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
@@ -375,14 +398,12 @@ def applywelopen(compdat_df, welopen_df):
                 & (compdat_df["K1"] == row["K"])
                 & (compdat_df["K2"] == row["K"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
-        elif row["C1"] or row["C2"]:
-            logger.warning(
-                "Lumped connections are not supported in a WELOPEN keyword. "
-                "Skipping WELOPEN actions for lumped connections '%s' and/or '%s'"
-                % (row["C1"], row["C2"])
-            )
-            continue
-        elif not (row["I"] and row["J"] and row["K"]):
+        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
+            previous_state = compdat_df[
+                (compdat_df["WELL"] == row["WELL"])
+                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
+            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
@@ -390,13 +411,21 @@ def applywelopen(compdat_df, welopen_df):
         else:
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
-                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+                f"\n {str(row)} "
+            )
+
+        if (row["C1"] is not None and row["C1"] > 0) or (
+            row["C2"] is not None and row["C2"]
+        ) > 0:
+            raise ValueError(
+                "Lumped connections are not supported by ecl2df in a WELOPEN keyword. "
+                f"\n{str(row)} "
             )
 
         if previous_state.empty:
             raise ValueError(
                 "A WELOPEN keyword is not acting on any existing connection. "
-                "(I=%s,J=%s,K=%s)" % (row["I"], row["J"], row["K"])
+                f"\n {str(row)} "
             )
 
         new_state = previous_state
@@ -423,12 +452,11 @@ def applywelopen(compdat_df, welopen_df):
     return compdat_df
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
-        parser (argparse.ArgumentParser or argparse.subparser): parser
-            to fill with arguments
+        parser: parser to fill with arguments
     """
     parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
     parser.add_argument(
@@ -459,7 +487,7 @@ def compdat_main(args):
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
 
 
-def df(eclfiles, initvectors=None):
+def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFrame:
     """Main function for Python API users
 
     Supports only COMPDAT information for now. Will

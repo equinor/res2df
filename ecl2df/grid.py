@@ -12,9 +12,11 @@ file.
 import logging
 import fnmatch
 import textwrap
+import argparse
 import datetime
 import dateutil.parser
 from pathlib import Path
+from typing import Union, List, Tuple, Optional, Dict, Type
 
 import numpy as np
 import pandas as pd
@@ -26,7 +28,7 @@ from .eclfiles import EclFiles
 logger = logging.getLogger(__name__)
 
 
-def get_available_rst_dates(eclfiles):
+def get_available_rst_dates(eclfiles: EclFiles) -> List[datetime.date]:
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
     logger.info(
@@ -40,16 +42,18 @@ def get_available_rst_dates(eclfiles):
     ]
 
 
-def dates2rstindices(eclfiles, dates):
+def dates2rstindices(
+    eclfiles: EclFiles, dates: Optional[Union[str, datetime.date, List[datetime.date]]]
+) -> Tuple[List[int], List[datetime.date], List[str]]:
     """Return the restart index/indices for a given datetime or list of datetimes
 
-      date: datetime.date or list of datetime.date, must
-            correspond to an existing date. If list, it
-            forces dateinheaders to be True.
-            Can also be string, then the mnenomics
-            'first', 'last', 'all', are supported, or ISO
-            date formats. If None or empty string is supplied,
-            an empty return tuple is returned.
+      dates: datetime.date or list of datetime.date, must
+          correspond to an existing date. If list, it
+          forces dateinheaders to be True.
+          Can also be string, then the mnenomics
+          'first', 'last', 'all', are supported, or ISO
+          date formats. If None or empty string is supplied,
+          an empty return tuple is returned.
 
     Raises exception if no dates are not found.
 
@@ -109,7 +113,13 @@ def dates2rstindices(eclfiles, dates):
     return (rstindices, chosendates, isostrings)
 
 
-def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
+def rst2df(
+    eclfiles: EclFiles,
+    date: Union[str, datetime.date, List[datetime.date]],
+    vectors: Optional[Union[str, List[str]]] = None,
+    dateinheaders: bool = False,
+    stackdates: bool = False,
+) -> pd.DataFrame:
     """Return a dataframe with dynamic data from the restart file
     for each cell, at a particular date.
 
@@ -121,12 +131,12 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
             Can also be string, then the mnenomics
             'first', 'last', 'all', are supported, or ISO
             date formats.
-         vectors (str or list): List of vectors to include,
+         vectors: List of vectors to include,
             glob-style wildcards supported
          dateinheaders: boolean on whether the date should
             be added to the column headers. Instead of
             SGAS as a column header, you get SGAS@YYYY-MM-DD.
-         stackdates (bool): Default is false. If true, a column
+         stackdates: Default is false. If true, a column
             called DATE will be added and data for all restart
             dates will be added in a stacked manner. Implies
             dateinheaders False.
@@ -235,18 +245,26 @@ def rst2df(eclfiles, date, vectors=None, dateinheaders=False, stackdates=False):
     return rststack
 
 
-def gridgeometry2df(eclfiles):
+def gridgeometry2df(
+    eclfiles: EclFiles, zonemap: Optional[Dict[int, str]] = None
+) -> pd.DataFrame:
     """Produce a Pandas Dataframe with Eclipse gridgeometry
 
     Order is significant, and is determined by the order from libecl, and used
     when merging with other dataframes with cell-data.
 
     Args:
-        eclfiles (EclFiles): object holding the Eclipse output files.
+        eclfiles: object holding the Eclipse output files.
+        zonemap: A zonemap dictionary mapping every K index to a
+            string, which will be put in a column ZONE. If none is provided,
+            a zonemap from a default file will be looked for. Provide an empty
+            dictionary to avoid looking for the default file, and no ZONE
+            column will be added.
 
     Returns:
-        DataFrame: With columns I, J, K, X, Y, Z, VOLUME, one row pr. cell. The
-        index of the dataframe are the global indices
+        DataFrame with at least the columns I, J, K, X, Y, Z and VOLUME. One row
+        pr. cell. The index of the dataframe are the global indices. If a zonemap
+        is provided, zone information will be in the column ZONE.
     """
     if not eclfiles:
         raise ValueError
@@ -278,7 +296,9 @@ def gridgeometry2df(eclfiles):
     # Column names should be uppercase
     grid_df.columns = [x.upper() for x in grid_df.columns]
 
-    zonemap = eclfiles.get_zonemap()
+    if zonemap is None:
+        # Look for default zonemap file:
+        zonemap = eclfiles.get_zonemap()
     if zonemap:
         logger.info("Merging zonemap into grid")
         grid_df = common.merge_zones(grid_df, zonemap, kname="K")
@@ -286,21 +306,26 @@ def gridgeometry2df(eclfiles):
     return grid_df
 
 
-def merge_initvectors(eclfiles, dframe, initvectors, ijknames=None):
+def merge_initvectors(
+    eclfiles: EclFiles,
+    dframe: pd.DataFrame,
+    initvectors: List[str],
+    ijknames: List[str] = None,
+) -> pd.DataFrame:
     """Merge in INIT vectors to a dataframe by I, J, K.
 
     Utility function for other modules to use. Normally it is sufficient
     for API users to only use the df() function.
 
     Args:
-        eclfiles (EclFiles): Object representing the Eclipse output files
-        dframe (pd.DataFrame): Table data to merge with
-        initvectors (list or str): Names of INIT vectors to merge in.
-        ijknames (list): Three strings that determine the I, J and K columns to use
+        eclfiles: Object representing the Eclipse output files
+        dframe: Table data to merge with
+        initvectors: Names of INIT vectors to merge in.
+        ijknames: Three strings that determine the I, J and K columns to use
             for merging in dframe. For compdat the 'K' is f.ex. denoted 'K1'
 
     Returns:
-        pd.DataFrame, copy of incoming dataframe with additional columns
+        Copy of incoming dataframe with additional columns
     """
     if not initvectors:
         # Nothing to do.
@@ -324,7 +349,7 @@ def merge_initvectors(eclfiles, dframe, initvectors, ijknames=None):
     return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
 
-def init2df(eclfiles, vectors=None):
+def init2df(eclfiles: EclFiles, vectors: Union[str, List[str]] = None) -> pd.DataFrame:
     """Extract information from INIT file with cell data
 
     Normally, you would use the df() function which will
@@ -333,8 +358,8 @@ def init2df(eclfiles, vectors=None):
     Order is significant, as index is used for merging
 
     Args:
-        eclfiles (EclFiles): Object that can serve the EGRID and INIT files
-        vectors (str or list): List of vectors to include,
+        eclfiles: Object that can serve the EGRID and INIT files
+        vectors: List of vectors to include,
             glob-style wildcards supported.
     """
     if not vectors:
@@ -390,12 +415,13 @@ def init2df(eclfiles, vectors=None):
 
 
 def df(
-    eclfiles,
-    vectors="*",
-    dropconstants=False,
-    rstdates=None,
-    dateinheaders=False,
-    stackdates=False,
+    eclfiles: EclFiles,
+    vectors: Union[str, List[str]] = "*",
+    dropconstants: bool = False,
+    rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
+    dateinheaders: bool = False,
+    stackdates: bool = False,
+    zonemap: Optional[Dict[int, str]] = None,
 ):
     """Produce a dataframe with grid information
 
@@ -419,8 +445,13 @@ def df(
             called DATE will be added and data for all restart
             dates will be added in a stacked manner. Implies
             dateinheaders False.
+        zonemap (dict): A zonemap dictionary mapping every K index to a
+            string, which will be put in a column ZONE. If none is provided,
+            a zonemap from a default file will be looked for. Provide an empty
+            dictionary to avoid looking for the default file, and no ZONE
+            column will be added.
     """
-    gridgeom = gridgeometry2df(eclfiles)
+    gridgeom = gridgeometry2df(eclfiles, zonemap)
     initdf = init2df(eclfiles, vectors=vectors)
     rst_df = None
     if rstdates:
@@ -437,7 +468,7 @@ def df(
     return grid_df
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parser.
 
     Arguments:
@@ -487,15 +518,17 @@ def fill_parser(parser):
     return parser
 
 
-def drop_constant_columns(dframe, alwayskeep=None):
+def drop_constant_columns(
+    dframe: pd.DataFrame, alwayskeep: Optional[Union[str, List[str]]] = None
+) -> pd.DataFrame:
     """Drop/delete constant columns from a dataframe.
 
     Args:
-        dframe: pd.DataFrame
+        dframe
         alwayskeep: string or list of strings of columns to keep
            anyway.
     Returns:
-        pd.DataFrame with equal or less columns.
+        Dataframe with equal or less columns.
     """
     if not alwayskeep:
         alwayskeep = []
@@ -518,8 +551,13 @@ def drop_constant_columns(dframe, alwayskeep=None):
 
 
 def df2ecl(
-    grid_df, keywords, eclfiles=None, dtype=None, filename=None, nocomments=False
-):
+    grid_df: pd.DataFrame,
+    keywords: Union[str, List[str]],
+    eclfiles: Optional[EclFiles] = None,
+    dtype: Optional[Type] = None,
+    filename: Optional[str] = None,
+    nocomments: bool = False,
+) -> str:
     """
     Write an include file with grid data keyword, like PERMX, PORO,
     FIPNUM etc, for the GRID section of the Eclipse deck.
@@ -535,23 +573,23 @@ def df2ecl(
     if the grid contains 8 cells (inactive and active).
 
     Args:
-        grid_df (pd.DataFrame). Dataframe with the keyword for which
+        grid_df: Dataframe with the keyword for which
             we want to export data, and also the a column with GLOBAL_INDEX.
             Without GLOBAL_INDEX, the output will likely be invalid.
             The grid can contain both active and inactive cells.
-        keywords (str or list of str): The keyword(s) to export, with one
+        keywords: The keyword(s) to export, with one
             value for every cell.
-        eclfiles (EclFiles): If provided, the total cell count for the grid
+        eclfiles: If provided, the total cell count for the grid
             will be requested from this object. If not, it will be *guessed*
             from the maximum number of GLOBAL_INDEX, which can be under-estimated
             in the corner-case that the last cells are inactive.
-        dtype (float or int-class): If provided, the columns which are
+        dtype: If provided, the columns which are
             outputted are converted to int or float. Dataframe columns
             read from CSV files easily gets the wrong type, while Eclipse
             might require some data to be strictly integer.
-        filename (str): If provided, the string produced will also to be
+        filename: If provided, the string produced will also to be
             written to this filename.
-        nocomments (bool): Set to True to avoid any comments being written. Defaults
+        nocomments: Set to True to avoid any comments being written. Defaults
             to False.
     """
     if isinstance(keywords, str):
@@ -655,7 +693,7 @@ def df2ecl(
     return string
 
 
-def grid_main(args):
+def grid_main(args) -> None:
     """This is the command line API"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

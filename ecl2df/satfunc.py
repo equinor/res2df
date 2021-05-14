@@ -13,20 +13,37 @@ TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
 import logging
+import argparse
+from typing import List, Dict, Union, Optional
+
 import pandas as pd
+
+try:
+    import opm.io
+except ImportError:
+    pass
 
 from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 from .common import write_dframe_stdout_file
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS = ["SWOF", "SGOF", "SWFN", "SGWFN", "SOF2", "SGFN", "SOF3", "SLGOF"]
+SUPPORTED_KEYWORDS: List[str] = [
+    "SWOF",
+    "SGOF",
+    "SWFN",
+    "SGWFN",
+    "SOF2",
+    "SGFN",
+    "SOF3",
+    "SLGOF",
+]
 
 # RENAMERS are a dictionary of dictionaries, referring to
 # how we should rename deck record items, from the JSON
 # files in opm.common and into Dataframe column names.
-RENAMERS = {}
+RENAMERS: Dict[str, Dict[str, Union[List[str], str]]] = {}
 RENAMERS["SGFN"] = {"DATA": ["SG", "KRG", "PCOG"]}
 RENAMERS["SGOF"] = {"DATA": ["SG", "KRG", "KROG", "PCOG"]}
 RENAMERS["SGWFN"] = {"DATA": ["SG", "KRG", "KRW", "PCGW"]}
@@ -37,19 +54,19 @@ RENAMERS["SWFN"] = {"DATA": ["SW", "KRW", "PCOW"]}
 RENAMERS["SWOF"] = {"DATA": ["SW", "KRW", "KROW", "PCOW"]}
 
 
-def xx_inject_satnumcount(deckstr, satnumcount):
+def xx_inject_satnumcount(deckstr: str, satnumcount: int) -> str:
     """Insert a TABDIMS with NTSFUN into a deck
 
     This is simple string manipulation, not OPM
     deck manipulation (which might be possible to do).
 
     Arguments:
-        deckstr (str): A string containing a partial deck (f.ex only
+        deckstr: A string containing a partial deck (f.ex only
             the SWOF keyword).
-        satnumcount (int): The NTSFUN number to use in TABDIMS
+        satnumcount: The NTSFUN number to use in TABDIMS
             (this function does not care if it is correct or not)
     Returns:
-        str: New deck with TABDIMS prepended.
+        New deck with TABDIMS prepended.
     """
     if "TABDIMS" in deckstr:
         logger.warning("Not inserting TABDIMS in a deck where already exists")
@@ -57,7 +74,11 @@ def xx_inject_satnumcount(deckstr, satnumcount):
     return "TABDIMS\n " + str(satnumcount) + " /\n\n" + str(deckstr)
 
 
-def df(deck, keywords=None, ntsfun=None):
+def df(
+    deck: Union[str, "opm.libopmcommon_python.Deck"],
+    keywords: Optional[List[str]] = None,
+    ntsfun: Optional[int] = None,
+) -> pd.DataFrame:
     """Extract the data in the saturation function keywords as a Pandas
     DataFrames.
 
@@ -75,11 +96,11 @@ def df(deck, keywords=None, ntsfun=None):
     returning the first function by default).
 
     Arguments:
-        deck (opm.io deck or str): Incoming data deck. Always
+        deck: Incoming data deck. Always
             supply as a string if you don't know TABDIMS-NTSFUN.
-        keywords (list of str): Requested keywords for which to
+        keywords: Requested keywords for which to
             to extract data.
-        ntsfun (int): Number of SATNUMs defined in the deck, only
+        ntsfun: Number of SATNUMs defined in the deck, only
             needed if TABDIMS with NTSFUN is not found in the deck.
             If not supplied (or None) and NTSFUN is not defined,
             it will be attempted inferred.
@@ -95,10 +116,10 @@ def df(deck, keywords=None, ntsfun=None):
     assert "TABDIMS" in deck
     ntsfun = deck["TABDIMS"][0][inferdims.DIMS_POS["NTSFUN"]].get_int(0)
 
-    keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
-    for keyword in keywords:
+    for keyword in wanted_keywords:
         # Construct the associated function names
         function_name = keyword.lower() + "_fromdeck"
         function = globals()[function_name]
@@ -117,12 +138,14 @@ def df(deck, keywords=None, ntsfun=None):
     return pd.DataFrame()
 
 
-def swof_fromdeck(deck, ntsfun=None):
+def swof_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SWOF data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -132,12 +155,14 @@ def swof_fromdeck(deck, ntsfun=None):
     )
 
 
-def sgof_fromdeck(deck, ntsfun=None):
+def sgof_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SGOF data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -147,12 +172,14 @@ def sgof_fromdeck(deck, ntsfun=None):
     )
 
 
-def swfn_fromdeck(deck, ntsfun=None):
+def swfn_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SWFN data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -162,12 +189,14 @@ def swfn_fromdeck(deck, ntsfun=None):
     )
 
 
-def sof2_fromdeck(deck, ntsfun=None):
+def sof2_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SOF2 data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -177,12 +206,14 @@ def sof2_fromdeck(deck, ntsfun=None):
     )
 
 
-def sgfn_fromdeck(deck, ntsfun=None):
+def sgfn_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SGFN data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -192,12 +223,14 @@ def sgfn_fromdeck(deck, ntsfun=None):
     )
 
 
-def sgwfn_fromdeck(deck, ntsfun=None):
+def sgwfn_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SGWFN data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -207,12 +240,14 @@ def sgwfn_fromdeck(deck, ntsfun=None):
     )
 
 
-def sof3_fromdeck(deck, ntsfun=None):
+def sof3_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SOF3 data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -222,12 +257,14 @@ def sof3_fromdeck(deck, ntsfun=None):
     )
 
 
-def slgof_fromdeck(deck, ntsfun=None):
+def slgof_fromdeck(
+    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
+) -> pd.DataFrame:
     """Extract SLGOF data from a deck
 
     Args:
-        deck (str or opm.common Deck)
-        ntsfun (int): Number of SATNUM regions in deck. Will
+        deck
+        ntsfun: Number of SATNUM regions in deck. Will
             be inferred if not present in deck
     """
     if "TABDIMS" not in deck:
@@ -237,7 +274,7 @@ def slgof_fromdeck(deck, ntsfun=None):
     )
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
@@ -266,12 +303,12 @@ def fill_parser(parser):
     return parser
 
 
-def fill_reverse_parser(parser):
+def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> eclipse include file"""
     return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
 
 
-def satfunc_main(args):
+def satfunc_main(args) -> None:
     """Entry-point for module, for command line utility"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -303,7 +340,7 @@ def satfunc_main(args):
         logger.error("Empty saturation functions data, not written to disk!")
 
 
-def satfunc_reverse_main(args):
+def satfunc_reverse_main(args) -> None:
     """For command line utility for CSV to Eclipse"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -313,19 +350,24 @@ def satfunc_reverse_main(args):
     common.write_inc_stdout_file(inc_string, args.output)
 
 
-def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):
+def df2ecl(
+    satfunc_df: pd.DataFrame,
+    keywords: Optional[List[str]] = None,
+    comments: Optional[Dict[str, str]] = None,
+    filename: Optional[str] = None,
+) -> str:
     """Generate Eclipse include strings from dataframes with
     saturation functions (SWOF, SGOF, ...)
 
     Args:
-        satfunc_df (pd.DataFrame): Dataframe with data on ecl2df format.
-        keywords (list of str): List of keywords to include. Must be
+        satfunc_df: Dataframe with data on ecl2df format.
+        keywords: List of keywords to include. Must be
             supported and present in the incoming dataframe. Keywords
             are printed in the order defined by this list.
-        comments (dict): Dictionary indexed by keyword with comments to be
+        comments: Dictionary indexed by keyword with comments to be
             included pr. keyword. If a key named "master" is present
             it will be used as a master comment for the outputted file.
-        filename (str): If supplied, the generated text will also be dumped
+        filename: If supplied, the generated text will also be dumped
             to file.
 
     Returns:
@@ -344,87 +386,89 @@ def df2ecl(satfunc_df, keywords=None, comments=None, filename=None):
     return string
 
 
-def df2ecl_swof(dframe, comment=None):
+def df2ecl_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SWOF data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SWOF data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SWOF data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SWOF", dframe, comment)
 
 
-def df2ecl_sgof(dframe, comment=None):
+def df2ecl_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SGOF data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SGOF data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SGOF data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SGOF", dframe, comment)
 
 
-def df2ecl_sgfn(dframe, comment=None):
+def df2ecl_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SGFN data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SGFN data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SGFN data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SGFN", dframe, comment)
 
 
-def df2ecl_sgwfn(dframe, comment=None):
+def df2ecl_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SGWFN data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SGWFN data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SGWFN data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SGWFN", dframe, comment)
 
 
-def df2ecl_swfn(dframe, comment=None):
+def df2ecl_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SWFN data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SWFN data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SWFN data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SWFN", dframe, comment)
 
 
-def df2ecl_slgof(dframe, comment=None):
+def df2ecl_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SLGOF data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SLGOF data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SLGOF data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SLGOF", dframe, comment)
 
 
-def df2ecl_sof2(dframe, comment=None):
+def df2ecl_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SOF2 data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SOF2 data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SOF2 data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SOF2", dframe, comment)
 
 
-def df2ecl_sof3(dframe, comment=None):
+def df2ecl_sof3(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print SOF3 data. Used by df2ecl().
 
     Args:
-        dframe (pd.DataFrame): Containing SOF3 data
-        comment (str): Text that will be included as a comment
+        dframe: Containing SOF3 data
+        comment: Text that will be included as a comment
     """
     return _df2ecl_satfuncs("SOF3", dframe, comment)
 
 
-def _df2ecl_satfuncs(keyword, dframe, comment=None):
+def _df2ecl_satfuncs(
+    keyword: str, dframe: pd.DataFrame, comment: Optional[str] = None
+) -> str:
     if dframe.empty:
         return "-- No data!\n"
     string = "{}\n".format(keyword)

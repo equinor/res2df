@@ -6,13 +6,14 @@ in ecl2df
 import sys
 import functools
 import importlib
+from typing import Optional
 
 import argparse
 
 from ecl2df import __version__
 
 # String constants in use for generating ERT forward model documentation:
-DESCRIPTION = """Convert Eclipse input and output files into CSV files,
+DESCRIPTION: str = """Convert Eclipse input and output files into CSV files,
 with the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see
 which subcommands are supported.
 
@@ -21,8 +22,8 @@ where ``n`` goes from 1 to 10.
 
 For more documentation, see https://equinor.github.io/ecl2df/.
 """
-CATEGORY = "utility.eclipse"
-EXAMPLES = """
+CATEGORY: str = "utility.eclipse"
+EXAMPLES: str = """
 
 Outputting the EQUIL data from an Eclipse deck. The ECLBASE variable from your
 ERT config is supplied implicitly::
@@ -39,7 +40,7 @@ comment. For more options, use ``<XARG3>`` etc.
 """  # noqa
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Make parser"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -55,8 +56,10 @@ def get_parser():
     )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
-        subparsers = parser.add_subparsers(
-            required=True, dest="subcommand", parser_class=argparse.ArgumentParser
+        subparsers = parser.add_subparsers(  # type: ignore
+            required=True,
+            dest="subcommand",
+            parser_class=argparse.ArgumentParser,
         )
     else:
         subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
@@ -220,7 +223,9 @@ def get_parser():
     for submodule, subparser in subparsers_dict.items():
         # Use the submodule's fill_parser() to add the submodule specific
         # arguments:
-        importlib.import_module("ecl2df." + submodule).fill_parser(subparser)
+        importlib.import_module("ecl2df." + submodule).fill_parser(  # type: ignore
+            subparser
+        )
 
         # Add empty placeholders, this looks strange but is needed for the
         # ERT forward model frontend, where non-used options must be supplied
@@ -240,7 +245,11 @@ def get_parser():
     return parser
 
 
-def run_subparser_main(args, submodule=None, parser=None):
+def run_subparser_main(
+    args,
+    submodule: str,
+    parser: Optional[argparse.ArgumentParser] = None,
+) -> None:
     """Wrapper for running the subparsers main() function, with
     custom argument handling.
 
@@ -256,11 +265,10 @@ def run_subparser_main(args, submodule=None, parser=None):
 
     Args:
         args (Namespace): argparse argument namespace
-        submodule (str): One of ecl2df's submodules. That module
+        submodule: One of ecl2df's submodules. That module
             must have a function called <submodule>_main()
-        parser (argparse.ArgumentParser): Used for raising errors.
+        parser: Used for raising errors.
     """
-    assert submodule is not None
     if "DATAFILE" in args:
         positionals = list(filter(len, [args.DATAFILE] + args.hiddenemptyplaceholders))
         args.DATAFILE = "".join([args.DATAFILE] + args.hiddenemptyplaceholders)
@@ -268,7 +276,7 @@ def run_subparser_main(args, submodule=None, parser=None):
         # Special treatment for the fipreports submodule
         positionals = list(filter(len, [args.PRTFILE] + args.hiddenemptyplaceholders))
         args.PRTFILE = "".join([args.PRTFILE] + args.hiddenemptyplaceholders)
-    if len(positionals) > 1:
+    if len(positionals) > 1 and parser is not None:
         parser.error(f"Unknown argument in {positionals}")
 
     mod = importlib.import_module("ecl2df." + submodule)
@@ -277,7 +285,7 @@ def run_subparser_main(args, submodule=None, parser=None):
     main_func(args)
 
 
-def main():
+def main() -> None:
     """Entry point"""
     parser = get_parser()
     args = parser.parse_args()

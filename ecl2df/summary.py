@@ -1,7 +1,9 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import os
 import logging
+import argparse
 from pathlib import Path
+from typing import Dict, List, Optional, Union, Any
 
 # The name 'datetime' is in use by a function argument:
 import datetime as dt
@@ -17,13 +19,13 @@ from .eclfiles import EclFiles
 from . import parameters
 from .common import write_dframe_stdout_file
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 # Frequency mnemonics for the API consumer to use:
-FREQ_RAW = "raw"
-FREQ_FIRST = "first"
-FREQ_LAST = "last"
-PD_FREQ_MNEMONICS = {
+FREQ_RAW: str = "raw"
+FREQ_FIRST: str = "first"
+FREQ_LAST: str = "last"
+PD_FREQ_MNEMONICS: Dict[str, str] = {
     "daily": "D",
     "weekly": "W-MON",
     "monthly": "MS",
@@ -37,7 +39,7 @@ https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffs
 """  # noqa
 
 
-def date_range(start_date, end_date, freq):
+def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> List[dt.datetime]:
     """Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics
     'yearly', 'daily', 'weekly', mapped over to pandas DateOffsets.
 
@@ -53,27 +55,35 @@ def date_range(start_date, end_date, freq):
     return pd.date_range(start_date, end_date, freq=PD_FREQ_MNEMONICS.get(freq, freq))
 
 
-def _ensure_date_or_none(some_date):
+def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[dt.date]:
     """Ensures an object is either a date or None
 
     Args:
         some_date: string or a datetime.date
 
     Returns:
-        datetime.date: None if input is None.
+        None if input is None.
 
     Raises:
         TypeError: if input is not None and not a date
     """
-    if some_date:
-        if isinstance(some_date, str):
-            return dateutil.parser.parse(some_date).date()
-        if not isinstance(some_date, dt.date):
-            raise TypeError(f"Not a date type: {str(some_date)}")
-    return some_date
+    if some_date is None:
+        return None
+    if isinstance(some_date, dt.date):
+        return some_date
+    if some_date == "":
+        return None
+    if isinstance(some_date, str):
+        return dateutil.parser.parse(some_date).date()
+    raise TypeError(f"Not a date type: {str(some_date)}")
 
 
-def _crop_datelist(eclsumsdates, freq, start_date=None, end_date=None):
+def _crop_datelist(
+    eclsumsdates: List[dt.datetime],
+    freq: Union[dt.date, dt.datetime, str],
+    start_date: Optional[dt.date] = None,
+    end_date: Optional[dt.date] = None,
+) -> Union[List[dt.date], List[dt.datetime]]:
     """Helper function for resample_smry_dates, taking care of
     the special cases where the list of dates should not be resampled, but
     only cropped or returned as is.
@@ -111,8 +121,12 @@ def _crop_datelist(eclsumsdates, freq, start_date=None, end_date=None):
 
 
 def resample_smry_dates(
-    eclsumsdates, freq=FREQ_RAW, normalize=True, start_date=None, end_date=None
-):
+    eclsumsdates: List[dt.datetime],
+    freq: str = FREQ_RAW,
+    normalize: bool = True,
+    start_date: Optional[Union[str, dt.date]] = None,
+    end_date: Optional[Union[str, dt.date]] = None,
+) -> Union[List[dt.date], List[dt.datetime]]:
     """
     Resample (optionally) a list of date(time)s to a new datelist according to options.
 
@@ -139,13 +153,7 @@ def resample_smry_dates(
             Dates past this date will be dropped, supplied
             end_date will always be included. Overrides
             normalized dates. Overridden if freq is 'last'.
-
-    Returns:
-        list of datetimes.
     """
-    if not eclsumsdates:
-        return []
-
     start_date = _ensure_date_or_none(start_date)
     end_date = _ensure_date_or_none(end_date)
 
@@ -174,45 +182,47 @@ def resample_smry_dates(
     start_n = offset.rollback(start_smry.date()).date()
     end_n = offset.rollforward(end_smry.date()).date()
 
-    if not start_date and not normalize:
-        start_date_range = start_smry.date()
-    elif not start_date and normalize:
-        start_date_range = start_n
+    if start_date is None:
+        if normalize:
+            start_date_range = start_n
+        else:
+            start_date_range = start_smry.date()
     else:
         start_date_range = start_date
 
-    if not end_date and not normalize:
-        end_date_range = end_smry.date()
-    elif not end_date and normalize:
-        end_date_range = end_n
+    if end_date is None:
+        if normalize:
+            end_date_range = end_n
+        else:
+            end_date_range = end_smry.date()
     else:
         end_date_range = end_date
 
     datetimes = date_range(start_date_range, end_date_range, freq)
 
     # Convert from numpys datetime64 to datetime.date:
-    datetimes = [x.date() for x in datetimes]
+    dates = [x.date() for x in datetimes]
 
     # pd.date_range will not include random dates that do not
     # fit on frequency boundary. Force include these if
     # supplied as user arguments.
-    if start_date and start_date not in datetimes:
-        datetimes = [start_date] + datetimes
-    if end_date and end_date not in datetimes:
-        datetimes = datetimes + [end_date]
-    return datetimes
+    if start_date and start_date not in dates:
+        dates = [start_date] + dates
+    if end_date and end_date not in dates:
+        dates = dates + [end_date]
+    return dates
 
 
 def df(
-    eclfiles,
-    time_index=None,
-    column_keys=None,
-    start_date=None,
-    end_date=None,
-    include_restart=True,
-    params=False,
-    paramfile=None,
-    datetime=False,  # A very poor choice of argument name [pylint]
+    eclfiles: EclFiles,
+    time_index: Optional[str] = None,
+    column_keys: Union[List[str], str] = None,
+    start_date: Optional[Union[str, dt.date]] = None,
+    end_date: Optional[Union[str, dt.date]] = None,
+    include_restart: bool = True,
+    params: bool = False,
+    paramfile: Optional[str] = None,
+    datetime: bool = False,  # A very poor choice of argument name [pylint]
 ):
     # pylint: disable=too-many-arguments
     """
@@ -245,11 +255,11 @@ def df(
             is 'last'.
         include_restart: boolean sent to libecl for wheter restarts
             files should be traversed
-        params (bool): If set, parameters.txt will be attempted loaded
+        params: If set, parameters.txt will be attempted loaded
             and merged with the summary data.
-        paramsfile (str): Explicit path to parameters file if autodiscovery is
+        paramsfile: Explicit path to parameters file if autodiscovery is
             not wanted. Implies params=True
-        datetime (bool): If True, the time index of the returned DataFrame
+        datetime: If True, the time index of the returned DataFrame
             is always of datetime type. If not, it will be datetime
             if raw dates are requested (which are at second accuracy),
             or it will be strings in case of yearly, monthly or daily
@@ -258,7 +268,7 @@ def df(
     Returns empty dataframe if there is no summary file, or if the
     column_keys are not existing.
     """
-    if not isinstance(column_keys, list):
+    if isinstance(column_keys, str):
         column_keys = [column_keys]
 
     if isinstance(eclfiles, EclSum):
@@ -270,6 +280,7 @@ def df(
             logger.warning("Error reading summary instance, returning empty dataframe")
             return pd.DataFrame()
 
+    time_index_arg: Optional[Union[List[dt.date], List[dt.datetime]]]
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = resample_smry_dates(
             eclsum.dates,
@@ -287,16 +298,15 @@ def df(
             end_date,
         )
     else:
-        # Can be None.
         time_index_arg = time_index
 
+    if time_index_arg is None:
+        time_index_str = ""
     if isinstance(time_index_arg, (list, np.ndarray)):
         if len(time_index_arg) < 6:
             time_index_str = str(time_index_arg)
         else:
             time_index_str = f"{time_index_arg[0:3]} … {time_index_arg[-3:]}"
-    else:
-        time_index_str = time_index_arg
 
     if not column_keys or not column_keys[0]:
         column_keys_str = "*"
@@ -338,21 +348,34 @@ def df(
     return dframe
 
 
-def _merge_params(dframe, paramfile=None, eclfiles=None):
-    """Locate parameters in a <key> <value> file and add to the dataframe"""
+def _merge_params(
+    dframe: pd.DataFrame,
+    paramfile: Optional[Union[str, Path]] = None,
+    eclfiles: Union[str, EclFiles] = None,
+) -> pd.DataFrame:
+    """Locate parameters in a <key> <value> file and add to the dataframe.
 
-    if not paramfile:
+    Will fetch parameters directly from a text file if provided, or look up
+    the parameters.txt file based on the location of an Eclise run.
+    """
+
+    if paramfile is None and eclfiles is not None:
         param_files = parameters.find_parameter_files(eclfiles)
         logger.info("Loading parameters from files: %s", str(param_files))
         param_dict = parameters.load_all(param_files)
+    elif (
+        paramfile is not None
+        and eclfiles is not None
+        and not Path(paramfile).is_absolute()
+    ):
+        param_files = parameters.find_parameter_files(eclfiles, filebase=str(paramfile))
+        logger.info("Loading parameters from files: %s", str(param_files))
+        param_dict = parameters.load_all(param_files)
+    elif paramfile is not None and Path(paramfile).is_absolute():
+        logger.info("Loading parameter from file: %s", str(paramfile))
+        param_dict = parameters.load(paramfile)
     else:
-        if not Path(paramfile).is_absolute():
-            param_file = parameters.find_parameter_files(eclfiles, filebase=paramfile)
-            logger.info("Loading parameters from file: %s", str(param_file))
-            param_dict = parameters.load(param_file)
-        else:
-            logger.info("Loading parameter from file: %s", str(paramfile))
-            param_dict = parameters.load(paramfile)
+        raise ValueError("Not able to locate parameters.txt")
     logger.info("Loaded %d parameters", len(param_dict))
     for key in param_dict:
         # By converting to str we are more robust with respect to what objects are
@@ -363,7 +386,7 @@ def _merge_params(dframe, paramfile=None, eclfiles=None):
     return dframe
 
 
-def smry_meta(eclfiles):
+def smry_meta(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for summary data vectors.
 
     A dictionary indexed by summary vector name is returned, and each
@@ -382,7 +405,8 @@ def smry_meta(eclfiles):
         eclsum = eclfiles
     else:
         eclsum = eclfiles.get_eclsum()
-    meta = {}
+
+    meta: Dict[str, Dict[str, Any]] = {}
     for col in eclsum.keys():
         meta[col] = {}
         meta[col]["unit"] = eclsum.unit(col)
@@ -406,10 +430,10 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
       will be emitted for skipped columns
 
     Args:
-        dframe (pd.DataFrame): Dataframe to read. Will not be modified.
+        dframe: Dataframe to read. Will not be modified.
 
     Returns:
-        pd.DataFrame: Modified copy of incoming dataframe.
+        Modified copy of incoming dataframe.
     """
     if dframe.empty:
         return dframe
@@ -467,18 +491,15 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
 def df2eclsum(
     dframe: pd.DataFrame,
     casename: str = "SYNTHETIC",
-):
+) -> EclSum:
     """Convert a dataframe to an EclSum object
 
     Args:
-        dframe (pd.DataFrame): Dataframe with a DATE colum (or with the
+        dframe: Dataframe with a DATE colum (or with the
             dates/datetimes in the index).
         casename: Name of Eclipse casename/basename to be used for the EclSum object
             If the EclSum object is later written to disk, this will be used
             to construct the filenames.
-
-    Returns:
-        EclSum
     """
     if dframe.empty:
         return None
@@ -493,7 +514,11 @@ def df2eclsum(
     # return EclSum.from_pandas(casename, dframe)
 
 
-def _libecl_eclsum_pandas_frame(eclsum, time_index=None, column_keys=None):
+def _libecl_eclsum_pandas_frame(
+    eclsum: EclSum,
+    time_index: Optional[Union[List[dt.date], List[dt.datetime]]] = None,
+    column_keys: Optional[List[str]] = None,
+) -> pd.DataFrame:
     """Build a Pandas dataframe from an EclSum object.
 
     Temporarily copied from libecl to circumvent bug
@@ -540,7 +565,12 @@ def _libecl_eclsum_pandas_frame(eclsum, time_index=None, column_keys=None):
     return frame
 
 
-def _libecl_eclsum_from_pandas(case, frame, dims=None, headers=None):
+def _libecl_eclsum_from_pandas(
+    case: str,
+    frame: pd.DataFrame,
+    dims: Optional[List[int]] = None,
+    headers: Optional[List[tuple]] = None,
+) -> EclSum:
     """Build an EclSum object from a Pandas dataframe.
 
     Temporarily copied from libecl to circumvent bug
@@ -575,12 +605,11 @@ def _libecl_eclsum_from_pandas(case, frame, dims=None, headers=None):
     return ecl_sum
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
-        parser (argparse.ArgumentParser or argparse.subparser): parser to fill
-            with arguments
+        parser: parser to fill with arguments
     """
     parser.add_argument(
         "DATAFILE",
@@ -656,7 +685,7 @@ def fill_parser(parser):
     return parser
 
 
-def fill_reverse_parser(parser):
+def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation:  dataframe -> eclsum files"""
 
     parser.add_argument(
@@ -672,7 +701,7 @@ def fill_reverse_parser(parser):
     return parser
 
 
-def summary_main(args):
+def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
@@ -695,7 +724,7 @@ def summary_main(args):
     write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
 
 
-def summary_reverse_main(args):
+def summary_reverse_main(args) -> None:
     """Entry point for usage with "csv2ecl summary" on the command line"""
     if args.verbose and not args.debug:
         logging.basicConfig(level=logging.INFO)

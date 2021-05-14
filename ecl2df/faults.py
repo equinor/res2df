@@ -5,10 +5,23 @@ a DataFrame
 
 """
 import logging
+import argparse
+from typing import Union
+
 import pandas as pd
 
-from .eclfiles import EclFiles
-from .common import parse_opmio_deckrecord, write_dframe_stdout_file
+from ecl2df import EclFiles
+from ecl2df.common import parse_opmio_deckrecord, write_dframe_stdout_file
+
+try:
+    # Needed for mypy
+
+    # pylint: disable=unused-import
+    import opm.io
+
+except ImportError:
+    pass
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,13 +30,13 @@ COLUMNS = ["NAME", "I", "J", "K", "FACE"]
 ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
 
 
-def df(deck):
+def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
     """Produce a dataframe of fault data from a deck
 
     All data for the keyword FAULTS will be returned.
 
     Args:
-        deck (opm.io Deck or EclFiles): Eclipse deck
+        deck: Eclipse deck
     """
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()
@@ -48,7 +61,7 @@ def df(deck):
     return pd.DataFrame(columns=COLUMNS, data=data)
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
@@ -66,7 +79,7 @@ def fill_parser(parser):
     return parser
 
 
-def faults_main(args):
+def faults_main(args) -> None:
     """Read from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

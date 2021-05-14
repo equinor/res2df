@@ -4,16 +4,19 @@ Extract non-neighbour connection (NNC) information from Eclipse output files.
 import os
 import logging
 import datetime
-import pandas as pd
+import argparse
 from pathlib import Path
+from typing import Optional
+
+import pandas as pd
 
 from ecl2df import common, EclFiles, grid, __version__
 from ecl2df.common import write_dframe_stdout_file
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
-def df(eclfiles, coords=False, pillars=False):
+def df(eclfiles: EclFiles, coords: bool = False, pillars: bool = False) -> pd.DataFrame:
     """Produce a Pandas Dataframe with NNC information
 
     A NNC is a pair of cells that are not next to each other
@@ -25,16 +28,16 @@ def df(eclfiles, coords=False, pillars=False):
     between the two cells)
 
     Args:
-        eclfiles (EclFiles): object that can serve EclFile and EclGrid
+        eclfiles: object that can serve EclFile and EclGrid
             on demand
-        coords (boolean): Set to True if you want the midpoint of the two
+        coords: Set to True if you want the midpoint of the two
             connected cells to be computed and added to the columns
             X, Y and Z.
-        pillars (boolean): Set to True if you want to filter to vertical
+        pillars: Set to True if you want to filter to vertical
             (along pillars) connections only.
 
     Returns:
-        pd.DataFrame. Empty if no NNC information found.
+        Empty if no NNC information found.
     """
     egrid_file = eclfiles.get_egridfile()
     egrid_grid = eclfiles.get_egrid()
@@ -99,18 +102,18 @@ def df(eclfiles, coords=False, pillars=False):
     return nncdf
 
 
-def add_nnc_coords(nncdf, eclfiles):
+def add_nnc_coords(nncdf: pd.DataFrame, eclfiles: EclFiles) -> pd.DataFrame:
     """Add columns X, Y and Z for the connection midpoint
 
     This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
     and computes the average in each direction.
 
     Arguments:
-        nncdf (DataFrame): With grid index columns (I1, J1, K1, I2, J2, K2)
-        eclfiles (EclFiles): Object used to fetch grid data from EGRID.
+        nncdf: With grid index columns (I1, J1, K1, I2, J2, K2)
+        eclfiles: Object used to fetch grid data from EGRID.
 
     Returns:
-        DataFrame: Incoming dataframe augmented with the columns X, Y and Z.
+        Incoming dataframe augmented with the columns X, Y and Z.
     """
     gridgeometry = grid.gridgeometry2df(eclfiles)
     gnncdf = pd.merge(
@@ -139,11 +142,11 @@ def add_nnc_coords(nncdf, eclfiles):
     return gnncdf[list(nncdf.columns) + ["X", "Y", "Z"]]
 
 
-def filter_vertical(nncdf):
+def filter_vertical(nncdf: pd.DataFrame) -> pd.DataFrame:
     """Filter to vertical connections
 
     Arguments:
-        nncdf (DataFrame): A dataframe with the columns
+        nncdf: A dataframe with the columns
             I1, J1, K1, I2, J2, K2.
 
     Returns:
@@ -164,7 +167,7 @@ def filter_vertical(nncdf):
 # Remaining functions are for the command line interface
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parser
 
     Arguments:
@@ -194,7 +197,9 @@ def fill_parser(parser):
     return parser
 
 
-def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
+def df2ecl_editnnc(
+    nnc_df: pd.DataFrame, filename: Optional[str] = None, nocomments: bool = False
+) -> str:
     """Write an EDITNNC keyword
 
     This will write::
@@ -271,7 +276,7 @@ def df2ecl_editnnc(nnc_df, filename=None, nocomments=False):
     return string
 
 
-def nnc_main(args):
+def nnc_main(args) -> None:
     """Command line access point from main() or from ecl2csv via subparser"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

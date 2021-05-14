@@ -13,13 +13,13 @@ from ecl2df import pvt, equil, satfunc, summary
 from ecl2df import __version__
 
 # String constants in use for generating ERT forward model documentation:
-DESCRIPTION = """Convert CSV files into Eclipse include files. Uses the command
+DESCRIPTION: str = """Convert CSV files into Eclipse include files. Uses the command
 line utility ``csv2ecl``. Run ``csv2ecl --help`` to see which subcommands are supported.
 No options other than the output file is possible when used directly as a forward model.
 When writing synthetic summary files, the ECLBASE with no filename suffix is expected
 as the OUTPUT argument."""
-CATEGORY = "utility.eclipse"
-EXAMPLES = (
+CATEGORY: str = "utility.eclipse"
+EXAMPLES: str = (
     "``FORWARD_MODEL "
     "CSV2ECL(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
     "<OUTPUT>=eclipse/include/equil.inc)``"
@@ -28,7 +28,7 @@ EXAMPLES = (
 )
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Make parser"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -44,8 +44,10 @@ def get_parser():
     )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
-        subparsers = parser.add_subparsers(
-            required=True, dest="subcommand", parser_class=argparse.ArgumentParser
+        subparsers = parser.add_subparsers(  # type: ignore
+            required=True,
+            dest="subcommand",
+            parser_class=argparse.ArgumentParser,
         )
     else:
         subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
@@ -93,7 +95,7 @@ def get_parser():
     return parser
 
 
-def main():
+def main() -> None:
     """Entry point"""
     parser = get_parser()
     args = parser.parse_args()

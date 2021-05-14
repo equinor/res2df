@@ -3,6 +3,7 @@ related to Eclipse runs"""
 
 import logging
 from pathlib import Path
+from typing import Union, List, Dict, Any
 
 import json
 import yaml
@@ -13,57 +14,56 @@ from ecl2df.eclfiles import EclFiles
 logger = logging.getLogger(__name__)
 
 
-def find_parameter_files(ecldeck_or_eclpath, filebase="parameters"):
+def find_parameter_files(
+    ecldeck_or_eclpath: Union[EclFiles, str], filebase: str = "parameters"
+) -> List[Path]:
     """Locate a default prioritized list of files to try to read as key-value
 
     File extensions .yml, .json and .txt are recognized and will be found in
     current dir, one directory up, and two directories up.
 
     Args:
-        ecldeck_or_eclpath (EclFiles or string): Either an EclFiles object of
+        ecldeck_or_eclpath: Either an EclFiles object of
             an Eclipse output set (only the corresponding path will be used),
             or path to a file or directory, that will be used as a starting
             point for locating parameter files
-        filebase:
-            the base of filenames to look for.
+        filebase: the base of filenames to look for.
 
     Return:
-        list of strings with absolute paths to filenames. Empty list if nothing
-           found
+        Absolute paths to filenames. Empty list if nothing found
     """
+    eclbasepath: Path
+    fname: str
     if isinstance(ecldeck_or_eclpath, EclFiles):
         eclbasepath = Path(ecldeck_or_eclpath.get_path())
     elif isinstance(ecldeck_or_eclpath, str):
         eclbasepath = Path(ecldeck_or_eclpath).parent.absolute()
     else:
         raise TypeError
-    files_to_lookfor = [
+    files_to_lookfor: List[str] = [
         filebase + ".json",
         filebase + ".yml",
         filebase + ".txt",
         filebase,
     ]
-    paths_to_check = [".", "..", Path("..") / Path("..")]
+    paths_to_check: List[Path] = [Path("."), Path(".."), Path("..") / Path("..")]
     foundfiles = []
     for path in paths_to_check:
         for fname in files_to_lookfor:
-            fullfname = eclbasepath / path / fname
+            fullfname = eclbasepath / path / Path(fname)
             if fullfname.is_file():
                 foundfiles.append(fullfname)
     return foundfiles
 
 
-def load_parameterstxt(filename):
+def load_parameterstxt(filename: Union[str, Path]) -> Dict[str, Any]:
     """Read parameters.txt into a dictionary
 
     Lines starting with a hash will be ignored.
 
     Args:
-        filename (str): file containing one key-value pair pr. line,
+        filename: file containing one key-value pair pr. line,
             separated by whitespace
-
-    Return:
-        dict
     """
     dframe = pd.read_csv(
         filename, comment="#", sep=r"\s", engine="python", names=["KEY", "VALUE"]
@@ -71,7 +71,9 @@ def load_parameterstxt(filename):
     return dframe.set_index("KEY")["VALUE"].to_dict()
 
 
-def load_all(filenames, warnduplicates=True):
+def load_all(
+    filenames: Union[List[str], List[Path]], warnduplicates: bool = True
+) -> Dict[str, Any]:
     """Reads a list of parameter filenames
 
     Dictionaries for all files will be merged into one.
@@ -81,11 +83,10 @@ def load_all(filenames, warnduplicates=True):
     the order of filenames).
 
     Args:
-        filenames (list): list of filenames, order matters.
-        warnduplicates (bool): If True (default), overlapping keys will be
-            warned.
+        filenames: Order matters.
+        warnduplicates: If True (default), overlapping keys will be warned.
     """
-    keyvalues = {}
+    keyvalues: Dict[str, Any] = {}
     for fname in filenames:
         new_params = load(fname)
         if warnduplicates and keyvalues:
@@ -97,7 +98,7 @@ def load_all(filenames, warnduplicates=True):
     return keyvalues
 
 
-def load(filename):
+def load(filename: Union[str, Path]) -> Dict[str, Any]:
     """Read a parameter file as txt, yaml or json
 
     Returns:
@@ -115,7 +116,8 @@ def load(filename):
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
             params_dict = None
-    except Exception as yaml_error:  # noqa
+    except Exception as yaml_exc:
+        yaml_error = str(yaml_exc)
         logger.debug("%s was not parseable with yaml, trying json.", filename)
 
     json_error = ""
@@ -125,7 +127,8 @@ def load(filename):
             params_dict = json.load(open(filename))
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as yaml")
-        except Exception as json_error:  # noqa
+        except Exception as json_exc:
+            json_error = str(json_exc)
             logger.debug("%s was not parseable with json, trying txt.", filename)
 
     txt_error = ""
@@ -135,7 +138,8 @@ def load(filename):
             params_dict = load_parameterstxt(filename)
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as txt")
-        except Exception as txt_error:  # noqa
+        except Exception as txt_exc:
+            txt_error = str(txt_exc)
             logger.debug("%s wat not parseable as txt, no more options", filename)
 
     if not params_dict:

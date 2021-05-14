@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.trans &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.trans &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -169,10 +169,14 @@
 <span class="sd">Extract transmissibility information from Eclipse output files as Dataframes.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">ecl2df</span>
+<span class="kn">import</span> <span class="nn">ecl2df.grid</span>
+<span class="kn">import</span> <span class="nn">ecl2df.nnc</span>
+
 <span class="kn">from</span> <span class="nn">ecl2df.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 
@@ -187,15 +191,15 @@
 
 
 <div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.trans.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
-    <span class="n">eclfiles</span><span class="p">,</span>
-    <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">group</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">onlykdir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">onlyijdir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">addnnc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">):</span>
+    <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span>
+    <span class="n">vectors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">boundaryfilter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">group</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">coords</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">onlykdir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">onlyijdir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">addnnc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Make a dataframe of the neighbour transmissibilities.</span>
 
 <span class="sd">    The TRANX, TRANY and TRANZ (whenever nonzero) will be used</span>
@@ -218,25 +222,25 @@
 <span class="sd">    you will get a corresponding FIPNUM1 and FIPNUM2 added.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eclfiles (EclFiles): An object representing your Eclipse run</span>
-<span class="sd">        vectors (str or list): Eclipse INIT vectors that you want to include</span>
-<span class="sd">        boundaryfilter (bool): Set to true if you want to filter where one INIT</span>
+<span class="sd">        eclfiles: An object representing your Eclipse run</span>
+<span class="sd">        vectors: Eclipse INIT vectors that you want to include</span>
+<span class="sd">        boundaryfilter: Set to true if you want to filter where one INIT</span>
 <span class="sd">            vector change. Only use for integer INIT vectors.</span>
-<span class="sd">        group (bool): Set to true if you want to sum transmissibilities over</span>
+<span class="sd">        group: Set to true if you want to sum transmissibilities over</span>
 <span class="sd">            boundary interfaces. Implies boundaryfilter and requires only one integer</span>
 <span class="sd">            INIT vector.</span>
-<span class="sd">        coords (bool): Set to true if you want to add coordinates for the</span>
+<span class="sd">        coords: Set to true if you want to add coordinates for the</span>
 <span class="sd">            average of the two cells centerpoint and the distance between</span>
 <span class="sd">            the two cells centerpoints (X, Y, Z, DX, DY, DZ)</span>
-<span class="sd">        onlykdir (bool): Set to true if you only want transmissibilities in</span>
+<span class="sd">        onlykdir: Set to true if you only want transmissibilities in</span>
 <span class="sd">            K direction</span>
-<span class="sd">        onlyijdir (bool): Set to true if you only want transmissibilities</span>
+<span class="sd">        onlyijdir: Set to true if you only want transmissibilities</span>
 <span class="sd">            in the IJ-plane</span>
-<span class="sd">        addnnc (bool): Set to true if NNC connection should be concatenated to</span>
+<span class="sd">        addnnc: Set to true if NNC connection should be concatenated to</span>
 <span class="sd">            the dataframe</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.DataFrame: with one cell-pair pr. row. Empty dataframe if error.</span>
+<span class="sd">        Dataframe with one cell-pair pr. row. Empty dataframe if error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vectors</span><span class="p">:</span>
         <span class="n">vectors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -262,7 +266,7 @@
             <span class="s2">&quot;Filtering to both k and to ij simultaneously &quot;</span> <span class="s2">&quot;results in empty dataframe&quot;</span>
         <span class="p">)</span>
 
-    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>  <span class="c1"># .set_index([&quot;I&quot;, &quot;J&quot;, &quot;K&quot;])</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
     <span class="n">existing_vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span> <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">vectors</span> <span class="k">if</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_vectors</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -395,7 +399,7 @@
     <span class="k">return</span> <span class="n">trans_df</span></div>
 
 
-<div class="viewcode-block" id="make_nx_graph"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.trans.make_nx_graph">[docs]</a><span class="k">def</span> <span class="nf">make_nx_graph</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="make_nx_graph"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.trans.make_nx_graph">[docs]</a><span class="k">def</span> <span class="nf">make_nx_graph</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;FIPNUM&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;networkx.Graph&quot;</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Construct a networkx graph for the transmissibilities.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">HAVE_NETWORKX</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please install networkx for this function to work&quot;</span><span class="p">)</span>
@@ -410,7 +414,7 @@
     <span class="k">return</span> <span class="n">graph</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.trans.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.trans.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
 
 <span class="sd">    Arguments:</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -170,6 +170,7 @@
 <span class="kn">import</span> <span class="nn">errno</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">opm.io</span>
@@ -187,7 +188,7 @@
 
 <span class="k">if</span> <span class="n">HAVE_OPM</span><span class="p">:</span>
     <span class="c1"># Default parse option to opm.io for a very permissive parsing</span>
-    <span class="n">OPMIOPARSER_RECOVERY</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">OPMIOPARSER_RECOVERY</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_DATA&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;PARSE_EXTRA_RECORDS&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;PARSE_INVALID_KEYWORD_COMBINATION&quot;</span><span class="p">,</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">ignore</span><span class="p">),</span>
@@ -242,11 +243,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="EclFiles.get_path"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_path"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the full path to the directory with the DATA file&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_ecldeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_ecldeck">[docs]</a>    <span class="k">def</span> <span class="nf">get_ecldeck</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_ecldeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_ecldeck">[docs]</a>    <span class="k">def</span> <span class="nf">get_ecldeck</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return a opm.io deck of the DATA file&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -260,21 +261,23 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span></div>
 
 <div class="viewcode-block" id="EclFiles.str2deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.str2deck">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">str2deck</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parsecontext</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">str2deck</span><span class="p">(</span>
+        <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Produce a opm.io deck from a string, using permissive</span>
 <span class="sd">        parsing by default&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">parsecontext</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">parsecontext</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">parsecontext</span> <span class="o">=</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ParseContext</span><span class="p">(</span><span class="n">OPMIOPARSER_RECOVERY</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EclFiles.file2deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.file2deck">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Try to convert standalone files into opm.io Deck objects&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhandle</span><span class="p">:</span>
             <span class="n">filestring</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fhandle</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
             <span class="k">return</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">filestring</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_egrid"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_egrid">[docs]</a>    <span class="k">def</span> <span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_egrid"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_egrid">[docs]</a>    <span class="k">def</span> <span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclGrid</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return EGRID file as an EclGrid object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span><span class="p">:</span>
             <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.EGRID&quot;</span>
@@ -286,7 +289,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="n">EclGrid</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_egridfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_egridfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_egridfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_egridfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a EclFile object</span>
 
 <span class="sd">        This gives access to data vectors defined on the grid.&quot;&quot;&quot;</span>
@@ -300,15 +303,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_eclsum"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_eclsum">[docs]</a>    <span class="k">def</span> <span class="nf">get_eclsum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_eclsum"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_eclsum">[docs]</a>    <span class="k">def</span> <span class="nf">get_eclsum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclSum</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return the summary file and</span>
 <span class="sd">        return as EclSum object</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            include_restart: boolean sent to libecl for whether restart files</span>
+<span class="sd">            include_restart: Sent to libecl for whether restart files</span>
 <span class="sd">                should be traversed.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            ecl.summary.EclSum</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span><span class="p">:</span>
             <span class="n">smryfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNSMRY&quot;</span>
@@ -320,7 +321,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="n">EclSum</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_initfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_initfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_initfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_initfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return the INIT file as an EclFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span><span class="p">:</span>
             <span class="n">initfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.INIT&quot;</span>
@@ -332,7 +333,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">initfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_rftfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_rftfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_rftfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_rftfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return the RFT file as an EclFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span><span class="p">:</span>
             <span class="n">rftfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.RFT&quot;</span>
@@ -344,7 +345,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_rstfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_rstfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_rstfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_rstfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return the UNRST file as an EclFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span><span class="p">:</span>
             <span class="n">rstfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span>
@@ -356,11 +357,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_rstfilename"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_rstfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_rstfilename"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_rstfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the inferred name of the UNRST file&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_prtfilename"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_prtfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_prtfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EclFiles.get_prtfilename"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.EclFiles.get_prtfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_prtfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the inferred name of the PRT file&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.PRT&quot;</span></div>
 
@@ -407,7 +408,7 @@
         <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">parse_zonemapfile</span><span class="p">(</span><span class="n">fullpath</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="rreplace"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.rreplace">[docs]</a><span class="k">def</span> <span class="nf">rreplace</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+<div class="viewcode-block" id="rreplace"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.eclfiles.rreplace">[docs]</a><span class="k">def</span> <span class="nf">rreplace</span><span class="p">(</span><span class="n">pat</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Variant of str.replace() that only replaces at the end of the string&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">string</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">pat</span><span class="p">)]</span> <span class="o">+</span> <span class="n">sub</span> <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">pat</span><span class="p">)</span> <span class="k">else</span> <span class="n">string</span>  <span class="c1"># noqa</span></div>
 </pre></div>

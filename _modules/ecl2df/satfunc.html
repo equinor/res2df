@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -179,20 +179,37 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">inferdims</span><span class="p">,</span> <span class="n">common</span>
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">SUPPORTED_KEYWORDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SWOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span> <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span> <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span> <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span> <span class="s2">&quot;SLGOF&quot;</span><span class="p">]</span>
+<span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;SWOF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SGOF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SWFN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SOF2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SGFN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SOF3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SLGOF&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="c1"># RENAMERS are a dictionary of dictionaries, referring to</span>
 <span class="c1"># how we should rename deck record items, from the JSON</span>
 <span class="c1"># files in opm.common and into Dataframe column names.</span>
-<span class="n">RENAMERS</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">RENAMERS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGFN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGOF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KROG&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOG&quot;</span><span class="p">]}</span>
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SGWFN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRG&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCGW&quot;</span><span class="p">]}</span>
@@ -203,19 +220,19 @@
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;SWOF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">,</span> <span class="s2">&quot;KROW&quot;</span><span class="p">,</span> <span class="s2">&quot;PCOW&quot;</span><span class="p">]}</span>
 
 
-<div class="viewcode-block" id="xx_inject_satnumcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.xx_inject_satnumcount">[docs]</a><span class="k">def</span> <span class="nf">xx_inject_satnumcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">,</span> <span class="n">satnumcount</span><span class="p">):</span>
+<div class="viewcode-block" id="xx_inject_satnumcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.xx_inject_satnumcount">[docs]</a><span class="k">def</span> <span class="nf">xx_inject_satnumcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">satnumcount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
 
 <span class="sd">    This is simple string manipulation, not OPM</span>
 <span class="sd">    deck manipulation (which might be possible to do).</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deckstr (str): A string containing a partial deck (f.ex only</span>
+<span class="sd">        deckstr: A string containing a partial deck (f.ex only</span>
 <span class="sd">            the SWOF keyword).</span>
-<span class="sd">        satnumcount (int): The NTSFUN number to use in TABDIMS</span>
+<span class="sd">        satnumcount: The NTSFUN number to use in TABDIMS</span>
 <span class="sd">            (this function does not care if it is correct or not)</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        str: New deck with TABDIMS prepended.</span>
+<span class="sd">        New deck with TABDIMS prepended.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deckstr</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Not inserting TABDIMS in a deck where already exists&quot;</span><span class="p">)</span>
@@ -223,7 +240,11 @@
     <span class="k">return</span> <span class="s2">&quot;TABDIMS</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">satnumcount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; /</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">deckstr</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract the data in the saturation function keywords as a Pandas</span>
 <span class="sd">    DataFrames.</span>
 
@@ -241,11 +262,11 @@
 <span class="sd">    returning the first function by default).</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deck (opm.io deck or str): Incoming data deck. Always</span>
+<span class="sd">        deck: Incoming data deck. Always</span>
 <span class="sd">            supply as a string if you don&#39;t know TABDIMS-NTSFUN.</span>
-<span class="sd">        keywords (list of str): Requested keywords for which to</span>
+<span class="sd">        keywords: Requested keywords for which to</span>
 <span class="sd">            to extract data.</span>
-<span class="sd">        ntsfun (int): Number of SATNUMs defined in the deck, only</span>
+<span class="sd">        ntsfun: Number of SATNUMs defined in the deck, only</span>
 <span class="sd">            needed if TABDIMS with NTSFUN is not found in the deck.</span>
 <span class="sd">            If not supplied (or None) and NTSFUN is not defined,</span>
 <span class="sd">            it will be attempted inferred.</span>
@@ -261,10 +282,10 @@
     <span class="k">assert</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span>
     <span class="n">ntsfun</span> <span class="o">=</span> <span class="n">deck</span><span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">inferdims</span><span class="o">.</span><span class="n">DIMS_POS</span><span class="p">[</span><span class="s2">&quot;NTSFUN&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">keywords</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
+    <span class="n">wanted_keywords</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
 
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">wanted_keywords</span><span class="p">:</span>
         <span class="c1"># Construct the associated function names</span>
         <span class="n">function_name</span> <span class="o">=</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_fromdeck&quot;</span>
         <span class="n">function</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">function_name</span><span class="p">]</span>
@@ -283,12 +304,14 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="swof_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.swof_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">swof_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="swof_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.swof_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">swof_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SWOF data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -298,12 +321,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="sgof_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sgof_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sgof_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="sgof_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sgof_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sgof_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SGOF data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -313,12 +338,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="swfn_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.swfn_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">swfn_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="swfn_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.swfn_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">swfn_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SWFN data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -328,12 +355,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="sof2_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sof2_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sof2_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="sof2_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sof2_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sof2_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SOF2 data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -343,12 +372,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="sgfn_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sgfn_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sgfn_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="sgfn_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sgfn_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sgfn_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SGFN data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -358,12 +389,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="sgwfn_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sgwfn_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sgwfn_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="sgwfn_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sgwfn_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sgwfn_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SGWFN data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -373,12 +406,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="sof3_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sof3_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sof3_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="sof3_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.sof3_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">sof3_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SOF3 data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -388,12 +423,14 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="slgof_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.slgof_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">slgof_fromdeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="slgof_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.slgof_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">slgof_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract SLGOF data from a deck</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (str or opm.common Deck)</span>
-<span class="sd">        ntsfun (int): Number of SATNUM regions in deck. Will</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntsfun: Number of SATNUM regions in deck. Will</span>
 <span class="sd">            be inferred if not present in deck</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
@@ -403,7 +440,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -432,12 +469,12 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;SWOF, SGOF++&quot;</span><span class="p">,</span> <span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="satfunc_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.satfunc_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="satfunc_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.satfunc_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -469,7 +506,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Empty saturation functions data, not written to disk!&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="satfunc_reverse_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.satfunc_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="satfunc_reverse_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.satfunc_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;For command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -479,19 +516,24 @@
     <span class="n">common</span><span class="o">.</span><span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
+    <span class="n">satfunc_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes with</span>
 <span class="sd">    saturation functions (SWOF, SGOF, ...)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        satfunc_df (pd.DataFrame): Dataframe with data on ecl2df format.</span>
-<span class="sd">        keywords (list of str): List of keywords to include. Must be</span>
+<span class="sd">        satfunc_df: Dataframe with data on ecl2df format.</span>
+<span class="sd">        keywords: List of keywords to include. Must be</span>
 <span class="sd">            supported and present in the incoming dataframe. Keywords</span>
 <span class="sd">            are printed in the order defined by this list.</span>
-<span class="sd">        comments (dict): Dictionary indexed by keyword with comments to be</span>
+<span class="sd">        comments: Dictionary indexed by keyword with comments to be</span>
 <span class="sd">            included pr. keyword. If a key named &quot;master&quot; is present</span>
 <span class="sd">            it will be used as a master comment for the outputted file.</span>
-<span class="sd">        filename (str): If supplied, the generated text will also be dumped</span>
+<span class="sd">        filename: If supplied, the generated text will also be dumped</span>
 <span class="sd">            to file.</span>
 
 <span class="sd">    Returns:</span>
@@ -510,87 +552,89 @@
     <span class="k">return</span> <span class="n">string</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_swof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_swof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swof</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_swof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_swof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SWOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SWOF data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SWOF data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SWOF&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_sgof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_sgof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SGOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SGOF data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SGOF data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SGOF&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_sgfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_sgfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SGFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SGFN data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SGFN data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SGFN&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_sgwfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgwfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgwfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_sgwfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sgwfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgwfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SGWFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SGWFN data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SGWFN data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SGWFN&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_swfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_swfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_swfn"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_swfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SWFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SWFN data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SWFN data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SWFN&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_slgof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_slgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_slgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_slgof"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_slgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_slgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SLGOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SLGOF data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SLGOF data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SLGOF&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_sof2"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sof2">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof2</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_sof2"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sof2">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof2</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SOF2 data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SOF2 data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SOF2 data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SOF2&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_sof3"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sof3">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof3</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_sof3"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.satfunc.df2ecl_sof3">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof3</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print SOF3 data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Containing SOF3 data</span>
-<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">        dframe: Containing SOF3 data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_df2ecl_satfuncs</span><span class="p">(</span><span class="s2">&quot;SOF3&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_df2ecl_satfuncs</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_df2ecl_satfuncs</span><span class="p">(</span>
+    <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;-- No data!</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.parameters &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.parameters &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -169,6 +169,7 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
@@ -179,57 +180,56 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="find_parameter_files"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.find_parameter_files">[docs]</a><span class="k">def</span> <span class="nf">find_parameter_files</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">,</span> <span class="n">filebase</span><span class="o">=</span><span class="s2">&quot;parameters&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="find_parameter_files"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.find_parameter_files">[docs]</a><span class="k">def</span> <span class="nf">find_parameter_files</span><span class="p">(</span>
+    <span class="n">ecldeck_or_eclpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EclFiles</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">filebase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;parameters&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Locate a default prioritized list of files to try to read as key-value</span>
 
 <span class="sd">    File extensions .yml, .json and .txt are recognized and will be found in</span>
 <span class="sd">    current dir, one directory up, and two directories up.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        ecldeck_or_eclpath (EclFiles or string): Either an EclFiles object of</span>
+<span class="sd">        ecldeck_or_eclpath: Either an EclFiles object of</span>
 <span class="sd">            an Eclipse output set (only the corresponding path will be used),</span>
 <span class="sd">            or path to a file or directory, that will be used as a starting</span>
 <span class="sd">            point for locating parameter files</span>
-<span class="sd">        filebase:</span>
-<span class="sd">            the base of filenames to look for.</span>
+<span class="sd">        filebase: the base of filenames to look for.</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        list of strings with absolute paths to filenames. Empty list if nothing</span>
-<span class="sd">           found</span>
+<span class="sd">        Absolute paths to filenames. Empty list if nothing found</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">eclbasepath</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">):</span>
         <span class="n">eclbasepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="o">.</span><span class="n">get_path</span><span class="p">())</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">eclbasepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">ecldeck_or_eclpath</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span>
-    <span class="n">files_to_lookfor</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">files_to_lookfor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
         <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.yml&quot;</span><span class="p">,</span>
         <span class="n">filebase</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span>
         <span class="n">filebase</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="n">paths_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)]</span>
+    <span class="n">paths_to_check</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)]</span>
     <span class="n">foundfiles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths_to_check</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">files_to_lookfor</span><span class="p">:</span>
-            <span class="n">fullfname</span> <span class="o">=</span> <span class="n">eclbasepath</span> <span class="o">/</span> <span class="n">path</span> <span class="o">/</span> <span class="n">fname</span>
+            <span class="n">fullfname</span> <span class="o">=</span> <span class="n">eclbasepath</span> <span class="o">/</span> <span class="n">path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fullfname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="n">foundfiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fullfname</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">foundfiles</span></div>
 
 
-<div class="viewcode-block" id="load_parameterstxt"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.load_parameterstxt">[docs]</a><span class="k">def</span> <span class="nf">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="load_parameterstxt"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.load_parameterstxt">[docs]</a><span class="k">def</span> <span class="nf">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Read parameters.txt into a dictionary</span>
 
 <span class="sd">    Lines starting with a hash will be ignored.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        filename (str): file containing one key-value pair pr. line,</span>
+<span class="sd">        filename: file containing one key-value pair pr. line,</span>
 <span class="sd">            separated by whitespace</span>
-
-<span class="sd">    Return:</span>
-<span class="sd">        dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
         <span class="n">filename</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\s&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">]</span>
@@ -237,7 +237,9 @@
     <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;KEY&quot;</span><span class="p">)[</span><span class="s2">&quot;VALUE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="load_all"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.load_all">[docs]</a><span class="k">def</span> <span class="nf">load_all</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">warnduplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="load_all"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.load_all">[docs]</a><span class="k">def</span> <span class="nf">load_all</span><span class="p">(</span>
+    <span class="n">filenames</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]],</span> <span class="n">warnduplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Reads a list of parameter filenames</span>
 
 <span class="sd">    Dictionaries for all files will be merged into one.</span>
@@ -247,11 +249,10 @@
 <span class="sd">    the order of filenames).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        filenames (list): list of filenames, order matters.</span>
-<span class="sd">        warnduplicates (bool): If True (default), overlapping keys will be</span>
-<span class="sd">            warned.</span>
+<span class="sd">        filenames: Order matters.</span>
+<span class="sd">        warnduplicates: If True (default), overlapping keys will be warned.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">keyvalues</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">keyvalues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
         <span class="n">new_params</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">warnduplicates</span> <span class="ow">and</span> <span class="n">keyvalues</span><span class="p">:</span>
@@ -263,7 +264,7 @@
     <span class="k">return</span> <span class="n">keyvalues</span></div>
 
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.parameters.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Read a parameter file as txt, yaml or json</span>
 
 <span class="sd">    Returns:</span>
@@ -281,7 +282,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="c1"># yaml happily parses txt files into a single line, don&#39;t want that.</span>
             <span class="n">params_dict</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">yaml_error</span><span class="p">:</span>  <span class="c1"># noqa</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">yaml_exc</span><span class="p">:</span>
+        <span class="n">yaml_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">yaml_exc</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with yaml, trying json.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="n">json_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -291,7 +293,8 @@
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as yaml&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">json_error</span><span class="p">:</span>  <span class="c1"># noqa</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">json_exc</span><span class="p">:</span>
+            <span class="n">json_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_exc</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was not parseable with json, trying txt.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="n">txt_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -301,7 +304,8 @@
             <span class="n">params_dict</span> <span class="o">=</span> <span class="n">load_parameterstxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; - ok, parsed as txt&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">txt_error</span><span class="p">:</span>  <span class="c1"># noqa</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">txt_exc</span><span class="p">:</span>
+            <span class="n">txt_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt_exc</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> wat not parseable as txt, no more options&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">params_dict</span><span class="p">:</span>

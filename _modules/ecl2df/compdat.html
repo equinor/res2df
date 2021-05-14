@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -171,7 +171,16 @@
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">opm.io.deck</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Allow parts of ecl2df to work without OPM:</span>
+    <span class="k">pass</span>
 
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
@@ -191,7 +200,7 @@
 <span class="sd">For COMPDAT dataframe columnnames, we prefer the RMS terms due to the</span>
 <span class="sd">one very long one, and mixed-case in opm</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="n">COMPDAT_RENAMER</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">COMPDAT_RENAMER</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;WELL&quot;</span><span class="p">:</span> <span class="s2">&quot;WELL&quot;</span><span class="p">,</span>
     <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
     <span class="s2">&quot;J&quot;</span><span class="p">:</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span>
@@ -209,29 +218,33 @@
 <span class="p">}</span>
 
 <span class="c1"># Workaround an inconsistency in JSON-files for OPM-common &lt; 2021.04:</span>
-<span class="n">WSEG_RENAMER</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">WSEG_RENAMER</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;SEG1&quot;</span><span class="p">:</span> <span class="s2">&quot;SEGMENT1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;SEG2&quot;</span><span class="p">:</span> <span class="s2">&quot;SEGMENT2&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unroll</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;opm.io.Deck&quot;</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">unroll</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
 
 <span class="sd">    The loop over the deck is a state machine, as it has to pick up dates and</span>
 <span class="sd">    potential information from the WELSPECS keyword.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deck (opm.libopmcommon_python.Deck): A deck representing the schedule</span>
+<span class="sd">        deck: A deck representing the schedule</span>
 <span class="sd">            Does not have to be a full Eclipse deck, an include file is sufficient</span>
-<span class="sd">        start_date (datetime.date or str): The default date to use for</span>
+<span class="sd">        start_date: The default date to use for</span>
 <span class="sd">            events where the DATE or START keyword is not found in advance.</span>
 <span class="sd">            Default: None</span>
-<span class="sd">        unroll (bool): Whether to unroll rows that cover a range,</span>
+<span class="sd">        unroll: Whether to unroll rows that cover a range,</span>
 <span class="sd">            like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dictionary with 3 dataframes, named COMPDAT, COMPSEGS and WELSEGS.</span>
+<span class="sd">        Dictionary with dataframes, at least for COMPDAT, COMPSEGS and WELSEGS.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">compdatrecords</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of dicts of every line in input file</span>
     <span class="n">compsegsrecords</span> <span class="o">=</span> <span class="p">[]</span>
@@ -255,6 +268,7 @@
                 <span class="n">steplist</span> <span class="o">=</span> <span class="n">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
                 <span class="c1"># Assuming not LAB units, then the unit is days.</span>
                 <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
                 <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
@@ -440,7 +454,9 @@
     <span class="c1"># )</span>
 
 
-<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="s2">&quot;K2&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span>
+    <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">start_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K2&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
 <span class="sd">    a range where data applies.</span>
 
@@ -463,15 +479,15 @@
 <span class="sd">    The latter is easier to work with in Pandas dataframes</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): Dataframe to be unrolled</span>
-<span class="sd">        start_column (str): Column name that contains the start of</span>
+<span class="sd">        dframe: Dataframe to be unrolled</span>
+<span class="sd">        start_column: Column name that contains the start of</span>
 <span class="sd">            a range.</span>
-<span class="sd">        end_column (str): Column name that contains the corresponding end</span>
+<span class="sd">        end_column Column name that contains the corresponding end</span>
 <span class="sd">            of the range.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.Dataframe, Unrolled version. Identical to input if none of</span>
-<span class="sd">            rows had any ranges.</span>
+<span class="sd">        Dataframe, unrolled version. Identical to input if none of</span>
+<span class="sd">        rows had any ranges.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">dframe</span>
@@ -496,7 +512,7 @@
     <span class="k">return</span> <span class="n">unrolled</span></div>
 
 
-<div class="viewcode-block" id="applywelopen"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.applywelopen">[docs]</a><span class="k">def</span> <span class="nf">applywelopen</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">welopen_df</span><span class="p">):</span>
+<div class="viewcode-block" id="applywelopen"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.applywelopen">[docs]</a><span class="k">def</span> <span class="nf">applywelopen</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Apply WELOPEN actions to the COMPDAT dataframe.</span>
 
 <span class="sd">    Each record in the WELOPEN keyword acts as an operator on existing connections</span>
@@ -523,11 +539,11 @@
 <span class="sd">    WELOPEN actions into explicit additional COMPDAT definitions in the exported df.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        compdat_df (pd.DataFrame): Dataframe with unrolled COMPDAT data</span>
-<span class="sd">        welopen_df (pd.DataFrame): Dataframe with WELOPEN actions</span>
+<span class="sd">        compdat_df: Dataframe with unrolled COMPDAT data</span>
+<span class="sd">        welopen_df: Dataframe with WELOPEN actions</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        pd.Dataframe, compdat_df now including WELOPEN actions</span>
+<span class="sd">        Dataframe, compdat_df now including WELOPEN actions</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
@@ -602,12 +618,11 @@
     <span class="k">return</span> <span class="n">compdat_df</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser</span>
-<span class="sd">            to fill with arguments</span>
+<span class="sd">        parser: parser to fill with arguments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of Eclipse DATA file.&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -638,7 +653,7 @@
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Main function for Python API users</span>
 
 <span class="sd">    Supports only COMPDAT information for now. Will</span>

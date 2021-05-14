@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -172,14 +172,19 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Set</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+
 <span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">opm.io.deck</span>  <span class="c1"># lgtm [py/import-and-import-from]</span>
+
     <span class="c1"># This import is seemingly not used, but necessary for some attributes</span>
     <span class="c1"># to be included in DeckItem objects.</span>
     <span class="kn">from</span> <span class="nn">opm.io.deck</span> <span class="kn">import</span> <span class="n">DeckKeyword</span>  <span class="c1"># noqa</span>
@@ -191,7 +196,7 @@
 
 <span class="c1"># Parse named JSON files, this exposes a dict of dictionary describing the contents</span>
 <span class="c1"># of supported Eclipse keyword data</span>
-<span class="n">OPMKEYWORDS</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">OPMKEYWORDS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">keyw</span> <span class="ow">in</span> <span class="p">[</span>
     <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span>
@@ -239,25 +244,29 @@
 <span class="c1"># This is a magic filename that means read/write from/to stdout</span>
 <span class="c1"># This makes it impossible to write to a file called &quot;-&quot; on disk</span>
 <span class="c1"># but that would anyway create a lot of other problems in the shell.</span>
-<span class="n">MAGIC_STDOUT</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+<span class="n">MAGIC_STDOUT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="write_dframe_stdout_file"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.write_dframe_stdout_file">[docs]</a><span class="k">def</span> <span class="nf">write_dframe_stdout_file</span><span class="p">(</span>
-    <span class="n">dframe</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logstr</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
+    <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">caller_logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">logstr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Write a dataframe to either stdout or a file</span>
 
 <span class="sd">    If output is the magic string &quot;-&quot;, output is written</span>
 <span class="sd">    to stdout.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        dframe (pd.DataFrame): Dataframe to write</span>
-<span class="sd">        output (str): Filename or &quot;-&quot;</span>
-<span class="sd">        index (bool): Passed to to_csv()</span>
-<span class="sd">        caller_logger (logging): Used if not stdout</span>
-<span class="sd">        logstr (str): Logged if not stdout.</span>
+<span class="sd">        dframe: Dataframe to write</span>
+<span class="sd">        output: Filename or &quot;-&quot;</span>
+<span class="sd">        index: Passed to to_csv()</span>
+<span class="sd">        caller_logger: Used if not stdout</span>
+<span class="sd">        logstr: Logged if not stdout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="n">MAGIC_STDOUT</span><span class="p">:</span>
         <span class="c1"># Ignore pipe errors when writing to stdout:</span>
@@ -271,7 +280,7 @@
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="write_inc_stdout_file"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.write_inc_stdout_file">[docs]</a><span class="k">def</span> <span class="nf">write_inc_stdout_file</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">outputfilename</span><span class="p">):</span>
+<div class="viewcode-block" id="write_inc_stdout_file"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.write_inc_stdout_file">[docs]</a><span class="k">def</span> <span class="nf">write_inc_stdout_file</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outputfilename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Write a string (typically an include file string) to stdout</span>
 <span class="sd">    or to a named file&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">outputfilename</span> <span class="o">==</span> <span class="n">MAGIC_STDOUT</span><span class="p">:</span>
@@ -283,7 +292,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote to </span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse_ecl_month"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_ecl_month">[docs]</a><span class="k">def</span> <span class="nf">parse_ecl_month</span><span class="p">(</span><span class="n">eclmonth</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_ecl_month"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_ecl_month">[docs]</a><span class="k">def</span> <span class="nf">parse_ecl_month</span><span class="p">(</span><span class="n">eclmonth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Translate Eclipse month strings to integer months&quot;&quot;&quot;</span>
     <span class="n">eclmonth2num</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;JAN&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -304,25 +313,29 @@
 
 
 <div class="viewcode-block" id="ecl_keyworddata_to_df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.ecl_keyworddata_to_df">[docs]</a><span class="k">def</span> <span class="nf">ecl_keyworddata_to_df</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recordcountername</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emptyrecordcountername</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
+    <span class="n">deck</span><span class="p">,</span>
+    <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">renamer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">recordcountername</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">emptyrecordcountername</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract data associated to an Eclipse keyword into a tabular form.</span>
 
-<span class="sd">    Two modes of enueration of tables in the keyworddata is supported, you</span>
+<span class="sd">    Two modes of enumeration of tables in the keyworddata is supported, you</span>
 <span class="sd">    will have to find out which one fits your particular keyword. Activate</span>
 <span class="sd">    by setting recordcountername or emptyrecordcountername to some string, which</span>
 <span class="sd">    will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deck (opm.common.Deck): Parsed deck</span>
-<span class="sd">        keyword (str): Name of the keyword for which to extract data.</span>
-<span class="sd">        renamer (dict): Mapping of names present in OPM json files for the</span>
+<span class="sd">        deck: Parsed deck</span>
+<span class="sd">        keyword: Name of the keyword for which to extract data.</span>
+<span class="sd">        renamer: Mapping of names present in OPM json files for the</span>
 <span class="sd">            keyword to desired column names in returned dataframe</span>
-<span class="sd">        recordcountername (str): If present, an extra column is added with this name</span>
+<span class="sd">        recordcountername: If present, an extra column is added with this name</span>
 <span class="sd">            with consecutive rows enumerated from 1. Use this to assign</span>
 <span class="sd">            EQLNUM or similar when this should be consecutive pr. row (not</span>
 <span class="sd">            the case for all keywords).</span>
-<span class="sd">        emptyrecordcountername (str): If supplied, an index is added to every parsed</span>
+<span class="sd">        emptyrecordcountername: If supplied, an index is added to every parsed</span>
 <span class="sd">            row based on how many empty records is encountered. For PVTO f.ex,</span>
 <span class="sd">            this gives the PVTNUM indexing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -348,6 +361,7 @@
         <span class="c1"># to unroll this data. We detect this situation by the item name &quot;DATA&quot; in</span>
         <span class="c1"># the json files, and that its value is of list type:</span>
         <span class="k">if</span> <span class="s2">&quot;DATA&quot;</span> <span class="ow">in</span> <span class="n">recdict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">renamer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="c1"># If DATA is sometimes used for something else in the jsons, redo this.</span>
             <span class="n">data_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">renamer</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span>  <span class="c1"># The renamers must be in sync with json!</span>
             <span class="n">data_chunks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">recdict</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">data_dim</span><span class="p">)</span>
@@ -378,25 +392,27 @@
 
 
 <div class="viewcode-block" id="parse_opmio_deckrecord"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_deckrecord">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_deckrecord</span><span class="p">(</span>
-    <span class="n">record</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">itemlistname</span><span class="o">=</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="n">recordindex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
+    <span class="n">record</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckRecord&quot;</span><span class="p">,</span>
+    <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">itemlistname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span><span class="p">,</span>
+    <span class="n">recordindex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">renamer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parse an opm.io.DeckRecord belonging to a certain keyword</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        record (opm.libopmcommon_python.DeckRecord): Record be parsed</span>
-<span class="sd">        keyword (string): Which Eclipse keyword this belongs to</span>
-<span class="sd">        itemlistname (string): The key in the json dict that describes the items,</span>
+<span class="sd">        record: Record be parsed</span>
+<span class="sd">        keyword: Which Eclipse keyword this belongs to</span>
+<span class="sd">        itemlistname: The key in the json dict that describes the items,</span>
 <span class="sd">            typically &#39;items&#39; or &#39;records&#39;</span>
-<span class="sd">        recordindex (int): For keywords where itemlistname is &#39;records&#39;, this is a</span>
-<span class="sd">            list index to the &quot;record&quot;</span>
+<span class="sd">        recordindex: For keywords where itemlistname is &#39;records&#39;, this is a</span>
+<span class="sd">            list index to the &quot;record&quot;.</span>
 <span class="sd">            Beware, there are multiple concepts here for what we call a record.</span>
-<span class="sd">        renamer (dict): If supplied, this dictionary will be used to remap</span>
+<span class="sd">        renamer: If supplied, this dictionary will be used to remap</span>
 <span class="sd">            the keys in returned dict. For items with name DATA, the dict</span>
 <span class="sd">            value is assumed to be a list of strings to be mapped to</span>
 <span class="sd">            each subitem.</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">keyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">OPMKEYWORDS</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keyword </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> not supported by common.py&quot;</span><span class="p">)</span>
@@ -437,20 +453,15 @@
     <span class="k">return</span> <span class="n">rec_dict</span></div>
 
 
-<div class="viewcode-block" id="parse_opmio_date_rec"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_date_rec">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_date_rec</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.</span>
-
-<span class="sd">    Return:</span>
-<span class="sd">        datetime.date</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="parse_opmio_date_rec"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_date_rec">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_date_rec</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="s2">&quot;opm.io.DeckRecord&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.&quot;&quot;&quot;</span>
     <span class="n">day</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">month</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_str</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">year</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">parse_ecl_month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse_opmio_tstep_rec"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_tstep_rec">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_opmio_tstep_rec"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_opmio_tstep_rec">[docs]</a><span class="k">def</span> <span class="nf">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="s2">&quot;opm.io.DeckRecord&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;Parse a record with TSTEP data</span>
 
 <span class="sd">    Return:</span>
@@ -459,18 +470,20 @@
     <span class="k">return</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_raw_data_list</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="merge_zones"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.merge_zones">[docs]</a><span class="k">def</span> <span class="nf">merge_zones</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">zonedict</span><span class="p">,</span> <span class="n">zoneheader</span><span class="o">=</span><span class="s2">&quot;ZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="o">=</span><span class="s2">&quot;K1&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="merge_zones"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.merge_zones">[docs]</a><span class="k">def</span> <span class="nf">merge_zones</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">zonedict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">zoneheader</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ZONE&quot;</span><span class="p">,</span> <span class="n">kname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K1&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Merge in a column with zone names, from a dictionary mapping</span>
 <span class="sd">    k-index to zone name. If the zonemap is not covering all</span>
 <span class="sd">    zones, cells will be filled with NaN.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        df (pd.DataFrame): Dataframe where we should augment a column</span>
-<span class="sd">        zonedict (dict): Dictionary with integer keys pointing to strings</span>
+<span class="sd">        df: Dataframe where we should augment a column</span>
+<span class="sd">        zonedict: Dictionary with integer keys pointing to strings</span>
 <span class="sd">            with zone names.</span>
-<span class="sd">        zoneheader (str): Name of the result column merged in,</span>
+<span class="sd">        zoneheader: Name of the result column merged in,</span>
 <span class="sd">            default: ZONE</span>
-<span class="sd">        kname (str): Column header in your dataframe that maps to dictionary keys.</span>
+<span class="sd">        kname: Column header in your dataframe that maps to dictionary keys.</span>
 <span class="sd">            default K1</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">zonedict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
@@ -496,14 +509,14 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="comment_formatter"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.comment_formatter">[docs]</a><span class="k">def</span> <span class="nf">comment_formatter</span><span class="p">(</span><span class="n">multiline</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;-- &quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="comment_formatter"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.comment_formatter">[docs]</a><span class="k">def</span> <span class="nf">comment_formatter</span><span class="p">(</span><span class="n">multiline</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-- &quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Prepends comment characters to every line in input</span>
 
 <span class="sd">    If nothing is supplied, an empty string is returned.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        multiline (str): String that can contain newlines</span>
-<span class="sd">        prefix (str): Comment characters to prepend every line with</span>
+<span class="sd">        multiline: String that can contain newlines</span>
+<span class="sd">        prefix: Comment characters to prepend every line with</span>
 <span class="sd">            Default is the Eclipse comment syntax &#39;-- &#39;</span>
 
 <span class="sd">    Returns:</span>
@@ -518,23 +531,28 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_wanted_keywords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.handle_wanted_keywords">[docs]</a><span class="k">def</span> <span class="nf">handle_wanted_keywords</span><span class="p">(</span><span class="n">wanted</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">supported</span><span class="p">,</span> <span class="n">modulename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="handle_wanted_keywords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.handle_wanted_keywords">[docs]</a><span class="k">def</span> <span class="nf">handle_wanted_keywords</span><span class="p">(</span>
+    <span class="n">wanted</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;opm.io.Deck&quot;</span><span class="p">,</span>
+    <span class="n">supported</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">modulename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Handle three list of keywords, wanted, available and supported</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        keywords (list of str): None, or list of strings of user-requested keywords</span>
-<span class="sd">        deck (opm.common Deck): Used to query which data is available</span>
-<span class="sd">        supported (list of str): Keywords that are supported by the module</span>
-<span class="sd">        modulename (str): Name of the module calling this function, used in logging</span>
+<span class="sd">        keywords: None, or list of strings of user-requested keywords</span>
+<span class="sd">        deck: Used to query which data is available</span>
+<span class="sd">        supported: Keywords that are supported by the module</span>
+<span class="sd">        modulename: Name of the module calling this function, used in logging</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wanted</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wanted</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">wanted</span> <span class="o">=</span> <span class="p">[</span><span class="n">wanted</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">wanted</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">wanted</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">wanted</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
         <span class="c1"># By default, select all supported keywords:</span>
         <span class="n">keywords</span> <span class="o">=</span> <span class="n">supported</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Warn if some keywords are unsupported:</span>
-        <span class="n">not_supported</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
+        <span class="n">not_supported</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">not_supported</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Requested keyword(s) not supported by ecl2df.</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -556,14 +574,16 @@
     <span class="k">return</span> <span class="n">keywords</span></div>
 
 
-<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">modulename</span><span class="p">,</span> <span class="n">defaultoutputfile</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span>
+    <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">modulename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">defaultoutputfile</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A standardized submodule parser for the command line utility</span>
 <span class="sd">    to produce Eclipse include files from a CSV file.</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
-<span class="sd">        modulename (str): Will be included in the help text</span>
-<span class="sd">        defaultoutputfile (str): Default output filename</span>
+<span class="sd">        parser: parser to fill with arguments</span>
+<span class="sd">        modulename: Will be included in the help text</span>
+<span class="sd">        defaultoutputfile: Default output filename</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;csvfile&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of CSV file with &quot;</span> <span class="o">+</span> <span class="n">modulename</span> <span class="o">+</span> <span class="s2">&quot; data on ecl2df format&quot;</span>
@@ -594,27 +614,27 @@
 
 
 <div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
-    <span class="n">dataframe</span><span class="p">,</span>
-    <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">comments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">supported</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">consecutive</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
+    <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">supported</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">consecutive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes in ecl2df format</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dataframe (pd.DataFrame): Dataframe with Eclipse data on ecl2df format.</span>
-<span class="sd">        keywords (list of str): List of keywords to include. Will be reduced</span>
+<span class="sd">        dataframe: Dataframe with Eclipse data on ecl2df format.</span>
+<span class="sd">        keywords: List of keywords to include. Will be reduced</span>
 <span class="sd">            to the set of keywords available in dataframe and to those supported</span>
-<span class="sd">        comments (dict): Dictionary indexed by keyword with comments to be</span>
-<span class="sd">            included pr.  keyword. If a key named &quot;master&quot; is present</span>
+<span class="sd">        comments: Dictionary indexed by keyword with comments to be</span>
+<span class="sd">            included pr. keyword. If a key named &quot;master&quot; is present</span>
 <span class="sd">            it will be used as a master comment for the outputted file.</span>
-<span class="sd">        supported (list): List of strings of keywords which are</span>
+<span class="sd">        supported: List of strings of keywords which are</span>
 <span class="sd">            supported in this invocation of this function.</span>
-<span class="sd">        consecutive (str): Column name for which we require the</span>
+<span class="sd">        consecutive: Column name for which we require the</span>
 <span class="sd">            numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</span>
-<span class="sd">        filename (str): If supplied, the generated text will also be dumped</span>
+<span class="sd">        filename: If supplied, the generated text will also be dumped</span>
 <span class="sd">            to file.</span>
 
 <span class="sd">    Returns:</span>
@@ -642,19 +662,21 @@
 
     <span class="k">if</span> <span class="n">comments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">comments</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">keywords</span><span class="p">]</span>  <span class="c1"># Can still be None</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="n">keywords</span><span class="p">]</span>
     <span class="n">keywords_in_frame</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="c1"># By default, select all supported PVT keywords:</span>
+        <span class="k">assert</span> <span class="n">supported</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">keywords</span> <span class="o">=</span> <span class="n">supported</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Warn if some keywords are unsupported:</span>
-        <span class="n">not_supported</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">supported</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">not_supported</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">not_supported</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Requested keyword(s) not supported by </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">calling_module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">calling_module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">not_supported</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="c1"># Warn if some requested keywords are not in frame:</span>
@@ -675,7 +697,7 @@
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">ecl2df_header</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;Output file printed by &quot;</span>
-        <span class="o">+</span> <span class="n">calling_module</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="o">+</span> <span class="n">calling_module</span><span class="o">.</span><span class="vm">__name__</span>  <span class="c1"># type: ignore</span>
         <span class="o">+</span> <span class="s2">&quot; &quot;</span>
         <span class="o">+</span> <span class="n">__version__</span>
         <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -701,7 +723,7 @@
     <span class="k">return</span> <span class="n">string</span></div>
 
 
-<div class="viewcode-block" id="runlength_eclcompress"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.runlength_eclcompress">[docs]</a><span class="k">def</span> <span class="nf">runlength_eclcompress</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;  &quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="runlength_eclcompress"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.runlength_eclcompress">[docs]</a><span class="k">def</span> <span class="nf">runlength_eclcompress</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;  &quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Compress a string of space-separated elements so that</span>
 
 <span class="sd">       2 2 2 2 2 3 3 4</span>
@@ -735,7 +757,12 @@
     <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compresseddata</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="stack_on_colnames"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.stack_on_colnames">[docs]</a><span class="k">def</span> <span class="nf">stack_on_colnames</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="stack_on_colnames"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.stack_on_colnames">[docs]</a><span class="k">def</span> <span class="nf">stack_on_colnames</span><span class="p">(</span>
+    <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span>
+    <span class="n">stackcolname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DATE&quot;</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;For a dataframe where some columns are multilevel, but where</span>
 <span class="sd">    the second level is encoded in the column name, this function</span>
 <span class="sd">    will stack the dataframe by putting the second level of the column</span>
@@ -763,14 +790,11 @@
 <span class="sd">    Column order is not guaranteed</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dframe (pd.DataFrame): A dataframe to stack</span>
-<span class="sd">        sep (str): The separator that is used in dframe.columns to define</span>
+<span class="sd">        dframe: A dataframe to stack</span>
+<span class="sd">        sep: The separator that is used in dframe.columns to define</span>
 <span class="sd">            the multilevel column names.</span>
-<span class="sd">        stackcolname (str): Used as column name for the second level</span>
+<span class="sd">        stackcolname: Used as column name for the second level</span>
 <span class="sd">            of the column multiindex</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
@@ -793,7 +817,7 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<div class="viewcode-block" id="parse_zonemapfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_zonemapfile">[docs]</a><span class="k">def</span> <span class="nf">parse_zonemapfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_zonemapfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_zonemapfile">[docs]</a><span class="k">def</span> <span class="nf">parse_zonemapfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Return a dictionary from (int) K layers in the simgrid to strings</span>
 
 <span class="sd">    Typical usage is to map from grid layer to zone names.</span>

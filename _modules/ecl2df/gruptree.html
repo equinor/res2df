@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.gruptree &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -170,13 +170,23 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">treelib</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Needed for mypy</span>
+
+    <span class="c1"># pylint: disable=unused-import</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span>
+<span class="kn">from</span> <span class="nn">ecl2df.common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
     <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
     <span class="n">parse_opmio_tstep_rec</span><span class="p">,</span>
@@ -186,7 +196,11 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">startdate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">welspecs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EclFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">startdate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">welspecs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract all group information from a deck</span>
 <span class="sd">    and present as a Pandas Dataframe of all edges.</span>
 
@@ -214,6 +228,7 @@
 <span class="sd">        information is found in deck.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">startdate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">startdate</span>
     <span class="k">else</span><span class="p">:</span>
@@ -229,9 +244,9 @@
     <span class="c1"># store the edges as a dictionary indexed by the edge</span>
     <span class="c1"># (which is a tuple of child and parent).</span>
     <span class="c1"># The value of the dictionary is GRUPTREE or WELSPECS</span>
-    <span class="n">currentedges</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">currentedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-    <span class="n">grupnet_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">grupnet_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="n">found_gruptree</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Flags which will tell when a new GRUPTREE or</span>
     <span class="n">found_welspecs</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># WELSPECS have been encountered.</span>
@@ -261,6 +276,7 @@
                     <span class="n">date</span> <span class="o">=</span> <span class="n">parse_opmio_date_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
                     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
                     <span class="n">steplist</span> <span class="o">=</span> <span class="n">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
                     <span class="c1"># Assuming not LAB units, then the unit is days.</span>
@@ -310,19 +326,23 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<span class="k">def</span> <span class="nf">_currentedges_to_gruptreerecords</span><span class="p">(</span><span class="n">currentedges</span><span class="p">,</span> <span class="n">grupnet_df</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_currentedges_to_gruptreerecords</span><span class="p">(</span>
+    <span class="n">currentedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">grupnet_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Merge a list of edges with information from the GRUPNET dataframe.</span>
 
 <span class="sd">    Edges where there is no parent (root nodes) are identified and added</span>
 <span class="sd">    as special cases.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        currentedges (list): List of tuples with (child, parent)</span>
-<span class="sd">        grupnet_df (pd.DataFrame): Containing data for each node to add.</span>
-<span class="sd">        date (datetime.date): Relevant date.</span>
+<span class="sd">        currentedges:</span>
+<span class="sd">        grupnet_df: Containing data for each node to add.</span>
+<span class="sd">        date: Relevant date.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        list: list of dictionaries (that can be made into a dataframe)</span>
+<span class="sd">        List of dictionaries (that can be made into a dataframe)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gruptreerecords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">childs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -349,7 +369,7 @@
     <span class="k">return</span> <span class="n">rootrecords</span> <span class="o">+</span> <span class="n">gruptreerecords</span>
 
 
-<div class="viewcode-block" id="edge_dataframe2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.edge_dataframe2dict">[docs]</a><span class="k">def</span> <span class="nf">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+<div class="viewcode-block" id="edge_dataframe2dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.edge_dataframe2dict">[docs]</a><span class="k">def</span> <span class="nf">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Convert list of edges in a dataframe into a</span>
 <span class="sd">    nested dictionary (tree).</span>
 
@@ -379,7 +399,7 @@
     <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only handle one date at a time&quot;</span><span class="p">)</span>
-    <span class="n">subtrees</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">subtrees</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]):</span>
@@ -392,14 +412,16 @@
     <span class="k">return</span> <span class="p">[{</span><span class="n">root</span><span class="p">:</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">root</span><span class="p">]}</span> <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">roots</span><span class="p">)]</span></div>
 
 
-<span class="k">def</span> <span class="nf">_add_to_tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_add_to_tree_from_dict</span><span class="p">(</span>
+    <span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
     <span class="n">tree</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nested_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
         <span class="n">_add_to_tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="tree_from_dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.tree_from_dict">[docs]</a><span class="k">def</span> <span class="nf">tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="tree_from_dict"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.tree_from_dict">[docs]</a><span class="k">def</span> <span class="nf">tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Convert a dictionary to a treelib Tree.</span>
 
 <span class="sd">    The treelib representation of the trees is used</span>
@@ -411,9 +433,6 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        nested_dict: nested dictonary representing a tree.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        treelib.Tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="c1"># Return an empty string, because str(treelib.Tree()) will error</span>
@@ -429,7 +448,7 @@
     <span class="k">return</span> <span class="n">tree</span></div>
 
 
-<div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Convert a nested dictonary to a treelib Tree</span>
 <span class="sd">    object. This function is recursive.</span>
 
@@ -443,9 +462,6 @@
 <span class="sd">    Args:</span>
 <span class="sd">        name: name of root node</span>
 <span class="sd">        nested_dict: nested dictonary of the children at the root.</span>
-
-<span class="sd">    Return:</span>
-<span class="sd">        treelib.Tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
         <span class="s2">&quot;dict2treelib() is deprecated and will be removed, use tree_from_dict()&quot;</span><span class="p">,</span>
@@ -459,7 +475,7 @@
     <span class="k">return</span> <span class="n">tree</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -491,7 +507,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="gruptree_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptree_main">[docs]</a><span class="k">def</span> <span class="nf">gruptree_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="gruptree_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.gruptree.gruptree_main">[docs]</a><span class="k">def</span> <span class="nf">gruptree_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>

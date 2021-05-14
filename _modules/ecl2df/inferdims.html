@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.inferdims &mdash; ecl2df 0.12.2 documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df 0.12.3.dev1+gbd8efda documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3.dev1+gbd8efda
               </div>
             
           
@@ -169,8 +169,8 @@
 <span class="sd">Eclipse 100 decks (typically single include-files)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">opm.io</span>
@@ -183,10 +183,10 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># Constants to use for pointing to positions in the xxxDIMS keyword</span>
-<span class="n">DIMS_POS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">NTPVT</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">NTSFUN</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">NTEQUL</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">DIMS_POS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">NTPVT</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">NTSFUN</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">NTEQUL</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="guess_dim"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.guess_dim">[docs]</a><span class="k">def</span> <span class="nf">guess_dim</span><span class="p">(</span><span class="n">deckstring</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimitem</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="guess_dim"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.guess_dim">[docs]</a><span class="k">def</span> <span class="nf">guess_dim</span><span class="p">(</span><span class="n">deckstring</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Guess the correct dimension count for an incoming deck (string)</span>
 
 <span class="sd">    The incoming deck must in string form, if not, extra data is most</span>
@@ -197,11 +197,11 @@
 <span class="sd">    stricter mode, to detect the correct table dimensionality</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deck (str): String containing an Eclipse deck or only a few Eclipse keywords</span>
-<span class="sd">        dimkeyword (str): Either TABDIMS or EQLDIMS</span>
-<span class="sd">        dimitem (int): The element number in TABDIMS/EQLDIMS to modify</span>
+<span class="sd">        deck: String containing an Eclipse deck or only a few Eclipse keywords</span>
+<span class="sd">        dimkeyword: Either TABDIMS or EQLDIMS</span>
+<span class="sd">        dimitem: The element number in TABDIMS/EQLDIMS to modify</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        int: The lowest number for which stricter opm.io parsing succeeds</span>
+<span class="sd">        The lowest number for which stricter opm.io parsing succeeds</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -257,7 +257,9 @@
     <span class="k">return</span> <span class="n">dimcountguess</span></div>
 
 
-<div class="viewcode-block" id="inject_dimcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.inject_dimcount">[docs]</a><span class="k">def</span> <span class="nf">inject_dimcount</span><span class="p">(</span><span class="n">deckstr</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">,</span> <span class="n">dimvalue</span><span class="p">,</span> <span class="n">nowarn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="inject_dimcount"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.inject_dimcount">[docs]</a><span class="k">def</span> <span class="nf">inject_dimcount</span><span class="p">(</span>
+    <span class="n">deckstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dimvalue</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nowarn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
 
 <span class="sd">    This is simple string manipulation, not opm.io</span>
@@ -266,16 +268,16 @@
 <span class="sd">    This function is to be wrapped by inject_xxxdims_ntxxx()</span>
 
 <span class="sd">    Arguments:</span>
-<span class="sd">        deckstr (str): A string containing a partial deck (f.ex only</span>
+<span class="sd">        deckstr: A string containing a partial deck (f.ex only</span>
 <span class="sd">            the SWOF keyword).</span>
-<span class="sd">        dimkeyword (str): Either TABDIMS or EQLDIMS</span>
-<span class="sd">        dimitem (int): Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.</span>
-<span class="sd">        dimvalue (int): The NTSFUN/NTPVT/NTEQUIL number to use</span>
+<span class="sd">        dimkeyword: Either TABDIMS or EQLDIMS</span>
+<span class="sd">        dimitem: Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.</span>
+<span class="sd">        dimvalue: The NTSFUN/NTPVT/NTEQUIL number to use</span>
 <span class="sd">            (this function does not care if it is correct or not)</span>
-<span class="sd">        nowarn (bool): By default it will warn if this function</span>
+<span class="sd">        nowarn: By default it will warn if this function</span>
 <span class="sd">            is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        str: New deck with TABDIMS/EQLDIMS prepended.</span>
+<span class="sd">        New deck with TABDIMS/EQLDIMS prepended.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only supports TABDIMS and EQLDIMS&quot;</span><span class="p">)</span>
@@ -302,7 +304,12 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inject_xxxdims_ntxxx"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.inject_xxxdims_ntxxx">[docs]</a><span class="k">def</span> <span class="nf">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="n">xxxdims</span><span class="p">,</span> <span class="n">ntxxx_name</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntxxx_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="inject_xxxdims_ntxxx"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.inferdims.inject_xxxdims_ntxxx">[docs]</a><span class="k">def</span> <span class="nf">inject_xxxdims_ntxxx</span><span class="p">(</span>
+    <span class="n">xxxdims</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ntxxx_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">ntxxx_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Ensures TABDIMS/EQLDIMS is present in a deck.</span>
 
 <span class="sd">    If ntxxx_value=None and ntxxx_name not in the deck, ntxxx_name will</span>
@@ -310,11 +317,11 @@
 <span class="sd">    into the deck.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        xxxdims (str): TABDIMS or EQLDIMS</span>
-<span class="sd">        ntxxx_name (str): NTPVT, NTEQUL or NTSFUN</span>
-<span class="sd">        deck (str or opm.io deck): A data deck. If ntxxx_name is to be</span>
+<span class="sd">        xxxdims: TABDIMS or EQLDIMS</span>
+<span class="sd">        ntxxx_name: NTPVT, NTEQUL or NTSFUN</span>
+<span class="sd">        deck: A data deck. If ntxxx_name is to be</span>
 <span class="sd">            estimated this *must* be a string and not a fully parsed deck.</span>
-<span class="sd">        npxxx_value (int): Supply this if ntxxx_name is known, but not present in the</span>
+<span class="sd">        npxxx_value: Supply this if ntxxx_name is known, but not present in the</span>
 <span class="sd">            deck, this will override any guessing. If the deck already</span>
 <span class="sd">            contains XXXDIMS, this will be ignored.</span>
 

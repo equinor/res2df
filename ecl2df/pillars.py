@@ -1,19 +1,18 @@
-"""
-Extract statistics pr cornerpoint pillar (i,j)-pair
-
-"""
+"""Extract statistics pr cornerpoint pillar (i,j)-pair"""
 
 import logging
+import argparse
 import datetime
-
 import dateutil.parser
+from typing import Union, Dict, List, Optional
+
 import pandas as pd
 
-import ecl2df
+from ecl2df import EclFiles, grid, common
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
-AGGREGATORS = {
+AGGREGATORS: Dict[str, str] = {
     "VOLUME": "sum",
     "PORV": "sum",
     "PERMX": "mean",
@@ -34,14 +33,14 @@ AGGREGATORS = {
 
 
 def df(
-    eclfiles,
-    region=None,
-    rstdates=None,
-    soilcutoff=0.2,
-    sgascutoff=0.7,
-    swatcutoff=0.7,
-    stackdates=False,
-):
+    eclfiles: EclFiles,
+    region: str = None,
+    rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
+    soilcutoff: float = 0.2,
+    sgascutoff: float = 0.7,
+    swatcutoff: float = 0.7,
+    stackdates: bool = False,
+) -> pd.DataFrame:
     """Produce a dataframe with pillar information
 
     This is the "main" function for Python API users
@@ -59,23 +58,23 @@ def df(
     like SWAT@2009-01-01
 
     Args:
-        region (str): A parameter the pillars will be split
+        region: A parameter the pillars will be split
             on. Typically EQLNUM or FIPNUM. Set to empty string
             or None to avoid any region grouping.
-        rstdates (str): Dates for which restart data
+        rstdates: Dates for which restart data
             is to be extracted. The string can
             be in ISO-format, or one of the mnenomics
             'first', 'last' or 'all'. It can also be a list
             of datetime.date.
-        soilcutoff (float): If not None, an oil-water contact will
+        soilcutoff: If not None, an oil-water contact will
             be estimated pr. pillar, based on the deepest cell with
             SOIL above the given cutoff. Value is put in column OWC.
-        sgascuttof (float): If not None, a gas contact will be
+        sgascuttof: If not None, a gas contact will be
             estimated pr pillar, based on the deepest cell with
             SGAS above the given cutoff. Value is put in column GOC.
-        swatcutoff (float): OWC or GWC is only computed for pillars
+        swatcutoff: OWC or GWC is only computed for pillars
             where at least one cell is above this value.
-        stackdates (bool): If true, a column
+        stackdates: If true, a column
             called DATE will be added and data for all restart
             dates will be added in a stacked manner.
     """
@@ -84,11 +83,9 @@ def df(
     if region:
         vectors.append(region)
     vectors.extend(["POR*", "PERM*", "SWAT", "SGAS", "1OVERBO", "1OVERBG"])
-    grid_df = ecl2df.grid.df(
-        eclfiles, rstdates=rstdates, vectors=vectors, dateinheaders=True
-    )
+    grid_df = grid.df(eclfiles, rstdates=rstdates, vectors=vectors, dateinheaders=True)
 
-    rstdates_iso = ecl2df.grid.dates2rstindices(eclfiles, rstdates)[2]
+    rstdates_iso = grid.dates2rstindices(eclfiles, rstdates)[2]
 
     grid_df["PILLAR"] = grid_df["I"].astype(str) + "-" + grid_df["J"].astype(str)
     logger.info("Computing pillar statistics")
@@ -135,21 +132,23 @@ def df(
                 grouped = pd.merge(grouped, contacts, how="left")
 
     if stackdates:
-        return ecl2df.common.stack_on_colnames(
+        return common.stack_on_colnames(
             grouped, sep="@", stackcolname="DATE", inplace=True
         )
     return grouped
 
 
-def compute_volumes(grid_df, datestr=None):
+def compute_volumes(
+    grid_df: pd.DataFrame, datestr: Optional[str] = None
+) -> Dict[str, float]:
     """Compute "dynamic" volumes, volumes for data coming from the
     UNRST file (SWAT+SGAS)
 
     SOIL is assumed not be present in grid_df, it will be computed here.
 
     Args:
-        grid_df (pd.DataFrame): A dataframe with the columns PORV, SWAT and SGAS
-        datestr (str): If not none, it should contain an ISO-8601 formatted date that
+        grid_df: A dataframe with the columns PORV, SWAT and SGAS
+        datestr: If not none, it should contain an ISO-8601 formatted date that
             will be appended to all columns with dynamic data, SWAT and SGAS
             in incoming grid_df must also be appended with the same date string.
             If datestr is "2009-01-02", then the columns will look
@@ -190,8 +189,13 @@ def compute_volumes(grid_df, datestr=None):
 
 
 def compute_pillar_contacts(
-    grid_df, region=None, soilcutoff=0.2, sgascutoff=0.7, swatcutoff=0.7, datestr=None
-):
+    grid_df: pd.DataFrame,
+    region: Optional[str] = None,
+    soilcutoff: float = 0.2,
+    sgascutoff: float = 0.7,
+    swatcutoff: float = 0.7,
+    datestr: Optional[str] = None,
+) -> pd.DataFrame:
     """Compute contacts pr. pillar in a grid dataframe.
 
     Requires the columns PILLAR, SOIL, SGAS and SWAT, I, J and Z
@@ -210,17 +214,17 @@ def compute_pillar_contacts(
     with at least one cell above swatcutoff.
 
     Args:
-        grid_df (pd.DataFrame): Representing the grid with geometry and properties
-        region (str): Region vector to group by, e.g. FIPNUM or EQLNUM
-        soilcutoff (float): OWC is deepest cell centre pr. pillar with oil
+        grid_df: Representing the grid with geometry and properties
+        region: Region vector to group by, e.g. FIPNUM or EQLNUM
+        soilcutoff: OWC is deepest cell centre pr. pillar with oil
             saturation above this
-        sgascutoff (float): GOC/GWC is deepest cell centre pr. pillar with
+        sgascutoff: GOC/GWC is deepest cell centre pr. pillar with
             gas saturation above this
-        swatcutoff (float): Pillars must have this amount of water in (in one cell)
+        swatcutoff: Pillars must have this amount of water in (in one cell)
             them to be available for OWC/GWC computations.
     Returns:
-        pd.Dataframe. Index is PILLAR with values I-J. Rows only for
-            pillars where a contact was found. Empty dataframe if no contacts found.
+        Index is PILLAR with values I-J. Rows only for
+        pillars where a contact was found. Empty dataframe if no contacts found.
     """
     assert 0 <= swatcutoff <= 1
     assert 0 <= soilcutoff <= 1
@@ -316,7 +320,7 @@ def compute_pillar_contacts(
     return pd.DataFrame()
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parser.
 
     Arguments:
@@ -403,11 +407,11 @@ def fill_parser(parser):
     return parser
 
 
-def pillars_main(args):
+def pillars_main(args) -> None:
     """This is the command line API"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
-    eclfiles = ecl2df.EclFiles(args.DATAFILE)
+    eclfiles = EclFiles(args.DATAFILE)
     dframe = df(
         eclfiles,
         region=args.region,
@@ -432,6 +436,6 @@ def pillars_main(args):
     elif args.group:
         dframe = dframe.mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    ecl2df.common.write_dframe_stdout_file(
+    common.write_dframe_stdout_file(
         dframe, args.output, index=False, caller_logger=logger
     )

@@ -33,6 +33,7 @@ DOCS_REQUIREMENTS = [
     "rstcheck",
     "sphinx",
     "sphinx-argparse",
+    "sphinx-autodoc-typehints",
     "sphinx_rtd_theme",
 ]
 EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS}
@@ -50,7 +51,7 @@ setup(
     license="GPLv3",
     packages=find_packages(include=["ecl2df*"]),
     package_dir={"ecl2df": "ecl2df"},
-    package_data={"ecl2df": ["opmkeywords/*", "config_jobs/*"]},
+    package_data={"ecl2df": ["opmkeywords/*", "config_jobs/*", "py.typed"]},
     zip_safe=False,
     entry_points={
         "console_scripts": [

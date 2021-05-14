@@ -3,8 +3,8 @@ Support module for inferring EQLDIMS and TABDIMS from incomplete
 Eclipse 100 decks (typically single include-files)
 """
 
-
 import logging
+from typing import Dict, Union, Optional
 
 try:
     import opm.io
@@ -17,10 +17,10 @@ from ecl2df import EclFiles
 logger = logging.getLogger(__name__)
 
 # Constants to use for pointing to positions in the xxxDIMS keyword
-DIMS_POS = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)
+DIMS_POS: Dict[str, int] = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)
 
 
-def guess_dim(deckstring, dimkeyword, dimitem=0):
+def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
     """Guess the correct dimension count for an incoming deck (string)
 
     The incoming deck must in string form, if not, extra data is most
@@ -31,11 +31,11 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     stricter mode, to detect the correct table dimensionality
 
     Arguments:
-        deck (str): String containing an Eclipse deck or only a few Eclipse keywords
-        dimkeyword (str): Either TABDIMS or EQLDIMS
-        dimitem (int): The element number in TABDIMS/EQLDIMS to modify
+        deck: String containing an Eclipse deck or only a few Eclipse keywords
+        dimkeyword: Either TABDIMS or EQLDIMS
+        dimitem: The element number in TABDIMS/EQLDIMS to modify
     Returns:
-        int: The lowest number for which stricter opm.io parsing succeeds
+        The lowest number for which stricter opm.io parsing succeeds
 
     """
 
@@ -91,7 +91,9 @@ def guess_dim(deckstring, dimkeyword, dimitem=0):
     return dimcountguess
 
 
-def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue, nowarn=False):
+def inject_dimcount(
+    deckstr: str, dimkeyword: str, dimitem: int, dimvalue: int, nowarn: bool = False
+) -> str:
     """Insert a TABDIMS with NTSFUN into a deck
 
     This is simple string manipulation, not opm.io
@@ -100,16 +102,16 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue, nowarn=False):
     This function is to be wrapped by inject_xxxdims_ntxxx()
 
     Arguments:
-        deckstr (str): A string containing a partial deck (f.ex only
+        deckstr: A string containing a partial deck (f.ex only
             the SWOF keyword).
-        dimkeyword (str): Either TABDIMS or EQLDIMS
-        dimitem (int): Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.
-        dimvalue (int): The NTSFUN/NTPVT/NTEQUIL number to use
+        dimkeyword: Either TABDIMS or EQLDIMS
+        dimitem: Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.
+        dimvalue: The NTSFUN/NTPVT/NTEQUIL number to use
             (this function does not care if it is correct or not)
-        nowarn (bool): By default it will warn if this function
+        nowarn: By default it will warn if this function
             is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.
     Returns:
-        str: New deck with TABDIMS/EQLDIMS prepended.
+        New deck with TABDIMS/EQLDIMS prepended.
     """
     if dimkeyword not in ["TABDIMS", "EQLDIMS"]:
         raise ValueError("Only supports TABDIMS and EQLDIMS")
@@ -136,7 +138,12 @@ def inject_dimcount(deckstr, dimkeyword, dimitem, dimvalue, nowarn=False):
     )
 
 
-def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
+def inject_xxxdims_ntxxx(
+    xxxdims: str,
+    ntxxx_name: str,
+    deck: Union[str, "opm.libopmcommon_python.Deck"],
+    ntxxx_value: Optional[int] = None,
+) -> "opm.libopmcommon_python.Deck":
     """Ensures TABDIMS/EQLDIMS is present in a deck.
 
     If ntxxx_value=None and ntxxx_name not in the deck, ntxxx_name will
@@ -144,11 +151,11 @@ def inject_xxxdims_ntxxx(xxxdims, ntxxx_name, deck, ntxxx_value=None):
     into the deck.
 
     Args:
-        xxxdims (str): TABDIMS or EQLDIMS
-        ntxxx_name (str): NTPVT, NTEQUL or NTSFUN
-        deck (str or opm.io deck): A data deck. If ntxxx_name is to be
+        xxxdims: TABDIMS or EQLDIMS
+        ntxxx_name: NTPVT, NTEQUL or NTSFUN
+        deck: A data deck. If ntxxx_name is to be
             estimated this *must* be a string and not a fully parsed deck.
-        npxxx_value (int): Supply this if ntxxx_name is known, but not present in the
+        npxxx_value: Supply this if ntxxx_name is known, but not present in the
             deck, this will override any guessing. If the deck already
             contains XXXDIMS, this will be ignored.
 

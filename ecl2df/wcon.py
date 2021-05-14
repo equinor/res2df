@@ -2,11 +2,21 @@
 
 import logging
 import datetime
+import argparse
+from typing import Union
 
 import pandas as pd
 
-from .eclfiles import EclFiles
-from .common import (
+try:
+    # Needed for mypy
+
+    # pylint: disable=unused-import
+    import opm.io
+except ImportError:
+    pass
+
+from ecl2df import EclFiles
+from ecl2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
     write_dframe_stdout_file,
@@ -18,16 +28,10 @@ logger = logging.getLogger(__name__)
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
 
-def df(deck):
+def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
-
-    Args:
-        deck (opm.io Deck) or EclFiles object
-
-    Return:
-        pd.DataFrame
     """
 
     if isinstance(deck, EclFiles):
@@ -68,7 +72,7 @@ def df(deck):
     return wcon_df
 
 
-def fill_parser(parser):
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
     Arguments:
@@ -85,7 +89,7 @@ def fill_parser(parser):
     return parser
 
 
-def wcon_main(args):
+def wcon_main(args) -> None:
     """Read from disk and write CSV back to disk"""
     if args.verbose:
         logging.basicConfig(level=logging.INFO)

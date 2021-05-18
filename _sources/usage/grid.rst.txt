@@ -64,6 +64,9 @@ the topmost example):
    # Apex reservoir (cell centre):
    dframe["Z"].min()
 
+   # Apex reservoir (topmost cell corner):
+   dframe["Z_MIN"].min()
+
 
 Pandas has powerful aggregation operators, and any thinkable statistical measure
 can be applied to the data. The Pandas `groupby()` operation can be used to get

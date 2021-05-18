@@ -2,8 +2,19 @@ import importlib
 from pathlib import Path
 from pkg_resources import resource_filename
 
-from ert_shared.plugins.plugin_manager import hook_implementation
-from ert_shared.plugins.plugin_response import plugin_response
+try:
+    from ert_shared.plugins.plugin_manager import hook_implementation
+    from ert_shared.plugins.plugin_response import plugin_response
+except ModuleNotFoundError:
+    # ert is not installed - use dummy/transparent function decorators.
+    def hook_implementation(func):
+        return func
+
+    def plugin_response(plugin_name):  # pylint: disable=unused-argument
+        def decorator(func):
+            return func
+
+        return decorator
 
 
 def _get_jobs_from_directory(directory):

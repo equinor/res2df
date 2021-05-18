@@ -280,11 +280,30 @@ def gridgeometry2df(
 
     xyz = grid.export_position(index_frame)
     vol = grid.export_volume(index_frame)
+    z_corners = grid.export_corners(index_frame)[:, [2, 5, 8, 11, 14, 17, 20]]
     grid_df = pd.DataFrame(
         index=index_frame["active"],
-        columns=["i", "j", "k", "x", "y", "z", "volume", "global_index"],
+        columns=[
+            "i",
+            "j",
+            "k",
+            "x",
+            "y",
+            "z",
+            "z_min",
+            "z_max",
+            "volume",
+            "global_index",
+        ],
         data=np.hstack(
-            (ijk, xyz, vol.reshape(-1, 1), np.array(index_frame.index).reshape(-1, 1))
+            (
+                ijk,
+                xyz,
+                z_corners.min(axis=1).reshape(-1, 1),
+                z_corners.max(axis=1).reshape(-1, 1),
+                vol.reshape(-1, 1),
+                np.array(index_frame.index).reshape(-1, 1),
+            )
         ),
     )
 

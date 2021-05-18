@@ -31,12 +31,16 @@ def test_gridgeometry2df():
     assert "X" in grid_geom
     assert "Y" in grid_geom
     assert "Z" in grid_geom
+    assert "Z_MIN" in grid_geom
+    assert "Z_MAX" in grid_geom
     assert "VOLUME" in grid_geom
     assert "ZONE" in grid_geom
     assert "GLOBAL_INDEX" in grid_geom
 
     # If at least one inactive cell, this will hold:
     assert grid_geom["GLOBAL_INDEX"].max() > len(grid_geom)
+
+    assert (grid_geom["Z_MAX"] > grid_geom["Z_MIN"]).all()
 
 
 def test_wrongfile():

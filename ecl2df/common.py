@@ -665,10 +665,10 @@ def is_color(input_string: str) -> bool:
         return True
 
     regex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-    return re.match(regex, input_string)
+    return bool(re.match(regex, input_string))
 
 
-def parse_lyrfile(filename: str) -> List[Dict[str, Any]]:
+def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
     """Return a list of dicts representation of the lyr file.
 
     The lyr file contains data of the following format,
@@ -714,7 +714,7 @@ def parse_lyrfile(filename: str) -> List[Dict[str, Any]]:
     for line in zonelines:
         try:
             linesplit = shlex.split(line)
-            zonedict = {"name": linesplit[0]}
+            zonedict: Dict[str, Any] = {"name": linesplit[0]}
             zone_color = linesplit.pop(-1) if is_color(linesplit[-1]) else None
             if zone_color is not None:
                 zonedict["color"] = zone_color

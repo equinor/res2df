@@ -13,10 +13,16 @@ data format.
    usage
    ecl2csv
    csv2ecl
-   modules
    installation
    contribution
    history
+
+.. toctree::
+   :hidden:
+   :maxdepth: 10
+   :caption: Python API
+
+   ecl2df/ecl2df
 
 Indices and tables
 ==================

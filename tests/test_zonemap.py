@@ -90,6 +90,17 @@ foo   3- 4 #FFGGHH
     assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
 
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
+        """
+valid 1-2 #FFE5F7
+foo   3- 4 bluez
+""",
+        encoding="utf-8",
+    )
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert "Failed on content: foo   3- 4 bluez" in caplog.text
+
 
 def test_lyrlist_format(tmpdir):
     """Ensure the lyr file is parsed correctly"""
@@ -107,25 +118,23 @@ def test_lyrlist_format(tmpdir):
         encoding="utf-8",
     )
     lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
-    # 0 - ZoneA
-    assert lyrlist[0]["from_layer"] == 1
-    assert lyrlist[0]["color"] == "#FFE5F7"
-    assert lyrlist[0]["name"] == "ZoneA"
-    # 1 - ZoneB
-    assert lyrlist[1]["to_layer"] == 10
-    assert "color" not in lyrlist[1]
-    # 2 - ZoneC
-    assert lyrlist[2]["color"] == "blue"
-    # 3 - ZoneD
-    assert lyrlist[3]["color"] == "#fbb"
-    assert lyrlist[3]["span"] == 3
-    assert "from_layer" not in lyrlist[3]
-    assert "to_layer" not in lyrlist[3]
-    # 4 - ZoneE
-    assert lyrlist[4]["to_layer"] == 20
-    assert "color" not in lyrlist[4]
-    # 5 - ZoneF
-    assert lyrlist[5]["color"] == "CORNFLOWERBLUE"
+
+    assert lyrlist == [
+        {"name": "ZoneA", "from_layer": 1, "to_layer": 5, "color": "#FFE5F7"},
+        {
+            "name": "ZoneB",
+            "from_layer": 6,
+            "to_layer": 10,
+        },
+        {"name": "ZoneC", "from_layer": 11, "to_layer": 15, "color": "blue"},
+        {"name": "ZoneD", "span": 3, "color": "#fbb"},
+        {
+            "name": "ZoneE",
+            "from_layer": 19,
+            "to_layer": 20,
+        },
+        {"name": "ZoneF", "from_layer": 21, "to_layer": 22, "color": "CORNFLOWERBLUE"},
+    ]
 
 
 def test_convert_lyrlist_to_zonemap(tmpdir):

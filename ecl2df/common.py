@@ -81,9 +81,14 @@ for keyw in [
 # but that would anyway create a lot of other problems in the shell.
 MAGIC_STDOUT: str = "-"
 
-SVG_COLOR_NAMES = (
-    open(Path(__file__).parent / "svg_color_keyword_names.txt", "r").read().splitlines()
-)
+SVG_COLOR_NAMES = [
+    color.lower()
+    for color in (
+        open(Path(__file__).parent / "svg_color_keyword_names.txt", "r")
+        .read()
+        .splitlines()
+    )
+]
 
 logger: logging.Logger = logging.getLogger(__name__)
 

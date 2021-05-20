@@ -657,9 +657,9 @@ def stack_on_colnames(
 
 
 def is_color(input_string: str) -> bool:
-    """Checks if the input string is avalid color.
+    """Checks if the input string is a valid color.
     That is six-digit hexadecimal, three-digit hexadecimal or
-    given as a SVG color keyword name
+    given as an SVG color keyword name
     """
     if input_string.lower() in SVG_COLOR_NAMES:
         return True
@@ -697,10 +697,10 @@ def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
         ]
 
     Args:
-        filename (str): Absolute path to a lyr file
+        filename: Absolute path to a lyr file
 
     Returns:
-        List[Dict[str, Any]]
+        A list of dictionaries representing the information in the lyr file.
 
     """  # noqa
 

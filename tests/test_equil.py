@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+import numpy as np
 import pandas as pd
 
 from ecl2df import equil, ecl2csv, csv2ecl
@@ -391,6 +392,46 @@ EQUIL
     inc = equil.df2ecl(df, withphases=True)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
+
+
+@pytest.mark.parametrize(
+    "somefloat, expected",
+    [
+        (1000.00000000000000000005, " 1000.0 "),
+        (1000.0000000000003, " 1000.0 "),  # Many decimals may destabilize Eclipse
+        (1000.0000003, " 1000.0 "),
+        (1000.000003, " 1000.000003 "),  # Assume Eclipse accepts this
+        (np.float32(1000.00003), " 1000.0 "),
+        (np.float32(1000.0003), " 1000.0003"),  # can give 1000.000305
+    ],
+)
+def test_eclipse_rounding(somefloat, expected):
+    """Values in include files with a lot of decimals, like you sometimes get
+    from Python floating point operations may crash Eclipse. Ensure these are
+    rounded (the typical output routine is pd.DataFrame.to_string())
+
+    As an example, 1000.00000000000000000005 as a datum value in EQUIL has been
+    observed to crash Eclipse. It would be hard to get Python to output this
+    particular value.
+    """
+
+    dframe = pd.DataFrame(
+        [
+            {
+                "Z": 2469.0,
+                "PRESSURE": 382.4,
+                "OWC": somefloat,
+                "PCOWC": 0.0,
+                "GOC": 0.0,
+                "PCGOC": 0.0,
+                "INITRS": 1.0,
+                "INITRV": 0.0,
+                "EQLNUM": 1,
+                "KEYWORD": "EQUIL",
+            }
+        ]
+    )
+    assert expected in equil.df2ecl(dframe, withphases=False)
 
 
 def test_main_subparser(tmpdir, mocker):

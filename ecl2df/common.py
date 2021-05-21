@@ -2,6 +2,7 @@
 
 import sys
 import json
+import re
 import signal
 import inspect
 import logging
@@ -10,7 +11,7 @@ import argparse
 import itertools
 from pathlib import Path
 import shlex
-from typing import Dict, Optional, List, Union, Set
+from typing import Dict, Optional, List, Union, Set, Any
 
 import numpy as np
 import pandas as pd
@@ -79,6 +80,15 @@ for keyw in [
 # This makes it impossible to write to a file called "-" on disk
 # but that would anyway create a lot of other problems in the shell.
 MAGIC_STDOUT: str = "-"
+
+SVG_COLOR_NAMES = [
+    color.lower()
+    for color in (
+        open(Path(__file__).parent / "svg_color_keyword_names.txt", "r")
+        .read()
+        .splitlines()
+    )
+]
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -651,43 +661,107 @@ def stack_on_colnames(
     return dframe
 
 
-def parse_zonemapfile(filename: str) -> Optional[dict]:
-    """Return a dictionary from (int) K layers in the simgrid to strings
+def is_color(input_string: str) -> bool:
+    """Checks if the input string is a valid color.
+    That is six-digit hexadecimal, three-digit hexadecimal or
+    given as an SVG color keyword name
+    """
+    if input_string.lower() in SVG_COLOR_NAMES:
+        return True
 
-    Typical usage is to map from grid layer to zone names.
+    regex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+    return bool(re.match(regex, input_string))
 
-    The layer filename must currently follow format:
 
-      'ZoneA' 1-4
-      'ZoneB' 5-10
+def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
+    """Return a list of dicts representation of the lyr file.
 
-    where the single quotes are optional for zones without spaces.
-    Write single layer zones as 11-11. NB: ResInsight requires single
-    quotes always.
+    The lyr file contains data of the following format,
+    where the color code is optional::
 
-    Either "--" or "#" can be used to denote comments.
+      'ZoneA' 1-4     #FFE5F7
+      'ZoneB' 5       red
+
+    Description of the lyr format:
+    https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_
+
+    The output has the following format::
+
+        [
+            {
+                "name": "ZoneA",
+                "from_layer": 1,
+                "to_layer": 4,
+                "color": "#FFE5F7"
+            },
+            {
+                "name": "ZoneB",
+                "span": 5,
+                "color": "red"
+            }
+        ]
 
     Args:
-        filename (str): Absolute path to a zone map file (lyr format)
+        filename: Absolute path to a lyr file
 
     Returns:
-        dict, integer keys which are the K layers. Every layer mentioned
-            in the interval in the input file is present. Can be empty.
-    """
+        A list of dictionaries representing the information in the lyr file.
+
+    """  # noqa
+
     zonelines = Path(filename).read_text().splitlines()
 
     # Remove comments, support both "--" and "#":
     zonelines = [line.split("--")[0].strip() for line in zonelines]
     zonelines = [line for line in zonelines if line and not line.startswith("#")]
 
-    zonemap = {}
+    lyrlist: List[Dict[str, Any]] = []
     for line in zonelines:
         try:
             linesplit = shlex.split(line)
-            (k_0, k_1) = "".join(linesplit[1:]).split("-")
-            zonemap.update(dict.fromkeys(range(int(k_0), int(k_1) + 1), linesplit[0]))
+            zonedict: Dict[str, Any] = {"name": linesplit[0]}
+            zone_color = linesplit.pop(-1) if is_color(linesplit[-1]) else None
+            if zone_color is not None:
+                zonedict["color"] = zone_color
+
+            numbers = " ".join(linesplit[1:]).split("-")
+            if len(numbers) == 2:
+                from_layer, to_layer = int(numbers[0]), int(numbers[1])
+                if from_layer <= to_layer:
+                    zonedict["from_layer"] = from_layer
+                    zonedict["to_layer"] = to_layer
+                else:
+                    logger.error("From_layer higher than to_layer")
+                    raise ValueError()
+            elif len(numbers) == 1:
+                zonedict["span"] = int(numbers[0])
+            else:
+                raise ValueError()
+            lyrlist.append(zonedict)
         except ValueError:
-            logger.error("Could not parse zonemapfile %s", filename)
+            logger.error("Could not parse lyr file %s", filename)
             logger.error("Failed on content: %s", line)
             return None
+    return lyrlist
+
+
+def convert_lyrlist_to_zonemap(lyrlist: List[Dict[str, Any]]) -> Dict[int, str]:
+    """Returns a layer to zone map as a dictionary
+
+    Args:
+        lyrlist (list): list of dicts coming from parse_lyrfile()
+    Returns:
+        Dict[int, str]: layer to zone mapping {1:"zoneA", 2:"zoneB"}
+    """
+    if lyrlist is None:
+        return None
+    zonemap = {}
+    for i, zonedict in enumerate(lyrlist):
+        if "span" in zonedict:
+            from_layer = lyrlist[i - 1]["to_layer"] + 1 if i > 0 else 1
+            to_layer = from_layer + zonedict["span"]
+        else:
+            from_layer = zonedict["from_layer"]
+            to_layer = zonedict["to_layer"]
+        zonemap.update(dict.fromkeys(range(from_layer, to_layer + 1), zonedict["name"]))
     return zonemap

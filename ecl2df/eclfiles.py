@@ -238,8 +238,8 @@ class EclFiles(object):
                 return {}
             logger.warning("Zonefile %s not found, ignoring", fullpath)
             return {}
-
-        return common.parse_zonemapfile(fullpath)
+        lyrlist = common.parse_lyrfile(fullpath)
+        return common.convert_lyrlist_to_zonemap(lyrlist)
 
 
 def rreplace(pat: str, sub: str, string: str) -> str:

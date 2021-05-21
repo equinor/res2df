@@ -17,8 +17,6 @@ LONG_DESCRIPTION = (Path(__file__).parent / "README.md").read_text()
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
     "ecl",
-    "equinor-libres",
-    "ert",
     "numpy",
     "opm>=2020.10.2",  # NB: Pypi versions.
     "pandas",
@@ -37,7 +35,7 @@ DOCS_REQUIREMENTS = [
     "sphinx-autodoc-typehints",
     "sphinx_rtd_theme",
 ]
-EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS}
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS, "ert": ["ert"]}
 
 setup(
     name="ecl2df",

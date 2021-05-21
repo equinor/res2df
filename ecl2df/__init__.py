@@ -1,4 +1,3 @@
-"""ecl2df"""
 import importlib
 from typing import List
 

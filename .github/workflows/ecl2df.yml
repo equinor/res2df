@@ -24,7 +24,12 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9']
-
+        include:
+          # For one of the Python versions we
+          # install the extra dependency ert
+          # (in order to not double the job matrix)
+          - python-version: '3.6'
+            install-ert: true
     steps:
       - name: Checkout commit locally
         uses: actions/checkout@v2
@@ -56,6 +61,10 @@ jobs:
           pip install .
           python -c "import ecl2df"
 
+      - name: Install ert
+        if: matrix.install-ert
+        run: pip install .[ert]
+
       - name: Install test dependencies
         run: pip install .[tests,docs]
 
@@ -73,7 +82,6 @@ jobs:
 
       - name: Build documentation
         run: |
-          sphinx-apidoc -f -H "API for ecl2df" -o docs ecl2df
           python setup.py build_sphinx
 
       - name: Update GitHub pages

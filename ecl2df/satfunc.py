@@ -489,9 +489,9 @@ def _df2ecl_satfuncs(
         col_headers = RENAMERS[keyword]["DATA"]
         string = (
             "-- "
-            + dframe[col_headers].to_string(
-                float_format=" %g", header=True, index=False
-            )[3:]
+            + dframe[col_headers]
+            .to_string(float_format=" %g", header=True, index=False)
+            .strip()
         )
         return string + "\n/\n"
 

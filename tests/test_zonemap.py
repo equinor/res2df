@@ -17,7 +17,8 @@ def test_stdzoneslyr():
     """Test that we can read zones if the zonemap is in a standard location.
 
     The eclfiles object defines what is the standard location for the file, while
-    the actual parsing is done in ecl2df.common.parse_zonemapfile()
+    the actual parsing is done in ecl2df.common.parse_lyrfile() and
+    converted to zonemap in common.convert_lyrlist_to_zonemap()
     """
     eclfiles = ecl2df.EclFiles(DATAFILE)
 
@@ -45,65 +46,122 @@ def test_nonexistingzones():
 
 
 def test_errors(tmpdir, caplog):
-    zonefile = tmpdir / "zonemap.lyr"
-    zonefile.write_text(
+    """Test in lyr parse function return correct errors"""
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
         """
 foo
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_zonemapfile(zonefile) is None
-    assert "Could not parse zonemapfile" in caplog.text
+    assert ecl2df.common.parse_lyrfile(lyrfile) is None
+    assert "Could not parse lyr file" in caplog.text
     assert "Failed on content: foo" in caplog.text
 
-    zonefile = tmpdir / "zonemap.lyr"
-    zonefile.write_text(
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
         """
 valid 1-2
 foo 1 2 3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_zonemapfile(zonefile) is None
+    assert ecl2df.common.parse_lyrfile(lyrfile) is None
     assert "Failed on content: foo 1 2 3" in caplog.text
 
-    zonefile = tmpdir / "zonemap.lyr"
-    zonefile.write_text(
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
         """
-valid 1-2 stray
+foo 2-1
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(zonefile)) is None
-    assert "Failed on content: valid 1-2 stray" in caplog.text
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert "From_layer higher than to_layer" in caplog.text
 
-
-def test_spaces_dashes(tmpdir):
-    """Ensure we support dashes around dashes"""
-    zonefile = tmpdir / "zonemap.lyr"
-    zonefile.write_text(
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
         """
--- Layer table for 83 layer simulation model xxxx
-'UT3_3'          1 -     15
-'UT3_2'          16 -   20
-'UT3_1'         21 -    21
-'UT2'           22 -   23
-'UT1_2'         24 -   37
-'UT1_1'         38 -   46 -- thistextisignored
-'MT2_2'         47 -   71
+valid 1-2 #FFE5F7
+foo   3- 4 #FFGGHH
 """,
         encoding="utf-8",
     )
-    zonemap = ecl2df.common.parse_zonemapfile(zonefile)
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
+
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
+        """
+valid 1-2 #FFE5F7
+foo   3- 4 bluez
+""",
+        encoding="utf-8",
+    )
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert "Failed on content: foo   3- 4 bluez" in caplog.text
+
+
+def test_lyrlist_format(tmpdir):
+    """Ensure the lyr file is parsed correctly"""
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
+        """
+-- Some text
+'ZoneA'          1 -     5  #FFE5F7
+'ZoneB'          6-     10  --no color
+'ZoneC'          11-15    blue
+'ZoneD'         3          #fbb
+'ZoneE'         19     -20
+'ZoneF'         21-22  CORNFLOWERBLUE
+""",
+        encoding="utf-8",
+    )
+    lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
+
+    assert lyrlist == [
+        {"name": "ZoneA", "from_layer": 1, "to_layer": 5, "color": "#FFE5F7"},
+        {
+            "name": "ZoneB",
+            "from_layer": 6,
+            "to_layer": 10,
+        },
+        {"name": "ZoneC", "from_layer": 11, "to_layer": 15, "color": "blue"},
+        {"name": "ZoneD", "span": 3, "color": "#fbb"},
+        {
+            "name": "ZoneE",
+            "from_layer": 19,
+            "to_layer": 20,
+        },
+        {"name": "ZoneF", "from_layer": 21, "to_layer": 22, "color": "CORNFLOWERBLUE"},
+    ]
+
+
+def test_convert_lyrlist_to_zonemap(tmpdir):
+    """Test common.covert_lyrlist_to_zonemap()"""
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfile.write_text(
+        """
+-- Some text
+'ZoneA'          1 -     5
+'ZoneB'         5
+'ZoneC'         11-20
+""",
+        encoding="utf-8",
+    )
+    lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
+    zonemap = ecl2df.common.convert_lyrlist_to_zonemap(lyrlist)
     assert zonemap
-    assert len(zonemap) == 71
-    assert zonemap[25] == "UT1_2"
+    assert len(lyrlist) == 3
+    assert len(zonemap) == 20
+    assert zonemap[10] == "ZoneB"
+    assert zonemap[20] == "ZoneC"
 
 
 def test_nonstandardzones(tmpdir):
     """Test that we can read zones from a specific filename"""
-    zonefile = tmpdir / "formations.lyr"
-    zonefilecontent = """
+    lyrfile = tmpdir / "formations.lyr"
+    lyrfilecontent = """
 -- foo
 # foo
 'Eiriksson'  1-10
@@ -111,8 +169,9 @@ def test_nonstandardzones(tmpdir):
 
 # Difficult quote parsing above, might not run in ResInsight.
 """
-    zonefile.write(zonefilecontent)
-    zonemap = ecl2df.common.parse_zonemapfile(zonefile)
+    lyrfile.write(lyrfilecontent)
+    lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
+    zonemap = ecl2df.common.convert_lyrlist_to_zonemap(lyrlist)
     assert 0 not in zonemap
     assert zonemap[1] == "Eiriksson"
     assert zonemap[10] == "Eiriksson"

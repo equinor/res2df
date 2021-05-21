@@ -27,6 +27,7 @@ REQUIREMENTS = [
 TEST_REQUIREMENTS = Path("test_requirements.txt").read_text().splitlines()
 
 DOCS_REQUIREMENTS = [
+    "autoapi",
     "ipython",
     "rstcheck",
     "sphinx",

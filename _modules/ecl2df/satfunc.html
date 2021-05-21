@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.12.3.dev7+g5fbea9a documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.12.3.dev8+gf26f672 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3.dev7+g5fbea9a
+                0.12.3.dev8+gf26f672
               </div>
             
           
@@ -661,9 +661,9 @@
         <span class="n">col_headers</span> <span class="o">=</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;DATA&quot;</span><span class="p">]</span>
         <span class="n">string</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;-- &quot;</span>
-            <span class="o">+</span> <span class="n">dframe</span><span class="p">[</span><span class="n">col_headers</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span>
-                <span class="n">float_format</span><span class="o">=</span><span class="s2">&quot; </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)[</span><span class="mi">3</span><span class="p">:]</span>
+            <span class="o">+</span> <span class="n">dframe</span><span class="p">[</span><span class="n">col_headers</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">float_format</span><span class="o">=</span><span class="s2">&quot; </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">/</span><span class="se">\n</span><span class="s2">&quot;</span>
 

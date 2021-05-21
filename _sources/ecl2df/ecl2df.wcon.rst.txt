@@ -1,0 +1,10 @@
+===============
+``ecl2df.wcon``
+===============
+
+.. automodule:: ecl2df.wcon
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.wcon

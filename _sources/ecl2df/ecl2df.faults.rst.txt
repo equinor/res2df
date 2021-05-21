@@ -1,0 +1,10 @@
+=================
+``ecl2df.faults``
+=================
+
+.. automodule:: ecl2df.faults
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.faults

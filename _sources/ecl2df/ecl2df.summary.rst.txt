@@ -1,0 +1,10 @@
+==================
+``ecl2df.summary``
+==================
+
+.. automodule:: ecl2df.summary
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.summary

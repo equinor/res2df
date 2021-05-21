@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ecl2df.grid &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ecl2df.gruptree" href="ecl2df.gruptree.html" />
+    <link rel="prev" title="ecl2df.fipreports" href="ecl2df.fipreports.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.12.3.dev5+g64892c0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.csv2ecl.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.equil.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.faults.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.fipreports.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.fipreports</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.gruptree.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.inferdims.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.inferdims</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.nnc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.nnc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.parameters.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pillars.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pillars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pvt.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pvt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.rft.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.satfunc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.summary.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.trans.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.trans</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.version.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.version</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wcon</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/ecl2df/ecl2df.grid.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ecl2df.grid">
+<span id="ecl2df-grid"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code><a class="headerlink" href="#module-ecl2df.grid" title="Permalink to this headline">¶</a></h1>
+<p>Extract grid information from Eclipse output files as Dataframes.</p>
+<p>Each cell in the grid correspond to one row.</p>
+<p>For grid cells, x, y, z for cell centre and volume is available as
+geometric information. Static data (properties) can be merged from
+the INIT file, and dynamic data can be merged from the Restart (UNRST)
+file.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.dates2rstindices">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">dates2rstindices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#dates2rstindices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.dates2rstindices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the restart index/indices for a given datetime or list of datetimes</p>
+<blockquote>
+<div><dl class="simple">
+<dt>dates: datetime.date or list of datetime.date, must</dt><dd><p>correspond to an existing date. If list, it
+forces dateinheaders to be True.
+Can also be string, then the mnenomics
+‘first’, ‘last’, ‘all’, are supported, or ISO
+date formats. If None or empty string is supplied,
+an empty return tuple is returned.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Raises exception if no dates are not found.</p>
+<dl class="simple">
+<dt>Return: tuple, first element is</dt><dd><p>list of integers, corresponding to restart indices. Length 1 or more.
+second element is list of corresponding datetime.date objecs, third
+is an ISO-8601 representation of the dates.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropconstants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rstdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateinheaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a dataframe with grid information</p>
+<p>Grid information (center coordinates x, y, z), cell
+indices (i, j, k) (indices follow the Eclipse convention starting
+at 1, not zero as in libecl), properties from INIT, and optionally
+any time dependent data from Restart files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Handle to an Eclipse case</p></li>
+<li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – Vectors to include, wildcards
+supported. Used to match both
+INIT vectors and RESTART vectors.</p></li>
+<li><p><strong>dropconstants</strong> (<em>bool</em>) – If true, columns that are constant
+for every cell are dropped.</p></li>
+<li><p><strong>rstdates</strong> (<em>list</em><em>, </em><em>str</em><em> or </em><em>datetime</em>) – Restart dates to include in ISO-8601 format.
+Alternatively, pick from the mnenomics ‘first’, ‘all’ and ‘last’.</p></li>
+<li><p><strong>dateinheaders</strong> (<em>bool</em>) – Whether columns with data from UNRST files
+should always have the ISO-date embedded in the column header.</p></li>
+<li><p><strong>stackdates</strong> (<em>bool</em>) – Default is false. If true, a column
+called DATE will be added and data for all restart
+dates will be added in a stacked manner. Implies
+dateinheaders False.</p></li>
+<li><p><strong>zonemap</strong> (<em>dict</em>) – A zonemap dictionary mapping every K index to a
+string, which will be put in a column ZONE. If none is provided,
+a zonemap from a default file will be looked for. Provide an empty
+dictionary to avoid looking for the default file, and no ZONE
+column will be added.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.df2ecl">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">df2ecl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nocomments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#df2ecl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.df2ecl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an include file with grid data keyword, like PERMX, PORO,
+FIPNUM etc, for the GRID section of the Eclipse deck.</p>
+<p>Output (returned as string and optionally written to file) will then
+contain f.ex:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PERMX</span>
+   <span class="mf">3.3</span> <span class="mf">4.1</span> <span class="mf">500.1</span> <span class="mf">8543.0</span> <span class="mf">1223.0</span> <span class="mf">5022.0</span>
+   <span class="mf">411.455</span> <span class="mf">4433.9</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>if the grid contains 8 cells (inactive and active).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with the keyword for which
+we want to export data, and also the a column with GLOBAL_INDEX.
+Without GLOBAL_INDEX, the output will likely be invalid.
+The grid can contain both active and inactive cells.</p></li>
+<li><p><strong>keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – The keyword(s) to export, with one
+value for every cell.</p></li>
+<li><p><strong>eclfiles</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>]) – If provided, the total cell count for the grid
+will be requested from this object. If not, it will be <em>guessed</em>
+from the maximum number of GLOBAL_INDEX, which can be under-estimated
+in the corner-case that the last cells are inactive.</p></li>
+<li><p><strong>dtype</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>]) – If provided, the columns which are
+outputted are converted to int or float. Dataframe columns
+read from CSV files easily gets the wrong type, while Eclipse
+might require some data to be strictly integer.</p></li>
+<li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If provided, the string produced will also to be
+written to this filename.</p></li>
+<li><p><strong>nocomments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to True to avoid any comments being written. Defaults
+to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.drop_constant_columns">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">drop_constant_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alwayskeep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#drop_constant_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.drop_constant_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop/delete constant columns from a dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – </p></li>
+<li><p><strong>alwayskeep</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – string or list of strings of columns to keep
+anyway.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dataframe with equal or less columns.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.fill_parser">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up sys.argv parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – argparse.ArgumentParser or argparse.subparser</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.get_available_rst_dates">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">get_available_rst_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#get_available_rst_dates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.get_available_rst_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of datetime objects for the available dates in the RST file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.grid_main">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">grid_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#grid_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.grid_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the command line API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.gridgeometry2df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">gridgeometry2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#gridgeometry2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.gridgeometry2df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce a Pandas Dataframe with Eclipse gridgeometry</p>
+<p>Order is significant, and is determined by the order from libecl, and used
+when merging with other dataframes with cell-data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – object holding the Eclipse output files.</p></li>
+<li><p><strong>zonemap</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – A zonemap dictionary mapping every K index to a
+string, which will be put in a column ZONE. If none is provided,
+a zonemap from a default file will be looked for. Provide an empty
+dictionary to avoid looking for the default file, and no ZONE
+column will be added.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame with at least the columns I, J, K, X, Y, Z and VOLUME. One row
+pr. cell. The index of the dataframe are the global indices. If a zonemap
+is provided, zone information will be in the column ZONE.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.init2df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">init2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#init2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.init2df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract information from INIT file with cell data</p>
+<p>Normally, you would use the df() function which will
+call this function on your behalf.</p>
+<p>Order is significant, as index is used for merging</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – Object that can serve the EGRID and INIT files</p></li>
+<li><p><strong>vectors</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – List of vectors to include,
+glob-style wildcards supported.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.merge_initvectors">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">merge_initvectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initvectors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ijknames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#merge_initvectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.merge_initvectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge in INIT vectors to a dataframe by I, J, K.</p>
+<p>Utility function for other modules to use. Normally it is sufficient
+for API users to only use the df() function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – Object representing the Eclipse output files</p></li>
+<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Table data to merge with</p></li>
+<li><p><strong>initvectors</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Names of INIT vectors to merge in.</p></li>
+<li><p><strong>ijknames</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Three strings that determine the I, J and K columns to use
+for merging in dframe. For compdat the ‘K’ is f.ex. denoted ‘K1’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Copy of incoming dataframe with additional columns</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.grid.rst2df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">rst2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateinheaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#rst2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.rst2df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dataframe with dynamic data from the restart file
+for each cell, at a particular date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – EclFiles object</p></li>
+<li><p><strong>date</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>]]) – <dl class="simple">
+<dt>datetime.date or list of datetime.date, must</dt><dd><p>correspond to an existing date. If list, it
+forces dateinheaders to be True.
+Can also be string, then the mnenomics
+‘first’, ‘last’, ‘all’, are supported, or ISO
+date formats.</p>
+</dd>
+<dt>vectors: List of vectors to include,</dt><dd><p>glob-style wildcards supported</p>
+</dd>
+<dt>dateinheaders: boolean on whether the date should</dt><dd><p>be added to the column headers. Instead of
+SGAS as a column header, you get <a class="reference external" href="mailto:SGAS&#37;&#52;&#48;YYYY-MM-DD">SGAS<span>&#64;</span>YYYY-MM-DD</a>.</p>
+</dd>
+<dt>stackdates: Default is false. If true, a column</dt><dd><p>called DATE will be added and data for all restart
+dates will be added in a stacked manner. Implies
+dateinheaders False.</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ecl2df.gruptree.html" class="btn btn-neutral float-right" title="ecl2df.gruptree" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ecl2df.fipreports.html" class="btn btn-neutral float-left" title="ecl2df.fipreports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Equinor 2019-2021.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

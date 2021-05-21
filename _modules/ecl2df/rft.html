@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.rft &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3.dev4+gdfc7c28
+                0.12.3.dev5+g64892c0
               </div>
             
           
@@ -97,10 +97,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecl2csv.html">ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../csv2ecl.html">csv2ecl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
 </ul>
 
             
@@ -273,7 +276,7 @@
     <span class="k">return</span> <span class="n">nav_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="rftrecords"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rftrecords">[docs]</a><span class="k">def</span> <span class="nf">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">EclFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="rftrecords"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.rftrecords">[docs]</a><span class="k">def</span> <span class="nf">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">EclFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;Generator for looping over RFT records in a EclFile object.</span>
 
 <span class="sd">    Each returned RFT record is represented as a dict with the keys:</span>
@@ -306,7 +309,7 @@
         <span class="k">yield</span> <span class="n">rftrecord</span></div>
 
 
-<div class="viewcode-block" id="get_con_seg_data"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.get_con_seg_data">[docs]</a><span class="k">def</span> <span class="nf">get_con_seg_data</span><span class="p">(</span>
+<div class="viewcode-block" id="get_con_seg_data"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.get_con_seg_data">[docs]</a><span class="k">def</span> <span class="nf">get_con_seg_data</span><span class="p">(</span>
     <span class="n">rftrecord</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">:</span> <span class="n">EclFile</span><span class="p">,</span> <span class="n">datatype</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -364,7 +367,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="count_wellbranches"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.count_wellbranches">[docs]</a><span class="k">def</span> <span class="nf">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="count_wellbranches"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.count_wellbranches">[docs]</a><span class="k">def</span> <span class="nf">count_wellbranches</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;From a segment dataframe, coming from get_con_seg_data(..., &quot;SEG&quot;)</span>
 <span class="sd">    determine the number of well branche.</span>
 
@@ -387,7 +390,7 @@
     <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">branchcount</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="process_seg_topology"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.process_seg_topology">[docs]</a><span class="k">def</span> <span class="nf">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="process_seg_topology"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.process_seg_topology">[docs]</a><span class="k">def</span> <span class="nf">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Determine and process the segment topology.</span>
 
 <span class="sd">    The topology of the well segments are determined by the SEGNXT column in</span>
@@ -448,7 +451,7 @@
     <span class="k">return</span> <span class="n">merged</span></div>
 
 
-<div class="viewcode-block" id="seg2dicttree"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.seg2dicttree">[docs]</a><span class="k">def</span> <span class="nf">seg2dicttree</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="seg2dicttree"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.seg2dicttree">[docs]</a><span class="k">def</span> <span class="nf">seg2dicttree</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generate a nested dictionary representing the</span>
 <span class="sd">    well through its segment topology</span>
 
@@ -482,7 +485,7 @@
     <span class="k">return</span> <span class="n">trees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="pretty_print_well"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.pretty_print_well">[docs]</a><span class="k">def</span> <span class="nf">pretty_print_well</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="pretty_print_well"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.pretty_print_well">[docs]</a><span class="k">def</span> <span class="nf">pretty_print_well</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return a multiline string with the segment structure</span>
 <span class="sd">    pretty printed as an ASCII tree.</span>
 
@@ -496,7 +499,7 @@
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree_from_dict</span><span class="p">(</span><span class="n">dicttree</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="split_seg_icd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.split_seg_icd">[docs]</a><span class="k">def</span> <span class="nf">split_seg_icd</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="split_seg_icd"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.split_seg_icd">[docs]</a><span class="k">def</span> <span class="nf">split_seg_icd</span><span class="p">(</span><span class="n">seg_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Split a segment dataframe into a dataframe</span>
 <span class="sd">    with non-ICD segments and one with.</span>
 
@@ -544,7 +547,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">icd_seg_data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="merge_icd_seg_conseg"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.merge_icd_seg_conseg">[docs]</a><span class="k">def</span> <span class="nf">merge_icd_seg_conseg</span><span class="p">(</span>
+<div class="viewcode-block" id="merge_icd_seg_conseg"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.merge_icd_seg_conseg">[docs]</a><span class="k">def</span> <span class="nf">merge_icd_seg_conseg</span><span class="p">(</span>
     <span class="n">con_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">seg_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">icd_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -633,7 +636,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="add_extras"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.add_extras">[docs]</a><span class="k">def</span> <span class="nf">add_extras</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="add_extras"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.add_extras">[docs]</a><span class="k">def</span> <span class="nf">add_extras</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Add extra nice-to-have columns to the dataframe</span>
 <span class="sd">    with tubing, icd-segments, and reservoir  connections matched</span>
 <span class="sd">    on rows</span>
@@ -680,7 +683,7 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">wellname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Loop over an RFT file and construct a dataframe representation</span>
@@ -810,7 +813,7 @@
     <span class="k">return</span> <span class="n">rftdata_df</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -839,7 +842,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="rft_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.rft.rft_main">[docs]</a><span class="k">def</span> <span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="rft_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.rft_main">[docs]</a><span class="k">def</span> <span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -950,7 +953,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright Equinor 2019-2020.
+        &#169; Copyright Equinor 2019-2021.
 
     </p>
   </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.equil &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3.dev4+gdfc7c28
+                0.12.3.dev5+g64892c0
               </div>
             
           
@@ -97,10 +97,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecl2csv.html">ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../csv2ecl.html">csv2ecl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
 </ul>
 
             
@@ -237,7 +240,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -288,7 +291,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="rsvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.rsvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rsvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="rsvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.rsvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rsvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract RSVD data from a deck</span>
@@ -305,7 +308,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rvvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.rvvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rvvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="rvvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.rvvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rvvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract RVVD data from a deck</span>
@@ -322,7 +325,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pbvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.pbvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pbvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pbvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.pbvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pbvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract PBVD data from a deck</span>
@@ -339,7 +342,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pdvd_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.pdvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pdvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pdvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.pdvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pdvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract PDVD data from a deck</span>
@@ -356,7 +359,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="phases_from_deck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.phases_from_deck">[docs]</a><span class="k">def</span> <span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="phases_from_deck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.phases_from_deck">[docs]</a><span class="k">def</span> <span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Determined the set of phases from a deck, as</span>
 <span class="sd">    a string with values &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
 <span class="sd">    or &quot;oil-gas&quot;</span>
@@ -378,7 +381,7 @@
     <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="phases_from_columns"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.phases_from_columns">[docs]</a><span class="k">def</span> <span class="nf">phases_from_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="phases_from_columns"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.phases_from_columns">[docs]</a><span class="k">def</span> <span class="nf">phases_from_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Determine the set of phases available in an</span>
 <span class="sd">    equil dataframe, based on which columns are there.</span>
 <span class="sd">    Returns &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
@@ -403,7 +406,7 @@
     <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="equil_fromdeck"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.equil_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">equil_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="equil_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">equil_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract EQUIL data from a deck</span>
@@ -440,7 +443,7 @@
     <span class="k">return</span> <span class="n">dataframe</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -468,12 +471,12 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;EQUIL, RSVD++&quot;</span><span class="p">,</span> <span class="s2">&quot;solution.inc&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="equil_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.equil_main">[docs]</a><span class="k">def</span> <span class="nf">equil_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="equil_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_main">[docs]</a><span class="k">def</span> <span class="nf">equil_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -505,7 +508,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Empty EQUIL-data, not written to disk!&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="equil_reverse_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.equil_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="equil_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -515,7 +518,7 @@
     <span class="n">common</span><span class="o">.</span><span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
+<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
     <span class="n">equil_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -555,7 +558,7 @@
     <span class="k">return</span> <span class="n">string</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_equil"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_equil">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_equil</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2ecl_equil"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_equil">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_equil</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print EQUIL keyword with data</span>
 
 <span class="sd">    Args:</span>
@@ -618,7 +621,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_rsvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_rsvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2ecl_rsvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_rsvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print RSVD keyword with data</span>
 
 <span class="sd">    This data consists of one table (rs as a function</span>
@@ -631,7 +634,7 @@
     <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_rvvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_rvvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2ecl_rvvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_rvvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print RVVD keyword with data</span>
 
 <span class="sd">    This data consists of one table (rv as a function</span>
@@ -644,7 +647,7 @@
     <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RVVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_pbvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_pbvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2ecl_pbvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_pbvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Print PBVD keyword with data</span>
 
 <span class="sd">    Bubble-point versus depth</span>
@@ -659,7 +662,7 @@
     <span class="k">return</span> <span class="n">_df2ecl_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl_pdvd"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.equil.df2ecl_pdvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2ecl_pdvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_pdvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print PDVD keyword with data.</span>
 
 <span class="sd">    Dew-point versus depth.</span>
@@ -727,7 +730,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright Equinor 2019-2020.
+        &#169; Copyright Equinor 2019-2021.
 
     </p>
   </div>

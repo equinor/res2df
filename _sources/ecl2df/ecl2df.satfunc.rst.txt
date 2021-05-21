@@ -1,0 +1,10 @@
+==================
+``ecl2df.satfunc``
+==================
+
+.. automodule:: ecl2df.satfunc
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.satfunc

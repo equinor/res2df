@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>satfunc &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
+  <title>satfunc &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.12.3.dev4+gdfc7c28
+                0.12.3.dev5+g64892c0
               </div>
             
           
@@ -119,10 +119,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
 </ul>
 
             
@@ -426,7 +429,7 @@ the command</p>
 </div>
 <p>For a dataframe or a CSV file in the format provided by this module, an Eclipse
 include file can be generated either with the Python API
-<a class="reference internal" href="../ecl2df.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> function or the command</p>
+<a class="reference internal" href="../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> function or the command</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose</span>
 </pre></div>
 </div>
@@ -476,7 +479,7 @@ Pyscal can create curves from parametrizations, and interpolate between curves.<
 <p>Pyscal can create initialize its relperm objects from Eclipse include files
 though the parsing capabilities of ecl2df.satfunc.</p>
 <p>The function <code class="docutils literal notranslate"><span class="pre">pyscal.pyscallist.df()</span></code> is analogous to <code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc.df()</span></code> in
-what it produces, and the <a class="reference internal" href="../ecl2df.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> can be used on both
+what it produces, and the <a class="reference internal" href="../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> can be used on both
 (potentially with some filtering needed.).</p>
 </div>
 </div>
@@ -495,7 +498,7 @@ what it produces, and the <a class="reference internal" href="../ecl2df.html#ecl
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright Equinor 2019-2020.
+        &#169; Copyright Equinor 2019-2021.
 
     </p>
   </div>

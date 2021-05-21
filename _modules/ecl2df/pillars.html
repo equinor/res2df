@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.pillars &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
+  <title>ecl2df.pillars &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3.dev4+gdfc7c28
+                0.12.3.dev5+g64892c0
               </div>
             
           
@@ -97,10 +97,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecl2csv.html">ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../csv2ecl.html">csv2ecl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
 </ul>
 
             
@@ -201,7 +204,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span>
     <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">rstdates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -307,7 +310,7 @@
     <span class="k">return</span> <span class="n">grouped</span></div>
 
 
-<div class="viewcode-block" id="compute_volumes"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.compute_volumes">[docs]</a><span class="k">def</span> <span class="nf">compute_volumes</span><span class="p">(</span>
+<div class="viewcode-block" id="compute_volumes"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.compute_volumes">[docs]</a><span class="k">def</span> <span class="nf">compute_volumes</span><span class="p">(</span>
     <span class="n">grid_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">datestr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Compute &quot;dynamic&quot; volumes, volumes for data coming from the</span>
@@ -357,7 +360,7 @@
     <span class="k">return</span> <span class="n">vols</span></div>
 
 
-<div class="viewcode-block" id="compute_pillar_contacts"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.compute_pillar_contacts">[docs]</a><span class="k">def</span> <span class="nf">compute_pillar_contacts</span><span class="p">(</span>
+<div class="viewcode-block" id="compute_pillar_contacts"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.compute_pillar_contacts">[docs]</a><span class="k">def</span> <span class="nf">compute_pillar_contacts</span><span class="p">(</span>
     <span class="n">grid_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">region</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">soilcutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
@@ -489,7 +492,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
 
 <span class="sd">    Arguments:</span>
@@ -576,7 +579,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="pillars_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.pillars.pillars_main">[docs]</a><span class="k">def</span> <span class="nf">pillars_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="pillars_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.pillars_main">[docs]</a><span class="k">def</span> <span class="nf">pillars_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -619,7 +622,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright Equinor 2019-2020.
+        &#169; Copyright Equinor 2019-2021.
 
     </p>
   </div>

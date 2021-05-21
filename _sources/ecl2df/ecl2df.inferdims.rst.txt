@@ -1,0 +1,10 @@
+====================
+``ecl2df.inferdims``
+====================
+
+.. automodule:: ecl2df.inferdims
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.inferdims

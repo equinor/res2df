@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ecl2df.summary &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ecl2df.trans" href="ecl2df.trans.html" />
+    <link rel="prev" title="ecl2df.satfunc" href="ecl2df.satfunc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.12.3.dev5+g64892c0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.csv2ecl.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.equil.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.faults.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.fipreports.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.fipreports</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.grid.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.gruptree.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.inferdims.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.inferdims</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.nnc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.nnc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.parameters.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pillars.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pillars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pvt.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pvt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.rft.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.satfunc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.trans.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.trans</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.version.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.version</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wcon</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">ecl2df.summary</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/ecl2df/ecl2df.summary.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ecl2df.summary">
+<span id="ecl2df-summary"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.summary</span></code><a class="headerlink" href="#module-ecl2df.summary" title="Permalink to this headline">¶</a></h1>
+<p>Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="ecl2df.summary.PD_FREQ_MNEMONICS">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">PD_FREQ_MNEMONICS</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">{'daily':</span> <span class="pre">'D',</span> <span class="pre">'monthly':</span> <span class="pre">'MS',</span> <span class="pre">'weekly':</span> <span class="pre">'W-MON',</span> <span class="pre">'yearly':</span> <span class="pre">'YS'}</span></em><a class="headerlink" href="#ecl2df.summary.PD_FREQ_MNEMONICS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mapping from ecl2df custom offset strings to Pandas DateOffset strings.
+See
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects">https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.date_range">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">date_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#date_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.date_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics
+‘yearly’, ‘daily’, ‘weekly’, mapped over to pandas DateOffsets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<em>datetime.date</em>) – </p></li>
+<li><p><strong>end_date</strong> (<em>datetime.date</em>) – </p></li>
+<li><p><strong>freq</strong> (<em>str</em>) – monthly, daily, weekly, yearly, or a Pandas date offset
+frequency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of datetimes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
+<p>This is a thin wrapper for EclSum.pandas_frame, by adding
+support for string mnenomics for the time index.</p>
+<p>The dataframe is always indexed by DATE, and the datatype for the
+index will usually be datetime64[ns] as long as all dates are
+before year 2262. If a longer time range is detected, the index.dtype
+will be object, and consisting of datetime.datetime() objects. The index
+is always named “DATE”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – EclFiles object representing the Eclipse deck. Alternatively
+an EclSum object.</p></li>
+<li><p><strong>time_index</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – string indicating a resampling frequency,
+‘yearly’, ‘monthly’, ‘daily’, ‘last’ or ‘raw’, the latter will
+return the simulated report steps (also default).
+If a list of DateTime is supplied, data will be resampled
+to these.</p></li>
+<li><p><strong>column_keys</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – list of column key wildcards. None means everything.</p></li>
+<li><p><strong>start_date</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – str or date with first date to include.
+Dates prior to this date will be dropped, supplied
+start_date will always be included.</p></li>
+<li><p><strong>end_date</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – str or date with last date to be included.
+Dates past this date will be dropped, supplied
+end_date will always be included. Overriden if time_index
+is ‘last’.</p></li>
+<li><p><strong>include_restart</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – boolean sent to libecl for wheter restarts
+files should be traversed</p></li>
+<li><p><strong>params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If set, parameters.txt will be attempted loaded
+and merged with the summary data.</p></li>
+<li><p><strong>paramsfile</strong> – Explicit path to parameters file if autodiscovery is
+not wanted. Implies params=True</p></li>
+<li><p><strong>datetime</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, the time index of the returned DataFrame
+is always of datetime type. If not, it will be datetime
+if raw dates are requested (which are at second accuracy),
+or it will be strings in case of yearly, monthly or daily
+time frequency.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns empty dataframe if there is no summary file, or if the
+column_keys are not existing.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.df2eclsum">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">df2eclsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SYNTHETIC'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#df2eclsum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.df2eclsum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dataframe to an EclSum object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with a DATE colum (or with the
+dates/datetimes in the index).</p></li>
+<li><p><strong>casename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of Eclipse casename/basename to be used for the EclSum object
+If the EclSum object is later written to disk, this will be used
+to construct the filenames.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclSum</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.fill_parser">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.fill_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up sys.argv parsers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – parser to fill with arguments</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.fill_reverse_parser">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.fill_reverse_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill a parser for the operation:  dataframe -&gt; eclsum files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.resample_smry_dates">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">resample_smry_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclsumsdates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'raw'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#resample_smry_dates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.resample_smry_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resample (optionally) a list of date(time)s to a new datelist according to options.</p>
+<p>Based on the dates as input, a new list at a finer or coarser time density
+can be returned, on the same date range. Incoming dates can also be cropped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eclsumsdates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]) – list of datetimes, typically coming from EclSum.dates</p></li>
+<li><p><strong>freq</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – string denoting requested frequency for
+the returned list of datetime. ‘raw’ will
+return the input datetimes (no resampling).
+Options for timeresampling are
+‘daily’, ‘weekly’, ‘monthly’ and ‘yearly’. ‘first’ will give
+the first date (minimum),  ‘last’ will give out the last
+date (maximum), as a list with one element. Can also be a single date.</p></li>
+<li><p><strong>normalize</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether to normalize backwards at the start
+and forwards at the end to ensure the raw
+date range is covered when resampling time.</p></li>
+<li><p><strong>start_date</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – str or date with first date to include
+Dates prior to this date will be dropped, supplied
+start_date will always be included. Overrides
+normalized dates.</p></li>
+<li><p><strong>end_date</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – str or date with last date to be included.
+Dates past this date will be dropped, supplied
+end_date will always be included. Overrides
+normalized dates. Overridden if freq is ‘last’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.smry_meta">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">smry_meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#smry_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.smry_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide metadata for summary data vectors.</p>
+<p>A dictionary indexed by summary vector name is returned, and each
+value is dictionary with the metadata types provided by the underlying
+EclSum object:</p>
+<ul class="simple">
+<li><p>unit (string)</p></li>
+<li><p>is_total (bool)</p></li>
+<li><p>is_rate (bool)</p></li>
+<li><p>is_historical (bool)</p></li>
+<li><p>get_num (int) (only provided if not None)</p></li>
+<li><p>keyword (str)</p></li>
+<li><p>wgname (str or None)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.summary_main">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">summary_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#summary_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.summary_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read summary data from disk and write CSV back to disk</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.summary.summary_reverse_main">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">summary_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#summary_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.summary_reverse_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry point for usage with “csv2ecl summary” on the command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ecl2df.trans.html" class="btn btn-neutral float-right" title="ecl2df.trans" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ecl2df.satfunc.html" class="btn btn-neutral float-left" title="ecl2df.satfunc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Equinor 2019-2021.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

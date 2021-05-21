@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3.dev4+gdfc7c28
+                0.12.3.dev5+g64892c0
               </div>
             
           
@@ -97,10 +97,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecl2csv.html">ecl2csv</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../csv2ecl.html">csv2ecl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API for ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
 </ul>
 
             
@@ -197,7 +200,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_available_rst_dates"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.get_available_rst_dates">[docs]</a><span class="k">def</span> <span class="nf">get_available_rst_dates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_available_rst_dates"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.get_available_rst_dates">[docs]</a><span class="k">def</span> <span class="nf">get_available_rst_dates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
     <span class="n">report_indices</span> <span class="o">=</span> <span class="n">EclFile</span><span class="o">.</span><span class="n">file_report_list</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfilename</span><span class="p">())</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -211,7 +214,7 @@
     <span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="dates2rstindices"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.dates2rstindices">[docs]</a><span class="k">def</span> <span class="nf">dates2rstindices</span><span class="p">(</span>
+<div class="viewcode-block" id="dates2rstindices"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.dates2rstindices">[docs]</a><span class="k">def</span> <span class="nf">dates2rstindices</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">dates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]]]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;Return the restart index/indices for a given datetime or list of datetimes</span>
@@ -282,7 +285,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">rstindices</span><span class="p">,</span> <span class="n">chosendates</span><span class="p">,</span> <span class="n">isostrings</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span>
+<div class="viewcode-block" id="rst2df"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.rst2df">[docs]</a><span class="k">def</span> <span class="nf">rst2df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span>
     <span class="n">date</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]],</span>
     <span class="n">vectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -414,7 +417,7 @@
     <span class="k">return</span> <span class="n">rststack</span></div>
 
 
-<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span>
+<div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with Eclipse gridgeometry</span>
@@ -494,7 +497,7 @@
     <span class="k">return</span> <span class="n">grid_df</span></div>
 
 
-<div class="viewcode-block" id="merge_initvectors"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.merge_initvectors">[docs]</a><span class="k">def</span> <span class="nf">merge_initvectors</span><span class="p">(</span>
+<div class="viewcode-block" id="merge_initvectors"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.merge_initvectors">[docs]</a><span class="k">def</span> <span class="nf">merge_initvectors</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">initvectors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -537,7 +540,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">ijkinit</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">ijknames</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">vectors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">vectors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
 
 <span class="sd">    Normally, you would use the df() function which will</span>
@@ -602,7 +605,7 @@
     <span class="k">return</span> <span class="n">init_df</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span>
     <span class="n">vectors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
     <span class="n">dropconstants</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -656,7 +659,7 @@
     <span class="k">return</span> <span class="n">grid_df</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
 
 <span class="sd">    Arguments:</span>
@@ -706,7 +709,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="drop_constant_columns"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.drop_constant_columns">[docs]</a><span class="k">def</span> <span class="nf">drop_constant_columns</span><span class="p">(</span>
+<div class="viewcode-block" id="drop_constant_columns"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.drop_constant_columns">[docs]</a><span class="k">def</span> <span class="nf">drop_constant_columns</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Drop/delete constant columns from a dataframe.</span>
@@ -738,7 +741,7 @@
     <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columnstodelete</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
+<div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span>
     <span class="n">grid_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EclFiles</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -881,7 +884,7 @@
     <span class="k">return</span> <span class="n">string</span></div>
 
 
-<div class="viewcode-block" id="grid_main"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.grid.grid_main">[docs]</a><span class="k">def</span> <span class="nf">grid_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="grid_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.grid_main">[docs]</a><span class="k">def</span> <span class="nf">grid_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -907,7 +910,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright Equinor 2019-2020.
+        &#169; Copyright Equinor 2019-2021.
 
     </p>
   </div>

@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ecl2df.parameters &mdash; ecl2df 0.12.3.dev5+g64892c0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ecl2df.pillars" href="ecl2df.pillars.html" />
+    <link rel="prev" title="ecl2df.nnc" href="ecl2df.nnc.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ecl2df
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.12.3.dev5+g64892c0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.csv2ecl.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.equil.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.faults.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.fipreports.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.fipreports</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.grid.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.gruptree.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.inferdims.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.inferdims</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.nnc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.nnc</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pillars.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pillars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pvt.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pvt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.rft.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.satfunc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.summary.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.trans.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.trans</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.version.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.version</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wcon</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">ecl2df.parameters</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/ecl2df/ecl2df.parameters.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ecl2df.parameters">
+<span id="ecl2df-parameters"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.parameters</span></code><a class="headerlink" href="#module-ecl2df.parameters" title="Permalink to this headline">¶</a></h1>
+<p>Support module for extra files with key-value information
+related to Eclipse runs</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.parameters.find_parameter_files">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.parameters.</span></span><span class="sig-name descname"><span class="pre">find_parameter_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ecldeck_or_eclpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filebase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parameters'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/parameters.html#find_parameter_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.parameters.find_parameter_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locate a default prioritized list of files to try to read as key-value</p>
+<p>File extensions .yml, .json and .txt are recognized and will be found in
+current dir, one directory up, and two directories up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ecldeck_or_eclpath</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Either an EclFiles object of
+an Eclipse output set (only the corresponding path will be used),
+or path to a file or directory, that will be used as a starting
+point for locating parameter files</p></li>
+<li><p><strong>filebase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – the base of filenames to look for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Absolute paths to filenames. Empty list if nothing found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.parameters.load">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.parameters.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/parameters.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.parameters.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a parameter file as txt, yaml or json</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dict() with parameter names as keys. Empty dictionary if</dt><dd><p>no parameters in the file.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p>Raises ValueError or IOError if no files are readable</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.parameters.load_all">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.parameters.</span></span><span class="sig-name descname"><span class="pre">load_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnduplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/parameters.html#load_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.parameters.load_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of parameter filenames</p>
+<p>Dictionaries for all files will be merged into one.</p>
+<p>Keys must be unique over all filenames, if not
+only the first occurence will be used (based on
+the order of filenames).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filenames</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]]) – Order matters.</p></li>
+<li><p><strong>warnduplicates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True (default), overlapping keys will be warned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.parameters.load_parameterstxt">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.parameters.</span></span><span class="sig-name descname"><span class="pre">load_parameterstxt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/parameters.html#load_parameterstxt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.parameters.load_parameterstxt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read parameters.txt into a dictionary</p>
+<p>Lines starting with a hash will be ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]) – file containing one key-value pair pr. line,
+separated by whitespace</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ecl2df.pillars.html" class="btn btn-neutral float-right" title="ecl2df.pillars" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ecl2df.nnc.html" class="btn btn-neutral float-left" title="ecl2df.nnc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Equinor 2019-2021.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+=================
+``ecl2df.common``
+=================
+
+.. automodule:: ecl2df.common
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.common

@@ -1,7 +1,0 @@
-API for ecl2df
-==============
-
-.. toctree::
-   :maxdepth: 4
-
-   ecl2df

@@ -1,0 +1,10 @@
+==============
+``ecl2df.nnc``
+==============
+
+.. automodule:: ecl2df.nnc
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.nnc

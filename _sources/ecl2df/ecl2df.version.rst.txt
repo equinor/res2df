@@ -1,0 +1,10 @@
+==================
+``ecl2df.version``
+==================
+
+.. automodule:: ecl2df.version
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.version

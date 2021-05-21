@@ -1,0 +1,10 @@
+==================
+``ecl2df.csv2ecl``
+==================
+
+.. automodule:: ecl2df.csv2ecl
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.csv2ecl

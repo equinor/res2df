@@ -1,0 +1,10 @@
+===================
+``ecl2df.gruptree``
+===================
+
+.. automodule:: ecl2df.gruptree
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.gruptree

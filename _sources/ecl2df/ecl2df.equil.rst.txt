@@ -1,0 +1,10 @@
+================
+``ecl2df.equil``
+================
+
+.. automodule:: ecl2df.equil
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.equil

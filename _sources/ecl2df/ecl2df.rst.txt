@@ -1,0 +1,39 @@
+==========
+``ecl2df``
+==========
+
+.. automodule:: ecl2df
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   ecl2df.common
+   ecl2df.compdat
+   ecl2df.csv2ecl
+   ecl2df.ecl2csv
+   ecl2df.eclfiles
+   ecl2df.equil
+   ecl2df.faults
+   ecl2df.fipreports
+   ecl2df.grid
+   ecl2df.gruptree
+   ecl2df.hook_implementations
+   ecl2df.inferdims
+   ecl2df.nnc
+   ecl2df.parameters
+   ecl2df.pillars
+   ecl2df.pvt
+   ecl2df.rft
+   ecl2df.satfunc
+   ecl2df.summary
+   ecl2df.trans
+   ecl2df.version
+   ecl2df.wcon
+
+.. currentmodule:: ecl2df

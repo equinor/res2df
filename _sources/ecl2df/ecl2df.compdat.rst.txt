@@ -1,0 +1,10 @@
+==================
+``ecl2df.compdat``
+==================
+
+.. automodule:: ecl2df.compdat
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.compdat

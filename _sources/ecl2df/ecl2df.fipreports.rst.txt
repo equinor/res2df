@@ -1,0 +1,10 @@
+=====================
+``ecl2df.fipreports``
+=====================
+
+.. automodule:: ecl2df.fipreports
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.fipreports

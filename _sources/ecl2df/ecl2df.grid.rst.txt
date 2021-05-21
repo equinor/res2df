@@ -1,0 +1,10 @@
+===============
+``ecl2df.grid``
+===============
+
+.. automodule:: ecl2df.grid
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.grid

@@ -397,17 +397,23 @@ EQUIL
 @pytest.mark.parametrize(
     "somefloat, expected",
     [
-        (1000.0000000000003, " 1000.0 "),  # All these decimals would crash Eclipse
+        (1000.00000000000000000005, " 1000.0 "),
+        (1000.0000000000003, " 1000.0 "),  # Many decimals may destabilize Eclipse
         (1000.0000003, " 1000.0 "),
-        (1000.000003, " 1000.000003 "),  # Eclipse should accept this.
+        (1000.000003, " 1000.000003 "),  # Assume Eclipse accepts this
         (np.float32(1000.00003), " 1000.0 "),
         (np.float32(1000.0003), " 1000.0003"),  # can give 1000.000305
     ],
 )
 def test_eclipse_rounding(somefloat, expected):
     """Values in include files with a lot of decimals, like you sometimes get
-    from Python floating point operations will crash Eclipse. Ensure these are
-    rounded (the typical output routine is pd.DataFrame.to_string())"""
+    from Python floating point operations may crash Eclipse. Ensure these are
+    rounded (the typical output routine is pd.DataFrame.to_string())
+
+    As an example, 1000.00000000000000000005 as a datum value in EQUIL has been
+    observed to crash Eclipse. It would be hard to get Python to output this
+    particular value.
+    """
 
     dframe = pd.DataFrame(
         [

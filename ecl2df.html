@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df package &mdash; ecl2df 0.12.3.dev3+g467c359 documentation</title>
+  <title>ecl2df package &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.12.3.dev3+g467c359
+                0.12.3.dev4+gdfc7c28
               </div>
             
           
@@ -251,6 +251,23 @@ Default is the Eclipse comment syntax ‘– ‘</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.common.convert_lyrlist_to_zonemap">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">convert_lyrlist_to_zonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lyrlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#convert_lyrlist_to_zonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.convert_lyrlist_to_zonemap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a layer to zone map as a dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lyrlist</strong> (<em>list</em>) – list of dicts coming from parse_lyrfile()</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>layer to zone mapping {1:”zoneA”, 2:”zoneB”}</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[int, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.common.df2ecl">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">df2ecl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consecutive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#df2ecl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.df2ecl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Eclipse include strings from dataframes in ecl2df format</p>
@@ -343,6 +360,19 @@ to produce Eclipse include files from a CSV file.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.common.is_color">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">is_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#is_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.is_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the input string is a valid color.
+That is six-digit hexadecimal, three-digit hexadecimal or
+given as an SVG color keyword name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.common.merge_zones">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">merge_zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonedict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoneheader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ZONE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'K1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#merge_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.merge_zones" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge in a column with zone names, from a dictionary mapping
@@ -373,6 +403,47 @@ default K1</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.common.parse_lyrfile">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_lyrfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_lyrfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.parse_lyrfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of dicts representation of the lyr file.</p>
+<p>The lyr file contains data of the following format,
+where the color code is optional:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>     <span class="c1">#FFE5F7</span>
+<span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span>       <span class="n">red</span>
+</pre></div>
+</div>
+<p>Description of the lyr format:
+<a class="reference external" href="https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_">https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_</a></p>
+<p>The output has the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ZoneA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;from_layer&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;to_layer&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#FFE5F7&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ZoneB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;span&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Absolute path to a lyr file</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of dictionaries representing the information in the lyr file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -416,37 +487,6 @@ each subitem.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>list of floats or ints</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.common.parse_zonemapfile">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_zonemapfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ecl2df/common.html#parse_zonemapfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.parse_zonemapfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dictionary from (int) K layers in the simgrid to strings</p>
-<p>Typical usage is to map from grid layer to zone names.</p>
-<p>The layer filename must currently follow format:</p>
-<blockquote>
-<div><p>‘ZoneA’ 1-4
-‘ZoneB’ 5-10</p>
-</div></blockquote>
-<p>where the single quotes are optional for zones without spaces.
-Write single layer zones as 11-11. NB: ResInsight requires single
-quotes always.</p>
-<p>Either “–” or “#” can be used to denote comments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Absolute path to a zone map file (lyr format)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>dict, integer keys which are the K layers. Every layer mentioned</dt><dd><p>in the interval in the input file is present. Can be empty.</p>
-</dd>
-</dl>
-</p>
 </dd>
 </dl>
 </dd></dl>

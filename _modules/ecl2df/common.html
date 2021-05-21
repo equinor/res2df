@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.12.3.dev3+g467c359 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.12.3.dev4+gdfc7c28 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3.dev3+g467c359
+                0.12.3.dev4+gdfc7c28
               </div>
             
           
@@ -171,6 +171,7 @@
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -179,7 +180,7 @@
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Set</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -248,6 +249,15 @@
 <span class="c1"># This makes it impossible to write to a file called &quot;-&quot; on disk</span>
 <span class="c1"># but that would anyway create a lot of other problems in the shell.</span>
 <span class="n">MAGIC_STDOUT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+
+<span class="n">SVG_COLOR_NAMES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">color</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;svg_color_keyword_names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">]</span>
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -820,45 +830,109 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<div class="viewcode-block" id="parse_zonemapfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_zonemapfile">[docs]</a><span class="k">def</span> <span class="nf">parse_zonemapfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return a dictionary from (int) K layers in the simgrid to strings</span>
+<div class="viewcode-block" id="is_color"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.is_color">[docs]</a><span class="k">def</span> <span class="nf">is_color</span><span class="p">(</span><span class="n">input_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Checks if the input string is a valid color.</span>
+<span class="sd">    That is six-digit hexadecimal, three-digit hexadecimal or</span>
+<span class="sd">    given as an SVG color keyword name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">input_string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">SVG_COLOR_NAMES</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<span class="sd">    Typical usage is to map from grid layer to zone names.</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="s2">&quot;^#([A-Fa-f0-9]</span><span class="si">{6}</span><span class="s2">|[A-Fa-f0-9]</span><span class="si">{3}</span><span class="s2">)$&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">input_string</span><span class="p">))</span></div>
 
-<span class="sd">    The layer filename must currently follow format:</span>
 
-<span class="sd">      &#39;ZoneA&#39; 1-4</span>
-<span class="sd">      &#39;ZoneB&#39; 5-10</span>
+<div class="viewcode-block" id="parse_lyrfile"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.parse_lyrfile">[docs]</a><span class="k">def</span> <span class="nf">parse_lyrfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
+    <span class="sd">&quot;&quot;&quot;Return a list of dicts representation of the lyr file.</span>
 
-<span class="sd">    where the single quotes are optional for zones without spaces.</span>
-<span class="sd">    Write single layer zones as 11-11. NB: ResInsight requires single</span>
-<span class="sd">    quotes always.</span>
+<span class="sd">    The lyr file contains data of the following format,</span>
+<span class="sd">    where the color code is optional::</span>
 
-<span class="sd">    Either &quot;--&quot; or &quot;#&quot; can be used to denote comments.</span>
+<span class="sd">      &#39;ZoneA&#39; 1-4     #FFE5F7</span>
+<span class="sd">      &#39;ZoneB&#39; 5       red</span>
+
+<span class="sd">    Description of the lyr format:</span>
+<span class="sd">    https://resinsight.org/3d-main-window/formations/#formation-names-description-files-_lyr_</span>
+
+<span class="sd">    The output has the following format::</span>
+
+<span class="sd">        [</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;name&quot;: &quot;ZoneA&quot;,</span>
+<span class="sd">                &quot;from_layer&quot;: 1,</span>
+<span class="sd">                &quot;to_layer&quot;: 4,</span>
+<span class="sd">                &quot;color&quot;: &quot;#FFE5F7&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;name&quot;: &quot;ZoneB&quot;,</span>
+<span class="sd">                &quot;span&quot;: 5,</span>
+<span class="sd">                &quot;color&quot;: &quot;red&quot;</span>
+<span class="sd">            }</span>
+<span class="sd">        ]</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        filename (str): Absolute path to a zone map file (lyr format)</span>
+<span class="sd">        filename: Absolute path to a lyr file</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        dict, integer keys which are the K layers. Every layer mentioned</span>
-<span class="sd">            in the interval in the input file is present. Can be empty.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        A list of dictionaries representing the information in the lyr file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
+
     <span class="n">zonelines</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
     <span class="c1"># Remove comments, support both &quot;--&quot; and &quot;#&quot;:</span>
     <span class="n">zonelines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">zonelines</span><span class="p">]</span>
     <span class="n">zonelines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">zonelines</span> <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)]</span>
 
-    <span class="n">zonemap</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">lyrlist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">zonelines</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">linesplit</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">k_0</span><span class="p">,</span> <span class="n">k_1</span><span class="p">)</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
-            <span class="n">zonemap</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">k_0</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">k_1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">zonedict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+            <span class="n">zone_color</span> <span class="o">=</span> <span class="n">linesplit</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_color</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">zone_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zone_color</span>
+
+            <span class="n">numbers</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">from_layer</span><span class="p">,</span> <span class="n">to_layer</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">from_layer</span> <span class="o">&lt;=</span> <span class="n">to_layer</span><span class="p">:</span>
+                    <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;from_layer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_layer</span>
+                    <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;to_layer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_layer</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;From_layer higher than to_layer&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;span&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+            <span class="n">lyrlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zonedict</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not parse zonemapfile </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not parse lyr file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed on content: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">lyrlist</span></div>
+
+
+<div class="viewcode-block" id="convert_lyrlist_to_zonemap"><a class="viewcode-back" href="../../ecl2df.html#ecl2df.common.convert_lyrlist_to_zonemap">[docs]</a><span class="k">def</span> <span class="nf">convert_lyrlist_to_zonemap</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns a layer to zone map as a dictionary</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lyrlist (list): list of dicts coming from parse_lyrfile()</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[int, str]: layer to zone mapping {1:&quot;zoneA&quot;, 2:&quot;zoneB&quot;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">lyrlist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">zonemap</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">zonedict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;span&quot;</span> <span class="ow">in</span> <span class="n">zonedict</span><span class="p">:</span>
+            <span class="n">from_layer</span> <span class="o">=</span> <span class="n">lyrlist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;to_layer&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+            <span class="n">to_layer</span> <span class="o">=</span> <span class="n">from_layer</span> <span class="o">+</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;span&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">from_layer</span> <span class="o">=</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;from_layer&quot;</span><span class="p">]</span>
+            <span class="n">to_layer</span> <span class="o">=</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;to_layer&quot;</span><span class="p">]</span>
+        <span class="n">zonemap</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">from_layer</span><span class="p">,</span> <span class="n">to_layer</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">zonemap</span></div>
 </pre></div>
 

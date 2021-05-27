@@ -84,9 +84,7 @@ MAGIC_STDOUT: str = "-"
 SVG_COLOR_NAMES = [
     color.lower()
     for color in (
-        open(Path(__file__).parent / "svg_color_keyword_names.txt", "r")
-        .read()
-        .splitlines()
+        (Path(__file__).parent / "svg_color_keyword_names.txt").read_text().splitlines()
     )
 ]
 

@@ -37,8 +37,8 @@ def report_block_lineparser(line: str) -> tuple:
     Does not support many different phase configurations yet.
     """
 
-    allowed_line_starts = [" :CURRENTLY", " :OUTFLOW", " :MATERIAL", " :ORIGINALLY"]
-    if not any([line.startswith(x) for x in allowed_line_starts]):
+    allowed_line_starts = [":CURRENTLY", ":OUTFLOW", ":MATERIAL", ":ORIGINALLY"]
+    if not any([line.strip().upper().startswith(x) for x in allowed_line_starts]):
         return tuple()
 
     colonsections = line.split(":")
@@ -48,7 +48,7 @@ def report_block_lineparser(line: str) -> tuple:
         row_name = "OUTFLOW TO REGION"
     else:
         to_index = None
-        row_name = colonsections[1].strip()
+        row_name = " ".join(colonsections[1].strip().upper().split())
 
     # Oil section:
     liquid_oil: Optional[float]
@@ -113,8 +113,16 @@ def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
     region_index = None
     date = None
 
-    datematcher = re.compile(r"\s\sREPORT\s+(\d+)\s+(\d+)\s+(\w+)\s+(\d+)")
-    reportblockmatcher = re.compile(".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)")
+    ecl_datematcher = re.compile(r"\s\sREPORT\s+\d+\s+(\d+)\s+(\w+)\s+(\d+)")
+    opm_datematcher = re.compile(r"Starting time step.*? date = (\d+)-(\w+)-(\d+)\s*")
+
+    # When case insensitive, this one works with both Eclipse100 and OPM:
+    reportblockmatcher = re.compile(
+        ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
+    )
+
+    # Flag for whether we are supposedly parsing a PRT file made by OPM flow:
+    opm = False
 
     with open(prtfile) as prt_fh:
         logger.info(
@@ -123,12 +131,16 @@ def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
             fipname,
         )
         for line in prt_fh:
-            matcheddate = re.match(datematcher, line)
-            if matcheddate:
+            matcheddate = re.match(ecl_datematcher, line)
+            if matcheddate is None:
+                matcheddate = re.match(opm_datematcher, line)
+                if matcheddate is not None:
+                    opm = True
+            if matcheddate is not None:
                 newdate = datetime.date(
-                    year=int(matcheddate.group(4)),
-                    month=parse_ecl_month(matcheddate.group(3)),
-                    day=int(matcheddate.group(2)),
+                    year=int(matcheddate.group(3)),
+                    month=parse_ecl_month(matcheddate.group(2).upper()),
+                    day=int(matcheddate.group(1)),
                 )
                 if newdate != date:
                     date = newdate
@@ -146,18 +158,21 @@ def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
 
             if in_report_block:
                 interesting_strings = ["IN PLACE", "OUTFLOW", "MATERIAL"]
-                if not sum([string in line for string in interesting_strings]):
+                if not sum([string in line.upper() for string in interesting_strings]):
                     # Skip if we are not on an interesting line.
                     continue
-                # The colons in the report block are not reliably included
-                # (differs by Eclipse version), even in the same PRT file. We
-                # insert them in fixed positions and hope for the best (if the
-                # ASCII table is actually dynamic with respect to content, this
-                # will fail)
-                linechars = list(line)
-                linechars[1] = ":"
-                linechars[27] = ":"
-                line = "".join(linechars)
+
+                if opm is False:
+                    # The colons in the report block are not reliably included
+                    # (differs by Eclipse version), even in the same PRT file. We
+                    # insert them in fixed positions and hope for the best (if the
+                    # ASCII table is actually dynamic with respect to content, this
+                    # will fail)
+                    linechars = list(line)
+                    linechars[1] = ":"
+                    linechars[27] = ":"
+                    line = "".join(linechars)
+
                 records.append(
                     [date, fipname, region_index] + list(report_block_lineparser(line))
                 )

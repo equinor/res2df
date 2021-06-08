@@ -26,6 +26,31 @@ def test_fipreports2df():
     assert len(fipreport_df["DATATYPE"].unique()) == 5
 
 
+def test_opm_prt_file():
+    """Test parsing a PRT file from OPM"""
+    fipreport_df = fipreports.df(
+        TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0-OPMFLOW.PRT"
+    )
+    assert len(fipreport_df) == 530
+    assert len(fipreport_df["DATE"].unique()) == 38
+    assert set(fipreport_df["REGION"]) == {1, 2, 3, 4, 5, 6}
+    assert set(
+        [
+            "DATE",
+            "FIPNAME",
+            "REGION",
+            "DATATYPE",
+            "STOIIP_OIL",
+            "ASSOCIATEDOIL_GAS",
+            "STOIIP_TOTAL",
+            "WIIP_TOTAL",
+            "GIIP_GAS",
+            "ASSOCIATEDGAS_OIL",
+            "GIIP_TOTAL",
+        ]
+    ).issubset(set(fipreport_df.columns))
+
+
 def test_mockprtfile():
     """
     Test (a) mocked PRT file(s)
@@ -191,6 +216,61 @@ def test_prtstring(tmpdir):
         ]
     )
 
+    pd.testing.assert_frame_equal(dframe, expected_dframe)
+
+
+def test_prtstring_opmflow(tmpdir):
+    prtstring = """
+Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
+
+                                                  ===================================================
+                                                  :        FIPNUM report region   1                 :
+                                                  :      PAV  =       306.192 BARSA                 :
+                                                  :      PORV =      78804306   RM3                 :
+                         :--------------- Oil    SM3 ---------------:-- Wat    SM3 --:--------------- Gas    SM3 ---------------:
+                         :      Liquid        Vapour        Total   :      Total     :      Free        Dissolved       Total   :
+:------------------------:------------------------------------------:----------------:------------------------------------------:
+:Currently   in place    :      16528782             0      16528782:     60416351   :             0             0             0:
+:------------------------:------------------------------------------:----------------:------------------------------------------:
+:Originally  in place    :      16530271             0      16530271:     60415965   :             0             0             0:
+:========================:==========================================:================:==========================================:
+"""  # noqa
+    tmpdir.chdir()
+    Path("FOO.PRT").write_text(prtstring)
+    dframe = fipreports.df("FOO.PRT")
+    print(dframe.to_dict(orient="records"))
+    expected_dframe = pd.DataFrame(
+        [
+            {
+                "DATE": datetime.date(2000, 1, 12),
+                "FIPNAME": "FIPNUM",
+                "REGION": 1,
+                "DATATYPE": "CURRENTLY IN PLACE",
+                "TO_REGION": None,
+                "STOIIP_OIL": 16528782.0,
+                "ASSOCIATEDOIL_GAS": 0.0,
+                "STOIIP_TOTAL": 16528782.0,
+                "WIIP_TOTAL": 60416351.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 0.0,
+                "GIIP_TOTAL": 0.0,
+            },
+            {
+                "DATE": datetime.date(2000, 1, 12),
+                "FIPNAME": "FIPNUM",
+                "REGION": 1,
+                "DATATYPE": "ORIGINALLY IN PLACE",
+                "TO_REGION": None,
+                "STOIIP_OIL": 16530271.0,
+                "ASSOCIATEDOIL_GAS": 0.0,
+                "STOIIP_TOTAL": 16530271.0,
+                "WIIP_TOTAL": 60415965.0,
+                "GIIP_GAS": 0.0,
+                "ASSOCIATEDGAS_OIL": 0.0,
+                "GIIP_TOTAL": 0.0,
+            },
+        ]
+    )
     pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 

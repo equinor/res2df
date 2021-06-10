@@ -44,8 +44,13 @@ Example computations on a grid dataframe
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Some grid statistic operations are very neatly expressed using Python and
-Pandas. Some examples (provided that the ``drame`` object is initialized as in
+Pandas. Some examples (provided that the ``dframe`` object is initialized as in
 the topmost example):
+
+Summation of floating point numbers is difficult for computers, as summing each
+number in a sequence can lead to accumulation of roundoff errors. This is
+proven to have an impact on volumetrics computations on a grid. For this, the
+Python function ``math.fsum()`` should always be used.
 
 .. code-block:: python
 
@@ -53,13 +58,13 @@ the topmost example):
    dframe["PORO"].mean()
 
    # Bulk volume in Gm3:
-   dframe["VOLUME"].sum() / 1e9
+   math.fsum(dframe["VOLUME"]) / 1e9
 
    # Total pore volume:
-   dframe["PORV"].sum()
+   math.fsum(dframe["PORV"])
 
    # Average (weighted) porosity:
-   dframe["PORV"].sum() / dframe["VOLUME"].sum()
+   math.fsum(dframe["PORV"]) / math.fsum(dframe["VOLUME"])
 
    # Apex reservoir (cell centre):
    dframe["Z"].min()

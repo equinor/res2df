@@ -50,11 +50,6 @@ jobs:
           black --check ecl2df tests setup.py docs/conf.py
           flake8 ecl2df tests
 
-      - name: Enforce static typing
-        run: |
-          pip install mypy
-          mypy ecl2df
-
       - name: Install ecl2df with dependencies
         run: |
           pip install --upgrade pip
@@ -70,6 +65,11 @@ jobs:
 
       - name: List all installed packages
         run: pip freeze
+
+      - name: Enforce static typing
+        run: |
+          pip install mypy
+          mypy ecl2df
 
       - name: Run tests
         run: |

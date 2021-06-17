@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>grid &mdash; ecl2df 0.13.1.dev3+g55e84bb documentation</title>
+  <title>grid &mdash; ecl2df 0.13.1.dev4+g6fc9d44 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.1.dev3+g55e84bb
+                0.13.1.dev4+g6fc9d44
               </div>
             
           
@@ -746,19 +746,23 @@ in a returned dataframe represents one cell.</p>
 <div class="section" id="example-computations-on-a-grid-dataframe">
 <h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this headline">¶</a></h2>
 <p>Some grid statistic operations are very neatly expressed using Python and
-Pandas. Some examples (provided that the <code class="docutils literal notranslate"><span class="pre">drame</span></code> object is initialized as in
+Pandas. Some examples (provided that the <code class="docutils literal notranslate"><span class="pre">dframe</span></code> object is initialized as in
 the topmost example):</p>
+<p>Summation of floating point numbers is difficult for computers, as summing each
+number in a sequence can lead to accumulation of roundoff errors. This is
+proven to have an impact on volumetrics computations on a grid. For this, the
+Python function <code class="docutils literal notranslate"><span class="pre">math.fsum()</span></code> should always be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Average non-weighted porosity:</span>
 <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORO&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
 <span class="c1"># Bulk volume in Gm3:</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e9</span>
+<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e9</span>
 
 <span class="c1"># Total pore volume:</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">])</span>
 
 <span class="c1"># Average (weighted) porosity:</span>
-<span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">])</span>
 
 <span class="c1"># Apex reservoir (cell centre):</span>
 <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>

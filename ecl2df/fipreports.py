@@ -8,6 +8,7 @@ import datetime
 from typing import Union, List, Optional
 
 import pandas as pd
+import numpy as np
 
 from ecl2df import EclFiles
 from ecl2df.common import parse_ecl_month, write_dframe_stdout_file
@@ -37,6 +38,12 @@ def report_block_lineparser(line: str) -> tuple:
     Does not support many different phase configurations yet.
     """
 
+    def float_or_nan(string: str) -> float:
+        try:
+            return float(string)
+        except ValueError:
+            return np.nan
+
     allowed_line_starts = [":CURRENTLY", ":OUTFLOW", ":MATERIAL", ":ORIGINALLY"]
     if not any([line.strip().upper().startswith(x) for x in allowed_line_starts]):
         return tuple()
@@ -56,21 +63,25 @@ def report_block_lineparser(line: str) -> tuple:
     total_oil: Optional[float]
     if len(colonsections[2].split()) == 3:
         # yes we have:
-        (liquid_oil, vapour_oil, total_oil) = map(float, colonsections[2].split())
+        (liquid_oil, vapour_oil, total_oil) = map(
+            float_or_nan, colonsections[2].split()
+        )
     elif len(colonsections[2].split()) == 1:
-        total_oil = float(colonsections[2])
+        total_oil = float_or_nan(colonsections[2])
         (liquid_oil, vapour_oil) = (None, None)
     else:
-        (liquid_oil, total_oil) = map(float, colonsections[2].split())
+        (liquid_oil, total_oil) = map(float_or_nan, colonsections[2].split())
         vapour_oil = None
-    total_water = float(colonsections[3])
+    total_water = float_or_nan(colonsections[3])
 
     # Gas section:
     if len(colonsections[4].split()) == 1:
-        total_gas = float(colonsections[4])
+        total_gas = float_or_nan(colonsections[4])
         (free_gas, dissolved_gas) = (None, None)
     else:
-        (free_gas, dissolved_gas, total_gas) = map(float, colonsections[4].split())
+        (free_gas, dissolved_gas, total_gas) = map(
+            float_or_nan, colonsections[4].split()
+        )
     return (
         row_name,
         to_index,

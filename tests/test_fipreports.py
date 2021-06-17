@@ -219,6 +219,29 @@ def test_prtstring(tmpdir):
     pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
+def test_rogue_eclipse_output(tmpdir):
+    """The starts in the material balance error line has been observed in reality."""
+    prtstring = """
+                                                =================================
+                                                : FIPNUM  REPORT REGION  120    :
+                                                :     PAV =        298.89  BARSA:
+                                                :     PORV=      4502843.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :     -2703242.        10451.      -2692791.:       2568336. :     59233087. 190842667352.  190901900439.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :       294586.         6362.        300947.:       1235671. :     39452538.     51855907.      91308445.:
+ :OUTFLOW THROUGH WELLS    :                                     65430.:      -1818966. :                                 -85526625.:
+ :MATERIAL BALANCE ERROR.  :                                   3419391.:        671761. :                              *************:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+"""  # noqa
+    tmpdir.chdir()
+    Path("FOO.PRT").write_text(prtstring)
+    dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
+    assert np.isnan(dframe.loc["MATERIAL BALANCE ERROR.", "GIIP_TOTAL"])
+
+
 def test_prtstring_opmflow(tmpdir):
     prtstring = """
 Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000

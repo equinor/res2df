@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.fipreports &mdash; ecl2df 0.13.1.dev4+g6fc9d44 documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df 0.13.1.dev5+gba6dddd documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.1.dev4+g6fc9d44
+                0.13.1.dev5+gba6dddd
               </div>
             
           
@@ -180,6 +180,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 <span class="kn">from</span> <span class="nn">ecl2df.common</span> <span class="kn">import</span> <span class="n">parse_ecl_month</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
@@ -209,6 +210,12 @@
 <span class="sd">    Does not support many different phase configurations yet.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">def</span> <span class="nf">float_or_nan</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
     <span class="n">allowed_line_starts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;:CURRENTLY&quot;</span><span class="p">,</span> <span class="s2">&quot;:OUTFLOW&quot;</span><span class="p">,</span> <span class="s2">&quot;:MATERIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;:ORIGINALLY&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">allowed_line_starts</span><span class="p">]):</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span>
@@ -228,21 +235,25 @@
     <span class="n">total_oil</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
         <span class="c1"># yes we have:</span>
-        <span class="p">(</span><span class="n">liquid_oil</span><span class="p">,</span> <span class="n">vapour_oil</span><span class="p">,</span> <span class="n">total_oil</span><span class="p">)</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="p">(</span><span class="n">liquid_oil</span><span class="p">,</span> <span class="n">vapour_oil</span><span class="p">,</span> <span class="n">total_oil</span><span class="p">)</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="n">float_or_nan</span><span class="p">,</span> <span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">total_oil</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">total_oil</span> <span class="o">=</span> <span class="n">float_or_nan</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="p">(</span><span class="n">liquid_oil</span><span class="p">,</span> <span class="n">vapour_oil</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">liquid_oil</span><span class="p">,</span> <span class="n">total_oil</span><span class="p">)</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="p">(</span><span class="n">liquid_oil</span><span class="p">,</span> <span class="n">total_oil</span><span class="p">)</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">float_or_nan</span><span class="p">,</span> <span class="n">colonsections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
         <span class="n">vapour_oil</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">total_water</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">total_water</span> <span class="o">=</span> <span class="n">float_or_nan</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
     <span class="c1"># Gas section:</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">total_gas</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">total_gas</span> <span class="o">=</span> <span class="n">float_or_nan</span><span class="p">(</span><span class="n">colonsections</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
         <span class="p">(</span><span class="n">free_gas</span><span class="p">,</span> <span class="n">dissolved_gas</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">free_gas</span><span class="p">,</span> <span class="n">dissolved_gas</span><span class="p">,</span> <span class="n">total_gas</span><span class="p">)</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">colonsections</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="p">(</span><span class="n">free_gas</span><span class="p">,</span> <span class="n">dissolved_gas</span><span class="p">,</span> <span class="n">total_gas</span><span class="p">)</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="n">float_or_nan</span><span class="p">,</span> <span class="n">colonsections</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">row_name</span><span class="p">,</span>
         <span class="n">to_index</span><span class="p">,</span>

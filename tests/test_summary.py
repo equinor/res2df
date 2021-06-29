@@ -21,6 +21,8 @@ from ecl2df.summary import (
     df,
     smry_meta,
     _fix_dframe_for_libecl,
+    _fallback_date_roll,
+    date_range,
 )
 
 TESTDIR = Path(__file__).absolute().parent
@@ -83,7 +85,7 @@ def test_df_column_keys():
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
 
-def test_summary2df_dates(caplog):
+def test_summary2df_dates():
     """Test that we have some API possibilities with ISO dates"""
     eclfiles = EclFiles(DATAFILE)
 
@@ -303,6 +305,11 @@ def test_foreseeable_future(tmpdir):
         ]
     ).all()
 
+    # Try with time interpolation involved:
+    dframe = summary.df(eclsum, time_index="yearly")
+    assert len(dframe) == 501
+    assert dframe.index.max() == datetime.date(year=2500, month=1, day=1)
+
     # Try with one-year timesteps:
     src_dframe = pd.DataFrame(
         {
@@ -326,6 +333,155 @@ def test_foreseeable_future(tmpdir):
     dframe = summary.df(eclsum)
     # Works fine when stepping only 68 years:
     assert dframe.index[-1] == dt(2468, 1, 1, 0, 0, 0)
+
+
+@pytest.mark.parametrize(
+    "rollme, direction, freq, expected",
+    [
+        (
+            dt(3000, 1, 1),
+            "forward",
+            "yearly",
+            dt(3000, 1, 1),
+        ),
+        (
+            dt(3000, 1, 1),
+            "forward",
+            "monthly",
+            dt(3000, 1, 1),
+        ),
+        (
+            dt(3000, 1, 2),
+            "forward",
+            "yearly",
+            dt(3001, 1, 1),
+        ),
+        (
+            dt(3000, 1, 2),
+            "forward",
+            "monthly",
+            dt(3000, 2, 1),
+        ),
+        (
+            dt(3000, 1, 1),
+            "back",
+            "yearly",
+            dt(3000, 1, 1),
+        ),
+        (
+            dt(3000, 1, 1),
+            "back",
+            "monthly",
+            dt(3000, 1, 1),
+        ),
+        (
+            dt(3000, 12, 31),
+            "back",
+            "yearly",
+            dt(3000, 1, 1),
+        ),
+        (
+            dt(3000, 2, 2),
+            "back",
+            "monthly",
+            dt(3000, 2, 1),
+        ),
+        pytest.param(
+            dt(3000, 2, 2),
+            "forward",
+            "daily",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        pytest.param(
+            dt(3000, 2, 2),
+            "upwards",
+            "yearly",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ],
+)
+def test_fallback_date_roll(rollme, direction, freq, expected):
+    assert _fallback_date_roll(rollme, direction, freq) == expected
+
+
+@pytest.mark.parametrize(
+    "start, end, freq, expected",
+    [
+        (
+            dt(3000, 1, 1),
+            dt(3002, 1, 1),
+            "yearly",
+            [
+                dt(3000, 1, 1),
+                dt(3001, 1, 1),
+                dt(3002, 1, 1),
+            ],
+        ),
+        (
+            dt(2999, 11, 1),
+            dt(3000, 2, 1),
+            "monthly",
+            [
+                dt(2999, 11, 1),
+                dt(2999, 12, 1),
+                dt(3000, 1, 1),
+                dt(3000, 2, 1),
+            ],
+        ),
+        pytest.param(
+            dt(3000, 1, 1),
+            dt(3000, 2, 1),
+            "weekly",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        (
+            # Crossing the problematic time boundary:
+            dt(2260, 1, 1),
+            dt(2263, 1, 1),
+            "yearly",
+            [
+                dt(2260, 1, 1),
+                dt(2261, 1, 1),
+                dt(2262, 1, 1),
+                dt(2263, 1, 1),
+            ],
+        ),
+        (
+            dt(3000, 1, 1),
+            dt(3000, 1, 1),
+            "yearly",
+            [
+                dt(3000, 1, 1),
+            ],
+        ),
+        (
+            dt(2000, 1, 1),
+            dt(2000, 1, 1),
+            "yearly",
+            [
+                dt(2000, 1, 1),
+            ],
+        ),
+        (
+            dt(2000, 1, 1),
+            dt(1000, 1, 1),
+            "yearly",
+            [],
+        ),
+        (
+            dt(3000, 1, 1),
+            dt(2000, 1, 1),
+            "yearly",
+            [],
+        ),
+    ],
+)
+def test_date_range(start, end, freq, expected):
+    # When dates are beyond year 2262, the function _fallback_date_range() is triggered.
+    assert date_range(start, end, freq) == expected
 
 
 def test_resample_smry_dates():

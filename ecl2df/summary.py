@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Union, Any
 # The name 'datetime' is in use by a function argument:
 import datetime as dt
 
-import dateutil.parser
+import dateutil
 import numpy as np
 import pandas as pd
 
@@ -52,7 +52,12 @@ def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> List[dt.dat
     Returns:
         list of datetimes
     """
-    return pd.date_range(start_date, end_date, freq=PD_FREQ_MNEMONICS.get(freq, freq))
+    try:
+        return pd.date_range(
+            start_date, end_date, freq=PD_FREQ_MNEMONICS.get(freq, freq)
+        )
+    except pd.errors.OutOfBoundsDatetime:
+        return _fallback_date_range(start_date, end_date, freq)
 
 
 def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[dt.date]:
@@ -74,7 +79,7 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
     if some_date == "":
         return None
     if isinstance(some_date, str):
-        return dateutil.parser.parse(some_date).date()
+        return dateutil.parser.parse(some_date).date()  # type: ignore
     raise TypeError(f"Not a date type: {str(some_date)}")
 
 
@@ -118,6 +123,68 @@ def _crop_datelist(
     if isinstance(freq, (dt.date, dt.datetime)):
         return [freq]
     raise ValueError(f"Expected freq to an accepted string or datetime type was {freq}")
+
+
+def _fallback_date_roll(rollme: dt.datetime, direction: str, freq: str) -> dt.datetime:
+    """Fallback function for rolling dates forward or backward onto a
+    date frequency boundary.
+
+    This function reimplements pandas' DateOffset.roll_forward() and backward()
+    only for monthly and yearly frequency. This is necessary as Pandas does not
+    support datetimes beyond year 2262 due to all datetimes in Pandas being
+    represented by nanosecond accuracy.
+
+    This function is a fallback only, to keep support for using all Pandas timeoffsets
+    in situations where years beyond 2262 is not a issue."""
+    if direction not in ["back", "forward"]:
+        raise ValueError(f"Unknown direction {direction}")
+
+    if freq == "yearly":
+        if direction == "forward":
+            if rollme <= dt.datetime(year=rollme.year, month=1, day=1):
+                return dt.datetime(year=rollme.year, month=1, day=1)
+            return dt.datetime(year=rollme.year + 1, month=1, day=1)
+        else:
+            return dt.datetime(year=rollme.year, month=1, day=1)
+
+    if freq == "monthly":
+        if direction == "forward":
+            if rollme <= dt.datetime(year=rollme.year, month=rollme.month, day=1):
+                return dt.datetime(year=rollme.year, month=rollme.month, day=1)
+            return dt.datetime(
+                year=rollme.year, month=rollme.month, day=1
+            ) + dateutil.relativedelta.relativedelta(  # type: ignore
+                months=1
+            )
+        else:
+            return dt.datetime(year=rollme.year, month=rollme.month, day=1)
+
+    raise ValueError(
+        "Only yearly or monthly frequencies are "
+        "supported for simulations beyond year 2262"
+    )
+
+
+def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.datetime]:
+    """Fallback routine for generating date ranges beyond Pandas datetime64[ns]
+    year-2262 limit.
+
+    Assumes that the start and end times already fall on a frequency boundary.
+    """
+    if freq == "yearly":
+        return [
+            dt.datetime(year=year, month=1, day=1)
+            for year in range(start.year, end.year + 1)
+        ]
+    if freq == "monthly":
+        dates = []
+        date = dt.datetime.combine(start, dt.datetime.min.time())
+        enddatetime = dt.datetime.combine(end, dt.datetime.min.time())
+        while date <= enddatetime:
+            dates.append(date)
+            date = date + dateutil.relativedelta.relativedelta(months=1)  # type: ignore
+        return dates
+    raise ValueError("Unsupported frequency for datetimes beyond year 2262")
 
 
 def resample_smry_dates(
@@ -164,7 +231,7 @@ def resample_smry_dates(
 
     # In case freq is an ISO-date(time)-string, interpret as such:
     try:
-        parseddate = dateutil.parser.isoparse(freq)
+        parseddate = dateutil.parser.isoparse(freq)  # type: ignore
         return [parseddate]
     except ValueError:
         # freq is a frequency string or datetime.date (or similar)
@@ -179,8 +246,16 @@ def resample_smry_dates(
     # will be mapped to [1997-11-01, 2020-04-01]
     # For yearly frequency it will return [1997-01-01, 2021-01-01].
     offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
-    start_n = offset.rollback(start_smry.date()).date()
-    end_n = offset.rollforward(end_smry.date()).date()
+    try:
+        start_n = offset.rollback(start_smry.date()).date()
+    except pd.errors.OutOfBoundsDatetime:
+        # Pandas only supports datetime up to year 2262
+        start_n = _fallback_date_roll(start_smry, "back", freq).date()
+    try:
+        end_n = offset.rollforward(end_smry.date()).date()
+    except pd.errors.OutOfBoundsDatetime:
+        # Pandas only supports datetime up to year 2262
+        end_n = _fallback_date_roll(end_smry, "forward", freq).date()
 
     if start_date is None:
         if normalize:
@@ -446,7 +521,10 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
             # Do not use pd.Series.apply() here, Pandas would try to convert it to
             # datetime64[ns] which is limited at year 2262.
             dframe["DATE"] = pd.Series(
-                [dateutil.parser.parse(datestr) for datestr in dframe["DATE"]],
+                [
+                    dateutil.parser.parse(datestr)  # type: ignore
+                    for datestr in dframe["DATE"]
+                ],
                 dtype="object",
                 index=dframe.index,
             )

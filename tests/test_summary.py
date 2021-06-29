@@ -1,6 +1,7 @@
 import os
 import sys
 import datetime
+from datetime import datetime as dt
 import logging
 from pathlib import Path
 
@@ -294,11 +295,11 @@ def test_foreseeable_future(tmpdir):
     assert (
         dframe.index
         == [
-            datetime.datetime(2000, 1, 1),
+            dt(2000, 1, 1),
             # This discrepancy is due to seconds as a 32-bit float
             # having an accuracy limit (roundoff-error)
             # https://github.com/equinor/ecl/issues/803
-            datetime.datetime(2499, 12, 31, 23, 55, 44),
+            dt(2499, 12, 31, 23, 55, 44),
         ]
     ).all()
 
@@ -312,7 +313,7 @@ def test_foreseeable_future(tmpdir):
     eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
     dframe = summary.df(eclsum)
     # Still buggy:
-    assert dframe.index[-1] == datetime.datetime(2068, 12, 31, 23, 57, 52)
+    assert dframe.index[-1] == dt(2068, 12, 31, 23, 57, 52)
 
     # Try with one-year timesteps, starting late:
     src_dframe = pd.DataFrame(
@@ -324,7 +325,7 @@ def test_foreseeable_future(tmpdir):
     eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
     dframe = summary.df(eclsum)
     # Works fine when stepping only 68 years:
-    assert dframe.index[-1] == datetime.datetime(2468, 1, 1, 0, 0, 0)
+    assert dframe.index[-1] == dt(2468, 1, 1, 0, 0, 0)
 
 
 def test_resample_smry_dates():
@@ -347,14 +348,12 @@ def test_resample_smry_dates():
     weekly = resample_smry_dates(ecldates, freq="weekly")
     assert len(weekly) == 159
 
-    assert resample_smry_dates(ecldates, freq="2001-04-05") == [
-        datetime.datetime(2001, 4, 5, 0, 0)
-    ]
+    assert resample_smry_dates(ecldates, freq="2001-04-05") == [dt(2001, 4, 5, 0, 0)]
     assert resample_smry_dates(ecldates, freq=datetime.date(2001, 4, 5)) == [
         datetime.date(2001, 4, 5)
     ]
-    assert resample_smry_dates(ecldates, freq=datetime.datetime(2001, 4, 5, 0, 0)) == [
-        datetime.datetime(2001, 4, 5, 0, 0)
+    assert resample_smry_dates(ecldates, freq=dt(2001, 4, 5, 0, 0)) == [
+        dt(2001, 4, 5, 0, 0)
     ]
     # start and end should be included:
     assert (
@@ -507,39 +506,33 @@ def test_smry_meta_synthetic():
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             pd.DataFrame([{"DATE": "2516-01-01", "FOPT": 1}]),
-            pd.DataFrame(
-                [{"FOPT": 1}], index=[datetime.datetime(2516, 1, 1)]
-            ).rename_axis("DATE"),
+            pd.DataFrame([{"FOPT": 1}], index=[dt(2516, 1, 1)]).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             pd.DataFrame([{"DATE": np.datetime64("2016-01-01"), "FOPT": 1}]),
-            pd.DataFrame(
-                [{"FOPT": 1}], index=[datetime.datetime(2016, 1, 1)]
-            ).rename_axis("DATE"),
+            pd.DataFrame([{"FOPT": 1}], index=[dt(2016, 1, 1)]).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             pd.DataFrame(
                 [{"DATE": pd.Timestamp(datetime.date(2016, 1, 1)), "FOPT": 1}]
             ),
-            pd.DataFrame(
-                [{"FOPT": 1}], index=[datetime.datetime(2016, 1, 1)]
-            ).rename_axis("DATE"),
+            pd.DataFrame([{"FOPT": 1}], index=[dt(2016, 1, 1)]).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             pd.DataFrame(
                 [
                     {
-                        "DATE": datetime.datetime(2016, 1, 1, 12, 34, 56),
+                        "DATE": dt(2016, 1, 1, 12, 34, 56),
                         "FOPT": 1,
                     }
                 ]
             ),
-            pd.DataFrame(
-                [{"FOPT": 1}], index=[datetime.datetime(2016, 1, 1, 12, 34, 56)]
-            ).rename_axis("DATE"),
+            pd.DataFrame([{"FOPT": 1}], index=[dt(2016, 1, 1, 12, 34, 56)]).rename_axis(
+                "DATE"
+            ),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
@@ -551,17 +544,13 @@ def test_smry_meta_synthetic():
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             pd.DataFrame([{"DATE": datetime.date(2017, 1, 1), "FOPT": 1}]),
-            pd.DataFrame(
-                [{"FOPT": 1}], index=[datetime.datetime(2017, 1, 1)]
-            ).rename_axis("DATE"),
+            pd.DataFrame([{"FOPT": 1}], index=[dt(2017, 1, 1)]).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (
             # Dates that go beyond Pandas' datetime64[ns] limits:
             pd.DataFrame([{"DATE": datetime.date(2517, 1, 1), "FOPT": 1}]),
-            pd.DataFrame(
-                [{"FOPT": 1}], index=[datetime.datetime(2517, 1, 1)]
-            ).rename_axis("DATE"),
+            pd.DataFrame([{"FOPT": 1}], index=[dt(2517, 1, 1)]).rename_axis("DATE"),
         ),
         # # # # # # # # # # # # # # # # # # # # # # # #
         (

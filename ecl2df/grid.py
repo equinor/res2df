@@ -266,8 +266,6 @@ def gridgeometry2df(
         pr. cell. The index of the dataframe are the global indices. If a zonemap
         is provided, zone information will be in the column ZONE.
     """
-    if not eclfiles:
-        raise ValueError
     egrid_file = eclfiles.get_egridfile()
     grid = eclfiles.get_egrid()
 
@@ -356,8 +354,11 @@ def merge_initvectors(
     assert isinstance(dframe, pd.DataFrame)
     assert isinstance(eclfiles, EclFiles)
 
-    for col in ijknames:
-        assert col in dframe
+    if not set(ijknames).issubset(dframe.columns):
+        raise ValueError(
+            f"All of the columns {ijknames} must be present "
+            "in the dataframe for merging"
+        )
 
     if isinstance(initvectors, str):
         initvectors = [initvectors]

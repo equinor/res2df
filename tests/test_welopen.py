@@ -8,7 +8,7 @@ from ecl2df import compdat
 from ecl2df import EclFiles
 
 WELOPEN_CASES = [
-    # Simplest possible  WELOPEN case
+    # Simplest possible WELOPEN case
     (
         """
     DATES
@@ -132,7 +132,7 @@ WELOPEN_CASES = [
             ],
         ),
     ),
-    # Lumped connections are not supported will crash.
+    # Lumped connections are not supported and will crash.
     pytest.param(
         """
     DATES
@@ -154,6 +154,30 @@ WELOPEN_CASES = [
             ],
         ),
         marks=pytest.mark.xfail(raises=ValueError),
+    ),
+    # Test multiple connections to the same cell
+    # (ecl2df <= 0.13.1 would remove OP1 from this dataframe)
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP2' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT'  /
+     'OP2' 'OPEN'  /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
     ),
     # Test multiple time steps
     (

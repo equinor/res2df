@@ -255,6 +255,18 @@ COMPDAT
     assert len(df_noroll) == 1
 
 
+def test_samecellperf():
+    """Test that we allow multiple perforations in the same cell"""
+    schstr = """
+COMPDAT
+  'OP1' 1 1 1 1 /
+  'OP2' 1 1 1 1 /
+/
+"""
+    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    assert len(df) == 2
+
+
 def test_unrollwelsegs():
     """Test unrolling of welsegs."""
     schstr = """

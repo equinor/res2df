@@ -445,7 +445,7 @@ def applywelopen(compdat_df: pd.DataFrame, welopen_df: pd.DataFrame) -> pd.DataF
     if not compdat_df.empty:
         compdat_df = (
             compdat_df.sort_values(by=["KEYWORD_IDX"])
-            .drop_duplicates(subset=["I", "J", "K1", "K2", "DATE"], keep="last")
+            .drop_duplicates(subset=["WELL", "I", "J", "K1", "K2", "DATE"], keep="last")
             .reset_index(drop=True)
         )
 

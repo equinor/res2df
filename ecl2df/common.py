@@ -34,6 +34,7 @@ from ecl2df import __version__
 # of supported Eclipse keyword data
 OPMKEYWORDS: Dict[str, dict] = {}
 for keyw in [
+    "BRANPROP",
     "COMPDAT",
     "COMPSEGS",
     "DENSITY",
@@ -42,6 +43,7 @@ for keyw in [
     "FAULTS",
     "GRUPNET",
     "GRUPTREE",
+    "NODEPROP",
     "PBVD",
     "PDVD",
     "PVDG",
@@ -75,7 +77,6 @@ for keyw in [
     OPMKEYWORDS[keyw] = json.loads(
         (Path(__file__).parent / "opmkeywords" / keyw).read_text()
     )
-
 
 # This is a magic filename that means read/write from/to stdout
 # This makes it impossible to write to a file called "-" on disk

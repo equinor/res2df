@@ -4,6 +4,7 @@
 
 # Remember to sync the keyword list here with the list in common.py
 keywords="
+BRANPROP
 COMPDAT
 COMPSEGS
 DENSITY
@@ -12,6 +13,7 @@ EQUIL
 FAULTS
 GRUPNET
 GRUPTREE
+NODEPROP
 PBVD
 PDVD
 PVDG
@@ -51,7 +53,7 @@ for keyword in $keywords; do
     perl -p -i -e 's/num_tables/size/g' $keyword
 
     # Pretty-print all json files (this is also done upstream)
-    jq < $keyword . > $keyword.tmp && rm $keyword && mv $keyword.tmp $keyword 
+    jq < $keyword . > $keyword.tmp && rm $keyword && mv $keyword.tmp $keyword
 done
 
 git status .

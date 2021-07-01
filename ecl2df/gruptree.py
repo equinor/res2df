@@ -82,9 +82,11 @@ def df(
 
     grupnet_df: pd.DataFrame = pd.DataFrame()
 
-    found_gruptree = False  # Flags which will tell when a new GRUPTREE or
-    found_welspecs = False  # WELSPECS have been encountered.
-    found_grupnet = False  # GRUPNET has been encountered
+    # Flags which will tell when a new GRUPTREE/BRANPROP, WELSPECS or
+    # GRUPNET/NODEPROP have been encountered
+    found_gruptree_or_branprop = False
+    found_welspecs = False
+    found_grupnet_or_nodeprop = False
     for kword in deck:
         if kword.name == "DATES" or kword.name == "START" or kword.name == "TSTEP":
             # Whenever we encounter a new DATES, it means that
@@ -92,7 +94,11 @@ def df(
             # have occured since the last date, so this is the chance
             # to dump the parsed data. Also we dump the *entire* tree
             # at every date with a change, not only the newfound edges.
-            if currentedges and (found_gruptree or found_welspecs or found_grupnet):
+            if currentedges and (
+                found_gruptree_or_branprop
+                or found_welspecs
+                or found_grupnet_or_nodeprop
+            ):
                 if date is None:
                     logger.warning("No date parsed, maybe you should pass --startdate")
                     logger.warning("Using 1900-01-01")
@@ -100,9 +106,9 @@ def df(
                 gruptreerecords += _currentedges_to_gruptreerecords(
                     currentedges, grupnet_df, date
                 )
-                found_gruptree = False
+                found_gruptree_or_branprop = False
                 found_welspecs = False
-                found_grupnet = False
+                found_grupnet_or_nodeprop = False
             # Done dumping the data for the previous date, parse the fresh
             # date:
             if kword.name == "DATES" or kword.name == "START":
@@ -125,22 +131,28 @@ def df(
             else:
                 logger.critical("BUG: Should not get here")
                 return pd.DataFrame()
-        if kword.name == "GRUPTREE":
-            found_gruptree = True
+        if kword.name in ["GRUPTREE", "BRANPROP"]:
+            found_gruptree_or_branprop = True
+            renamer = (
+                {"DOWNTREE_NODE": "CHILD_GROUP", "UPTREE_NODE": "PARENT_GROUP"}
+                if kword.name == "BRANPROP"
+                else None
+            )
             for edgerec in kword:
-                edge_dict = parse_opmio_deckrecord(edgerec, "GRUPTREE")
+                edge_dict = parse_opmio_deckrecord(edgerec, kword.name, renamer=renamer)
                 currentedges[
                     (edge_dict["CHILD_GROUP"], edge_dict["PARENT_GROUP"])
-                ] = "GRUPTREE"
+                ] = kword.name
         if kword.name == "WELSPECS" and welspecs:
             found_welspecs = True
             for wellrec in kword:
                 wspc_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
                 currentedges[(wspc_dict["WELL"], wspc_dict["GROUP"])] = "WELSPECS"
-        if kword.name == "GRUPNET":
-            found_grupnet = True
+        if kword.name in ["GRUPNET", "NODEPROP"]:
+            found_grupnet_or_nodeprop = True
             for rec in kword:
-                grupnet_data = parse_opmio_deckrecord(rec, "GRUPNET")
+                grupnet_data = parse_opmio_deckrecord(rec, kword.name)
+                grupnet_data["KEYWORD"] = kword.name
                 grupnetrecords.append(grupnet_data)
             grupnet_df = (
                 pd.DataFrame(grupnetrecords)
@@ -149,7 +161,7 @@ def df(
             )
 
     # Ensure we also store any tree information found after the last DATE statement
-    if found_gruptree or found_welspecs:
+    if found_gruptree_or_branprop or found_welspecs:
         gruptreerecords += _currentedges_to_gruptreerecords(
             currentedges, grupnet_df, date
         )
@@ -181,17 +193,22 @@ def _currentedges_to_gruptreerecords(
     gruptreerecords = []
     childs = set()
     parents = set()
-    for edgename, value in currentedges.items():
+    for edgename, edgekeyword in currentedges.items():
         rec_dict = {
             "DATE": date,
             "CHILD": edgename[0],
             "PARENT": edgename[1],
-            "KEYWORD": value,
+            "KEYWORD": edgekeyword,
         }
         childs |= {edgename[0]}
         parents |= {edgename[1]}
         if edgename[0] in grupnet_df.index:
-            rec_dict.update(grupnet_df.loc[edgename[0]])
+            node_info = grupnet_df.loc[edgename[0]]
+            if (edgekeyword, node_info.KEYWORD) == ("BRANPROP", "NODEPROP") or (
+                edgekeyword,
+                node_info.KEYWORD,
+            ) == ("GRUPTREE", "GRUPNET"):
+                rec_dict.update(node_info.drop("KEYWORD"))
         gruptreerecords.append(rec_dict)
     roots = parents - childs
     rootrecords = []

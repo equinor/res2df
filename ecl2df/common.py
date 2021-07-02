@@ -218,9 +218,9 @@ def ecl_keyworddata_to_df(
                 ) from err
             data_df = pd.DataFrame(columns=renamer["DATA"], data=data_reshaped)
             # Assign the remaining items from the parsed dict to the dataframe:
-            for key, _ in recdict.items():
+            for key, value in recdict.items():
                 if key != "DATA":
-                    data_df[key] = recdict[key]
+                    data_df[key] = value
             records.append(data_df)
             record_counter += 1
         else:

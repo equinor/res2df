@@ -14,9 +14,10 @@ import fnmatch
 import textwrap
 import argparse
 import datetime
-import dateutil.parser
 from pathlib import Path
 from typing import Union, List, Tuple, Optional, Dict, Type
+
+import dateutil.parser
 
 import numpy as np
 import pandas as pd
@@ -163,7 +164,7 @@ def rst2df(
     rstvectors = []
     for vec in eclfiles.get_rstfile().headers:
         if vec[1] == activecells and any(
-            [fnmatch.fnmatch(vec[0], key) for key in vectors]
+            fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
             rstvectors.append(vec[0])
     rstvectors = list(set(rstvectors))  # Make unique list
@@ -215,7 +216,7 @@ def rst2df(
             "SWAT" in rst_df
             and "SGAS" in rst_df
             and "SOIL" not in rst_df
-            and any([fnmatch.fnmatch("SOIL", key) for key in vectors])
+            and any(fnmatch.fnmatch("SOIL", key) for key in vectors)
         ):
             rst_df["SOIL"] = 1 - rst_df["SWAT"] - rst_df["SGAS"]
 
@@ -394,10 +395,10 @@ def init2df(eclfiles: EclFiles, vectors: Union[str, List[str]] = None) -> pd.Dat
     include_porv = False
     for vec in init.headers:
         if vec[1] == egrid.getNumActive() and any(
-            [fnmatch.fnmatch(vec[0], key) for key in vectors]
+            fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
             usevectors.append(vec[0])
-        if vec[0] == "PORV" and any([fnmatch.fnmatch("PORV", key) for key in vectors]):
+        if vec[0] == "PORV" and any(fnmatch.fnmatch("PORV", key) for key in vectors):
             include_porv = True
 
     if usevectors:

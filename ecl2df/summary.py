@@ -1,5 +1,6 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 import os
+import ctypes
 import logging
 import argparse
 from pathlib import Path
@@ -12,7 +13,6 @@ import dateutil
 import numpy as np
 import pandas as pd
 
-import ctypes
 from ecl.summary import EclSum, EclSumKeyWordVector
 
 from .eclfiles import EclFiles
@@ -144,8 +144,7 @@ def _fallback_date_roll(rollme: dt.datetime, direction: str, freq: str) -> dt.da
             if rollme <= dt.datetime(year=rollme.year, month=1, day=1):
                 return dt.datetime(year=rollme.year, month=1, day=1)
             return dt.datetime(year=rollme.year + 1, month=1, day=1)
-        else:
-            return dt.datetime(year=rollme.year, month=1, day=1)
+        return dt.datetime(year=rollme.year, month=1, day=1)
 
     if freq == "monthly":
         if direction == "forward":
@@ -156,8 +155,7 @@ def _fallback_date_roll(rollme: dt.datetime, direction: str, freq: str) -> dt.da
             ) + dateutil.relativedelta.relativedelta(  # type: ignore
                 months=1
             )
-        else:
-            return dt.datetime(year=rollme.year, month=rollme.month, day=1)
+        return dt.datetime(year=rollme.year, month=rollme.month, day=1)
 
     raise ValueError(
         "Only yearly or monthly frequencies are "
@@ -613,6 +611,7 @@ def _libecl_eclsum_pandas_frame(
     if len(keywords) == 0:
         raise ValueError("No valid key")
 
+    # pylint: disable=protected-access
     if time_index is None:
         time_index = eclsum.dates  # Changed from libecl
         data = np.zeros([len(time_index), len(keywords)])
@@ -663,6 +662,7 @@ def _libecl_eclsum_from_pandas(
         start_time = start_time.to_pydatetime()
 
     var_list = []
+    # pylint: disable=protected-access
     if headers is None:
         header_list = EclSum._compile_headers_list(frame.columns.values, dims)
     else:
@@ -670,16 +670,16 @@ def _libecl_eclsum_from_pandas(
     if dims is None:
         dims = [1, 1, 1]
     ecl_sum = EclSum.writer(case, start_time, dims[0], dims[1], dims[2])
-    for kw, wgname, num, unit in header_list:
+    for keyword, wgname, num, unit in header_list:
         var_list.append(
-            ecl_sum.addVariable(kw, wgname=wgname, num=num, unit=unit).getKey1()
+            ecl_sum.addVariable(keyword, wgname=wgname, num=num, unit=unit).getKey1()
         )
 
-    for i, time in enumerate(frame.index):
+    for idx, time in enumerate(frame.index):
         days = (time - start_time).days
-        t_step = ecl_sum.addTStep(i + 1, days)
+        t_step = ecl_sum.addTStep(idx + 1, days)
         for var in var_list:
-            t_step[var] = frame.iloc[i][var]
+            t_step[var] = frame.iloc[idx][var]
     return ecl_sum
 
 

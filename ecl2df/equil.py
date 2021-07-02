@@ -4,6 +4,7 @@ Extract EQUIL from an Eclipse deck as Pandas DataFrame
 
 import logging
 import argparse
+from pathlib import Path
 from typing import List, Dict, Union, Optional
 
 import pandas as pd
@@ -12,6 +13,7 @@ from ecl2df import inferdims, common
 from .eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm.io
 
 except ImportError:
@@ -318,7 +320,7 @@ def equil_main(args) -> None:
     else:
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string
-        equil_df = df("".join(open(args.DATAFILE).readlines()))
+        equil_df = df(Path(args.DATAFILE).read_text())
     if not equil_df.empty:
         common.write_dframe_stdout_file(
             equil_df,

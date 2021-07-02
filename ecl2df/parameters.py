@@ -111,7 +111,7 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
     yaml_error = ""
     try:
         logger.debug("Trying to parse %s with yaml.safe_load()", filename)
-        params_dict = yaml.safe_load(open(filename))
+        params_dict = yaml.safe_load(Path(filename).read_text())
         logger.debug(" - ok, parsed as yaml")
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
@@ -124,7 +124,8 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
     if not params_dict:
         try:
             logger.debug("Trying to parse %s with json.load()", filename)
-            params_dict = json.load(open(filename))
+            with open(filename) as f_handle:
+                params_dict = json.load(f_handle)
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as yaml")
         except Exception as json_exc:

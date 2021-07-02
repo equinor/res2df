@@ -45,7 +45,7 @@ def report_block_lineparser(line: str) -> tuple:
             return np.nan
 
     allowed_line_starts = [":CURRENTLY", ":OUTFLOW", ":MATERIAL", ":ORIGINALLY"]
-    if not any([line.strip().upper().startswith(x) for x in allowed_line_starts]):
+    if not any(line.strip().upper().startswith(x) for x in allowed_line_starts):
         return tuple()
 
     colonsections = line.split(":")

@@ -18,6 +18,7 @@ import pandas as pd
 
 
 try:
+    # pylint: disable=unused-import
     import opm.io.deck  # lgtm [py/import-and-import-from]
 
     # This import is seemingly not used, but necessary for some attributes
@@ -192,8 +193,7 @@ def ecl_keyworddata_to_df(
             # for PVTO, this counter variable will be used as PVTNUM
             emptyrecord_counter += 1
             continue
-        else:
-            recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
+        recdict = parse_opmio_deckrecord(deckrecord, keyword, renamer=renamer)
         if emptyrecordcountername is not None:
             recdict[emptyrecordcountername] = emptyrecord_counter
         if recordcountername is not None:
@@ -220,7 +220,7 @@ def ecl_keyworddata_to_df(
             # Assign the remaining items from the parsed dict to the dataframe:
             for key, value in recdict.items():
                 if key != "DATA":
-                    data_df[key] = recdict[key]
+                    data_df[key] = value
             records.append(data_df)
             record_counter += 1
         else:
@@ -286,11 +286,11 @@ def parse_opmio_deckrecord(
 
     if renamer:
         renamed_dict = {}
-        for key in rec_dict:
+        for key, value in rec_dict.items():
             if key in renamer and not isinstance(renamer[key], list):
-                renamed_dict[renamer[key]] = rec_dict[key]
+                renamed_dict[renamer[key]] = value
             else:
-                renamed_dict[key] = rec_dict[key]
+                renamed_dict[key] = value
         return renamed_dict
     return rec_dict
 
@@ -747,16 +747,16 @@ def convert_lyrlist_to_zonemap(lyrlist: List[Dict[str, Any]]) -> Dict[int, str]:
     """Returns a layer to zone map as a dictionary
 
     Args:
-        lyrlist (list): list of dicts coming from parse_lyrfile()
+        lyrlist: list of dicts coming from parse_lyrfile()
     Returns:
-        Dict[int, str]: layer to zone mapping {1:"zoneA", 2:"zoneB"}
+        Layer to zone mapping {1: "zoneA", 2: "zoneB"}
     """
     if lyrlist is None:
         return None
     zonemap = {}
-    for i, zonedict in enumerate(lyrlist):
+    for idx, zonedict in enumerate(lyrlist):
         if "span" in zonedict:
-            from_layer = lyrlist[i - 1]["to_layer"] + 1 if i > 0 else 1
+            from_layer = lyrlist[idx - 1]["to_layer"] + 1 if idx > 0 else 1
             to_layer = from_layer + zonedict["span"]
         else:
             from_layer = zonedict["from_layer"]

@@ -3,9 +3,9 @@
 import logging
 import argparse
 import datetime
-import dateutil.parser
 from typing import Union, Dict, List, Optional
 
+import dateutil.parser
 import pandas as pd
 
 from ecl2df import EclFiles, grid, common

@@ -6,6 +6,7 @@ Data can be extracted from a full Eclipse deck or from individual files.
 
 import logging
 import argparse
+from pathlib import Path
 from typing import List, Dict, Union, Optional
 
 import pandas as pd
@@ -293,7 +294,7 @@ def pvt_main(args) -> None:
         # When TABDIMS is not present, the code will try to infer
         # the number of saturation functions, this is necessarily
         # more error-prone, and it needs a string as input.
-        stringdeck = "".join(open(args.DATAFILE).readlines())
+        stringdeck = Path(args.DATAFILE).read_text()
         pvt_df = df(stringdeck, keywords=args.keywords)
     if not pvt_df.empty:
         common.write_dframe_stdout_file(

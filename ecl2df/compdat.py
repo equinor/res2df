@@ -11,6 +11,7 @@ from typing import Dict, Optional, Union, List
 import pandas as pd
 
 try:
+    # pylint: disable=unused-import
     import opm.io.deck
 except ImportError:
     # Allow parts of ecl2df to work without OPM:
@@ -175,8 +176,11 @@ def deck2dfs(
                 if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO"]:
                     rec_data["STATUS"] = "SHUT"
                     logger.warning(
-                        "WELOPEN status %s is not a valid "
-                        "COMPDAT state. Using 'SHUT' instead." % rec_data["STATUS"]
+                        (
+                            "WELOPEN status %s is not a valid "
+                            "COMPDAT state. Using 'SHUT' instead."
+                        ),
+                        rec_data["STATUS"],
                     )
                 welopenrecords.append(rec_data)
         elif kword.name == "WELSEGS":

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.13.2.dev4+gffaa89a documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev4+gffaa89a
+                0.13.2.dev5+g499b041
               </div>
             
           
@@ -183,6 +183,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="k">try</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=unused-import</span>
     <span class="kn">import</span> <span class="nn">opm.io.deck</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="c1"># Allow parts of ecl2df to work without OPM:</span>
@@ -347,8 +348,11 @@
                 <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OPEN&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">,</span> <span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">]:</span>
                     <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SHUT&quot;</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;WELOPEN status </span><span class="si">%s</span><span class="s2"> is not a valid &quot;</span>
-                        <span class="s2">&quot;COMPDAT state. Using &#39;SHUT&#39; instead.&quot;</span> <span class="o">%</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span>
+                        <span class="p">(</span>
+                            <span class="s2">&quot;WELOPEN status </span><span class="si">%s</span><span class="s2"> is not a valid &quot;</span>
+                            <span class="s2">&quot;COMPDAT state. Using &#39;SHUT&#39; instead.&quot;</span>
+                        <span class="p">),</span>
+                        <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">],</span>
                     <span class="p">)</span>
                 <span class="n">welopenrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev4+gffaa89a documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev4+gffaa89a
+                0.13.2.dev5+g499b041
               </div>
             
           
@@ -186,9 +186,10 @@
 <span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">dateutil.parser</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="kn">import</span> <span class="nn">dateutil.parser</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -335,7 +336,7 @@
     <span class="n">rstvectors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfile</span><span class="p">()</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">activecells</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]</span>
+            <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span>
         <span class="p">):</span>
             <span class="n">rstvectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">rstvectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rstvectors</span><span class="p">))</span>  <span class="c1"># Make unique list</span>
@@ -387,7 +388,7 @@
             <span class="s2">&quot;SWAT&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span>
             <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="ow">in</span> <span class="n">rst_df</span>
             <span class="ow">and</span> <span class="s2">&quot;SOIL&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rst_df</span>
-            <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;SOIL&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">])</span>
+            <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;SOIL&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SOIL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SWAT&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rst_df</span><span class="p">[</span><span class="s2">&quot;SGAS&quot;</span><span class="p">]</span>
 
@@ -566,10 +567,10 @@
     <span class="n">include_porv</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">egrid</span><span class="o">.</span><span class="n">getNumActive</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]</span>
+            <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span>
         <span class="p">):</span>
             <span class="n">usevectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PORV&quot;</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;PORV&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PORV&quot;</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="s2">&quot;PORV&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">):</span>
             <span class="n">include_porv</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="n">usevectors</span><span class="p">:</span>

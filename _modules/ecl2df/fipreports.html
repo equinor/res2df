@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.fipreports &mdash; ecl2df 0.13.2.dev4+gffaa89a documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev4+gffaa89a
+                0.13.2.dev5+g499b041
               </div>
             
           
@@ -217,7 +217,7 @@
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
     <span class="n">allowed_line_starts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;:CURRENTLY&quot;</span><span class="p">,</span> <span class="s2">&quot;:OUTFLOW&quot;</span><span class="p">,</span> <span class="s2">&quot;:MATERIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;:ORIGINALLY&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">allowed_line_starts</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">allowed_line_starts</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span>
 
     <span class="n">colonsections</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>

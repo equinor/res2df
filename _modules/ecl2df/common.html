@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.13.2.dev4+gffaa89a documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev4+gffaa89a
+                0.13.2.dev5+g499b041
               </div>
             
           
@@ -190,6 +190,7 @@
 
 
 <span class="k">try</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=unused-import</span>
     <span class="kn">import</span> <span class="nn">opm.io.deck</span>  <span class="c1"># lgtm [py/import-and-import-from]</span>
 
     <span class="c1"># This import is seemingly not used, but necessary for some attributes</span>
@@ -364,8 +365,7 @@
             <span class="c1"># for PVTO, this counter variable will be used as PVTNUM</span>
             <span class="n">emptyrecord_counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">recdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
+        <span class="n">recdict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">deckrecord</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">emptyrecordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">recdict</span><span class="p">[</span><span class="n">emptyrecordcountername</span><span class="p">]</span> <span class="o">=</span> <span class="n">emptyrecord_counter</span>
         <span class="k">if</span> <span class="n">recordcountername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -392,7 +392,7 @@
             <span class="c1"># Assign the remaining items from the parsed dict to the dataframe:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">recdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s2">&quot;DATA&quot;</span><span class="p">:</span>
-                    <span class="n">data_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">recdict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">data_df</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_df</span><span class="p">)</span>
             <span class="n">record_counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
@@ -458,11 +458,11 @@
 
     <span class="k">if</span> <span class="n">renamer</span><span class="p">:</span>
         <span class="n">renamed_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">rec_dict</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">rec_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">renamer</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">renamed_dict</span><span class="p">[</span><span class="n">renamer</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rec_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">renamed_dict</span><span class="p">[</span><span class="n">renamer</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">renamed_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rec_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">renamed_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">renamed_dict</span>
     <span class="k">return</span> <span class="n">rec_dict</span></div>
 
@@ -919,16 +919,16 @@
     <span class="sd">&quot;&quot;&quot;Returns a layer to zone map as a dictionary</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        lyrlist (list): list of dicts coming from parse_lyrfile()</span>
+<span class="sd">        lyrlist: list of dicts coming from parse_lyrfile()</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[int, str]: layer to zone mapping {1:&quot;zoneA&quot;, 2:&quot;zoneB&quot;}</span>
+<span class="sd">        Layer to zone mapping {1: &quot;zoneA&quot;, 2: &quot;zoneB&quot;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">lyrlist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">zonemap</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">zonedict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">zonedict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;span&quot;</span> <span class="ow">in</span> <span class="n">zonedict</span><span class="p">:</span>
-            <span class="n">from_layer</span> <span class="o">=</span> <span class="n">lyrlist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;to_layer&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+            <span class="n">from_layer</span> <span class="o">=</span> <span class="n">lyrlist</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;to_layer&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
             <span class="n">to_layer</span> <span class="o">=</span> <span class="n">from_layer</span> <span class="o">+</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;span&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">from_layer</span> <span class="o">=</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;from_layer&quot;</span><span class="p">]</span>

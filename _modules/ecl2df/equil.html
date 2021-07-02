@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.equil &mdash; ecl2df 0.13.2.dev4+gffaa89a documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev4+gffaa89a
+                0.13.2.dev5+g499b041
               </div>
             
           
@@ -176,6 +176,7 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -184,6 +185,7 @@
 <span class="kn">from</span> <span class="nn">.eclfiles</span> <span class="kn">import</span> <span class="n">EclFiles</span>
 
 <span class="k">try</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=unused-import</span>
     <span class="kn">import</span> <span class="nn">opm.io</span>
 
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -490,7 +492,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># This might be an include file for which we have to infer/guess</span>
         <span class="c1"># EQLDIMS. Then we send it to df() as a string</span>
-        <span class="n">equil_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()))</span>
+        <span class="n">equil_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">equil_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
             <span class="n">equil_df</span><span class="p">,</span>

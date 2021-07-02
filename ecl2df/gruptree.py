@@ -71,22 +71,24 @@ def df(
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()
 
-    gruptreerecords = []  # list of dict of rows containing an edge.
-    grupnetrecords = []
+    edgerecords = []  # list of dict of rows containing an edge.
+    nodedatarecords = []
 
     # In order for the GRUPTREE keywords to accumulate, we
     # store the edges as a dictionary indexed by the edge
     # (which is a tuple of child and parent).
     # The value of the dictionary is GRUPTREE or WELSPECS
-    currentedges: Dict[tuple, str] = dict()
+    currentedges: Dict[str, Dict[tuple, str]] = {"GRUPTREE": dict(), "BRANPROP": dict()}
 
-    grupnet_df: pd.DataFrame = pd.DataFrame()
+    nodedata: Dict[str, pd.DataFrame] = {
+        "GRUPNET": pd.DataFrame(),
+        "NODEPROP": pd.DataFrame(),
+    }
 
     # Flags which will tell when a new GRUPTREE/BRANPROP, WELSPECS or
     # GRUPNET/NODEPROP have been encountered
-    found_gruptree_or_branprop = False
-    found_welspecs = False
-    found_grupnet_or_nodeprop = False
+    keywords = ["GRUPTREE", "BRANPROP", "WELSPECS", "GRUPNET", "NODEPROP"]
+    found_keywords = {key: False for key in keywords}
     for kword in deck:
         if kword.name == "DATES" or kword.name == "START" or kword.name == "TSTEP":
             # Whenever we encounter a new DATES, it means that
@@ -94,21 +96,15 @@ def df(
             # have occured since the last date, so this is the chance
             # to dump the parsed data. Also we dump the *entire* tree
             # at every date with a change, not only the newfound edges.
-            if currentedges and (
-                found_gruptree_or_branprop
-                or found_welspecs
-                or found_grupnet_or_nodeprop
-            ):
+            if any([val for val in found_keywords.values()]):
                 if date is None:
                     logger.warning("No date parsed, maybe you should pass --startdate")
                     logger.warning("Using 1900-01-01")
                     date = datetime.date(year=1900, month=1, day=1)
-                gruptreerecords += _currentedges_to_gruptreerecords(
-                    currentedges, grupnet_df, date
+                edgerecords += _write_edgerecords(
+                    currentedges, nodedata, found_keywords, date
                 )
-                found_gruptree_or_branprop = False
-                found_welspecs = False
-                found_grupnet_or_nodeprop = False
+                found_keywords = {key: False for key in keywords}
             # Done dumping the data for the previous date, parse the fresh
             # date:
             if kword.name == "DATES" or kword.name == "START":
@@ -132,7 +128,7 @@ def df(
                 logger.critical("BUG: Should not get here")
                 return pd.DataFrame()
         if kword.name in ["GRUPTREE", "BRANPROP"]:
-            found_gruptree_or_branprop = True
+            found_keywords[kword.name] = True
             renamer = (
                 {"DOWNTREE_NODE": "CHILD_GROUP", "UPTREE_NODE": "PARENT_GROUP"}
                 if kword.name == "BRANPROP"
@@ -140,41 +136,76 @@ def df(
             )
             for edgerec in kword:
                 edge_dict = parse_opmio_deckrecord(edgerec, kword.name, renamer=renamer)
-                currentedges[
+                currentedges[kword.name][
                     (edge_dict["CHILD_GROUP"], edge_dict["PARENT_GROUP"])
                 ] = kword.name
         if kword.name == "WELSPECS" and welspecs:
-            found_welspecs = True
+            found_keywords["WELSPECS"] = True
             for wellrec in kword:
                 wspc_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
-                currentedges[(wspc_dict["WELL"], wspc_dict["GROUP"])] = "WELSPECS"
+                currentedges["GRUPTREE"][
+                    (wspc_dict["WELL"], wspc_dict["GROUP"])
+                ] = "WELSPECS"
+
+                # Only write to BRANPROP if there is a current BRANPROP tree
+                if currentedges["BRANPROP"]:
+                    currentedges["BRANPROP"][
+                        (wspc_dict["WELL"], wspc_dict["GROUP"])
+                    ] = "WELSPECS"
         if kword.name in ["GRUPNET", "NODEPROP"]:
-            found_grupnet_or_nodeprop = True
+            found_keywords[kword.name] = True
             for rec in kword:
-                grupnet_data = parse_opmio_deckrecord(rec, kword.name)
-                grupnet_data["KEYWORD"] = kword.name
-                grupnetrecords.append(grupnet_data)
-            grupnet_df = (
-                pd.DataFrame(grupnetrecords)
+                nodedatarecords.append(parse_opmio_deckrecord(rec, kword.name))
+            nodedata[kword.name] = (
+                pd.DataFrame(nodedatarecords)
                 .drop_duplicates(subset="NAME", keep="last")
                 .set_index("NAME")
             )
 
     # Ensure we also store any tree information found after the last DATE statement
-    if found_gruptree_or_branprop or found_welspecs:
-        gruptreerecords += _currentedges_to_gruptreerecords(
-            currentedges, grupnet_df, date
-        )
-    dframe = pd.DataFrame(gruptreerecords)
+    if any([val for val in found_keywords.values()]):
+        edgerecords += _write_edgerecords(currentedges, nodedata, found_keywords, date)
+    dframe = pd.DataFrame(edgerecords)
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+
+    # Remove duplicate rows
+    # This happens with WELSPECS if GRUPTREE and BRANPROP is defined at the same timestep
+    dframe = dframe.drop_duplicates(
+        subset=["DATE", "CHILD", "KEYWORD", "PARENT"], keep="last"
+    )
     print(dframe)
     return dframe
 
 
-def _currentedges_to_gruptreerecords(
+def _write_edgerecords(
+    currentedges: Dict[str, Dict[tuple, str]],
+    nodedata: Dict[str, pd.DataFrame],
+    found_keywords: dict,
+    date: Optional[datetime.date],
+) -> List[dict]:
+    """
+    Description
+    """
+    edgerecords = []
+    if any([found_keywords[key] for key in ["GRUPTREE", "GRUPNET", "WELSPECS"]]):
+        edgerecords += _merge_edges_and_nodeinfo(
+            currentedges["GRUPTREE"], nodedata["GRUPNET"], date
+        )
+    if (
+        any([found_keywords[key] for key in ["BRANPROP", "NODEPROP", "WELSPECS"]])
+        and currentedges["BRANPROP"]
+    ):
+        edgerecords += _merge_edges_and_nodeinfo(
+            currentedges["BRANPROP"], nodedata["NODEPROP"], date
+        )
+
+    return edgerecords
+
+
+def _merge_edges_and_nodeinfo(
     currentedges: Dict[tuple, str],
-    grupnet_df: pd.DataFrame,
+    nodedata_df: pd.DataFrame,
     date: Optional[datetime.date],
 ) -> List[dict]:
     """Merge a list of edges with information from the GRUPNET dataframe.
@@ -184,13 +215,13 @@ def _currentedges_to_gruptreerecords(
 
     Args:
         currentedges:
-        grupnet_df: Containing data for each node to add.
+        nodedata_df: Containing data for each node to add.
         date: Relevant date.
 
     Returns:
         List of dictionaries (that can be made into a dataframe)
     """
-    gruptreerecords = []
+    edgerecords = []
     childs = set()
     parents = set()
     for edgename, edgekeyword in currentedges.items():
@@ -202,22 +233,17 @@ def _currentedges_to_gruptreerecords(
         }
         childs |= {edgename[0]}
         parents |= {edgename[1]}
-        if edgename[0] in grupnet_df.index:
-            node_info = grupnet_df.loc[edgename[0]]
-            if (edgekeyword, node_info.KEYWORD) == ("BRANPROP", "NODEPROP") or (
-                edgekeyword,
-                node_info.KEYWORD,
-            ) == ("GRUPTREE", "GRUPNET"):
-                rec_dict.update(node_info.drop("KEYWORD"))
-        gruptreerecords.append(rec_dict)
+        if edgename[0] in nodedata_df.index:
+            rec_dict.update(nodedata_df.loc[edgename[0]])
+        edgerecords.append(rec_dict)
     roots = parents - childs
     rootrecords = []
     for root in roots:
-        rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": "GRUPTREE"}
-        if root in grupnet_df.index:
-            rec_dict.update(grupnet_df.loc[root])
+        rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": "ENDPOINT"}
+        if root in nodedata_df.index:
+            rec_dict.update(nodedata_df.loc[root])
         rootrecords.append(rec_dict)
-    return rootrecords + gruptreerecords
+    return rootrecords + edgerecords
 
 
 def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:

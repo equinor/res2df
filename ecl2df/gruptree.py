@@ -6,7 +6,7 @@ import datetime
 import collections
 import argparse
 import warnings
-from typing import Optional, Union, List, Dict
+from typing import Optional, Union, List, Dict, Any
 
 import treelib
 import pandas as pd
@@ -78,7 +78,10 @@ def df(
     # store the edges as a dictionary indexed by the edge
     # (which is a tuple of child and parent).
     # The value of the dictionary is GRUPTREE or WELSPECS
-    currentedges: Dict[str, Dict[tuple, str]] = {"GRUPTREE": dict(), "BRANPROP": dict()}
+    currentedges: Dict[str, Dict[tuple, Dict[str, Any]]] = {
+        "GRUPTREE": dict(),
+        "BRANPROP": dict(),
+    }
     wellspecsedges: Dict[tuple, str] = dict()
     nodedata: Dict[str, pd.DataFrame] = {
         "GRUPNET": pd.DataFrame(),
@@ -96,7 +99,7 @@ def df(
             # have occured since the last date, so this is the chance
             # to dump the parsed data. Also we dump the *entire* tree
             # at every date with a change, not only the newfound edges.
-            if any([val for val in found_keywords.values()]):
+            if any(val for val in found_keywords.values()):
                 if date is None:
                     logger.warning("No date parsed, maybe you should pass --startdate")
                     logger.warning("Using 1900-01-01")
@@ -136,20 +139,16 @@ def df(
             )
             for edgerec in kword:
                 edge_dict = parse_opmio_deckrecord(edgerec, kword.name, renamer=renamer)
-                currentedges[kword.name][
-                    (edge_dict["CHILD_GROUP"], edge_dict["PARENT_GROUP"])
-                ] = kword.name
+                child = edge_dict.pop("CHILD_GROUP")
+                parent = edge_dict.pop("PARENT_GROUP")
+                currentedges[kword.name][(child, parent)] = edge_dict
+
         if kword.name == "WELSPECS" and welspecs:
             found_keywords["WELSPECS"] = True
             for wellrec in kword:
                 wspc_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
                 wellspecsedges[(wspc_dict["WELL"], wspc_dict["GROUP"])] = "WELSPECS"
 
-                # Only write to BRANPROP if there is a current BRANPROP tree
-                if currentedges["BRANPROP"]:
-                    currentedges["BRANPROP"][
-                        (wspc_dict["WELL"], wspc_dict["GROUP"])
-                    ] = "WELSPECS"
         if kword.name in ["GRUPNET", "NODEPROP"]:
             found_keywords[kword.name] = True
             for rec in kword:
@@ -180,7 +179,7 @@ def df(
 
 
 def _write_edgerecords(
-    currentedges: Dict[str, Dict[tuple, str]],
+    currentedges: Dict[str, Dict[tuple, Dict[str, Any]]],
     nodedata: Dict[str, pd.DataFrame],
     wellspecsedges: Dict[tuple, str],
     found_keywords: dict,
@@ -214,7 +213,7 @@ def _write_edgerecords(
 
 
 def _merge_edges_and_nodeinfo(
-    currentedges: Dict[tuple, str],
+    currentedges: Dict[tuple, Dict[str, Any]],
     nodedata_df: pd.DataFrame,
     wellspecsedges: Dict[tuple, str],
     date: Optional[datetime.date],
@@ -237,34 +236,33 @@ def _merge_edges_and_nodeinfo(
     childs = set()
     parents = set()
     # Write GRUPTREE/BRANPROP edges
-    for edgename, edgekeyword in currentedges.items():
-        rec_dict = {
-            "DATE": date,
-            "CHILD": edgename[0],
-            "PARENT": edgename[1],
-            "KEYWORD": edgekeyword,
-        }
-        childs |= {edgename[0]}
-        parents |= {edgename[1]}
-        if edgename[0] in nodedata_df.index:
-            rec_dict.update(nodedata_df.loc[edgename[0]])
+    for (child, parent), edge_dict in currentedges.items():
+        rec_dict = {"DATE": date, "CHILD": child, "PARENT": parent, "KEYWORD": treetype}
+        childs |= {child}
+        parents |= {parent}
+
+        # Add fields from edge_dict
+        rec_dict.update(edge_dict)
+
+        # Add node data
+        if child in nodedata_df.index:
+            rec_dict.update(nodedata_df.loc[child])
         edgerecords.append(rec_dict)
 
     # Write WELSPECS edges
-    for edgename, _ in wellspecsedges.items():
-        if (treetype == "BRANPROP" and edgename[1] in childs) or (
-            treetype == "GRUPTREE"
-        ):
+    for (child, parent), _ in wellspecsedges.items():
+        if (treetype == "BRANPROP" and parent in childs) or (treetype == "GRUPTREE"):
             rec_dict = {
                 "DATE": date,
-                "CHILD": edgename[0],
-                "PARENT": edgename[1],
+                "CHILD": child,
+                "PARENT": parent,
                 "KEYWORD": "WELSPECS",
             }
             edgerecords.append(rec_dict)
+
         if treetype == "GRUPTREE":
-            childs |= {edgename[0]}
-            parents |= {edgename[1]}
+            childs |= {child}
+            parents |= {parent}
 
     # If the treetype is GRUPTREE, add root nodes
     if treetype == "GRUPTREE":

@@ -401,12 +401,14 @@ def test_prettyprint(mocker, capsys):
     assert (
         """
 Date: 2000-01-01
+GRUPTREE trees:
 FIELD
 ├── OP
 └── WI
 
 
 Date: 2000-02-01
+GRUPTREE trees:
 FIELD
 ├── OP
 │   ├── OP_1
@@ -417,6 +419,7 @@ FIELD
 
 
 Date: 2000-06-01
+GRUPTREE trees:
 FIELD
 ├── OP
 │   ├── OP_1
@@ -428,6 +431,7 @@ FIELD
 
 
 Date: 2001-01-01
+GRUPTREE trees:
 FIELD
 ├── OP
 │   ├── OP_1
@@ -441,6 +445,7 @@ FIELD
 
 
 Date: 2001-03-01
+GRUPTREE trees:
 FIELD
 ├── OP
 │   ├── OP_1

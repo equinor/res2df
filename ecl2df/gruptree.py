@@ -46,11 +46,11 @@ def df(
 
     The gruptree is a time dependent property,
     with accumulative effects from new occurences of
-    GRUPTREE or WELSPECS.
+    GRUPNET, WELSPECS, BRANPROP and NODEPROP.
 
-    Whenever the tree changes, the previous tree is copied
-    and a new complete tree is added to the dataframe tagged
-    with the new date.
+    Whenever the GRUPTREE or BRANPROP tree changes, the
+    previous tree is copied and a new complete tree is added
+    to the dataframe tagged with the new date.
 
     startdate is only relevant when START is not in the deck.
 
@@ -74,7 +74,7 @@ def df(
     edgerecords = []  # list of dict of rows containing an edge.
     nodedatarecords = []
 
-    # In order for the GRUPTREE keywords to accumulate, we
+    # In order for the GRUPTREE/BRANPROP keywords to accumulate, we
     # store the edges as a dictionary indexed by the edge
     # (which is a tuple of child and parent).
     # The value of the dictionary is GRUPTREE or WELSPECS

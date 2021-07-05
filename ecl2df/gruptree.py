@@ -79,7 +79,7 @@ def df(
     # (which is a tuple of child and parent).
     # The value of the dictionary is GRUPTREE or WELSPECS
     currentedges: Dict[str, Dict[tuple, str]] = {"GRUPTREE": dict(), "BRANPROP": dict()}
-    wellspecsedges: Dict[tuple,str] = dict()
+    wellspecsedges: Dict[tuple, str] = dict()
     nodedata: Dict[str, pd.DataFrame] = {
         "GRUPNET": pd.DataFrame(),
         "NODEPROP": pd.DataFrame(),
@@ -143,9 +143,7 @@ def df(
             found_keywords["WELSPECS"] = True
             for wellrec in kword:
                 wspc_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
-                wellspecsedges[
-                    (wspc_dict["WELL"], wspc_dict["GROUP"])
-                ] = "WELSPECS"
+                wellspecsedges[(wspc_dict["WELL"], wspc_dict["GROUP"])] = "WELSPECS"
 
                 # Only write to BRANPROP if there is a current BRANPROP tree
                 if currentedges["BRANPROP"]:
@@ -164,13 +162,16 @@ def df(
 
     # Ensure we also store any tree information found after the last DATE statement
     if any([val for val in found_keywords.values()]):
-        edgerecords += _write_edgerecords(currentedges, nodedata, wellspecsedges, found_keywords, date)
+        edgerecords += _write_edgerecords(
+            currentedges, nodedata, wellspecsedges, found_keywords, date
+        )
     dframe = pd.DataFrame(edgerecords)
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
 
     # Remove duplicate rows
-    # This happens with WELSPECS if GRUPTREE and BRANPROP is defined at the same timestep
+    # This happens with WELSPECS if GRUPTREE and BRANPROP is defined
+    # at the same timestep
     dframe = dframe.drop_duplicates(
         subset=["DATE", "CHILD", "KEYWORD", "PARENT"], keep="last"
     )
@@ -191,14 +192,22 @@ def _write_edgerecords(
     edgerecords = []
     if any([found_keywords[key] for key in ["GRUPTREE", "GRUPNET", "WELSPECS"]]):
         edgerecords += _merge_edges_and_nodeinfo(
-            currentedges["GRUPTREE"], nodedata["GRUPNET"], wellspecsedges, date, "GRUPTREE"
+            currentedges["GRUPTREE"],
+            nodedata["GRUPNET"],
+            wellspecsedges,
+            date,
+            "GRUPTREE",
         )
     if (
         any([found_keywords[key] for key in ["BRANPROP", "NODEPROP", "WELSPECS"]])
         and currentedges["BRANPROP"]
     ):
         edgerecords += _merge_edges_and_nodeinfo(
-            currentedges["BRANPROP"], nodedata["NODEPROP"], wellspecsedges, date, "BRANPROP"
+            currentedges["BRANPROP"],
+            nodedata["NODEPROP"],
+            wellspecsedges,
+            date,
+            "BRANPROP",
         )
 
     return edgerecords
@@ -209,7 +218,7 @@ def _merge_edges_and_nodeinfo(
     nodedata_df: pd.DataFrame,
     wellspecsedges: Dict[tuple, str],
     date: Optional[datetime.date],
-    treetype: str
+    treetype: str,
 ) -> List[dict]:
     """Merge a list of edges with information from the GRUPNET dataframe.
 
@@ -243,7 +252,9 @@ def _merge_edges_and_nodeinfo(
 
     # Write WELSPECS edges
     for edgename, _ in wellspecsedges.items():
-        if (treetype == "BRANPROP" and edgename[1] in childs) or (treetype=="GRUPTREE"):
+        if (treetype == "BRANPROP" and edgename[1] in childs) or (
+            treetype == "GRUPTREE"
+        ):
             rec_dict = {
                 "DATE": date,
                 "CHILD": edgename[0],
@@ -251,7 +262,7 @@ def _merge_edges_and_nodeinfo(
                 "KEYWORD": "WELSPECS",
             }
             edgerecords.append(rec_dict)
-        if treetype=="GRUPTREE":
+        if treetype == "GRUPTREE":
             childs |= {edgename[0]}
             parents |= {edgename[1]}
 

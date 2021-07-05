@@ -428,12 +428,14 @@ def gruptree_main(args) -> None:
     if args.prettyprint:
         if "DATE" in dframe:
             for date in dframe["DATE"].dropna().unique():
-                df_date = dframe[dframe.DATE==date]
+                df_date = dframe[dframe.DATE == date]
                 print("Date: " + str(date.astype("M8[D]")))
 
                 for treetype in ["GRUPTREE", "BRANPROP"]:
                     if treetype in df_date["KEYWORD"].unique():
-                        df_treetype = df_date[df_date["KEYWORD"].isin([treetype, "WELSPECS"])]
+                        df_treetype = df_date[
+                            df_date["KEYWORD"].isin([treetype, "WELSPECS"])
+                        ]
                         print(f"{treetype} trees:")
                         for tree in edge_dataframe2dict(df_treetype):
                             print(tree_from_dict(tree))

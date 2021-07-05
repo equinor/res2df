@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 import pandas as pd
+import numpy as np
 
 from ecl2df import gruptree, ecl2csv
 from ecl2df.eclfiles import EclFiles
@@ -473,3 +474,91 @@ def test_main_subparser(tmpdir, mocker):
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+@pytest.mark.parametrize(
+    "schstr, expected_dframe",
+    [
+        (
+            """
+DATES
+  1 JAN 2000 /
+/
+
+GRUPTREE
+ 'OP' 'FIELD'/
+/
+
+        """,
+            pd.DataFrame(
+                [
+                    {
+                        "DATE": "2000-01-01",
+                        "CHILD": "FIELD",
+                        "PARENT": np.nan,
+                        "KEYWORD": "GRUPTREE",
+                    },
+                    {
+                        "DATE": "2000-01-01",
+                        "CHILD": "OP",
+                        "PARENT": "FIELD",
+                        "KEYWORD": "GRUPTREE",
+                    },
+                ]
+            ),
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        #         (
+        #             """
+        # GRUPTREE
+        #  'OP' 'FIELDA'/
+        # /
+        # GRUPNET
+        #   'FIELDA' 90 /
+        #   'OP' 100 /
+        #   'FIELDB' 80 /   -- This is ignored when it is not in the GRUPTREE!
+        # /
+        #         """,
+        #             pd.DataFrame(
+        #                 [
+        #                     {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
+        #                     {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
+        #                 ]
+        #             )
+        #         ),
+        #         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        #         (
+        #             """
+        # GRUPTREE
+        #  'OP' 'FIELDA'/
+        #  'OPX' 'FIELDB' /
+        # /
+        # GRUPNET
+        #   'FIELDA' 90 /
+        #   'OP' 100 /
+        #   'FIELDB' 80 /
+        # /
+        #         """,
+        #             pd.DataFrame(
+        #                 [
+        #                     {"CHILD": "FIELDB", "PARENT": None, "TERMINAL_PRESSURE": 80},
+        #                     {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
+        #                     {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
+        #                     {"CHILD": "OPX", "PARENT": "FIELDB", "TERMINAL_PRESSURE": None},
+        #                 ]
+        #             )
+        #         )
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    ],
+)
+def test_branprop_nodeprop(schstr, expected_dframe):
+    """Description"""
+    deck = EclFiles.str2deck(schstr)
+    dframe = gruptree.df(deck)
+    test_columns = ["DATE", "CHILD", "KEYWORD", "PARENT"]
+    expected_dframe.DATE = pd.to_datetime(expected_dframe.DATE)
+    pd.testing.assert_frame_equal(
+        dframe[test_columns],
+        expected_dframe[test_columns],
+        check_dtype=False,
+    )

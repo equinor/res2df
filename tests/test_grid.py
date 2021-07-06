@@ -17,7 +17,7 @@ TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
-def test_gridgeometry2df():
+def test_gridgeometry2df(mocker):
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
     grid_geom = grid.gridgeometry2df(eclfiles)
@@ -41,6 +41,17 @@ def test_gridgeometry2df():
     assert grid_geom["GLOBAL_INDEX"].max() > len(grid_geom)
 
     assert (grid_geom["Z_MAX"] > grid_geom["Z_MIN"]).all()
+
+    with pytest.raises(TypeError, match="missing 1 required positional"):
+        grid.gridgeometry2df()
+
+    with pytest.raises(AttributeError):
+        # This error situation we don't really try to handle.
+        grid.gridgeometry2df(None)
+
+    with pytest.raises(ValueError, match="No EGRID file supplied"):
+        mocker.patch("ecl2df.eclfiles.EclFiles.get_egridfile", return_value=None)
+        grid.gridgeometry2df(eclfiles)
 
 
 def test_wrongfile():
@@ -94,6 +105,36 @@ def test_gridzonemap():
     assert len(dframe) == len(grid_no_zone)
 
 
+def test_merge_initvectors():
+    eclfiles = EclFiles(DATAFILE)
+    assert grid.merge_initvectors(eclfiles, pd.DataFrame(), []).empty
+    foo_df = pd.DataFrame([{"FOO": 1}])
+    pd.testing.assert_frame_equal(grid.merge_initvectors(eclfiles, foo_df, []), foo_df)
+
+    with pytest.raises(ValueError, match="All of the columns"):
+        grid.merge_initvectors(eclfiles, foo_df, ["NONEXISTING"])
+
+    minimal_df = pd.DataFrame([{"I": 10, "J": 11, "K": 12}])
+
+    with pytest.raises(KeyError):
+        grid.merge_initvectors(eclfiles, minimal_df, ["NONEXISTING"])
+
+    withporo = grid.merge_initvectors(eclfiles, minimal_df, ["PORO"])
+    pd.testing.assert_frame_equal(
+        withporo, minimal_df.assign(PORO=0.221848), check_dtype=False
+    )
+
+    with pytest.raises(ValueError):
+        # ijknames must be length 3
+        grid.merge_initvectors(
+            eclfiles, minimal_df, ["PORO"], ijknames=["I", "J", "K", "L"]
+        )
+    with pytest.raises(ValueError):
+        grid.merge_initvectors(eclfiles, minimal_df, ["PORO"], ijknames=["I", "J"])
+    with pytest.raises(ValueError, match="All of the columns"):
+        grid.merge_initvectors(eclfiles, minimal_df, ["PORO"], ijknames=["A", "B", "C"])
+
+
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -145,6 +186,9 @@ def test_df2ecl(tmpdir):
     grid_df = grid.df(eclfiles)
 
     fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
+    assert grid.df2ecl(grid_df, "FIPNUM", dtype="int", nocomments=True) == grid.df2ecl(
+        grid_df, "FIPNUM", dtype=int, nocomments=True
+    )
     assert "FIPNUM" in fipnum_str
     assert "-- Output file printed by ecl2df.grid" in fipnum_str
     assert "35817 active cells" in fipnum_str  # (comment at the end)
@@ -176,6 +220,13 @@ def test_df2ecl(tmpdir):
     assert Path("perm.inc").is_file()
     incstring = open("perm.inc").readlines()
     assert sum([1 for line in incstring if "PERM" in line]) == 6
+
+    assert grid.df2ecl(grid_df, ["PERMX"], dtype=float, nocomments=True) == grid.df2ecl(
+        grid_df, ["PERMX"], dtype="float", nocomments=True
+    )
+
+    # with pytest.raises(ValueError, match="Wrong dtype argument"):
+    grid.df2ecl(grid_df, ["PERMX"], dtype=dict)
 
     with pytest.raises(ValueError):
         grid.df2ecl(grid_df, ["PERMRR"])
@@ -238,6 +289,15 @@ def test_dropconstants():
     assert "A" in grid.drop_constant_columns(df)
     assert "B" in grid.drop_constant_columns(df, alwayskeep="B")
     assert "B" in grid.drop_constant_columns(df, alwayskeep=["B"])
+
+    with pytest.raises(TypeError):
+        grid.drop_constant_columns(df, alwayskeep={"FOO"})
+    with pytest.raises(TypeError):
+        grid.drop_constant_columns(df, alwayskeep=1)
+    with pytest.raises(TypeError):
+        grid.drop_constant_columns({})
+
+    assert grid.drop_constant_columns(pd.DataFrame()).empty
 
 
 def test_df():
@@ -368,6 +428,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "grid",
+        "--verbose",
         DATAFILE,
         "-o",
         str(tmpcsvfile),

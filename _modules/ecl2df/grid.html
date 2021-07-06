@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev6+gbe46913 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.13.3.dev1+g181deba documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev6+gbe46913
+                0.13.3.dev1+g181deba
               </div>
             
           
@@ -445,8 +445,6 @@
 <span class="sd">        pr. cell. The index of the dataframe are the global indices. If a zonemap</span>
 <span class="sd">        is provided, zone information will be in the column ZONE.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">eclfiles</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span>
     <span class="n">egrid_file</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egridfile</span><span class="p">()</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_egrid</span><span class="p">()</span>
 
@@ -535,8 +533,11 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ijknames</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dframe</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">ijknames</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;All of the columns </span><span class="si">{</span><span class="n">ijknames</span><span class="si">}</span><span class="s2"> must be present &quot;</span>
+            <span class="s2">&quot;in the dataframe for merging&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">initvectors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">initvectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">initvectors</span><span class="p">]</span>

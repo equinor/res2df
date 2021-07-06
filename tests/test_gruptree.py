@@ -510,48 +510,48 @@ BRANPROP
                         "CHILD": "FIELD",
                         "PARENT": np.nan,
                         "KEYWORD": "GRUPTREE",
-                    }, # 1
+                    },  # 1
                     {
                         "DATE": "2000-01-01",
                         "CHILD": "LEAF",
                         "PARENT": "FIELD",
                         "KEYWORD": "GRUPTREE",
-                    }, # 2
+                    },  # 2
                     {
                         "DATE": "2000-01-01",
                         "CHILD": "NODE_A",
                         "PARENT": "FIELD",
                         "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 1
-                    }, # 3
+                        "VFP_TABLE": 1,
+                    },  # 3
                     {
                         "DATE": "2000-01-01",
                         "CHILD": "LEAF",
                         "PARENT": "NODE_A",
                         "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 2
-                    }, # 4
+                        "VFP_TABLE": 2,
+                    },  # 4
                     {
                         "DATE": "2000-02-01",
                         "CHILD": "NODE_A",
                         "PARENT": "FIELD",
                         "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 1
-                    }, # 5
+                        "VFP_TABLE": 1,
+                    },  # 5
                     {
                         "DATE": "2000-02-01",
                         "CHILD": "NODE_B",
                         "PARENT": "FIELD",
                         "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 3
-                    }, # 6
+                        "VFP_TABLE": 3,
+                    },  # 6
                     {
                         "DATE": "2000-02-01",
                         "CHILD": "LEAF",
                         "PARENT": "NODE_B",
                         "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 4
-                    }, # 7
+                        "VFP_TABLE": 4,
+                    },  # 7
                 ]
             ),
         ),
@@ -574,7 +574,7 @@ BRANPROP
         #                 ]
         #             )
         #         ),
-        #         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        #         # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
         #         (
         #             """
         # GRUPTREE
@@ -606,7 +606,5 @@ def test_branprop_nodeprop(schstr, expected_dframe):
     test_columns = ["DATE", "CHILD", "KEYWORD", "PARENT", "VFP_TABLE"]
     expected_dframe.DATE = pd.to_datetime(expected_dframe.DATE)
     pd.testing.assert_frame_equal(
-        dframe[test_columns],
-        expected_dframe[test_columns],
-        check_dtype=False
+        dframe[test_columns], expected_dframe[test_columns], check_dtype=False
     )

@@ -171,9 +171,7 @@ def df(
     # Remove duplicate rows
     # This happens with WELSPECS if GRUPTREE and BRANPROP is defined
     # at the same timestep
-    dframe = dframe.drop_duplicates(
-        subset=["DATE", "CHILD", "KEYWORD"], keep="last"
-    )
+    dframe = dframe.drop_duplicates(subset=["DATE", "CHILD", "KEYWORD"], keep="last")
     print(dframe)
     return dframe
 

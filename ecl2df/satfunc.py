@@ -14,11 +14,13 @@ TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 """
 import logging
 import argparse
+from pathlib import Path
 from typing import List, Dict, Union, Optional
 
 import pandas as pd
 
 try:
+    # pylint: disable=unused-import
     import opm.io
 except ImportError:
     pass
@@ -322,9 +324,7 @@ def satfunc_main(args) -> None:
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string
-        satfunc_df = df(
-            "".join(open(args.DATAFILE).readlines()), keywords=args.keywords
-        )
+        satfunc_df = df(Path(args.DATAFILE).read_text(), keywords=args.keywords)
     if not satfunc_df.empty:
         write_dframe_stdout_file(
             satfunc_df,

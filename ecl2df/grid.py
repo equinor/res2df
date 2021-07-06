@@ -14,9 +14,10 @@ import fnmatch
 import textwrap
 import argparse
 import datetime
-import dateutil.parser
 from pathlib import Path
 from typing import Union, List, Tuple, Optional, Dict, Type
+
+import dateutil.parser
 
 import numpy as np
 import pandas as pd
@@ -123,6 +124,10 @@ def rst2df(
     """Return a dataframe with dynamic data from the restart file
     for each cell, at a particular date.
 
+    The dataframe will have a dummy index. The column named
+    "active" refers to the active cell index, and is to be used
+    when merging with the grid geometry dataframe.
+
     Args:
         eclfiles: EclFiles object
         date: datetime.date or list of datetime.date, must
@@ -136,7 +141,7 @@ def rst2df(
          dateinheaders: boolean on whether the date should
             be added to the column headers. Instead of
             SGAS as a column header, you get SGAS@YYYY-MM-DD.
-         stackdates: Default is false. If true, a column
+         stackdates: Default is false. If True, a column
             called DATE will be added and data for all restart
             dates will be added in a stacked manner. Implies
             dateinheaders False.
@@ -163,7 +168,7 @@ def rst2df(
     rstvectors = []
     for vec in eclfiles.get_rstfile().headers:
         if vec[1] == activecells and any(
-            [fnmatch.fnmatch(vec[0], key) for key in vectors]
+            fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
             rstvectors.append(vec[0])
     rstvectors = list(set(rstvectors))  # Make unique list
@@ -215,7 +220,7 @@ def rst2df(
             "SWAT" in rst_df
             and "SGAS" in rst_df
             and "SOIL" not in rst_df
-            and any([fnmatch.fnmatch("SOIL", key) for key in vectors])
+            and any(fnmatch.fnmatch("SOIL", key) for key in vectors)
         ):
             rst_df["SOIL"] = 1 - rst_df["SWAT"] - rst_df["SGAS"]
 
@@ -232,16 +237,18 @@ def rst2df(
         # Remove columns that are all NaN:
         rst_df.dropna(axis="columns", how="all", inplace=True)
 
+        rst_df.index.name = "active"
+
         rst_dfs[datestr] = rst_df
 
     if not rst_dfs:
         return pd.DataFrame()
 
     if not stackdates:
-        return pd.concat(rst_dfs.values(), axis=1)
+        return pd.concat(rst_dfs.values(), axis=1).reset_index()
+
     rststack = pd.concat(rst_dfs, sort=False).reset_index()
     rststack.rename(columns={"level_0": "DATE"}, inplace=True)
-    del rststack["level_1"]
     return rststack
 
 
@@ -395,10 +402,10 @@ def init2df(eclfiles: EclFiles, vectors: Union[str, List[str]] = None) -> pd.Dat
     include_porv = False
     for vec in init.headers:
         if vec[1] == egrid.getNumActive() and any(
-            [fnmatch.fnmatch(vec[0], key) for key in vectors]
+            fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
             usevectors.append(vec[0])
-        if vec[0] == "PORV" and any([fnmatch.fnmatch("PORV", key) for key in vectors]):
+        if vec[0] == "PORV" and any(fnmatch.fnmatch("PORV", key) for key in vectors):
             include_porv = True
 
     if usevectors:
@@ -451,21 +458,21 @@ def df(
     any time dependent data from Restart files.
 
     Args:
-        eclfiles (EclFiles): Handle to an Eclipse case
-        vectors (str or list): Vectors to include, wildcards
+        eclfiles: Handle to an Eclipse case
+        vectors: Vectors to include, wildcards
             supported. Used to match both
             INIT vectors and RESTART vectors.
         dropconstants (bool): If true, columns that are constant
             for every cell are dropped.
-        rstdates (list, str or datetime): Restart dates to include in ISO-8601 format.
+        rstdates: Restart dates to include in ISO-8601 format.
             Alternatively, pick from the mnenomics 'first', 'all' and 'last'.
-        dateinheaders (bool): Whether columns with data from UNRST files
+        dateinheaders: Whether columns with data from UNRST files
             should always have the ISO-date embedded in the column header.
-        stackdates (bool): Default is false. If true, a column
+        stackdates: Default is false. If true, a column
             called DATE will be added and data for all restart
             dates will be added in a stacked manner. Implies
             dateinheaders False.
-        zonemap (dict): A zonemap dictionary mapping every K index to a
+        zonemap: A zonemap dictionary mapping every K index to a
             string, which will be put in a column ZONE. If none is provided,
             a zonemap from a default file will be looked for. Provide an empty
             dictionary to avoid looking for the default file, and no ZONE
@@ -482,10 +489,18 @@ def df(
             dateinheaders=dateinheaders,
             stackdates=stackdates,
         )
-    grid_df = pd.concat([gridgeom, initdf, rst_df], axis=1, sort=False)
+    grid_df = gridgeom.merge(
+        initdf, how="outer", on=None, left_index=True, right_index=True
+    )
+
+    if rst_df is not None and not rst_df.empty:
+        grid_df = grid_df.merge(
+            rst_df, how="outer", left_index=True, right_on="active"
+        ).reset_index(drop=True)
+
     if dropconstants:
         grid_df = drop_constant_columns(grid_df)
-    return grid_df
+    return grid_df.drop("active", axis="columns", errors="ignore")
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

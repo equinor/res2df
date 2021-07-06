@@ -339,7 +339,7 @@ def test_df():
     grid_df = grid.df(eclfiles, vectors=["PRESSURE"], rstdates="last", stackdates=True)
     assert "PRESSURE" in grid_df
     assert len(grid_df.columns) == geometry_cols + 2
-    assert "DATE" in grid_df  # awaits stacking
+    assert "DATE" in grid_df  # Present because of stackdates
 
     grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="last")
     assert "PRESSURE" in grid_df
@@ -349,11 +349,38 @@ def test_df():
     assert "PRESSURE" not in grid_df
     assert "PRESSURE@2001-08-01" in grid_df
 
-    grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="all", stackdates=True)
+    grid_df = grid.df(
+        eclfiles, vectors=["PORO", "PRESSURE"], rstdates="all", stackdates=True
+    )
     assert "PRESSURE" in grid_df
-    assert len(grid_df.columns) == geometry_cols + 2
+    assert len(grid_df.columns) == geometry_cols + 3
     assert "DATE" in grid_df
     assert len(grid_df["DATE"].unique()) == 4
+    assert not grid_df.isna().any().any()
+    # Check that all but the dynamic data has been repeated:
+    df1 = (
+        grid_df[grid_df["DATE"] == "2000-01-01"]
+        .drop(["DATE", "PRESSURE"], axis=1)
+        .reset_index(drop=True)
+    )
+    df2 = (
+        grid_df[grid_df["DATE"] == "2000-07-01"]
+        .drop(["PRESSURE", "DATE"], axis=1)
+        .reset_index(drop=True)
+    )
+    df3 = (
+        grid_df[grid_df["DATE"] == "2001-02-01"]
+        .drop(["PRESSURE", "DATE"], axis=1)
+        .reset_index(drop=True)
+    )
+    df4 = (
+        grid_df[grid_df["DATE"] == "2001-08-01"]
+        .drop(["PRESSURE", "DATE"], axis=1)
+        .reset_index(drop=True)
+    )
+    pd.testing.assert_frame_equal(df1, df2)
+    pd.testing.assert_frame_equal(df1, df3)
+    pd.testing.assert_frame_equal(df1, df4)
 
     grid_df = grid.df(eclfiles, vectors="PORO")
     assert "I" in grid_df
@@ -365,7 +392,7 @@ def test_df():
     assert "I" in grid_df
     assert "PORO" in grid_df
     assert "DATE" not in grid_df
-    # (no RST columns, so no DATE info in the daaframe)
+    # (no RST columns, so no DATE info in the dataframe)
     # (warnings should be printed)
 
     grid_df = grid.df(eclfiles, vectors="PORO", rstdates="all", stackdates=True)
@@ -464,9 +491,9 @@ def test_get_available_rst_dates():
 def test_rst2df():
     """Test producing dataframes from restart files"""
     eclfiles = EclFiles(DATAFILE)
-    assert grid.rst2df(eclfiles, "first").shape == (35817, 23)
-    assert grid.rst2df(eclfiles, "last").shape == (35817, 23)
-    assert grid.rst2df(eclfiles, "all").shape == (35817, 23 * 4)
+    assert grid.rst2df(eclfiles, "first").shape == (35817, 24)
+    assert grid.rst2df(eclfiles, "last").shape == (35817, 24)
+    assert grid.rst2df(eclfiles, "all").shape == (35817, 23 * 4 + 1)
 
     assert "SOIL" in grid.rst2df(eclfiles, date="first", dateinheaders=False)
     assert (
@@ -478,11 +505,21 @@ def test_rst2df():
     assert rst_df["DATE"].unique()[0] == "2000-01-01"
     rst_df = grid.rst2df(eclfiles, "all", stackdates=True)
     assert len(rst_df["DATE"].unique()) == len(grid.get_available_rst_dates(eclfiles))
-    assert rst_df.shape == (4 * 35817, 23 + 1)  # "DATE" is now the extra column
+
+    # "DATE" and "active" are now the extra columns:
+    assert rst_df.shape == (4 * 35817, 23 + 2)
+
+    # Test that only the PPCW column contains NaN's (only defined for selected cells)
+    nancols = rst_df.isna().any()
+    assert nancols["PPCW"]
+    assert (
+        len(rst_df[["PPCW", "DATE"]].dropna()["DATE"].unique()) == 4
+    )  # All dates present
+    assert sum(nancols) == 1  # All other columns are "False"
 
     # Check vector slicing:
     rst_df = grid.rst2df(eclfiles, "first", vectors="S???")
-    assert rst_df.shape == (35817, 3)
+    assert rst_df.shape == (35817, 4)
     assert "SGAS" in rst_df
     assert "SWAT" in rst_df
     assert "SOIL" in rst_df  # This is actually computed

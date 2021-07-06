@@ -486,9 +486,22 @@ DATES
 /
 
 GRUPTREE
- 'OP' 'FIELD'/
+ 'LEAF' 'FIELD'/
 /
 
+BRANPROP
+  'NODE_A'  'FIELD'  1 /
+  'LEAF'  'NODE_A' 2 /
+/
+
+DATES
+  1 FEB 2000 /
+/
+
+BRANPROP
+  'NODE_B'  'FIELD'  3 /
+  'LEAF'  'NODE_B' 4 /
+/
         """,
             pd.DataFrame(
                 [
@@ -497,13 +510,48 @@ GRUPTREE
                         "CHILD": "FIELD",
                         "PARENT": np.nan,
                         "KEYWORD": "GRUPTREE",
-                    },
+                    }, # 1
                     {
                         "DATE": "2000-01-01",
-                        "CHILD": "OP",
+                        "CHILD": "LEAF",
                         "PARENT": "FIELD",
                         "KEYWORD": "GRUPTREE",
-                    },
+                    }, # 2
+                    {
+                        "DATE": "2000-01-01",
+                        "CHILD": "NODE_A",
+                        "PARENT": "FIELD",
+                        "KEYWORD": "BRANPROP",
+                        "VFP_TABLE": 1
+                    }, # 3
+                    {
+                        "DATE": "2000-01-01",
+                        "CHILD": "LEAF",
+                        "PARENT": "NODE_A",
+                        "KEYWORD": "BRANPROP",
+                        "VFP_TABLE": 2
+                    }, # 4
+                    {
+                        "DATE": "2000-02-01",
+                        "CHILD": "NODE_A",
+                        "PARENT": "FIELD",
+                        "KEYWORD": "BRANPROP",
+                        "VFP_TABLE": 1
+                    }, # 5
+                    {
+                        "DATE": "2000-02-01",
+                        "CHILD": "NODE_B",
+                        "PARENT": "FIELD",
+                        "KEYWORD": "BRANPROP",
+                        "VFP_TABLE": 3
+                    }, # 6
+                    {
+                        "DATE": "2000-02-01",
+                        "CHILD": "LEAF",
+                        "PARENT": "NODE_B",
+                        "KEYWORD": "BRANPROP",
+                        "VFP_TABLE": 4
+                    }, # 7
                 ]
             ),
         ),
@@ -521,8 +569,8 @@ GRUPTREE
         #         """,
         #             pd.DataFrame(
         #                 [
-        #                     {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
-        #                     {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
+        #                     {"CHILD": "FIELDA", "PARENT": None,
+        #                     {"CHILD": "OP", "PARENT": "FIELDA",
         #                 ]
         #             )
         #         ),
@@ -541,10 +589,10 @@ GRUPTREE
         #         """,
         #             pd.DataFrame(
         #                 [
-        #                     {"CHILD": "FIELDB", "PARENT": None, "TERMINAL_PRESSURE": 80},
-        #                     {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
-        #                     {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
-        #                     {"CHILD": "OPX", "PARENT": "FIELDB", "TERMINAL_PRESSURE": None},
+        #                     {"CHILD": "FIELDB", "PARENT": None,
+        #                     {"CHILD": "FIELDA", "PARENT": None,
+        #                     {"CHILD": "OP", "PARENT": "FIELDA",
+        #                     {"CHILD": "OPX", "PARENT": "FIELDB",
         #                 ]
         #             )
         #         )
@@ -554,11 +602,11 @@ GRUPTREE
 def test_branprop_nodeprop(schstr, expected_dframe):
     """Description"""
     deck = EclFiles.str2deck(schstr)
-    dframe = gruptree.df(deck)
-    test_columns = ["DATE", "CHILD", "KEYWORD", "PARENT"]
+    dframe = gruptree.df(deck).reset_index()
+    test_columns = ["DATE", "CHILD", "KEYWORD", "PARENT", "VFP_TABLE"]
     expected_dframe.DATE = pd.to_datetime(expected_dframe.DATE)
     pd.testing.assert_frame_equal(
         dframe[test_columns],
         expected_dframe[test_columns],
-        check_dtype=False,
+        check_dtype=False
     )

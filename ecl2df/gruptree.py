@@ -172,7 +172,7 @@ def df(
     # This happens with WELSPECS if GRUPTREE and BRANPROP is defined
     # at the same timestep
     dframe = dframe.drop_duplicates(
-        subset=["DATE", "CHILD", "KEYWORD", "PARENT"], keep="last"
+        subset=["DATE", "CHILD", "KEYWORD"], keep="last"
     )
     print(dframe)
     return dframe

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev6+gbe46913 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.2.dev5+g499b041
+                0.13.2.dev6+gbe46913
               </div>
             
           
@@ -296,6 +296,10 @@
     <span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
 <span class="sd">    for each cell, at a particular date.</span>
 
+<span class="sd">    The dataframe will have a dummy index. The column named</span>
+<span class="sd">    &quot;active&quot; refers to the active cell index, and is to be used</span>
+<span class="sd">    when merging with the grid geometry dataframe.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        eclfiles: EclFiles object</span>
 <span class="sd">        date: datetime.date or list of datetime.date, must</span>
@@ -309,7 +313,7 @@
 <span class="sd">         dateinheaders: boolean on whether the date should</span>
 <span class="sd">            be added to the column headers. Instead of</span>
 <span class="sd">            SGAS as a column header, you get SGAS@YYYY-MM-DD.</span>
-<span class="sd">         stackdates: Default is false. If true, a column</span>
+<span class="sd">         stackdates: Default is false. If True, a column</span>
 <span class="sd">            called DATE will be added and data for all restart</span>
 <span class="sd">            dates will be added in a stacked manner. Implies</span>
 <span class="sd">            dateinheaders False.</span>
@@ -405,16 +409,18 @@
         <span class="c1"># Remove columns that are all NaN:</span>
         <span class="n">rst_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+        <span class="n">rst_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;active&quot;</span>
+
         <span class="n">rst_dfs</span><span class="p">[</span><span class="n">datestr</span><span class="p">]</span> <span class="o">=</span> <span class="n">rst_df</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">rst_dfs</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">stackdates</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
     <span class="n">rststack</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rst_dfs</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="n">rststack</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;level_0&quot;</span><span class="p">:</span> <span class="s2">&quot;DATE&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">rststack</span><span class="p">[</span><span class="s2">&quot;level_1&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">rststack</span></div>
 
 
@@ -623,21 +629,21 @@
 <span class="sd">    any time dependent data from Restart files.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eclfiles (EclFiles): Handle to an Eclipse case</span>
-<span class="sd">        vectors (str or list): Vectors to include, wildcards</span>
+<span class="sd">        eclfiles: Handle to an Eclipse case</span>
+<span class="sd">        vectors: Vectors to include, wildcards</span>
 <span class="sd">            supported. Used to match both</span>
 <span class="sd">            INIT vectors and RESTART vectors.</span>
 <span class="sd">        dropconstants (bool): If true, columns that are constant</span>
 <span class="sd">            for every cell are dropped.</span>
-<span class="sd">        rstdates (list, str or datetime): Restart dates to include in ISO-8601 format.</span>
+<span class="sd">        rstdates: Restart dates to include in ISO-8601 format.</span>
 <span class="sd">            Alternatively, pick from the mnenomics &#39;first&#39;, &#39;all&#39; and &#39;last&#39;.</span>
-<span class="sd">        dateinheaders (bool): Whether columns with data from UNRST files</span>
+<span class="sd">        dateinheaders: Whether columns with data from UNRST files</span>
 <span class="sd">            should always have the ISO-date embedded in the column header.</span>
-<span class="sd">        stackdates (bool): Default is false. If true, a column</span>
+<span class="sd">        stackdates: Default is false. If true, a column</span>
 <span class="sd">            called DATE will be added and data for all restart</span>
 <span class="sd">            dates will be added in a stacked manner. Implies</span>
 <span class="sd">            dateinheaders False.</span>
-<span class="sd">        zonemap (dict): A zonemap dictionary mapping every K index to a</span>
+<span class="sd">        zonemap: A zonemap dictionary mapping every K index to a</span>
 <span class="sd">            string, which will be put in a column ZONE. If none is provided,</span>
 <span class="sd">            a zonemap from a default file will be looked for. Provide an empty</span>
 <span class="sd">            dictionary to avoid looking for the default file, and no ZONE</span>
@@ -654,10 +660,18 @@
             <span class="n">dateinheaders</span><span class="o">=</span><span class="n">dateinheaders</span><span class="p">,</span>
             <span class="n">stackdates</span><span class="o">=</span><span class="n">stackdates</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gridgeom</span><span class="p">,</span> <span class="n">initdf</span><span class="p">,</span> <span class="n">rst_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">gridgeom</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">initdf</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rst_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rst_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">grid_df</span> <span class="o">=</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+            <span class="n">rst_df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;active&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">dropconstants</span><span class="p">:</span>
         <span class="n">grid_df</span> <span class="o">=</span> <span class="n">drop_constant_columns</span><span class="p">(</span><span class="n">grid_df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">grid_df</span></div>
+    <span class="k">return</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>

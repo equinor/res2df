@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev5+g499b041 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.13.2.dev6+gbe46913 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.2.dev5+g499b041
+                0.13.2.dev6+gbe46913
               </div>
             
           
@@ -250,21 +250,21 @@ any time dependent data from Restart files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><em>EclFiles</em></a>) – Handle to an Eclipse case</p></li>
-<li><p><strong>vectors</strong> (<em>str</em><em> or </em><em>list</em>) – Vectors to include, wildcards
+<li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – Handle to an Eclipse case</p></li>
+<li><p><strong>vectors</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Vectors to include, wildcards
 supported. Used to match both
 INIT vectors and RESTART vectors.</p></li>
 <li><p><strong>dropconstants</strong> (<em>bool</em>) – If true, columns that are constant
 for every cell are dropped.</p></li>
-<li><p><strong>rstdates</strong> (<em>list</em><em>, </em><em>str</em><em> or </em><em>datetime</em>) – Restart dates to include in ISO-8601 format.
+<li><p><strong>rstdates</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – Restart dates to include in ISO-8601 format.
 Alternatively, pick from the mnenomics ‘first’, ‘all’ and ‘last’.</p></li>
-<li><p><strong>dateinheaders</strong> (<em>bool</em>) – Whether columns with data from UNRST files
+<li><p><strong>dateinheaders</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether columns with data from UNRST files
 should always have the ISO-date embedded in the column header.</p></li>
-<li><p><strong>stackdates</strong> (<em>bool</em>) – Default is false. If true, a column
+<li><p><strong>stackdates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Default is false. If true, a column
 called DATE will be added and data for all restart
 dates will be added in a stacked manner. Implies
 dateinheaders False.</p></li>
-<li><p><strong>zonemap</strong> (<em>dict</em>) – A zonemap dictionary mapping every K index to a
+<li><p><strong>zonemap</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – A zonemap dictionary mapping every K index to a
 string, which will be put in a column ZONE. If none is provided,
 a zonemap from a default file will be looked for. Provide an empty
 dictionary to avoid looking for the default file, and no ZONE
@@ -453,6 +453,9 @@ for merging in dframe. For compdat the ‘K’ is f.ex. denoted ‘K1’</p></li
 <span class="sig-prename descclassname"><span class="pre">ecl2df.grid.</span></span><span class="sig-name descname"><span class="pre">rst2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateinheaders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackdates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/grid.html#rst2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.grid.rst2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dataframe with dynamic data from the restart file
 for each cell, at a particular date.</p>
+<p>The dataframe will have a dummy index. The column named
+“active” refers to the active cell index, and is to be used
+when merging with the grid geometry dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -469,7 +472,7 @@ date formats.</p>
 <dt>dateinheaders: boolean on whether the date should</dt><dd><p>be added to the column headers. Instead of
 SGAS as a column header, you get <a class="reference external" href="mailto:SGAS&#37;&#52;&#48;YYYY-MM-DD">SGAS<span>&#64;</span>YYYY-MM-DD</a>.</p>
 </dd>
-<dt>stackdates: Default is false. If true, a column</dt><dd><p>called DATE will be added and data for all restart
+<dt>stackdates: Default is false. If True, a column</dt><dd><p>called DATE will be added and data for all restart
 dates will be added in a stacked manner. Implies
 dateinheaders False.</p>
 </dd>

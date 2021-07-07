@@ -38,7 +38,7 @@ def df(
     """Extract all group information from a deck
     and present as a Pandas Dataframe of all edges.
 
-    Numerical properties for nodes given in GRUPNET will
+    Properties for nodes given in GRUPNET/NODEPROP will
     be added as extra columns.
 
     From WELSPECS, well names are extracted and added
@@ -75,27 +75,30 @@ def df(
     nodedatarecords = []
 
     # In order for the GRUPTREE/BRANPROP keywords to accumulate, we
-    # store the edges as a dictionary indexed by the edge
+    # store the edges as dictionaries indexed by the edge
     # (which is a tuple of child and parent).
-    # The value of the dictionary is GRUPTREE or WELSPECS
     currentedges: Dict[str, Dict[tuple, Dict[str, Any]]] = {
         "GRUPTREE": dict(),
         "BRANPROP": dict(),
     }
+    # Same approach for the wellspecs keywords
     wellspecsedges: Dict[tuple, str] = dict()
+    # Node properties from GRUPNET/NODEPROP is stored in a dataframe
+    # Note that it's not allowed to mix GRUPNET and NODEPROP in eclipse
+    # so the datframe will only contain columns from one of them
     nodedata: Dict[str, pd.DataFrame] = {
         "GRUPNET": pd.DataFrame(),
         "NODEPROP": pd.DataFrame(),
     }
 
-    # Flags which will tell when a new GRUPTREE/BRANPROP, WELSPECS or
-    # GRUPNET/NODEPROP have been encountered
+    # Flags which will tell when a new network related keyword
+    # has been encountered
     keywords = ["GRUPTREE", "BRANPROP", "WELSPECS", "GRUPNET", "NODEPROP"]
     found_keywords = {key: False for key in keywords}
     for kword in deck:
         if kword.name == "DATES" or kword.name == "START" or kword.name == "TSTEP":
             # Whenever we encounter a new DATES, it means that
-            # we have processed all the GRUPTREE and WELSPECS that
+            # we have processed all the network keywords that
             # have occured since the last date, so this is the chance
             # to dump the parsed data. Also we dump the *entire* tree
             # at every date with a change, not only the newfound edges.
@@ -151,8 +154,13 @@ def df(
 
         if kword.name in ["GRUPNET", "NODEPROP"]:
             found_keywords[kword.name] = True
+            renamer = (
+                {"PRESSURE": "TERMINAL_PRESSURE"} if kword.name == "NODEPROP" else None
+            )
             for rec in kword:
-                nodedatarecords.append(parse_opmio_deckrecord(rec, kword.name))
+                nodedatarecords.append(
+                    parse_opmio_deckrecord(rec, kword.name, renamer=renamer)
+                )
             nodedata[kword.name] = (
                 pd.DataFrame(nodedatarecords)
                 .drop_duplicates(subset="NAME", keep="last")
@@ -168,9 +176,9 @@ def df(
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
 
-    # Remove duplicate rows
-    # This happens with WELSPECS if GRUPTREE and BRANPROP is defined
-    # at the same timestep
+    # Remove rows with duplicate DATE, CHILD and KEYWORD
+    # This happens with WELSPECS if both GRUPTREE and BRANPROP is defined
+    # at the same timestep. And when a node is redirected to a new parent node
     dframe = dframe.drop_duplicates(subset=["DATE", "CHILD", "KEYWORD"], keep="last")
     print(dframe)
     return dframe
@@ -183,30 +191,29 @@ def _write_edgerecords(
     found_keywords: dict,
     date: Optional[datetime.date],
 ) -> List[dict]:
-    """
-    Description
+    """Writes a new GRUPTREE tree if there are new instances of
+    GRUPTREE, GRUPNET or WELSPECS and writes a new BRANPROP tree
+    if there are new instances of BRANPROP, NODEPROP or WELSPECS.
+
+    If both trees are written, any duplicate WELSPECS rows are
+    removed at the end of the df function.
     """
     edgerecords = []
-    if any([found_keywords[key] for key in ["GRUPTREE", "GRUPNET", "WELSPECS"]]):
-        edgerecords += _merge_edges_and_nodeinfo(
-            currentedges["GRUPTREE"],
-            nodedata["GRUPNET"],
-            wellspecsedges,
-            date,
-            "GRUPTREE",
-        )
-    if (
-        any([found_keywords[key] for key in ["BRANPROP", "NODEPROP", "WELSPECS"]])
-        and currentedges["BRANPROP"]
-    ):
-        edgerecords += _merge_edges_and_nodeinfo(
-            currentedges["BRANPROP"],
-            nodedata["NODEPROP"],
-            wellspecsedges,
-            date,
-            "BRANPROP",
-        )
-
+    for treetype, nodetype, welspecs in [
+        ("GRUPTREE", "GRUPNET", "WELSPECS"),
+        ("BRANPROP", "NODEPROP", "WELSPECS"),
+    ]:
+        if (
+            any(found_keywords[key] for key in [treetype, nodetype, welspecs])
+            and currentedges[treetype]
+        ):
+            edgerecords += _merge_edges_and_nodeinfo(
+                currentedges[treetype],
+                nodedata[nodetype],
+                wellspecsedges,
+                date,
+                treetype,
+            )
     return edgerecords
 
 
@@ -217,10 +224,13 @@ def _merge_edges_and_nodeinfo(
     date: Optional[datetime.date],
     treetype: str,
 ) -> List[dict]:
-    """Merge a list of edges with information from the GRUPNET dataframe.
+    """Merge a list of edges with information from the nodedata dataframe.
 
     Edges where there is no parent (root nodes) are identified and added
     as special cases.
+
+    Welspecs-edges are allowed to have a parent that is missing from the
+    GRUPTREE tree, but these edges are ignored for BRANPROP trees.
 
     Args:
         currentedges:
@@ -238,10 +248,8 @@ def _merge_edges_and_nodeinfo(
         rec_dict = {"DATE": date, "CHILD": child, "PARENT": parent, "KEYWORD": treetype}
         childs |= {child}
         parents |= {parent}
-
         # Add fields from edge_dict
         rec_dict.update(edge_dict)
-
         # Add node data
         if child in nodedata_df.index:
             rec_dict.update(nodedata_df.loc[child])
@@ -249,6 +257,10 @@ def _merge_edges_and_nodeinfo(
 
     # Write WELSPECS edges
     for (child, parent), _ in wellspecsedges.items():
+        # The welspecs edges are not added to childs/parents, because the
+        # parents shall not be added as terminal nodes even if they are missing
+        # from GRUPTREE/BRANPROP
+        # For BRANPROP trees, only wells with a parent in the tree are added
         if (treetype == "BRANPROP" and parent in childs) or (treetype == "GRUPTREE"):
             rec_dict = {
                 "DATE": date,
@@ -258,22 +270,14 @@ def _merge_edges_and_nodeinfo(
             }
             edgerecords.append(rec_dict)
 
-        if treetype == "GRUPTREE":
-            childs |= {child}
-            parents |= {parent}
-
-    # If the treetype is GRUPTREE, add root nodes
-    if treetype == "GRUPTREE":
-        roots = parents - childs
-        rootrecords = []
-        for root in roots:
-            rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": "GRUPTREE"}
-            if root in nodedata_df.index:
-                rec_dict.update(nodedata_df.loc[root])
-            rootrecords.append(rec_dict)
-        return rootrecords + edgerecords
-
-    return edgerecords
+    roots = parents - childs
+    rootrecords = []
+    for root in roots:
+        rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": treetype}
+        if root in nodedata_df.index:
+            rec_dict.update(nodedata_df.loc[root])
+        rootrecords.append(rec_dict)
+    return rootrecords + edgerecords
 
 
 def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:

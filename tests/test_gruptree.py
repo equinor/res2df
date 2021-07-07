@@ -477,134 +477,173 @@ def test_main_subparser(tmpdir, mocker):
 
 
 @pytest.mark.parametrize(
-    "schstr, expected_dframe",
+    "schstr, expected_dframe, check_columns",
     [
         (
+            # Changing BRANPROP
             """
 DATES
   1 JAN 2000 /
 /
-
 GRUPTREE
- 'LEAF' 'FIELD'/
+ 'TMPL_A' 'FIELD'/
 /
-
 BRANPROP
   'NODE_A'  'FIELD'  1 /
-  'LEAF'  'NODE_A' 2 /
+  'TMPL_A'  'NODE_A' 2 /
 /
-
+NODEPROP
+  'FIELD'  20 /
+  'TMPL_A'  2*  YES /
+/
 DATES
   1 FEB 2000 /
 /
-
 BRANPROP
   'NODE_B'  'FIELD'  3 /
-  'LEAF'  'NODE_B' 4 /
+  'TMPL_A'  'NODE_B' 4 /
 /
         """,
             pd.DataFrame(
                 [
-                    {
-                        "DATE": "2000-01-01",
-                        "CHILD": "FIELD",
-                        "PARENT": np.nan,
-                        "KEYWORD": "GRUPTREE",
-                    },  # 1
-                    {
-                        "DATE": "2000-01-01",
-                        "CHILD": "LEAF",
-                        "PARENT": "FIELD",
-                        "KEYWORD": "GRUPTREE",
-                    },  # 2
-                    {
-                        "DATE": "2000-01-01",
-                        "CHILD": "NODE_A",
-                        "PARENT": "FIELD",
-                        "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 1,
-                    },  # 3
-                    {
-                        "DATE": "2000-01-01",
-                        "CHILD": "LEAF",
-                        "PARENT": "NODE_A",
-                        "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 2,
-                    },  # 4
-                    {
-                        "DATE": "2000-02-01",
-                        "CHILD": "NODE_A",
-                        "PARENT": "FIELD",
-                        "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 1,
-                    },  # 5
-                    {
-                        "DATE": "2000-02-01",
-                        "CHILD": "NODE_B",
-                        "PARENT": "FIELD",
-                        "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 3,
-                    },  # 6
-                    {
-                        "DATE": "2000-02-01",
-                        "CHILD": "LEAF",
-                        "PARENT": "NODE_B",
-                        "KEYWORD": "BRANPROP",
-                        "VFP_TABLE": 4,
-                    },  # 7
-                ]
+                    ["2000-01-01", "FIELD", "GRUPTREE", np.nan, np.nan, np.nan],
+                    ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD", np.nan, np.nan],
+                    ["2000-01-01", "FIELD", "BRANPROP", np.nan, np.nan, 20],
+                    ["2000-01-01", "NODE_A", "BRANPROP", "FIELD", 1, np.nan],
+                    ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A", 2, np.nan],
+                    ["2000-02-01", "FIELD", "BRANPROP", np.nan, np.nan, 20],
+                    ["2000-02-01", "NODE_A", "BRANPROP", "FIELD", 1, np.nan],
+                    ["2000-02-01", "NODE_B", "BRANPROP", "FIELD", 3, np.nan],
+                    ["2000-02-01", "TMPL_A", "BRANPROP", "NODE_B", 4, np.nan],
+                ],
+                columns=[
+                    "DATE",
+                    "CHILD",
+                    "KEYWORD",
+                    "PARENT",
+                    "VFP_TABLE",
+                    "TERMINAL_PRESSURE",
+                ],
             ),
+            ["DATE", "CHILD", "KEYWORD", "PARENT", "VFP_TABLE", "TERMINAL_PRESSURE"],
         ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-        #         (
-        #             """
-        # GRUPTREE
-        #  'OP' 'FIELDA'/
-        # /
-        # GRUPNET
-        #   'FIELDA' 90 /
-        #   'OP' 100 /
-        #   'FIELDB' 80 /   -- This is ignored when it is not in the GRUPTREE!
-        # /
-        #         """,
-        #             pd.DataFrame(
-        #                 [
-        #                     {"CHILD": "FIELDA", "PARENT": None,
-        #                     {"CHILD": "OP", "PARENT": "FIELDA",
-        #                 ]
-        #             )
-        #         ),
-        #         # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-        #         (
-        #             """
-        # GRUPTREE
-        #  'OP' 'FIELDA'/
-        #  'OPX' 'FIELDB' /
-        # /
-        # GRUPNET
-        #   'FIELDA' 90 /
-        #   'OP' 100 /
-        #   'FIELDB' 80 /
-        # /
-        #         """,
-        #             pd.DataFrame(
-        #                 [
-        #                     {"CHILD": "FIELDB", "PARENT": None,
-        #                     {"CHILD": "FIELDA", "PARENT": None,
-        #                     {"CHILD": "OP", "PARENT": "FIELDA",
-        #                     {"CHILD": "OPX", "PARENT": "FIELDB",
-        #                 ]
-        #             )
-        #         )
+        (
+            # Changing NODEPROP
+            """
+DATES
+  1 JAN 2000 /
+/
+GRUPTREE
+ 'TMPL_A' 'FIELD'/
+/
+BRANPROP
+  'NODE_A'  'FIELD'  /
+  'TMPL_A'  'NODE_A'  /
+/
+NODEPROP
+  'FIELD'  20 /
+  'TMPL_A'  2*  YES /
+/
+DATES
+  1 FEB 2000 /
+/
+NODEPROP
+  'FIELD'  22  1* YES /
+/
+        """,
+            pd.DataFrame(
+                [
+                    ["2000-01-01", "FIELD", "GRUPTREE", np.nan, np.nan, np.nan],
+                    ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD", np.nan, np.nan],
+                    ["2000-01-01", "FIELD", "BRANPROP", np.nan, 20, "NO"],
+                    ["2000-01-01", "NODE_A", "BRANPROP", "FIELD", np.nan, np.nan],
+                    ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A", np.nan, "YES"],
+                    ["2000-02-01", "FIELD", "BRANPROP", np.nan, 22, "YES"],
+                    ["2000-02-01", "NODE_A", "BRANPROP", "FIELD", np.nan, np.nan],
+                    ["2000-02-01", "TMPL_A", "BRANPROP", "NODE_A", np.nan, "YES"],
+                ],
+                columns=[
+                    "DATE",
+                    "CHILD",
+                    "KEYWORD",
+                    "PARENT",
+                    "TERMINAL_PRESSURE",
+                    "ADD_GAS_LIFT_GAS",
+                ],
+            ),
+            [
+                "DATE",
+                "CHILD",
+                "KEYWORD",
+                "PARENT",
+                "TERMINAL_PRESSURE",
+                "ADD_GAS_LIFT_GAS",
+            ],
+        ),
+        # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+        (
+            # WELSPECS
+            """
+DATES
+  1 JAN 2000 /
+/
+GRUPTREE
+ 'TMPL_A' 'FIELD'/
+/
+BRANPROP
+  'NODE_A'  'FIELD'  /
+  'TMPL_A'  'NODE_A'  /
+/
+NODEPROP
+  'FIELD'  20 /
+  'TMPL_A'  2*  YES /
+/
+WELSPECS
+  'WELL_1'  'TMPL_A' 1 1 1 OIL /
+  'WELL_2'  'TMPL_B' 1 1 1 OIL /
+/
+DATES
+  1 FEB 2000 /
+/
+NODEPROP
+  'FIELD' 22 /
+/
+        """,
+            # TMPL_B is not in any trees. The WELSPECS line is added
+            # only when there is a new GRUPTREE tree
+            # TMPL_A is in both trees, but is not repeated at the date
+            # where there is two trees
+            pd.DataFrame(
+                [
+                    ["2000-01-01", "FIELD", "GRUPTREE", np.nan],
+                    ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD"],
+                    ["2000-01-01", "WELL_2", "WELSPECS", "TMPL_B"],
+                    ["2000-01-01", "FIELD", "BRANPROP", np.nan],
+                    ["2000-01-01", "NODE_A", "BRANPROP", "FIELD"],
+                    ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A"],
+                    ["2000-01-01", "WELL_1", "WELSPECS", "TMPL_A"],
+                    ["2000-02-01", "FIELD", "BRANPROP", np.nan],
+                    ["2000-02-01", "NODE_A", "BRANPROP", "FIELD"],
+                    ["2000-02-01", "TMPL_A", "BRANPROP", "NODE_A"],
+                    ["2000-02-01", "WELL_1", "WELSPECS", "TMPL_A"],
+                ],
+                columns=["DATE", "CHILD", "KEYWORD", "PARENT"],
+            ),
+            ["DATE", "CHILD", "KEYWORD", "PARENT"],
+        ),
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     ],
 )
-def test_branprop_nodeprop(schstr, expected_dframe):
-    """Description"""
+def test_branprop_nodeprop(schstr, expected_dframe, check_columns):
+    """Testing that the gruptree dataframe works correctly
+    when the schedule string contains BRANPROP and NODEPROP
+    """
     deck = EclFiles.str2deck(schstr)
     dframe = gruptree.df(deck).reset_index()
-    test_columns = ["DATE", "CHILD", "KEYWORD", "PARENT", "VFP_TABLE"]
     expected_dframe.DATE = pd.to_datetime(expected_dframe.DATE)
     pd.testing.assert_frame_equal(
-        dframe[test_columns], expected_dframe[test_columns], check_dtype=False
+        dframe[check_columns],
+        expected_dframe[check_columns],
+        check_dtype=False,
     )

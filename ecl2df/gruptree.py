@@ -81,7 +81,7 @@ def df(
         "GRUPTREE": dict(),
         "BRANPROP": dict(),
     }
-    # Same approach for the wellspecs keywords
+    # Same approach for the welspecs keywords
     wellspecsedges: Dict[tuple, str] = dict()
     # Node properties from GRUPNET/NODEPROP is stored in a dataframe
     # Note that it's not allowed to mix GRUPNET and NODEPROP in eclipse
@@ -168,7 +168,7 @@ def df(
             )
 
     # Ensure we also store any tree information found after the last DATE statement
-    if any([val for val in found_keywords.values()]):
+    if any(val for val in found_keywords.values()):
         edgerecords += _write_edgerecords(
             currentedges, nodedata, wellspecsedges, found_keywords, date
         )

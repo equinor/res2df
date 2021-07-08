@@ -32,6 +32,7 @@ from ecl2df import EclFiles
                 ]
             ),
         ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
         (
             # Test initialization of list with no wells
             """
@@ -54,6 +55,7 @@ from ecl2df import EclFiles
                 ]
             ),
         ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
         (
             """
     DATES
@@ -88,21 +90,50 @@ from ecl2df import EclFiles
                 ]
             ),
         ),
-        # Wildcard wells are currently not supported
-        # (it requires knowledge of all currenly processed wells)
-        pytest.param(
+        # # # # # # # # # # # # # # # # # # # # # # # #
+        # Construct well list from existing well list
+        (
             """
-    WLIST
-     '*OP' NEW 'PROD*' /
+    DATES
+     1 MAY 2001 /
     /
 
+    WLIST
+     '*OP' NEW OP1 /
+    /
+
+    DATES
+     2 MAY 2001 /
+    /
+    WLIST
+      '*OPS' NEW /
+      '*OPS' ADD '*OP' /
+    /
     """,
-            None,
-            id="wellcardwlist",
-            marks=pytest.mark.xfail(
-                raises=NotImplementedError, match="Wildcards in WLIST are not supported"
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "",
+                        "DATE": datetime.date(2001, 5, 2),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "ADD",
+                        "WELLS": "*OP",
+                        "DATE": datetime.date(2001, 5, 2),
+                    },
+                ]
             ),
         ),
+        # # # # # # # # # # # # # # # # # # # # # # # #
     ],
 )
 def test_parse_wlist(deckstr, expected_df):
@@ -200,6 +231,47 @@ def test_parse_wlist(deckstr, expected_df):
                         "NAME": "OP",
                         "ACTION": "NEW",
                         "WELLS": "OP1 OP2",
+                        "DATE": datetime.date(1900, 1, 2),
+                    },
+                ]
+            ),
+        ),
+        (
+            # Existing well-lists will be repeated on subsequent dates:
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OPA",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(1900, 1, 1),
+                    },
+                    {
+                        "NAME": "OPB",
+                        "ACTION": "NEW",
+                        "WELLS": "OP2",
+                        "DATE": datetime.date(1900, 1, 2),
+                    },
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OPA",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(1900, 1, 1),
+                    },
+                    {
+                        "NAME": "OPA",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(1900, 1, 2),
+                    },
+                    {
+                        "NAME": "OPB",
+                        "ACTION": "NEW",
+                        "WELLS": "OP2",
                         "DATE": datetime.date(1900, 1, 2),
                     },
                 ]
@@ -357,6 +429,53 @@ def test_parse_wlist(deckstr, expected_df):
                 ]
             ),
         ),
+        (
+            # Adding elements from another well list:
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "",
+                        "DATE": datetime.date(2001, 5, 2),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "ADD",
+                        "WELLS": "*OP",
+                        "DATE": datetime.date(2001, 5, 2),
+                    },
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 2),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 2),
+                    },
+                ]
+            ),
+        ),
         pytest.param(
             # Adding to a nonexisting list
             pd.DataFrame(
@@ -371,6 +490,47 @@ def test_parse_wlist(deckstr, expected_df):
             ),
             None,
             marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        pytest.param(
+            # Adding from a previously undefined list
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "",
+                        "DATE": datetime.date(1900, 1, 1),
+                    },
+                    {
+                        "NAME": "OP",
+                        "ACTION": "ADD",
+                        "WELLS": "*OPS",
+                        "DATE": datetime.date(1900, 1, 1),
+                    },
+                ]
+            ),
+            None,
+            marks=pytest.mark.xfail(raises=ValueError),
+            # "Recursive well list OPS does not exist"
+        ),
+        # Wildcard wells are currently not supported
+        # (it requires knowledge of all currenly processed wells)
+        pytest.param(
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "PROD*",
+                        "DATE": datetime.date(1900, 1, 1),
+                    },
+                ]
+            ),
+            None,
+            id="wellcardwlist",
+            marks=pytest.mark.xfail(
+                raises=NotImplementedError, match="Wildcards in WLIST are not supported"
+            ),
         ),
     ],
 )

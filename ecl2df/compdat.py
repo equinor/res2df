@@ -217,13 +217,11 @@ def deck2dfs(
                 rec_data["DATE"] = date
                 if isinstance(rec_data["WELLS"], list):
                     rec_data["WELLS"] = " ".join(rec_data["WELLS"])
-                # Don't store the asterisk that is needed in the Eclipse
+
+                # Do not store the asterisk that is needed in the Eclipse
                 # keywords for referring to well lists:
                 rec_data["NAME"] = rec_data["NAME"].replace("*", "")
-                # Well wildcards in WLIST creation is not supported:
-                if "*" in rec_data["WELLS"] or "?" in rec_data["WELLS"]:
-                    print(rec_data)
-                    raise NotImplementedError("Wildcards in WLIST are not supported")
+
                 wlistrecords.append(rec_data)
 
     compdat_df = pd.DataFrame(compdatrecords)
@@ -454,11 +452,23 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                     f"{str(wlist_record)}"
                 )
         if wlist_record["ACTION"] == "ADD":
-            if wlist_record["NAME"] not in currentstate:
-                raise ValueError(
-                    "WLIST ADD only works on existing well lists: "
-                    f"{str(wlist_record)}"
-                )
+            # Already defined well-lists can be used to append whole
+            # well lists to other lists:
+            recursive_wlists = [
+                r_wlist
+                for r_wlist in wlist_record["WELLS"].split()
+                if r_wlist.startswith("*")
+            ]
+            for r_wlist in recursive_wlists:
+                if r_wlist[1:] in currentstate:
+                    wlist_record["WELLS"] = wlist_record["WELLS"].replace(
+                        r_wlist, currentstate[r_wlist[1:]]
+                    )
+                else:
+                    print(wlist_record)
+                    raise ValueError(
+                        f"Recursive well list {r_wlist} does not exist in {currentstate}"
+                    )
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(
                     set(
@@ -500,8 +510,11 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                     )
                 )
 
+
     # Dump final state:
     for wlistname, wells in currentstate.items():
+        if "*" in wells:
+            raise NotImplementedError("Wildcards in WLIST are not supported")
         new_records.append(
             {"DATE": currentdate, "NAME": wlistname, "ACTION": "NEW", "WELLS": wells}
         )

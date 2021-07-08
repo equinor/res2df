@@ -6,7 +6,7 @@ import datetime
 import collections
 import argparse
 import warnings
-from typing import Optional, Union, List, Dict, Any
+from typing import Optional, Union, List, Dict, Any, Tuple
 
 import treelib
 import pandas as pd
@@ -77,7 +77,7 @@ def df(
     # In order for the GRUPTREE/BRANPROP keywords to accumulate, we
     # store the edges as dictionaries indexed by the edge
     # (which is a tuple of child and parent).
-    currentedges: Dict[str, Dict[tuple, Dict[str, Any]]] = {
+    currentedges: Dict[str, Dict[Tuple[str, str], Dict[str, Any]]] = {
         "GRUPTREE": dict(),
         "BRANPROP": dict(),
     }

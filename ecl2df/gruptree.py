@@ -418,6 +418,34 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def prettyprint(dframe: pd.DataFrame) -> str:
+    """Returns a string with the prettyprint of a dataframe
+    possibly containing multiple dates and both GRUPTREE and
+    BRANPROP trees"""
+    output = ""
+    for date in dframe["DATE"].dropna().unique():
+        df_date = dframe[dframe.DATE == date]
+        output += "Date: " + str(date.astype("M8[D]")) + "\n"
+
+        for treetype in ["GRUPTREE", "BRANPROP"]:
+            if treetype in df_date["KEYWORD"].unique():
+                df_treetype = df_date[df_date["KEYWORD"].isin([treetype, "WELSPECS"])]
+                if treetype == "BRANPROP":
+                    # filter out edges where the parent is not a
+                    # child in the tree. This will be printed as
+                    # a separate tree for GRUPTREE
+                    df_treetype = df_treetype[
+                        df_treetype.PARENT.isin(df_treetype.CHILD.unique())
+                    ]
+
+                output += f"{treetype} trees:\n"
+                for tree in edge_dataframe2dict(df_treetype):
+                    output += str(tree_from_dict(tree))
+                    output += "\n"
+        output += "\n"
+    return output
+
+
 def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
     if args.verbose:
@@ -429,19 +457,7 @@ def gruptree_main(args) -> None:
     dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
         if "DATE" in dframe:
-            for date in dframe["DATE"].dropna().unique():
-                df_date = dframe[dframe.DATE == date]
-                print("Date: " + str(date.astype("M8[D]")))
-
-                for treetype in ["GRUPTREE", "BRANPROP"]:
-                    if treetype in df_date["KEYWORD"].unique():
-                        df_treetype = df_date[
-                            df_date["KEYWORD"].isin([treetype, "WELSPECS"])
-                        ]
-                        print(f"{treetype} trees:")
-                        for tree in edge_dataframe2dict(df_treetype):
-                            print(tree_from_dict(tree))
-                print("")
+            print(prettyprint(dframe))
         else:
             logger.warning("No tree data to prettyprint")
     if dframe.empty:

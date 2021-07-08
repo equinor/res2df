@@ -393,7 +393,7 @@ def test_main(tmpdir, mocker):
     assert not disk_df.empty
 
 
-def test_prettyprint(mocker, capsys):
+def test_prettyprint_commandline(mocker, capsys):
     """Test pretty printing via command line interface"""
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"])
     ecl2csv.main()
@@ -647,3 +647,63 @@ def test_branprop_nodeprop(schstr, expected_dframe, check_columns):
         expected_dframe[check_columns],
         check_dtype=False,
     )
+
+
+def test_prettyprint(tmpdir, mocker, caplog):
+    """ "Test prettyprinting with multiple dates and both
+    GRUPTREE and BRANPROP trees"""
+    schstr = """
+DATES
+  1 JAN 2000 /
+/
+GRUPTREE
+ 'TMPL_A' 'FIELD'/
+/
+BRANPROP
+  'NODE_A'  'FIELD'  /
+  'TMPL_A'  'NODE_A'  /
+/
+NODEPROP
+  'FIELD'  20 /
+  'TMPL_A'  2*  YES /
+/
+WELSPECS
+  'WELL_1'  'TMPL_A' 1 1 1 OIL /
+  'WELL_2'  'TMPL_B' 1 1 1 OIL /
+/
+DATES
+  1 FEB 2000 /
+/
+NODEPROP
+  'FIELD' 22 /
+/
+    """
+
+    expected_prettyprint = """
+Date: 2000-01-01
+GRUPTREE trees:
+FIELD
+└── TMPL_A
+    └── WELL_1
+
+TMPL_B
+└── WELL_2
+
+BRANPROP trees:
+FIELD
+└── NODE_A
+    └── TMPL_A
+        └── WELL_1
+
+
+Date: 2000-02-01
+BRANPROP trees:
+FIELD
+└── NODE_A
+    └── TMPL_A
+        └── WELL_1
+
+
+    """
+    dframe = gruptree.df(EclFiles.str2deck(schstr))
+    assert gruptree.prettyprint(dframe).strip() == expected_prettyprint.strip()

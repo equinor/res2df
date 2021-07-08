@@ -430,7 +430,8 @@ def test_parse_wlist(deckstr, expected_df):
             ),
         ),
         (
-            # Adding elements from another well list:
+            # Adding elements from another well list, defined
+            # on the same date:
             pd.DataFrame(
                 [
                     {
@@ -443,13 +444,13 @@ def test_parse_wlist(deckstr, expected_df):
                         "NAME": "OPS",
                         "ACTION": "NEW",
                         "WELLS": "",
-                        "DATE": datetime.date(2001, 5, 2),
+                        "DATE": datetime.date(2001, 5, 1),
                     },
                     {
                         "NAME": "OPS",
                         "ACTION": "ADD",
                         "WELLS": "*OP",
-                        "DATE": datetime.date(2001, 5, 2),
+                        "DATE": datetime.date(2001, 5, 1),
                     },
                 ]
             ),
@@ -462,16 +463,46 @@ def test_parse_wlist(deckstr, expected_df):
                         "DATE": datetime.date(2001, 5, 1),
                     },
                     {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                ]
+            ),
+        ),
+        (
+            # Adding elements from another well list,
+            # directly with a NEW statement:
+            pd.DataFrame(
+                [
+                    {
                         "NAME": "OP",
                         "ACTION": "NEW",
                         "WELLS": "OP1",
-                        "DATE": datetime.date(2001, 5, 2),
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "*OP",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
                     },
                     {
                         "NAME": "OPS",
                         "ACTION": "NEW",
                         "WELLS": "OP1",
-                        "DATE": datetime.date(2001, 5, 2),
+                        "DATE": datetime.date(2001, 5, 1),
                     },
                 ]
             ),

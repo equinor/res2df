@@ -441,17 +441,8 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                     }
                 )
         currentdate = date
-        if wlist_record["ACTION"] == "NEW":
-            currentstate[wlist_record["NAME"]] = " ".join(
-                sorted(wlist_record["WELLS"].split())
-            )
-        elif wlist_record["ACTION"] in ["ADD", "DEL"]:
-            if wlist_record["NAME"] not in currentstate:
-                raise ValueError(
-                    "WLIST ADD/DEL only works on existing well lists: "
-                    f"{str(wlist_record)}"
-                )
-        if wlist_record["ACTION"] == "ADD":
+
+        if wlist_record["ACTION"] in ["ADD", "NEW"]:
             # Already defined well-lists can be used to append whole
             # well lists to other lists:
             recursive_wlists = [
@@ -470,6 +461,17 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                         f"Recursive well list {r_wlist} does not exist in "
                         f"{currentstate}"
                     )
+        if wlist_record["ACTION"] == "NEW":
+            currentstate[wlist_record["NAME"]] = " ".join(
+                sorted(wlist_record["WELLS"].split())
+            )
+        elif wlist_record["ACTION"] in ["ADD", "DEL"]:
+            if wlist_record["NAME"] not in currentstate:
+                raise ValueError(
+                    "WLIST ADD/DEL only works on existing well lists: "
+                    f"{str(wlist_record)}"
+                )
+        if wlist_record["ACTION"] == "ADD":
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(
                     set(

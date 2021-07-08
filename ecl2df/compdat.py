@@ -467,7 +467,8 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                 else:
                     print(wlist_record)
                     raise ValueError(
-                        f"Recursive well list {r_wlist} does not exist in {currentstate}"
+                        f"Recursive well list {r_wlist} does not exist in "
+                        f"{currentstate}"
                     )
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(
@@ -509,7 +510,6 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                         )
                     )
                 )
-
 
     # Dump final state:
     for wlistname, wells in currentstate.items():

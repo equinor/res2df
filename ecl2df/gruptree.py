@@ -82,7 +82,7 @@ def df(
         "BRANPROP": dict(),
     }
     # Same approach for the welspecs keywords
-    wellspecsedges: Dict[tuple, str] = dict()
+    wellspecsedges: Dict[Tuple[str, str], str] = dict()
     # Node properties from GRUPNET/NODEPROP is stored in a dataframe
     # Note that it's not allowed to mix GRUPNET and NODEPROP in eclipse
     # so the datframe will only contain columns from one of them
@@ -185,9 +185,9 @@ def df(
 
 
 def _write_edgerecords(
-    currentedges: Dict[str, Dict[tuple, Dict[str, Any]]],
+    currentedges: Dict[str, Dict[Tuple[str, str], Dict[str, Any]]],
     nodedata: Dict[str, pd.DataFrame],
-    wellspecsedges: Dict[tuple, str],
+    wellspecsedges: Dict[Tuple[str, str], str],
     found_keywords: dict,
     date: Optional[datetime.date],
 ) -> List[dict]:
@@ -218,9 +218,9 @@ def _write_edgerecords(
 
 
 def _merge_edges_and_nodeinfo(
-    currentedges: Dict[tuple, Dict[str, Any]],
+    currentedges: Dict[Tuple[str, str], Dict[str, Any]],
     nodedata_df: pd.DataFrame,
-    wellspecsedges: Dict[tuple, str],
+    wellspecsedges: Dict[Tuple[str, str], str],
     date: Optional[datetime.date],
     treetype: str,
 ) -> List[dict]:

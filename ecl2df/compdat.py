@@ -513,8 +513,6 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
 
     # Dump final state:
     for wlistname, wells in currentstate.items():
-        if "*" in wells:
-            raise NotImplementedError("Wildcards in WLIST are not supported")
         new_records.append(
             {"DATE": currentdate, "NAME": wlistname, "ACTION": "NEW", "WELLS": wells}
         )

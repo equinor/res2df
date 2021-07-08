@@ -513,9 +513,9 @@ def test_parse_wlist(deckstr, expected_df):
             marks=pytest.mark.xfail(raises=ValueError),
             # "Recursive well list OPS does not exist"
         ),
-        # Wildcard wells are currently not supported
-        # (it requires knowledge of all currenly processed wells)
-        pytest.param(
+        # Wildcard wells should pass through, the dataframe user
+        # will have to process it.
+        (
             pd.DataFrame(
                 [
                     {
@@ -526,10 +526,15 @@ def test_parse_wlist(deckstr, expected_df):
                     },
                 ]
             ),
-            None,
-            id="wellcardwlist",
-            marks=pytest.mark.xfail(
-                raises=NotImplementedError, match="Wildcards in WLIST are not supported"
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "PROD*",
+                        "DATE": datetime.date(1900, 1, 1),
+                    },
+                ]
             ),
         ),
     ],

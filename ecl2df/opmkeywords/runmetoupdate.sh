@@ -38,6 +38,7 @@ WCONPROD
 WELOPEN
 WELSEGS
 WELSPECS
+WLIST
 WSEGAICD
 WSEGSICD
 WSEGVALV
@@ -51,7 +52,7 @@ for keyword in $keywords; do
     perl -p -i -e 's/num_tables/size/g' $keyword
 
     # Pretty-print all json files (this is also done upstream)
-    jq < $keyword . > $keyword.tmp && rm $keyword && mv $keyword.tmp $keyword 
+    jq < $keyword . > $keyword.tmp && rm $keyword && mv $keyword.tmp $keyword
 done
 
 git status .

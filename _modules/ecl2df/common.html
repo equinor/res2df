@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev1+g181deba documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev2+gcb33931 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev1+g181deba
+                0.13.3.dev2+gcb33931
               </div>
             
           
@@ -240,6 +240,7 @@
     <span class="s2">&quot;WELOPEN&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WELSEGS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WELSPECS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WLIST&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WSEGAICD&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WSEGSICD&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WSEGVALV&quot;</span><span class="p">,</span>
@@ -443,14 +444,23 @@
     <span class="c1"># but for some keywords there are more values, like for PVTO</span>
     <span class="k">for</span> <span class="n">item_idx</span><span class="p">,</span> <span class="n">jsonitem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">itemlist</span><span class="p">):</span>
         <span class="n">item_name</span> <span class="o">=</span> <span class="n">jsonitem</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">defaulted</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">defaulted</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">defaulted</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="c1"># Workaround for missing default in json for WLIST item WELLS (empty string)</span>
+            <span class="n">defaulted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">defaulted</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># The DeckItem attribute .value is only present if there is an</span>
                 <span class="c1"># explicit statement &quot;from opm.io.deck import DeckKeyword&quot;</span>
                 <span class="c1"># in this file.</span>
                 <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_raw_data_list</span><span class="p">()</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_raw_data_list</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="c1"># Will get here for string lists:</span>
+                    <span class="n">rec_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_list</span><span class="p">()</span>
                 <span class="c1"># (the caller is responsible for unrolling this list with</span>
                 <span class="c1"># correct naming of elements)</span>
         <span class="k">else</span><span class="p">:</span>

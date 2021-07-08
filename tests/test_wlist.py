@@ -507,6 +507,54 @@ def test_parse_wlist(deckstr, expected_df):
                 ]
             ),
         ),
+        (
+            # Adding elements from another well list,
+            # directly with a NEW statement, recursively:
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "*OP",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPST",
+                        "ACTION": "NEW",
+                        "WELLS": "*OPS",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "NAME": "OP",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPS",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                    {
+                        "NAME": "OPST",
+                        "ACTION": "NEW",
+                        "WELLS": "OP1",
+                        "DATE": datetime.date(2001, 5, 1),
+                    },
+                ]
+            ),
+        ),
         pytest.param(
             # Adding to a nonexisting list
             pd.DataFrame(

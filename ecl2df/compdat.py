@@ -1,5 +1,5 @@
 """Parser and dataframe generator for the Eclipse keywords:
-  * COMPAT
+  * COMPDAT
   * WELSEGS
   * COMPSEGS
   * WELOPEN
@@ -7,6 +7,7 @@
   * WSEGVALV
   * WSEGSICD
   * WLIST
+  * COMPLUMP
 """
 
 import datetime
@@ -15,6 +16,7 @@ import argparse
 from typing import Dict, Optional, Union, List
 
 import pandas as pd
+import numpy as np
 
 try:
     # pylint: disable=unused-import
@@ -95,6 +97,7 @@ def deck2dfs(
     wsegaicdrecords = []
     wsegvalvrecords = []
     wlistrecords = []
+    complumprecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
@@ -223,16 +226,24 @@ def deck2dfs(
                 rec_data["NAME"] = rec_data["NAME"].replace("*", "")
 
                 wlistrecords.append(rec_data)
+        elif kword.name == "COMPLUMP":
+            for rec in kword:
+                rec_data = parse_opmio_deckrecord(rec, "COMPLUMP")
+                rec_data["DATE"] = date
+                complumprecords.append(rec_data)
 
     compdat_df = pd.DataFrame(compdatrecords)
     welopen_df = pd.DataFrame(welopenrecords)
     wlist_df = pd.DataFrame(wlistrecords)
+    complump_df = pd.DataFrame(complumprecords)
 
     if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
 
     if not welopen_df.empty:
-        compdat_df = applywelopen(compdat_df, welopen_df, expand_wlist(wlist_df))
+        compdat_df = applywelopen(
+            compdat_df, welopen_df, expand_wlist(wlist_df), complump_df
+        )
 
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
@@ -522,6 +533,61 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(new_records)
 
 
+def expand_complump_in_welopen_df(
+    welopen_df: pd.DataFrame, complump_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Description"""
+
+    if (
+        welopen_df.empty
+        or welopen_df is None
+        or complump_df.empty
+        or complump_df is None
+    ):
+        return welopen_df
+
+    exp_welopens = []
+    for _, row in welopen_df.iterrows():
+
+        if np.isnan(row["C1"]) and np.isnan(row["C2"]):
+            exp_welopens.append(row)
+        else:
+            # Found a row that refers to cumplump numbers
+            # Check that the cumplump numbers are ok:
+            if not row["C1"] > 0 or not row["C2"] > 0:
+                raise ValueError(f"Both C1 and C2 must be positive numbers: {row}")
+            if row["C2"] < row["C1"]:
+                raise ValueError(f"C2 must be equal or greater than C1: {row}")
+
+            relevant_complump_df = complump_df[
+                (complump_df["DATE"] <= row["DATE"])
+                & (complump_df["WELL"] == row["WELL"])
+                & (complump_df["N"] >= row["C1"])
+                & (complump_df["N"] <= row["C2"])
+            ]
+            for _, complump_row in relevant_complump_df.iterrows():
+                if complump_row["K1"] != complump_row["K2"]:
+                    raise ValueError(
+                        f"K2>K1 must be expanded elsewhere: {complump_row}"
+                    )
+                cell_row = row.copy()
+                cell_row["I"] = complump_row["I"]
+                cell_row["J"] = complump_row["J"]
+                cell_row["K"] = complump_row["K1"]
+                cell_row["C1"] = np.nan
+                cell_row["C2"] = np.nan
+                exp_welopens.append(cell_row)
+
+    # wn = "SOP09"
+    # print(welopen_df[welopen_df.WELL==wn])#[welopen_df.C1.isin([7, 8, 9])])
+    # print(complump_df[(complump_df.WELL==wn) & (complump_df.N.isin([7,8,9]))])
+    # df = pd.DataFrame(exp_welopens)
+    # print(df[df.WELL==wn])
+    # welopen_df.to_csv("welopen_before.csv")
+    # df.to_csv("welopen_after.csv")
+    return pd.DataFrame(exp_welopens)
+
+
 def expand_wlist_in_welopen_df(
     welopen_df: pd.DataFrame, wlist_df: pd.DataFrame
 ) -> pd.DataFrame:
@@ -560,6 +626,7 @@ def applywelopen(
     compdat_df: pd.DataFrame,
     welopen_df: pd.DataFrame,
     wlist_df: Optional[pd.DataFrame] = None,
+    complump_df: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Apply WELOPEN actions to the COMPDAT dataframe.
 
@@ -590,6 +657,7 @@ def applywelopen(
         compdat_df: Dataframe with unrolled COMPDAT data
         welopen_df: Dataframe with WELOPEN actions
         wlist_df: Dataframe with WLIST NEW records. Optional.
+        complump_df: Dataframe with COMPLUMP records. Optional.
 
     Returns:
         compdat_df now including WELOPEN actions
@@ -605,12 +673,14 @@ def applywelopen(
                 )
 
     welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
-
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
+    welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 
     for _, row in welopen_df.iterrows():
-        if (row["I"] is None and row["J"] is None and row["K"] is None) or (
-            row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
+        if (
+            (row["I"] is None and row["J"] is None and row["K"] is None)
+            or (np.isnan(row["I"]) and np.isnan(row["J"]) and np.isnan(row["K"]))
+            or (row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0)
         ):
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
@@ -641,13 +711,13 @@ def applywelopen(
                 f"\n {str(row)} "
             )
 
-        if (row["C1"] is not None and row["C1"] > 0) or (
-            row["C2"] is not None and row["C2"]
-        ) > 0:
-            raise ValueError(
-                "Lumped connections are not supported by ecl2df in a WELOPEN keyword. "
-                f"\n{str(row)} "
-            )
+        # if (row["C1"] is not None and row["C1"] > 0) or (
+        #     row["C2"] is not None and row["C2"]
+        # ) > 0:
+        #     raise ValueError(
+        #         "Lumped connections are not supported by ecl2df in a WELOPEN keyword. "
+        #         f"\n{str(row)} "
+        #     )
 
         if previous_state.empty:
             raise ValueError(

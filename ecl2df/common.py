@@ -35,6 +35,7 @@ OPMKEYWORDS: Dict[str, dict] = {}
 for keyw in [
     "BRANPROP",
     "COMPDAT",
+    "COMPLUMP",
     "COMPSEGS",
     "DENSITY",
     "EQLDIMS",

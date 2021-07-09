@@ -35,6 +35,7 @@ from ecl2df import __version__
 OPMKEYWORDS: Dict[str, dict] = {}
 for keyw in [
     "COMPDAT",
+    "COMPLUMP",
     "COMPSEGS",
     "DENSITY",
     "EQLDIMS",

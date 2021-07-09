@@ -574,18 +574,12 @@ def expand_complump_in_welopen_df(
                 cell_row["I"] = complump_row["I"]
                 cell_row["J"] = complump_row["J"]
                 cell_row["K"] = complump_row["K1"]
-                cell_row["C1"] = np.nan
-                cell_row["C2"] = np.nan
+                cell_row["C1"] = None
+                cell_row["C2"] = None
                 exp_welopens.append(cell_row)
 
-    # wn = "SOP09"
-    # print(welopen_df[welopen_df.WELL==wn])#[welopen_df.C1.isin([7, 8, 9])])
-    # print(complump_df[(complump_df.WELL==wn) & (complump_df.N.isin([7,8,9]))])
-    # df = pd.DataFrame(exp_welopens)
-    # print(df[df.WELL==wn])
-    # welopen_df.to_csv("welopen_before.csv")
-    # df.to_csv("welopen_after.csv")
-    return pd.DataFrame(exp_welopens)
+    dframe = pd.DataFrame(exp_welopens)
+    return df.astype(object).where(pd.notnull(dframe), None)
 
 
 def expand_wlist_in_welopen_df(
@@ -677,10 +671,8 @@ def applywelopen(
     welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 
     for _, row in welopen_df.iterrows():
-        if (
-            (row["I"] is None and row["J"] is None and row["K"] is None)
-            or (np.isnan(row["I"]) and np.isnan(row["J"]) and np.isnan(row["K"]))
-            or (row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0)
+        if (row["I"] is None and row["J"] is None and row["K"] is None) or (
+            row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
         ):
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])

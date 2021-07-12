@@ -61,7 +61,7 @@
 
           
             
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+            <img src="../_static/_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -103,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
@@ -247,8 +247,8 @@ results are not reliable.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pd.DataFrame</strong> – </p></li>
-<li><p><strong>at least the columns SEGIDX</strong> (<em>with</em>) – </p></li>
-<li><p><strong>and SEGBRNO</strong> (<em>SEGNXT</em>) – </p></li>
+<li><p><strong>SEGIDX</strong> (<em>with at least the columns</em>) – </p></li>
+<li><p><strong>SEGBRNO</strong> (<em>SEGNXT and</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -283,7 +283,7 @@ will be included</p></li>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>to fill with arguments</strong> (<em>parser</em>) – </p>
+<dd class="field-odd"><p><strong>arguments</strong> (<em>parser to fill with</em>) – </p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
@@ -415,7 +415,7 @@ the columns SEGIDX, SEGNXT</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>made from a binary RFT file.</strong> (<em>EclFile</em>) – </p>
+<dd class="field-odd"><p><strong>file.</strong> (<em>EclFile made from a binary RFT</em>) – </p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>

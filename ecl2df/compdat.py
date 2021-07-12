@@ -227,7 +227,7 @@ def deck2dfs(
 
                 wlistrecords.append(rec_data)
         elif kword.name == "COMPLUMP":
-            for rec in kword:
+            for rec in kword:  # Loop over the lines inside COMPLUMP record
                 rec_data = parse_opmio_deckrecord(rec, "COMPLUMP")
                 rec_data["DATE"] = date
                 complumprecords.append(rec_data)
@@ -242,7 +242,10 @@ def deck2dfs(
 
     if not welopen_df.empty:
         compdat_df = applywelopen(
-            compdat_df, welopen_df, expand_wlist(wlist_df), complump_df
+            compdat_df,
+            welopen_df,
+            expand_wlist(wlist_df),
+            unroll_complump(complump_df),
         )
 
     compsegs_df = pd.DataFrame(compsegsrecords)
@@ -382,8 +385,44 @@ def unrolldf(
     return unrolled
 
 
-#        '*OP' NEW OP1 /
-#        '*OP' ADD OP2 /
+def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
+    """Unrolls the COMPLUMP keyword where K2>K1. Uses the unrolldf function,
+    but this function gives more precise handling of errors.
+
+    Example:
+    COMPLUMP
+        'OP1' 74 135 7 8 1 /
+    /
+
+    is transformed/unrolled so it would be equal to::
+
+    COMPDAT
+        'OP1' 74 135 7 7 1 /
+        'OP1' 74 135 8 8 1 /
+    /
+
+    Args:
+        dframe: Dataframe to be unrolled
+
+    Returns:
+        Dataframe, unrolled version.
+    """
+    if complump_df is None or complump_df.empty:
+        return complump_df
+
+    for _, row in complump_df.iterrows():
+        I, J, K1, K2 = int(row["I"]), int(row["J"]), int(row["K1"]), int(row["K2"])
+        if I < 0 or J < 0 or K1 < 0 or K2 < 0:
+            raise ValueError(
+                f"Negative values for COMPLUMP coordinates are not allowed: {row}"
+            )
+        elif I == 0 or J == 0 or K1 == 0 or K2 == 0:
+            raise ValueError(
+                f"Defaulted COMPLUMP coordinates are not supported in ecl2df: {row}"
+            )
+        elif K2 < K1:
+            raise ValueError(f"K2 must be equal to or greater than K1: {row}")
+    return unrolldf(complump_df)
 
 
 def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
@@ -536,7 +575,27 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
 def expand_complump_in_welopen_df(
     welopen_df: pd.DataFrame, complump_df: pd.DataFrame
 ) -> pd.DataFrame:
-    """Description"""
+    """Go through all elements of WELOPEN and expand the rows
+    referring to COMPLUMPS. The output dataframe is as if the
+    connections were refered to explicitly in WELOPEN:
+
+    Example:
+    COMPLUMP
+        'OP1' 74 135 7 7 1 /
+        'OP1' 74 136 8 8 1 /
+        'OP1' 74 136 9 9 2 /
+        'OP1' 74 137 10 10 3 /
+    /
+    WELOPEN
+        'OP1' 'SHUT' 3* 1 1 /
+    /
+
+    is transformed into the equivalent dataframe representation of:
+    WELOPEN
+        'OP1' 'SHUT' 74 135 7 /
+        'OP1' 'SHUT' 74 135 8 /
+    /
+    """
 
     if (
         welopen_df.empty
@@ -548,15 +607,20 @@ def expand_complump_in_welopen_df(
 
     exp_welopens = []
     for _, row in welopen_df.iterrows():
-
-        if np.isnan(row["C1"]) and np.isnan(row["C2"]):
+        # if row["C1"] is None and row["C2"] is None:
+        if row["C1"] is None and row["C2"] is None:
             exp_welopens.append(row)
+        elif row["C1"] is None or row["C2"] is None:
+            raise ValueError(
+                f"Both or none of the completions numbers in WELOPEN must be defined: {row}"
+            )
         else:
             # Found a row that refers to cumplump numbers
             # Check that the cumplump numbers are ok:
-            if not row["C1"] > 0 or not row["C2"] > 0:
+            C1, C2 = int(row["C1"]), int(row["C2"])
+            if C1 <= 0 or C2 <= 0:
                 raise ValueError(f"Both C1 and C2 must be positive numbers: {row}")
-            if row["C2"] < row["C1"]:
+            if C2 < C1:
                 raise ValueError(f"C2 must be equal or greater than C1: {row}")
 
             relevant_complump_df = complump_df[
@@ -568,7 +632,7 @@ def expand_complump_in_welopen_df(
             for _, complump_row in relevant_complump_df.iterrows():
                 if complump_row["K1"] != complump_row["K2"]:
                     raise ValueError(
-                        f"K2>K1 must be expanded elsewhere: {complump_row}"
+                        f"K1 must be equal to K2 in COMPLUMP (K2>K1 must be expanded elsewhere): {complump_row}"
                     )
                 cell_row = row.copy()
                 cell_row["I"] = complump_row["I"]
@@ -579,7 +643,7 @@ def expand_complump_in_welopen_df(
                 exp_welopens.append(cell_row)
 
     dframe = pd.DataFrame(exp_welopens)
-    return df.astype(object).where(pd.notnull(dframe), None)
+    return dframe.astype(object).where(pd.notnull(dframe), None)
 
 
 def expand_wlist_in_welopen_df(
@@ -612,8 +676,8 @@ def expand_wlist_in_welopen_df(
         else:
             # Explicit wellname was used, no expansion to happen:
             exp_welopens.append(row)
-
-    return pd.DataFrame(exp_welopens)
+    dframe = pd.DataFrame(exp_welopens)
+    return dframe.astype(object).where(pd.notnull(dframe), None)
 
 
 def applywelopen(
@@ -702,14 +766,6 @@ def applywelopen(
                 "A WELOPEN keyword contains data that could not be parsed. "
                 f"\n {str(row)} "
             )
-
-        # if (row["C1"] is not None and row["C1"] > 0) or (
-        #     row["C2"] is not None and row["C2"]
-        # ) > 0:
-        #     raise ValueError(
-        #         "Lumped connections are not supported by ecl2df in a WELOPEN keyword. "
-        #         f"\n{str(row)} "
-        #     )
 
         if previous_state.empty:
             raise ValueError(

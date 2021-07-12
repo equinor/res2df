@@ -132,29 +132,6 @@ WELOPEN_CASES = [
             ],
         ),
     ),
-    # Lumped connections are not supported and will crash.
-    pytest.param(
-        """
-    DATES
-     1 JAN 2000 /
-    /
-    COMPDAT
-     'OP1' 1 1 1 3 'OPEN' /
-    /
-    WELOPEN
-     'OP1' 'SHUT' 3* 1 2 /
-    /
-    """,
-        pd.DataFrame(
-            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
-            data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
-            ],
-        ),
-        marks=pytest.mark.xfail(raises=ValueError),
-    ),
     # Test multiple connections to the same cell
     # (ecl2df <= 0.13.1 would remove OP1 from this dataframe)
     (

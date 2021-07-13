@@ -584,6 +584,28 @@ WELOPEN_CASES = [
             ],
         ),
     ),
+    # Test wildcard in the beginning of a wellname
+    # Must be written as \*, because wellnames starting with *
+    # are WLIST elements by definition.
+    (
+        """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     '\\*P1' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+    ),
     # Test wildcard in wellname. A well that also matches the well template
     # but is defined later, is not SHUT
     (

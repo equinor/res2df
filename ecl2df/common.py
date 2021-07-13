@@ -793,7 +793,9 @@ def get_wells_matching_template(template: str, wells: list):
             "Well template can not start with * "
             f"This is the definition of a WLIST element: {template}"
         )
-    elif template.startswith("\*"):
+    elif template.startswith("\\*"):
+        # Note that the two \\ are actually read as one and
+        # this will return True for f.ex '\*P1'
         template = template[1:]
     regex = template.replace("*", ".+")
     return [well for well in wells if bool(re.match(regex, well))]

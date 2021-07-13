@@ -774,3 +774,23 @@ def convert_lyrlist_to_zonemap(lyrlist: List[Dict[str, Any]]) -> Dict[int, str]:
             to_layer = zonedict["to_layer"]
         zonemap.update(dict.fromkeys(range(from_layer, to_layer + 1), zonedict["name"]))
     return zonemap
+
+
+def get_wells_matching_template(template: str, wells: list):
+    """Returns wells in the list that is matching the template
+
+    Example:
+    template = 'B_*'
+    wells = ['B_1H', 'B_2H', 'D_1H']
+    would return ['B_1H', 'B_2H']
+
+    An * in the beginning of the template must be preceded
+    with a backslash, otherwise it would be interpreted as a WLIST
+    name.
+    """
+    if template.startswith("*"):
+        raise ValueError(f"Well template can not start with *: {template}")
+    elif template.startswith("\*"):
+        template = template[1:]
+    regex = template.replace("*", ".+")
+    return [well for well in wells if bool(re.match(regex, well))]

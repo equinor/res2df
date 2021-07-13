@@ -88,7 +88,8 @@ WELOPEN_CASES = [
             ],
         ),
     ),
-    # Fail with ValueError when lumped connections are specified
+    # Fail with ValueError when both I,J,K (3-5) and completions number (6-7)
+    # are defined in WELOPEN
     pytest.param(
         """
     DATES
@@ -790,6 +791,181 @@ def test_welopen(test_input, expected):
     ],
 )
 def test_welopen_wlist(test_input, expected):
+    deck = EclFiles.str2deck(test_input)
+    dfs = compdat.deck2dfs(deck)
+    pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)
+
+
+@pytest.mark.parametrize(
+    "test_input, expected",
+    [
+        # Simplest possible case
+        (
+            """
+DATES
+    1 JAN 2000 /
+/
+COMPDAT
+    'OP1' 1 1 1 1 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 1 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 1 /
+/
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                ],
+            ),
+        ),
+        # Range of Ks in COMPDAT/COMPLUMP and multiple dates
+        (
+            """
+DATES
+    1 JAN 2000 /
+/
+COMPDAT
+    'OP1' 1 1 1 3 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 2 1 /
+/
+DATES
+    1 FEB 2000 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 1 /
+/
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+                    [datetime.date(2000, 2, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 2, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+                ],
+            ),
+        ),
+        # Range of COMPLUMPs in WELOPEN
+        (
+            """
+DATES
+    1 JAN 2000 /
+/
+COMPDAT
+    'OP1' 1 1 1 5 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 2 1 /
+    'OP1' 1 1 3 4 2 /
+    'OP1' 1 1 5 5 3 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 2 /
+/
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 5, 5, "OPEN"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 4, 4, "SHUT"],
+                ],
+            ),
+        ),
+        #         # Test default handling in COMPLUMP. Default value 0 means all values of that coordinate
+        #         (
+        #             """
+        # DATES
+        #     1 JAN 2000 /
+        # /
+        # COMPDAT
+        #     'OP1' 1 1 1 2 'OPEN' /
+        #     'OP1' 2 1 1 1 'OPEN' /
+        # /
+        # COMPLUMP
+        #     'OP1' 1 0 0 0 1 /
+        # /
+        # WELOPEN
+        #     'OP1' 'SHUT' 3* 1 1 /
+        # /
+        #     """,
+        #             pd.DataFrame(
+        #                 columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+        #                 data=[
+        #                     [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+        #                     [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+        #                     [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+        #                 ],
+        #             )
+        #         ),
+        pytest.param(
+            # Fails when K2<K1 in COMPLUMP
+            """
+COMPDAT
+    'OP1' 1 1 1 2 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 2 1 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 1 /
+/
+""",
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError, match="K2 must be equal to or greater than K1"
+            ),
+        ),
+        pytest.param(
+            # Fails when only one completion number is defined in WELOPEN
+            """
+COMPDAT
+    'OP1' 1 1 1 1 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 1 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 /
+/
+""",
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Both or none of the completions numbers in WELOPEN must be defined",
+            ),
+        ),
+        pytest.param(
+            # Fails when C2<C1 in WELOPEN
+            """
+COMPDAT
+    'OP1' 1 1 1 2 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 1 1 /
+    'OP1' 1 1 2 2 2 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 2 1 /
+/
+""",
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError, match="C2 must be equal or greater than C1"
+            ),
+        ),
+    ],
+)
+def test_welopen_complump(test_input, expected):
     deck = EclFiles.str2deck(test_input)
     dfs = compdat.deck2dfs(deck)
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)

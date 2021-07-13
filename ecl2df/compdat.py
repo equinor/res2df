@@ -606,22 +606,22 @@ def expand_complump_in_welopen_df(
     referring to COMPLUMPS. The output dataframe is as if the
     connections were refered to explicitly in WELOPEN:
 
-    Example:
-    COMPLUMP
-        'OP1' 74 135 7 7 1 /
-        'OP1' 74 136 8 8 1 /
-        'OP1' 74 136 9 9 2 /
-        'OP1' 74 137 10 10 3 /
-    /
-    WELOPEN
-        'OP1' 'SHUT' 3* 1 1 /
-    /
+    Example::
+      COMPLUMP
+       'OP1' 74 135 7 7 1 /
+       'OP1' 74 136 8 8 1 /
+       'OP1' 74 136 9 9 2 /
+       'OP1' 74 137 10 10 3 /
+      /
+      WELOPEN
+       'OP1' 'SHUT' 3* 1 1 /
+      /
 
-    is transformed into the equivalent dataframe representation of:
-    WELOPEN
-        'OP1' 'SHUT' 74 135 7 /
-        'OP1' 'SHUT' 74 135 8 /
-    /
+    is transformed into the equivalent dataframe representation of::
+      WELOPEN
+       'OP1' 'SHUT' 74 135 7 /
+       'OP1' 'SHUT' 74 135 8 /
+      /
     """
 
     if (

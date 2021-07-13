@@ -435,16 +435,19 @@ def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
         return complump_df
 
     for _, row in complump_df.iterrows():
-        I, J, K1, K2 = int(row["I"]), int(row["J"]), int(row["K1"]), int(row["K2"])
-        if I < 0 or J < 0 or K1 < 0 or K2 < 0:
+        val_I = int(row["I"])
+        val_J = int(row["J"])
+        val_K1 = int(row["K1"])
+        val_K2 = int(row["K2"])
+        if val_I < 0 or val_J < 0 or val_K1 < 0 or val_K2 < 0:
             raise ValueError(
                 f"Negative values for COMPLUMP coordinates are not allowed: {row}"
             )
-        elif I == 0 or J == 0 or K1 == 0 or K2 == 0:
+        elif val_I == 0 or val_J == 0 or val_K1 == 0 or val_K2 == 0:
             raise ValueError(
                 f"Defaulted COMPLUMP coordinates are not supported in ecl2df: {row}"
             )
-        elif K2 < K1:
+        elif val_K2 < val_K1:
             raise ValueError(f"K2 must be equal to or greater than K1: {row}")
     return unrolldf(complump_df)
 
@@ -636,7 +639,8 @@ def expand_complump_in_welopen_df(
             exp_welopens.append(row)
         elif row["C1"] is None or row["C2"] is None:
             raise ValueError(
-                f"Both or none of the completions numbers in WELOPEN must be defined: {row}"
+                "Both or none of the completions numbers in "
+                f"WELOPEN must be defined: {row}"
             )
         else:
             # Found a row that refers to cumplump numbers
@@ -656,7 +660,8 @@ def expand_complump_in_welopen_df(
             for _, complump_row in relevant_complump_df.iterrows():
                 if complump_row["K1"] != complump_row["K2"]:
                     raise ValueError(
-                        f"K1 must be equal to K2 in COMPLUMP (K2>K1 must be expanded elsewhere): {complump_row}"
+                        "K1 must be equal to K2 in COMPLUMP "
+                        f"(K2>K1 must be expanded elsewhere): {complump_row}"
                     )
                 cell_row = row.copy()
                 cell_row["I"] = complump_row["I"]

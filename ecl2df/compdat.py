@@ -413,17 +413,18 @@ def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
     """Unrolls the COMPLUMP keyword where K2>K1. Uses the unrolldf function,
     but this function gives more precise handling of errors.
 
-    Example:
-    COMPLUMP
-        'OP1' 74 135 7 8 1 /
-    /
+    Example::
 
-    is transformed/unrolled so it would be equal to::
+      COMPLUMP
+       'OP1' 74 135 7 8 1 /
+      /
 
-    COMPDAT
-        'OP1' 74 135 7 7 1 /
-        'OP1' 74 135 8 8 1 /
-    /
+    is transformed/unrolled so to the dataframe representation of::
+
+      COMPDAT
+       'OP1' 74 135 7 7 1 /
+       'OP1' 74 135 8 8 1 /
+      /
 
     Args:
         dframe: Dataframe to be unrolled
@@ -606,7 +607,8 @@ def expand_complump_in_welopen_df(
     referring to COMPLUMPS. The output dataframe is as if the
     connections were refered to explicitly in WELOPEN:
 
-    Example::
+    Example: COMPLUMP and WELOPEN keywords::
+
       COMPLUMP
        'OP1' 74 135 7 7 1 /
        'OP1' 74 136 8 8 1 /
@@ -618,10 +620,19 @@ def expand_complump_in_welopen_df(
       /
 
     is transformed into the equivalent dataframe representation of::
+
       WELOPEN
        'OP1' 'SHUT' 74 135 7 /
        'OP1' 'SHUT' 74 135 8 /
       /
+
+    Args:
+        welopen_df: Dataframe with WELOPEN actions
+        complump_df: Dataframe with COMPLUMP records. Optional.
+
+    Returns:
+        welopen_df with complump expanded to actual connections.
+
     """
 
     if (

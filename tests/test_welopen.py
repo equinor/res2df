@@ -919,32 +919,36 @@ WELOPEN
                 ],
             ),
         ),
-        #         # Test default handling in COMPLUMP. Default value 0 means all values of that coordinate
-        #         (
-        #             """
-        # DATES
-        #     1 JAN 2000 /
-        # /
-        # COMPDAT
-        #     'OP1' 1 1 1 2 'OPEN' /
-        #     'OP1' 2 1 1 1 'OPEN' /
-        # /
-        # COMPLUMP
-        #     'OP1' 1 0 0 0 1 /
-        # /
-        # WELOPEN
-        #     'OP1' 'SHUT' 3* 1 1 /
-        # /
-        #     """,
-        #             pd.DataFrame(
-        #                 columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
-        #                 data=[
-        #                     [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-        #                     [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
-        #                     [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
-        #                 ],
-        #             )
-        #         ),
+        # Test default handling in COMPLUMP. Default value 0 means all values
+        # of this coordinate
+        # This fails for now, but dataframe is indicating wanted behavior
+        pytest.param(
+            """
+DATES
+    1 JAN 2000 /
+/
+COMPDAT
+    'OP1' 1 1 1 2 'OPEN' /
+    'OP1' 2 1 1 1 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 0 0 0 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 1 /
+/
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                ],
+            ),
+            id="complump_defaults",
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
         pytest.param(
             # Fails when K2<K1 in COMPLUMP
             """
@@ -981,7 +985,10 @@ WELOPEN
             id="complump_missingcompletion_number",
             marks=pytest.mark.xfail(
                 raises=ValueError,
-                match="Both or none of the completions numbers in WELOPEN must be defined",
+                match=(
+                    "Both or none of the completions numbers "
+                    "in WELOPEN must be defined."
+                ),
             ),
         ),
         pytest.param(

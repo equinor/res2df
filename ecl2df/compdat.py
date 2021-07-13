@@ -16,7 +16,6 @@ import logging
 from typing import Dict, List, Optional, Union
 
 import pandas as pd
-import numpy as np
 
 try:
     # pylint: disable=unused-import
@@ -31,6 +30,7 @@ from .common import (
     parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
+    get_wells_matching_template,
 )
 from .eclfiles import EclFiles
 from .grid import merge_initvectors
@@ -243,7 +243,7 @@ def deck2dfs(
     if not welopen_df.empty:
         compdat_df = applywelopen(
             compdat_df,
-            welopen_df,
+            expand_welopen(welopen_df, compdat_df),
             expand_wlist(wlist_df),
             unroll_complump(complump_df),
         )
@@ -325,6 +325,30 @@ def postprocess():
     # alldata_icd = pd.merge(
     #     compdatsegwel_icd_df, welsegs_df, on=["date", "well", "segment"]
     # )
+
+
+def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
+    """Expand rows in welopen with wellname containing * notation,
+    with the correct wells from compdat_df that was defined at that date
+    """
+    exp_welopen = []
+    for _, row in welopen_df.iterrows():
+        if row["WELL"].startswith("*"):
+            # This means that the WELL field is refering to a list
+            # This is handled elsewhere and we let it pass here
+            exp_welopen.append(row)
+        elif "*" in row["WELL"]:
+            relevant_wells = compdat_df[compdat_df["DATE"] <= row["DATE"]][
+                "WELL"
+            ].unique()
+            matched_wells = get_wells_matching_template(row["WELL"], relevant_wells)
+            for well in matched_wells:
+                exp_row = row.copy()
+                exp_row["WELL"] = well
+                exp_welopen.append(exp_row)
+        else:
+            exp_welopen.append(row)
+    return pd.DataFrame(exp_welopen)
 
 
 def unrolldf(

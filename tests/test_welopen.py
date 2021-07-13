@@ -560,6 +560,62 @@ WELOPEN_CASES = [
             }
         ),
     ),
+    # Test wildcard in wellname
+    (
+        """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP2' 2 2 2 2 'OPEN' /
+     'WI1' 3 3 3 3 'OPEN' /
+    /
+    WELOPEN
+     'OP*' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "SHUT"],
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
+            ],
+        ),
+    ),
+    # Test wildcard in wellname. A well that also matches the well template
+    # but is defined later, is not SHUT
+    (
+        """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP2' 2 2 2 2 'OPEN' /
+     'WI1' 3 3 3 3 'OPEN' /
+    /
+    WELOPEN
+     'OP*' 'SHUT' /
+    /
+    DATES
+      1 FEB 2000 /
+    /
+    COMPDAT
+      'OP3' 4 4 4 4 'OPEN' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "SHUT"],
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
+                [datetime.date(2000, 2, 1), "OP3", 4, 4, 4, 4, "OPEN"],
+            ],
+        ),
+    ),
 ]
 
 
@@ -693,22 +749,6 @@ def test_welopen(test_input, expected):
                     [datetime.date(2000, 1, 2), "IN2", 2, 1, 1, 1, "SHUT"],
                 ],
             ),
-        ),
-        # Wildcards for wells are not supported (yet?):
-        pytest.param(
-            """
-    DATES
-      1 JAN 2000 /
-    /
-    COMPDAT
-      'OP1' 1 1 1 1 'OPEN' /
-    /
-    WELOPEN
-      'OP*' 'SHUT' /
-    /""",
-            None,
-            id="wildcardwell",
-            marks=pytest.mark.xfail(raises=ValueError),
         ),
         # WLIST defined too late
         pytest.param(
@@ -919,6 +959,7 @@ WELOPEN
 /
 """,
             None,
+            id="complump_K2lessthanK1",
             marks=pytest.mark.xfail(
                 raises=ValueError, match="K2 must be equal to or greater than K1"
             ),
@@ -937,6 +978,7 @@ WELOPEN
 /
 """,
             None,
+            id="complump_missingcompletion_number",
             marks=pytest.mark.xfail(
                 raises=ValueError,
                 match="Both or none of the completions numbers in WELOPEN must be defined",
@@ -959,6 +1001,26 @@ WELOPEN
             None,
             marks=pytest.mark.xfail(
                 raises=ValueError, match="C2 must be equal or greater than C1"
+            ),
+        ),
+        pytest.param(
+            # Fails when C2<C1 in WELOPEN
+            """
+COMPDAT
+    'OP1' 1 1 1 1 'OPEN' /
+/
+COMPLUMP
+    'OP1' -1 -1 -1 -1 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 1 1 /
+/
+""",
+            None,
+            id="complump_negativevalues",
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Negative values for COMPLUMP coordinates are not allowed",
             ),
         ),
     ],

@@ -1,6 +1,7 @@
 """Test module for ecl2df.common"""
 
 import pandas as pd
+import pytest
 
 from ecl2df import common
 
@@ -87,3 +88,37 @@ def test_eclcompress():
     assert common.runlength_eclcompress("1 1 1") == "3*1"
     assert common.runlength_eclcompress("1     1 1") == "3*1"
     assert common.runlength_eclcompress("1  \n  1 1 2") == "3*1  2"
+
+
+@pytest.mark.parametrize(
+    "template, wells, output",
+    [
+        ("OP*", ["OP1", "OP2", "WI"], ["OP1", "OP2"]),
+        ("B*H", ["B_1H", "BH", "B_23H", "WI"], ["B_1H", "BH", "B_23H"]),
+        ("B_1H*", ["B_1H", "B_1HT2", "OB_1H"], ["B_1H", "B_1HT2"]),
+        ("\\*P1", ["OP1", "WI"], ["OP1"]),
+        ("B_?H", ["B_1H", "B_12H"], ["B_1H"]),
+        ("\\????", ["B_1H", "D_2H", "OP1"], ["B_1H", "D_2H"]),
+        pytest.param(
+            "*P1",
+            ["OP1"],
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Well template not allowed to start with * or ?",
+            ),
+        ),
+        pytest.param(
+            "????",
+            ["B_1H"],
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Well template not allowed to start with * or ?",
+            ),
+        ),
+    ],
+)
+def test_well_matching_template(template, wells, output):
+    "Test that get_wells_matching_template is working as intended."
+    assert common.get_wells_matching_template(template, wells) == output

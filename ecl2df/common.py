@@ -777,25 +777,24 @@ def convert_lyrlist_to_zonemap(lyrlist: List[Dict[str, Any]]) -> Dict[int, str]:
 
 
 def get_wells_matching_template(template: str, wells: list):
-    """Returns wells in the list that is matching the template
+    """Returns the wells in the list that is matching the template
+    containing wilcard characters. The wildcard charachters supported
+    are * to match zero or more charachters and ? to match a single
+    non-empty character. Any wildcards in the beginning of the template
+    must be preceded with a \\.
 
-    Example:
-    template = 'B_*'
-    wells = ['B_1H', 'B_2H', 'D_1H']
-    would return ['B_1H', 'B_2H']
-
-    An * in the beginning of the template must be preceded
-    with a backslash, otherwise it would be interpreted as a WLIST
-    name.
+    Well name templates starting with ? might be allowed in Eclipse
+    in some contexts, but not in all and will not be permitted here to
+    avoid confusion.
     """
-    if template.startswith("*"):
+    if template.startswith("*") or template.startswith("?"):
         raise ValueError(
-            "Well template can not start with * "
-            f"This is the definition of a WLIST element: {template}"
+            "Well template not allowed to start with * or ?: "
+            f"Must be preceded with a \\: {template}"
         )
-    elif template.startswith("\\*"):
+    elif template.startswith("\\"):
         # Note that the two \\ are actually read as one and
         # this will return True for f.ex '\*P1'
         template = template[1:]
-    regex = template.replace("*", ".+")
+    regex = template.replace("*", ".*").replace("?", ".")
     return [well for well in wells if bool(re.match(regex, well))]

@@ -107,6 +107,7 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
+        id="both_connection_and_completion_defined",
         marks=pytest.mark.xfail(raises=ValueError),
     ),
     # Test J slicing
@@ -603,6 +604,7 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
+        id="?_notation_not_implemented",
         marks=pytest.mark.xfail(
             raises=ValueError, match="? notation in WELOPEN not implemented"
         ),
@@ -992,7 +994,10 @@ WELOPEN
                 ],
             ),
             id="complump_defaults",
-            marks=pytest.mark.xfail(raises=ValueError),
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Defaulted COMPLUMP coordinates are not supported in ecl2df",
+            ),
         ),
         pytest.param(
             # Fails when K2<K1 in COMPLUMP
@@ -1008,7 +1013,7 @@ WELOPEN
 /
 """,
             None,
-            id="complump_K2lessthanK1",
+            id="complump_K2<K1",
             marks=pytest.mark.xfail(
                 raises=ValueError, match="K2 must be equal to or greater than K1"
             ),
@@ -1051,6 +1056,7 @@ WELOPEN
 /
 """,
             None,
+            id="welopen_C2<C1",
             marks=pytest.mark.xfail(
                 raises=ValueError, match="C2 must be equal or greater than C1"
             ),
@@ -1073,6 +1079,46 @@ WELOPEN
             marks=pytest.mark.xfail(
                 raises=ValueError,
                 match="Negative values for COMPLUMP coordinates are not allowed",
+            ),
+        ),
+        pytest.param(
+            # Fails when C2<C1 in WELOPEN
+            """
+COMPDAT
+    'OP1' 1 1 1 1 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* -1 -1 /
+/
+""",
+            None,
+            id="welopen_negative_complumpvalues",
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Negative values for C1/C2 is no allowed",
+            ),
+        ),
+        pytest.param(
+            # Fails when C2<C1 in WELOPEN
+            """
+COMPDAT
+    'OP1' 1 1 1 1 'OPEN' /
+/
+COMPLUMP
+    'OP1' 1 1 1 1 /
+/
+WELOPEN
+    'OP1' 'SHUT' 3* 0 0 /
+/
+""",
+            None,
+            id="welopen_default_complumpvalues",
+            marks=pytest.mark.xfail(
+                raises=ValueError,
+                match="Defaults (zero) for C1/C2 is not implemented",
             ),
         ),
     ],

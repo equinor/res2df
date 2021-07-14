@@ -359,9 +359,8 @@ def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
             # This means that the WELL field is refering to a well list
             # This is handled elsewhere and we let it pass here
             exp_welopen.append(row)
-        elif "?" in row["WELL"]:
-            raise ValueError(f"? notation in WELOPEN not implemented: {row}")
-        elif "*" in row["WELL"]:
+        elif "*" in row["WELL"] or "?" in row["WELL"]:
+            # This row is a well name template
             relevant_wells = compdat_df[compdat_df["DATE"] <= row["DATE"]][
                 "WELL"
             ].unique()

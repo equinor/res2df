@@ -561,7 +561,9 @@ WELOPEN_CASES = [
             }
         ),
     ),
-    # Test wildcard in wellname
+    # Referencing multiple wells with wildcards
+    # Wildcard structures are tested in test_common and need
+    # not be tested here.
     (
         """
     DATES
@@ -582,52 +584,6 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "B_1H", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "B_2H", 2, 2, 2, 2, "SHUT"],
                 [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
-            ],
-        ),
-    ),
-    # ? notation in WELOPEN is not implemented and fails
-    pytest.param(
-        """
-    DATES
-      1 JAN 2000 /
-    /
-    COMPDAT
-     'OP1' 1 1 1 1 'OPEN' /
-    /
-    WELOPEN
-     '?' 'SHUT' /
-    /
-    """,
-        pd.DataFrame(
-            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
-            data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-            ],
-        ),
-        id="?_notation_not_implemented",
-        marks=pytest.mark.xfail(
-            raises=ValueError, match="? notation in WELOPEN not implemented"
-        ),
-    ),
-    # Test wildcard in the beginning of a wellname
-    # Must be written as \*, because wellnames starting with *
-    # are WLIST elements by definition.
-    (
-        """
-    DATES
-      1 JAN 2000 /
-    /
-    COMPDAT
-     'OP1' 1 1 1 1 'OPEN' /
-    /
-    WELOPEN
-     '\\*P1' 'SHUT' /
-    /
-    """,
-        pd.DataFrame(
-            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
-            data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
     ),

@@ -681,8 +681,10 @@ def expand_complump_in_welopen_df(
             # Found a row that refers to cumplump numbers
             # Check that the cumplump numbers are ok:
             C1, C2 = int(row["C1"]), int(row["C2"])
-            if C1 <= 0 or C2 <= 0:
-                raise ValueError(f"Both C1 and C2 must be positive numbers: {row}")
+            if C1 < 0 or C2 < 0:
+                raise ValueError(f"Negative values for C1/C2 is no allowed: {row}")
+            if C1 == 0 or C2 == 0:
+                raise ValueError(f"Defaults (zero) for C1/C2 is not implemented: {row}")
             if C2 < C1:
                 raise ValueError(f"C2 must be equal or greater than C1: {row}")
 

@@ -330,13 +330,37 @@ def postprocess():
 def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
     """Expand rows in welopen with wellname containing * notation,
     with the correct wells from compdat_df that was defined at that date
+
+    Example::
+
+      WELOPEN
+       'OP*' 'SHUT' /
+      /
+
+    might become the equivalent dataframe representation of::
+
+      WELOPEN
+       'OP1' 'SHUT' /
+       'OP2' 'SHUT' /
+      /
+
+    if both OP1 and OP2 are defined at that time.
+
+    Args:
+        welopen_df: DataFrame with welopen
+        compdat_df: DataFrame with compdat
+
+    Returns:
+        Expanded welopen dataframe
     """
     exp_welopen = []
     for _, row in welopen_df.iterrows():
         if row["WELL"].startswith("*"):
-            # This means that the WELL field is refering to a list
+            # This means that the WELL field is refering to a well list
             # This is handled elsewhere and we let it pass here
             exp_welopen.append(row)
+        elif "?" in row["WELL"]:
+            raise ValueError(f"? notation in WELOPEN not implemented: {row}")
         elif "*" in row["WELL"]:
             relevant_wells = compdat_df[compdat_df["DATE"] <= row["DATE"]][
                 "WELL"
@@ -419,9 +443,9 @@ def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
        'OP1' 74 135 7 8 1 /
       /
 
-    is transformed/unrolled so to the dataframe representation of::
+    is transformed/unrolled to the dataframe representation of::
 
-      COMPDAT
+      COMPLUMP
        'OP1' 74 135 7 7 1 /
        'OP1' 74 135 8 8 1 /
       /
@@ -665,8 +689,8 @@ def expand_complump_in_welopen_df(
             relevant_complump_df = complump_df[
                 (complump_df["DATE"] <= row["DATE"])
                 & (complump_df["WELL"] == row["WELL"])
-                & (complump_df["N"] >= row["C1"])
-                & (complump_df["N"] <= row["C2"])
+                & (complump_df["N"] >= C1)
+                & (complump_df["N"] <= C2)
             ]
             for _, complump_row in relevant_complump_df.iterrows():
                 if complump_row["K1"] != complump_row["K2"]:
@@ -790,11 +814,6 @@ def applywelopen(
                 & (compdat_df["J"] == row["J"])
                 & (compdat_df["K1"] == row["K"])
                 & (compdat_df["K2"] == row["K"])
-            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
-        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
-            previous_state = compdat_df[
-                (compdat_df["WELL"] == row["WELL"])
-                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
             previous_state = compdat_df[

@@ -569,21 +569,44 @@ WELOPEN_CASES = [
       1 JAN 2000 /
     /
     COMPDAT
-     'OP1' 1 1 1 1 'OPEN' /
-     'OP2' 2 2 2 2 'OPEN' /
+     'B_1H' 1 1 1 1 'OPEN' /
+     'B_2H' 2 2 2 2 'OPEN' /
      'WI1' 3 3 3 3 'OPEN' /
     /
     WELOPEN
-     'OP*' 'SHUT' /
+     'B*H' 'SHUT' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "B_1H", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "B_2H", 2, 2, 2, 2, "SHUT"],
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
+            ],
+        ),
+    ),
+    # ? notation in WELOPEN is not implemented and fails
+    pytest.param(
+        """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     '?' 'SHUT' /
     /
     """,
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-                [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "SHUT"],
-                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
             ],
+        ),
+        marks=pytest.mark.xfail(
+            raises=ValueError, match="? notation in WELOPEN not implemented"
         ),
     ),
     # Test wildcard in the beginning of a wellname

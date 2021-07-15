@@ -242,7 +242,7 @@ def test_eclcompress():
             None,
             marks=pytest.mark.xfail(
                 raises=ValueError,
-                match="Well template not allowed to start with * or ?",
+                match="Well template not allowed to start with a wildcard character",
             ),
         ),
         pytest.param(
@@ -251,7 +251,7 @@ def test_eclcompress():
             None,
             marks=pytest.mark.xfail(
                 raises=ValueError,
-                match="Well template not allowed to start with * or ?",
+                match="Well template not allowed to start with a wildcard character",
             ),
         ),
     ],

@@ -1020,7 +1020,7 @@ WELOPEN
             ),
         ),
         pytest.param(
-            # Fails when C2<C1 in WELOPEN
+            # Fails for negative numbers in COMPLUMP row
             """
 COMPDAT
     'OP1' 1 1 1 1 'OPEN' /
@@ -1040,7 +1040,7 @@ WELOPEN
             ),
         ),
         pytest.param(
-            # Fails when C2<C1 in WELOPEN
+            # Fails for negative completion numbers in welopen
             """
 COMPDAT
     'OP1' 1 1 1 1 'OPEN' /
@@ -1053,14 +1053,14 @@ WELOPEN
 /
 """,
             None,
-            id="welopen_negative_complumpvalues",
+            id="welopen_negative_completionvalues",
             marks=pytest.mark.xfail(
                 raises=ValueError,
                 match="Negative values for C1/C2 is no allowed",
             ),
         ),
         pytest.param(
-            # Fails when C2<C1 in WELOPEN
+            # Fails for default completionvalues (zero) in WELOPEN
             """
 COMPDAT
     'OP1' 1 1 1 1 'OPEN' /

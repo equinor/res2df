@@ -786,10 +786,16 @@ def get_wells_matching_template(template: str, wells: list):
     Well name templates starting with ? might be allowed in Eclipse
     in some contexts, but not in all and will not be permitted here to
     avoid confusion.
+
+    Args:
+        template: well name template with wildcard characters
+        wells: list of wells to match against the template
+    Returns:
+        List of matched wells
     """
     if template.startswith("*") or template.startswith("?"):
         raise ValueError(
-            "Well template not allowed to start with * or ?: "
+            "Well template not allowed to start with a wildcard character: "
             f"Must be preceded with a \\: {template}"
         )
     elif template.startswith("\\"):

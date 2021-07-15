@@ -328,7 +328,7 @@ def postprocess():
 
 
 def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
-    """Expand rows in welopen with wellname containing * notation,
+    """Expand rows in welopen with well names containing wildcard characters,
     with the correct wells from compdat_df that was defined at that date
 
     Example::
@@ -360,7 +360,7 @@ def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
             # This is handled elsewhere and we let it pass here
             exp_welopen.append(row)
         elif "*" in row["WELL"] or "?" in row["WELL"]:
-            # This row is a well name template
+            # This row is identified a well name template with wildcard characters
             relevant_wells = compdat_df[compdat_df["DATE"] <= row["DATE"]][
                 "WELL"
             ].unique()

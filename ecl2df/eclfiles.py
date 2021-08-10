@@ -1,10 +1,10 @@
 """Module to hold Eclipse input and output filenames"""
 
-import os
 import errno
 import logging
+import os
 from pathlib import Path
-from typing import List, Tuple, Any, Optional, Union
+from typing import Any, List, Optional, Tuple, Union
 
 try:
     import opm.io
@@ -13,9 +13,11 @@ try:
 except ImportError:
     HAVE_OPM = False
 
+from ecl import EclFileFlagEnum
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from ecl.summary import EclSum
+
 from ecl2df import common
 
 logger = logging.getLogger(__name__)
@@ -134,7 +136,10 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
             logger.info("Opening data vectors from EGRID file: %s", egridfilename)
-            self._egridfile = EclFile(egridfilename)
+            self._egridfile = EclFile(
+                egridfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
+            )
+
         return self._egridfile
 
     def get_eclsum(self, include_restart: bool = True) -> EclSum:
@@ -164,7 +169,9 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), initfilename
                 )
             logger.info("Opening INIT file: %s", initfilename)
-            self._initfile = EclFile(initfilename)
+            self._initfile = EclFile(
+                initfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
+            )
         return self._initfile
 
     def get_rftfile(self) -> EclFile:
@@ -176,7 +183,9 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), rftfilename
                 )
             logger.info("Opening RFT file: %s", rftfilename)
-            self._rftfile = EclFile(rftfilename)
+            self._rftfile = EclFile(
+                rftfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
+            )
         return self._rftfile
 
     def get_rstfile(self) -> EclFile:
@@ -188,7 +197,9 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), rstfilename
                 )
             logger.info("Opening RST file: %s", rstfilename)
-            self._rstfile = EclFile(rstfilename)
+            self._rstfile = EclFile(
+                rstfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
+            )
         return self._rstfile
 
     def get_rstfilename(self) -> str:
@@ -198,6 +209,22 @@ class EclFiles(object):
     def get_prtfilename(self) -> str:
         """Return the inferred name of the PRT file"""
         return self._eclbase + ".PRT"
+
+    def close(self) -> None:
+        """Close any opened files. Most files are opened though ecl with
+        an option to close the stream as possible, leaving not much work
+        for this function."""
+        if self._egridfile is not None:
+            self._egridfile = None
+        if self._initfile is not None:
+            self._initfile = None
+        if self._eclsum is not None:
+            # This is necessary for garbage collection to close the EclSum file:
+            self._eclsum = None
+        if self._rstfile is not None:
+            self._rstfile = None
+        if self._rftfile is not None:
+            self._rftfile = None
 
     def get_zonemap(self, filename=None):
         """Return a dictionary from (int) K layers in the simgrid to strings

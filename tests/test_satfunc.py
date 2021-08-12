@@ -310,6 +310,129 @@ SWFN
     assert len(wrongdf["SW"].unique()) == 3
 
 
+def test_defaulted_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
+    dframe = satfunc.df(
+        """
+SWOF
+0 0 1 1
+0.5 1* 1* 1*
+1 1 0 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCOW"], [1, 0.5, 0])
+    np.testing.assert_allclose(dframe["KROW"], [1, 0.5, 0])
+    np.testing.assert_allclose(dframe["KRW"], [0, 0.5, 1])
+
+    dframe = satfunc.df(
+        """
+SGOF
+0 0 1 1
+0.5 1* 1* 1*
+1 1 0 0
+/
+0 0 1 1
+0.2 1* 1* 1*
+1 1 0 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCOG"], [1, 0.5, 0, 1, 0.8, 0])
+    np.testing.assert_allclose(dframe["KROG"], [1, 0.5, 0, 1, 0.8, 0])
+    np.testing.assert_allclose(dframe["KRG"], [0, 0.5, 1, 0, 0.2, 1])
+
+    dframe = satfunc.df(
+        """
+SWFN
+0 0 1
+0.1 1* 1*
+0.9 1* 1*
+1 1 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCOW"], [1, 0.9, 0.1, 0])
+    np.testing.assert_allclose(dframe["KRW"], [0, 0.1, 0.9, 1])
+
+    dframe = satfunc.df(
+        """
+SOF3
+0 0 1
+0.1 1* 1*
+0.9 1* 1*
+1 1 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["KROG"], [1, 0.9, 0.1, 0])
+    np.testing.assert_allclose(dframe["KROW"], [0, 0.1, 0.9, 1])
+
+    dframe = satfunc.df(
+        """
+SOF2
+0 0
+0.1 1*
+0.9 1*
+1 1
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["KRO"], [0, 0.1, 0.9, 1])
+
+    dframe = satfunc.df(
+        """
+SGFN
+0 0 1
+0.1 1* 1*
+0.9 2*
+1 1 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCOG"], [1, 0.9, 0.1, 0])
+    np.testing.assert_allclose(dframe["KRG"], [0, 0.1, 0.9, 1])
+
+    dframe = satfunc.df(
+        """
+SGWFN
+0 0 1 1
+0.5 3*
+1 1 0 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCGW"], [1, 0.5, 0])
+    np.testing.assert_allclose(dframe["KRG"], [0, 0.5, 1])
+    np.testing.assert_allclose(dframe["KRW"], [1, 0.5, 0])
+
+    dframe = satfunc.df(
+        """
+SLGOF
+0 0 1 1
+0.5 3*
+1 1 0 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCOG"], [1, 0.5, 0])
+    np.testing.assert_allclose(dframe["KRG"], [0, 0.5, 1])
+    np.testing.assert_allclose(dframe["KRO"], [1, 0.5, 0])
+
+    # This will probably crash Eclipse:
+    dframe = satfunc.df(
+        """
+SWFN
+0 0 1*
+1 1 0
+/
+"""
+    )
+    np.testing.assert_allclose(dframe["PCOW"], [np.nan, 0])
+    np.testing.assert_allclose(dframe["KRW"], [0, 1])
+
+
 def test_multiple_keywords_family2():
 
     satnumstr = """

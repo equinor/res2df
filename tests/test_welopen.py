@@ -602,3 +602,217 @@ def test_welopen(test_input, expected):
         .sort_values(by=columns_to_check, axis=0)
         .reset_index()[columns_to_check]
     ).all(axis=None)
+
+
+@pytest.mark.parametrize(
+    # It should only be necessary to test "NEW" actions in WLIST here, as the
+    # transformation from ADD/DEL/MOV into NEW is tested in test_wlist
+    "test_input, expected",
+    [
+        # Simplest case with one well in list
+        (
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+    /
+    WLIST
+      '*OP' NEW OP1 /
+    /
+    WELOPEN
+      '*OP' 'SHUT' /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                ],
+            ),
+        ),
+        # WLIST for a different well
+        pytest.param(
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+    /
+    WLIST
+      '*OP' NEW OP2 /
+    /
+    WELOPEN
+      '*OP' 'SHUT' /
+    /
+    """,
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError, match="A WELOPEN keyword is not acting"
+            ),
+        ),
+        # Two wells.
+        (
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+      'OP2' 1 1 1 1 'OPEN' /
+    /
+    WLIST
+      '*OP' NEW OP1 OP2/
+    /
+    WELOPEN
+      -- Shut the wells immediately, overriding OPEN in COMPDAT
+      '*OP' 'SHUT' /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                ],
+            ),
+        ),
+        # Four wells, two lists.
+        (
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+      'OP2' 1 1 1 1 'OPEN' /
+      'IN1' 2 1 1 1 'OPEN' /
+      'IN2' 2 1 1 1 'OPEN' /
+    /
+    WELOPEN
+      -- In ecl2df, the WELOPEN is allowed to be before WLIST
+      '*OP' 'SHUT' /
+    /
+    WLIST
+      '*OP' NEW OP1 OP2 /
+      '*IN' NEW IN1 IN2 /
+    /
+    DATES
+      2 JAN 2000 /
+    /
+    WELOPEN
+      '*IN' 'SHUT' /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "IN1", 2, 1, 1, 1, "OPEN"],
+                    [datetime.date(2000, 1, 1), "IN2", 2, 1, 1, 1, "OPEN"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 2), "IN1", 2, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 2), "IN2", 2, 1, 1, 1, "SHUT"],
+                ],
+            ),
+        ),
+        # Wildcards for wells are not supported (yet?):
+        pytest.param(
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+      'OP*' 'SHUT' /
+    /""",
+            None,
+            id="wildcardwell",
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        # WLIST defined too late
+        pytest.param(
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+      '*OP' 'SHUT' /
+    /
+    DATES
+      2 JAN 2000/
+    /
+    WLIST
+      '*OP' NEW OP2 /
+    /
+    """,
+            None,
+            id="futurewlist",
+            marks=pytest.mark.xfail(
+                raises=ValueError, match="Well list OP not defined at 2000-01-01"
+            ),
+        ),
+        pytest.param(
+            # WELOPEN on non-existing well list name
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+    /
+    WLIST
+      '*OP' NEW OP1 /
+    /
+    WELOPEN
+      '*OPS' 'SHUT' /
+    /
+    """,
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError, match="Well list OPS not defined at 2000-01-01"
+            ),
+        ),
+        # WLIST that has been redefined
+        pytest.param(
+            """
+    DATES
+      1 JAN 1999/
+    /
+    WLIST
+      '*OP' NEW OP9 /
+    /
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+    /
+    WLIST
+      '*OP' NEW OP1 /
+    /
+    WELOPEN
+      '*OP' 'SHUT' /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                ],
+            ),
+            id="redefined_wlist",
+        ),
+    ],
+)
+def test_welopen_wlist(test_input, expected):
+    deck = EclFiles.str2deck(test_input)
+    dfs = compdat.deck2dfs(deck)
+    pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)

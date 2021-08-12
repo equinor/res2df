@@ -1,6 +1,12 @@
-"""
-Extract COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck
-
+"""Parser and dataframe generator for the Eclipse keywords:
+  * COMPAT
+  * WELSEGS
+  * COMPSEGS
+  * WELOPEN
+  * WSEGAICD
+  * WSEGVALV
+  * WSEGSICD
+  * WLIST
 """
 
 import datetime
@@ -88,6 +94,7 @@ def deck2dfs(
     wsegsicdrecords = []
     wsegaicdrecords = []
     wsegvalvrecords = []
+    wlistrecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
@@ -204,15 +211,28 @@ def deck2dfs(
                 if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
                     rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
                 welsegsrecords.append(rec_data)
+        elif kword.name == "WLIST":
+            for rec in kword:
+                rec_data = parse_opmio_deckrecord(rec, "WLIST")
+                rec_data["DATE"] = date
+                if isinstance(rec_data["WELLS"], list):
+                    rec_data["WELLS"] = " ".join(rec_data["WELLS"])
+
+                # Do not store the asterisk that is needed in the Eclipse
+                # keywords for referring to well lists:
+                rec_data["NAME"] = rec_data["NAME"].replace("*", "")
+
+                wlistrecords.append(rec_data)
 
     compdat_df = pd.DataFrame(compdatrecords)
     welopen_df = pd.DataFrame(welopenrecords)
+    wlist_df = pd.DataFrame(wlistrecords)
 
     if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
 
     if not welopen_df.empty:
-        compdat_df = applywelopen(compdat_df, welopen_df)
+        compdat_df = applywelopen(compdat_df, welopen_df, expand_wlist(wlist_df))
 
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
@@ -245,6 +265,7 @@ def deck2dfs(
         COMPDAT=compdat_df,
         COMPSEGS=compsegs_df,
         WELSEGS=welsegs_df,
+        WLIST=wlist_df,
         WSEGSICD=wsegsicd_df,
         WSEGAICD=wsegaicd_df,
         WSEGVALV=wsegvalv_df,
@@ -350,7 +371,196 @@ def unrolldf(
     return unrolled
 
 
-def applywelopen(compdat_df: pd.DataFrame, welopen_df: pd.DataFrame) -> pd.DataFrame:
+#        '*OP' NEW OP1 /
+#        '*OP' ADD OP2 /
+
+
+def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
+    """Expand all WLIST actions in a dataframe into a dataframe with
+    only "NEW" actions. This makes the dataframe cheaper to parse to
+    get the state of the well lists at a particular date
+
+    Example:
+
+    .. code-block::
+
+      WLIST
+        '*OP' NEW OP1 /
+        '*OP' ADD OP2 /
+      /
+
+    is transformed into the equivalent dataframe representation of:
+
+    .. code-block::
+
+      WLIST
+        '*OP' NEW OP1 OP2 /  -- wells always sorted alphabetically
+      /
+
+    and then similarly for more complex MOV, DEL and NEW actions.
+
+    The rationale is that if you extract all WLIST rows at a date
+    and there are only NEW actions present, you can trust that dataframe
+    to contain all WLIST actions accumulated from the start.
+
+    Warning: If multiple WLIST keywords are at the same date, with other
+    keywords depending on the WLIST state in between, that effect is lost
+    through this dataframe representation.
+
+    Args:
+        wlist_df (pd.DataFrame): Dataframe with WLIST action rows. DATE
+            must be present as a column in the DataFrame
+
+    Returns:
+        pd.DataFrame. WLIST rows with only NEW directives
+    """
+
+    # This function maintain all current (as in pr. date) well lists as a list
+    # of dictionaries, which accumulates all WLIST directives. Every time the date
+    # changes, the current state is outputted as it was valid for the previous date.
+
+    currentstate: Dict[str, str] = {}
+
+    if wlist_df.empty:
+        return wlist_df
+
+    currentdate = wlist_df["DATE"].min()
+    new_records = []
+
+    for idx, wlist_record in wlist_df.iterrows():
+        date = wlist_record["DATE"]
+        if date > currentdate:
+            # Store current state
+            for wlistname, wells in currentstate.items():
+                new_records.append(
+                    {
+                        "DATE": currentdate,
+                        "NAME": wlistname,
+                        "ACTION": "NEW",
+                        "WELLS": wells,
+                    }
+                )
+        currentdate = date
+
+        if wlist_record["ACTION"] in ["ADD", "NEW"]:
+            # Already defined well-lists can be used to append whole
+            # well lists to other lists:
+            recursive_wlists = [
+                r_wlist
+                for r_wlist in wlist_record["WELLS"].split()
+                if r_wlist.startswith("*")
+            ]
+            for r_wlist in recursive_wlists:
+                if r_wlist[1:] in currentstate:
+                    wlist_record["WELLS"] = wlist_record["WELLS"].replace(
+                        r_wlist, currentstate[r_wlist[1:]]
+                    )
+                else:
+                    print(wlist_record)
+                    raise ValueError(
+                        f"Recursive well list {r_wlist} does not exist in "
+                        f"{currentstate}"
+                    )
+        if wlist_record["ACTION"] == "NEW":
+            currentstate[wlist_record["NAME"]] = " ".join(
+                sorted(wlist_record["WELLS"].split())
+            )
+        elif wlist_record["ACTION"] in ["ADD", "DEL"]:
+            if wlist_record["NAME"] not in currentstate:
+                raise ValueError(
+                    "WLIST ADD/DEL only works on existing well lists: "
+                    f"{str(wlist_record)}"
+                )
+        if wlist_record["ACTION"] == "ADD":
+            currentstate[wlist_record["NAME"]] = " ".join(
+                sorted(
+                    set(
+                        wlist_record["WELLS"].split()
+                        + currentstate[wlist_record["NAME"]].split()
+                    )
+                )
+            )
+        if wlist_record["ACTION"] == "DEL":
+            currentstate[wlist_record["NAME"]] = " ".join(
+                sorted(
+                    list(
+                        set(currentstate[wlist_record["NAME"]].split())
+                        - set(wlist_record["WELLS"].split())
+                    )
+                )
+            )
+        if wlist_record["ACTION"] == "MOV":
+            if wlist_record["NAME"] not in currentstate:
+                currentstate[wlist_record["NAME"]] = ""
+            currentstate[wlist_record["NAME"]] = " ".join(
+                sorted(
+                    list(
+                        set(currentstate[wlist_record["NAME"]].split()).union(
+                            set(wlist_record["WELLS"].split())
+                        )
+                    )
+                )
+            )
+            for wlist in currentstate.keys():
+                if wlist == wlist_record["NAME"]:
+                    continue
+                currentstate[wlist] = " ".join(
+                    sorted(
+                        list(
+                            set(currentstate[wlist].split())
+                            - set(wlist_record["WELLS"].split())
+                        )
+                    )
+                )
+
+    # Dump final state:
+    for wlistname, wells in currentstate.items():
+        new_records.append(
+            {"DATE": currentdate, "NAME": wlistname, "ACTION": "NEW", "WELLS": wells}
+        )
+
+    return pd.DataFrame(new_records)
+
+
+def expand_wlist_in_welopen_df(
+    welopen_df: pd.DataFrame, wlist_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Go trough a welopen dataframe and expand rows where the well-name refers
+    to a well-list. The returned dataframe is as if the welopen commands were
+    inputted explicitly without the use of WLIST.
+    """
+    if welopen_df.empty or welopen_df is None or wlist_df is None or wlist_df.empty:
+        return welopen_df
+
+    exp_welopens = []
+    for _, row in welopen_df.iterrows():
+        relevant_wlist_df = wlist_df[wlist_df["DATE"] <= row["DATE"]]
+        if row["WELL"].startswith("*"):
+            wlistname = row["WELL"].replace("*", "")
+            if wlistname in relevant_wlist_df["NAME"].to_numpy():
+                for well in (
+                    relevant_wlist_df[relevant_wlist_df["NAME"] == wlistname]
+                    .tail(1)["WELLS"]
+                    .reset_index(drop=True)[0]
+                    .split()
+                ):
+                    wellrow = row.copy()
+                    wellrow.update({"WELL": well})
+                    exp_welopens.append(wellrow)
+            else:
+                raise ValueError(f"Well list {wlistname} not defined at {row['DATE']}")
+        else:
+            # Explicit wellname was used, no expansion to happen:
+            exp_welopens.append(row)
+
+    return pd.DataFrame(exp_welopens)
+
+
+def applywelopen(
+    compdat_df: pd.DataFrame,
+    welopen_df: pd.DataFrame,
+    wlist_df: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
     """Apply WELOPEN actions to the COMPDAT dataframe.
 
     Each record in the WELOPEN keyword acts as an operator on existing connections
@@ -379,12 +589,25 @@ def applywelopen(compdat_df: pd.DataFrame, welopen_df: pd.DataFrame) -> pd.DataF
     Args:
         compdat_df: Dataframe with unrolled COMPDAT data
         welopen_df: Dataframe with WELOPEN actions
+        wlist_df: Dataframe with WLIST NEW records. Optional.
 
     Returns:
-        Dataframe, compdat_df now including WELOPEN actions
+        compdat_df now including WELOPEN actions
 
     """
+    if isinstance(wlist_df, pd.DataFrame):
+        if wlist_df.empty:
+            wlist_df = None
+        else:
+            if set(wlist_df["ACTION"]) != {"NEW"}:
+                raise ValueError(
+                    "The WLIST dataframe must be expanded through expand_wlist()"
+                )
+
     welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
+
+    welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
+
     for _, row in welopen_df.iterrows():
         if (row["I"] is None and row["J"] is None and row["K"] is None) or (
             row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0

@@ -434,7 +434,7 @@ def pillars_main(args) -> None:
     if groupbies:
         dframe = dframe.groupby(groupbies).agg(aggregators).reset_index()
     elif args.group:
-        dframe = dframe.mean().to_frame().transpose()
+        dframe = dframe.drop("PILLAR", axis=1).mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
     common.write_dframe_stdout_file(
         dframe, args.output, index=False, caller_logger=logger

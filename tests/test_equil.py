@@ -84,6 +84,38 @@ def test_df2ecl(tmpdir):
     assert Path("eclipse/include/equil.inc").is_file()
 
 
+def test_df2ecl_equil(tmpdir):
+    """Test the underlying function directly"""
+    dframe = pd.DataFrame(
+        [
+            {
+                "Z": 2469.0,
+                "PRESSURE": 382.4,
+                "OWC": 1700.0,
+                "PCOWC": 0.0,
+                "GOC": 0.0,
+                "EQLNUM": 1,
+                "KEYWORD": "EQUIL",
+            },
+        ]
+    )
+    # Check that we don't need the KEYWORD in the underlying function
+    assert equil.df2ecl_equil(dframe) == equil.df2ecl_equil(
+        dframe.drop("KEYWORD", axis="columns")
+    )
+
+    # Can also drop EQLNUM since we have only one row:
+    assert equil.df2ecl_equil(dframe) == equil.df2ecl_equil(
+        dframe.drop("EQLNUM", axis="columns")
+    )
+
+    # Problem if we have two rows, nothing is returned and a critical error is logged
+    assert (
+        equil.df2ecl_equil(pd.concat([dframe, dframe]).drop("EQLNUM", axis="columns"))
+        == ""
+    )
+
+
 def test_decks():
     """Test some string decks"""
     deckstr = """
@@ -108,6 +140,13 @@ EQUIL
     inc = equil.df2ecl_equil(equil.df(""))
     assert "No data" in inc
     assert equil.df(inc).empty
+
+    # Test more empty data:
+    assert "No data" in equil.df2ecl_equil(equil.df(""))
+    assert "No data" in equil.df2ecl_rsvd(equil.df(""))
+    assert "No data" in equil.df2ecl_rvvd(equil.df(""))
+    assert "No data" in equil.df2ecl_pbvd(equil.df(""))
+    assert "No data" in equil.df2ecl_pdvd(equil.df(""))
 
     deckstr = """
 OIL
@@ -183,6 +222,50 @@ EQUIL
     df_from_inc = equil.df(inc)
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
+
+
+def test_equil_fromdeck():
+    """equil.df relies on equil.equil_fromdeck, test that expliclitly"""
+    deckstr = """
+OIL
+WATER
+GAS
+
+EQUIL
+--   DATUM  PRESSURE     OWC  PCOWC  GOC  PCGOC  INITRS  INITRV  ACCURACY
+ 2469.0     382.4  1700.0    0.0  0.0    0.0     1     0      20  /
+ 2469.0     382.4  1000.0    0.0  0.0    0.0     2     0      20  /
+"""
+    pd.testing.assert_frame_equal(
+        equil.equil_fromdeck(deckstr), equil.df(deckstr).drop("KEYWORD", axis=1)
+    )
+    # If we supply a deck object and not a string, it will not be able
+    # to pick up both EQLNUMs:
+    assert len(equil.equil_fromdeck(deckstr)) == 2  # correct
+    assert len(equil.equil_fromdeck(deckstr, 2)) == 2
+    assert len(equil.equil_fromdeck(deckstr, 1)) == 1
+    assert len(equil.equil_fromdeck(EclFiles.str2deck(deckstr))) == 1  # (watch out!)
+
+    wrongdeck = """
+EQUIL
+1 1 1 1 1 1 1 1 1 /
+/
+"""
+    with pytest.raises(ValueError, match="Could not determine phase configuration"):
+        equil.equil_fromdeck(wrongdeck)
+
+    with pytest.raises(ValueError, match="Could not determine phase configuration"):
+        equil.equil_fromdeck("")
+
+    # Single phase decks will not work:
+    gasdeck = """
+GAS
+
+EQUIL
+1 1 5000 0 4000 /
+"""
+    with pytest.raises(ValueError, match="Could not determine phase configuration"):
+        equil.equil_fromdeck(gasdeck)
 
 
 def test_rsvd():
@@ -296,6 +379,16 @@ PBVD
     # Check that we can use the underlying function directly:
     pbvd_df2 = equil.pbvd_fromdeck(deckstr)
     pd.testing.assert_frame_equal(pbvd_df.drop("KEYWORD", axis="columns"), pbvd_df2)
+
+    # Check that we don't need the KEYWORD column for the underlying function:
+    assert equil.df2ecl_pbvd(pbvd_df) == equil.df2ecl_pbvd(
+        pbvd_df.drop("KEYWORD", axis="columns")
+    )
+
+    # If EQLNUM column is dropped it is not possible to guess the
+    # correct include file, so the code must fail:
+    with pytest.raises(KeyError):
+        equil.df2ecl_pbvd(pbvd_df.drop("EQLNUM", axis="columns"))
 
 
 def test_pdvd():
@@ -434,7 +527,7 @@ def test_eclipse_rounding(somefloat, expected):
     assert expected in equil.df2ecl(dframe, withphases=False)
 
 
-def test_main_subparser(tmpdir, mocker):
+def test_main_subparser(tmpdir, mocker, capsys):
     """Test command line interface"""
     tmpdir.chdir()
     tmpcsvfile = "equil.csv"
@@ -467,3 +560,62 @@ def test_main_subparser(tmpdir, mocker):
         disk_df,
         check_like=True,
     )
+
+    # Test empty equil data:
+    Path("poro.inc").write_text(
+        """
+GAS
+OIL
+
+PORO
+0.1 0.1 /
+"""
+    )
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "equil", "-v", "poro.inc", "-o", "notwritten.csv"]
+    )
+    ecl2csv.main()
+    # (an ERROR is logged)
+    assert not Path("notwritten.csv").exists()
+
+
+@pytest.mark.parametrize(
+    "deckstring, expected",
+    [
+        ("", ""),
+        ("OIL", ""),
+        ("OIL\nWATER", "oil-water"),
+        ("WATER\nOIL", "oil-water"),
+        ("WATER", ""),
+        ("GAS", ""),
+        ("WATER\nGAS", "gas-water"),
+        ("GAS\nWATER", "gas-water"),
+        ("OIL\nWATER\nGAS", "oil-water-gas"),
+        ("oil\nwater\ngas", "oil-water-gas"),  # (!) OPM is case insensitive
+        ("OIL\nWATER\ngas", "oil-water-gas"),
+    ],
+)
+def test_phases_from_deck(deckstring, expected):
+    """Test that we can extract phase configuration from a deck"""
+    deck = EclFiles.str2deck(deckstring)
+    assert equil.phases_from_deck(deck) == expected
+
+
+@pytest.mark.parametrize(
+    "stringlist, expected",
+    [
+        ([""], ""),
+        (["OWC"], "oil-water"),
+        (["GWC"], "gas-water"),
+        (["GOC"], "oil-gas"),
+        (["OWC", "GOC"], "oil-water-gas"),
+        (["OWC", "GOC"], "oil-water-gas"),
+        (["OWC", "GWC"], ""),  # Meaningless
+        (["GOC", "GWC"], ""),
+        (["WOC"], ""),  # common typo..
+    ],
+)
+def test_phases_from_columns(stringlist, expected):
+    """Test that we can pick the correct phase configuration based
+    on the column names in a dataframe."""
+    assert equil.phases_from_columns(stringlist) == expected

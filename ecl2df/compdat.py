@@ -1,19 +1,19 @@
 """Parser and dataframe generator for the Eclipse keywords:
   * COMPDAT
-  * WELSEGS
+  * COMPLUMP
   * COMPSEGS
   * WELOPEN
-  * WSEGAICD
-  * WSEGVALV
-  * WSEGSICD
+  * WELSEGS
   * WLIST
-  * COMPLUMP
+  * WSEGAICD
+  * WSEGSICD
+  * WSEGVALV
 """
 
+import argparse
 import datetime
 import logging
-import argparse
-from typing import Dict, Optional, Union, List
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -24,15 +24,15 @@ except ImportError:
     # Allow parts of ecl2df to work without OPM:
     pass
 
-from .eclfiles import EclFiles
 from .common import (
+    get_wells_matching_template,
     merge_zones,
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
-    get_wells_matching_template,
 )
+from .eclfiles import EclFiles
 from .grid import merge_initvectors
 
 logger = logging.getLogger(__name__)
@@ -243,7 +243,7 @@ def deck2dfs(
     if not welopen_df.empty:
         compdat_df = applywelopen(
             compdat_df,
-            expand_welopen(welopen_df, compdat_df),
+            expand_welopen_wildcards(welopen_df, compdat_df),
             expand_wlist(wlist_df),
             unroll_complump(complump_df),
         )
@@ -327,7 +327,7 @@ def postprocess():
     # )
 
 
-def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
+def expand_welopen_wildcards(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
     """Expand rows in welopen with well names containing wildcard characters,
     with the correct wells from compdat_df that was defined at that date
 
@@ -677,7 +677,7 @@ def expand_complump_in_welopen_df(
                 f"WELOPEN must be defined: {row}"
             )
         else:
-            # Found a row that refers to cumplump numbers
+            # Found a row that refers to complump numbers
             # Check that the cumplump numbers are ok:
             C1, C2 = int(row["C1"]), int(row["C2"])
             if C1 < 0 or C2 < 0:

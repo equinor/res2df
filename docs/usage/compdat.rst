@@ -1,10 +1,11 @@
 compdat
 ^^^^^^^
 
-This module extracts COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck.
+This module extracts COMPDAT, WELSEGS and COMPSEGS to a dataframe
+representation from an Eclipse deck.
 
-Additionally, it will parse WELOPEN statements and emit new COMPDAT
-statements from the actions in WELOPEN.
+WELOPEN and COMPLUMP statements are parsed and converted as COMPDAT
+statements into the dataframe representation.
 
 ..
   compdat.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/compdat.csv', index=False)

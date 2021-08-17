@@ -119,6 +119,6 @@ def test_eclcompress():
         ),
     ],
 )
-def test_well_matching_template(template, wells, output):
+def test_wells_matching_template(template, wells, output):
     "Test that get_wells_matching_template is working as intended."
     assert common.get_wells_matching_template(template, wells) == output

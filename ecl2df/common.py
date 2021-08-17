@@ -790,6 +790,7 @@ def get_wells_matching_template(template: str, wells: list):
     Args:
         template: well name template with wildcard characters
         wells: list of wells to match against the template
+
     Returns:
         List of matched wells
     """

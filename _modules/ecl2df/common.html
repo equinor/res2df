@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev2+gcb33931 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev2+gcb33931
+                0.13.3.dev3+g63fffaf
               </div>
             
           
@@ -206,6 +206,7 @@
 <span class="c1"># of supported Eclipse keyword data</span>
 <span class="n">OPMKEYWORDS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">keyw</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="s2">&quot;BRANPROP&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
@@ -214,6 +215,7 @@
     <span class="s2">&quot;FAULTS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NODEPROP&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PBVD&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PDVD&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PVDG&quot;</span><span class="p">,</span>
@@ -248,7 +250,6 @@
     <span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="n">keyw</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
         <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;opmkeywords&quot;</span> <span class="o">/</span> <span class="n">keyw</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
     <span class="p">)</span>
-
 
 <span class="c1"># This is a magic filename that means read/write from/to stdout</span>
 <span class="c1"># This makes it impossible to write to a file called &quot;-&quot; on disk</span>

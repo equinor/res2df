@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.gruptree &mdash; ecl2df 0.13.3.dev2+gcb33931 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.3.dev2+gcb33931
+                0.13.3.dev3+g63fffaf
               </div>
             
           
@@ -210,16 +210,16 @@
 <span class="sig-prename descclassname"><span class="pre">ecl2df.gruptree.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startdate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">welspecs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/gruptree.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.gruptree.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all group information from a deck
 and present as a Pandas Dataframe of all edges.</p>
-<p>Numerical properties for nodes given in GRUPNET will
+<p>Properties for nodes given in GRUPNET/NODEPROP will
 be added as extra columns.</p>
 <p>From WELSPECS, well names are extracted and added
 as nodes with an edge to its group.</p>
 <p>The gruptree is a time dependent property,
 with accumulative effects from new occurences of
-GRUPTREE or WELSPECS.</p>
-<p>Whenever the tree changes, the previous tree is copied
-and a new complete tree is added to the dataframe tagged
-with the new date.</p>
+GRUPNET, WELSPECS, BRANPROP and NODEPROP.</p>
+<p>Whenever the GRUPTREE or BRANPROP tree changes, the
+previous tree is copied and a new complete tree is added
+to the dataframe tagged with the new date.</p>
 <p>startdate is only relevant when START is not in the deck.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -311,6 +311,19 @@ to fill with arguments</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.gruptree.prettyprint">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.gruptree.</span></span><span class="sig-name descname"><span class="pre">prettyprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/gruptree.html#prettyprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.gruptree.prettyprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string with the prettyprint of a dataframe
+possibly containing multiple dates and both GRUPTREE and
+BRANPROP trees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 </dd></dl>

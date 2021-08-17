@@ -650,7 +650,7 @@ def stack_on_colnames(
             of the column multiindex
     """
     if not inplace:
-        dframe = pd.DataFrame(dframe)
+        dframe = dframe.copy()
     tuplecolumns = list(map(lambda x: tuple(x.split(sep)), dframe.columns))
     if max(map(len, tuplecolumns)) < 2:
         logger.info("No columns to stack")

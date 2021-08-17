@@ -4,6 +4,7 @@
 
 # Remember to sync the keyword list here with the list in common.py
 keywords="
+BRANPROP
 COMPDAT
 COMPSEGS
 DENSITY
@@ -12,6 +13,7 @@ EQUIL
 FAULTS
 GRUPNET
 GRUPTREE
+NODEPROP
 PBVD
 PDVD
 PVDG

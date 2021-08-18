@@ -430,7 +430,7 @@ def test_main(tmpdir, mocker):
     )
     mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "empty.inc", "-o", "empty.csv"])
     ecl2csv.main()
-    assert not Path("empty.csv").is_file()
+    assert not Path("empty.csv").read_text().strip()
 
 
 def test_magic_stdout(tmpdir):

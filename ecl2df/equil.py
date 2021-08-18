@@ -318,21 +318,20 @@ def equil_main(args) -> None:
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string
         equil_df = df(Path(args.DATAFILE).read_text())
-    if not equil_df.empty:
-        common.write_dframe_stdout_file(
-            equil_df,
-            args.output,
-            index=False,
-            caller_logger=logger,
-            logstr=(
-                "Unique EQLNUMs: {}, keywords: {}".format(
-                    str(len(equil_df["EQLNUM"].unique())),
-                    str(equil_df["KEYWORD"].unique()),
-                )
-            ),
-        )
+
+    if "EQLNUM" in equil_df and "KEYWORD" in equil_df:
+        eqlnums = str(len(equil_df["EQLNUM"].unique()))
+        keywords = str(equil_df["KEYWORD"].unique())
     else:
-        logger.error("Empty EQUIL-data, not written to disk!")
+        eqlnums = "-"
+        keywords = "-"
+    common.write_dframe_stdout_file(
+        equil_df,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr=f"Unique EQLNUMs: {eqlnums}, keywords: {keywords}",
+    )
 
 
 def equil_reverse_main(args) -> None:

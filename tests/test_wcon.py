@@ -221,7 +221,9 @@ def test_main_subparsers(tmpdir, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "wcon", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+        ["ecl2csv", "wcon", "-v", "-o", "-", DATAFILE],
+        check=True,
+        stdout=subprocess.PIPE,
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty

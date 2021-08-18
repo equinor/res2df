@@ -118,6 +118,8 @@ def write_dframe_stdout_file(
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         dframe.to_csv(sys.stdout, index=index)
     else:
+        if caller_logger and dframe.empty:
+            caller_logger.warning("Empty dataframe being written to disk")
         if caller_logger and not logstr:
             caller_logger.info("Writing to file %s", str(output))
         elif caller_logger and logstr:

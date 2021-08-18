@@ -107,12 +107,14 @@ def inject_dimcount(
         dimkeyword: Either TABDIMS or EQLDIMS
         dimitem: Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.
         dimvalue: The NTSFUN/NTPVT/NTEQUIL number to use
-            (this function does not care if it is correct or not)
+            (this function does not care if it is correct or not but
+            it must be larger than zero)
         nowarn: By default it will warn if this function
             is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.
     Returns:
         New deck with TABDIMS/EQLDIMS prepended.
     """
+    assert dimvalue > 0, "dimvalue must be larger than zero"
     if dimkeyword not in ["TABDIMS", "EQLDIMS"]:
         raise ValueError("Only supports TABDIMS and EQLDIMS")
     if dimkeyword == "TABDIMS":
@@ -120,7 +122,7 @@ def inject_dimcount(
             raise ValueError("Only support item 0 and 1 in TABDIMS")
     if dimkeyword == "EQLDIMS":
         if dimitem not in [0]:
-            raise ValueError("Only item 0 in EQLDIMS can be estimated")
+            raise ValueError("Only item 0 in EQLDIMS can be injected")
 
     if dimkeyword in deckstr:
         if not nowarn:
@@ -194,9 +196,5 @@ def inject_xxxdims_ntxxx(
     )
     # Overwrite the deck object
     deck = EclFiles.str2deck(augmented_strdeck)
-
-    if isinstance(deck, str):
-        # If a string is supplied as a deck, we always return a parsed Deck object
-        deck = EclFiles.str2deck(deck)
 
     return deck

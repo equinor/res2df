@@ -797,8 +797,6 @@ def summary_main(args) -> None:
         paramfile=args.paramfile,
         datetime=False,
     )
-    if sum_df.empty:
-        logger.warning("Empty summary data being written to disk!")
     write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
 
 

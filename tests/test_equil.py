@@ -571,12 +571,9 @@ PORO
 0.1 0.1 /
 """
     )
-    mocker.patch(
-        "sys.argv", ["ecl2csv", "equil", "-v", "poro.inc", "-o", "notwritten.csv"]
-    )
+    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "poro.inc", "-o", "empty.csv"])
     ecl2csv.main()
-    # (an ERROR is logged)
-    assert not Path("notwritten.csv").exists()
+    assert not Path("empty.csv").read_text().strip()
 
 
 @pytest.mark.parametrize(

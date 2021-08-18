@@ -460,7 +460,5 @@ def gruptree_main(args) -> None:
             print(prettyprint(dframe))
         else:
             logger.warning("No tree data to prettyprint")
-    if dframe.empty:
-        logger.error("Empty GRUPTREE dataframe, not written to disk!")
     elif args.output:
         write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)

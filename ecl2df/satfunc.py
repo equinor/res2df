@@ -168,19 +168,19 @@ def satfunc_main(args) -> None:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string
         satfunc_df = df(Path(args.DATAFILE).read_text(), keywords=args.keywords)
-    if not satfunc_df.empty:
-        write_dframe_stdout_file(
-            satfunc_df,
-            args.output,
-            index=False,
-            caller_logger=logger,
-            logstr="Unique SATNUMs: {}, saturation keywords: {}".format(
-                str(len(satfunc_df["SATNUM"].unique())),
-                str(satfunc_df["KEYWORD"].unique()),
-            ),
-        )
+    if "SATNUM" in satfunc_df and "KEYWORD" in satfunc_df:
+        satnums = str(len(satfunc_df["SATNUM"].unique()))
+        keywords = str(satfunc_df["KEYWORD"].unique())
     else:
-        logger.error("Empty saturation functions data, not written to disk!")
+        satnums = "-"
+        keywords = "-"
+    write_dframe_stdout_file(
+        satfunc_df,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr=f"Unique SATNUMs: {satnums}, saturation keywords: {keywords}",
+    )
 
 
 def satfunc_reverse_main(args) -> None:

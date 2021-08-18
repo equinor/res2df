@@ -296,20 +296,19 @@ def pvt_main(args) -> None:
         # more error-prone, and it needs a string as input.
         stringdeck = Path(args.DATAFILE).read_text()
         pvt_df = df(stringdeck, keywords=args.keywords)
-    if not pvt_df.empty:
-        common.write_dframe_stdout_file(
-            pvt_df,
-            args.output,
-            index=False,
-            caller_logger=logger,
-            logstr=(
-                "Unique PVTNUMs: {}, PVT keywords: {}".format(
-                    str(len(pvt_df["PVTNUM"].unique())), str(pvt_df["KEYWORD"].unique())
-                )
-            ),
-        )
+    if "PVTNUM" in pvt_df and "KEYWORD" in pvt_df:
+        pvtnums = str(len(pvt_df["PVTNUM"].unique()))
+        keywords = str(pvt_df["KEYWORD"].unique())
     else:
-        logger.error("Empty PVT data, not written to disk")
+        pvtnums = "-"
+        keywords = "-"
+    common.write_dframe_stdout_file(
+        pvt_df,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr=f"Unique PVTNUMs: {pvtnums}, PVT keywords: {keywords}",
+    )
 
 
 def pvt_reverse_main(args) -> None:

@@ -97,9 +97,6 @@ def wcon_main(args) -> None:
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     wcon_df = df(deck)
-    if wcon_df.empty:
-        logger.warning("Empty wcon dataframe being written to disk!")
-        return
     write_dframe_stdout_file(
         wcon_df,
         args.output,

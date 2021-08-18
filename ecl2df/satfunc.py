@@ -96,17 +96,16 @@ def df(
         deck = deck.get_ecldeck()
     deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
     assert "TABDIMS" in deck
-    ntsfun = deck["TABDIMS"][0][inferdims.DIMS_POS["NTSFUN"]].get_int(0)
 
     wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
     for keyword in wanted_keywords:
-        # Construct the associated function names
-        function_name = keyword.lower() + "_fromdeck"
-        function = globals()[function_name]
-        dframe = function(deck, ntsfun=ntsfun)
-        frames.append(dframe.assign(KEYWORD=keyword))
+        frames.append(
+            common.ecl_keyworddata_to_df(
+                deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
+            ).assign(KEYWORD=keyword)
+        )
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:
         dframe = pd.concat(nonempty_frames, axis=0, sort=False, ignore_index=True)
@@ -118,142 +117,6 @@ def df(
         dframe["KEYWORD"] = dframe["KEYWORD"].astype(str)
         return dframe
     return pd.DataFrame()
-
-
-def swof_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SWOF data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SWOF", renamer=RENAMERS["SWOF"], recordcountername="SATNUM"
-    )
-
-
-def sgof_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SGOF data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SGOF", renamer=RENAMERS["SGOF"], recordcountername="SATNUM"
-    )
-
-
-def swfn_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SWFN data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SWFN", renamer=RENAMERS["SWFN"], recordcountername="SATNUM"
-    )
-
-
-def sof2_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SOF2 data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SOF2", renamer=RENAMERS["SOF2"], recordcountername="SATNUM"
-    )
-
-
-def sgfn_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SGFN data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SGFN", renamer=RENAMERS["SGFN"], recordcountername="SATNUM"
-    )
-
-
-def sgwfn_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SGWFN data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SGWFN", renamer=RENAMERS["SGWFN"], recordcountername="SATNUM"
-    )
-
-
-def sof3_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SOF3 data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SOF3", renamer=RENAMERS["SOF3"], recordcountername="SATNUM"
-    )
-
-
-def slgof_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntsfun: Optional[int] = None
-) -> pd.DataFrame:
-    """Extract SLGOF data from a deck
-
-    Args:
-        deck
-        ntsfun: Number of SATNUM regions in deck. Will
-            be inferred if not present in deck
-    """
-    if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
-    return common.ecl_keyworddata_to_df(
-        deck, "SLGOF", renamer=RENAMERS["SLGOF"], recordcountername="SATNUM"
-    )
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

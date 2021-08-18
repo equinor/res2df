@@ -84,6 +84,9 @@ def test_df_column_keys():
     assert set(sumdf.columns) == {"FOPT", "FOPR"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
+    with pytest.raises(ValueError, match="No valid key"):
+        summary.df(EclFiles(DATAFILE), column_keys=["BOGUS"])
+
 
 def test_summary2df_dates():
     """Test that we have some API possibilities with ISO dates"""
@@ -199,6 +202,25 @@ def test_paramsupport(tmpdir):
     assert "BAR" in disk_df
     assert len(disk_df["BAR"].unique()) == 1
     assert disk_df["BAR"].unique()[0] == 3
+
+    # Test the merging from summary.df() explicitly:
+    assert "FOO" in summary.df(eclfiles, params=True, paramfile=None)
+    assert "FOO" not in summary.df(eclfiles, params=False, paramfile=None)
+    assert "FOO" not in summary.df(eclfiles, params=None, paramfile=None)
+
+    assert "FOO" in summary.df(eclfiles, params=False, paramfile=parametersyml)
+    assert "FOO" in summary.df(eclfiles, params=None, paramfile=parametersyml)
+    assert "FOO" in summary.df(eclfiles, params=None, paramfile="parameters.yml")
+
+    # Non-existing relative path is a soft error:
+    assert "FOO" not in summary.df(
+        eclfiles, params=None, paramfile="notexisting/parameters.yml"
+    )
+
+    # Non-existing absolute path is a hard error:
+    with pytest.raises(FileNotFoundError):
+        summary.df(eclfiles, params=None, paramfile="/tmp/notexisting/parameters.yml")
+
     parametersyml.unlink()
 
 
@@ -477,6 +499,29 @@ def test_fallback_date_roll(rollme, direction, freq, expected):
             "yearly",
             [],
         ),
+        (
+            dt(2300, 5, 6),
+            dt(2302, 3, 1),
+            "yearly",
+            [
+                dt(2300, 5, 6),
+                dt(2301, 1, 1),
+                dt(2302, 1, 1),
+                dt(2302, 3, 1),
+            ],
+        ),
+        (
+            dt(2304, 5, 6),
+            dt(2302, 3, 1),
+            "yearly",
+            [],
+        ),
+        (
+            dt(2302, 3, 1),
+            dt(2302, 3, 1),
+            "yearly",
+            [dt(2302, 3, 1)],
+        ),
     ],
 )
 def test_date_range(start, end, freq, expected):
@@ -606,6 +651,43 @@ def test_resample_smry_dates():
             )
         )
         == 2
+    )
+
+    # Check that we can be outside the nanosecond timestamp limitation in Pandas:
+    assert (
+        len(
+            resample_smry_dates(
+                ecldates,
+                start_date="2000-06-05",
+                end_date="2300-06-07",
+                freq="yearly",
+                normalize=True,
+            )
+        )
+        == 2 + 300  # boundary dates + 2001-01-01 to 2300-01-01
+    )
+
+    # Verify boundary date bug up to and including ecl2df v0.13.2
+    assert (
+        resample_smry_dates(
+            ecldates,
+            start_date="2300-06-05",
+            end_date="2301-06-07",
+            freq="yearly",
+            normalize=False,
+        )
+        == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
+    )
+    # Normalization should not change anything when dates are explicit:
+    assert (
+        resample_smry_dates(
+            ecldates,
+            start_date="2300-06-05",
+            end_date="2301-06-07",
+            freq="yearly",
+            normalize=True,
+        )
+        == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
     )
 
 
@@ -925,7 +1007,7 @@ def test_csv2ecl_summary(tmpdir, mocker):
         [
             "csv2ecl",
             "summary",
-            "-v",
+            "--debug",
             "summary.csv",
             "--output",
             str(Path("foo") / Path("SYNTHETIC")),

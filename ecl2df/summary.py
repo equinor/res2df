@@ -68,9 +68,6 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
 
     Returns:
         None if input is None.
-
-    Raises:
-        TypeError: if input is not None and not a date
     """
     if some_date is None:
         return None
@@ -80,7 +77,6 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
         return None
     if isinstance(some_date, str):
         return dateutil.parser.parse(some_date).date()  # type: ignore
-    raise TypeError(f"Not a date type: {str(some_date)}")
 
 
 def _crop_datelist(
@@ -103,6 +99,7 @@ def _crop_datelist(
     Returns:
         list of datetimes.
     """
+    datetimes: Union[List[dt.date], List[dt.datetime]] = []  # type: ignore
     if freq == FREQ_RAW:
         datetimes = eclsumsdates
         datetimes.sort()
@@ -115,14 +112,13 @@ def _crop_datelist(
             end_date = dt.datetime.combine(end_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
-        return datetimes
-    if freq == FREQ_FIRST:
-        return [min(eclsumsdates).date()]
-    if freq == FREQ_LAST:
-        return [max(eclsumsdates).date()]
-    if isinstance(freq, (dt.date, dt.datetime)):
-        return [freq]
-    raise ValueError(f"Expected freq to an accepted string or datetime type was {freq}")
+    elif freq == FREQ_FIRST:
+        datetimes = [min(eclsumsdates).date()]
+    elif freq == FREQ_LAST:
+        datetimes = [max(eclsumsdates).date()]
+    elif isinstance(freq, (dt.date, dt.datetime)):
+        datetimes = [freq]
+    return datetimes
 
 
 def _fallback_date_roll(rollme: dt.datetime, direction: str, freq: str) -> dt.datetime:
@@ -169,11 +165,18 @@ def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.dat
 
     Assumes that the start and end times already fall on a frequency boundary.
     """
+    if start == end:
+        return [dt.datetime.combine(start, dt.datetime.min.time())]
+    if end < start:
+        return []
     if freq == "yearly":
-        return [
+        dates = [dt.datetime.combine(start, dt.datetime.min.time())] + [
             dt.datetime(year=year, month=1, day=1)
-            for year in range(start.year, end.year + 1)
+            for year in range(start.year + 1, end.year + 1)
         ]
+        if dt.datetime.combine(end, dt.datetime.min.time()) != dates[-1]:
+            dates = dates + [dt.datetime.combine(end, dt.datetime.min.time())]
+        return dates
     if freq == "monthly":
         dates = []
         date = dt.datetime.combine(start, dt.datetime.min.time())
@@ -209,7 +212,8 @@ def resample_smry_dates(
             date (maximum), as a list with one element. Can also be a single date.
         normalize: Whether to normalize backwards at the start
             and forwards at the end to ensure the raw
-            date range is covered when resampling time.
+            date range is covered when resampling time. This is
+            ignored if start_date or end_date is explicitly supplied.
         start_date: str or date with first date to include
             Dates prior to this date will be dropped, supplied
             start_date will always be included. Overrides
@@ -245,30 +249,32 @@ def resample_smry_dates(
     # For yearly frequency it will return [1997-01-01, 2021-01-01].
     offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
     try:
-        start_n = offset.rollback(start_smry.date()).date()
+        start_normalized = offset.rollback(start_smry.date()).date()
     except pd.errors.OutOfBoundsDatetime:
         # Pandas only supports datetime up to year 2262
-        start_n = _fallback_date_roll(start_smry, "back", freq).date()
+        start_normalized = _fallback_date_roll(start_smry, "back", freq).date()
     try:
-        end_n = offset.rollforward(end_smry.date()).date()
+        end_normalized = offset.rollforward(end_smry.date()).date()
     except pd.errors.OutOfBoundsDatetime:
         # Pandas only supports datetime up to year 2262
-        end_n = _fallback_date_roll(end_smry, "forward", freq).date()
+        end_normalized = _fallback_date_roll(end_smry, "forward", freq).date()
 
     if start_date is None:
         if normalize:
-            start_date_range = start_n
+            start_date_range = start_normalized
         else:
             start_date_range = start_smry.date()
     else:
+        # Normalization is not applied for explicit date
         start_date_range = start_date
 
     if end_date is None:
         if normalize:
-            end_date_range = end_n
+            end_date_range = end_normalized
         else:
             end_date_range = end_smry.date()
     else:
+        # Normalization is not applied for explicit date
         end_date_range = end_date
 
     datetimes = date_range(start_date_range, end_date_range, freq)
@@ -392,10 +398,6 @@ def df(
         time_index_str or "raw",
     )
 
-    if eclsum is None:
-        # Warning is already logged by eclfiles.
-        return pd.DataFrame()
-
     # dframe = eclsum.pandas_frame(time_index_arg, column_keys)
     dframe = _libecl_eclsum_pandas_frame(eclsum, time_index_arg, column_keys)
 
@@ -513,8 +515,6 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
     dframe = dframe.copy()
     if "DATE" in dframe.columns:
         # Infer datatype (Pandas cannot answer it) based on the first element:
-        if isinstance(dframe["DATE"].values[0], pd.Timestamp):
-            dframe["DATE"] = pd.Series(pd.to_pydatetime(dframe["DATE"]), dtype="object")
         if isinstance(dframe["DATE"].values[0], str):
             # Do not use pd.Series.apply() here, Pandas would try to convert it to
             # datetime64[ns] which is limited at year 2262.

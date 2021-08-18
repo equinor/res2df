@@ -56,26 +56,6 @@ RENAMERS["SWFN"] = {"DATA": ["SW", "KRW", "PCOW"]}
 RENAMERS["SWOF"] = {"DATA": ["SW", "KRW", "KROW", "PCOW"]}
 
 
-def xx_inject_satnumcount(deckstr: str, satnumcount: int) -> str:
-    """Insert a TABDIMS with NTSFUN into a deck
-
-    This is simple string manipulation, not OPM
-    deck manipulation (which might be possible to do).
-
-    Arguments:
-        deckstr: A string containing a partial deck (f.ex only
-            the SWOF keyword).
-        satnumcount: The NTSFUN number to use in TABDIMS
-            (this function does not care if it is correct or not)
-    Returns:
-        New deck with TABDIMS prepended.
-    """
-    if "TABDIMS" in deckstr:
-        logger.warning("Not inserting TABDIMS in a deck where already exists")
-        return deckstr
-    return "TABDIMS\n " + str(satnumcount) + " /\n\n" + str(deckstr)
-
-
 def df(
     deck: Union[str, "opm.libopmcommon_python.Deck"],
     keywords: Optional[List[str]] = None,

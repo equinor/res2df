@@ -1,13 +1,13 @@
 """Test module for fipreports"""
 
+import datetime
 import sys
 from pathlib import Path
-import datetime
 
-import pandas as pd
 import numpy as np
-
-from ecl2df import fipreports, ecl2csv
+import pandas as pd
+import pytest
+from ecl2df import ecl2csv, fipreports
 from ecl2df.eclfiles import EclFiles
 from ecl2df.fipreports import report_block_lineparser as parser
 
@@ -70,6 +70,15 @@ def test_mockprtfile():
     dframe = fipreports.df(MOCKPRTFILE, fipname="FIPOWG")
     assert dframe["FIPNAME"].unique() == "FIPOWG"
     assert len(dframe["DATE"].unique()) == 1
+
+    with pytest.raises(ValueError):
+        fipreports.df(MOCKPRTFILE, fipname="WIPNUM")
+
+    # fipname at most 8 characters:
+    assert fipreports.df(MOCKPRTFILE, fipname="FIP45678").empty
+
+    with pytest.raises(ValueError):
+        fipreports.df(MOCKPRTFILE, fipname="FIP456789")
 
 
 def test_prtstring(tmpdir):
@@ -243,6 +252,7 @@ def test_rogue_eclipse_output(tmpdir):
 
 
 def test_prtstring_opmflow(tmpdir):
+    """Test parsing the PRT output from OPM flow."""
     prtstring = """
 Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 
@@ -342,3 +352,26 @@ def test_cmdline(tmpdir):
     assert "FIPNAME" in disk_df
     assert "STOIIP_OIL" in disk_df
     assert not disk_df.empty
+
+    # Debug mode:
+    sys.argv = [
+        "ecl2csv",
+        "fipreports",
+        "--debug",
+        DATAFILE,
+        "--output",
+        "debugmode.csv",
+    ]
+    ecl2csv.main()
+    pd.testing.assert_frame_equal(pd.read_csv("debugmode.csv"), disk_df)
+
+    # Directly on PRT file:
+    sys.argv = [
+        "ecl2csv",
+        "fipreports",
+        DATAFILE.replace("DATA", "PRT"),
+        "--output",
+        "fromprtfile.csv",
+    ]
+    ecl2csv.main()
+    pd.testing.assert_frame_equal(pd.read_csv("fromprtfile.csv"), disk_df)

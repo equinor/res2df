@@ -510,6 +510,11 @@ def test_df2ecl_pvto():
         pd.concat([dframe, dframe]).drop("PVTNUM", axis="columns")
     )
 
+    # If only one row, this is accepted:
+    assert "PVTO" in pvt.df2ecl_pvto(dframe.head(1).drop("PVTNUM", axis="columns"))
+    # (the corner case with only one row is not very meaningful, but at
+    # least it is well defined how to treat it)
+
 
 def test_df2ecl_rock(tmpdir):
     """Test generation of ROCK include files from dataframes"""
@@ -552,12 +557,15 @@ def test_df2ecl_rock(tmpdir):
     rock_inc = pvt.df2ecl(rock_df, keywords="ROCK")
     assert "ROCK" in rock_inc
 
-    # This dataframe is ignored, as we miss PVTNUM:
+    # This dataframe is ignored, if we miss PVTNUM:
     ambig_rock_df = pd.DataFrame(
         columns=["KEYWORD", "PRESSURE", "COMPRESSIBILITY"],
         data=[["ROCK", 100, 0.001], ["ROCK", 200, 0.002]],
     )
-    assert "ROCK" not in pvt.df2ecl(ambig_rock_df)
+    assert "ROCK" not in pvt.df2ecl_rock(ambig_rock_df)
+
+    # But if only one row, it is ok:
+    assert "ROCK" in pvt.df2ecl_rock(ambig_rock_df.head(1))
 
     # If we don't want the ROCK keyword, we won't get it:
     nonrock_inc = pvt.df2ecl(rock_df, keywords=["PVTO"])
@@ -578,6 +586,9 @@ def test_df2ecl_density():
     assert "DENSITY" not in pvt.df2ecl_density(
         pd.concat([density_df, density_df]).drop("PVTNUM", axis="columns")
     )
+
+    # Unless there is only one row:
+    assert "DENSITY" in pvt.df2ecl_density(density_df.drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="OILDENSITY"):
@@ -604,6 +615,9 @@ def test_df2ecl_pvtw():
         pd.concat([pvtw_df, pvtw_df]).drop("PVTNUM", axis="columns")
     )
 
+    # Unless there is only one row:
+    assert "PVTW" in pvt.df2ecl_pvtw(pvtw_df.drop("PVTNUM", axis="columns"))
+
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
         pvt.df2ecl_pvtw(pvtw_df.drop("VOLUMEFACTOR", axis="columns"))
@@ -620,6 +634,7 @@ def test_df2ecl_pvtg():
         ],
     )
     assert "PVTG" in pvt.df2ecl_pvtg(pvtg_df)
+    assert "PVTG" in pvt.df2ecl_pvtg(pvtg_df.assign(KEYWORD="PVTG"))
     pd.testing.assert_frame_equal(
         pvt.df(pvt.df2ecl_pvtg(pvtg_df)).drop("KEYWORD", axis="columns"), pvtg_df
     )
@@ -628,6 +643,9 @@ def test_df2ecl_pvtg():
     assert "PVTG" not in pvt.df2ecl_pvtg(
         pd.concat([pvtg_df, pvtg_df]).drop("PVTNUM", axis="columns")
     )
+
+    # Unless there is only one row:
+    assert "PVTG" in pvt.df2ecl_pvtg(pvtg_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
@@ -646,6 +664,7 @@ def test_df2ecl_pvdo():
     )
 
     assert "PVDO" in pvt.df2ecl_pvdo(pvdo_df)
+    assert "PVDO" in pvt.df2ecl_pvdo(pvdo_df.assign(KEYWORD="PVDO"))
     pd.testing.assert_frame_equal(
         pvt.df(pvt.df2ecl_pvdo(pvdo_df)).drop("KEYWORD", axis="columns"), pvdo_df
     )
@@ -654,6 +673,9 @@ def test_df2ecl_pvdo():
     assert "PVDO" not in pvt.df2ecl_pvdo(
         pd.concat([pvdo_df, pvdo_df]).drop("PVTNUM", axis="columns")
     )
+
+    # Unless there is only one row:
+    assert "PVDO" in pvt.df2ecl_pvdo(pvdo_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):

@@ -3,11 +3,10 @@
 import sys
 from pathlib import Path
 
-import pandas as pd
 import networkx
+import pandas as pd
 
-from ecl2df import trans
-from ecl2df import ecl2csv
+from ecl2df import ecl2csv, trans
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -42,6 +41,11 @@ def test_trans():
     assert "K" not in trans.df(eclfiles, onlyijdir=True)["DIR"]
     assert "I" not in trans.df(eclfiles, onlykdir=True)["DIR"]
 
+    # A warning is logged, seems strange to filter on both, but
+    # the answer (empty) makes sense given the instruction. Alternative
+    # would be a ValueError.
+    assert trans.df(eclfiles, onlykdir=True, onlyijdir=True).empty
+
     transnnc_df = trans.df(eclfiles, addnnc=True)
     assert len(transnnc_df) > trans_full_length
 
@@ -66,6 +70,9 @@ def test_grouptrans():
     assert (trans_df["FIPNUM1"] < trans_df["FIPNUM2"]).all()
     assert len(trans_df) == 7
     assert "X" in trans_df  # (average X coord for that FIPNUM interface)
+
+    # This gives a logged error:
+    assert trans.df(eclfiles, vectors=["FIPNUM", "EQLNUM"], group=True).empty
 
 
 def test_nx(tmpdir):

@@ -97,7 +97,7 @@ def df(
 
     if onlykdir and onlyijdir:
         logger.warning(
-            "Filtering to both k and to ij simultaneously " "results in empty dataframe"
+            "Filtering to both k and to ij simultaneously results in empty dataframe"
         )
 
     grid_df = ecl2df.grid.df(eclfiles)

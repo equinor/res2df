@@ -290,9 +290,11 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
     Returns:
         Nested dict,
     """
+    if seg_data.empty:
+        return {}
+
     if "LEAF" not in seg_data:
         seg_data = process_seg_topology(seg_data)
-
     subtrees: dict = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in seg_data.iterrows():
@@ -307,9 +309,6 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
     roots = set(parents).difference(children)
     trees = []
     trees.append({root: subtrees[root] for root in roots})
-    if len(trees) > 1:
-        logger.warning("BUG: Multiple roots detected in well topology")
-        return trees[0]
     return trees[0]
 
 
@@ -409,13 +408,16 @@ def merge_icd_seg_conseg(
     if icd_data is None:
         icd_data = pd.DataFrame()
 
-    if logger.level >= logging.DEBUG:
+    if logger.level <= logging.DEBUG:
+        logger.debug("Writing connection data to con.csv")
         con_data[CON_TOPOLOGY_COLS.intersection(con_data.columns)].to_csv(
             "con.csv", index=False
         )
+        logger.debug("Writing segment data to seg.csv")
         seg_data[SEG_TOPOLOGY_COLS.intersection(seg_data.columns)].to_csv(
             "seg.csv", index=False
         )
+        logger.debug("Writing ICD data to icd.csv")
         icd_data[ICD_TOPOLOGY_COLS.intersection(icd_data.columns)].to_csv(
             "icd.csv", index=False
         )
@@ -486,7 +488,8 @@ def add_extras(dframe: pd.DataFrame, inplace: bool = True) -> pd.DataFrame:
             dframe.loc[nonzero_pres, "CONPRES"] - dframe.loc[nonzero_pres, "SEGPRES"]
         )
 
-    dframe["DRAWDOWN"] = 0  # Set a default so that the column always exists
+    if not dframe.empty:
+        dframe["DRAWDOWN"] = 0  # Set a default so that the column always exists
 
     if "CONPRES" in dframe and "PRESSURE" in dframe:
         nonzero_conpres = dframe["CONPRES"] > 0

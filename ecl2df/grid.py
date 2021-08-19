@@ -91,10 +91,11 @@ def dates2rstindices(
                 chosendates = [availabledates[-1]]
             elif dates == "all":
                 chosendates = availabledates
-    elif isinstance(dates, datetime.date):
-        chosendates = [dates]
     elif isinstance(dates, datetime.datetime):
         chosendates = [dates.date()]
+    elif isinstance(dates, datetime.date):
+        # Beware, datetime.datetime would also match here.
+        chosendates = [dates]
     elif isinstance(dates, list):
         chosendates = [x for x in dates if x in availabledates]
         if not chosendates:

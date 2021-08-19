@@ -1,15 +1,13 @@
 """Test module for rft"""
 
-import sys
-import random
 import datetime
+import random
+import sys
 from pathlib import Path
 
 import pandas as pd
-
 import pytest
-
-from ecl2df import rft, ecl2csv
+from ecl2df import ecl2csv, rft
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -74,6 +72,9 @@ def test_minimal_well():
     one_seg = pd.DataFrame(
         {"SEGIDX": [1], "SEGNXT": [None], "SEGBRNO": [1], "SEGPRES": [195.8]}
     )
+    with pytest.raises(ValueError, match="Insufficient topology"):
+        rft.process_seg_topology(one_seg.drop("SEGIDX", axis="columns"))
+
     m_one_seg = rft.process_seg_topology(one_seg)
     assert m_one_seg["LEAF"][0]
     assert len(m_one_seg) == 1
@@ -357,6 +358,105 @@ def test_longer_branched_partly_icd_well():
     assert all(con_seg["DRAWDOWN"].values == [10, 10, 9, 9])
 
 
+def test_seg2dicttree():
+    assert rft.seg2dicttree(pd.DataFrame()) == {}
+    with pytest.raises(ValueError):
+        rft.seg2dicttree(pd.DataFrame({"SEGIDX": [1]}))
+
+    with pytest.raises(KeyError, match="SEGBRNO"):
+        rft.seg2dicttree(pd.DataFrame({"SEGIDX": [1], "SEGNXT": [None]}))
+
+    # Simplest well:
+    assert rft.seg2dicttree(
+        pd.DataFrame({"SEGIDX": [1], "SEGNXT": [None], "SEGBRNO": [1]})
+    ) == {1: {}}
+
+    # Two branches:
+    assert rft.seg2dicttree(
+        pd.DataFrame(
+            {"SEGIDX": [1, 2, 3], "SEGNXT": [None, 1, 1], "SEGBRNO": [1, 1, 2]}
+        )
+    ) == {1: {2: {}, 3: {}}}
+
+
+@pytest.mark.parametrize(
+    "dframe, inplace,  expected",
+    [
+        (pd.DataFrame(), True, pd.DataFrame()),
+        (pd.DataFrame(), False, pd.DataFrame()),
+        (
+            pd.DataFrame([{"CONPRES": 30, "SEGPRES": 20}]),
+            True,
+            pd.DataFrame(
+                [{"CONPRES": 30, "SEGPRES": 20, "COMPLETION_DP": 10, "DRAWDOWN": 0}]
+            ),
+        ),
+        (
+            pd.DataFrame([{"CONPRES": 30, "SEGPRES": 20}]),
+            False,
+            pd.DataFrame(
+                [{"CONPRES": 30, "SEGPRES": 20, "COMPLETION_DP": 10, "DRAWDOWN": 0}]
+            ),
+        ),
+        (
+            pd.DataFrame([{"CONPRES": 30, "PRESSURE": 40}]),
+            True,
+            pd.DataFrame(
+                [{"CONPRES": 30, "PRESSURE": 40, "DRAWDOWN": 10, "CONBPRES": 40}]
+            ),
+        ),
+        (
+            # Compute connection length
+            pd.DataFrame([{"CONLENEN": 4, "CONLENST": 3}]),
+            True,
+            pd.DataFrame(
+                [
+                    {
+                        "CONLENEN": 4,
+                        "CONLENST": 3,
+                        "CONMD": 3.5,
+                        "CONLENTH": 1,
+                        "DRAWDOWN": 0,
+                    }
+                ]
+            ),
+        ),
+        (
+            # Compute scaled rates (pr meter connection)
+            pd.DataFrame([{"CONORAT": 400, "CONLENTH": 2}]),
+            True,
+            pd.DataFrame(
+                [{"CONORAT": 400, "CONLENTH": 2, "CONORATS": 200.0, "DRAWDOWN": 0}]
+            ),
+        ),
+        (
+            pd.DataFrame([{"CONWRAT": 400, "CONLENTH": 2}]),
+            True,
+            pd.DataFrame(
+                [{"CONWRAT": 400, "CONLENTH": 2, "CONWRATS": 200.0, "DRAWDOWN": 0}]
+            ),
+        ),
+        (
+            pd.DataFrame([{"CONGRAT": 400, "CONLENTH": 2}]),
+            True,
+            pd.DataFrame(
+                [{"CONGRAT": 400, "CONLENTH": 2, "CONGRATS": 200.0, "DRAWDOWN": 0}]
+            ),
+        ),
+    ],
+)
+def test_add_extras(dframe, inplace, expected):
+    """Test addition of nice-to-have extras column."""
+    original = dframe.copy()
+    result = rft.add_extras(dframe, inplace)
+    print(result)
+    pd.testing.assert_frame_equal(result, expected, check_like=True)
+    if inplace:
+        pd.testing.assert_frame_equal(result, dframe)
+    else:
+        pd.testing.assert_frame_equal(dframe, original)
+
+
 def test_rft2df():
     """Test that dataframes are produced"""
     eclfiles = EclFiles(DATAFILE)
@@ -381,10 +481,10 @@ def test_rft2df():
     assert not rftdf.columns.empty
 
 
-def test_main_subparsers(tmpdir):
+def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / ".TMP-rft.csv"
-    sys.argv = ["ecl2csv", "rft", DATAFILE, "-o", str(tmpcsvfile)]
+    mocker.patch("sys.argv", ["ecl2csv", "rft", DATAFILE, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -405,3 +505,16 @@ def test_main_subparsers(tmpdir):
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
+
+
+def test_main_debugmode(tmpdir, mocker):
+    """Test debug mode"""
+    tmpdir.chdir()
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "rft", "--debug", DATAFILE, "-o", "indebugmode.csv"]
+    )
+    ecl2csv.main()
+    # Extra files emitted in debug mode:
+    assert not pd.read_csv("con.csv").empty
+    assert Path("seg.csv").exists()  # too simple example data, no segments.
+    assert Path("icd.csv").exists()  # too simple example data, no ICD

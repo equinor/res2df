@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -290,6 +290,8 @@
         <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_DFL</span><span class="p">)</span>
         <span class="n">dframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">caller_logger</span> <span class="ow">and</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">caller_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Empty dataframe being written to disk&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">caller_logger</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">logstr</span><span class="p">:</span>
             <span class="n">caller_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing to file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">caller_logger</span> <span class="ow">and</span> <span class="n">logstr</span><span class="p">:</span>
@@ -822,7 +824,7 @@
 <span class="sd">            of the column multiindex</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">tuplecolumns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)),</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">tuplecolumns</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No columns to stack&quot;</span><span class="p">)</span>

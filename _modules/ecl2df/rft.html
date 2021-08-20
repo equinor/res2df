@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.rft &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -462,9 +462,11 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Nested dict,</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
     <span class="k">if</span> <span class="s2">&quot;LEAF&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="p">:</span>
         <span class="n">seg_data</span> <span class="o">=</span> <span class="n">process_seg_topology</span><span class="p">(</span><span class="n">seg_data</span><span class="p">)</span>
-
     <span class="n">subtrees</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
@@ -479,9 +481,6 @@
     <span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
     <span class="n">trees</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">trees</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">root</span><span class="p">:</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">})</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trees</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;BUG: Multiple roots detected in well topology&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">trees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">trees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
@@ -581,13 +580,16 @@
     <span class="k">if</span> <span class="n">icd_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">icd_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">level</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">level</span> <span class="o">&lt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing connection data to con.csv&quot;</span><span class="p">)</span>
         <span class="n">con_data</span><span class="p">[</span><span class="n">CON_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="s2">&quot;con.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing segment data to seg.csv&quot;</span><span class="p">)</span>
         <span class="n">seg_data</span><span class="p">[</span><span class="n">SEG_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="s2">&quot;seg.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing ICD data to icd.csv&quot;</span><span class="p">)</span>
         <span class="n">icd_data</span><span class="p">[</span><span class="n">ICD_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">icd_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="s2">&quot;icd.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
@@ -658,7 +660,8 @@
             <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nonzero_pres</span><span class="p">,</span> <span class="s2">&quot;SEGPRES&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 
-    <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Set a default so that the column always exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DRAWDOWN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Set a default so that the column always exists</span>
 
     <span class="k">if</span> <span class="s2">&quot;CONPRES&quot;</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="ow">and</span> <span class="s2">&quot;PRESSURE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="n">nonzero_conpres</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;CONPRES&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>

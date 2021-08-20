@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.inferdims &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -279,12 +279,14 @@
 <span class="sd">        dimkeyword: Either TABDIMS or EQLDIMS</span>
 <span class="sd">        dimitem: Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.</span>
 <span class="sd">        dimvalue: The NTSFUN/NTPVT/NTEQUIL number to use</span>
-<span class="sd">            (this function does not care if it is correct or not)</span>
+<span class="sd">            (this function does not care if it is correct or not but</span>
+<span class="sd">            it must be larger than zero)</span>
 <span class="sd">        nowarn: By default it will warn if this function</span>
 <span class="sd">            is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        New deck with TABDIMS/EQLDIMS prepended.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dimvalue</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;dimvalue must be larger than zero&quot;</span>
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only supports TABDIMS and EQLDIMS&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">&quot;TABDIMS&quot;</span><span class="p">:</span>
@@ -292,7 +294,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only support item 0 and 1 in TABDIMS&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="o">==</span> <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dimitem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only item 0 in EQLDIMS can be estimated&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only item 0 in EQLDIMS can be injected&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dimkeyword</span> <span class="ow">in</span> <span class="n">deckstr</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">nowarn</span><span class="p">:</span>
@@ -366,10 +368,6 @@
     <span class="p">)</span>
     <span class="c1"># Overwrite the deck object</span>
     <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">augmented_strdeck</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="c1"># If a string is supplied as a deck, we always return a parsed Deck object</span>
-        <span class="n">deck</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">deck</span></div>
 </pre></div>

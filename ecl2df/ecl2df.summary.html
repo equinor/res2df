@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.summary &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -347,7 +347,8 @@ the first date (minimum),  ‘last’ will give out the last
 date (maximum), as a list with one element. Can also be a single date.</p></li>
 <li><p><strong>normalize</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether to normalize backwards at the start
 and forwards at the end to ensure the raw
-date range is covered when resampling time.</p></li>
+date range is covered when resampling time. This is
+ignored if start_date or end_date is explicitly supplied.</p></li>
 <li><p><strong>start_date</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – str or date with first date to include
 Dates prior to this date will be dropped, supplied
 start_date will always be included. Overrides

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.pvt &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.pvt &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -468,20 +468,19 @@
         <span class="c1"># more error-prone, and it needs a string as input.</span>
         <span class="n">stringdeck</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
         <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">stringdeck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">pvt_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
-            <span class="n">pvt_df</span><span class="p">,</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
-            <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-            <span class="n">logstr</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;Unique PVTNUMs: </span><span class="si">{}</span><span class="s2">, PVT keywords: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())),</span> <span class="nb">str</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
-                <span class="p">)</span>
-            <span class="p">),</span>
-        <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">in</span> <span class="n">pvt_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">pvt_df</span><span class="p">:</span>
+        <span class="n">pvtnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Empty PVT data, not written to disk&quot;</span><span class="p">)</span></div>
+        <span class="n">pvtnums</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+        <span class="n">pvt_df</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unique PVTNUMs: </span><span class="si">{</span><span class="n">pvtnums</span><span class="si">}</span><span class="s2">, PVT keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

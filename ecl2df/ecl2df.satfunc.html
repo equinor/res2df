@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -458,174 +458,6 @@ to file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.sgfn_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">sgfn_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#sgfn_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.sgfn_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SGFN data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.sgof_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">sgof_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#sgof_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.sgof_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SGOF data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.sgwfn_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">sgwfn_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#sgwfn_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.sgwfn_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SGWFN data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.slgof_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">slgof_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#slgof_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.slgof_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SLGOF data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.sof2_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">sof2_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#sof2_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.sof2_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SOF2 data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.sof3_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">sof3_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#sof3_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.sof3_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SOF3 data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.swfn_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">swfn_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#swfn_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.swfn_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SWFN data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.swof_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">swof_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#swof_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.swof_fromdeck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract SWOF data from a deck</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntsfun</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of SATNUM regions in deck. Will
-be inferred if not present in deck</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ecl2df.satfunc.xx_inject_satnumcount">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">xx_inject_satnumcount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnumcount</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#xx_inject_satnumcount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.xx_inject_satnumcount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert a TABDIMS with NTSFUN into a deck</p>
-<p>This is simple string manipulation, not OPM
-deck manipulation (which might be possible to do).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>deckstr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – A string containing a partial deck (f.ex only
-the SWOF keyword).</p></li>
-<li><p><strong>satnumcount</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The NTSFUN number to use in TABDIMS
-(this function does not care if it is correct or not)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>New deck with TABDIMS prepended.</p>
 </dd>
 </dl>
 </dd></dl>

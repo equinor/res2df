@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.grid &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -263,10 +263,11 @@
                 <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">availabledates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
             <span class="k">elif</span> <span class="n">dates</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
                 <span class="n">chosendates</span> <span class="o">=</span> <span class="n">availabledates</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
-        <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dates</span><span class="p">]</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
         <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dates</span><span class="o">.</span><span class="n">date</span><span class="p">()]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+        <span class="c1"># Beware, datetime.datetime would also match here.</span>
+        <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dates</span><span class="p">]</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">chosendates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dates</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">availabledates</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">chosendates</span><span class="p">:</span>

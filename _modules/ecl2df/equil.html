@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.equil &mdash; ecl2df 0.13.3.dev3+g63fffaf documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.13.3.dev17+g6152776 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev3+g63fffaf
+                0.13.3.dev17+g6152776
               </div>
             
           
@@ -399,11 +399,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;oil-water-gas&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;gas-water&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;oil-water&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;OWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GOC&quot;</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;GWC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;oil-gas&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
@@ -413,25 +413,22 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract EQUIL data from a deck</span>
 
+<span class="sd">    If the deck is supplied as a string object, the number</span>
+<span class="sd">    of EQLNUM regions will be inferred if needed.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
-<span class="sd">        ntequl: Number of EQLNUM regions in deck. Will</span>
-<span class="sd">            be inferred if not present in deck</span>
+<span class="sd">        ntequl: Number of EQLNUM regions in deck.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;EQLDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTEQUL&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntequl</span><span class="p">)</span>
 
-    <span class="n">phasecount</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="s2">&quot;OIL&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;GAS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;WATER&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">])</span>
     <span class="n">phases</span> <span class="o">=</span> <span class="n">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">phases</span> <span class="ow">or</span> <span class="n">phases</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">RENAMERS</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Could not determine phase configuration, got &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="n">columnrenamer</span> <span class="o">=</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">)]</span>
-    <span class="k">if</span> <span class="n">phasecount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">columnrenamer</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">:</span> <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span> <span class="s2">&quot;DATUM_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">}</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">columnrenamer</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported phase configuration&quot;</span><span class="p">)</span>
 
     <span class="n">dataframe</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
         <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">columnrenamer</span><span class="p">,</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;EQLNUM&quot;</span>
@@ -493,21 +490,20 @@
         <span class="c1"># This might be an include file for which we have to infer/guess</span>
         <span class="c1"># EQLDIMS. Then we send it to df() as a string</span>
         <span class="n">equil_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">equil_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
-            <span class="n">equil_df</span><span class="p">,</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
-            <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-            <span class="n">logstr</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;Unique EQLNUMs: </span><span class="si">{}</span><span class="s2">, keywords: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())),</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
-                <span class="p">)</span>
-            <span class="p">),</span>
-        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">in</span> <span class="n">equil_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">equil_df</span><span class="p">:</span>
+        <span class="n">eqlnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">equil_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Empty EQUIL-data, not written to disk!&quot;</span><span class="p">)</span></div>
+        <span class="n">eqlnums</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+        <span class="n">equil_df</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unique EQLNUMs: </span><span class="si">{</span><span class="n">eqlnums</span><span class="si">}</span><span class="s2">, keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="equil_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -695,8 +691,6 @@
         <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;EQLNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
-        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;EQLNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_df2ecl_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Print one equilibriation function table for a specific</span>

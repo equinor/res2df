@@ -1,14 +1,14 @@
 # pylint: disable=c0301
 """Extract FIP region reports from Eclipse PRT file"""
 
-import re
-import logging
 import argparse
 import datetime
-from typing import Union, List, Optional
+import logging
+import re
+from typing import List, Optional, Union
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from ecl2df import EclFiles
 from ecl2df.common import parse_ecl_month, write_dframe_stdout_file

@@ -1,11 +1,9 @@
 import datetime
 
 import pandas as pd
-
 import pytest
 
-from ecl2df import compdat
-from ecl2df import EclFiles
+from ecl2df import EclFiles, compdat
 
 
 @pytest.mark.parametrize(

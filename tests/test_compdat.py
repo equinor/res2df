@@ -4,11 +4,9 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-
 import pytest
 
-from ecl2df import compdat, ecl2csv
-from ecl2df import EclFiles
+from ecl2df import EclFiles, compdat, ecl2csv
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

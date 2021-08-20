@@ -1,6 +1,7 @@
 """Test module for satfunc2df"""
 
 import pytest
+
 from ecl2df import inferdims
 
 

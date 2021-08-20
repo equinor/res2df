@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+
 from ecl2df.eclfiles import EclFiles
 from ecl2df.parameters import find_parameter_files, load, load_all
 

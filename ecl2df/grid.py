@@ -9,21 +9,21 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
-import logging
-import fnmatch
-import textwrap
 import argparse
 import datetime
+import fnmatch
+import logging
+import textwrap
 from pathlib import Path
-from typing import Union, List, Tuple, Optional, Dict, Type
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 import dateutil.parser
-
 import numpy as np
 import pandas as pd
-
 from ecl.eclfile import EclFile
-from ecl2df import common, __version__
+
+from ecl2df import __version__, common
+
 from .eclfiles import EclFiles
 
 logger = logging.getLogger(__name__)

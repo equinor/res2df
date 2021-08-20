@@ -1,14 +1,14 @@
 """Extract statistics pr cornerpoint pillar (i,j)-pair"""
 
-import logging
 import argparse
 import datetime
-from typing import Union, Dict, List, Optional
+import logging
+from typing import Dict, List, Optional, Union
 
 import dateutil.parser
 import pandas as pd
 
-from ecl2df import EclFiles, grid, common
+from ecl2df import EclFiles, common, grid
 
 logger: logging.Logger = logging.getLogger(__name__)
 

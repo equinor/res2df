@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
+
 from ecl2df import ecl2csv, fipreports
 from ecl2df.eclfiles import EclFiles
 from ecl2df.fipreports import report_block_lineparser as parser

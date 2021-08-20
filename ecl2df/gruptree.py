@@ -1,15 +1,15 @@
 """Extract GRUPTREE information from an Eclipse deck"""
 
-import sys
-import logging
-import datetime
-import collections
 import argparse
+import collections
+import datetime
+import logging
+import sys
 import warnings
-from typing import Optional, Union, List, Dict, Any, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-import treelib
 import pandas as pd
+import treelib
 
 try:
     # Needed for mypy

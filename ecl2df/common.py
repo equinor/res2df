@@ -1,21 +1,20 @@
 """Common functions for ecl2df modules"""
 
-import sys
-import json
-import re
-import signal
-import inspect
-import logging
-import datetime
 import argparse
+import datetime
+import inspect
 import itertools
-from pathlib import Path
+import json
+import logging
+import re
 import shlex
-from typing import Dict, Optional, List, Union, Set, Any
+import signal
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Union
 
 import numpy as np
 import pandas as pd
-
 
 try:
     # pylint: disable=unused-import

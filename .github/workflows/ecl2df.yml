@@ -44,12 +44,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Check code style
-        run: |
-          pip install black flake8
-          black --check ecl2df tests setup.py docs/conf.py
-          flake8 ecl2df tests
-
       - name: Install ecl2df with dependencies
         run: |
           pip install --upgrade pip
@@ -63,13 +57,15 @@ jobs:
       - name: Install test dependencies
         run: pip install .[tests,docs]
 
+      - name: Check code style and typing
+        run: |
+          black --check ecl2df tests setup.py docs/conf.py
+          flake8 ecl2df tests
+          isort --check-only --profile black ecl2df tests
+          mypy ecl2df
+
       - name: List all installed packages
         run: pip freeze
-
-      - name: Enforce static typing
-        run: |
-          pip install mypy
-          mypy ecl2df
 
       - name: Run tests
         run: |

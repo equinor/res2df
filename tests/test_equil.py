@@ -3,12 +3,11 @@
 import subprocess
 from pathlib import Path
 
-import pytest
-
 import numpy as np
 import pandas as pd
+import pytest
 
-from ecl2df import equil, ecl2csv, csv2ecl
+from ecl2df import csv2ecl, ecl2csv, equil
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

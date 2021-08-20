@@ -4,13 +4,10 @@ Convert dataframes (in ecl2df format) to Eclipse include files,
 for selected keywords
 """
 
+import argparse
 import sys
 
-import argparse
-
-from ecl2df import pvt, equil, satfunc, summary
-
-from ecl2df import __version__
+from ecl2df import __version__, equil, pvt, satfunc, summary
 
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION: str = """Convert CSV files into Eclipse include files. Uses the command

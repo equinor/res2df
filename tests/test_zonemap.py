@@ -3,11 +3,9 @@
 from pathlib import Path
 
 import pandas as pd
-
 import pytest
 
 import ecl2df
-
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

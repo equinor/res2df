@@ -1,23 +1,22 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
-import os
-import ctypes
-import logging
 import argparse
-from pathlib import Path
-from typing import Dict, List, Optional, Union, Any
+import ctypes
 
 # The name 'datetime' is in use by a function argument:
 import datetime as dt
+import logging
+import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
 import dateutil
 import numpy as np
 import pandas as pd
-
 from ecl.summary import EclSum, EclSumKeyWordVector
 
-from .eclfiles import EclFiles
 from . import parameters
 from .common import write_dframe_stdout_file
+from .eclfiles import EclFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 

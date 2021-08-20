@@ -1,8 +1,8 @@
 """Extract WCON* from an Eclipse deck"""
 
-import logging
-import datetime
 import argparse
+import datetime
+import logging
 from typing import Union
 
 import pandas as pd

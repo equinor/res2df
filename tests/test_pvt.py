@@ -1,15 +1,14 @@
 """Test module for pvt"""
 
 import io
+import logging
 import subprocess
 from pathlib import Path
 
-import logging
 import pandas as pd
-
 import pytest
 
-from ecl2df import pvt, ecl2csv, csv2ecl
+from ecl2df import csv2ecl, ecl2csv, pvt
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

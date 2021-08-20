@@ -14,20 +14,18 @@ by adding the prefix ``ICD_``
 """
 
 import argparse
+import collections
 import datetime
 import logging
-import collections
-from typing import Set, Iterable, Dict, Any, Optional
+from typing import Any, Dict, Iterable, Optional, Set
 
 import numpy as np
 import pandas as pd
-
 from ecl.eclfile import EclFile
 
+from .common import merge_zones, write_dframe_stdout_file
 from .eclfiles import EclFiles
 from .gruptree import tree_from_dict
-from .common import merge_zones, write_dframe_stdout_file
-
 
 logger: logging.Logger = logging.getLogger(__name__)
 

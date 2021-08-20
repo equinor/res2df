@@ -4,14 +4,14 @@ Extract the PVT data from an Eclipse (input) deck as Pandas Dataframes
 Data can be extracted from a full Eclipse deck or from individual files.
 """
 
-import logging
 import argparse
+import logging
 from pathlib import Path
-from typing import List, Dict, Union, Optional
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from ecl2df import inferdims, common, EclFiles
+from ecl2df import EclFiles, common, inferdims
 
 try:
     # Needed for mypy

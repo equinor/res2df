@@ -1,16 +1,16 @@
 """
 Extract non-neighbour connection (NNC) information from Eclipse output files.
 """
-import os
-import logging
-import datetime
 import argparse
+import datetime
+import logging
+import os
 from pathlib import Path
 from typing import Optional
 
 import pandas as pd
 
-from ecl2df import common, EclFiles, grid, __version__
+from ecl2df import EclFiles, __version__, common, grid
 from ecl2df.common import write_dframe_stdout_file
 
 logger: logging.Logger = logging.getLogger(__name__)

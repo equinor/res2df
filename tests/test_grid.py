@@ -1,16 +1,14 @@
 """Test module for ecl2df.grid"""
 
-import sys
 import datetime
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
 import pytest
 
-from ecl2df import grid, common
-from ecl2df import ecl2csv
+from ecl2df import common, ecl2csv, grid
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

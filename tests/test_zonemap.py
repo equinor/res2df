@@ -101,6 +101,14 @@ foo   3- 4 bluez
     assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 bluez" in caplog.text
 
+    lyrfile.write_text(
+        """
+invalid 1-2-3
+""",
+        encoding="utf-8",
+    )
+    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+
 
 def test_lyrlist_format(tmpdir):
     """Ensure the lyr file is parsed correctly"""
@@ -248,4 +256,17 @@ def test_merge_zones(dframe, zonedict, zoneheader, kname, expected_df):
         ecl2df.common.merge_zones(dframe, zonedict, zoneheader, kname),
         expected_df,
         check_like=True,
+    )
+
+
+def test_repeated_merge_zone():
+    """Merging zone information into a frame where the column already
+    exists should not modify the frame."""
+
+    dframe = pd.DataFrame([{"K1": 1, "ZONE": "upper"}])
+    pd.testing.assert_frame_equal(
+        ecl2df.common.merge_zones(dframe, {1: "upper"}, "ZONE"), dframe
+    )
+    pd.testing.assert_frame_equal(
+        ecl2df.common.merge_zones(dframe, {1: "lower"}, "ZONE"), dframe
     )

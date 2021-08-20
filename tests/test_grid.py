@@ -189,6 +189,9 @@ def test_df2ecl(tmpdir):
     assert grid.df2ecl(grid_df, "FIPNUM", dtype="int", nocomments=True) == grid.df2ecl(
         grid_df, "FIPNUM", dtype=int, nocomments=True
     )
+    with pytest.raises(ValueError, match="Wrong dtype argument foo"):
+        grid.df2ecl(grid_df, "FIPNUM", dtype="foo")
+
     assert "FIPNUM" in fipnum_str
     assert "-- Output file printed by ecl2df.grid" in fipnum_str
     assert "35817 active cells" in fipnum_str  # (comment at the end)
@@ -241,6 +244,12 @@ def test_df2ecl(tmpdir):
     gr_rst_stacked = grid.df(eclfiles, rstdates="all", stackdates=True)
     fipnum_str_rst = grid.df2ecl(gr_rst_stacked, "FIPNUM", dtype=int, nocomments=True)
     assert fipnum_str_rst == fipnum_str_nocomment
+
+    # dateinheaders here will be ignored due to stackdates:
+    pd.testing.assert_frame_equal(
+        gr_rst_stacked,
+        grid.df(eclfiles, rstdates="all", stackdates=True, dateinheaders=True),
+    )
 
 
 def test_df2ecl_mock():
@@ -472,6 +481,47 @@ def test_get_available_rst_dates():
     assert isinstance(didx[1][0], datetime.date)
     assert didx[1][0] == alldates[0]
     assert didx[1][-1] == alldates[-1]
+
+    somedate = grid.dates2rstindices(eclfiles, "2000-07-01")
+    assert somedate[1] == [alldates[1]]
+
+    with pytest.raises(ValueError, match="date 1999-09-09 not found in UNRST file"):
+        grid.dates2rstindices(eclfiles, "1999-09-09")
+
+    with pytest.raises(ValueError, match="date 1999-0909 not understood"):
+        grid.dates2rstindices(eclfiles, "1999-0909")
+
+    expl_date = grid.dates2rstindices(eclfiles, datetime.date(2000, 7, 1))
+    assert expl_date[1] == [alldates[1]]
+
+    expl_datetime = grid.dates2rstindices(
+        eclfiles, datetime.datetime(2000, 7, 1, 0, 0, 0)
+    )
+    assert expl_datetime[1] == [alldates[1]]
+
+    expl_list_datetime = grid.dates2rstindices(eclfiles, [datetime.date(2000, 7, 1)])
+    assert expl_list_datetime[1] == [alldates[1]]
+
+    # For list input, only datetime.date objects are allowed:
+    expl_list2_date = grid.dates2rstindices(
+        eclfiles, [datetime.date(2000, 7, 1), datetime.date(2001, 2, 1)]
+    )
+    assert expl_list2_date[1] == [alldates[1], alldates[2]]
+
+    with pytest.raises(ValueError, match="None of the requested dates were found"):
+        grid.dates2rstindices(eclfiles, ["2000-07-01", "2001-02-01"])
+
+    with pytest.raises(ValueError, match="None of the requested dates were found"):
+        grid.dates2rstindices(
+            eclfiles,
+            [
+                datetime.datetime(2000, 7, 1, 0, 0, 0),
+                datetime.datetime(2001, 2, 1, 0, 0, 0),
+            ],
+        )
+
+    with pytest.raises(ValueError, match="not understood"):
+        grid.dates2rstindices(eclfiles, {"2000-07-01": "2001-02-01"})
 
     first = grid.dates2rstindices(eclfiles, "first")
     assert first[1][0] == alldates[0]

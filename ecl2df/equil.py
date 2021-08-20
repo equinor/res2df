@@ -227,11 +227,11 @@ def phases_from_columns(columns: List[str]) -> str:
     """
     if "OWC" in columns and "GOC" in columns:
         return "oil-water-gas"
-    if "GWC" in columns:
+    if "GWC" in columns and "OWC" not in columns and "GOC" not in columns:
         return "gas-water"
-    if "OWC" in columns and "GOC" not in columns:
+    if "OWC" in columns and "GOC" not in columns and "GWC" not in columns:
         return "oil-water"
-    if "OWC" not in columns and "GOC" in columns:
+    if "OWC" not in columns and "GOC" in columns and "GWC" not in columns:
         return "oil-gas"
     return ""
 
@@ -241,25 +241,22 @@ def equil_fromdeck(
 ) -> pd.DataFrame:
     """Extract EQUIL data from a deck
 
+    If the deck is supplied as a string object, the number
+    of EQLNUM regions will be inferred if needed.
+
     Args:
         deck
-        ntequl: Number of EQLNUM regions in deck. Will
-            be inferred if not present in deck
+        ntequl: Number of EQLNUM regions in deck.
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
 
-    phasecount = sum(["OIL" in deck, "GAS" in deck, "WATER" in deck])
     phases = phases_from_deck(deck)
     if not phases or phases not in RENAMERS:
         raise ValueError(
             "Could not determine phase configuration, got '{}'".format(phases)
         )
     columnrenamer = RENAMERS[phases_from_deck(deck)]
-    if phasecount == 1:
-        columnrenamer = {"DATUM_DEPTH": "DATUM", "DATUM_PRESSURE": "PRESSURE"}
-    if not columnrenamer:
-        raise ValueError("Unsupported phase configuration")
 
     dataframe = common.ecl_keyworddata_to_df(
         deck, "EQUIL", renamer=columnrenamer, recordcountername="EQLNUM"
@@ -321,21 +318,20 @@ def equil_main(args) -> None:
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string
         equil_df = df(Path(args.DATAFILE).read_text())
-    if not equil_df.empty:
-        common.write_dframe_stdout_file(
-            equil_df,
-            args.output,
-            index=False,
-            caller_logger=logger,
-            logstr=(
-                "Unique EQLNUMs: {}, keywords: {}".format(
-                    str(len(equil_df["EQLNUM"].unique())),
-                    str(equil_df["KEYWORD"].unique()),
-                )
-            ),
-        )
+
+    if "EQLNUM" in equil_df and "KEYWORD" in equil_df:
+        eqlnums = str(len(equil_df["EQLNUM"].unique()))
+        keywords = str(equil_df["KEYWORD"].unique())
     else:
-        logger.error("Empty EQUIL-data, not written to disk!")
+        eqlnums = "-"
+        keywords = "-"
+    common.write_dframe_stdout_file(
+        equil_df,
+        args.output,
+        index=False,
+        caller_logger=logger,
+        logstr=f"Unique EQLNUMs: {eqlnums}, keywords: {keywords}",
+    )
 
 
 def equil_reverse_main(args) -> None:
@@ -523,8 +519,6 @@ def _df2ecl_equilfuncs(
         subset = dframe
     else:
         subset = dframe[dframe["KEYWORD"] == keyword]
-    if "EQLNUM" not in subset:
-        subset["EQLNUM"] = 1
 
     def _df2ecl_equilfuncs_eqlnum(dframe: pd.DataFrame) -> str:
         """Print one equilibriation function table for a specific

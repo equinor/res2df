@@ -87,9 +87,6 @@ def faults_main(args) -> None:
     if eclfiles:
         deck = eclfiles.get_ecldeck()
     faults_df = df(deck)
-    if faults_df.empty:
-        logger.warning("Empty FAULT data, not written to disk!")
-        return
     write_dframe_stdout_file(
         faults_df,
         args.output,

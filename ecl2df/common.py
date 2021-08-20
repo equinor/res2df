@@ -118,6 +118,8 @@ def write_dframe_stdout_file(
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         dframe.to_csv(sys.stdout, index=index)
     else:
+        if caller_logger and dframe.empty:
+            caller_logger.warning("Empty dataframe being written to disk")
         if caller_logger and not logstr:
             caller_logger.info("Writing to file %s", str(output))
         elif caller_logger and logstr:
@@ -650,7 +652,7 @@ def stack_on_colnames(
             of the column multiindex
     """
     if not inplace:
-        dframe = pd.DataFrame(dframe)
+        dframe = dframe.copy()
     tuplecolumns = list(map(lambda x: tuple(x.split(sep)), dframe.columns))
     if max(map(len, tuplecolumns)) < 2:
         logger.info("No columns to stack")

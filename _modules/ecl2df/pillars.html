@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.pillars &mdash; ecl2df 0.13.3.dev19+g05f01cd documentation</title>
+  <title>ecl2df.pillars &mdash; ecl2df 0.13.3.dev20+g17939a4 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev19+g05f01cd
+                0.13.3.dev20+g17939a4
               </div>
             
           
@@ -606,7 +606,7 @@
     <span class="k">if</span> <span class="n">groupbies</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupbies</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">aggregators</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
-        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
     <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">]</span>
     <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
         <span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span>

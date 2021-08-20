@@ -282,9 +282,6 @@ def nnc_main(args) -> None:
         logging.basicConfig(level=logging.INFO)
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
-    if nncdf.empty:
-        logger.warning("Empty NNC dataframe being written to disk!")
-        return
     write_dframe_stdout_file(
         nncdf,
         args.output,

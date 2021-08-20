@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def find_parameter_files(
-    ecldeck_or_eclpath: Union[EclFiles, str], filebase: str = "parameters"
+    ecldeck_or_eclpath: Union[EclFiles, str, Path], filebase: str = "parameters"
 ) -> List[Path]:
     """Locate a default prioritized list of files to try to read as key-value
 
@@ -36,7 +36,7 @@ def find_parameter_files(
     fname: str
     if isinstance(ecldeck_or_eclpath, EclFiles):
         eclbasepath = Path(ecldeck_or_eclpath.get_path())
-    elif isinstance(ecldeck_or_eclpath, str):
+    elif isinstance(ecldeck_or_eclpath, (str, Path)):
         eclbasepath = Path(ecldeck_or_eclpath).parent.absolute()
     else:
         raise TypeError
@@ -52,7 +52,7 @@ def find_parameter_files(
         for fname in files_to_lookfor:
             fullfname = eclbasepath / path / Path(fname)
             if fullfname.is_file():
-                foundfiles.append(fullfname)
+                foundfiles.append(fullfname.resolve())
     return foundfiles
 
 
@@ -108,6 +108,14 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
     Raises ValueError or IOError if no files are readable
     """
     params_dict = None
+
+    if not Path(filename).exists():
+        raise FileNotFoundError(str(filename) + " not found")
+
+    if not Path(filename).read_text().strip():
+        logger.warning("%s was empty", filename)
+        return {}
+
     yaml_error = ""
     try:
         logger.debug("Trying to parse %s with yaml.safe_load()", filename)
@@ -141,7 +149,7 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
             logger.debug(" - ok, parsed as txt")
         except Exception as txt_exc:
             txt_error = str(txt_exc)
-            logger.debug("%s wat not parseable as txt, no more options", filename)
+            logger.debug("%s was not parseable as txt, no more options", filename)
 
     if not params_dict:
         logger.warning("%s could not be parsed as yaml, json or txt", filename)

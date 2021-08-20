@@ -214,17 +214,12 @@ class EclFiles(object):
         """Close any opened files. Most files are opened though ecl with
         an option to close the stream as possible, leaving not much work
         for this function."""
-        if self._egridfile is not None:
-            self._egridfile = None
-        if self._initfile is not None:
-            self._initfile = None
-        if self._eclsum is not None:
-            # This is necessary for garbage collection to close the EclSum file:
-            self._eclsum = None
-        if self._rstfile is not None:
-            self._rstfile = None
-        if self._rftfile is not None:
-            self._rftfile = None
+        self._egridfile = None
+        self._initfile = None
+        # This is necessary for garbage collection to close the EclSum file:
+        self._eclsum = None
+        self._rstfile = None
+        self._rftfile = None
 
     def get_zonemap(self, filename=None):
         """Return a dictionary from (int) K layers in the simgrid to strings

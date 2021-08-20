@@ -12,10 +12,10 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
-import logging
 import argparse
+import logging
 from pathlib import Path
-from typing import List, Dict, Union, Optional
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -25,9 +25,10 @@ try:
 except ImportError:
     pass
 
-from ecl2df import inferdims, common
-from .eclfiles import EclFiles
+from ecl2df import common, inferdims
+
 from .common import write_dframe_stdout_file
+from .eclfiles import EclFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 

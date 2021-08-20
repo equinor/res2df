@@ -1,28 +1,26 @@
+import datetime
+import logging
 import os
 import sys
-import datetime
 from datetime import datetime as dt
-import logging
 from pathlib import Path
 
-import yaml
+import ecl
 import numpy as np
 import pandas as pd
-
 import pytest
+import yaml
 
-import ecl
-
-from ecl2df import summary, ecl2csv, csv2ecl
+from ecl2df import csv2ecl, ecl2csv, summary
 from ecl2df.eclfiles import EclFiles
 from ecl2df.summary import (
-    resample_smry_dates,
-    df2eclsum,
-    df,
-    smry_meta,
-    _fix_dframe_for_libecl,
     _fallback_date_roll,
+    _fix_dframe_for_libecl,
     date_range,
+    df,
+    df2eclsum,
+    resample_smry_dates,
+    smry_meta,
 )
 
 TESTDIR = Path(__file__).absolute().parent

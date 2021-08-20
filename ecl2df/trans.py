@@ -2,16 +2,16 @@
 """
 Extract transmissibility information from Eclipse output files as Dataframes.
 """
-import logging
 import argparse
-from typing import Union, List
+import logging
+from typing import List, Union
 
 import pandas as pd
 
 import ecl2df.grid
 import ecl2df.nnc
-
 from ecl2df.common import write_dframe_stdout_file
+
 from .eclfiles import EclFiles
 
 try:

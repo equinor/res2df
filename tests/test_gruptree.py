@@ -2,11 +2,11 @@
 
 from pathlib import Path
 
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
 
-from ecl2df import gruptree, ecl2csv
+from ecl2df import ecl2csv, gruptree
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

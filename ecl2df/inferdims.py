@@ -4,7 +4,7 @@ Eclipse 100 decks (typically single include-files)
 """
 
 import logging
-from typing import Dict, Union, Optional
+from typing import Dict, Optional, Union
 
 try:
     import opm.io

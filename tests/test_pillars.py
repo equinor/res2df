@@ -5,9 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ecl2df import pillars
-from ecl2df import grid
-from ecl2df import ecl2csv
+from ecl2df import ecl2csv, grid, pillars
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

@@ -1,12 +1,12 @@
 """Test module for wcon"""
 
 import io
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import pandas as pd
 
-from ecl2df import wcon, ecl2csv
+from ecl2df import ecl2csv, wcon
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

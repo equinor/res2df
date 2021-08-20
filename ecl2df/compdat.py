@@ -9,10 +9,10 @@
   * WLIST
 """
 
+import argparse
 import datetime
 import logging
-import argparse
-from typing import Dict, Optional, Union, List
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -23,7 +23,6 @@ except ImportError:
     # Allow parts of ecl2df to work without OPM:
     pass
 
-from .eclfiles import EclFiles
 from .common import (
     merge_zones,
     parse_opmio_date_rec,
@@ -31,6 +30,7 @@ from .common import (
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
 )
+from .eclfiles import EclFiles
 from .grid import merge_initvectors
 
 logger = logging.getLogger(__name__)

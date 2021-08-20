@@ -2,14 +2,15 @@
 Extract EQUIL from an Eclipse deck as Pandas DataFrame
 """
 
-import logging
 import argparse
+import logging
 from pathlib import Path
-from typing import List, Dict, Union, Optional
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from ecl2df import inferdims, common
+from ecl2df import common, inferdims
+
 from .eclfiles import EclFiles
 
 try:

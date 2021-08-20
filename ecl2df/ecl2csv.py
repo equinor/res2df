@@ -3,12 +3,11 @@
 End-user command line tool for accessing functionality
 in ecl2df
 """
-import sys
+import argparse
 import functools
 import importlib
+import sys
 from typing import Optional
-
-import argparse
 
 from ecl2df import __version__
 

@@ -1,13 +1,13 @@
 """Support module for extra files with key-value information
 related to Eclipse runs"""
 
+import json
 import logging
 from pathlib import Path
-from typing import Union, List, Dict, Any
+from typing import Any, Dict, List, Union
 
-import json
-import yaml
 import pandas as pd
+import yaml
 
 from ecl2df.eclfiles import EclFiles
 

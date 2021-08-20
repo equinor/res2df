@@ -1,12 +1,12 @@
 """Test module for nnc2df"""
 
 import io
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import pandas as pd
 
-from ecl2df import faults, ecl2csv
+from ecl2df import ecl2csv, faults
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent

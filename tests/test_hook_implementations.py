@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 
-
 try:
     # pylint: disable=unused-import
 

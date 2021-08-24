@@ -135,10 +135,15 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     ), f"Could not determine a single saturation column in {dframe.columns}"
     sat_col = list(sat_cols)[0]
 
+    if dframe[sat_col].isna().any():
+        raise ValueError("nan in saturation column is not allowed")
+
     filled_frames = []
     for _, subframe in dframe.groupby("SATNUM"):
         filled_frames.append(
-            subframe.set_index(sat_col).interpolate(method="index").reset_index()
+            subframe.set_index(sat_col)
+            .interpolate(method="index", limit_area="inside")
+            .reset_index()
         )
     return pd.concat(filled_frames)
 

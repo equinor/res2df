@@ -310,7 +310,7 @@ SWFN
     assert len(wrongdf["SW"].unique()) == 3
 
 
-def test_defaulted_values():
+def test_defaulted_swof_values():
     """The Eclipse manual states that missing values in
     a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
@@ -326,6 +326,10 @@ SWOF
     np.testing.assert_allclose(dframe["KROW"], [1, 0.5, 0])
     np.testing.assert_allclose(dframe["KRW"], [0, 0.5, 1])
 
+
+def test_defaulted_sgof_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SGOF
@@ -343,6 +347,10 @@ SGOF
     np.testing.assert_allclose(dframe["KROG"], [1, 0.5, 0, 1, 0.8, 0])
     np.testing.assert_allclose(dframe["KRG"], [0, 0.5, 1, 0, 0.2, 1])
 
+
+def test_defaulted_swfn_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SWFN
@@ -356,6 +364,10 @@ SWFN
     np.testing.assert_allclose(dframe["PCOW"], [1, 0.9, 0.1, 0])
     np.testing.assert_allclose(dframe["KRW"], [0, 0.1, 0.9, 1])
 
+
+def test_defaulted_sof3_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SOF3
@@ -369,6 +381,10 @@ SOF3
     np.testing.assert_allclose(dframe["KROG"], [1, 0.9, 0.1, 0])
     np.testing.assert_allclose(dframe["KROW"], [0, 0.1, 0.9, 1])
 
+
+def test_defaulted_sof2_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SOF2
@@ -381,6 +397,10 @@ SOF2
     )
     np.testing.assert_allclose(dframe["KRO"], [0, 0.1, 0.9, 1])
 
+
+def test_defaulted_sgfn_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SGFN
@@ -394,6 +414,10 @@ SGFN
     np.testing.assert_allclose(dframe["PCOG"], [1, 0.9, 0.1, 0])
     np.testing.assert_allclose(dframe["KRG"], [0, 0.1, 0.9, 1])
 
+
+def test_defaulted_sgwfn_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SGWFN
@@ -407,6 +431,10 @@ SGWFN
     np.testing.assert_allclose(dframe["KRG"], [0, 0.5, 1])
     np.testing.assert_allclose(dframe["KRW"], [1, 0.5, 0])
 
+
+def test_defaulted_slgof_values():
+    """The Eclipse manual states that missing values in
+    a SWOF/SWFN/++ record should be replaced by linearly interpolated values"""
     dframe = satfunc.df(
         """
 SLGOF
@@ -431,6 +459,158 @@ SWFN
     )
     np.testing.assert_allclose(dframe["PCOW"], [np.nan, 0])
     np.testing.assert_allclose(dframe["KRW"], [0, 1])
+
+
+@pytest.mark.parametrize(
+    "dframe, expected",
+    [
+        (
+            pd.DataFrame([{"SW": 0, "KR": 0, "SATNUM": 1}]),
+            pd.DataFrame([{"SW": 0, "KR": 0, "SATNUM": 1}]),
+        ),
+        (
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.5, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.5, "KR": 0.5, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+        ),
+        (
+            # nan by missing in initalization dict:
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.1, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KR": 0.1, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+        ),
+        (
+            # Explicit numpy nan:
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KR": np.nan, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KR": 0.1, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+        ),
+        (
+            # python float nan:
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KR": float("nan"), "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KR": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KR": 0.1, "SATNUM": 1},
+                    {"SW": 1, "KR": 1, "SATNUM": 1},
+                ]
+            ),
+        ),
+        (
+            # It will not care about column names:
+            pd.DataFrame(
+                [
+                    {"SW": 0, "FOO": 0, "SATNUM": 1},
+                    {"SW": 0.1, "SATNUM": 1},
+                    {"SW": 1, "FOO": 1, "SATNUM": 1},
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {"SW": 0, "FOO": 0, "SATNUM": 1},
+                    {"SW": 0.1, "FOO": 0.1, "SATNUM": 1},
+                    {"SW": 1, "FOO": 1, "SATNUM": 1},
+                ]
+            ),
+        ),
+        (
+            # No extrapolation:
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KRW": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KRW": np.nan, "SATNUM": 1},
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {"SW": 0, "KRW": 0, "SATNUM": 1},
+                    {"SW": 0.1, "KRW": np.nan, "SATNUM": 1},
+                ]
+            ),
+        ),
+        pytest.param(
+            pd.DataFrame([{"SW": 0}]),
+            None,
+            marks=pytest.mark.xfail(
+                raises=KeyError,
+                match="SATNUM",
+            ),
+        ),
+        pytest.param(
+            pd.DataFrame([{"SW": np.nan, "SATNUM": 1}]),
+            None,
+            marks=pytest.mark.xfail(
+                raises=ValueError, match="nan in saturation column is not allowed"
+            ),
+        ),
+        pytest.param(
+            pd.DataFrame(),
+            None,
+            marks=pytest.mark.xfail(
+                raises=AssertionError,
+                match="Could not determine a single saturation column",
+            ),
+        ),
+        pytest.param(
+            pd.DataFrame([{"FOO": 1}]),
+            None,
+            marks=pytest.mark.xfail(
+                raises=AssertionError,
+                match="Could not determine a single saturation column",
+            ),
+        ),
+        pytest.param(
+            pd.DataFrame([{"SW": 1, "SG": 1}]),
+            None,
+            marks=pytest.mark.xfail(
+                raises=AssertionError,
+                match="Could not determine a single saturation column",
+            ),
+        ),
+    ],
+)
+def test_interpolate_defaults(dframe, expected):
+    """Test that NaN's in non-saturation columns will be interpolated linearly"""
+    pd.testing.assert_frame_equal(satfunc.interpolate_defaults(dframe), expected)
 
 
 def test_multiple_keywords_family2():

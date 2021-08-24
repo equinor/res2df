@@ -299,6 +299,10 @@ def parse_opmio_deckrecord(
                 # which the default values are not provided in the JSON. Return
                 # these defaulted values as NaN's for the calling code to fix.
                 for idx in range(len(record[item_idx])):
+                    # This code is using a private attribute of an
+                    # OPM DeckItem. A better solution has not yet
+                    # been found in the OPM API. See also
+                    # https://github.com/OPM/opm-common/issues/2598
                     if record[item_idx].__defaulted(idx):
                         rec_dict[item_name][idx] = np.nan
         else:

@@ -668,7 +668,6 @@ def expand_complump_in_welopen_df(
 
     exp_welopens = []
     for _, row in welopen_df.iterrows():
-        # if row["C1"] is None and row["C2"] is None:
         if row["C1"] is None and row["C2"] is None:
             exp_welopens.append(row)
         elif row["C1"] is None or row["C2"] is None:
@@ -681,7 +680,7 @@ def expand_complump_in_welopen_df(
             # Check that the cumplump numbers are ok:
             C1, C2 = int(row["C1"]), int(row["C2"])
             if C1 < 0 or C2 < 0:
-                raise ValueError(f"Negative values for C1/C2 is no allowed: {row}")
+                raise ValueError(f"Negative values for C1/C2 is not allowed: {row}")
             if C1 == 0 or C2 == 0:
                 raise ValueError(f"Defaults (zero) for C1/C2 is not implemented: {row}")
             if C2 < C1:

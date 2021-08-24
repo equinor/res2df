@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.13.3.dev20+g17939a4 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.13.3.dev21+g02b080f documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.3.dev20+g17939a4
+                0.13.3.dev21+g02b080f
               </div>
             
           
@@ -205,17 +205,18 @@
   <div class="section" id="module-ecl2df.compdat">
 <span id="ecl2df-compdat"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code><a class="headerlink" href="#module-ecl2df.compdat" title="Permalink to this headline">¶</a></h1>
 <p>Parser and dataframe generator for the Eclipse keywords:
-* COMPAT
-* WELSEGS
+* COMPDAT
+* COMPLUMP
 * COMPSEGS
 * WELOPEN
+* WELSEGS
+* WLIST
 * WSEGAICD
-* WSEGVALV
 * WSEGSICD
-* WLIST</p>
+* WSEGVALV</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.compdat.applywelopen">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">applywelopen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wlist_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#applywelopen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.applywelopen" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">applywelopen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wlist_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complump_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#applywelopen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.applywelopen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply WELOPEN actions to the COMPDAT dataframe.</p>
 <p>Each record in the WELOPEN keyword acts as an operator on existing connections
 in existing wells.</p>
@@ -243,6 +244,7 @@ WELOPEN actions into explicit additional COMPDAT definitions in the exported df.
 <li><p><strong>compdat_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with unrolled COMPDAT data</p></li>
 <li><p><strong>welopen_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with WELOPEN actions</p></li>
 <li><p><strong>wlist_df</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]) – Dataframe with WLIST NEW records. Optional.</p></li>
+<li><p><strong>complump_df</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]) – Dataframe with COMPLUMP records. Optional.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -296,6 +298,79 @@ add a zone-name if a zonefile is found alongside</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.Dataframe with one row pr cell to well connection</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.compdat.expand_complump_in_welopen_df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_complump_in_welopen_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complump_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#expand_complump_in_welopen_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.expand_complump_in_welopen_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go through all elements of WELOPEN and expand the rows
+referring to COMPLUMPS. The output dataframe is as if the
+connections were refered to explicitly in WELOPEN:</p>
+<p>Example: COMPLUMP and WELOPEN keywords:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPLUMP</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="mi">7</span> <span class="mi">1</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">136</span> <span class="mi">8</span> <span class="mi">8</span> <span class="mi">1</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">136</span> <span class="mi">9</span> <span class="mi">9</span> <span class="mi">2</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">137</span> <span class="mi">10</span> <span class="mi">10</span> <span class="mi">3</span> <span class="o">/</span>
+<span class="o">/</span>
+<span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="mi">3</span><span class="o">*</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed into the equivalent dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">8</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>welopen_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with WELOPEN actions</p></li>
+<li><p><strong>complump_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with COMPLUMP records. Optional.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>welopen_df with complump expanded to actual connections.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.compdat.expand_welopen_wildcards">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen_wildcards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#expand_welopen_wildcards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.expand_welopen_wildcards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expand rows in welopen with well names containing wildcard characters,
+with the correct wells from compdat_df that was defined at that date</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP*&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>might become the equivalent dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WELOPEN</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="o">/</span>
+ <span class="s1">&#39;OP2&#39;</span> <span class="s1">&#39;SHUT&#39;</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>if both OP1 and OP2 are defined at that time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>welopen_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – DataFrame with welopen</p></li>
+<li><p><strong>compdat_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – DataFrame with compdat</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expanded welopen dataframe</p>
 </dd>
 </dl>
 </dd></dl>
@@ -381,6 +456,37 @@ one very long one, and mixed-case in opm</p>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">postprocess</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#postprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Postprocessing of the compdat data, merging.</p>
 <p>This function is NOT FINISHED</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.compdat.unroll_complump">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">unroll_complump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complump_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#unroll_complump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.unroll_complump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unrolls the COMPLUMP keyword where K2&gt;K1. Uses the unrolldf function,
+but this function gives more precise handling of errors.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPLUMP</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">1</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<p>is transformed/unrolled to the dataframe representation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPLUMP</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">7</span> <span class="mi">7</span> <span class="mi">1</span> <span class="o">/</span>
+ <span class="s1">&#39;OP1&#39;</span> <span class="mi">74</span> <span class="mi">135</span> <span class="mi">8</span> <span class="mi">8</span> <span class="mi">1</span> <span class="o">/</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dframe</strong> – Dataframe to be unrolled</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dataframe, unrolled version.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

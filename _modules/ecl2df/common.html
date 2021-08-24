@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev20+g17939a4 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev21+g02b080f documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev20+g17939a4
+                0.13.3.dev21+g02b080f
               </div>
             
           
@@ -207,6 +207,7 @@
 <span class="k">for</span> <span class="n">keyw</span> <span class="ow">in</span> <span class="p">[</span>
     <span class="s2">&quot;BRANPROP&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPDAT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;COMPLUMP&quot;</span><span class="p">,</span>
     <span class="s2">&quot;COMPSEGS&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
     <span class="s2">&quot;EQLDIMS&quot;</span><span class="p">,</span>
@@ -947,6 +948,37 @@
             <span class="n">to_layer</span> <span class="o">=</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;to_layer&quot;</span><span class="p">]</span>
         <span class="n">zonemap</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">from_layer</span><span class="p">,</span> <span class="n">to_layer</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">zonedict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">zonemap</span></div>
+
+
+<div class="viewcode-block" id="get_wells_matching_template"><a class="viewcode-back" href="../../ecl2df/ecl2df.common.html#ecl2df.common.get_wells_matching_template">[docs]</a><span class="k">def</span> <span class="nf">get_wells_matching_template</span><span class="p">(</span><span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wells</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the wells in the list that is matching the template</span>
+<span class="sd">    containing wilcard characters. The wildcard charachters supported</span>
+<span class="sd">    are * to match zero or more charachters and ? to match a single</span>
+<span class="sd">    non-empty character. Any wildcards in the beginning of the template</span>
+<span class="sd">    must be preceded with a \\.</span>
+
+<span class="sd">    Well name templates starting with ? might be allowed in Eclipse</span>
+<span class="sd">    in some contexts, but not in all and will not be permitted here to</span>
+<span class="sd">    avoid confusion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template: well name template with wildcard characters</span>
+<span class="sd">        wells: list of wells to match against the template</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of matched wells</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">template</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Well template not allowed to start with a wildcard character: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Must be preceded with a </span><span class="se">\\</span><span class="s2">: </span><span class="si">{</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">template</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="c1"># Note that the two \\ are actually read as one and</span>
+        <span class="c1"># this will return True for f.ex &#39;\*P1&#39;</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">well</span> <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">wells</span> <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">well</span><span class="p">))]</span></div>
 </pre></div>
 
            </div>

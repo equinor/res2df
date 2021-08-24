@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev20+g17939a4 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.13.3.dev21+g02b080f documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.3.dev20+g17939a4
+                0.13.3.dev21+g02b080f
               </div>
             
           
@@ -320,6 +320,30 @@ to produce Eclipse include files from a CSV file.</p>
 <li><p><strong>modulename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Will be included in the help text</p></li>
 <li><p><strong>defaultoutputfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Default output filename</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.common.get_wells_matching_template">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">get_wells_matching_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#get_wells_matching_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.get_wells_matching_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the wells in the list that is matching the template
+containing wilcard characters. The wildcard charachters supported
+are * to match zero or more charachters and ? to match a single
+non-empty character. Any wildcards in the beginning of the template
+must be preceded with a .</p>
+<p>Well name templates starting with ? might be allowed in Eclipse
+in some contexts, but not in all and will not be permitted here to
+avoid confusion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – well name template with wildcard characters</p></li>
+<li><p><strong>wells</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – list of wells to match against the template</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of matched wells</p>
 </dd>
 </dl>
 </dd></dl>

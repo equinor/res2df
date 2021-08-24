@@ -464,11 +464,12 @@ SWFN
 @pytest.mark.parametrize(
     "dframe, expected",
     [
-        (
+        pytest.param(
             pd.DataFrame([{"SW": 0, "KR": 0, "SATNUM": 1}]),
             pd.DataFrame([{"SW": 0, "KR": 0, "SATNUM": 1}]),
+            id="Dummy one-line input, not touched",
         ),
-        (
+        pytest.param(
             pd.DataFrame(
                 [
                     {"SW": 0, "KR": 0, "SATNUM": 1},
@@ -483,9 +484,9 @@ SWFN
                     {"SW": 1, "KR": 1, "SATNUM": 1},
                 ]
             ),
+            id="Implicit Nan through Pandas dataframe initialization",
         ),
-        (
-            # nan by missing in initalization dict:
+        pytest.param(
             pd.DataFrame(
                 [
                     {"SW": 0, "KR": 0, "SATNUM": 1},
@@ -500,9 +501,9 @@ SWFN
                     {"SW": 1, "KR": 1, "SATNUM": 1},
                 ]
             ),
+            id="Ensure linear interpolation in index values",
         ),
-        (
-            # Explicit numpy nan:
+        pytest.param(
             pd.DataFrame(
                 [
                     {"SW": 0, "KR": 0, "SATNUM": 1},
@@ -517,9 +518,9 @@ SWFN
                     {"SW": 1, "KR": 1, "SATNUM": 1},
                 ]
             ),
+            id="Explicit numpy nan",
         ),
-        (
-            # python float nan:
+        pytest.param(
             pd.DataFrame(
                 [
                     {"SW": 0, "KR": 0, "SATNUM": 1},
@@ -534,9 +535,9 @@ SWFN
                     {"SW": 1, "KR": 1, "SATNUM": 1},
                 ]
             ),
+            id="Python float nan",
         ),
-        (
-            # It will not care about column names:
+        pytest.param(
             pd.DataFrame(
                 [
                     {"SW": 0, "FOO": 0, "SATNUM": 1},
@@ -551,9 +552,9 @@ SWFN
                     {"SW": 1, "FOO": 1, "SATNUM": 1},
                 ]
             ),
+            id="Will not care about column names",
         ),
-        (
-            # No extrapolation:
+        pytest.param(
             pd.DataFrame(
                 [
                     {"SW": 0, "KRW": 0, "SATNUM": 1},
@@ -566,6 +567,7 @@ SWFN
                     {"SW": 0.1, "KRW": np.nan, "SATNUM": 1},
                 ]
             ),
+            id="No extrapolation",
         ),
         pytest.param(
             pd.DataFrame([{"SW": 0}]),

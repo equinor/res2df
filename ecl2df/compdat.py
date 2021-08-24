@@ -1,12 +1,13 @@
 """Parser and dataframe generator for the Eclipse keywords:
-  * COMPAT
-  * WELSEGS
+  * COMPDAT
+  * COMPLUMP
   * COMPSEGS
   * WELOPEN
-  * WSEGAICD
-  * WSEGVALV
-  * WSEGSICD
+  * WELSEGS
   * WLIST
+  * WSEGAICD
+  * WSEGSICD
+  * WSEGVALV
 """
 
 import argparse
@@ -24,6 +25,7 @@ except ImportError:
     pass
 
 from .common import (
+    get_wells_matching_template,
     merge_zones,
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
@@ -95,6 +97,7 @@ def deck2dfs(
     wsegaicdrecords = []
     wsegvalvrecords = []
     wlistrecords = []
+    complumprecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
@@ -223,16 +226,27 @@ def deck2dfs(
                 rec_data["NAME"] = rec_data["NAME"].replace("*", "")
 
                 wlistrecords.append(rec_data)
+        elif kword.name == "COMPLUMP":
+            for rec in kword:  # Loop over the lines inside COMPLUMP record
+                rec_data = parse_opmio_deckrecord(rec, "COMPLUMP")
+                rec_data["DATE"] = date
+                complumprecords.append(rec_data)
 
     compdat_df = pd.DataFrame(compdatrecords)
     welopen_df = pd.DataFrame(welopenrecords)
     wlist_df = pd.DataFrame(wlistrecords)
+    complump_df = pd.DataFrame(complumprecords)
 
     if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
 
     if not welopen_df.empty:
-        compdat_df = applywelopen(compdat_df, welopen_df, expand_wlist(wlist_df))
+        compdat_df = applywelopen(
+            compdat_df,
+            expand_welopen_wildcards(welopen_df, compdat_df),
+            expand_wlist(wlist_df),
+            unroll_complump(complump_df),
+        )
 
     compsegs_df = pd.DataFrame(compsegsrecords)
     welsegs_df = pd.DataFrame(welsegsrecords)
@@ -313,6 +327,53 @@ def postprocess():
     # )
 
 
+def expand_welopen_wildcards(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
+    """Expand rows in welopen with well names containing wildcard characters,
+    with the correct wells from compdat_df that was defined at that date
+
+    Example::
+
+      WELOPEN
+       'OP*' 'SHUT' /
+      /
+
+    might become the equivalent dataframe representation of::
+
+      WELOPEN
+       'OP1' 'SHUT' /
+       'OP2' 'SHUT' /
+      /
+
+    if both OP1 and OP2 are defined at that time.
+
+    Args:
+        welopen_df: DataFrame with welopen
+        compdat_df: DataFrame with compdat
+
+    Returns:
+        Expanded welopen dataframe
+    """
+    exp_welopen = []
+    for _, row in welopen_df.iterrows():
+        if row["WELL"].startswith("*"):
+            # This means that the WELL field is refering to a well list
+            # This is handled elsewhere and we let it pass here
+            exp_welopen.append(row)
+        elif "*" in row["WELL"] or "?" in row["WELL"]:
+            # This row is identified a well name template with wildcard characters
+            relevant_wells = compdat_df[compdat_df["DATE"] <= row["DATE"]][
+                "WELL"
+            ].unique()
+            matched_wells = get_wells_matching_template(row["WELL"], relevant_wells)
+            for well in matched_wells:
+                exp_row = row.copy()
+                exp_row["WELL"] = well
+                exp_welopen.append(exp_row)
+        else:
+            exp_welopen.append(row)
+    return pd.DataFrame(exp_welopen)
+
+
 def unrolldf(
     dframe: pd.DataFrame, start_column: str = "K1", end_column: str = "K2"
 ) -> pd.DataFrame:
@@ -371,8 +432,48 @@ def unrolldf(
     return unrolled
 
 
-#        '*OP' NEW OP1 /
-#        '*OP' ADD OP2 /
+def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
+    """Unrolls the COMPLUMP keyword where K2>K1. Uses the unrolldf function,
+    but this function gives more precise handling of errors.
+
+    Example::
+
+      COMPLUMP
+       'OP1' 74 135 7 8 1 /
+      /
+
+    is transformed/unrolled to the dataframe representation of::
+
+      COMPLUMP
+       'OP1' 74 135 7 7 1 /
+       'OP1' 74 135 8 8 1 /
+      /
+
+    Args:
+        dframe: Dataframe to be unrolled
+
+    Returns:
+        Dataframe, unrolled version.
+    """
+    if complump_df is None or complump_df.empty:
+        return complump_df
+
+    for _, row in complump_df.iterrows():
+        val_I = int(row["I"])
+        val_J = int(row["J"])
+        val_K1 = int(row["K1"])
+        val_K2 = int(row["K2"])
+        if val_I < 0 or val_J < 0 or val_K1 < 0 or val_K2 < 0:
+            raise ValueError(
+                f"Negative values for COMPLUMP coordinates are not allowed: {row}"
+            )
+        elif val_I == 0 or val_J == 0 or val_K1 == 0 or val_K2 == 0:
+            raise ValueError(
+                f"Defaulted COMPLUMP coordinates are not supported in ecl2df: {row}"
+            )
+        elif val_K2 < val_K1:
+            raise ValueError(f"K2 must be equal to or greater than K1: {row}")
+    return unrolldf(complump_df)
 
 
 def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
@@ -522,6 +623,93 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(new_records)
 
 
+def expand_complump_in_welopen_df(
+    welopen_df: pd.DataFrame, complump_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Go through all elements of WELOPEN and expand the rows
+    referring to COMPLUMPS. The output dataframe is as if the
+    connections were refered to explicitly in WELOPEN:
+
+    Example: COMPLUMP and WELOPEN keywords::
+
+      COMPLUMP
+       'OP1' 74 135 7 7 1 /
+       'OP1' 74 136 8 8 1 /
+       'OP1' 74 136 9 9 2 /
+       'OP1' 74 137 10 10 3 /
+      /
+      WELOPEN
+       'OP1' 'SHUT' 3* 1 1 /
+      /
+
+    is transformed into the equivalent dataframe representation of::
+
+      WELOPEN
+       'OP1' 'SHUT' 74 135 7 /
+       'OP1' 'SHUT' 74 135 8 /
+      /
+
+    Args:
+        welopen_df: Dataframe with WELOPEN actions
+        complump_df: Dataframe with COMPLUMP records. Optional.
+
+    Returns:
+        welopen_df with complump expanded to actual connections.
+
+    """
+
+    if (
+        welopen_df.empty
+        or welopen_df is None
+        or complump_df.empty
+        or complump_df is None
+    ):
+        return welopen_df
+
+    exp_welopens = []
+    for _, row in welopen_df.iterrows():
+        if row["C1"] is None and row["C2"] is None:
+            exp_welopens.append(row)
+        elif row["C1"] is None or row["C2"] is None:
+            raise ValueError(
+                "Both or none of the completions numbers in "
+                f"WELOPEN must be defined: {row}"
+            )
+        else:
+            # Found a row that refers to complump numbers
+            # Check that the cumplump numbers are ok:
+            C1, C2 = int(row["C1"]), int(row["C2"])
+            if C1 < 0 or C2 < 0:
+                raise ValueError(f"Negative values for C1/C2 is not allowed: {row}")
+            if C1 == 0 or C2 == 0:
+                raise ValueError(f"Defaults (zero) for C1/C2 is not implemented: {row}")
+            if C2 < C1:
+                raise ValueError(f"C2 must be equal or greater than C1: {row}")
+
+            relevant_complump_df = complump_df[
+                (complump_df["DATE"] <= row["DATE"])
+                & (complump_df["WELL"] == row["WELL"])
+                & (complump_df["N"] >= C1)
+                & (complump_df["N"] <= C2)
+            ]
+            for _, complump_row in relevant_complump_df.iterrows():
+                if complump_row["K1"] != complump_row["K2"]:
+                    raise ValueError(
+                        "K1 must be equal to K2 in COMPLUMP "
+                        f"(K2>K1 must be expanded elsewhere): {complump_row}"
+                    )
+                cell_row = row.copy()
+                cell_row["I"] = complump_row["I"]
+                cell_row["J"] = complump_row["J"]
+                cell_row["K"] = complump_row["K1"]
+                cell_row["C1"] = None
+                cell_row["C2"] = None
+                exp_welopens.append(cell_row)
+
+    dframe = pd.DataFrame(exp_welopens)
+    return dframe.astype(object).where(pd.notnull(dframe), None)
+
+
 def expand_wlist_in_welopen_df(
     welopen_df: pd.DataFrame, wlist_df: pd.DataFrame
 ) -> pd.DataFrame:
@@ -552,14 +740,15 @@ def expand_wlist_in_welopen_df(
         else:
             # Explicit wellname was used, no expansion to happen:
             exp_welopens.append(row)
-
-    return pd.DataFrame(exp_welopens)
+    dframe = pd.DataFrame(exp_welopens)
+    return dframe.astype(object).where(pd.notnull(dframe), None)
 
 
 def applywelopen(
     compdat_df: pd.DataFrame,
     welopen_df: pd.DataFrame,
     wlist_df: Optional[pd.DataFrame] = None,
+    complump_df: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Apply WELOPEN actions to the COMPDAT dataframe.
 
@@ -590,6 +779,7 @@ def applywelopen(
         compdat_df: Dataframe with unrolled COMPDAT data
         welopen_df: Dataframe with WELOPEN actions
         wlist_df: Dataframe with WLIST NEW records. Optional.
+        complump_df: Dataframe with COMPLUMP records. Optional.
 
     Returns:
         compdat_df now including WELOPEN actions
@@ -605,8 +795,8 @@ def applywelopen(
                 )
 
     welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
-
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
+    welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 
     for _, row in welopen_df.iterrows():
         if (row["I"] is None and row["J"] is None and row["K"] is None) or (
@@ -630,23 +820,10 @@ def applywelopen(
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
-        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
-            previous_state = compdat_df[
-                (compdat_df["WELL"] == row["WELL"])
-                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
-            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
                 f"\n {str(row)} "
-            )
-
-        if (row["C1"] is not None and row["C1"] > 0) or (
-            row["C2"] is not None and row["C2"]
-        ) > 0:
-            raise ValueError(
-                "Lumped connections are not supported by ecl2df in a WELOPEN keyword. "
-                f"\n{str(row)} "
             )
 
         if previous_state.empty:

@@ -243,7 +243,7 @@ def parse_opmio_deckrecord(
     itemlistname: str = "items",
     recordindex: Optional[int] = None,
     renamer: Optional[Union[Dict[str, str], Dict[str, Union[str, List[str]]]]] = None,
-) -> dict:
+) -> Dict[str, Any]:
     """
     Parse an opm.io.DeckRecord belonging to a certain keyword
 
@@ -263,7 +263,7 @@ def parse_opmio_deckrecord(
     if keyword not in OPMKEYWORDS:
         raise ValueError(f"Keyword {keyword} not supported by common.py")
 
-    rec_dict = {}
+    rec_dict: Dict[str, Any] = {}
 
     if recordindex is None:  # Beware, 0 is different from None here.
         itemlist = OPMKEYWORDS[keyword][itemlistname]
@@ -294,14 +294,25 @@ def parse_opmio_deckrecord(
                     rec_dict[item_name] = record[item_idx].get_data_list()
                 # (the caller is responsible for unrolling this list with
                 # correct naming of elements)
+
+                # When we parse a list, some values in it can be defaulted, for
+                # which the default values are not provided in the JSON. Return
+                # these defaulted values as NaN's for the calling code to fix.
+                for idx in range(len(record[item_idx])):
+                    # This code is using a private attribute of an
+                    # OPM DeckItem. A better solution has not yet
+                    # been found in the OPM API. See also
+                    # https://github.com/OPM/opm-common/issues/2598
+                    if record[item_idx].__defaulted(idx):
+                        rec_dict[item_name][idx] = np.nan
         else:
             rec_dict[item_name] = jsonitem.get("default", None)
 
     if renamer:
-        renamed_dict = {}
+        renamed_dict: Dict[str, Any] = {}
         for key, value in rec_dict.items():
             if key in renamer and not isinstance(renamer[key], list):
-                renamed_dict[renamer[key]] = value
+                renamed_dict[renamer[key]] = value  # type: ignore
             else:
                 renamed_dict[key] = value
         return renamed_dict

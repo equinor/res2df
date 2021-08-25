@@ -103,9 +103,11 @@ def df(
     frames = []
     for keyword in wanted_keywords:
         frames.append(
-            common.ecl_keyworddata_to_df(
-                deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
-            ).assign(KEYWORD=keyword)
+            interpolate_defaults(
+                common.ecl_keyworddata_to_df(
+                    deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
+                ).assign(KEYWORD=keyword)
+            )
         )
     nonempty_frames = [frame for frame in frames if not frame.empty]
     if nonempty_frames:
@@ -118,6 +120,32 @@ def df(
         dframe["KEYWORD"] = dframe["KEYWORD"].astype(str)
         return dframe
     return pd.DataFrame()
+
+
+def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
+    """Interpolate NaN's linearly in saturation.
+    Saturation function tables in Eclipse decks can have certain values defaulted.
+    When parsed by common.ecl2df, these values are returned as np.nan.
+    The incoming dataframe must be associated to one keyword only, but
+    can consist of multiple SATNUMs.
+    """
+    sat_cols: set = {"SW", "SO", "SG", "SL"}.intersection(dframe.columns)
+    assert (
+        len(sat_cols) == 1
+    ), f"Could not determine a single saturation column in {dframe.columns}"
+    sat_col = list(sat_cols)[0]
+
+    if dframe[sat_col].isna().any():
+        raise ValueError("nan in saturation column is not allowed")
+
+    filled_frames = []
+    for _, subframe in dframe.groupby("SATNUM"):
+        filled_frames.append(
+            subframe.set_index(sat_col)
+            .interpolate(method="index", limit_area="inside")
+            .reset_index()
+        )
+    return pd.concat(filled_frames)
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

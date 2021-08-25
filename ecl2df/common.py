@@ -35,6 +35,7 @@ OPMKEYWORDS: Dict[str, dict] = {}
 for keyw in [
     "BRANPROP",
     "COMPDAT",
+    "COMPLUMP",
     "COMPSEGS",
     "DENSITY",
     "EQLDIMS",
@@ -242,7 +243,7 @@ def parse_opmio_deckrecord(
     itemlistname: str = "items",
     recordindex: Optional[int] = None,
     renamer: Optional[Union[Dict[str, str], Dict[str, Union[str, List[str]]]]] = None,
-) -> dict:
+) -> Dict[str, Any]:
     """
     Parse an opm.io.DeckRecord belonging to a certain keyword
 
@@ -262,7 +263,7 @@ def parse_opmio_deckrecord(
     if keyword not in OPMKEYWORDS:
         raise ValueError(f"Keyword {keyword} not supported by common.py")
 
-    rec_dict = {}
+    rec_dict: Dict[str, Any] = {}
 
     if recordindex is None:  # Beware, 0 is different from None here.
         itemlist = OPMKEYWORDS[keyword][itemlistname]
@@ -293,14 +294,25 @@ def parse_opmio_deckrecord(
                     rec_dict[item_name] = record[item_idx].get_data_list()
                 # (the caller is responsible for unrolling this list with
                 # correct naming of elements)
+
+                # When we parse a list, some values in it can be defaulted, for
+                # which the default values are not provided in the JSON. Return
+                # these defaulted values as NaN's for the calling code to fix.
+                for idx in range(len(record[item_idx])):
+                    # This code is using a private attribute of an
+                    # OPM DeckItem. A better solution has not yet
+                    # been found in the OPM API. See also
+                    # https://github.com/OPM/opm-common/issues/2598
+                    if record[item_idx].__defaulted(idx):
+                        rec_dict[item_name][idx] = np.nan
         else:
             rec_dict[item_name] = jsonitem.get("default", None)
 
     if renamer:
-        renamed_dict = {}
+        renamed_dict: Dict[str, Any] = {}
         for key, value in rec_dict.items():
             if key in renamer and not isinstance(renamer[key], list):
-                renamed_dict[renamer[key]] = value
+                renamed_dict[renamer[key]] = value  # type: ignore
             else:
                 renamed_dict[key] = value
         return renamed_dict
@@ -775,3 +787,34 @@ def convert_lyrlist_to_zonemap(lyrlist: List[Dict[str, Any]]) -> Dict[int, str]:
             to_layer = zonedict["to_layer"]
         zonemap.update(dict.fromkeys(range(from_layer, to_layer + 1), zonedict["name"]))
     return zonemap
+
+
+def get_wells_matching_template(template: str, wells: list):
+    """Returns the wells in the list that is matching the template
+    containing wilcard characters. The wildcard charachters supported
+    are * to match zero or more charachters and ? to match a single
+    non-empty character. Any wildcards in the beginning of the template
+    must be preceded with a \\.
+
+    Well name templates starting with ? might be allowed in Eclipse
+    in some contexts, but not in all and will not be permitted here to
+    avoid confusion.
+
+    Args:
+        template: well name template with wildcard characters
+        wells: list of wells to match against the template
+
+    Returns:
+        List of matched wells
+    """
+    if template.startswith("*") or template.startswith("?"):
+        raise ValueError(
+            "Well template not allowed to start with a wildcard character: "
+            f"Must be preceded with a \\: {template}"
+        )
+    elif template.startswith("\\"):
+        # Note that the two \\ are actually read as one and
+        # this will return True for f.ex '\*P1'
+        template = template[1:]
+    regex = template.replace("*", ".*").replace("?", ".")
+    return [well for well in wells if bool(re.match(regex, well))]

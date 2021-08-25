@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.13.3.dev21+g02b080f documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.13.3.dev22+gff21fca documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.3.dev21+g02b080f
+                0.13.3.dev22+gff21fca
               </div>
             
           
@@ -275,9 +275,11 @@
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">wanted_keywords</span><span class="p">:</span>
         <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
-                <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;SATNUM&quot;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">)</span>
+            <span class="n">interpolate_defaults</span><span class="p">(</span>
+                <span class="n">common</span><span class="o">.</span><span class="n">ecl_keyworddata_to_df</span><span class="p">(</span>
+                    <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;SATNUM&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="p">)</span>
     <span class="n">nonempty_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">nonempty_frames</span><span class="p">:</span>
@@ -290,6 +292,32 @@
         <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dframe</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="interpolate_defaults"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.interpolate_defaults">[docs]</a><span class="k">def</span> <span class="nf">interpolate_defaults</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Interpolate NaN&#39;s linearly in saturation.</span>
+<span class="sd">    Saturation function tables in Eclipse decks can have certain values defaulted.</span>
+<span class="sd">    When parsed by common.ecl2df, these values are returned as np.nan.</span>
+<span class="sd">    The incoming dataframe must be associated to one keyword only, but</span>
+<span class="sd">    can consist of multiple SATNUMs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sat_cols</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;SW&quot;</span><span class="p">,</span> <span class="s2">&quot;SO&quot;</span><span class="p">,</span> <span class="s2">&quot;SG&quot;</span><span class="p">,</span> <span class="s2">&quot;SL&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">sat_cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Could not determine a single saturation column in </span><span class="si">{</span><span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">sat_col</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sat_cols</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">dframe</span><span class="p">[</span><span class="n">sat_col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;nan in saturation column is not allowed&quot;</span><span class="p">)</span>
+
+    <span class="n">filled_frames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">subframe</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">):</span>
+        <span class="n">filled_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">subframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">sat_col</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">limit_area</span><span class="o">=</span><span class="s2">&quot;inside&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">filled_frames</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>

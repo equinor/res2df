@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.satfunc &mdash; ecl2df 0.13.3.dev21+g02b080f documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.13.3.dev22+gff21fca documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.13.3.dev21+g02b080f
+                0.13.3.dev22+gff21fca
               </div>
             
           
@@ -436,6 +436,21 @@ to file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.satfunc.interpolate_defaults">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">interpolate_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/satfunc.html#interpolate_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.satfunc.interpolate_defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolate NaN’s linearly in saturation.
+Saturation function tables in Eclipse decks can have certain values defaulted.
+When parsed by common.ecl2df, these values are returned as np.nan.
+The incoming dataframe must be associated to one keyword only, but
+can consist of multiple SATNUMs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>

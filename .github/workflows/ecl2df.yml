@@ -24,12 +24,6 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.7', '3.8', '3.9']
-        include:
-          # For one of the Python versions we
-          # install the extra dependency ert
-          # (in order to not double the job matrix)
-          - python-version: '3.6'
-            install-ert: true
     steps:
       - name: Checkout commit locally
         uses: actions/checkout@v2

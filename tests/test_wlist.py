@@ -5,6 +5,14 @@ import pytest
 
 from ecl2df import EclFiles, compdat
 
+try:
+    import opm  # noqa
+except ImportError:
+    pytest.skip(
+        "OPM is not installed",
+        allow_module_level=True,
+    )
+
 
 @pytest.mark.parametrize(
     "deckstr, expected_df",

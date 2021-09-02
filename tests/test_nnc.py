@@ -10,6 +10,14 @@ import pytest
 from ecl2df import ecl2csv, faults, nnc, trans
 from ecl2df.eclfiles import EclFiles
 
+try:
+    import opm  # noqa
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
+
+
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
@@ -45,6 +53,7 @@ def test_nnc2df_coords():
     assert "Z" in gnncdf
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
     eclfiles = EclFiles(DATAFILE)
@@ -98,6 +107,7 @@ def test_df2ecl_editnnc(tmpdir):
     print(nnc.df2ecl_editnnc(nnc.df(eclfiles).head(4).assign(TRANM=0.1)))
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("nnc.csv")
@@ -111,6 +121,7 @@ def test_main(tmpdir, mocker):
     assert "TRAN" in disk_df
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(

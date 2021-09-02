@@ -3,7 +3,15 @@
 import sys
 from pathlib import Path
 
-import networkx
+import pytest
+
+try:
+    import networkx
+
+    HAVE_NETWORKX = True
+except ImportError:
+    HAVE_NETWORKX = False
+
 import pandas as pd
 
 from ecl2df import ecl2csv, trans
@@ -75,6 +83,7 @@ def test_grouptrans():
     assert trans.df(eclfiles, vectors=["FIPNUM", "EQLNUM"], group=True).empty
 
 
+@pytest.mark.skipif(not HAVE_NETWORKX, reason="Requires networkx being installed")
 def test_nx(tmpdir):
     """Test graph generation"""
     eclfiles = EclFiles(DATAFILE)

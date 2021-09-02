@@ -5,22 +5,24 @@ import pandas as pd
 import pytest
 
 import ecl2df
+from ecl2df.hook_implementations import jobs
 
 try:
     # pylint: disable=unused-import
 
     import ert_shared  # noqa
-except ImportError:
-    pytest.skip(
-        "ERT is not installed, skipping hook implementation tests.",
-        allow_module_level=True,
-    )
 
+    HAVE_ERT = True
+except ImportError:
+    HAVE_ERT = False
 
 TESTDIR = Path(__file__).absolute().parent
 DATADIR = TESTDIR / "data/reek/eclipse/model"
 
 
+@pytest.mark.skipif(
+    not HAVE_ERT, reason="ERT is not installed, skipping hook implementation tests."
+)
 def test_ecl2csv_through_ert(tmpdir):
     """Test running the ERT executable on a mocked config file"""
     tmpdir.chdir()
@@ -106,3 +108,39 @@ def test_ecl2csv_through_ert(tmpdir):
 
     for subcommand in csv2ecl_subcommands:
         assert Path(subcommand + ".inc").is_file()
+
+
+@pytest.mark.skipif(not HAVE_ERT, reason="ERT is not installed")
+def test_job_documentation():
+    if HAVE_ERT:
+        assert (
+            type(jobs.job_documentation("ECL2CSV"))
+            == ert_shared.plugins.plugin_response.PluginResponse
+        )
+        assert (
+            type(jobs.job_documentation("CSV2ECL"))
+            == ert_shared.plugins.plugin_response.PluginResponse
+        )
+    else:
+        assert jobs.job_documentation("ECL2CSV") is None
+        assert jobs.job_documentation("CSV2ECL") is None
+
+    assert jobs.job_documentation("foobar") is None
+
+
+def test_get_module_variable():
+    """Test that we can robustly peek into jobs for metadata.
+
+    This is independent whether ERT is installed or not
+    """
+    assert jobs._get_module_variable_if_exists("foo", "bar") == ""
+    assert jobs._get_module_variable_if_exists(
+        "ecl2df.ecl2csv", "DESCRIPTION"
+    ).startswith("Convert Eclipse input and output")
+    assert jobs._get_module_variable_if_exists("ecl2df.ecl2csv", "NOPE") == ""
+
+
+@pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")
+def test_no_erthooks():
+    """Test that we can import the hook implementations even when ERT is unavailable."""
+    from ecl2df.hook_implementations import jobs  # noqa

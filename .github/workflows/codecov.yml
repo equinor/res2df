@@ -23,15 +23,16 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install ecl2df and test dependencies
+    - name: Install ecl2df 
       run: |
         pip install pip -U
         pip install .[tests,ert]
 
-    - name: Generate coverage report
+    - name: Generate coverage report and upload
       run: |
         pytest tests --disable-warnings --cov=ecl2df --cov-report=xml
-
-    - name: Upload coverage to Codecov
-      run: |
+        # Uninstall packages that ecl2df supports not being installed:
+        pip uninstall --yes ert networkx
+        # Run tests again in cov-append-mode:
+        pytest tests --disable-warnings --cov=ecl2df --cov-report=xml --cov-append
         bash <(curl -s https://codecov.io/bash)

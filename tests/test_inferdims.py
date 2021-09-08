@@ -94,8 +94,12 @@ def test_inject_xxxdims_ntxxx():
 
     # Repeated calls should be ok:
     deck_with_injection = inferdims.inject_xxxdims_ntxxx(
-        "TABDIMS", "NTSFUN", "SWOF\n0/\n0/\n"
+        "TABDIMS", "NTSFUN", "SWOF\n0/\n0/\n", 1
     )
-    assert deck_with_injection == inferdims.inject_xxxdims_ntxxx(
-        "TABDIMS", "NTSFUN", deck_with_injection
+    assert "TABDIMS\n   1 /" in str(
+        inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck_with_injection, 10)
+    )
+    # If no number is supplied, return the deck untouched:
+    assert "TABDIMS\n   1 /" in str(
+        inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck_with_injection, None)
     )

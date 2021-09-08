@@ -335,6 +335,51 @@ def test_multiple_roots():
         gruptree.tree_from_dict({"foo": 1, "bar": 2})
 
 
+@pytest.mark.parametrize(
+    "dframe, expected",
+    [
+        (pd.DataFrame(), [{}]),
+        pytest.param(
+            pd.DataFrame([{"FOO": "BAR"}]),
+            [{}],
+            marks=pytest.mark.xfail(raises=KeyError),
+            # "PARENT" is required.
+        ),
+        pytest.param(
+            pd.DataFrame([{"PARENT": "A"}]),
+            [{}],
+            marks=pytest.mark.xfail(raises=KeyError)
+            # "CHILD" is also required
+        ),
+        (pd.DataFrame([{"PARENT": "A", "CHILD": "B"}]), [{"A": {"B": {}}}]),
+        (
+            pd.DataFrame(
+                [{"PARENT": "A", "CHILD": "B"}, {"PARENT": "B", "CHILD": "C"}]
+            ),
+            [{"A": {"B": {"C": {}}}}],
+        ),
+        (
+            # DATE is not used
+            pd.DataFrame([{"PARENT": "A", "CHILD": "B", "DATE": "2000-01-01"}]),
+            [{"A": {"B": {}}}],
+        ),
+        pytest.param(
+            # DATE is not used, but will be checked that it is the same:
+            pd.DataFrame(
+                [
+                    {"PARENT": "A", "CHILD": "B", "DATE": "2000-01-01"},
+                    {"PARENT": "A", "CHILD": "B", "DATE": "2040-01-01"},
+                ]
+            ),
+            None,
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ],
+)
+def test_edge_dataframe2dict(dframe, expected):
+    assert gruptree.edge_dataframe2dict(dframe) == expected
+
+
 def test_emptytree_strdeck():
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
@@ -356,6 +401,14 @@ def test_emptytree_commandlinetool(tmpdir, mocker, caplog):
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
     ecl2csv.main()
     assert "No tree data to prettyprint" in caplog.text
+
+
+def test_cli_nothing_to_do(mocker, capsys):
+    """Test that the client says nothing to do when DATA is supplied, but no action."""
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "EMPTY.DATA"])
+    with pytest.raises(SystemExit):
+        ecl2csv.main()
+    assert "Nothing to do" in capsys.readouterr().out
 
 
 def test_tstep():

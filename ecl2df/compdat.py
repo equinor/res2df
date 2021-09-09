@@ -618,10 +618,10 @@ def expand_complump_in_welopen_df(
     """
 
     if (
-        welopen_df.empty
-        or welopen_df is None
-        or complump_df.empty
+        welopen_df is None
+        or welopen_df.empty
         or complump_df is None
+        or complump_df.empty
     ):
         return welopen_df
 
@@ -773,11 +773,6 @@ def applywelopen(
                 & (compdat_df["J"] == row["J"])
                 & (compdat_df["K1"] == row["K"])
                 & (compdat_df["K2"] == row["K"])
-            ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
-        elif row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0:
-            previous_state = compdat_df[
-                (compdat_df["WELL"] == row["WELL"])
-                & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(

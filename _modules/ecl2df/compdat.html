@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ecl2df.compdat &mdash; ecl2df 0.14.1.dev3+g0dd2f47 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.14.1.dev5+gd5a0f51 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.14.1.dev3+g0dd2f47
+                0.14.1.dev5+gd5a0f51
               </div>
             
           
@@ -458,47 +458,6 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="postprocess"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.postprocess">[docs]</a><span class="k">def</span> <span class="nf">postprocess</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Postprocessing of the compdat data, merging.</span>
-
-<span class="sd">    This function is NOT FINISHED&quot;&quot;&quot;</span>
-    <span class="c1"># compdat_df = pd.read_csv(&quot;compdat.csv&quot;)</span>
-    <span class="n">compsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;compsegs.csv&quot;</span><span class="p">)</span>
-    <span class="n">welsegs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;welsegs.csv&quot;</span><span class="p">)</span>
-
-    <span class="c1">#  We need different handling of ICD&#39;s and non-ICD wells due</span>
-    <span class="c1">#  to the complex WELSEGS structure:</span>
-    <span class="c1">#</span>
-    <span class="c1"># ICD wells:</span>
-    <span class="c1"># 1. First compdata is merged with compsegs (non-ICD</span>
-    <span class="c1">#    should be stripped away).</span>
-    <span class="c1"># 2. Then that product is merged with welsegs on &#39;branch&#39;</span>
-    <span class="c1"># 3. Then that product is merged again with welsegs, where</span>
-    <span class="c1">#    we join on &#39;join_segment&#39; and &#39;segment&#39;</span>
-    <span class="c1"># 4. Then we finally have the mapping between completed</span>
-    <span class="c1">#    cells and branch number</span>
-    <span class="c1">#</span>
-    <span class="c1"># Non-ICD wells:</span>
-    <span class="c1"># 1. Merge compdata and compsegs</span>
-    <span class="c1"># 2. Then we are ready.. compsegs contains the correct branch number</span>
-
-    <span class="c1"># compdatsegs = pd.merge(compdat_df,</span>
-    <span class="c1">#                        compsegs_df, on=[&quot;date&quot;, &quot;well&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;])</span>
-    <span class="c1"># WARNING: Only correct for dual-branch wells,</span>
-    <span class="c1"># not triple-branach wells with ICD..</span>
-    <span class="n">compsegs_icd_df</span> <span class="o">=</span> <span class="n">compsegs_df</span><span class="p">[</span><span class="n">compsegs_df</span><span class="o">.</span><span class="n">branch</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
-    <span class="c1"># icd_wells = compsegs_icd_df.well.unique()</span>
-    <span class="n">compdatsegwel_icd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">compsegs_icd_df</span><span class="p">,</span> <span class="n">welsegs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;well&quot;</span><span class="p">,</span> <span class="s2">&quot;branch&quot;</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="k">del</span> <span class="n">compdatsegwel_icd_df</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">]</span>  <span class="c1"># we don&#39;t need this</span>
-    <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;branch&quot;</span><span class="p">:</span> <span class="s2">&quot;icd_branch&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">compdatsegwel_icd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;join_segment&quot;</span><span class="p">:</span> <span class="s2">&quot;segment&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-    <span class="c1"># alldata_icd = pd.merge(</span>
-    <span class="c1">#     compdatsegwel_icd_df, welsegs_df, on=[&quot;date&quot;, &quot;well&quot;, &quot;segment&quot;]</span>
-    <span class="c1"># )</span>
-
-
 <div class="viewcode-block" id="expand_welopen_wildcards"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen_wildcards">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_wildcards</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Expand rows in welopen with well names containing wildcard characters,</span>
 <span class="sd">    with the correct wells from compdat_df that was defined at that date</span>
@@ -831,10 +790,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="p">(</span>
-        <span class="n">welopen_df</span><span class="o">.</span><span class="n">empty</span>
-        <span class="ow">or</span> <span class="n">welopen_df</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="ow">or</span> <span class="n">complump_df</span><span class="o">.</span><span class="n">empty</span>
+        <span class="n">welopen_df</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">or</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">empty</span>
         <span class="ow">or</span> <span class="n">complump_df</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">or</span> <span class="n">complump_df</span><span class="o">.</span><span class="n">empty</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">welopen_df</span>
 
@@ -986,11 +945,6 @@
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">])</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;K1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;K2&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">previous_state</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[</span>
-                <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">])</span>
-                <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
             <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>

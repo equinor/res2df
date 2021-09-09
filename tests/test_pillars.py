@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from ecl2df import ecl2csv, grid, pillars
 from ecl2df.eclfiles import EclFiles
@@ -46,105 +47,279 @@ def test_pillars():
     assert "OWC@" + lastdate in pillars_df
     assert "GOC@" + lastdate not in pillars_df  # Because the dataset has no GAS...
 
-
-def test_contact():
-    """Test the contact estimation on mocked grid frames
-
-    I, J, and K are not included in the mock frames, as they are not
-    necessary.
-    """
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"], data=[["1-1", 1, 0, 0, 1000]]
+    # Grouping by unknowns only trigger a warning
+    pd.testing.assert_frame_equal(
+        pillars.df(eclfiles), pillars.df(eclfiles, region="FOOBAR")
     )
-    gdf_contacts = pillars.compute_pillar_contacts(gdf)
-    assert gdf_contacts.empty
 
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
-        data=[["1-1", 1, 0, 0, 1000], ["1-1", 0.5, 0.5, 0, 999]],
+
+# These frame will be reused in the following test.
+PILLARS_WITH_UPFLANK = pd.DataFrame(
+    columns=["PILLAR", "SWAT", "SOIL", "Z"],
+    data=[
+        ["1-1", 0.2, 0.8, 950],
+        ["1-1", 0.7, 0.3, 951],
+        ["1-1", 0.9, 0.1, 952],
+        ["1-1", 1, 0, 953],
+        ["2-1", 0.2, 1, 400],  # Upflank oil, to be ignored.
+    ],
+)
+PILLARS_GAS_IN_WATER = pd.DataFrame(
+    columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
+    data=[
+        ["1-1", 0.2, 0.02, 0.8, 940],
+        ["1-1", 0.2, 0.1, 0.7, 942],
+        ["1-1", 0.2, 0.4, 0.4, 945],
+        ["1-1", 0.2, 0.8, 0, 950],
+        ["1-1", 0.7, 0.3, 0, 951],
+        ["1-1", 0.9, 0.1, 0, 952],
+        ["1-1", 1, 0, 0, 953],
+        # Add a row with gas saturation in water, this
+        # could be due to a gas injector and
+        # should not be picked up as a GOC:
+        ["1-1", 0.5, 0, 0.5, 953],
+        ["1-1", 1, 0, 0, 953],
+    ],
+)
+
+
+@pytest.mark.parametrize(
+    "pillar_df, args, expectedrows",
+    [
+        (pd.DataFrame(), {}, []),
+        pytest.param(
+            pd.DataFrame([{"SWAT": 1}]),
+            {},
+            None,
+            marks=pytest.mark.xfail(raises=KeyError),
+            id="no_pillar_column",
+        ),
+        pytest.param(
+            pd.DataFrame([{"SWAT": 1, "I": 1, "J": 1}]),
+            {},
+            None,
+            marks=pytest.mark.xfail(raises=KeyError),
+            id="no_z_column",
+        ),
+        pytest.param(
+            pd.DataFrame([{"SWAT": 1, "I": 1, "J": 1, "Z": 1000}]),
+            {},
+            [],
+            id="no_saturations_gives_empty_result",
+        ),
+        (
+            pd.DataFrame(
+                columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
+                data=[["1-1", 1, 0, 0, 1000]],
+            ),
+            {},
+            [],
+        ),
+        (
+            pd.DataFrame(
+                columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
+                data=[["1-1", 1, 0, 0, 1000], ["1-1", 0.5, 0.5, 0, 999]],
+            ),
+            {},
+            [{"PILLAR": "1-1", "OWC": 999}],
+        ),
+        (
+            pd.DataFrame(
+                columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
+                data=[["1-1", 1, 0, 0, 1000], ["1-1", 0.5, 0.5, 0, 999]],
+            ),
+            {"soilcutoff": 0.2},
+            [{"PILLAR": "1-1", "OWC": 999}],
+        ),
+        pytest.param(
+            pd.DataFrame(
+                columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
+                data=[["1-1", 1, 0, 0, 1000], ["1-1", 0.5, 0.5, 0, 999]],
+            ),
+            {"soilcutoff": 0.6},
+            [],
+            id="bump_soilcutoff_giving_no_contact",
+        ),
+        pytest.param(
+            pd.DataFrame(
+                columns=["PILLAR", "SWAT", "SGAS", "Z"],
+                data=[["1-1", 1, 0, 1000], ["1-1", 0.2, 0.8, 999]],
+            ),
+            {},
+            [{"PILLAR": "1-1", "GWC": 999}],
+            id="two-phase_gas-water",
+        ),
+        pytest.param(
+            pd.DataFrame(
+                columns=["PILLAR", "SWAT", "SOIL", "Z"],
+                data=[["1-1", 1, 0, 1000], ["1-1", 0.2, 0.8, 999]],
+            ),
+            {},
+            [{"PILLAR": "1-1", "OWC": 999}],
+            id="two-phase-oil-water",
+        ),
+        pytest.param(
+            pd.DataFrame(
+                columns=["PILLAR", "EQLNUM", "SWAT", "SOIL", "Z"],
+                data=[
+                    ["1-1", 1, 1, 0, 1000],
+                    ["1-1", 1, 0.2, 0.8, 999],
+                    ["1-1", 2, 1, 0, 2000],
+                    ["1-1", 2, 0.2, 0.8, 1999],
+                ],
+            ),
+            {"region": "EQLNUM"},
+            [
+                {"PILLAR": "1-1", "EQLNUM": 1, "OWC": 999},
+                {"PILLAR": "1-1", "EQLNUM": 2, "OWC": 1999},
+            ],
+            id="testing_region_support",
+        ),
+        pytest.param(
+            PILLARS_WITH_UPFLANK,
+            {},
+            [
+                {"PILLAR": "1-1", "OWC": 951},
+            ],
+            id="upflank_oil_ignored",
+        ),
+        pytest.param(
+            PILLARS_WITH_UPFLANK,
+            {"swatcutoff": 0.05},
+            [
+                {"PILLAR": "1-1", "OWC": 951},
+                {"PILLAR": "2-1", "OWC": 400},
+            ],
+            id="swatcutoff_includes_upflank",
+        ),
+        # "OWC is deepest cell centre with saturation more than soilcutoff":
+        pytest.param(
+            PILLARS_WITH_UPFLANK,
+            {"soilcutoff": 0.05},
+            [
+                {"PILLAR": "1-1", "OWC": 952},
+            ],
+            id="soilcutoff_0.05",
+        ),
+        pytest.param(
+            PILLARS_WITH_UPFLANK,
+            {"soilcutoff": 0.25},
+            [
+                {"PILLAR": "1-1", "OWC": 951},
+            ],
+            id="soilcutoff_0.25",
+        ),
+        pytest.param(
+            PILLARS_WITH_UPFLANK,
+            {"soilcutoff": 0.7},
+            [
+                {"PILLAR": "1-1", "OWC": 950},
+            ],
+            id="soilcutoff_0.7",
+        ),
+        pytest.param(
+            PILLARS_WITH_UPFLANK,
+            {"soilcutoff": 0.8},
+            [],
+            id="soilcutoff_0.8",
+        ),
+        # "GOC is deepest point with gas saturation is more than sgascutoff,
+        # and where some cells have oil saturation more than gocsoilcutoff"
+        pytest.param(
+            PILLARS_GAS_IN_WATER,
+            {},
+            [{"PILLAR": "1-1", "OWC": 951, "GOC": 940}],
+            id="goc_gas_in_water",
+        ),
+        pytest.param(
+            PILLARS_GAS_IN_WATER,
+            {"sgascutoff": 0.05},
+            [{"PILLAR": "1-1", "OWC": 951, "GOC": 945}],
+            id="sgascutoff_0.05",
+        ),
+        pytest.param(
+            PILLARS_GAS_IN_WATER,
+            {"sgascutoff": 0.4},
+            [{"PILLAR": "1-1", "OWC": 951, "GOC": 942}],
+            id="sgascutoff_0.4",
+        ),
+        pytest.param(
+            PILLARS_GAS_IN_WATER,
+            {"sgascutoff": 0.75},
+            [{"PILLAR": "1-1", "OWC": 951, "GOC": 940}],
+            id="sgascutoff_0.75",
+        ),
+    ],
+)
+def test_compute_pillar_contacts(pillar_df, args, expectedrows):
+    pd.testing.assert_frame_equal(
+        pillars.compute_pillar_contacts(pillar_df, **args), pd.DataFrame(expectedrows)
     )
-    gdf_contact = pillars.compute_pillar_contacts(gdf, soilcutoff=0.2)
-    assert not gdf_contact.empty
-    assert gdf_contact["OWC"].values == [999]
 
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "SWAT", "SGAS", "Z"],
-        data=[["1-1", 1, 0, 1000], ["1-1", 0.2, 0.8, 999]],
+
+@pytest.mark.parametrize(
+    "dframe, datestr, expectedrows",
+    [
+        (pd.DataFrame(), None, []),
+        (
+            pd.DataFrame([{"PORV": 1, "SWAT": 0.9, "SGAS": 0}]),
+            None,
+            [{"SOIL": 0.1, "WATVOL": 0.9, "GASVOL": 0, "OILVOL": 0.1}],
+        ),
+        (
+            # Empty datestring is the same as None:
+            pd.DataFrame([{"PORV": 1, "SWAT": 0.9, "SGAS": 0}]),
+            "",
+            [{"SOIL": 0.1, "WATVOL": 0.9, "GASVOL": 0, "OILVOL": 0.1}],
+        ),
+        (
+            # With a date included:
+            pd.DataFrame([{"PORV": 1, "SWAT@2000-01-01": 0.9, "SGAS@2000-01-01": 0}]),
+            "2000-01-01",
+            [
+                {
+                    "SOIL@2000-01-01": 0.1,
+                    "WATVOL@2000-01-01": 0.9,
+                    "GASVOL@2000-01-01": 0,
+                    "OILVOL@2000-01-01": 0.1,
+                }
+            ],
+        ),
+        (
+            # Asking for a date for which there is no data:
+            pd.DataFrame([{"PORV": 1, "SWAT@2000-01-01": 0.9, "SGAS@2000-01-01": 0}]),
+            "2001-01-01",
+            [],
+        ),
+        (
+            # Two phase oil-water
+            pd.DataFrame([{"PORV": 1, "SWAT": 0.9}]),
+            None,
+            [{"SOIL": 0.1, "WATVOL": 0.9, "OILVOL": 0.1}],
+        ),
+        (
+            # Including surface conditions
+            pd.DataFrame(
+                [{"PORV": 1, "SWAT": 0.5, "SGAS": 0.2, "1OVERBO": 0.8, "1OVERBG": 2}]
+            ),
+            None,
+            [
+                {
+                    "SOIL": 0.3,
+                    "WATVOL": 0.5,
+                    "GASVOL": 0.2,
+                    "OILVOL": 0.3,
+                    "OILVOLSURF": 0.3 * 0.8,
+                    "GASVOLSURF": 0.2 * 2,
+                }
+            ],
+        ),
+    ],
+)
+def test_compute_volumes(dframe, datestr, expectedrows):
+    pd.testing.assert_frame_equal(
+        pillars.compute_volumes(dframe, datestr), pd.DataFrame(expectedrows)
     )
-    gdf_contact = pillars.compute_pillar_contacts(gdf)
-    assert not gdf_contact.empty
-    assert gdf_contact["GWC"].values == [999]
-
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "SWAT", "SOIL", "Z"],
-        data=[["1-1", 1, 0, 1000], ["1-1", 0.2, 0.8, 999]],
-    )
-    gdf_contact = pillars.compute_pillar_contacts(gdf)
-    assert not gdf_contact.empty
-    assert gdf_contact["OWC"].values == [999]
-
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "EQLNUM", "SWAT", "SOIL", "Z"],
-        data=[
-            ["1-1", 1, 1, 0, 1000],
-            ["1-1", 1, 0.2, 0.8, 999],
-            ["1-1", 2, 1, 0, 2000],
-            ["1-1", 2, 0.2, 0.8, 1999],
-        ],
-    )
-    gdf_contact = pillars.compute_pillar_contacts(gdf, region="EQLNUM")
-    assert not gdf_contact.empty
-    assert len(gdf_contact) == 2
-    assert 999 in gdf_contact["OWC"].values
-    assert 1999 in gdf_contact["OWC"].values
-
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "SWAT", "SOIL", "Z"],
-        data=[
-            ["1-1", 0.2, 0.8, 950],
-            ["1-1", 0.7, 0.3, 951],
-            ["1-1", 0.9, 0.1, 952],
-            ["1-1", 1, 0, 953],
-            ["2-1", 0.2, 1, 400],  # Upflank oil, to be ignored.
-        ],
-    )
-    # swatcutoff controls the upflank oil:
-    assert len(pillars.compute_pillar_contacts(gdf)) == 1
-    assert len(pillars.compute_pillar_contacts(gdf, swatcutoff=0.05)) == 2
-
-    # "OWC is deepest cell centre with saturation more than soilcutoff"
-    assert pillars.compute_pillar_contacts(gdf, soilcutoff=0.05)["OWC"].values[0] == 952
-    assert pillars.compute_pillar_contacts(gdf, soilcutoff=0.25)["OWC"].values[0] == 951
-    assert pillars.compute_pillar_contacts(gdf, soilcutoff=0.7)["OWC"].values[0] == 950
-    assert pillars.compute_pillar_contacts(gdf, soilcutoff=0.8).empty
-
-    gdf = pd.DataFrame(
-        columns=["PILLAR", "SWAT", "SOIL", "SGAS", "Z"],
-        data=[
-            ["1-1", 0.2, 0.02, 0.8, 940],
-            ["1-1", 0.2, 0.1, 0.7, 942],
-            ["1-1", 0.2, 0.4, 0.4, 945],
-            ["1-1", 0.2, 0.8, 0, 950],
-            ["1-1", 0.7, 0.3, 0, 951],
-            ["1-1", 0.9, 0.1, 0, 952],
-            ["1-1", 1, 0, 0, 953],
-            # Add a row with gas saturation in water, this
-            # could be due to a gas injector and
-            # should not be picked up as a GOC:
-            ["1-1", 0.5, 0, 0.5, 953],
-            ["1-1", 1, 0, 0, 953],
-        ],
-    )
-    # "GOC is deepest point with gas saturation is more than sgascutoff,
-    # and where some cells have oil saturation more than gocsoilcutoff"
-    assert pillars.compute_pillar_contacts(gdf, sgascutoff=0.05)["GOC"].values[0] == 945
-    assert pillars.compute_pillar_contacts(gdf, sgascutoff=0.4)["GOC"].values[0] == 942
-    assert pillars.compute_pillar_contacts(gdf, sgascutoff=0.75)["GOC"].values[0] == 940
-
-    # Check default behaviour, this is allowed to change in the future.
-    def_contacts = pillars.compute_pillar_contacts(gdf)
-    assert def_contacts["OWC"].values[0] == 951
-    assert def_contacts["GOC"].values[0] == 940
 
 
 def test_main(tmpdir):

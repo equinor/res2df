@@ -286,47 +286,6 @@ def deck2dfs(
     )
 
 
-def postprocess():
-    """Postprocessing of the compdat data, merging.
-
-    This function is NOT FINISHED"""
-    # compdat_df = pd.read_csv("compdat.csv")
-    compsegs_df = pd.read_csv("compsegs.csv")
-    welsegs_df = pd.read_csv("welsegs.csv")
-
-    #  We need different handling of ICD's and non-ICD wells due
-    #  to the complex WELSEGS structure:
-    #
-    # ICD wells:
-    # 1. First compdata is merged with compsegs (non-ICD
-    #    should be stripped away).
-    # 2. Then that product is merged with welsegs on 'branch'
-    # 3. Then that product is merged again with welsegs, where
-    #    we join on 'join_segment' and 'segment'
-    # 4. Then we finally have the mapping between completed
-    #    cells and branch number
-    #
-    # Non-ICD wells:
-    # 1. Merge compdata and compsegs
-    # 2. Then we are ready.. compsegs contains the correct branch number
-
-    # compdatsegs = pd.merge(compdat_df,
-    #                        compsegs_df, on=["date", "well", "i", "j", "k"])
-    # WARNING: Only correct for dual-branch wells,
-    # not triple-branach wells with ICD..
-    compsegs_icd_df = compsegs_df[compsegs_df.branch > 2]
-    # icd_wells = compsegs_icd_df.well.unique()
-    compdatsegwel_icd_df = pd.merge(
-        compsegs_icd_df, welsegs_df, on=["date", "well", "branch"]
-    )
-    del compdatsegwel_icd_df["segment"]  # we don't need this
-    compdatsegwel_icd_df.rename(columns={"branch": "icd_branch"}, inplace=True)
-    compdatsegwel_icd_df.rename(columns={"join_segment": "segment"}, inplace=True)
-    # alldata_icd = pd.merge(
-    #     compdatsegwel_icd_df, welsegs_df, on=["date", "well", "segment"]
-    # )
-
-
 def expand_welopen_wildcards(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
     """Expand rows in welopen with well names containing wildcard characters,
     with the correct wells from compdat_df that was defined at that date

@@ -1088,6 +1088,200 @@ WELOPEN
     ],
 )
 def test_welopen_complump(test_input, expected):
+    """Test the welopen_complump functionality through Eclipse decks"""
     deck = EclFiles.str2deck(test_input)
     dfs = compdat.deck2dfs(deck)
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)
+
+
+@pytest.mark.parametrize(
+    "welopen, complump, expected",
+    [
+        pytest.param([], [], [], id="empty_input_empty_output"),
+        pytest.param(
+            [{"FOO": "BAR"}],
+            [],
+            [{"FOO": "BAR"}],
+            id="empty_complump_pass_through_welopen",
+        ),
+        pytest.param(
+            [{"WELL": "OP1", "C1": None, "C2": None}],
+            [],
+            [{"WELL": "OP1", "C1": None, "C2": None}],
+            id="pass_through_None_complumps",
+        ),
+        pytest.param(
+            [{"WELL": "OP1", "DATE": datetime.date(2000, 1, 1), "C1": 1, "C2": 1}],
+            [
+                {
+                    "WELL": "OP1",
+                    "DATE": datetime.date(2000, 1, 1),
+                    "STATUS": "OPEN",
+                    "I": 2,
+                    "J": 2,
+                    "K1": 2,
+                    "K2": 2,
+                    "N": 1,
+                }
+            ],
+            [
+                {
+                    "WELL": "OP1",
+                    "DATE": datetime.date(2000, 1, 1),
+                    "C1": None,
+                    "C2": None,
+                    "I": 2,
+                    "J": 2,
+                    "K": 2,
+                }
+            ],
+            id="basic",
+        ),
+        pytest.param(
+            [{"WELL": "OP1", "DATE": datetime.date(2000, 1, 1), "C1": 1, "C2": 1}],
+            [
+                {
+                    "WELL": "OP1",
+                    "DATE": datetime.date(2000, 1, 1),
+                    "STATUS": "OPEN",
+                    "I": 2,
+                    "J": 2,
+                    "K1": 2,
+                    "K2": 3,
+                    "N": 1,
+                }
+            ],
+            [],
+            id="k2_not_equal_kq_in_complump",
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ],
+)
+def test_welopen_complump_direct(welopen, complump, expected):
+    """Test the welopen_complump directly.
+
+    For situations not that easy to reach via string input."""
+    pd.testing.assert_frame_equal(
+        compdat.expand_complump_in_welopen_df(
+            pd.DataFrame(welopen), pd.DataFrame(complump)
+        ),
+        pd.DataFrame(expected),
+        check_dtype=False,
+    )
+
+
+@pytest.mark.parametrize(
+    "compdat_rows, welopen_rows, wlist_rows, complump_rows, expected_rows",
+    [
+        pytest.param([], [], [], [], [], id="emptyinput"),
+        pytest.param(
+            [{"WELL": "OP1"}],
+            [],
+            [{"ACTION": "ADD"}],
+            [],
+            [],
+            id="non-expanded_wlist",
+            # "The WLIST dataframe must be expanded through expand_wlist()"
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        pytest.param(
+            [{"WELL": "OP1", "I": 1, "J": 1, "K1": 1, "K2": 1}],
+            [{"WELL": "OP1", "STATUS": "SHUT", "I": 0, "J": 0, "K": 0}],
+            [],
+            [],
+            [],
+            id="no_keyword_idx",
+            # Column KEYWORD_IDX must be present in compdat rows
+            marks=pytest.mark.xfail(raises=KeyError),
+        ),
+        pytest.param(
+            [
+                {
+                    "WELL": "OP1",
+                    "I": 1,
+                    "J": 1,
+                    "K1": 1,
+                    "K2": 1,
+                    "KEYWORD_IDX": 1,
+                    "DATE": None,
+                }
+            ],
+            [
+                {
+                    "WELL": "OP1",
+                    "STATUS": "SHUT",
+                    "I": 0,
+                    "J": 0,
+                    "K": 0,
+                    "KEYWORD_IDX": 2,
+                    "DATE": None,
+                }
+            ],
+            [],
+            [],
+            [
+                {
+                    "WELL": "OP1",
+                    "I": 1,
+                    "J": 1,
+                    "K1": 1,
+                    "K2": 1,
+                    "KEYWORD_IDX": 2,
+                    "DATE": None,
+                    "OP/SH": "SHUT",
+                }
+            ],
+            id="working_example",
+        ),
+        pytest.param(
+            [
+                {
+                    "WELL": "OP1",
+                    "I": 1,
+                    "J": 1,
+                    "K1": 1,
+                    "K2": 1,
+                    "KEYWORD_IDX": 1,
+                    "DATE": None,
+                }
+            ],
+            [
+                {
+                    "WELL": "OP1",
+                    "STATUS": "SHUT",
+                    "I": 1,  # Either all zero or none nonzero
+                    "J": 0,
+                    "K": 0,
+                    "KEYWORD_IDX": 2,
+                    "DATE": None,
+                }
+            ],
+            [],
+            [],
+            [],
+            id="invalid welopen",
+            # " A WELOPEN keyword contains data that could not be parsed"
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ],
+)
+def test_applywelopen(
+    compdat_rows, welopen_rows, wlist_rows, complump_rows, expected_rows
+):
+    print(
+        compdat.applywelopen(
+            pd.DataFrame(compdat_rows),
+            pd.DataFrame(welopen_rows),
+            pd.DataFrame(wlist_rows),
+            pd.DataFrame(complump_rows),
+        ).to_dict(orient="records")
+    )
+    pd.testing.assert_frame_equal(
+        compdat.applywelopen(
+            pd.DataFrame(compdat_rows),
+            pd.DataFrame(welopen_rows),
+            pd.DataFrame(wlist_rows),
+            pd.DataFrame(complump_rows),
+        ),
+        pd.DataFrame(expected_rows),
+    )

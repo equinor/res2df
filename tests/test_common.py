@@ -7,6 +7,13 @@ import pytest
 
 from ecl2df import common, eclfiles, equil
 
+try:
+    import opm  # noqa
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
+
 
 def test_opmkeywords():
     """Test that we have loaded some keyword metadata from json files on disk"""
@@ -121,6 +128,7 @@ def test_parse_opmio_deckrecord():
         common.parse_opmio_deckrecord(None, "FOOBAR")
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="OPM is not installed")
 @pytest.mark.parametrize(
     "wanted, deckstr, supported, expected",
     [

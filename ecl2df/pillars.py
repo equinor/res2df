@@ -140,7 +140,7 @@ def df(
 
 def compute_volumes(
     grid_df: pd.DataFrame, datestr: Optional[str] = None
-) -> Dict[str, float]:
+) -> pd.DataFrame:
     """Compute "dynamic" volumes, volumes for data coming from the
     UNRST file (SWAT+SGAS)
 
@@ -176,14 +176,14 @@ def compute_volumes(
     if "SOIL" + atdatestr in vols:
         vols["OILVOL" + atdatestr] = vols["SOIL" + atdatestr] * grid_df["PORV"]
 
-    if "1OVERBO" + atdatestr in grid_df and "OILVOL" + atdatestr in grid_df:
+    if "1OVERBO" + atdatestr in grid_df and "OILVOL" + atdatestr in vols:
         vols["OILVOLSURF" + atdatestr] = (
-            grid_df["OILVOL" + atdatestr] * grid_df["1OVERBO" + atdatestr]
+            vols["OILVOL" + atdatestr] * grid_df["1OVERBO" + atdatestr]
         )
 
-    if "1OVERBG" + atdatestr in grid_df and "GASVOL" + atdatestr in grid_df:
+    if "1OVERBG" + atdatestr in grid_df and "GASVOL" + atdatestr in vols:
         vols["GASVOLSURF" + atdatestr] = (
-            grid_df["GASVOL" + atdatestr] * grid_df["1OVERBG" + atdatestr]
+            vols["GASVOL" + atdatestr] * grid_df["1OVERBG" + atdatestr]
         )
     return vols
 
@@ -250,6 +250,10 @@ def compute_pillar_contacts(
     if "PILLAR" not in grid_df:
         grid_df["PILLAR"] = grid_df["I"].astype(str) + "-" + grid_df["J"].astype(str)
 
+    if "Z" not in grid_df:
+        # To ensure same exception across Python 3.x:
+        raise KeyError("Z column must be present in dataframe")
+
     if region:
         groupbies.append(region)
     owc = pd.DataFrame()
@@ -315,9 +319,7 @@ def compute_pillar_contacts(
         return owc
     if owc.empty and not goc.empty:
         return goc
-    if not owc.empty and not goc.empty:
-        return pd.merge(owc, goc)
-    return pd.DataFrame()
+    return pd.merge(owc, goc)
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

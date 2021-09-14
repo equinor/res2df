@@ -8,6 +8,15 @@ import pytest
 
 from ecl2df import EclFiles, compdat, ecl2csv
 
+try:
+    import opm  # noqa
+except ImportError:
+    pytest.skip(
+        "OPM is not installed",
+        allow_module_level=True,
+    )
+
+
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
@@ -180,8 +189,23 @@ COMPDAT
     assert "2001-05-02" in dates
     assert "2001-05-07" in dates
 
+    schstr_nodate = """
+COMPDAT
+ 'OP1' 33 110 31 31 'OPEN'  /
+/
 
-def test_applywelopen():
+TSTEP
+  1 /
+
+COMPDAT
+ 'OP1' 34 111 32 32 'OPEN' /
+/
+    """
+    assert compdat.deck2dfs(EclFiles.str2deck(schstr_nodate)) == {}
+    # (critical error logged)
+
+
+def test_applywelopen_stringdeck():
     schstr = """
 DATES
    1 MAY 2001 /
@@ -370,9 +394,14 @@ WELSPECS
   OP1 OPWEST 20 30 1000 /
 /
 """
-    compdat_str = """
+    compdat_str_def_i = """
 COMPDAT
   'OP1' 1* 0 10 11  /
+/
+"""
+    compdat_str_def_j = """
+COMPDAT
+  'OP1' 20 1* 10 11  /
 /
 """
     compdat_str_nodefaults = """
@@ -381,15 +410,30 @@ COMPDAT
 /
 """
 
-    with pytest.raises(ValueError, match="WELSPECS must be provided"):
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str))["COMPDAT"]
+    with pytest.raises(ValueError, match="WELSPECS must be provided when I"):
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i))["COMPDAT"]
+
+    # I value of 0 also means defaulted:
+    with pytest.raises(ValueError, match="WELSPECS must be provided when I"):
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i.replace("1*", "0")))[
+            "COMPDAT"
+        ]
+
+    with pytest.raises(ValueError, match="WELSPECS must be provided when J"):
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_j))["COMPDAT"]
+
+    # J value of 0 also means defaulted:
+    with pytest.raises(ValueError, match="WELSPECS must be provided when J"):
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_j.replace("1*", "0")))[
+            "COMPDAT"
+        ]
 
     with pytest.raises(ValueError, match="WELSPECS must be provided"):
         # Wrong order:
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str + welspecs_str))["COMPDAT"]
+        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i + welspecs_str))["COMPDAT"]
 
     # Simplest example:
-    compdat_df = compdat.deck2dfs(EclFiles.str2deck(welspecs_str + compdat_str))[
+    compdat_df = compdat.deck2dfs(EclFiles.str2deck(welspecs_str + compdat_str_def_i))[
         "COMPDAT"
     ]
     assert compdat_df["I"].unique() == [20]
@@ -400,13 +444,13 @@ COMPDAT
         EclFiles.str2deck(
             welspecs_str.replace("OP1", "OP2").replace("30", "99")
             + welspecs_str
-            + compdat_str
+            + compdat_str_def_i
         )
     )["COMPDAT"]
 
     # Partial defaulting
     compdat_df = compdat.deck2dfs(
-        EclFiles.str2deck(welspecs_str + compdat_str + compdat_str_nodefaults)
+        EclFiles.str2deck(welspecs_str + compdat_str_def_i + compdat_str_nodefaults)
     )["COMPDAT"]
 
     assert set(compdat_df["I"].unique()) == {20, 55}
@@ -416,8 +460,8 @@ COMPDAT
         EclFiles.str2deck(
             welspecs_str.replace("OP1", "OP2").replace("30", "99")
             + welspecs_str
-            + compdat_str
-            + compdat_str.replace("OP1", "OP2")
+            + compdat_str_def_i
+            + compdat_str_def_i.replace("OP1", "OP2")
         )
     )["COMPDAT"]
 
@@ -431,10 +475,10 @@ COMPDAT
         EclFiles.str2deck(
             "DATES\n  1 JAN 2030 /\n/\n"
             + welspecs_str
-            + compdat_str
+            + compdat_str_def_i
             + "DATES\n  1 JAN 2040 /\n/\n"
             + welspecs_str.replace("30", "33")
-            + compdat_str
+            + compdat_str_def_i
         )
     )["COMPDAT"]
     assert compdat_df[compdat_df["DATE"].astype(str) == "2030-01-01"]["J"].unique() == [

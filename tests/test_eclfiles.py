@@ -1,12 +1,23 @@
 import os
 from pathlib import Path
 
+import pytest
+
 from ecl2df import EclFiles
+
+try:
+    import opm  # noqa
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
+
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="OPM is not installed")
 def test_filedescriptors():
     """Test that filedescriptors are properly closed"""
 

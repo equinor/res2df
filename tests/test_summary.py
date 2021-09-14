@@ -23,6 +23,13 @@ from ecl2df.summary import (
     smry_meta,
 )
 
+try:
+    import opm  # noqa
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
+
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
@@ -933,6 +940,7 @@ def test_df2eclsum_datetimeindex():
     assert roundtrip["FOPT"].values == [1000]
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
 def test_ecl2df_errors(tmpdir):
     """Test error handling on bogus/corrupted summary files"""
     tmpdir.chdir()

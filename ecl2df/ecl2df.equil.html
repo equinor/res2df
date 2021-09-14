@@ -1,80 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>ecl2df.equil &mdash; ecl2df 0.14.1.dev6+g2b60084 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ecl2df.faults" href="ecl2df.faults.html" />
     <link rel="prev" title="ecl2df.eclfiles" href="ecl2df.eclfiles.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> ecl2df
-          
-
-          
-            
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.14.1.dev6+g2b60084
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -82,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage and examples</a></li>
@@ -135,79 +82,37 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">ecl2df</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a> &raquo;</li>
-        
       <li><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/ecl2df/ecl2df.equil.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="module-ecl2df.equil">
-<span id="ecl2df-equil"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code><a class="headerlink" href="#module-ecl2df.equil" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="module-ecl2df.equil">
+<span id="ecl2df-equil"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code><a class="headerlink" href="#module-ecl2df.equil" title="Permalink to this headline"></a></h1>
 <p>Extract EQUIL from an Eclipse deck as Pandas DataFrame</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df" title="Permalink to this definition"></a></dt>
 <dd><p>Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
 PBVD and PDVD.</p>
 <p>How each data value in the EQUIL records are to be interpreted
@@ -241,7 +146,7 @@ None and EQLDIMS is not present, it will be inferred.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df2ecl">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">withphases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">withphases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl" title="Permalink to this definition"></a></dt>
 <dd><p>Generate Eclipse include strings from dataframes with
 solution (EQUIL, RSVD++) data.</p>
 <dl class="field-list simple">
@@ -268,7 +173,7 @@ to file.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df2ecl_equil">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_equil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_equil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_equil" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_equil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_equil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_equil" title="Permalink to this definition"></a></dt>
 <dd><p>Print EQUIL keyword with data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -285,7 +190,7 @@ to file.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df2ecl_pbvd">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_pbvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_pbvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_pbvd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_pbvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_pbvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_pbvd" title="Permalink to this definition"></a></dt>
 <dd><p>Print PBVD keyword with data</p>
 <p>Bubble-point versus depth</p>
 <p>This data consists of one table (Pb as a function
@@ -305,7 +210,7 @@ of depth) for each EQLNUM</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df2ecl_pdvd">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_pdvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_pdvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_pdvd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_pdvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_pdvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_pdvd" title="Permalink to this definition"></a></dt>
 <dd><p>Print PDVD keyword with data.</p>
 <p>Dew-point versus depth.</p>
 <p>This data consists of one table (Pd as a function
@@ -322,7 +227,7 @@ of depth) for each EQLNUM</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df2ecl_rsvd">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_rsvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_rsvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_rsvd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_rsvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_rsvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_rsvd" title="Permalink to this definition"></a></dt>
 <dd><p>Print RSVD keyword with data</p>
 <p>This data consists of one table (rs as a function
 of depth) for each EQLNUM</p>
@@ -341,7 +246,7 @@ of depth) for each EQLNUM</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.df2ecl_rvvd">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_rvvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_rvvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_rvvd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2ecl_rvvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#df2ecl_rvvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.df2ecl_rvvd" title="Permalink to this definition"></a></dt>
 <dd><p>Print RVVD keyword with data</p>
 <p>This data consists of one table (rv as a function
 of depth) for each EQLNUM</p>
@@ -360,7 +265,7 @@ of depth) for each EQLNUM</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.equil_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#equil_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.equil_fromdeck" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#equil_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.equil_fromdeck" title="Permalink to this definition"></a></dt>
 <dd><p>Extract EQUIL data from a deck</p>
 <p>If the deck is supplied as a string object, the number
 of EQLNUM regions will be inferred if needed.</p>
@@ -379,7 +284,7 @@ of EQLNUM regions will be inferred if needed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.equil_main">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#equil_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.equil_main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#equil_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.equil_main" title="Permalink to this definition"></a></dt>
 <dd><p>Read from disk and write CSV back to disk</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -390,7 +295,7 @@ of EQLNUM regions will be inferred if needed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.equil_reverse_main">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#equil_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.equil_reverse_main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#equil_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.equil_reverse_main" title="Permalink to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility for CSV to Eclipse</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -401,7 +306,7 @@ of EQLNUM regions will be inferred if needed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.fill_parser">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.fill_parser" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.fill_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -416,7 +321,7 @@ fill with arguments</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.fill_reverse_parser">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.fill_reverse_parser" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.fill_reverse_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Fill a parser for the operation dataframe -&gt; eclipse include file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -427,7 +332,7 @@ fill with arguments</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.pbvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">pbvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#pbvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.pbvd_fromdeck" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">pbvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#pbvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.pbvd_fromdeck" title="Permalink to this definition"></a></dt>
 <dd><p>Extract PBVD data from a deck</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -445,7 +350,7 @@ be inferred if not present in deck</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.pdvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">pdvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#pdvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.pdvd_fromdeck" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">pdvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#pdvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.pdvd_fromdeck" title="Permalink to this definition"></a></dt>
 <dd><p>Extract PDVD data from a deck</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -463,7 +368,7 @@ be inferred if not present in deck</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.phases_from_columns">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#phases_from_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.phases_from_columns" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#phases_from_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.phases_from_columns" title="Permalink to this definition"></a></dt>
 <dd><p>Determine the set of phases available in an
 equil dataframe, based on which columns are there.
 Returns “oil-water-gas”, “gas-water”, “oil-water”,
@@ -484,7 +389,7 @@ or “oil-gas”</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.phases_from_deck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#phases_from_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.phases_from_deck" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#phases_from_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.phases_from_deck" title="Permalink to this definition"></a></dt>
 <dd><p>Determined the set of phases from a deck, as
 a string with values “oil-water-gas”, “gas-water”, “oil-water”,
 or “oil-gas”</p>
@@ -503,7 +408,7 @@ or “oil-gas”</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.rsvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">rsvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#rsvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.rsvd_fromdeck" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">rsvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#rsvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.rsvd_fromdeck" title="Permalink to this definition"></a></dt>
 <dd><p>Extract RSVD data from a deck</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -521,7 +426,7 @@ be inferred if not present in deck</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.equil.rvvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">rvvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#rvvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.rvvd_fromdeck" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.equil.</span></span><span class="sig-name descname"><span class="pre">rvvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/equil.html#rvvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.equil.rvvd_fromdeck" title="Permalink to this definition"></a></dt>
 <dd><p>Extract RVVD data from a deck</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -537,54 +442,37 @@ be inferred if not present in deck</p></li>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ecl2df.faults.html" class="btn btn-neutral float-right" title="ecl2df.faults" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ecl2df.eclfiles.html" class="btn btn-neutral float-left" title="ecl2df.eclfiles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ecl2df.faults.html" class="btn btn-neutral float-right" title="ecl2df.faults" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright Equinor 2019-2021.
-
-    </p>
+    <p>&#169; Copyright Equinor 2019-2021.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-    
+  </script>  
 
   <style>
     /* Sidebar header (and topbar for mobile) */

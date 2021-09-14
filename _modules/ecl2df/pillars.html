@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.pillars &mdash; ecl2df 0.14.1.dev6+g2b60084 documentation</title>
+  <title>ecl2df.pillars &mdash; ecl2df 0.14.1.dev8+g174924c documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev6+g2b60084
+                0.14.1.dev8+g174924c
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -219,7 +219,7 @@
 
 <div class="viewcode-block" id="compute_volumes"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.compute_volumes">[docs]</a><span class="k">def</span> <span class="nf">compute_volumes</span><span class="p">(</span>
     <span class="n">grid_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">datestr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Compute &quot;dynamic&quot; volumes, volumes for data coming from the</span>
 <span class="sd">    UNRST file (SWAT+SGAS)</span>
 
@@ -255,14 +255,14 @@
     <span class="k">if</span> <span class="s2">&quot;SOIL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">vols</span><span class="p">:</span>
         <span class="n">vols</span><span class="p">[</span><span class="s2">&quot;OILVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">=</span> <span class="n">vols</span><span class="p">[</span><span class="s2">&quot;SOIL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="s2">&quot;1OVERBO&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span> <span class="ow">and</span> <span class="s2">&quot;OILVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;1OVERBO&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span> <span class="ow">and</span> <span class="s2">&quot;OILVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">vols</span><span class="p">:</span>
         <span class="n">vols</span><span class="p">[</span><span class="s2">&quot;OILVOLSURF&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;OILVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;1OVERBO&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span>
+            <span class="n">vols</span><span class="p">[</span><span class="s2">&quot;OILVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;1OVERBO&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;1OVERBG&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span> <span class="ow">and</span> <span class="s2">&quot;GASVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;1OVERBG&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span> <span class="ow">and</span> <span class="s2">&quot;GASVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">vols</span><span class="p">:</span>
         <span class="n">vols</span><span class="p">[</span><span class="s2">&quot;GASVOLSURF&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;GASVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;1OVERBG&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span>
+            <span class="n">vols</span><span class="p">[</span><span class="s2">&quot;GASVOL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;1OVERBG&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">vols</span></div>
 
@@ -329,6 +329,10 @@
     <span class="k">if</span> <span class="s2">&quot;PILLAR&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
         <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="s2">&quot;Z&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
+        <span class="c1"># To ensure same exception across Python 3.x:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Z column must be present in dataframe&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">region</span><span class="p">:</span>
         <span class="n">groupbies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
     <span class="n">owc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -394,9 +398,7 @@
         <span class="k">return</span> <span class="n">owc</span>
     <span class="k">if</span> <span class="n">owc</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">goc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">goc</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">owc</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">goc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">owc</span><span class="p">,</span> <span class="n">goc</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">owc</span><span class="p">,</span> <span class="n">goc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.pillars.html#ecl2df.pillars.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>

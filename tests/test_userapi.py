@@ -2,12 +2,22 @@
 
 from pathlib import Path
 
+import pytest
+
 import ecl2df
+
+try:
+    import opm  # noqa
+
+    HAVE_OPM = True
+except ImportError:
+    HAVE_OPM = False
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
+@pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
 def test_userapi():
     """Test that we can act as human API user
 

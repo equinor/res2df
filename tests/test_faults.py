@@ -5,9 +5,18 @@ import subprocess
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from ecl2df import ecl2csv, faults
 from ecl2df.eclfiles import EclFiles
+
+try:
+    import opm  # noqa
+except ImportError:
+    pytest.skip(
+        "OPM is not installed, nothing relevant in here then",
+        allow_module_level=True,
+    )
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

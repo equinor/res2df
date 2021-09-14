@@ -6,6 +6,14 @@ import pytest
 
 import ecl2df
 
+try:
+    import opm  # noqa
+except ImportError:
+    pytest.skip(
+        "OPM is not installed, command line client does not work without it.",
+        allow_module_level=True,
+    )
+
 
 @pytest.mark.integration
 def test_integration():

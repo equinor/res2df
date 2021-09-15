@@ -12,7 +12,8 @@ from ecl2df import ecl2csv, rft
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 # pylint: disable=protected-access
 
@@ -20,7 +21,7 @@ DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_rftrecords2df():
     """Test that we can construct a dataframe for navigating in RFT
     records"""
-    rftrecs = rft._rftrecords2df(EclFiles(DATAFILE).get_rftfile())
+    rftrecs = rft._rftrecords2df(EclFiles(EIGHTCELLS).get_rftfile())
     assert len(rftrecs[rftrecs["recordname"] == "TIME"]) == len(
         rftrecs["timeindex"].unique()
     )
@@ -35,7 +36,7 @@ def test_rftrecords2df():
 def test_rftrecords_generator():
     """Test the generator that will iterate over an EclFile/RFTFile
     and provide one yield pr.  well pr. date"""
-    for rftrecord in rft.rftrecords(EclFiles(DATAFILE).get_rftfile()):
+    for rftrecord in rft.rftrecords(EclFiles(EIGHTCELLS).get_rftfile()):
         assert isinstance(rftrecord, dict)
         assert "date" in rftrecord
         assert isinstance(rftrecord["date"], datetime.date)
@@ -50,7 +51,7 @@ def test_rftrecords_generator():
 
 def test_get_con_seg_data():
     """Get CON data. Later add more code here to defend the name"""
-    rftfile = EclFiles(DATAFILE).get_rftfile()
+    rftfile = EclFiles(EIGHTCELLS).get_rftfile()
 
     # Test the first record, it is a CON type (not multisegment)
     rftrecord = next(rft.rftrecords(rftfile))
@@ -460,7 +461,7 @@ def test_add_extras(dframe, inplace, expected):
 
 def test_rft2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     rftdf = rft.df(eclfiles)
     assert "ZONE" in rftdf
     assert "LEAF" not in rftdf  # Topology metadata should not be exported
@@ -485,7 +486,7 @@ def test_rft2df():
 def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / ".TMP-rft.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "rft", DATAFILE, "-o", str(tmpcsvfile)])
+    mocker.patch("sys.argv", ["ecl2csv", "rft", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -498,7 +499,7 @@ def test_main_subparsers(tmpdir, mocker):
         "ecl2cvsv",
         "rft",
         "-v",
-        DATAFILE.replace(".DATA", ".RFT"),
+        REEK.replace(".DATA", ".RFT"),
         "-o",
         str(tmpcsvfile),
     ]
@@ -512,7 +513,7 @@ def test_main_debugmode(tmpdir, mocker):
     """Test debug mode"""
     tmpdir.chdir()
     mocker.patch(
-        "sys.argv", ["ecl2csv", "rft", "--debug", DATAFILE, "-o", "indebugmode.csv"]
+        "sys.argv", ["ecl2csv", "rft", "--debug", EIGHTCELLS, "-o", "indebugmode.csv"]
     )
     ecl2csv.main()
     # Extra files emitted in debug mode:

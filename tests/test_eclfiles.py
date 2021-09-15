@@ -14,7 +14,7 @@ except ImportError:
 
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="OPM is not installed")
@@ -28,7 +28,7 @@ def test_filedescriptors():
 
     pre_fd_count = len(list(fd_dir.glob("*")))
 
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     # No opened files yet:
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
 

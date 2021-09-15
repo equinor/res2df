@@ -10,12 +10,12 @@ from ecl2df import ecl2csv, grid, pillars
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_pillars():
     """Test that we can build a dataframe of pillar statistics"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     pillars_df = pillars.df(eclfiles)
     assert "PILLAR" in pillars_df
     assert "VOLUME" in pillars_df
@@ -325,7 +325,7 @@ def test_compute_volumes(dframe, datestr, expectedrows):
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "pillars.csv"
-    sys.argv = ["ecl2csv", "pillars", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "pillars", REEK, "-o", str(tmpcsvfile)]
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -337,7 +337,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "",
         "--group",
@@ -358,7 +358,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "FIPNUM",
         "-o",
@@ -376,7 +376,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "FIPNUM",
         "--group",
@@ -394,7 +394,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "",
         "--group",
@@ -420,7 +420,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "",
         "--group",
@@ -446,7 +446,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "",
         "--group",
@@ -470,7 +470,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "",
         "--group",
@@ -497,7 +497,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "pillars",
-        DATAFILE,
+        REEK,
         "--region",
         "FIPNUM",
         "--rstdates",
@@ -521,7 +521,7 @@ def test_main(tmpdir):
         "ecl2csv",
         "pillars",
         "-v",
-        DATAFILE,
+        REEK,
         "--rstdates",
         "all",
         "--stackdates",

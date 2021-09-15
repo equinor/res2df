@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from .test_grid import DATAFILE
+from .test_grid import EIGHTCELLS
 
 try:
     import opm  # noqa
@@ -18,7 +18,7 @@ except ImportError:
 @pytest.mark.parametrize("verbose", [False, True])
 def test_grid_logging(tmp_path, verbose):
 
-    commands = ["ecl2csv", "grid", DATAFILE, "--output", tmp_path / "eclgrid.csv"]
+    commands = ["ecl2csv", "grid", EIGHTCELLS, "--output", tmp_path / "eclgrid.csv"]
     if verbose:
         commands.append("-v")
 

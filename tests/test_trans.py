@@ -18,12 +18,13 @@ from ecl2df import ecl2csv, trans
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_trans():
     """Test that we can build a dataframe of transmissibilities"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     trans_df = trans.df(eclfiles)
     assert "TRAN" in trans_df
     assert "DIR" in trans_df
@@ -70,7 +71,7 @@ def test_trans():
 
 def test_grouptrans():
     """Test grouping of transmissibilities"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     trans_df = trans.df(eclfiles, vectors="FIPNUM", group=True, coords=True)
     assert "FIPNUMPAIR" in trans_df
     assert "FIPNUM1" in trans_df
@@ -86,7 +87,7 @@ def test_grouptrans():
 @pytest.mark.skipif(not HAVE_NETWORKX, reason="Requires networkx being installed")
 def test_nx(tmpdir):
     """Test graph generation"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     network = trans.make_nx_graph(eclfiles, region="FIPNUM")
     assert network.number_of_nodes() == 6
     networkx.write_gexf(
@@ -98,7 +99,7 @@ def test_nx(tmpdir):
 def test_main(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "trans.csv"
-    sys.argv = ["ecl2csv", "trans", "-v", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

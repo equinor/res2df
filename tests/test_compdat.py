@@ -18,7 +18,8 @@ except ImportError:
 
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 SCHFILE = str(TESTDIR / "data/reek/eclipse/include/schedule/reek_history.sch")
 
@@ -31,7 +32,7 @@ SCHFILE_VALV = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_valve1_gp.s
 
 def test_df():
     """Test main dataframe API, only testing that something comes out"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     compdat_df = compdat.df(eclfiles)
     assert not compdat_df.empty
     assert "ZONE" in compdat_df
@@ -41,11 +42,11 @@ def test_df():
 
 def test_comp2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     compdfs = compdat.deck2dfs(eclfiles.get_ecldeck())
 
     assert not compdfs["COMPDAT"].empty
-    assert compdfs["WELSEGS"].empty  # REEK demo does not include multisegment wells
+    assert compdfs["WELSEGS"].empty
     assert compdfs["COMPSEGS"].empty
     assert not compdfs["COMPDAT"].columns.empty
 
@@ -318,7 +319,7 @@ def test_unrollbogus():
 
 def test_initmerging():
     """Test that we can ask for INIT vectors to be merged into the data"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     noinit_df = compdat.df(eclfiles)
     df = compdat.df(eclfiles, initvectors=[])
     assert isinstance(df, pd.DataFrame)
@@ -341,7 +342,7 @@ def test_initmerging():
 def test_main_subparsers(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "compdat.csv"
-    sys.argv = ["ecl2csv", "compdat", "-v", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -352,7 +353,7 @@ def test_main_subparsers(tmpdir):
     sys.argv = [
         "ecl2csv",
         "compdat",
-        DATAFILE,
+        EIGHTCELLS,
         "--initvectors",
         "FIPNUM",
         "-o",
@@ -368,7 +369,7 @@ def test_main_subparsers(tmpdir):
     sys.argv = [
         "ecl2csv",
         "compdat",
-        DATAFILE,
+        EIGHTCELLS,
         "--initvectors",
         "FIPNUM",
         "EQLNUM",

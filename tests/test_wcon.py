@@ -18,12 +18,12 @@ except ImportError:
         allow_module_level=True,
     )
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_wcon2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     wcondf = wcon.df(eclfiles.get_ecldeck())
 
     assert not wcondf.empty
@@ -218,7 +218,7 @@ WCONHIST
 def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / ".TMP-wcondf.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "wcon", DATAFILE, "-o", str(tmpcsvfile)])
+    mocker.patch("sys.argv", ["ecl2csv", "wcon", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -229,7 +229,7 @@ def test_main_subparsers(tmpdir, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "wcon", "-v", "-o", "-", DATAFILE],
+        ["ecl2csv", "wcon", "-v", "-o", "-", EIGHTCELLS],
         check=True,
         stdout=subprocess.PIPE,
     )

@@ -18,12 +18,14 @@ except ImportError:
     )
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+# EIGTHCELLS is to be used in test_main_subparser when #356 is solved:
+# EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_gruptree2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     grupdf = gruptree.df(eclfiles.get_ecldeck())
 
     assert not grupdf.empty
@@ -446,7 +448,7 @@ WELSPECS
 def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("gruptree.csv")
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", DATAFILE, "-o", str(tmpcsvfile)])
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -456,7 +458,7 @@ def test_main(tmpdir, mocker):
 
 def test_prettyprint_commandline(mocker, capsys):
     """Test pretty printing via command line interface"""
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", DATAFILE, "--prettyprint"])
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", REEK, "--prettyprint"])
     ecl2csv.main()
     stdout = capsys.readouterr().out.strip()
     print(stdout)
@@ -527,9 +529,7 @@ FIELD
 def test_main_subparser(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("gruptree.csv")
-    mocker.patch(
-        "sys.argv", ["ecl2csv", "gruptree", "-v", DATAFILE, "-o", str(tmpcsvfile)]
-    )
+    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "-v", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()

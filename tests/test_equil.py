@@ -20,12 +20,13 @@ except ImportError:
 
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_equil2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     equildf = equil.df(eclfiles)
     expected = {}
     expected["EQUIL"] = pd.DataFrame(
@@ -82,7 +83,7 @@ def test_equil2df():
 def test_df2ecl(tmpdir):
     """Test that we can write include files to disk"""
     tmpdir.chdir()
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     equildf = equil.df(eclfiles)
     equil.df2ecl(equildf, filename="equil.inc")
     assert Path("equil.inc").is_file()
@@ -539,7 +540,7 @@ def test_main_subparser(tmpdir, mocker, capsys):
     """Test command line interface"""
     tmpdir.chdir()
     tmpcsvfile = "equil.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", DATAFILE, "-o", tmpcsvfile])
+    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", REEK, "-o", tmpcsvfile])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()

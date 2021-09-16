@@ -46,8 +46,8 @@ def test_comp2df():
     compdfs = compdat.deck2dfs(eclfiles.get_ecldeck())
 
     assert not compdfs["COMPDAT"].empty
-    assert compdfs["WELSEGS"].empty
-    assert compdfs["COMPSEGS"].empty
+    assert not compdfs["WELSEGS"].empty
+    assert not compdfs["COMPSEGS"].empty
     assert not compdfs["COMPDAT"].columns.empty
 
 

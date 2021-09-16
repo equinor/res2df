@@ -123,16 +123,10 @@ def df(
                     steplist = parse_opmio_tstep_rec(rec)
                     # Assuming not LAB units, then the unit is days.
                     days = sum(steplist)
-                    if days <= 0:
-                        logger.critical("Invalid TSTEP, summed to %s days", str(days))
-                        return pd.DataFrame()
                     date += datetime.timedelta(days=days)
                     logger.info(
                         "Advancing %s days to %s through TSTEP", str(days), str(date)
                     )
-            else:
-                logger.critical("BUG: Should not get here")
-                return pd.DataFrame()
         if kword.name in ["GRUPTREE", "BRANPROP"]:
             found_keywords[kword.name] = True
             renamer = (

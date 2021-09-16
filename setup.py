@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 try:
     from sphinx.setup_command import BuildDoc
@@ -20,6 +20,7 @@ REQUIREMENTS = [
     "numpy",
     "opm>=2020.10.2",  # NB: Pypi versions.
     "pandas",
+    "pyarrow",
     "pyyaml>=5.1",
     "treelib",
 ]
@@ -63,6 +64,7 @@ setup(
         "console_scripts": [
             "csv2ecl=ecl2df.csv2ecl:main",
             "ecl2csv=ecl2df.ecl2csv:main",
+            "ecl2arrow=ecl2df.ecl2csv:main",
         ],
         "ert": ["ecl2df_jobs = ecl2df.hook_implementations.jobs"],
     },

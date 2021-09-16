@@ -286,6 +286,8 @@ def main() -> None:
     """Entry point"""
     parser = get_parser()
     args = parser.parse_args()
+    if "arrow" in parser.prog:
+        args.__dict__["arrow"] = True
     args.func(args)
 
 

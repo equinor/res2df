@@ -12,6 +12,8 @@ from typing import Any, Dict, List, Optional, Union
 import dateutil
 import numpy as np
 import pandas as pd
+import pyarrow
+import pyarrow.feather
 from ecl.summary import EclSum, EclSumKeyWordVector
 
 from ecl2df import getLogger_ecl2csv
@@ -436,6 +438,48 @@ def df(
     return dframe
 
 
+def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
+    """Construct a Pyarrow table from a dataframe, conserving metadata.
+
+    All integer columns will have datatype int32, all floats will have float32
+    as this is Eclipse specific.
+
+    Metadata values will be written as strings. A True property is thus
+    represented as the string "True" in the arrow object.
+
+    The index in the dataframe is always assumed to be a time-index, but
+    not necessarily a Pandas datetimetype (which is only of nanosecond precision).
+    This index is always named DATE in the pyarrow table.
+    """
+
+    field_list: List[pyarrow.Field] = []
+    field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
+    column_arrays = [dframe.index.to_numpy()]
+
+    for colname in dframe.columns:
+        if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
+            # Boolean objects in the metadata dictionary must be converted to bytes:
+            field_metadata = {
+                bytes(key, encoding="ascii"): bytes(str(value), encoding="ascii")
+                for key, value in dframe.attrs["meta"][colname].items()
+            }
+        else:
+            field_metadata = {}
+        if pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
+            dtype = pyarrow.int32()
+        elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
+            # Parameters are potentially merged into the dataframe.
+            dtype = pyarrow.string()
+        else:
+            dtype = pyarrow.float32()
+        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
+        column_arrays.append(dframe[colname].to_numpy())
+
+    schema = pyarrow.schema(field_list)
+
+    return pyarrow.table(column_arrays, schema=schema)
+
+
 def _merge_params(
     dframe: pd.DataFrame,
     paramfile: Optional[Union[str, Path]] = None,
@@ -764,11 +808,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output csv file. Use '-' to write to stdout. "
-            "Default 'summary.csv'"
+            "Name of output file. Use '-' to write to stdout. " "Default 'summary.csv'"
         ),
         default="summary.csv",
     )
+    parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
+
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
 
@@ -797,6 +842,7 @@ def summary_main(args) -> None:
     eclbase = (
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
+
     eclfiles = EclFiles(eclbase)
     sum_df = df(
         eclfiles,
@@ -808,6 +854,9 @@ def summary_main(args) -> None:
         paramfile=args.paramfile,
         datetime=False,
     )
+    if args.arrow:
+        sum_df = _df2pyarrow(sum_df)
+
     write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
 
 

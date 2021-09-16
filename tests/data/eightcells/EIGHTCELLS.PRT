@@ -67,14 +67,12 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0: DIMENS
  0:   2 2 2 /
  0:
- 0:
  0: OIL
  0: WATER
  0: --GAS
  0:
  0: START
  0:   1 'JAN' 2000 /
- 0:
  0:
  0: TABDIMS
  0:   1 /
@@ -84,6 +82,9 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0:
  0: WELLDIMS
  0:   1 /
+ 0:
+ 0: WSEGDIMS
+ 0:   1 10 10 /
  0:
  0: UNIFOUT
  0:
@@ -186,6 +187,7 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0: -- datum pressure_datum owc/gwc pc@owc goc pc@goc item7 item8 oip_init
  0:   100 100 50 /
  0:
+ 0:
  0: RPTRST
  0:   ALLPROPS/
  0:
@@ -207,6 +209,18 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0:   OP1 1 1 1 1 OPEN 1* 1* 0.15  /
  0: /
  0:
+ 0:
+ 0: WELSEGS
+ 0:   OP1 5 5 1* INC /
+ 0:    2 2 1 1 10 10  0.015 0.0001 /
+ 0: /
+ 0:
+ 0: COMPSEGS
+ 0:  OP1 /
+ 0: --i j k branch len
+ 0:   1 1 1 1      10 10 Z /
+ 0: /
+ 0:
  0: WRFTPLT
  0:  '*' YES YES YES  /
  0: /
@@ -217,8 +231,6 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0:
  0: TSTEP
  0:   1 1 /
- 0:
- 0:
 
  ******** END OF INPUT DATA FOR RUN EIGHTCELLS
      1 READING RUNSPEC
@@ -229,8 +241,12 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
      6 READING TABDIMS
      7 READING EQLDIMS
      8 READING WELLDIMS
-     9 READING UNIFOUT
-    10 READING GRID
+     9 READING WSEGDIMS
+    10 READING UNIFOUT
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
+ @           CHECKING FOR LICENSES
+    11 READING GRID
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           CHECKING FOR LICENSES
@@ -241,16 +257,16 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           THE MEMORY REQUIRED TO PROCESS THE GRID SECTION IS
  @               167108 BYTES
-    11 READING NEWTRAN
-    12 READING COORD
-    13 READING ZCORN
-    14 READING PORO
-    15 READING PERMX
-    16 READING PERMY
-    17 READING PERMZ
-    18 READING GRIDFILE
-    19 READING INIT
-    20 READING PROPS
+    12 READING NEWTRAN
+    13 READING COORD
+    14 READING ZCORN
+    15 READING PORO
+    16 READING PERMX
+    17 READING PERMY
+    18 READING PERMZ
+    19 READING GRIDFILE
+    20 READING INIT
+    21 READING PROPS
 
  @--COMMENT  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           NO NON-NEIGHBOUR CONNECTIONS FOUND
@@ -260,36 +276,34 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           THE MEMORY REQUIRED TO PROCESS THE SOLUTION SECTION IS
- @               477948 BYTES
+ @               587020 BYTES
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @              62179 CHARACTER VARIABLES USED
-    21 READING SWOF
-    22 READING DENSITY
-    23 READING PVTW
-    24 READING PVDO
-    25 READING ROCK
-    26 READING FILLEPS
-    27 READING REGIONS
-    28 READING SATNUM
-    29 READING EQLNUM
-    30 READING SOLUTION
-    31 READING EQUIL
-    32 READING RPTRST
-    33 READING SUMMARY
-    34 READING FOPR
-    35 READING FOPT
-    36 READING WOPT
-    37 READING WOPR
-    38 READING SCHEDULE
-    39 READING WELSPECS
-    40 READING COMPDAT
-    41 READING WRFTPLT
-
- @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           WELL OP1      HAS NOT BEEN DECLARED A MULTI-SEGMENT WELL,
- @           SEGMENT DATA WILL NOT BE OUTPUT.
-    42 READING WCONPROD
+    22 READING SWOF
+    23 READING DENSITY
+    24 READING PVTW
+    25 READING PVDO
+    26 READING ROCK
+    27 READING FILLEPS
+    28 READING REGIONS
+    29 READING SATNUM
+    30 READING EQLNUM
+    31 READING SOLUTION
+    32 READING EQUIL
+    33 READING RPTRST
+    34 READING SUMMARY
+    35 READING FOPR
+    36 READING FOPT
+    37 READING WOPT
+    38 READING WOPR
+    39 READING SCHEDULE
+    40 READING WELSPECS
+    41 READING COMPDAT
+    42 READING WELSEGS
+    43 READING COMPSEGS
+    44 READING WRFTPLT
+    45 READING WCONPROD
 
  @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           THE BOTTOM HOLE PRESSURE LIMIT FOR WELL OP1
@@ -299,17 +313,13 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           OPENING WELL OP1      AT TIME      0.00   DAYS
  @           CONTROLLED BY OIL RATE
-    43 READING TSTEP
-
- @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
- @           SEGMENT DATA HAS BEEN REQUESTED FOR THE RFT FILE FOR
- @           WELL OP1      BUT THIS IS NOT A MULTI-SEGMENT WELL.
+    46 READING TSTEP
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           RESTART FILE WRITTEN   REPORT     0
 1                             **********************************************************************   1
   SIMULATE AT      0.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2
-  REPORT   0     1 JAN 2000   *EIGHTCELLS                                                              * RUN AT 14:12 ON 15 SEP 2021
+  REPORT   0     1 JAN 2000   *EIGHTCELLS                                                              * RUN AT 13:16 ON 16 SEP 2021
                               **************************************************************************
 
  STEP    1 TIME=      1.00  DAYS (    +1.0  DAYS REPT  2 ITS) (2-JAN-2000)
@@ -319,7 +329,7 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  @           RESTART FILE WRITTEN   REPORT     1
 1                             **********************************************************************   2
   SIMULATE AT      1.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2
-  REPORT   1     2 JAN 2000   *EIGHTCELLS                                                              * RUN AT 14:12 ON 15 SEP 2021
+  REPORT   1     2 JAN 2000   *EIGHTCELLS                                                              * RUN AT 13:16 ON 16 SEP 2021
                               **************************************************************************
 
  STEP    2 TIME=      2.00  DAYS (    +1.0  DAYS REPT  2 ITS) (3-JAN-2000)
@@ -327,20 +337,20 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
 
  @--MESSAGE  AT TIME        2.0   DAYS    ( 3-JAN-2000):
  @           RESTART FILE WRITTEN   REPORT     2
-    44 READING END
+    47 READING END
 1                             **********************************************************************   3
   END      AT      2.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2
-  REPORT   2     3 JAN 2000   *EIGHTCELLS                                                              * RUN AT 14:12 ON 15 SEP 2021
+  REPORT   2     3 JAN 2000   *EIGHTCELLS                                                              * RUN AT 13:16 ON 16 SEP 2021
                               **************************************************************************
             8 Mbytes of storage required
     1031.5912 KB/active cell
-          227 Mbytes (image size)
+          228 Mbytes (image size)
 
  Error summary
  Comments               1
- Warnings               3
+ Warnings               1
  Problems               0
  Errors                 0
  Bugs                   0
- Final cpu       0.09 elapsed       0.35
+ Final cpu       0.13 elapsed       0.56
  Total number of time steps forced to be accepted          0

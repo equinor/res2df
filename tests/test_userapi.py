@@ -14,7 +14,7 @@ except ImportError:
     HAVE_OPM = False
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
@@ -27,7 +27,7 @@ def test_userapi():
     To the user reading the source: Skip all 'assert' lines, read the rest.
 
     """
-    eclfiles = ecl2df.EclFiles(DATAFILE)
+    eclfiles = ecl2df.EclFiles(REEK)
 
     compdatdf = ecl2df.compdat.df(eclfiles)
     equil = ecl2df.equil.df(eclfiles)

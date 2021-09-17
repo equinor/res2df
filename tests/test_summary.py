@@ -31,14 +31,15 @@ except ImportError:
     HAVE_OPM = False
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 logging.basicConfig(level=logging.INFO)
 
 
 def test_df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     sumdf = summary.df(eclfiles)
 
     assert sumdf.index.name == "DATE"
@@ -62,7 +63,7 @@ def test_df():
 
 def test_df_column_keys():
     """Test that we can slice the dataframe on columns"""
-    sumdf = summary.df(EclFiles(DATAFILE), column_keys="FOPT")
+    sumdf = summary.df(EclFiles(REEK), column_keys="FOPT")
     assert set(sumdf.columns) == {"FOPT"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT"}
 
@@ -77,25 +78,25 @@ def test_df_column_keys():
         "FOPTF",
         "FOPP",
     }
-    sumdf = summary.df(EclFiles(DATAFILE), column_keys="FOP*")
+    sumdf = summary.df(EclFiles(REEK), column_keys="FOP*")
     assert set(sumdf.columns) == fop_cols
     assert set(sumdf.attrs["meta"].keys()) == fop_cols
 
-    sumdf = summary.df(EclFiles(DATAFILE), column_keys=["FOP*"])
+    sumdf = summary.df(EclFiles(REEK), column_keys=["FOP*"])
     assert set(sumdf.columns) == fop_cols
     assert set(sumdf.attrs["meta"].keys()) == fop_cols
 
-    sumdf = summary.df(EclFiles(DATAFILE), column_keys=["FOPR", "FOPT"])
+    sumdf = summary.df(EclFiles(REEK), column_keys=["FOPR", "FOPT"])
     assert set(sumdf.columns) == {"FOPT", "FOPR"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
     with pytest.raises(ValueError, match="No valid key"):
-        summary.df(EclFiles(DATAFILE), column_keys=["BOGUS"])
+        summary.df(EclFiles(REEK), column_keys=["BOGUS"])
 
 
 def test_summary2df_dates():
     """Test that we have some API possibilities with ISO dates"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
 
     sumdf = summary.df(
         eclfiles,
@@ -131,7 +132,7 @@ def test_ecl2csv_summary(tmpdir):
         "ecl2csv",
         "summary",
         "-v",
-        DATAFILE,
+        REEK,
         "-o",
         str(tmpcsvfile),
         "--start_date",
@@ -149,7 +150,7 @@ def test_ecl2csv_summary(tmpdir):
     sys.argv = [
         "ecl2csv",
         "summary",
-        DATAFILE,
+        REEK,
         "-o",
         str(tmpcsvfile),
         "--time_index",
@@ -178,13 +179,13 @@ def test_paramsupport(tmpdir):
     """
     tmpcsvfile = tmpdir / "sum.csv"
 
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
 
     parameterstxt = Path(eclfiles.get_path()) / "parameters.txt"
     if parameterstxt.is_file():
         parameterstxt.unlink()
     parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
-    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
+    sys.argv = ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
@@ -197,7 +198,7 @@ def test_paramsupport(tmpdir):
     if parametersyml.is_file():
         parametersyml.unlink()
     parametersyml.write_text(yaml.dump({"FOO": 1, "BAR": 3}), encoding="utf-8")
-    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile), "-p"]
+    sys.argv = ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
     ecl2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
@@ -232,7 +233,7 @@ def test_paramsupport(tmpdir):
 def test_main_subparser(tmpdir):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "sum.csv"
-    sys.argv = ["ecl2csv", "summary", DATAFILE, "-o", str(tmpcsvfile)]
+    sys.argv = ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)]
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -245,7 +246,7 @@ def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
     # realization-0 here has its last summary date at 2003-01-02
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily", datetime=True)
     assert str(daily.index[-1])[0:10] == "2003-01-02"
     monthly = summary.df(
@@ -261,7 +262,7 @@ def test_datenormalization():
 def test_extrapolation():
     """Summary data should be possible to extrapolate into
     the future, rates should be zero, cumulatives should be constant"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     lastfopt = summary.df(
         eclfiles, column_keys="FOPT", time_index="last", datetime=True
     )["FOPT"].values[0]
@@ -537,7 +538,7 @@ def test_date_range(start, end, freq, expected):
 def test_resample_smry_dates():
     """Test resampling of summary dates"""
 
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
 
     ecldates = eclfiles.get_eclsum().dates
 
@@ -698,7 +699,7 @@ def test_resample_smry_dates():
 
 def test_smry_meta():
     """Test obtaining metadata dictionary for summary vectors from an EclSum object"""
-    meta = smry_meta(EclFiles(DATAFILE))
+    meta = smry_meta(EclFiles(REEK))
 
     assert isinstance(meta, dict)
     assert "FOPT" in meta

@@ -12,12 +12,13 @@ from ecl2df import common, ecl2csv, grid
 from ecl2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS")
 
 
 def test_gridgeometry2df(mocker):
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     grid_geom = grid.gridgeometry2df(eclfiles)
 
     assert isinstance(grid_geom, pd.DataFrame)
@@ -66,7 +67,7 @@ def test_wrongfile():
 def test_gridzonemap():
     """Check that zonemap can be merged automatically be default, and also
     that there is some API for supplying the zonemap directly as a dictionary"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     grid_geom = grid.gridgeometry2df(eclfiles, zonemap=None)
 
     default_zonemap = grid_geom["ZONE"]
@@ -104,7 +105,7 @@ def test_gridzonemap():
 
 
 def test_merge_initvectors():
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     assert grid.merge_initvectors(eclfiles, pd.DataFrame(), []).empty
     foo_df = pd.DataFrame([{"FOO": 1}])
     pd.testing.assert_frame_equal(grid.merge_initvectors(eclfiles, foo_df, []), foo_df)
@@ -135,7 +136,7 @@ def test_merge_initvectors():
 
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     init_df = grid.init2df(eclfiles)
 
     assert isinstance(init_df, pd.DataFrame)
@@ -144,7 +145,7 @@ def test_init2df():
     assert "PORO" in init_df
     assert "PORV" in init_df
 
-    # The KRO data from the INIT file contains only NaN's,
+    # The KRO data from the INIT file in Reek contains only NaN's,
     # but libecl gives out a large negative integer/float.
     # ecl2df should ensure this comes out as a NaN (but it
     # should be allowed later to drop columns which have only NaNs))
@@ -154,7 +155,7 @@ def test_init2df():
 
 def test_grid_df():
     """Test that dataframe with INIT vectors and coordinates can be produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     grid_df = grid.df(eclfiles)
 
     assert isinstance(grid_df, pd.DataFrame)
@@ -180,7 +181,7 @@ def test_grid_df():
 
 def test_df2ecl(tmpdir):
     """Test if we are able to output include files for grid data"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     grid_df = grid.df(eclfiles)
 
     fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
@@ -263,7 +264,7 @@ def test_df2ecl_mock():
 
 def test_subvectors():
     """Test that we can ask for a few vectors only"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     init_df = grid.init2df(eclfiles, "PORO")
     assert "PORO" in init_df
     assert "PERMX" not in init_df
@@ -309,7 +310,7 @@ def test_dropconstants():
 
 def test_df():
     """Test the df function"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     # assert error..
     with pytest.raises(TypeError):
         # pylint: disable=no-value-for-parameter
@@ -417,7 +418,7 @@ def test_main(tmpdir):
     sys.argv = [
         "ecl2csv",
         "grid",
-        DATAFILE,
+        EIGHTCELLS,
         "-o",
         str(tmpcsvfile),
         "--rstdates",
@@ -436,11 +437,11 @@ def test_main(tmpdir):
         "ecl2csv",
         "grid",
         "--verbose",
-        DATAFILE,
+        EIGHTCELLS,
         "-o",
         str(tmpcsvfile),
         "--rstdates",
-        "2001-02-01",
+        "2000-01-01",
         "--vectors",
         "PORO",
         "PERMX",
@@ -454,7 +455,7 @@ def test_main(tmpdir):
     Path(tmpcsvfile).unlink()
 
     # Test with constants dropping
-    sys.argv = ["ecl2csv", "grid", DATAFILE, "-o", str(tmpcsvfile), "--dropconstants"]
+    sys.argv = ["ecl2csv", "grid", REEK, "-o", str(tmpcsvfile), "--dropconstants"]
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -466,7 +467,7 @@ def test_main(tmpdir):
 
 def test_get_available_rst_dates():
     """Test the support of dates in restart files"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     # rstfile = eclfiles.get_rstfile()
 
     alldates = grid.get_available_rst_dates(eclfiles)
@@ -538,7 +539,7 @@ def test_get_available_rst_dates():
 
 def test_rst2df():
     """Test producing dataframes from restart files"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     assert grid.rst2df(eclfiles, "first").shape == (35817, 24)
     assert grid.rst2df(eclfiles, "last").shape == (35817, 24)
     assert grid.rst2df(eclfiles, "all").shape == (35817, 23 * 4 + 1)

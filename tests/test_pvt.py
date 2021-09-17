@@ -20,7 +20,8 @@ except ImportError:
     )
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
@@ -161,7 +162,7 @@ PVDO
 def test_pvt_reek():
     """Test that the Reek PVT input can be parsed individually"""
 
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     pvto_df = pvt.pvto_fromdeck(eclfiles.get_ecldeck())
     assert "PVTNUM" in pvto_df
     assert "PRESSURE" in pvto_df
@@ -293,7 +294,7 @@ PVTG
 
 def test_density():
     """Test that DENSITY can be parsed from files and from strings"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     density_df = pvt.density_fromdeck(eclfiles.get_ecldeck())
     assert len(density_df) == 1
     assert "PVTNUM" in density_df
@@ -378,7 +379,7 @@ def test_rock():
 
 def test_df():
     """Test that aggregate dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)  # Reek dataset
+    eclfiles = EclFiles(REEK)
     pvtdf = pvt.df(eclfiles)
 
     assert not pvtdf.empty
@@ -395,7 +396,7 @@ def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpdir.chdir()
     tmpcsvfile = str(tmpdir.join("pvt.csv"))
-    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", DATAFILE, "-o", tmpcsvfile])
+    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", EIGHTCELLS, "-o", tmpcsvfile])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -444,14 +445,14 @@ def test_magic_stdout(tmpdir):
     """Test writing dataframes and include files to stdout"""
     tmpdir.chdir()
     result = subprocess.run(
-        ["ecl2csv", "pvt", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+        ["ecl2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty
 
     # Verbose options should not ruin it:
     result = subprocess.run(
-        ["ecl2csv", "pvt", "--verbose", "-o", "-", DATAFILE],
+        ["ecl2csv", "pvt", "--verbose", "-o", "-", EIGHTCELLS],
         check=True,
         stdout=subprocess.PIPE,
     )

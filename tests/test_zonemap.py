@@ -8,7 +8,7 @@ import pytest
 import ecl2df
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 
 def test_stdzoneslyr():
@@ -18,7 +18,7 @@ def test_stdzoneslyr():
     the actual parsing is done in ecl2df.common.parse_lyrfile() and
     converted to zonemap in common.convert_lyrlist_to_zonemap()
     """
-    eclfiles = ecl2df.EclFiles(DATAFILE)
+    eclfiles = ecl2df.EclFiles(REEK)
 
     zonemap = eclfiles.get_zonemap()
     assert isinstance(zonemap, dict)
@@ -37,7 +37,7 @@ def test_stdzoneslyr():
 def test_nonexistingzones():
     """Test an Eclipse case with non-existing zonemap (i.e. no zonemap file
     in the standard location)"""
-    eclfiles = ecl2df.EclFiles(DATAFILE)
+    eclfiles = ecl2df.EclFiles(REEK)
     zonemap = eclfiles.get_zonemap("foobar")
     # (we got a warning and an empty dict)
     assert not zonemap
@@ -74,7 +74,7 @@ foo 2-1
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "From_layer higher than to_layer" in caplog.text
 
     lyrfile = tmpdir / "formations.lyr"
@@ -85,7 +85,7 @@ foo   3- 4 #FFGGHH
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
 
     lyrfile = tmpdir / "formations.lyr"
@@ -96,7 +96,7 @@ foo   3- 4 bluez
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 bluez" in caplog.text
 
     lyrfile.write_text(
@@ -105,7 +105,7 @@ invalid 1-2-3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(DATAFILE).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
 
 
 def test_lyrlist_format(tmpdir):

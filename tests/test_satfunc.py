@@ -20,13 +20,14 @@ except ImportError:
 
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_ecldeck_to_satfunc_dframe():
     """Test that dataframes can be produced from a full Eclipse deck (the
     example Reek case)"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     satdf = satfunc.df(eclfiles.get_ecldeck())
 
     assert set(satdf["KEYWORD"]) == {"SWOF", "SGOF"}
@@ -53,7 +54,7 @@ def test_ecldeck_to_satfunc_dframe():
 def test_satfunc_roundtrip():
     """Test that we can produce a SATNUM dataframe from the Reek case, convert
     it back to an include file, and then reinterpret it to the same"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(EIGHTCELLS)
     satdf = satfunc.df(eclfiles.get_ecldeck())
     inc = satfunc.df2ecl(satdf)
     df_from_inc = satfunc.df(inc)
@@ -66,7 +67,7 @@ def test_satfunc_roundtrip():
 def test_df2ecl_order():
     """Test that we can control the keyword order in generated
     strings by the list supplied in keywords argument"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     satdf = satfunc.df(eclfiles.get_ecldeck())
 
     swof_sgof = satfunc.df2ecl(satdf, keywords=["SWOF", "SGOF"])
@@ -654,7 +655,7 @@ SGFN
 def test_main_subparsers(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("satfunc.csv")
-    mocker.patch("sys.argv", ["ecl2csv", "satfunc", DATAFILE, "-o", str(tmpcsvfile)])
+    mocker.patch("sys.argv", ["ecl2csv", "satfunc", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -668,7 +669,7 @@ def test_main_subparsers(tmpdir, mocker):
         [
             "ecl2csv",
             "satfunc",
-            DATAFILE,
+            EIGHTCELLS,
             "--keywords",
             "SWOF",
             "--output",

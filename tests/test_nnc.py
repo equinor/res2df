@@ -19,12 +19,13 @@ except ImportError:
 
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_nnc2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     nncdf = nnc.df(eclfiles)
 
     assert not nncdf.empty
@@ -43,9 +44,15 @@ def test_nnc2df():
     assert len(nncdf) < prelen
 
 
+def test_no_nnc():
+    """Test nnc on an Eclipse case with no NNCs"""
+    eclfiles = EclFiles(EIGHTCELLS)
+    assert nnc.df(eclfiles).empty
+
+
 def test_nnc2df_coords():
     """Test that we are able to add coordinates"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     gnncdf = nnc.df(eclfiles, coords=True)
     assert not gnncdf.empty
     assert "X" in gnncdf
@@ -56,7 +63,7 @@ def test_nnc2df_coords():
 @pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     nncdf = nnc.df(eclfiles)
     faultsdf = faults.df(eclfiles.get_ecldeck())
 
@@ -80,7 +87,7 @@ def test_nnc2df_faultnames():
 
 def test_df2ecl_editnnc(tmpdir):
     """Test generation of EDITNNC keyword"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     nncdf = nnc.df(eclfiles)
     tmpdir.chdir()
 
@@ -111,7 +118,7 @@ def test_df2ecl_editnnc(tmpdir):
 def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir.join("nnc.csv")
-    mocker.patch("sys.argv", ["ecl2csv", "nnc", "-v", DATAFILE, "-o", str(tmpcsvfile)])
+    mocker.patch("sys.argv", ["ecl2csv", "nnc", "-v", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -125,7 +132,7 @@ def test_main(tmpdir, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "nnc", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+        ["ecl2csv", "nnc", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty

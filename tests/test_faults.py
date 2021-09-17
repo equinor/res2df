@@ -19,12 +19,13 @@ except ImportError:
     )
 
 TESTDIR = Path(__file__).absolute().parent
-DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS")
 
 
 def test_faults2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(DATAFILE)
+    eclfiles = EclFiles(REEK)
     faultsdf = faults.df(eclfiles.get_ecldeck())
 
     assert "NAME" in faultsdf
@@ -50,6 +51,13 @@ FAULTS
     assert len(faultsdf) == 16
 
 
+def test_nofaults():
+    """Test on a dataset with no faults"""
+    eclfiles = EclFiles(EIGHTCELLS)
+    faultsdf = faults.df(eclfiles.get_ecldeck())
+    assert faultsdf.empty
+
+
 def test_multiplestr2df():
     """Test that we support multiple occurences of the FAULTS keyword"""
     deckstr = """
@@ -73,7 +81,7 @@ FAULTS
 def test_main_subparser(tmpdir, mocker):
     """Test command line interface with subparsers"""
     tmpcsvfile = tmpdir / "faultsdf.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "faults", DATAFILE, "-o", str(tmpcsvfile)])
+    mocker.patch("sys.argv", ["ecl2csv", "faults", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -84,7 +92,7 @@ def test_main_subparser(tmpdir, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "faults", "-o", "-", DATAFILE], check=True, stdout=subprocess.PIPE
+        ["ecl2csv", "faults", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty

@@ -11,7 +11,7 @@ START
   1 'JAN' 2000 /
 
 TABDIMS
-  1 /
+  1 1 20 20 2 /
 
 EQLDIMS
   1 /
@@ -77,6 +77,7 @@ PERMZ
   100.0  100.0  100.0  100.0    100.0  100.0  100.0  100.0
 /
 
+
 GRIDFILE
   0 1
 /
@@ -116,6 +117,9 @@ SATNUM
 EQLNUM
   1  1  1  1  1  1  1  1/
 
+FIPNUM
+  1 1 1 1 2 2 2 2
+/
 
 SOLUTION
 

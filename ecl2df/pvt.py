@@ -530,6 +530,9 @@ def df2ecl_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     else:
         subset = dframe[dframe["KEYWORD"] == "PVDG"]
     if "PVTNUM" not in subset:
+        if len(subset) != 1:
+            logger.critical("If PVTNUM is not supplied, only one row should be given")
+            return ""
         subset["PVTNUM"] = 1
 
     def _pvdg_pvtnum(dframe):

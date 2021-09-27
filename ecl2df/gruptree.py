@@ -19,7 +19,7 @@ try:
 except ImportError:
     pass
 
-from ecl2df import EclFiles
+from ecl2df import EclFiles, getLogger_ecl2csv
 from ecl2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
@@ -116,7 +116,7 @@ def df(
             if kword.name == "DATES" or kword.name == "START":
                 for rec in kword:
                     date = parse_opmio_date_rec(rec)
-                    logging.info("Parsing at date %s", str(date))
+                    logger.debug("Parsing at date %s", str(date))
             elif kword.name == "TSTEP":
                 assert date is not None
                 for rec in kword:
@@ -442,8 +442,7 @@ def prettyprint(dframe: pd.DataFrame) -> str:
 
 def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)

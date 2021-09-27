@@ -1,7 +1,6 @@
 """Test module for pvt"""
 
 import io
-import logging
 import subprocess
 from pathlib import Path
 
@@ -22,9 +21,6 @@ except ImportError:
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
-
-logger = logging.getLogger("")
-logger.setLevel(logging.DEBUG)
 
 
 def test_pvto_strings():

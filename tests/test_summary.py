@@ -1,5 +1,4 @@
 import datetime
-import logging
 import os
 import sys
 from datetime import datetime as dt
@@ -33,8 +32,6 @@ except ImportError:
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
-
-logging.basicConfig(level=logging.INFO)
 
 
 def test_df():

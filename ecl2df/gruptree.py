@@ -197,10 +197,7 @@ def _write_edgerecords(
         ("GRUPTREE", "GRUPNET", "WELSPECS"),
         ("BRANPROP", "NODEPROP", "WELSPECS"),
     ]:
-        if (
-            any(found_keywords[key] for key in [treetype, nodetype, welspecs])
-            and currentedges[treetype]
-        ):
+        if any(found_keywords[key] for key in [treetype, nodetype, welspecs]):
             edgerecords += _merge_edges_and_nodeinfo(
                 currentedges[treetype],
                 nodedata[nodetype],
@@ -250,10 +247,8 @@ def _merge_edges_and_nodeinfo(
         edgerecords.append(rec_dict)
 
     # Write WELSPECS edges
+    welspecs_parents = set()
     for (child, parent), _ in wellspecsedges.items():
-        # The welspecs edges are not added to childs/parents, because the
-        # parents shall not be added as terminal nodes even if they are missing
-        # from GRUPTREE/BRANPROP
         # For BRANPROP trees, only wells with a parent in the tree are added
         if (treetype == "BRANPROP" and parent in childs) or (treetype == "GRUPTREE"):
             rec_dict = {
@@ -263,6 +258,16 @@ def _merge_edges_and_nodeinfo(
                 "KEYWORD": "WELSPECS",
             }
             edgerecords.append(rec_dict)
+        if treetype == "GRUPTREE":
+            welspecs_parents |= {parent}
+
+    # Missing welspecs parents are connected directly to the FIELD node
+    # (only for GRUPTREE)
+    for parent in welspecs_parents - childs:
+        edgerecords.append(
+            {"DATE": date, "CHILD": parent, "KEYWORD": treetype, "PARENT": "FIELD"}
+        )
+        parents |= {"FIELD"}
 
     roots = parents - childs
     rootrecords = []

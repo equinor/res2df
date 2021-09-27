@@ -20,7 +20,24 @@ except ImportError:
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 # EIGTHCELLS is to be used in test_main_subparser when #356 is solved:
-# EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
+EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
+
+
+def test_eightcells_dataset():
+    """Test Eightcells dataset"""
+    eclfiles = EclFiles(EIGHTCELLS)
+    gruptree_df = gruptree.df(eclfiles.get_ecldeck())
+
+    expected_dframe = pd.DataFrame(
+        [
+            ["2000-01-01", "FIELD", "GRUPTREE", np.nan],
+            ["2000-01-01", "OP1", "WELSPECS", "OPS"],
+            ["2000-01-01", "OPS", "GRUPTREE", "FIELD"],
+        ],
+        columns=["DATE", "CHILD", "KEYWORD", "PARENT"],
+    )
+    expected_dframe["DATE"] = pd.to_datetime(expected_dframe["DATE"])
+    pd.testing.assert_frame_equal(gruptree_df, expected_dframe, check_dtype=False)
 
 
 def test_gruptree2df():
@@ -672,14 +689,16 @@ NODEPROP
 /
         """,
             # TMPL_B is not in any trees. The WELSPECS line is added
-            # only when there is a new GRUPTREE tree
+            # only when there is a new GRUPTREE tree and a GRUPTREE
+            # entry is added connecting TMPL_B to the FIELD node.
             # TMPL_A is in both trees, but is not repeated at the date
-            # where there is two trees
+            # where there are two trees
             pd.DataFrame(
                 [
                     ["2000-01-01", "FIELD", "GRUPTREE", np.nan],
                     ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD"],
                     ["2000-01-01", "WELL_2", "WELSPECS", "TMPL_B"],
+                    ["2000-01-01", "TMPL_B", "GRUPTREE", "FIELD"],
                     ["2000-01-01", "FIELD", "BRANPROP", np.nan],
                     ["2000-01-01", "NODE_A", "BRANPROP", "FIELD"],
                     ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A"],
@@ -744,11 +763,10 @@ NODEPROP
 Date: 2000-01-01
 GRUPTREE trees:
 FIELD
-└── TMPL_A
-    └── WELL_1
-
-TMPL_B
-└── WELL_2
+├── TMPL_A
+│   └── WELL_1
+└── TMPL_B
+    └── WELL_2
 
 BRANPROP trees:
 FIELD

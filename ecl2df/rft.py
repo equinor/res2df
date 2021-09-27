@@ -23,6 +23,8 @@ import numpy as np
 import pandas as pd
 from ecl.eclfile import EclFile
 
+from ecl2df import getLogger_ecl2csv
+
 from .common import merge_zones, write_dframe_stdout_file
 from .eclfiles import EclFiles
 from .gruptree import tree_from_dict
@@ -673,10 +675,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def rft_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
-    if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     if args.DATAFILE.endswith(".RFT"):
         # Support the RFT file as an argument also:
         eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")

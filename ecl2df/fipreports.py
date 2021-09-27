@@ -10,7 +10,7 @@ from typing import List, Optional, Union
 import numpy as np
 import pandas as pd
 
-from ecl2df import EclFiles
+from ecl2df import EclFiles, getLogger_ecl2csv
 from ecl2df.common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
@@ -209,10 +209,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fipreports_main(args) -> None:
     """Command line API"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
-    if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:

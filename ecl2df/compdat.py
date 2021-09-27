@@ -24,6 +24,8 @@ except ImportError:
     # Allow parts of ecl2df to work without OPM:
     pass
 
+from ecl2df import getLogger_ecl2csv
+
 from .common import (
     get_wells_matching_template,
     merge_zones,
@@ -836,8 +838,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)

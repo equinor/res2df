@@ -29,6 +29,8 @@ except ImportError:
 
 from ecl2df import __version__
 
+from .constants import MAGIC_STDOUT
+
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
 # of supported Eclipse keyword data
 OPMKEYWORDS: Dict[str, dict] = {}
@@ -79,10 +81,6 @@ for keyw in [
         (Path(__file__).parent / "opmkeywords" / keyw).read_text()
     )
 
-# This is a magic filename that means read/write from/to stdout
-# This makes it impossible to write to a file called "-" on disk
-# but that would anyway create a lot of other problems in the shell.
-MAGIC_STDOUT: str = "-"
 
 SVG_COLOR_NAMES = [
     color.lower()

@@ -15,7 +15,7 @@ try:
 except ImportError:
     pass
 
-from ecl2df import EclFiles
+from ecl2df import EclFiles, getLogger_ecl2csv
 from ecl2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
@@ -91,8 +91,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def wcon_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()

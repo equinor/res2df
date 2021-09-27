@@ -25,7 +25,7 @@ try:
 except ImportError:
     pass
 
-from ecl2df import common, inferdims
+from ecl2df import common, getLogger_ecl2csv, inferdims
 
 from .common import write_dframe_stdout_file
 from .eclfiles import EclFiles
@@ -118,6 +118,11 @@ def df(
         dframe["KEYWORD"] = pd.Categorical(dframe["KEYWORD"], SUPPORTED_KEYWORDS)
         dframe.sort_values(["SATNUM", "KEYWORD"], inplace=True)
         dframe["KEYWORD"] = dframe["KEYWORD"].astype(str)
+        logger.info(
+            "Extracted keywords %s for %i SATNUMs",
+            dframe["KEYWORD"].unique(),
+            len(dframe["SATNUM"].unique()),
+        )
         return dframe
     return pd.DataFrame()
 
@@ -184,8 +189,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def satfunc_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -214,8 +218,7 @@ def satfunc_main(args) -> None:
 
 def satfunc_reverse_main(args) -> None:
     """For command line utility for CSV to Eclipse"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(satfunc_df, keywords=args.keywords)

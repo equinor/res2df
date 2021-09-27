@@ -14,6 +14,8 @@ import numpy as np
 import pandas as pd
 from ecl.summary import EclSum, EclSumKeyWordVector
 
+from ecl2df import getLogger_ecl2csv
+
 from . import parameters
 from .common import write_dframe_stdout_file
 from .eclfiles import EclFiles
@@ -780,8 +782,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclbase = (
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
@@ -801,10 +802,7 @@ def summary_main(args) -> None:
 
 def summary_reverse_main(args) -> None:
     """Entry point for usage with "csv2ecl summary" on the command line"""
-    if args.verbose and not args.debug:
-        logging.basicConfig(level=logging.INFO)
-    if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+    logger = getLogger_ecl2csv(__name__, vars(args))
 
     summary_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)

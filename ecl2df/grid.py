@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from ecl.eclfile import EclFile
 
-from ecl2df import __version__, common
+from ecl2df import __version__, common, getLogger_ecl2csv
 
 from .eclfiles import EclFiles
 
@@ -731,8 +731,7 @@ def df2ecl(
 
 def grid_main(args) -> None:
     """This is the command line API"""
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
     grid_df = df(
         eclfiles,

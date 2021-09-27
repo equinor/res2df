@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.pvt &mdash; ecl2df 0.14.1.dev10+gb39e30a documentation</title>
+  <title>ecl2df.pvt &mdash; ecl2df 0.14.1.dev11+g65dba1d documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev10+gb39e30a
+                0.14.1.dev11+g65dba1d
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -67,6 +67,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../ecl2df.html">ecl2df</a> &raquo;</li>
       <li>ecl2df.pvt</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -90,7 +91,7 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">common</span><span class="p">,</span> <span class="n">inferdims</span>
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">common</span><span class="p">,</span> <span class="n">getLogger_ecl2csv</span><span class="p">,</span> <span class="n">inferdims</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="c1"># Needed for mypy</span>
@@ -359,8 +360,7 @@
 
 <div class="viewcode-block" id="pvt_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvt_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for Eclipse to CSV&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
@@ -392,8 +392,7 @@
 
 <div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2ecl</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>

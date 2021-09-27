@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.wcon &mdash; ecl2df 0.14.1.dev10+gb39e30a documentation</title>
+  <title>ecl2df.wcon &mdash; ecl2df 0.14.1.dev11+g65dba1d documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev10+gb39e30a
+                0.14.1.dev11+g65dba1d
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -67,6 +67,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../ecl2df.html">ecl2df</a> &raquo;</li>
       <li>ecl2df.wcon</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -94,7 +95,7 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
-<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span>
+<span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">getLogger_ecl2csv</span>
 <span class="kn">from</span> <span class="nn">ecl2df.common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
     <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
@@ -170,8 +171,7 @@
 
 <div class="viewcode-block" id="wcon_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.wcon.html#ecl2df.wcon.wcon_main">[docs]</a><span class="k">def</span> <span class="nf">wcon_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>

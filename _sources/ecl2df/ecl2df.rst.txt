@@ -15,6 +15,7 @@ Submodules
 
    ecl2df.common
    ecl2df.compdat
+   ecl2df.constants
    ecl2df.csv2ecl
    ecl2df.ecl2csv
    ecl2df.eclfiles

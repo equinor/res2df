@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df &mdash; ecl2df 0.14.1.dev10+gb39e30a documentation</title>
+  <title>ecl2df &mdash; ecl2df 0.14.1.dev11+g65dba1d documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev10+gb39e30a
+                0.14.1.dev11+g65dba1d
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.constants.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.csv2ecl.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
@@ -113,12 +114,37 @@
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.getLogger_ecl2csv">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.</span></span><span class="sig-name descname"><span class="pre">getLogger_ecl2csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ecl2df'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df.html#getLogger_ecl2csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.getLogger_ecl2csv" title="Permalink to this definition"></a></dt>
+<dd><p>Provide a custom logger for ecl2csv and csv2ecl</p>
+<p>Logging output is by default split by logging levels (split between WARNING and
+ERROR) to stdout and stderr, each log occurs in only one of the streams.
+This deviates from Unix standard, but is accepted here because the code
+often writes it main output to a dedicated filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – A suggested name for the logger, usually
+__name__ should be supplied</p></li>
+<li><p><strong>args_dict</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]]) – Dictionary with contents from the argparse namespace object.
+Only keys “output”, “verbose” and “debug” will be looked at.
+Use vars(args) in caller code to convert from argparse Namespace object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 <section id="submodules">
 <h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecl2df.constants.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.constants</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecl2df.csv2ecl.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>

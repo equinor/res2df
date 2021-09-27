@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.common &mdash; ecl2df 0.14.1.dev10+gb39e30a documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.14.1.dev11+g65dba1d documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev10+gb39e30a
+                0.14.1.dev11+g65dba1d
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -67,6 +67,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../ecl2df.html">ecl2df</a> &raquo;</li>
       <li>ecl2df.common</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -107,6 +108,8 @@
     <span class="k">pass</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">MAGIC_STDOUT</span>
 
 <span class="c1"># Parse named JSON files, this exposes a dict of dictionary describing the contents</span>
 <span class="c1"># of supported Eclipse keyword data</span>
@@ -158,10 +161,6 @@
         <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;opmkeywords&quot;</span> <span class="o">/</span> <span class="n">keyw</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
     <span class="p">)</span>
 
-<span class="c1"># This is a magic filename that means read/write from/to stdout</span>
-<span class="c1"># This makes it impossible to write to a file called &quot;-&quot; on disk</span>
-<span class="c1"># but that would anyway create a lot of other problems in the shell.</span>
-<span class="n">MAGIC_STDOUT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
 
 <span class="n">SVG_COLOR_NAMES</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">color</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>

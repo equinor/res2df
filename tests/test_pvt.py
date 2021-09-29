@@ -656,8 +656,12 @@ def test_df2ecl_pvtg():
         pvt.df2ecl_pvtg(pvtg_df.drop("VOLUMEFACTOR", axis="columns"))
 
 
-def test_df2ecl_pvdo():
-    pvdo_df = pd.DataFrame(
+def test_df2ecl_pvdo_pvdg():
+    """Test construction of PVDO and PVDG statements from dataframe.
+
+    The keyword data and code is similar enough to warrant one test
+    for both functions, with the same dataset."""
+    pvdog_df = pd.DataFrame(
         columns=["PRESSURE", "VOLUMEFACTOR", "VISCOSITY", "PVTNUM"],
         data=[
             [400.0, 6, 0.01, 1],
@@ -667,20 +671,33 @@ def test_df2ecl_pvdo():
         ],
     )
 
-    assert "PVDO" in pvt.df2ecl_pvdo(pvdo_df)
-    assert "PVDO" in pvt.df2ecl_pvdo(pvdo_df.assign(KEYWORD="PVDO"))
+    assert "PVDO" in pvt.df2ecl_pvdo(pvdog_df)
+    assert "PVDG" in pvt.df2ecl_pvdg(pvdog_df)
+
+    assert "PVDO" in pvt.df2ecl_pvdo(pvdog_df.assign(KEYWORD="PVDO"))
+    assert "PVDG" in pvt.df2ecl_pvdg(pvdog_df.assign(KEYWORD="PVDG"))
+
     pd.testing.assert_frame_equal(
-        pvt.df(pvt.df2ecl_pvdo(pvdo_df)).drop("KEYWORD", axis="columns"), pvdo_df
+        pvt.df(pvt.df2ecl_pvdo(pvdog_df)).drop("KEYWORD", axis="columns"), pvdog_df
+    )
+    pd.testing.assert_frame_equal(
+        pvt.df(pvt.df2ecl_pvdg(pvdog_df)).drop("KEYWORD", axis="columns"), pvdog_df
     )
 
     # If PVTNUM is missing, the code gives up:
     assert "PVDO" not in pvt.df2ecl_pvdo(
-        pd.concat([pvdo_df, pvdo_df]).drop("PVTNUM", axis="columns")
+        pd.concat([pvdog_df, pvdog_df]).drop("PVTNUM", axis="columns")
+    )
+    assert "PVDG" not in pvt.df2ecl_pvdg(
+        pd.concat([pvdog_df, pvdog_df]).drop("PVTNUM", axis="columns")
     )
 
     # Unless there is only one row:
-    assert "PVDO" in pvt.df2ecl_pvdo(pvdo_df.head(1).drop("PVTNUM", axis="columns"))
+    assert "PVDO" in pvt.df2ecl_pvdo(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
+    assert "PVDG" in pvt.df2ecl_pvdg(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
-        pvt.df2ecl_pvdo(pvdo_df.drop("VOLUMEFACTOR", axis="columns"))
+        pvt.df2ecl_pvdo(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))
+    with pytest.raises(KeyError, match="VOLUMEFACTOR"):
+        pvt.df2ecl_pvdg(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))

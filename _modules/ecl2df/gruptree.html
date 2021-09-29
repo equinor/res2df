@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.gruptree &mdash; ecl2df 0.14.1.dev11+g65dba1d documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.14.1.dev12+g0c252c9 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev11+g65dba1d
+                0.14.1.dev12+g0c252c9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -277,10 +277,7 @@
         <span class="p">(</span><span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;BRANPROP&quot;</span><span class="p">,</span> <span class="s2">&quot;NODEPROP&quot;</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">),</span>
     <span class="p">]:</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="nb">any</span><span class="p">(</span><span class="n">found_keywords</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">treetype</span><span class="p">,</span> <span class="n">nodetype</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">])</span>
-            <span class="ow">and</span> <span class="n">currentedges</span><span class="p">[</span><span class="n">treetype</span><span class="p">]</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">found_keywords</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">treetype</span><span class="p">,</span> <span class="n">nodetype</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">]):</span>
             <span class="n">edgerecords</span> <span class="o">+=</span> <span class="n">_merge_edges_and_nodeinfo</span><span class="p">(</span>
                 <span class="n">currentedges</span><span class="p">[</span><span class="n">treetype</span><span class="p">],</span>
                 <span class="n">nodedata</span><span class="p">[</span><span class="n">nodetype</span><span class="p">],</span>
@@ -330,10 +327,8 @@
         <span class="n">edgerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
 
     <span class="c1"># Write WELSPECS edges</span>
+    <span class="n">welspecs_parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">),</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">wellspecsedges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="c1"># The welspecs edges are not added to childs/parents, because the</span>
-        <span class="c1"># parents shall not be added as terminal nodes even if they are missing</span>
-        <span class="c1"># from GRUPTREE/BRANPROP</span>
         <span class="c1"># For BRANPROP trees, only wells with a parent in the tree are added</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;BRANPROP&quot;</span> <span class="ow">and</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">childs</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">):</span>
             <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -343,6 +338,16 @@
                 <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="n">edgerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span>
+            <span class="n">welspecs_parents</span> <span class="o">|=</span> <span class="p">{</span><span class="n">parent</span><span class="p">}</span>
+
+    <span class="c1"># Missing welspecs parents are connected directly to the FIELD node</span>
+    <span class="c1"># (only for GRUPTREE)</span>
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">welspecs_parents</span> <span class="o">-</span> <span class="n">childs</span><span class="p">:</span>
+        <span class="n">edgerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">treetype</span><span class="p">,</span> <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="s2">&quot;FIELD&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">parents</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;FIELD&quot;</span><span class="p">}</span>
 
     <span class="n">roots</span> <span class="o">=</span> <span class="n">parents</span> <span class="o">-</span> <span class="n">childs</span>
     <span class="n">rootrecords</span> <span class="o">=</span> <span class="p">[]</span>

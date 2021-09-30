@@ -1,6 +1,7 @@
 """Test module for fipreports"""
 
 import datetime
+import os
 from pathlib import Path
 
 import numpy as np
@@ -81,7 +82,7 @@ def test_mockprtfile():
         fipreports.df(MOCKPRTFILE, fipname="FIP456789")
 
 
-def test_prtstring(tmpdir):
+def test_prtstring(tmp_path):
     """Test a PRT from string, verifying every detail of the dataframe"""
     prtstring = """
   REPORT   0     1 JAN 2000
@@ -105,7 +106,7 @@ def test_prtstring(tmpdir):
  :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.:
  ====================================================================================================================================
 """  # noqa
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring)
     dframe = fipreports.df("FOO.PRT")
     expected_dframe = pd.DataFrame(
@@ -228,7 +229,7 @@ def test_prtstring(tmpdir):
     pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
-def test_rogue_eclipse_output(tmpdir):
+def test_rogue_eclipse_output(tmp_path):
     """The starts in the material balance error line has been observed in reality."""
     prtstring = """
                                                 =================================
@@ -245,13 +246,13 @@ def test_rogue_eclipse_output(tmpdir):
  :MATERIAL BALANCE ERROR.  :                                   3419391.:        671761. :                              *************:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
 """  # noqa
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring)
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
     assert np.isnan(dframe.loc["MATERIAL BALANCE ERROR.", "GIIP_TOTAL"])
 
 
-def test_prtstring_opmflow(tmpdir):
+def test_prtstring_opmflow(tmp_path):
     """Test parsing the PRT output from OPM flow."""
     prtstring = """
 Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
@@ -268,7 +269,7 @@ Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 :Originally  in place    :      16530271             0      16530271:     60415965   :             0             0             0:
 :========================:==========================================:================:==========================================:
 """  # noqa
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring)
     dframe = fipreports.df("FOO.PRT")
     print(dframe.to_dict(orient="records"))
@@ -341,9 +342,9 @@ def test_report_block_lineparser():
     assert int(tup[7]) == 22298026321
 
 
-def test_cmdline(tmpdir, mocker):
+def test_cmdline(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "TMP-fipreports.csv"
+    tmpcsvfile = tmp_path / "TMP-fipreports.csv"
     mocker.patch(
         "sys.argv",
         ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)],

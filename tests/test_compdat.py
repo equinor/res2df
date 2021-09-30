@@ -338,9 +338,9 @@ def test_initmerging():
         compdat.df(eclfiles, initvectors=2)
 
 
-def test_main_subparsers(tmpdir, mocker):
+def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "compdat.csv"
+    tmpcsvfile = tmp_path / "compdat.csv"
     mocker.patch(
         "sys.argv", ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
@@ -392,7 +392,7 @@ def test_main_subparsers(tmpdir, mocker):
     assert not disk_df.empty
 
 
-def test_defaulted_compdat_i_j(tmpdir):
+def test_defaulted_compdat_i_j(tmp_path):
     """I and J can be defaulted (that is 1* or 0) in COMPDAT records, then
     that information should be fetched from the most recent WELSPECS keyword
     """

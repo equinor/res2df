@@ -1,5 +1,6 @@
 """Test module for ecl2df.common"""
 
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -89,9 +90,9 @@ def test_stack_on_colname():
     assert not stacked.isnull().sum().sum()
 
 
-def test_write_dframe_file(tmpdir):
+def test_write_dframe_file(tmp_path):
     """Test that we can write dataframes to files."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     dframe = pd.DataFrame([{"foo": "bar"}])
     common.write_dframe_stdout_file(dframe, "foo.csv")
     pd.testing.assert_frame_equal(pd.read_csv("foo.csv"), dframe)
@@ -104,9 +105,9 @@ def test_write_dframe_stdout(capsys):
     assert "foo\nbar" in capsys.readouterr().out
 
 
-def test_write_inc_file(tmpdir):
+def test_write_inc_file(tmp_path):
     """Test that we can write include files to files."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     string = "PORO\n0\n/"
     common.write_inc_stdout_file(string, "poro.inc")
     assert Path("poro.inc").read_text() == string

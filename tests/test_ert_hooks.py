@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -23,11 +24,11 @@ DATADIR = TESTDIR / "data/reek/eclipse/model"
 @pytest.mark.skipif(
     not HAVE_ERT, reason="ERT is not installed, skipping hook implementation tests."
 )
-def test_ecl2csv_through_ert(tmpdir):
+def test_ecl2csv_through_ert(tmp_path):
     """Test running the ERT executable on a mocked config file"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
-    # Symlink Eclipse output to our tmpdir:
+    # Symlink Eclipse output to our tmp_path:
     eclbase = "2_R001_REEK-0"
     ecl_extensions = [
         "DATA",

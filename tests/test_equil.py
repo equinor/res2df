@@ -1,5 +1,6 @@
 """Test module for equil2df"""
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -80,9 +81,9 @@ def test_equil2df():
     pd.testing.assert_frame_equal(equildf, df_from_inc, check_dtype=False)
 
 
-def test_df2ecl(tmpdir):
+def test_df2ecl(tmp_path):
     """Test that we can write include files to disk"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     eclfiles = EclFiles(EIGHTCELLS)
     equildf = equil.df(eclfiles)
     equil.df2ecl(equildf, filename="equil.inc")
@@ -93,7 +94,7 @@ def test_df2ecl(tmpdir):
     assert Path("eclipse/include/equil.inc").is_file()
 
 
-def test_df2ecl_equil(tmpdir):
+def test_df2ecl_equil(tmp_path):
     """Test the underlying function directly"""
     dframe = pd.DataFrame(
         [
@@ -426,10 +427,10 @@ PDVD
     pd.testing.assert_frame_equal(pdvd_df.drop("KEYWORD", axis="columns"), pdvd_df2)
 
 
-def test_rsvd_via_file(tmpdir, mocker):
+def test_rsvd_via_file(tmp_path, mocker):
     """Test that we can reparse RSVD with unknown TABDIMS
     from a file using the command line utility"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     deckstr = """
 RSVD
  10 100
@@ -536,9 +537,9 @@ def test_eclipse_rounding(somefloat, expected):
     assert expected in equil.df2ecl(dframe, withphases=False)
 
 
-def test_main_subparser(tmpdir, mocker, capsys):
+def test_main_subparser(tmp_path, mocker, capsys):
     """Test command line interface"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     tmpcsvfile = "equil.csv"
     mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", REEK, "-o", tmpcsvfile])
     ecl2csv.main()

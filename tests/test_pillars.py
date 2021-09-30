@@ -321,9 +321,9 @@ def test_compute_volumes(dframe, datestr, expectedrows):
     )
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "pillars.csv"
+    tmpcsvfile = tmp_path / "pillars.csv"
     mocker.patch("sys.argv", ["ecl2csv", "pillars", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()

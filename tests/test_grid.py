@@ -1,6 +1,6 @@
 """Test module for ecl2df.grid"""
-
 import datetime
+import os
 from pathlib import Path
 
 import numpy as np
@@ -178,7 +178,7 @@ def test_grid_df():
     )
 
 
-def test_df2ecl(tmpdir):
+def test_df2ecl(tmp_path):
     """Test if we are able to output include files for grid data"""
     eclfiles = EclFiles(REEK)
     grid_df = grid.df(eclfiles)
@@ -216,7 +216,7 @@ def test_df2ecl(tmpdir):
     assert "3333" in fipnum_big_str
     assert len(fipnum_big_str) > len(fipnum_str)
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     grid.df2ecl(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
     assert Path("perm.inc").is_file()
     incstring = open("perm.inc").readlines()
@@ -411,9 +411,9 @@ def test_df():
     # but not for now.
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "eclgrid.csv"
+    tmpcsvfile = tmp_path / "eclgrid.csv"
     mocker.patch(
         "sys.argv",
         [

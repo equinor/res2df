@@ -1,7 +1,6 @@
 """Test module for fipreports"""
 
 import datetime
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -342,10 +341,13 @@ def test_report_block_lineparser():
     assert int(tup[7]) == 22298026321
 
 
-def test_cmdline(tmpdir):
+def test_cmdline(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "TMP-fipreports.csv"
-    sys.argv = ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)]
+    mocker.patch(
+        "sys.argv",
+        ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)],
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -355,24 +357,30 @@ def test_cmdline(tmpdir):
     assert not disk_df.empty
 
     # Debug mode:
-    sys.argv = [
-        "ecl2csv",
-        "fipreports",
-        "--debug",
-        DATAFILE,
-        "--output",
-        "debugmode.csv",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "fipreports",
+            "--debug",
+            DATAFILE,
+            "--output",
+            "debugmode.csv",
+        ],
+    )
     ecl2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("debugmode.csv"), disk_df)
 
     # Directly on PRT file:
-    sys.argv = [
-        "ecl2csv",
-        "fipreports",
-        DATAFILE.replace("DATA", "PRT"),
-        "--output",
-        "fromprtfile.csv",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "fipreports",
+            DATAFILE.replace("DATA", "PRT"),
+            "--output",
+            "fromprtfile.csv",
+        ],
+    )
     ecl2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("fromprtfile.csv"), disk_df)

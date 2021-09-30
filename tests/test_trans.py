@@ -1,6 +1,5 @@
 """Test module for ecl2df.trans"""
 
-import sys
 from pathlib import Path
 
 import pytest
@@ -96,10 +95,12 @@ def test_nx(tmpdir):
     assert Path(tmpdir / "reek-fipnum-trans.gxf").is_file()
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "trans.csv"
-    sys.argv = ["ecl2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

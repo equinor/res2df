@@ -1,7 +1,6 @@
 """Test module for ecl2df.grid"""
 
 import datetime
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -412,20 +411,23 @@ def test_df():
     # but not for now.
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test command line interface"""
     tmpcsvfile = tmpdir / "eclgrid.csv"
-    sys.argv = [
-        "ecl2csv",
-        "grid",
-        EIGHTCELLS,
-        "-o",
-        str(tmpcsvfile),
-        "--rstdates",
-        "first",
-        "--vectors",
-        "PORO",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "grid",
+            EIGHTCELLS,
+            "-o",
+            str(tmpcsvfile),
+            "--rstdates",
+            "first",
+            "--vectors",
+            "PORO",
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -433,19 +435,22 @@ def test_main(tmpdir):
     Path(tmpcsvfile).unlink()
 
     # Do again with also restarts and multiple vectors:
-    sys.argv = [
-        "ecl2csv",
-        "grid",
-        "--verbose",
-        EIGHTCELLS,
-        "-o",
-        str(tmpcsvfile),
-        "--rstdates",
-        "2000-01-01",
-        "--vectors",
-        "PORO",
-        "PERMX",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "grid",
+            "--verbose",
+            EIGHTCELLS,
+            "-o",
+            str(tmpcsvfile),
+            "--rstdates",
+            "2000-01-01",
+            "--vectors",
+            "PORO",
+            "PERMX",
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -455,7 +460,9 @@ def test_main(tmpdir):
     Path(tmpcsvfile).unlink()
 
     # Test with constants dropping
-    sys.argv = ["ecl2csv", "grid", REEK, "-o", str(tmpcsvfile), "--dropconstants"]
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "grid", REEK, "-o", str(tmpcsvfile), "--dropconstants"]
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

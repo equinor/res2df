@@ -2,7 +2,6 @@
 
 import datetime
 import random
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -495,14 +494,17 @@ def test_main_subparsers(tmpdir, mocker):
 
     tmpcsvfile = tmpdir / ".TMP-rft2.csv"
     # Test with RFT file as argument:
-    sys.argv = [
-        "ecl2cvsv",
-        "rft",
-        "-v",
-        REEK.replace(".DATA", ".RFT"),
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2cvsv",
+            "rft",
+            "-v",
+            REEK.replace(".DATA", ".RFT"),
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

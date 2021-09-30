@@ -56,6 +56,9 @@ def getLogger_ecl2csv(
 
     formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 
+    # In case this logger has been initialized earlier, clear it:
+    logger.handlers.clear()
+
     if args_dict.get("output", "") == MAGIC_STDOUT:
         # If main output is to stdout, we must send all logs to stderr:
         default_handler = logging.StreamHandler(sys.stderr)

@@ -119,3 +119,12 @@ def test_ecl2csv_logging(tmp_path, ecl2df_module, verbose, fileexport, mocker, c
         else:
             assert "INFO:" not in stdout_output
             assert "INFO:" not in stderr_output
+
+
+def test_repeated_logger_construction(capsys):
+    """If we repeatedly call getLogger(), ensure handlers are not added on top"""
+    logger = ecl2df.getLogger_ecl2csv("nodouble")
+    logger = ecl2df.getLogger_ecl2csv("nodouble")
+    logger.warning("Don't repeat me")
+    captured = capsys.readouterr()
+    assert captured.out.count("Don't repeat me") == 1

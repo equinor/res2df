@@ -1,6 +1,7 @@
 """Test module for pvt"""
 
 import io
+import os
 import subprocess
 from pathlib import Path
 
@@ -388,11 +389,13 @@ def test_df():
     assert len(pvtdf["PVTNUM"].unique()) == 1
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpdir.chdir()
-    tmpcsvfile = str(tmpdir.join("pvt.csv"))
-    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", EIGHTCELLS, "-o", tmpcsvfile])
+    os.chdir(tmp_path)
+    tmpcsvfile = tmp_path / "pvt.csv"
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "pvt", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -402,8 +405,10 @@ def test_main(tmpdir, mocker):
     assert not disk_df.empty
 
     # Write back to include file:
-    incfile = str(tmpdir.join("pvt.inc"))
-    mocker.patch("sys.argv", ["csv2ecl", "pvt", "-v", str(tmpcsvfile), "-o", incfile])
+    incfile = tmp_path / "pvt.inc"
+    mocker.patch(
+        "sys.argv", ["csv2ecl", "pvt", "-v", str(tmpcsvfile), "-o", str(incfile)]
+    )
     csv2ecl.main()
 
     # Reparse the include file on disk back to dataframe
@@ -413,7 +418,7 @@ def test_main(tmpdir, mocker):
     pd.testing.assert_frame_equal(disk_df, disk_inc_df)
 
     # Test entry point towards include file:
-    (Path(tmpdir) / "pvto.inc").write_text(
+    (Path(tmp_path) / "pvto.inc").write_text(
         """PVTO
     0      1 1.0001 1
          200 1.000  1.001 /
@@ -426,7 +431,7 @@ def test_main(tmpdir, mocker):
     assert Path("pvto.csv").is_file()
 
     # Empty data:
-    (Path(tmpdir) / "empty.inc").write_text(
+    (Path(tmp_path) / "empty.inc").write_text(
         """SWOF
     0      1 1.0001 1 /
     /
@@ -437,9 +442,9 @@ def test_main(tmpdir, mocker):
     assert not Path("empty.csv").read_text().strip()
 
 
-def test_magic_stdout(tmpdir):
+def test_magic_stdout(tmp_path):
     """Test writing dataframes and include files to stdout"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     result = subprocess.run(
         ["ecl2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
     )
@@ -520,9 +525,9 @@ def test_df2ecl_pvto():
     # least it is well defined how to treat it)
 
 
-def test_df2ecl_rock(tmpdir):
+def test_df2ecl_rock(tmp_path):
     """Test generation of ROCK include files from dataframes"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     rock_df = pd.DataFrame(
         columns=["PVTNUM", "KEYWORD", "PRESSURE", "COMPRESSIBILITY"],

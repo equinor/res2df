@@ -1,8 +1,7 @@
 """Test module for rft"""
-
 import datetime
+import os
 import random
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -483,9 +482,9 @@ def test_rft2df():
     assert not rftdf.columns.empty
 
 
-def test_main_subparsers(tmpdir, mocker):
+def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / ".TMP-rft.csv"
+    tmpcsvfile = tmp_path / ".TMP-rft.csv"
     mocker.patch("sys.argv", ["ecl2csv", "rft", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
@@ -493,25 +492,28 @@ def test_main_subparsers(tmpdir, mocker):
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
 
-    tmpcsvfile = tmpdir / ".TMP-rft2.csv"
+    tmpcsvfile = tmp_path / ".TMP-rft2.csv"
     # Test with RFT file as argument:
-    sys.argv = [
-        "ecl2cvsv",
-        "rft",
-        "-v",
-        REEK.replace(".DATA", ".RFT"),
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2cvsv",
+            "rft",
+            "-v",
+            REEK.replace(".DATA", ".RFT"),
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
 
 
-def test_main_debugmode(tmpdir, mocker):
+def test_main_debugmode(tmp_path, mocker):
     """Test debug mode"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mocker.patch(
         "sys.argv", ["ecl2csv", "rft", "--debug", EIGHTCELLS, "-o", "indebugmode.csv"]
     )

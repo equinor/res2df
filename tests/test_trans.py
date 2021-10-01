@@ -1,6 +1,5 @@
 """Test module for ecl2df.trans"""
 
-import sys
 from pathlib import Path
 
 import pytest
@@ -85,21 +84,21 @@ def test_grouptrans():
 
 
 @pytest.mark.skipif(not HAVE_NETWORKX, reason="Requires networkx being installed")
-def test_nx(tmpdir):
+def test_nx(tmp_path):
     """Test graph generation"""
     eclfiles = EclFiles(REEK)
     network = trans.make_nx_graph(eclfiles, region="FIPNUM")
     assert network.number_of_nodes() == 6
-    networkx.write_gexf(
-        network, str(tmpdir.join("reek-fipnum-trans.gxf")), prettyprint=True
-    )
-    assert Path(tmpdir / "reek-fipnum-trans.gxf").is_file()
+    networkx.write_gexf(network, tmp_path / "reek-fipnum-trans.gxf", prettyprint=True)
+    assert (tmp_path / "reek-fipnum-trans.gxf").is_file()
 
 
-def test_main(tmpdir):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "trans.csv"
-    sys.argv = ["ecl2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    tmpcsvfile = tmp_path / "trans.csv"
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

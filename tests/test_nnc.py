@@ -1,6 +1,7 @@
 """Test module for nnc2df"""
 
 import io
+import os
 import subprocess
 from pathlib import Path
 
@@ -85,11 +86,11 @@ def test_nnc2df_faultnames():
     # Remove I_x, J_x, K_x (and _y) which is not needed
 
 
-def test_df2ecl_editnnc(tmpdir):
+def test_df2ecl_editnnc(tmp_path):
     """Test generation of EDITNNC keyword"""
     eclfiles = EclFiles(REEK)
     nncdf = nnc.df(eclfiles)
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     nncdf["TRANM"] = 2
     editnnc = nnc.df2ecl_editnnc(nncdf, filename="editnnc.inc")
@@ -115,9 +116,9 @@ def test_df2ecl_editnnc(tmpdir):
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join("nnc.csv")
+    tmpcsvfile = tmp_path / "nnc.csv"
     mocker.patch("sys.argv", ["ecl2csv", "nnc", "-v", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 

@@ -1,5 +1,6 @@
 """Test module for satfunc2df"""
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -248,7 +249,7 @@ def test_str2df(string, expected_df):
     pd.testing.assert_frame_equal(df_from_inc, expected_df)
 
 
-def test_sgof_satnuminferrer(tmpdir, mocker):
+def test_sgof_satnuminferrer(tmp_path, mocker):
     """Test inferring of SATNUMS in SGOF strings"""
     sgofstr = """
 SGOF
@@ -264,7 +265,7 @@ SGOF
   1 1 0 0
 /
 """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     assert inferdims.guess_dim(sgofstr, "TABDIMS", 0) == 3
     sgofdf = satfunc.df(sgofstr)
     assert "SATNUM" in sgofdf
@@ -652,9 +653,9 @@ SGFN
     assert len(satnum_df) == 6
 
 
-def test_main_subparsers(tmpdir, mocker):
+def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join("satfunc.csv")
+    tmpcsvfile = tmp_path / "satfunc.csv"
     mocker.patch("sys.argv", ["ecl2csv", "satfunc", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
@@ -662,7 +663,7 @@ def test_main_subparsers(tmpdir, mocker):
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
 
-    tmpcsvfile2 = tmpdir.join(".TMP-satfunc-swof.csv")
+    tmpcsvfile2 = tmp_path / ".TMP-satfunc-swof.csv"
     print(tmpcsvfile2)
     mocker.patch(
         "sys.argv",
@@ -683,9 +684,9 @@ def test_main_subparsers(tmpdir, mocker):
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}
 
 
-def test_csv2ecl(tmpdir, mocker):
+def test_csv2ecl(tmp_path, mocker):
     """Test command line interface for csv to Eclipse include files"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     tmpcsvfile = "satfunc.csv"
 
     swof_df = pd.DataFrame(

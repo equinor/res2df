@@ -78,9 +78,9 @@ FAULTS
     assert len(faultsdf.loc["C"]) == 6
 
 
-def test_main_subparser(tmpdir, mocker):
+def test_main_subparser(tmp_path, mocker):
     """Test command line interface with subparsers"""
-    tmpcsvfile = tmpdir / "faultsdf.csv"
+    tmpcsvfile = tmp_path / "faultsdf.csv"
     mocker.patch("sys.argv", ["ecl2csv", "faults", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 

@@ -43,9 +43,9 @@ def test_nonexistingzones():
     assert not zonemap
 
 
-def test_errors(tmpdir, caplog):
+def test_errors(tmp_path, caplog):
     """Test in lyr parse function return correct errors"""
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 foo
@@ -56,7 +56,7 @@ foo
     assert "Could not parse lyr file" in caplog.text
     assert "Failed on content: foo" in caplog.text
 
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 valid 1-2
@@ -67,7 +67,7 @@ foo 1 2 3
     assert ecl2df.common.parse_lyrfile(lyrfile) is None
     assert "Failed on content: foo 1 2 3" in caplog.text
 
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 foo 2-1
@@ -77,7 +77,7 @@ foo 2-1
     assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "From_layer higher than to_layer" in caplog.text
 
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 valid 1-2 #FFE5F7
@@ -88,7 +88,7 @@ foo   3- 4 #FFGGHH
     assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
 
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 valid 1-2 #FFE5F7
@@ -108,9 +108,9 @@ invalid 1-2-3
     assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
 
 
-def test_lyrlist_format(tmpdir):
+def test_lyrlist_format(tmp_path):
     """Ensure the lyr file is parsed correctly"""
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 -- Some text
@@ -143,9 +143,9 @@ def test_lyrlist_format(tmpdir):
     ]
 
 
-def test_convert_lyrlist_to_zonemap(tmpdir):
+def test_convert_lyrlist_to_zonemap(tmp_path):
     """Test common.covert_lyrlist_to_zonemap()"""
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfile.write_text(
         """
 -- Some text
@@ -164,9 +164,9 @@ def test_convert_lyrlist_to_zonemap(tmpdir):
     assert zonemap[20] == "ZoneC"
 
 
-def test_nonstandardzones(tmpdir):
+def test_nonstandardzones(tmp_path):
     """Test that we can read zones from a specific filename"""
-    lyrfile = tmpdir / "formations.lyr"
+    lyrfile = tmp_path / "formations.lyr"
     lyrfilecontent = """
 -- foo
 # foo
@@ -175,7 +175,7 @@ def test_nonstandardzones(tmpdir):
 
 # Difficult quote parsing above, might not run in ResInsight.
 """
-    lyrfile.write(lyrfilecontent)
+    lyrfile.write_text(lyrfilecontent)
     lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
     zonemap = ecl2df.common.convert_lyrlist_to_zonemap(lyrlist)
     assert 0 not in zonemap

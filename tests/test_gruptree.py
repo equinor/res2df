@@ -1,5 +1,6 @@
 """Test module for nnc2df"""
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -85,9 +86,9 @@ WELSPECS
     assert len(withstart) == 6
 
 
-def test_grupnet_rst_docs(tmpdir):
+def test_grupnet_rst_docs(tmp_path):
     """Provide the input and output for the examples in the RST documentation"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     schstr = """
 START
  01 'JAN' 2000 /
@@ -422,8 +423,8 @@ def test_emptytree_strdeck():
     assert treelibtree == ""
 
 
-def test_emptytree_commandlinetool(tmpdir, mocker, caplog):
-    tmpdir.chdir()
+def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
+    os.chdir(tmp_path)
     Path("EMPTY.DATA").write_text("")
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
     ecl2csv.main()
@@ -462,9 +463,9 @@ WELSPECS
     print(grupdf)
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join("gruptree.csv")
+    tmpcsvfile = tmp_path / "gruptree.csv"
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
@@ -543,9 +544,9 @@ FIELD
     )
 
 
-def test_main_subparser(tmpdir, mocker):
+def test_main_subparser(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir.join("gruptree.csv")
+    tmpcsvfile = tmp_path / "gruptree.csv"
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", "-v", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
@@ -729,7 +730,7 @@ def test_branprop_nodeprop(schstr, expected_dframe, check_columns):
     )
 
 
-def test_prettyprint(tmpdir, mocker, caplog):
+def test_prettyprint(tmp_path, mocker, caplog):
     """ "Test prettyprinting with multiple dates and both
     GRUPTREE and BRANPROP trees"""
     schstr = """

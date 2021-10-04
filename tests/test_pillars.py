@@ -1,6 +1,5 @@
 """Test module for ecl2df.pillars"""
 
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -322,10 +321,10 @@ def test_compute_volumes(dframe, datestr, expectedrows):
     )
 
 
-def test_main(tmpdir):
+def test_main(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "pillars.csv"
-    sys.argv = ["ecl2csv", "pillars", REEK, "-o", str(tmpcsvfile)]
+    tmpcsvfile = tmp_path / "pillars.csv"
+    mocker.patch("sys.argv", ["ecl2csv", "pillars", REEK, "-o", str(tmpcsvfile)])
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -334,16 +333,19 @@ def test_main(tmpdir):
     assert len(disk_df) == 2560
 
     # Group over every pillar, no matter what FIPNUM. One single row output
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "",
-        "--group",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "",
+            "--group",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -355,15 +357,18 @@ def test_main(tmpdir):
     assert not disk_df.empty
 
     # Pillars pr region, but no grouping
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "FIPNUM",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "FIPNUM",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -373,16 +378,19 @@ def test_main(tmpdir):
     assert len(disk_df) == 7675
 
     # Group pr. FIPNUM:
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "FIPNUM",
-        "--group",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "FIPNUM",
+            "--group",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -391,18 +399,21 @@ def test_main(tmpdir):
     assert len(disk_df) == 6
 
     # Test dates:
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "",
-        "--group",
-        "--rstdates",
-        "first",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "",
+            "--group",
+            "--rstdates",
+            "first",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -417,18 +428,21 @@ def test_main(tmpdir):
     assert len(disk_df) == 1
 
     # Test dates:
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "",
-        "--group",
-        "--rstdates",
-        "last",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "",
+            "--group",
+            "--rstdates",
+            "last",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -443,18 +457,21 @@ def test_main(tmpdir):
     assert len(disk_df) == 1
 
     # Test all dates:
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "",
-        "--group",
-        "--rstdates",
-        "all",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "",
+            "--group",
+            "--rstdates",
+            "all",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -467,19 +484,22 @@ def test_main(tmpdir):
     assert len(disk_df) == 1
 
     # Test stacked dates:
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "",
-        "--group",
-        "--rstdates",
-        "all",
-        "--stackdates",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "",
+            "--group",
+            "--rstdates",
+            "all",
+            "--stackdates",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -494,18 +514,21 @@ def test_main(tmpdir):
     assert len(disk_df) == 4
 
     # Test stacked dates, no grouping:
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        REEK,
-        "--region",
-        "FIPNUM",
-        "--rstdates",
-        "all",
-        "--stackdates",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            REEK,
+            "--region",
+            "FIPNUM",
+            "--rstdates",
+            "all",
+            "--stackdates",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -517,17 +540,20 @@ def test_main(tmpdir):
     assert len(disk_df) == 30700
 
     # Test stacked dates but with grouping only on pillars
-    sys.argv = [
-        "ecl2csv",
-        "pillars",
-        "-v",
-        REEK,
-        "--rstdates",
-        "all",
-        "--stackdates",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "pillars",
+            "-v",
+            REEK,
+            "--rstdates",
+            "all",
+            "--stackdates",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

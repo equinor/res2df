@@ -1,6 +1,5 @@
 """Test module for compdat"""
 
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -339,10 +338,12 @@ def test_initmerging():
         compdat.df(eclfiles, initvectors=2)
 
 
-def test_main_subparsers(tmpdir):
+def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "compdat.csv"
-    sys.argv = ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    tmpcsvfile = tmp_path / "compdat.csv"
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -350,15 +351,18 @@ def test_main_subparsers(tmpdir):
     assert "ZONE" in disk_df
     assert not disk_df.empty
 
-    sys.argv = [
-        "ecl2csv",
-        "compdat",
-        EIGHTCELLS,
-        "--initvectors",
-        "FIPNUM",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "compdat",
+            EIGHTCELLS,
+            "--initvectors",
+            "FIPNUM",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -366,16 +370,19 @@ def test_main_subparsers(tmpdir):
     assert "FIPNUM" in disk_df
     assert not disk_df.empty
 
-    sys.argv = [
-        "ecl2csv",
-        "compdat",
-        EIGHTCELLS,
-        "--initvectors",
-        "FIPNUM",
-        "EQLNUM",
-        "-o",
-        str(tmpcsvfile),
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "compdat",
+            EIGHTCELLS,
+            "--initvectors",
+            "FIPNUM",
+            "EQLNUM",
+            "-o",
+            str(tmpcsvfile),
+        ],
+    )
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -385,7 +392,7 @@ def test_main_subparsers(tmpdir):
     assert not disk_df.empty
 
 
-def test_defaulted_compdat_i_j(tmpdir):
+def test_defaulted_compdat_i_j(tmp_path):
     """I and J can be defaulted (that is 1* or 0) in COMPDAT records, then
     that information should be fetched from the most recent WELSPECS keyword
     """

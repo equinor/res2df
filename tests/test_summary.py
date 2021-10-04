@@ -1,6 +1,5 @@
 import datetime
 import os
-import sys
 from datetime import datetime as dt
 from pathlib import Path
 
@@ -121,42 +120,48 @@ def test_summary2df_dates():
 
 
 @pytest.mark.integration
-def test_ecl2csv_summary(tmpdir):
+def test_ecl2csv_summary(tmp_path, mocker):
     """Test that the command line utility ecl2csv is installed and
     works with summary data"""
-    tmpcsvfile = tmpdir / "sum.csv"
-    sys.argv = [
-        "ecl2csv",
-        "summary",
-        "-v",
-        REEK,
-        "-o",
-        str(tmpcsvfile),
-        "--start_date",
-        "2002-01-02",
-        "--end_date",
-        "2003-01-02",
-    ]
+    tmpcsvfile = tmp_path / "sum.csv"
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "summary",
+            "-v",
+            REEK,
+            "-o",
+            str(tmpcsvfile),
+            "--start_date",
+            "2002-01-02",
+            "--end_date",
+            "2003-01-02",
+        ],
+    )
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 97  # Includes timestamps
     assert str(disk_df["DATE"].values[0]) == "2002-01-02 00:00:00"
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02 00:00:00"
 
-    tmpcsvfile = tmpdir / "sum.csv"
-    sys.argv = [
-        "ecl2csv",
-        "summary",
-        REEK,
-        "-o",
-        str(tmpcsvfile),
-        "--time_index",
-        "daily",
-        "--start_date",
-        "2002-01-02",
-        "--end_date",
-        "2003-01-02",
-    ]
+    tmpcsvfile = tmp_path / "sum.csv"
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "summary",
+            REEK,
+            "-o",
+            str(tmpcsvfile),
+            "--time_index",
+            "daily",
+            "--start_date",
+            "2002-01-02",
+            "--end_date",
+            "2003-01-02",
+        ],
+    )
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 366
@@ -166,7 +171,7 @@ def test_ecl2csv_summary(tmpdir):
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
 
 
-def test_paramsupport(tmpdir):
+def test_paramsupport(tmp_path, mocker):
     """Test that we can merge in parameters.txt
 
     This test code manipulates the paths in the checked out
@@ -174,7 +179,7 @@ def test_paramsupport(tmpdir):
     It should not leave any extra files around, but requires certain filenames
     not to be under version control.
     """
-    tmpcsvfile = tmpdir / "sum.csv"
+    tmpcsvfile = tmp_path / "sum.csv"
 
     eclfiles = EclFiles(EIGHTCELLS)
 
@@ -182,7 +187,9 @@ def test_paramsupport(tmpdir):
     if parameterstxt.is_file():
         parameterstxt.unlink()
     parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
-    sys.argv = ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+    )
     ecl2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
@@ -195,7 +202,9 @@ def test_paramsupport(tmpdir):
     if parametersyml.is_file():
         parametersyml.unlink()
     parametersyml.write_text(yaml.dump({"FOO": 1, "BAR": 3}), encoding="utf-8")
-    sys.argv = ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+    )
     ecl2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
@@ -227,10 +236,10 @@ def test_paramsupport(tmpdir):
     parametersyml.unlink()
 
 
-def test_main_subparser(tmpdir):
+def test_main_subparser(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / "sum.csv"
-    sys.argv = ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)]
+    tmpcsvfile = tmp_path / "sum.csv"
+    mocker.patch("sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
@@ -305,11 +314,11 @@ def test_extrapolation():
     )["FOPT"].values == [lastfopt]
 
 
-def test_foreseeable_future(tmpdir):
+def test_foreseeable_future(tmp_path):
     """The foreseeable future in reservoir simulation is "defined" as 500 years.
 
     Check that we support summary files with this timespan"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     src_dframe = pd.DataFrame(
         [
             {"DATE": "2000-01-01", "FPR": 200},
@@ -939,9 +948,9 @@ def test_df2eclsum_datetimeindex():
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
-def test_ecl2df_errors(tmpdir):
+def test_ecl2df_errors(tmp_path):
     """Test error handling on bogus/corrupted summary files"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("FOO.UNSMRY").write_bytes(os.urandom(100))
     Path("FOO.SMSPEC").write_bytes(os.urandom(100))
     with pytest.raises(OSError, match="Failed to create summary instance"):
@@ -978,7 +987,7 @@ def test_df2eclsum_errors():
 
 
 @pytest.mark.integration
-def test_csv2ecl_summary(tmpdir, mocker):
+def test_csv2ecl_summary(tmp_path, mocker):
     """Check that we can call df2eclsum through the csv2ecl command line
     utility"""
     dframe = pd.DataFrame(
@@ -987,7 +996,7 @@ def test_csv2ecl_summary(tmpdir, mocker):
             {"DATE": "2017-01-01", "FOPT": 1000, "FOPR": 100},
         ]
     )
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     dframe.to_csv("summary.csv")
     mocker.patch(
         "sys.argv",

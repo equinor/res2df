@@ -1,6 +1,7 @@
 """Test module for parameters"""
 
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -92,9 +93,9 @@ def test_multiple_parameters():
     parameterstxt.unlink()
 
 
-def test_find_parameter_files_modeldir(tmpdir):
+def test_find_parameter_files_modeldir(tmp_path):
     """Test find_parameter_files when parameters are in the model directory."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model_dir = Path("realization-0/iter-0/eclipse/model")
     model_dir.mkdir(parents=True)
     assert find_parameter_files(model_dir / "FOO.DATA") == []
@@ -129,9 +130,9 @@ def test_find_parameter_files_modeldir(tmpdir):
         find_parameter_files({"foo": "bar"})
 
 
-def test_find_parameter_files_verticalplacement(tmpdir):
+def test_find_parameter_files_verticalplacement(tmp_path):
     """Test find_parameter_files with parameters.txt placed above in the hiearchy."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model_dir = Path("foo/bar/realization-0/iter-0/eclipse/model")
     model_dir.mkdir(parents=True)
 
@@ -161,9 +162,9 @@ def test_find_parameter_files_verticalplacement(tmpdir):
     ]
 
 
-def test_load(tmpdir):
+def test_load(tmp_path):
     """Test loading of yml/json/txt files into dictionaries"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     Path("empty").touch()
     assert load("empty") == {}  # A warning is logged

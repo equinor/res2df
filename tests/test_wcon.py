@@ -215,9 +215,9 @@ WCONHIST
     assert "2001-05-07" in dates
 
 
-def test_main_subparsers(tmpdir, mocker):
+def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmpdir / ".TMP-wcondf.csv"
+    tmpcsvfile = tmp_path / ".TMP-wcondf.csv"
     mocker.patch("sys.argv", ["ecl2csv", "wcon", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
 

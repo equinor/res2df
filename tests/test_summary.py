@@ -236,6 +236,52 @@ def test_paramsupport(tmp_path, mocker):
     parametersyml.unlink()
 
 
+def test_paramsupport_explicitfile(tmp_path, mocker):
+    """Test explicit naming of parameters file from command line.
+
+    This is a little bit tricky because the parameter file is assumed to be
+    relative to the DATA file, not to working directory unless it is absolute."""
+
+    tmpcsvfile = tmp_path / "smrywithrandomparams.txt"
+    randomparamfile = tmp_path / "fooparams.txt"
+    randomparamfile.write_text("FOO barrbarr\nCOM 1234", encoding="ascii")
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "summary",
+            "--verbose",
+            EIGHTCELLS,
+            "-o",
+            str(tmpcsvfile),
+            "--paramfile",
+            str(randomparamfile),  # Absolute filepath
+        ],
+    )
+    ecl2csv.main()
+    assert pd.read_csv(tmpcsvfile)["FOO"].unique() == ["barrbarr"]
+    assert pd.read_csv(tmpcsvfile)["COM"].unique() == [1234]
+
+    # If we now change to tmp_path and give a relative filename to the parameter file,'
+    # it will not be found:
+    os.chdir(tmp_path)
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            "summary",
+            "--verbose",
+            EIGHTCELLS,
+            "-o",
+            "smry_noparams.csv",
+            "--paramfile",
+            Path(randomparamfile).name,  # A relative filepath
+        ],
+    )
+    ecl2csv.main()
+    assert "FOO" not in pd.read_csv("smry_noparams.csv")
+
+
 def test_main_subparser(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "sum.csv"

@@ -448,7 +448,7 @@ def _merge_params(
         logger.info("Loading parameters from files: %s", str(param_files))
         param_dict = parameters.load_all(param_files)
     elif paramfile is not None and Path(paramfile).is_absolute():
-        logger.info("Loading parameter from file: %s", str(paramfile))
+        logger.info("Loading parameters from file: %s", str(paramfile))
         param_dict = parameters.load(paramfile)
     else:
         raise ValueError("Not able to locate parameters.txt")
@@ -728,7 +728,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--end_date",
         type=str,
         help=(
-            "End at a specific date, in ISO format YYYY-MM-DD"
+            "End at a specific date, in ISO format YYYY-MM-DD. "
             "Ignored if time_index is first or last"
         ),
         default="",
@@ -737,14 +737,14 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-p",
         "--params",
         action="store_true",
-        help="Merge key-value data from parameter file into each row",
+        help="Merge key-value data from parameter file into each row.",
     )
     parser.add_argument(
         "--paramfile",
         type=str,
         help=(
             "Filename of key-value parameter file to look for if -p is set, "
-            "relative to Eclipse DATA file or an absolute filename "
+            "relative to Eclipse DATA file or an absolute filename. "
             "If not supplied, parameters.{json,yml,txt} in "
             "{., .. and ../..} will be merged in."
         ),

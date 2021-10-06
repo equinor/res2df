@@ -223,7 +223,9 @@ def df(
             "DZ": "mean",
             "TRAN": "sum",
         }
-        aggregators = {key: aggregators[key] for key in aggregators if key in trans_df}
+        aggregators = {
+            key: value for (key, value) in aggregators.items() if key in trans_df
+        }
         trans_df = trans_df.groupby(pairname).agg(aggregators).reset_index()
 
         # Reinstate FIPNUM1 and FIPNUM2 (by splitting the pair, to get sorting for free)
@@ -301,7 +303,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def trans_main(args):
     """This is the command line API"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     trans_df = df(
         eclfiles,

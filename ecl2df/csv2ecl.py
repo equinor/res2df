@@ -37,7 +37,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s {version}".format(version=__version__),
+        version=f"%(prog)s {__version__}",
     )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:

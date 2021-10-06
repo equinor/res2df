@@ -83,7 +83,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def faults_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -93,5 +95,5 @@ def faults_main(args) -> None:
         args.output,
         index=False,
         caller_logger=logger,
-        logstr="Wrote to {}".format(args.output),
+        logstr=f"Wrote to {args.output}",
     )

@@ -51,7 +51,7 @@ def job_documentation(job_name):
     if job_name not in ecl2df_jobs:
         return None
 
-    module_name = "ecl2df.{job_name}".format(job_name=job_name.lower())
+    module_name = f"ecl2df.{job_name.lower()}"
 
     description = _get_module_variable_if_exists(
         module_name=module_name, variable_name="DESCRIPTION"

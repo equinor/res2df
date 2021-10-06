@@ -40,7 +40,7 @@ def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
     wconrecords = []  # List of dicts of every line in input file
     date = None  # DATE columns will always be there, but can contain NaN
     for kword in deck:
-        if kword.name == "DATES" or kword.name == "START":
+        if kword.name in ["DATES", "START"]:
             for rec in kword:
                 logger.info("Parsing at date %s", str(date))
                 date = parse_opmio_date_rec(rec)
@@ -91,7 +91,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def wcon_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable:redefined-outer_name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -101,5 +103,5 @@ def wcon_main(args) -> None:
         args.output,
         index=False,
         caller_logger=logger,
-        logstr="Wrote to {}".format(args.output),
+        logstr=f"Wrote to {args.output}",
     )

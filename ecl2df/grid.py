@@ -637,7 +637,7 @@ def df2ecl(
         elif dtype.startswith("float"):
             dtype = float
         else:
-            raise ValueError("Wrong dtype argument {}".format(dtype))
+            raise ValueError(f"Wrong dtype argument {dtype}")
 
     # Figure out the total number of cells for which we need to export data for:
     global_size = None
@@ -689,7 +689,7 @@ def df2ecl(
 
     for keyword in keywords:
         if keyword not in grid_df.columns:
-            raise ValueError("Keyword {} not found in grid dataframe".format(keyword))
+            raise ValueError(f"Keyword {keyword} not found in grid dataframe")
         vector = np.zeros(global_size)
         vector[grid_df["GLOBAL_INDEX"].astype(int).values] = grid_df[keyword]
         if dtype == int:
@@ -718,8 +718,9 @@ def df2ecl(
         )
         string += "\n/"
         if not nocomments:
-            string += " -- {}: {} active cells, {} total cell count\n".format(
-                keyword, active_cells, global_size
+            string += (
+                f" -- {keyword}: {active_cells} active cells, "
+                f"{global_size} total cell count\n"
             )
         string += "\n"
 
@@ -731,7 +732,9 @@ def df2ecl(
 
 def grid_main(args) -> None:
     """This is the command line API"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     grid_df = df(
         eclfiles,

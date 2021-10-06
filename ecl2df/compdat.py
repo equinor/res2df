@@ -103,7 +103,7 @@ def deck2dfs(
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
     for idx, kword in enumerate(deck):
-        if kword.name == "DATES" or kword.name == "START":
+        if kword.name in ["DATES", "START"]:
             for rec in kword:
                 date = parse_opmio_date_rec(rec)
                 logger.info("Parsing at date %s", str(date))
@@ -420,19 +420,19 @@ def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
         return complump_df
 
     for _, row in complump_df.iterrows():
-        val_I = int(row["I"])
-        val_J = int(row["J"])
-        val_K1 = int(row["K1"])
-        val_K2 = int(row["K2"])
-        if val_I < 0 or val_J < 0 or val_K1 < 0 or val_K2 < 0:
+        val_i = int(row["I"])
+        val_j = int(row["J"])
+        val_k1 = int(row["K1"])
+        val_k2 = int(row["K2"])
+        if val_i < 0 or val_j < 0 or val_k1 < 0 or val_k2 < 0:
             raise ValueError(
                 f"Negative values for COMPLUMP coordinates are not allowed: {row}"
             )
-        elif val_I == 0 or val_J == 0 or val_K1 == 0 or val_K2 == 0:
+        if val_i == 0 or val_j == 0 or val_k1 == 0 or val_k2 == 0:
             raise ValueError(
                 f"Defaulted COMPLUMP coordinates are not supported in ecl2df: {row}"
             )
-        elif val_K2 < val_K1:
+        if val_k2 < val_k1:
             raise ValueError(f"K2 must be equal to or greater than K1: {row}")
     return unrolldf(complump_df)
 
@@ -489,7 +489,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
     currentdate = wlist_df["DATE"].min()
     new_records = []
 
-    for idx, wlist_record in wlist_df.iterrows():
+    for _, wlist_record in wlist_df.iterrows():
         date = wlist_record["DATE"]
         if date > currentdate:
             # Store current state
@@ -563,7 +563,9 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                     )
                 )
             )
-            for wlist in currentstate.keys():
+            for (
+                wlist
+            ) in currentstate.keys():  # pylint: disable=consider-iterating-dictionary
                 if wlist == wlist_record["NAME"]:
                     continue
                 currentstate[wlist] = " ".join(
@@ -639,19 +641,19 @@ def expand_complump_in_welopen_df(
         else:
             # Found a row that refers to complump numbers
             # Check that the cumplump numbers are ok:
-            C1, C2 = int(row["C1"]), int(row["C2"])
-            if C1 < 0 or C2 < 0:
+            c_1, c_2 = int(row["C1"]), int(row["C2"])
+            if c_1 < 0 or c_2 < 0:
                 raise ValueError(f"Negative values for C1/C2 is not allowed: {row}")
-            if C1 == 0 or C2 == 0:
+            if c_1 == 0 or c_2 == 0:
                 raise ValueError(f"Defaults (zero) for C1/C2 is not implemented: {row}")
-            if C2 < C1:
+            if c_2 < c_1:
                 raise ValueError(f"C2 must be equal or greater than C1: {row}")
 
             relevant_complump_df = complump_df[
                 (complump_df["DATE"] <= row["DATE"])
                 & (complump_df["WELL"] == row["WELL"])
-                & (complump_df["N"] >= C1)
-                & (complump_df["N"] <= C2)
+                & (complump_df["N"] >= c_1)
+                & (complump_df["N"] <= c_2)
             ]
             for _, complump_row in relevant_complump_df.iterrows():
                 if complump_row["K1"] != complump_row["K2"]:
@@ -838,7 +840,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)

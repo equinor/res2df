@@ -264,9 +264,7 @@ def df2ecl_editnnc(
     if not nocomments:
         string += " "
         string += common.comment_formatter(
-            "  {} nnc connections, avg multiplier {}".format(
-                len(nnc_df), nnc_df["TRANM"].mean()
-            )
+            f"  {len(nnc_df)} nnc connections, avg multiplier {nnc_df['TRANM'].mean()}"
         )
     string += "\n\n"
 
@@ -278,7 +276,9 @@ def df2ecl_editnnc(
 
 def nnc_main(args) -> None:
     """Command line access point from main() or from ecl2csv via subparser"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(
@@ -286,6 +286,6 @@ def nnc_main(args) -> None:
         args.output,
         index=False,
         caller_logger=logger,
-        logstr="Wrote to {}".format(args.output),
+        logstr=f"Wrote to {args.output}",
     )
     nncdf.to_csv(args.output, index=False)

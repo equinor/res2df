@@ -78,11 +78,11 @@ def df(
     # store the edges as dictionaries indexed by the edge
     # (which is a tuple of child and parent).
     currentedges: Dict[str, Dict[Tuple[str, str], Dict[str, Any]]] = {
-        "GRUPTREE": dict(),
-        "BRANPROP": dict(),
+        "GRUPTREE": {},
+        "BRANPROP": {},
     }
     # Same approach for the welspecs keywords
-    wellspecsedges: Dict[Tuple[str, str], str] = dict()
+    wellspecsedges: Dict[Tuple[str, str], str] = {}
     # Node properties from GRUPNET/NODEPROP is stored in a dataframe
     # Note that it's not allowed to mix GRUPNET and NODEPROP in eclipse
     # so the datframe will only contain columns from one of them
@@ -96,7 +96,7 @@ def df(
     keywords = ["GRUPTREE", "BRANPROP", "WELSPECS", "GRUPNET", "NODEPROP"]
     found_keywords = {key: False for key in keywords}
     for kword in deck:
-        if kword.name == "DATES" or kword.name == "START" or kword.name == "TSTEP":
+        if kword.name in ["DATES", "START", "TSTEP"]:
             # Whenever we encounter a new DATES, it means that
             # we have processed all the network keywords that
             # have occured since the last date, so this is the chance
@@ -113,7 +113,7 @@ def df(
                 found_keywords = {key: False for key in keywords}
             # Done dumping the data for the previous date, parse the fresh
             # date:
-            if kword.name == "DATES" or kword.name == "START":
+            if kword.name in ["DATES", "START"]:
                 for rec in kword:
                     date = parse_opmio_date_rec(rec)
                     logger.debug("Parsing at date %s", str(date))
@@ -447,7 +447,9 @@ def prettyprint(dframe: pd.DataFrame) -> str:
 
 def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)

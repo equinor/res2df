@@ -365,11 +365,11 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
 
     icd_seg_data.columns = ["ICD_" + x for x in icd_seg_data.columns]
 
-    msg = "Found %d ICD segments, indices %s" % (
+    logger.debug(
+        "Found %d ICD segments, indices %s",
         len(icd_seg_data),
         str(icd_seg_data["ICD_SEGIDX"].values),
     )
-    logger.debug(msg)
 
     return (seg_data, icd_seg_data)
 
@@ -536,12 +536,11 @@ def df(
             continue
 
         logger.info(
-            "Extracting {} well {:>8} at {}, record index: {}".format(
-                rftrecord["wellmodel"],
-                rftrecord["wellname"],
-                rftrecord["date"],
-                rftrecord["timeindex"],
-            )
+            "Extracting %s well %s at %s, record index: %s",
+            rftrecord["wellmodel"],
+            str.rjust(rftrecord["wellname"], 8),
+            rftrecord["date"],
+            rftrecord["timeindex"],
         )
 
         headers = rftrecord["headers"]
@@ -675,7 +674,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def rft_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     if args.DATAFILE.endswith(".RFT"):
         # Support the RFT file as an argument also:
         eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")

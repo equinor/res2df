@@ -85,7 +85,9 @@ for keyw in [
 SVG_COLOR_NAMES = [
     color.lower()
     for color in (
-        (Path(__file__).parent / "svg_color_keyword_names.txt").read_text().splitlines()
+        (Path(__file__).parent / "svg_color_keyword_names.txt")
+        .read_text(encoding="utf-8")
+        .splitlines()
     )
 ]
 
@@ -133,7 +135,7 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
         print(string)
     else:
-        Path(outputfilename).write_text(string)
+        Path(outputfilename).write_text(string, encoding="utf-8")
         print(f"Wrote to {outputfilename}")
 
 
@@ -729,7 +731,7 @@ def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
 
     """  # noqa
 
-    zonelines = Path(filename).read_text().splitlines()
+    zonelines = Path(filename).read_text(encoding="utf-8").splitlines()
 
     # Remove comments, support both "--" and "#":
     zonelines = [line.split("--")[0].strip() for line in zonelines]
@@ -810,7 +812,7 @@ def get_wells_matching_template(template: str, wells: list):
             "Well template not allowed to start with a wildcard character: "
             f"Must be preceded with a \\: {template}"
         )
-    elif template.startswith("\\"):
+    if template.startswith("\\"):
         # Note that the two \\ are actually read as one and
         # this will return True for f.ex '\*P1'
         template = template[1:]

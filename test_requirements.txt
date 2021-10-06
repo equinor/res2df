@@ -4,6 +4,7 @@ isort
 mypy
 networkx
 pre-commit
+pylint-ignore
 pytest
 pytest-cov
 pytest-mock

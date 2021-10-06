@@ -63,6 +63,7 @@ jobs:
           flake8 ecl2df tests
           isort --check-only --profile black ecl2df tests
           mypy ecl2df
+          pylint-ignore --rcfile=.pylintrc ecl2df
 
       - name: List all installed packages
         run: pip freeze

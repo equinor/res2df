@@ -24,7 +24,7 @@ except ImportError:
     # Allow parts of ecl2df to work without OPM:
     pass
 
-from ecl2df import getLogger_ecl2csv
+from ecl2df import common, getLogger_ecl2csv
 
 from .common import (
     get_wells_matching_template,
@@ -33,6 +33,7 @@ from .common import (
     parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
+    write_inc_stdout_file,
 )
 from .eclfiles import EclFiles
 from .grid import merge_initvectors
@@ -46,6 +47,7 @@ For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
 one very long one, and mixed-case in opm
 """
 COMPDAT_RENAMER: Dict[str, str] = {
+    # This dictionary is assumed ordered.
     "WELL": "WELL",
     "I": "I",
     "J": "J",
@@ -838,6 +840,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """Fill a parser for the operation dataframe -> eclipse include file"""
+    return common.fill_reverse_parser(parser, "COMPDAT", "compdat.inc")
+
+
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -846,6 +853,16 @@ def compdat_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     compdat_df = df(eclfiles, initvectors=args.initvectors)
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
+
+
+def compdat_reverse_main(args) -> None:
+    logger = getLogger_ecl2csv(
+        __name__, vars(args)
+    )  # pylint: disabled=redefined-outer-name
+    compdat_df = pd.read_csv(args.csvfile)
+    logger.info("Parsed %s", args.csvfile)
+    inc_string = df2ecl(compdat_df)
+    write_inc_stdout_file(inc_string, args.output)
 
 
 def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFrame:
@@ -871,3 +888,32 @@ def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFr
         compdat_df = merge_zones(compdat_df, zonemap)
 
     return compdat_df
+
+
+def df2ecl(dframe) -> str:
+    return df2ecl_compdat(dframe)
+
+
+def df2ecl_compdat(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print COMPDAT statements to be merged into a Schedule section"""
+    if dframe.empty:
+        return "-- No data in compdat dataframe!"
+
+    # Loop over dates.
+    # skip first date?
+
+    string = "COMPDAT\n"
+    string += common.comment_formatter(comment)
+    string += "-- compdat headers..\n"
+
+    # remove trailing colums with all nans.
+    # qoute the wellname
+    # Insert 1* for defaults
+    # Use pandas to print the table justified.
+
+    for _, row in dframe.iterrows():
+        for item_name in COMPDAT_RENAMER.values():  # ordering in that dict is critical.
+            string += f" {row[item_name]}"
+        string += " / \n"
+    string += "/\n"
+    return string

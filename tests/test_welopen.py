@@ -862,6 +862,55 @@ def test_welopen_wlist(test_input, expected):
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)
 
 
+def test_welopen_df():
+    """Test that we can obtain WELOPEN information when it applies on well state,
+    not on connections."""
+    deck = EclFiles.str2deck(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' / -- This is ignored for connections
+    /
+    """
+    )
+    print(compdat.deck2dfs(deck)["WELOPEN"])
+    pd.testing.assert_frame_equal(
+        compdat.deck2dfs(deck)["WELOPEN"],
+        pd.DataFrame(
+            columns=[
+                "DATE",
+                "WELL",
+                "I",
+                "J",
+                "K",
+                "C1",
+                "C2",
+                "STATUS",
+                "KEYWORD_IDX",
+            ],
+            data=[
+                [
+                    datetime.date(2000, 1, 1),
+                    "OP1",
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    "SHUT",
+                    2,
+                ],
+            ],
+        ),
+        check_like=True,
+    )
+
+
 @pytest.mark.parametrize(
     "test_input, expected",
     [

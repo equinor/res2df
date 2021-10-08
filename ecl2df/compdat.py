@@ -281,6 +281,7 @@ def deck2dfs(
         COMPDAT=compdat_df,
         COMPSEGS=compsegs_df,
         WELSEGS=welsegs_df,
+        WELOPEN=welopen_df,
         WLIST=wlist_df,
         WSEGSICD=wsegsicd_df,
         WSEGAICD=wsegaicd_df,

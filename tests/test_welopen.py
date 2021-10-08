@@ -14,8 +14,8 @@ except ImportError:
     )
 
 WELOPEN_CASES = [
-    # Simplest possible WELOPEN case
-    (
+    # WELOPEN operating on well state, not on connections:
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -30,12 +30,13 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
             ],
         ),
+        id="on-wellstate",
     ),
-    # Test the defaults handling in WELOPEN:
-    (
+    # Test the defaults handling in WELOPEN, it will still operate on well state:
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -50,12 +51,13 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
             ],
         ),
+        id="on-wellstate-explicit-defaults",
     ),
-    # Test the defaults handling in WELOPEN (zero value means apply to all)
-    (
+    # Test the zero handling in WELOPEN (zero value means apply to all)
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -73,9 +75,10 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
+        id="zero-values",
     ),
     # Test the defaults handling in WELOPEN (default values are negative)
-    (
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -93,9 +96,111 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
+        id="negative-values",
+    ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     -- When item 3-7 are defaulted, the action applies to the well and not the
+     -- connections. Thus they should be kept open.
+     'OP1' 'STOP' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+        id="welopen-stop-on-well",
+    ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'STOP' 1* 1* 1* /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+        id="welopen-stop-on-well-explicit-defaults",
+    ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-shut-on-connection",
     ),
     # Fail with ValueError when both I,J,K (3-5) and completions number (6-7)
-    # are defined in WELOPEN
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'STOP' 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-stop-on-connection-is-shut",
+    ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'POPN' 1 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+        id="welopen-popn-on-connection-is-open",
+    ),
     pytest.param(
         """
     DATES
@@ -109,17 +214,28 @@ WELOPEN_CASES = [
      'OP1' 'SHUT' 1 1 1 1 1 /
     /
     """,
-        pd.DataFrame(
-            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
-            data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-            ],
-        ),
+        None,
         id="both_connection_and_completion_defined",
         marks=pytest.mark.xfail(raises=ValueError),
     ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP2' 'SHUT' 1 1 1 /
+    /
+    """,
+        None,
+        id="operating-on-unknown-well",
+        marks=pytest.mark.xfail(raises=ValueError),
+    ),
     # Test J slicing
-    (
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -139,10 +255,10 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
             ],
         ),
+        id="j-slicing",
     ),
     # Test multiple connections to the same cell
-    # (ecl2df <= 0.13.1 would remove OP1 from this dataframe)
-    (
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -152,8 +268,8 @@ WELOPEN_CASES = [
      'OP2' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     'OP1' 'SHUT'  /
-     'OP2' 'OPEN'  /
+     'OP1' 'SHUT' 0 0 0 /
+     'OP2' 'OPEN' 0 0 0 /
     /
     """,
         pd.DataFrame(
@@ -163,9 +279,10 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "OPEN"],
             ],
         ),
+        id="multiple-connnections-same-cell",
     ),
     # Test multiple time steps
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -176,7 +293,7 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP1' 'SHUT' /
+     'OP1' 'SHUT' 0 0 0 /
     /
 
     TSTEP
@@ -208,8 +325,9 @@ WELOPEN_CASES = [
                 },
             }
         ),
+        id="multiple-time-steps",
     ),
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -220,7 +338,7 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP1' 'OPEN' /
+     'OP1' 'OPEN' 0 0 0/
     /
 
     TSTEP
@@ -252,8 +370,9 @@ WELOPEN_CASES = [
                 },
             }
         ),
+        id="more-time-steps",
     ),
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -265,7 +384,7 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP2' 'OPEN' /
+     'OP2' 'OPEN' 0 0 0/
     /
 
     DATES
@@ -276,7 +395,7 @@ WELOPEN_CASES = [
      'OP1' 34 111 32 32 'OPEN' /
     /
     WELOPEN
-     'OP1' 'SHUT' /
+     'OP1' 'SHUT' 0 0 0 /
     /
 
     DATES
@@ -284,8 +403,8 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP1' 'OPEN' /
-     'OP2' 'SHUT' /
+     'OP1' 'OPEN' 0 0 0 /
+     'OP2' 'SHUT' 0 0 0 /
     /
     """,
         pd.DataFrame(
@@ -323,8 +442,9 @@ WELOPEN_CASES = [
                 },
             }
         ),
+        id="date-stepping",
     ),
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -351,7 +471,7 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP1' 'OPEN' /
+     'OP1' 'OPEN' 0 0 0 /
     /
     """,
         pd.DataFrame(
@@ -371,34 +491,9 @@ WELOPEN_CASES = [
                 },
             }
         ),
+        id="more-date-stepping",
     ),
-    (
-        """
-    DATES
-     1 MAY 2001 /
-    /
-
-    COMPDAT
-     'OP1' 1 1 1 1 'OPEN'  /
-    /
-
-    WELOPEN
-     'OP1' 'SHUT' /
-    /
-    """,
-        pd.DataFrame(
-            {
-                "WELL": {0: "OP1"},
-                "I": {0: 1},
-                "J": {0: 1},
-                "K1": {0: 1},
-                "K2": {0: 1},
-                "OP/SH": {0: "SHUT"},
-                "DATE": {0: datetime.date(2001, 5, 1)},
-            }
-        ),
-    ),
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -431,34 +526,9 @@ WELOPEN_CASES = [
                 "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 2)},
             }
         ),
+        id="test-xx1",
     ),
-    (
-        """
-    DATES
-     1 MAY 2001 /
-    /
-
-    COMPDAT
-     'OP1' 1 1 1 2 'OPEN'  /
-    /
-
-    WELOPEN
-     'OP1' 'SHUT' 1 1 1 /
-    /
-    """,
-        pd.DataFrame(
-            {
-                "WELL": {0: "OP1", 1: "OP1"},
-                "I": {0: 1, 1: 1},
-                "J": {0: 1, 1: 1},
-                "K1": {0: 2, 1: 1},
-                "K2": {0: 2, 1: 1},
-                "OP/SH": {0: "OPEN", 1: "SHUT"},
-                "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 1)},
-            }
-        ),
-    ),
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -469,38 +539,8 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP1' 'SHUT' /
-    /
-
-    WELOPEN
-     'OP1' 'OPEN' /
-    /
-    """,
-        pd.DataFrame(
-            {
-                "WELL": {0: "OP1"},
-                "I": {0: 1},
-                "J": {0: 1},
-                "K1": {0: 1},
-                "K2": {0: 1},
-                "OP/SH": {0: "OPEN"},
-                "DATE": {0: datetime.date(2001, 5, 1)},
-            }
-        ),
-    ),
-    (
-        """
-    DATES
-     1 MAY 2001 /
-    /
-
-    COMPDAT
-     'OP1' 1 1 1 1 'OPEN'  /
-    /
-
-    WELOPEN
-     'OP1' 'OPEN' /
-     'OP1' 'SHUT' /
+     'OP1' 'OPEN' 0 0 0 /
+     'OP1' 'SHUT' 0 0 0 /
     /
     """,
         pd.DataFrame(
@@ -514,8 +554,9 @@ WELOPEN_CASES = [
                 "DATE": {0: datetime.date(2001, 5, 1)},
             }
         ),
+        id="self-overwriting-records",
     ),
-    (
+    pytest.param(
         """
     DATES
      1 MAY 2001 /
@@ -526,7 +567,7 @@ WELOPEN_CASES = [
     /
 
     WELOPEN
-     'OP1' 'OPEN' /
+     'OP1' 'OPEN' 0 0 0 /
      'OP1' 'SHUT' 1 1 1 /
     /
     """,
@@ -541,38 +582,12 @@ WELOPEN_CASES = [
                 "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 1)},
             }
         ),
-    ),
-    # Test 0 values for ijk-connections
-    (
-        """
-    DATES
-     1 MAY 2001 /
-    /
-
-    COMPDAT
-     'OP1' 1 1 1 2 'OPEN'  /
-    /
-
-    WELOPEN
-     'OP1' 'SHUT' 0 0 0 2* /
-    /
-    """,
-        pd.DataFrame(
-            {
-                "WELL": {0: "OP1", 1: "OP1"},
-                "I": {0: 1, 1: 1},
-                "J": {0: 1, 1: 1},
-                "K1": {0: 2, 1: 1},
-                "K2": {0: 2, 1: 1},
-                "OP/SH": {0: "SHUT", 1: "SHUT"},
-                "DATE": {0: datetime.date(2001, 5, 1), 1: datetime.date(2001, 5, 1)},
-            }
-        ),
+        id="open-and-shut-slice-multiple-welopen",
     ),
     # Referencing multiple wells with wildcards
     # Wildcard structures are tested in test_common and need
     # not be tested here.
-    (
+    pytest.param(
         """
     DATES
       1 JAN 2000 /
@@ -583,7 +598,7 @@ WELOPEN_CASES = [
      'WI1' 3 3 3 3 'OPEN' /
     /
     WELOPEN
-     'B*H' 'SHUT' /
+     'B*H' 'SHUT' 0 0 0 /
     /
     """,
         pd.DataFrame(
@@ -594,10 +609,11 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
             ],
         ),
+        id="multiple-wells-via-wildcard",
     ),
     # Test wildcard in wellname. A well that also matches the well template
     # but is defined later, is not SHUT
-    (
+    pytest.param(
         """
     DATES
       1 JAN 2000 /
@@ -608,7 +624,7 @@ WELOPEN_CASES = [
      'WI1' 3 3 3 3 'OPEN' /
     /
     WELOPEN
-     'OP*' 'SHUT' /
+     'OP*' 'SHUT' 0 0 0 /
     /
     DATES
       1 FEB 2000 /
@@ -626,11 +642,12 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 2, 1), "OP3", 4, 4, 4, 4, "OPEN"],
             ],
         ),
+        id="wildcards-do-not-apply-to-future-wells",
     ),
 ]
 
 
-@pytest.mark.parametrize("test_input,expected", WELOPEN_CASES)
+@pytest.mark.parametrize("test_input, expected", WELOPEN_CASES)
 def test_welopen(test_input, expected):
     """Test with WELOPEN present"""
     deck = EclFiles.str2deck(test_input)
@@ -665,7 +682,7 @@ def test_welopen(test_input, expected):
       '*OP' NEW OP1 /
     /
     WELOPEN
-      '*OP' 'SHUT' /
+      '*OP' 'SHUT' 0 0 0 /
     /
     """,
             pd.DataFrame(
@@ -688,7 +705,7 @@ def test_welopen(test_input, expected):
       '*OP' NEW OP2 /
     /
     WELOPEN
-      '*OP' 'SHUT' /
+      '*OP' 'SHUT' 0 0 0 /
     /
     """,
             None,
@@ -711,7 +728,7 @@ def test_welopen(test_input, expected):
     /
     WELOPEN
       -- Shut the wells immediately, overriding OPEN in COMPDAT
-      '*OP' 'SHUT' /
+      '*OP' 'SHUT' 0 0 0 /
     /
     """,
             pd.DataFrame(
@@ -736,7 +753,7 @@ def test_welopen(test_input, expected):
     /
     WELOPEN
       -- In ecl2df, the WELOPEN is allowed to be before WLIST
-      '*OP' 'SHUT' /
+      '*OP' 'SHUT' 0 0 0 /
     /
     WLIST
       '*OP' NEW OP1 OP2 /
@@ -746,7 +763,7 @@ def test_welopen(test_input, expected):
       2 JAN 2000 /
     /
     WELOPEN
-      '*IN' 'SHUT' /
+      '*IN' 'SHUT' 0 0 0 /
     /
     """,
             pd.DataFrame(
@@ -771,7 +788,7 @@ def test_welopen(test_input, expected):
       'OP1' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-      '*OP' 'SHUT' /
+      '*OP' 'SHUT' 0 0 0 /
     /
     DATES
       2 JAN 2000/
@@ -799,7 +816,7 @@ def test_welopen(test_input, expected):
       '*OP' NEW OP1 /
     /
     WELOPEN
-      '*OPS' 'SHUT' /
+      '*OPS' 'SHUT' 0 0 0 /
     /
     """,
             None,
@@ -826,7 +843,7 @@ def test_welopen(test_input, expected):
       '*OP' NEW OP1 /
     /
     WELOPEN
-      '*OP' 'SHUT' /
+      '*OP' 'SHUT' 0 0 0 /
     /
     """,
             pd.DataFrame(

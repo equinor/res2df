@@ -210,12 +210,12 @@ WELOPEN_CASES = [
      'OP1' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     -- This also specifies lumped connections, which will give crash
+     -- This points to a lumped connection, but COMPLUMP is missing
      'OP1' 'SHUT' 1 1 1 1 1 /
     /
     """,
         None,
-        id="both_connection_and_completion_defined",
+        id="complump_missing",
         marks=pytest.mark.xfail(raises=ValueError),
     ),
     pytest.param(
@@ -1150,6 +1150,59 @@ WELOPEN
                 raises=ValueError,
                 match="Defaults (zero) for C1/C2 is not implemented",
             ),
+        ),
+        pytest.param(
+            """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    COMPLUMP
+     'OP1' 1 1 1 1 1 /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 1 1 1 1 1 /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                ],
+            ),
+            id="indices_and_complump_combined",
+        ),
+        pytest.param(
+            """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP1' 1 1 2 2 'OPEN' /
+    /
+    COMPLUMP
+     -- Assign completion number 1 and 2 to the two connections
+     'OP1' 1 1 1 1 1 /
+     'OP1' 1 1 2 2 2 /
+    /
+    WELOPEN
+     -- This is ok, gives shut well:
+     'OP1' 'SHUT' 1 1 1 1 1 /  -- must match both i,j,k and complump
+     -- The following is ignored, because completion 2 is not at 1,1,1
+     'OP1' 'SHUT' 1 1 1 2 2 /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                ],
+            ),
+            id="indices_and_complump_combined_2",
         ),
     ],
 )

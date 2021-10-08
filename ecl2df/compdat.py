@@ -646,7 +646,7 @@ def expand_complump_in_welopen_df(
             if c_1 < 0 or c_2 < 0:
                 raise ValueError(f"Negative values for C1/C2 is not allowed: {row}")
             if c_1 == 0 or c_2 == 0:
-                raise ValueError(f"Defaults (zero) for C1/C2 is not implemented: {row}")
+                raise ValueError(f"Zeros for C1/C2 is not implemented: {row}")
             if c_2 < c_1:
                 raise ValueError(f"C2 must be equal or greater than C1: {row}")
 
@@ -656,6 +656,20 @@ def expand_complump_in_welopen_df(
                 & (complump_df["N"] >= c_1)
                 & (complump_df["N"] <= c_2)
             ]
+            # If I, J and K is also present in the WELOPEN record
+            # we should "and" the complump filter and the i,j,k filter:
+            if (
+                {"I", "J", "K"}.issubset(row.keys())
+                and row["I"]
+                and row["J"]
+                and row["K"]
+            ):
+                relevant_complump_df = relevant_complump_df[
+                    (relevant_complump_df["I"] == row["I"])
+                    & (relevant_complump_df["J"] == row["J"])
+                    & (relevant_complump_df["K1"] == row["K"])
+                    & (relevant_complump_df["K2"] == row["K"])
+                ]
             for _, complump_row in relevant_complump_df.iterrows():
                 if complump_row["K1"] != complump_row["K2"]:
                     raise ValueError(
@@ -787,7 +801,9 @@ def applywelopen(
             and row["C2"] is None
         ):
             # The compdat dataframe is assumed unrolled
-            # so that K1 is always equal to K2.
+            # so that K1 is always equal to K2. Any openings of lumped
+            # connections (C1 and C2) should already be translated to
+            # I, J, and K when we get here.
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
@@ -797,8 +813,6 @@ def applywelopen(
                 & (compdat_df["K2"] == row["K"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
-            # Positive completion numbers will end here, as it is not
-            # supported yet.
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
                 f"\n {str(row)} "

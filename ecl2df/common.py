@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
 
+import dateutil
 import numpy as np
 import pandas as pd
 
@@ -90,6 +91,22 @@ SVG_COLOR_NAMES = [
         .splitlines()
     )
 ]
+ECLMONTH2NUM = {
+    "JAN": 1,
+    "FEB": 2,
+    "MAR": 3,
+    "APR": 4,
+    "MAY": 5,
+    "JUN": 6,
+    "JUL": 7,
+    "JLY": 7,
+    "AUG": 8,
+    "SEP": 9,
+    "OCT": 10,
+    "NOV": 11,
+    "DEC": 12,
+}
+NUM2ECLMONTH = {num: month for month, num in ECLMONTH2NUM.items()}
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -141,22 +158,20 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
 
 def parse_ecl_month(eclmonth: str) -> int:
     """Translate Eclipse month strings to integer months"""
-    eclmonth2num = {
-        "JAN": 1,
-        "FEB": 2,
-        "MAR": 3,
-        "APR": 4,
-        "MAY": 5,
-        "JUN": 6,
-        "JUL": 7,
-        "JLY": 7,
-        "AUG": 8,
-        "SEP": 9,
-        "OCT": 10,
-        "NOV": 11,
-        "DEC": 12,
-    }
-    return eclmonth2num[eclmonth]
+    return ECLMONTH2NUM[eclmonth]
+
+
+def datetime_to_eclipsedate(
+    timestamp: Union[str, datetime.datetime, datetime.date]
+) -> str:
+    """Convert a Python timestamp or date to the Eclipse DATE format"""
+    if isinstance(timestamp, str):
+        timestamp = dateutil.parser.isoparse(timestamp)
+    assert isinstance(timestamp, (datetime.datetime, datetime.date))
+    string = f"{timestamp.day} {NUM2ECLMONTH[timestamp.month]} {timestamp.year}"
+    if isinstance(timestamp, datetime.datetime):
+        string += " " + timestamp.strftime("%H:%M:%S")
+    return string.replace("00:00:00", "").strip()
 
 
 def ecl_keyworddata_to_df(

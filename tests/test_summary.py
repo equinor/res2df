@@ -993,6 +993,28 @@ def test_df2eclsum_datetimeindex():
     assert roundtrip["FOPT"].values == [1000]
 
 
+def test_duplicated_summary_vectors(caplog):
+    """EclSum files on disk may contain repeated vectors
+    if the user has inserted a vector name twice in the
+    SUMMARY section
+
+    ecl2df.summary.df() should deduplicate this, and give a warning.
+    """
+
+    # ecl2df.df2eclsum() is not able to mock such a UNSMRY file.
+    dupe_datafile = (
+        TESTDIR
+        / "data"
+        / "eightcells"
+        / "eightcells_duplicated_summary_vector"
+        / "EIGHTCELLS_DUPES.DATA"
+    )
+    assert "SUMMARY\nFOPR\nFOPR" in dupe_datafile.read_text()
+    deduplicated_dframe = df(EclFiles(dupe_datafile))
+    assert (deduplicated_dframe.columns == ["YEARS", "FOPR"]).all()
+    assert "Duplicated columns detected" in caplog.text
+
+
 @pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
 def test_ecl2df_errors(tmp_path):
     """Test error handling on bogus/corrupted summary files"""

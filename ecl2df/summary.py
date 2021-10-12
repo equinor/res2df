@@ -422,6 +422,17 @@ def df(
     if datetime is True:
         if dframe.index.dtype == "object":
             dframe.index = pd.to_datetime(dframe.index)
+
+    # Remove duplicated column names. These will occur from libecl
+    # when the user has repeated vector names in the summary SECTION
+    dupes = dframe.columns.duplicated()
+    if dupes.any():
+        logger.warning(
+            "Duplicated columns detected, check your DATA file "
+            "for repeated vectors in the SUMMARY section"
+        )
+        logger.warning("Duplicates: %s", str(list(dframe.columns[dupes])))
+        dframe = dframe.loc[:, ~dframe.columns.duplicated()]
     return dframe
 
 

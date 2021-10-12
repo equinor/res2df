@@ -112,14 +112,14 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
     if not Path(filename).exists():
         raise FileNotFoundError(str(filename) + " not found")
 
-    if not Path(filename).read_text().strip():
+    if not Path(filename).read_text(encoding="utf-8").strip():
         logger.warning("%s was empty", filename)
         return {}
 
     yaml_error = ""
     try:
         logger.debug("Trying to parse %s with yaml.safe_load()", filename)
-        params_dict = yaml.safe_load(Path(filename).read_text())
+        params_dict = yaml.safe_load(Path(filename).read_text(encoding="utf-8"))
         logger.debug(" - ok, parsed as yaml")
         if not isinstance(params_dict, dict):
             # yaml happily parses txt files into a single line, don't want that.
@@ -132,7 +132,7 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
     if not params_dict:
         try:
             logger.debug("Trying to parse %s with json.load()", filename)
-            with open(filename) as f_handle:
+            with open(filename, encoding="utf-8") as f_handle:
                 params_dict = json.load(f_handle)
             assert isinstance(params_dict, dict)
             logger.debug(" - ok, parsed as yaml")
@@ -154,7 +154,7 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
     if not params_dict:
         logger.warning("%s could not be parsed as yaml, json or txt", filename)
         logger.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
-        raise ValueError("Could not parse {}".format(filename))
+        raise ValueError(f"Could not parse {filename}")
 
     # Filter to values that are NOT dict's. We can have dict as value when
     # "grouped" keys are present in the json files, both as "group:key value"

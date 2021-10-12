@@ -109,9 +109,7 @@ class EclFiles(object):
     @staticmethod
     def file2deck(filename: Union[str, Path]) -> "opm.libopmcommon_python.Deck":
         """Try to convert standalone files into opm.io Deck objects"""
-        with open(filename) as fhandle:
-            filestring = "".join(fhandle.readlines())
-            return EclFiles.str2deck(filestring)
+        return EclFiles.str2deck(Path(filename).read_text(encoding="utf-8"))
 
     def get_egrid(self) -> EclGrid:
         """Find and return EGRID file as an EclGrid object"""

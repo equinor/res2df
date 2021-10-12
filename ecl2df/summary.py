@@ -78,6 +78,7 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
         return None
     if isinstance(some_date, str):
         return dateutil.parser.parse(some_date).date()  # type: ignore
+    raise TypeError(f"some_date must be a string or a date, got {some_date}")
 
 
 def _crop_datelist(
@@ -542,8 +543,8 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
         dframe.index.values[0], (dt.datetime, np.datetime64, pd.Timestamp)
     ):
         raise ValueError(
-            "dataframe must have a datetime index, got %s of type %s"
-            % (dframe.index.values[0], type(dframe.index.values[0]))
+            "dataframe must have a datetime index, got "
+            f"{dframe.index.values[0]} of type {type(dframe.index.values[0])}"
         )
     dframe.sort_index(axis=0, inplace=True)
 
@@ -782,7 +783,9 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclbase = (
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
@@ -802,7 +805,9 @@ def summary_main(args) -> None:
 
 def summary_reverse_main(args) -> None:
     """Entry point for usage with "csv2ecl summary" on the command line"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
 
     summary_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)

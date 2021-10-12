@@ -261,9 +261,7 @@ def equil_fromdeck(
 
     phases = phases_from_deck(deck)
     if not phases or phases not in RENAMERS:
-        raise ValueError(
-            "Could not determine phase configuration, got '{}'".format(phases)
-        )
+        raise ValueError(f"Could not determine phase configuration, got '{phases}'")
     columnrenamer = RENAMERS[phases_from_deck(deck)]
 
     dataframe = common.ecl_keyworddata_to_df(
@@ -313,8 +311,9 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def equil_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
-
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -344,7 +343,9 @@ def equil_main(args) -> None:
 
 def equil_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     equil_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(equil_df, keywords=args.keywords)
@@ -516,11 +517,11 @@ def _df2ecl_equilfuncs(
     """Internal function to be used by df2ecl_<keyword>() functions"""
     if dframe.empty:
         return "-- No data!"
-    string = "{}\n".format(keyword)
+    string = f"{keyword}\n"
     string += common.comment_formatter(comment)
     col_headers = RENAMERS[keyword]["DATA"]
 
-    string += "--   {:^21} {:^21} \n".format("DEPTH", col_headers[1])
+    string += f"--   {'DEPTH':^21} {col_headers[1]:^21} \n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -540,13 +541,11 @@ def _df2ecl_equilfuncs(
         string = ""
         dframe = dframe.sort_values("Z")
         for _, row in dframe.iterrows():
-            string += "  {:20.7f} {:20.7f}\n".format(
-                row[col_headers[0]], row[col_headers[1]]
-            )
+            string += f"  {row[col_headers[0]]:20.7f} {row[col_headers[1]]:20.7f}\n"
         return string + "/\n"
 
     subset = subset.set_index("EQLNUM").sort_index()
     for eqlnum in subset.index.unique():
-        string += "-- EQLNUM: {}\n".format(eqlnum)
+        string += f"-- EQLNUM: {eqlnum}\n"
         string += _df2ecl_equilfuncs_eqlnum(subset[subset.index == eqlnum])
     return string + "\n"

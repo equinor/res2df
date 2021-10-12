@@ -135,7 +135,7 @@ def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
     # Flag for whether we are supposedly parsing a PRT file made by OPM flow:
     opm = False
 
-    with open(prtfile) as prt_fh:
+    with open(prtfile, encoding="utf-8") as prt_fh:
         logger.info(
             "Parsing file %s for blocks starting with %s REPORT REGION",
             prtfile,
@@ -209,7 +209,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fipreports_main(args) -> None:
     """Command line API"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:

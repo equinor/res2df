@@ -280,7 +280,9 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def pvt_main(args) -> None:
     """Entry-point for module, for command line utility for Eclipse to CSV"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     logger.info("Parsed %s", args.DATAFILE)
     if eclfiles:
@@ -293,7 +295,7 @@ def pvt_main(args) -> None:
         # When TABDIMS is not present, the code will try to infer
         # the number of saturation functions, this is necessarily
         # more error-prone, and it needs a string as input.
-        stringdeck = Path(args.DATAFILE).read_text()
+        stringdeck = Path(args.DATAFILE).read_text(encoding="utf-8")
         pvt_df = df(stringdeck, keywords=args.keywords)
     if "PVTNUM" in pvt_df and "KEYWORD" in pvt_df:
         pvtnums = str(len(pvt_df["PVTNUM"].unique()))
@@ -312,7 +314,9 @@ def pvt_main(args) -> None:
 
 def pvt_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     pvt_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(pvt_df, keywords=args.keywords)
@@ -358,7 +362,7 @@ def df2ecl_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "ROCK\n"
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21}\n".format("PRESSURE", "COMPRESSIBILITY")
+    string += "--   {'PRESSURE':^21} {'COMPRESSIBILITY':^21}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -371,9 +375,7 @@ def df2ecl_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
     for _, row in subset.iterrows():
-        string += "  {PRESSURE:20.7f} {COMPRESSIBILITY:20.7f} /\n".format(
-            **(row.to_dict())
-        )
+        string += f"  {row['PRESSURE']:20.7f} {row['COMPRESSIBILITY']:20.7f} /\n"
     return string + "\n"
 
 
@@ -388,9 +390,7 @@ def df2ecl_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "DENSITY\n"
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} {:^21}  \n".format(
-        "OILDENSITY", "WATERDENSITY", "GASDENSITY"
-    )
+    string += f"--   {'OILDENSITY':^21} {'WATERDENSITY':^21} {'GASDENSITY':^21}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -403,8 +403,8 @@ def df2ecl_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
     for _, row in subset.iterrows():
-        string += "  {OILDENSITY:20.7f} {WATERDENSITY:20.7f}".format(**(row.to_dict()))
-        string += " {GASDENSITY:20.7f} /\n".format(**(row.to_dict()))
+        string += f"  {row['OILDENSITY']:20.7f} {row['WATERDENSITY']:20.7f}"
+        string += f" {row['GASDENSITY']:20.7f} /\n"
     return string + "\n"
 
 
@@ -422,8 +422,9 @@ def df2ecl_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "PVTW\n"
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} {:^21} {:^21} {:^21}  \n".format(
-        "PRESSURE", "VOLUMEFACTOR", "COMPRESSIBILITY", "VISCOSITY", "VISCOSIBILITY"
+    string += (
+        f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'COMPRESSIBILITY':^21} "
+        f"{'VISCOSITY':^21} {'VISCOSIBILITY':^21}\n"
     )
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -437,9 +438,9 @@ def df2ecl_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
     for _, row in subset.iterrows():
-        string += "  {PRESSURE:20.7f} {VOLUMEFACTOR:20.7f} ".format(**(row.to_dict()))
-        string += "{COMPRESSIBILITY:20.7f} {VISCOSITY:20.7f} ".format(**(row.to_dict()))
-        string += "{VISCOSIBILITY:20.7f}/\n".format(**(row.to_dict()))
+        string += f"  {row['PRESSURE']:20.7f} {row['VOLUMEFACTOR']:20.7f} "
+        string += f"{row['COMPRESSIBILITY']:20.7f} {row['VISCOSITY']:20.7f} "
+        string += f"{row['VISCOSIBILITY']:20.7f}/\n"
     return string + "\n"
 
 
@@ -454,12 +455,10 @@ def df2ecl_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "PVTG\n"
     string += common.comment_formatter(comment)
-    string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
-        "PRESSURE", "OGR", "VOLUMEFACTOR", "VISCOSITY"
+    string += (
+        f"-- {'PRESSURE':^22} {'OGR':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     )
-    string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
-        "*", "OGR", "VOLUMEFACTOR", "VISCOSITY"
-    )
+    string += f"-- {'*':^22} {'OGR':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -485,7 +484,7 @@ def df2ecl_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         string = ""
         assert len(dframe.index.unique()) == 1
         p_gas = dframe.index.values[0]
-        string += "{:20.7f}  ".format(p_gas)
+        string += f"{p_gas:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
             if rowidx > 0:
                 indent = "\n" + " " * 22
@@ -493,11 +492,10 @@ def df2ecl_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
                 indent = ""
             string += (
                 indent
-                + "{OGR:20.7f}  {VOLUMEFACTOR:20.7f}  {VISCOSITY:20.7f}".format(
-                    **(row.to_dict())
-                )
+                + f"{row['OGR']:20.7f}  {row['VOLUMEFACTOR']:20.7f}  "
+                + f"{row['VISCOSITY']:20.7f}"
             )
-        string += " /\n-- End PRESSURE={}\n".format(p_gas)
+        string += f" /\n-- End PRESSURE={p_gas}\n"
         return string
 
     for pvtnum in subset.index.unique():
@@ -519,9 +517,7 @@ def df2ecl_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "PVDG\n"
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} {:^21}  \n".format(
-        "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
-    )
+    string += f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'VISCOSITY':^21}  \n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -545,15 +541,13 @@ def df2ecl_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         string = ""
         dframe = dframe.sort_values("PRESSURE")
         for _, row in dframe.iterrows():
-            string += "  {PRESSURE:20.7f} {VOLUMEFACTOR:20.7f} ".format(
-                **(row.to_dict())
-            )
-            string += "{VISCOSITY:20.7f}\n".format(**(row.to_dict()))
+            string += f"  {row['PRESSURE']:20.7f} {row['VOLUMEFACTOR']:20.7f} "
+            string += f"{row['VISCOSITY']:20.7f}\n"
         return string + "/\n"
 
     subset = subset.set_index("PVTNUM").sort_index()
     for pvtnum in subset.index.unique():
-        string += "-- PVTNUM: {}\n".format(pvtnum)
+        string += "-- PVTNUM: {pvtnum}\n"
         string += _pvdg_pvtnum(subset[subset.index == pvtnum])
 
     return string + "\n"
@@ -570,9 +564,7 @@ def df2ecl_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "PVDO\n"
     string += common.comment_formatter(comment)
-    string += "--   {:^21} {:^21} {:^21}  \n".format(
-        "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
-    )
+    string += f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'VISCOSITY':^21}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -596,15 +588,13 @@ def df2ecl_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         string = ""
         dframe = dframe.sort_values("PRESSURE")
         for _, row in dframe.iterrows():
-            string += "  {PRESSURE:20.7f} {VOLUMEFACTOR:20.7f} ".format(
-                **(row.to_dict())
-            )
-            string += "{VISCOSITY:20.7f}\n".format(**(row.to_dict()))
+            string += f"  {row['PRESSURE']:20.7f} {row['VOLUMEFACTOR']:20.7f} "
+            string += f"{row['VISCOSITY']:20.7f}\n"
         return string + "/\n"
 
     subset = subset.set_index("PVTNUM").sort_index()
     for pvtnum in subset.index.unique():
-        string += "-- PVTNUM: {}\n".format(pvtnum)
+        string += f"-- PVTNUM: {pvtnum}\n"
         string += _pvdo_pvtnum(subset[subset.index == pvtnum])
 
     return string + "\n"
@@ -621,12 +611,8 @@ def df2ecl_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "PVTO\n"
     string += common.comment_formatter(comment)
-    string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
-        "RS", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
-    )
-    string += "-- {:^22} {:^22} {:^22} {:^22}\n".format(
-        "*", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"
-    )
+    string += "-- {'RS':^22} {'PRESSURE':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
+    string += "-- {'*':^22} {'PRESSURE':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
         subset = dframe
@@ -652,7 +638,7 @@ def df2ecl_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         string = ""
         assert len(dframe.index.unique()) == 1
         rs = dframe.index.values[0]
-        string += "{:20.7f}  ".format(rs)
+        string += f"{rs:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
             if rowidx > 0:
                 indent = "\n" + " " * 22
@@ -660,11 +646,10 @@ def df2ecl_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
                 indent = ""
             string += (
                 indent
-                + "{PRESSURE:20.7f}  {VOLUMEFACTOR:20.7f}  {VISCOSITY:20.7f}".format(
-                    **(row.to_dict())
-                )
+                + f"{row['PRESSURE']:20.7f}  {row['VOLUMEFACTOR']:20.7f}  "
+                + f"{row['VISCOSITY']:20.7f}"
             )
-        string += " /\n-- End RS={}\n".format(rs)
+        string += f" /\n-- End RS={rs}\n"
         return string
 
     for pvtnum in subset.index.unique():

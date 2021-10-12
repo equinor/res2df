@@ -189,7 +189,9 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def satfunc_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     eclfiles = EclFiles(args.DATAFILE)
     if eclfiles:
         deck = eclfiles.get_ecldeck()
@@ -200,7 +202,9 @@ def satfunc_main(args) -> None:
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string
-        satfunc_df = df(Path(args.DATAFILE).read_text(), keywords=args.keywords)
+        satfunc_df = df(
+            Path(args.DATAFILE).read_text(encoding="utf-8"), keywords=args.keywords
+        )
     if "SATNUM" in satfunc_df and "KEYWORD" in satfunc_df:
         satnums = str(len(satfunc_df["SATNUM"].unique()))
         keywords = str(satfunc_df["KEYWORD"].unique())
@@ -218,7 +222,9 @@ def satfunc_main(args) -> None:
 
 def satfunc_reverse_main(args) -> None:
     """For command line utility for CSV to Eclipse"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+        __name__, vars(args)
+    )
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(satfunc_df, keywords=args.keywords)
@@ -346,7 +352,7 @@ def _df2ecl_satfuncs(
 ) -> str:
     if dframe.empty:
         return "-- No data!\n"
-    string = "{}\n".format(keyword)
+    string = f"{keyword}\n"
     string += common.comment_formatter(comment)
 
     if "KEYWORD" not in dframe:
@@ -372,6 +378,6 @@ def _df2ecl_satfuncs(
 
     # Loop over every SATNUM
     for satnum in subset.index.unique():
-        string += "-- SATNUM: {}\n".format(satnum)
+        string += f"-- SATNUM: {satnum}\n"
         string += _df2ecl_satfuncs_satnum(keyword, subset[subset.index == satnum])
     return string + "\n"

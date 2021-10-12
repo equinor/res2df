@@ -17,5 +17,17 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 def test_eightcells_dataset():
     """Test Eightcells dataset"""
     wellconnstatus_df = wellconnstatus.df(EIGHTCELLS)
-    print(wellconnstatus_df)
-    assert wellconnstatus_df.empty
+    expected_dframe = pd.DataFrame(
+        [
+            {
+                "DATE": "2000-01-02",
+                "WELL": "OP1",
+                "I": 1,
+                "J": 1,
+                "K": 1,
+                "OP/SH": "OPEN",
+            }
+        ],
+    )
+    expected_dframe["DATE"] = pd.to_datetime(expected_dframe["DATE"])
+    pd.testing.assert_frame_equal(wellconnstatus_df, expected_dframe, check_dtype=False)

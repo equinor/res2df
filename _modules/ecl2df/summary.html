@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -158,6 +158,7 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">some_date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">some_date</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;some_date must be a string or a date, got </span><span class="si">{</span><span class="n">some_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_crop_datelist</span><span class="p">(</span>
@@ -622,8 +623,8 @@
         <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;dataframe must have a datetime index, got </span><span class="si">%s</span><span class="s2"> of type </span><span class="si">%s</span><span class="s2">&quot;</span>
-            <span class="o">%</span> <span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">type</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="s2">&quot;dataframe must have a datetime index, got &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
     <span class="n">dframe</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -862,7 +863,9 @@
 
 <div class="viewcode-block" id="summary_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.summary_main">[docs]</a><span class="k">def</span> <span class="nf">summary_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">eclbase</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.DATA&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.UNSMRY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.SMSPEC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="p">)</span>
@@ -882,7 +885,9 @@
 
 <div class="viewcode-block" id="summary_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.summary_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry point for usage with &quot;csv2ecl summary&quot; on the command line&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>

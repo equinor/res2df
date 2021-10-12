@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.satfunc &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -269,7 +269,9 @@
 
 <div class="viewcode-block" id="satfunc_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.satfunc_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">eclfiles</span><span class="p">:</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_ecldeck</span><span class="p">()</span>
@@ -280,7 +282,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># This might be an include file for which we have to infer/guess</span>
         <span class="c1"># TABDIMS. Then we send it to df() as a string</span>
-        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(),</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
+        <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;SATNUM&quot;</span> <span class="ow">in</span> <span class="n">satfunc_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">satfunc_df</span><span class="p">:</span>
         <span class="n">satnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
         <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
@@ -298,7 +302,9 @@
 
 <div class="viewcode-block" id="satfunc_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.satfunc_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;For command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2ecl</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
@@ -426,7 +432,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;-- No data!</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
@@ -452,7 +458,7 @@
 
     <span class="c1"># Loop over every SATNUM</span>
     <span class="k">for</span> <span class="n">satnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- SATNUM: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">satnum</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;-- SATNUM: </span><span class="si">{</span><span class="n">satnum</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="n">_df2ecl_satfuncs_satnum</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">satnum</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 </pre></div>

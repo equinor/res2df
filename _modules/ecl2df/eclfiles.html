@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -189,9 +189,7 @@
 <div class="viewcode-block" id="EclFiles.file2deck"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.file2deck">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Try to convert standalone files into opm.io Deck objects&quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhandle</span><span class="p">:</span>
-            <span class="n">filestring</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fhandle</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
-            <span class="k">return</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">filestring</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="EclFiles.get_egrid"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_egrid">[docs]</a>    <span class="k">def</span> <span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclGrid</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Find and return EGRID file as an EclGrid object&quot;&quot;&quot;</span>

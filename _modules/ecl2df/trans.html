@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.trans &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.trans &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -303,7 +303,9 @@
             <span class="s2">&quot;DZ&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
             <span class="s2">&quot;TRAN&quot;</span><span class="p">:</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">aggregators</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">aggregators</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">aggregators</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">trans_df</span><span class="p">}</span>
+        <span class="n">aggregators</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">aggregators</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">trans_df</span>
+        <span class="p">}</span>
         <span class="n">trans_df</span> <span class="o">=</span> <span class="n">trans_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">pairname</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">aggregators</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
         <span class="c1"># Reinstate FIPNUM1 and FIPNUM2 (by splitting the pair, to get sorting for free)</span>
@@ -381,7 +383,9 @@
 
 <div class="viewcode-block" id="trans_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.trans.html#ecl2df.trans.trans_main">[docs]</a><span class="k">def</span> <span class="nf">trans_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">trans_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
         <span class="n">eclfiles</span><span class="p">,</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.fipreports &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.fipreports &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -215,7 +215,7 @@
     <span class="c1"># Flag for whether we are supposedly parsing a PRT file made by OPM flow:</span>
     <span class="n">opm</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">prtfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">prt_fh</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">prtfile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">prt_fh</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Parsing file </span><span class="si">%s</span><span class="s2"> for blocks starting with </span><span class="si">%s</span><span class="s2"> REPORT REGION&quot;</span><span class="p">,</span>
             <span class="n">prtfile</span><span class="p">,</span>
@@ -289,7 +289,9 @@
 
 <div class="viewcode-block" id="fipreports_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.fipreports.html#ecl2df.fipreports.fipreports_main">[docs]</a><span class="k">def</span> <span class="nf">fipreports_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Command line API&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.PRT&quot;</span><span class="p">):</span>
         <span class="n">prtfile</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span>
     <span class="k">else</span><span class="p">:</span>

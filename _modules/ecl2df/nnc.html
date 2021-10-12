@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.nnc &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.nnc &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -344,9 +344,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">nocomments</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span>
-            <span class="s2">&quot;  </span><span class="si">{}</span><span class="s2"> nnc connections, avg multiplier </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">),</span> <span class="n">nnc_df</span><span class="p">[</span><span class="s2">&quot;TRANM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-            <span class="p">)</span>
+            <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">)</span><span class="si">}</span><span class="s2"> nnc connections, avg multiplier </span><span class="si">{</span><span class="n">nnc_df</span><span class="p">[</span><span class="s1">&#39;TRANM&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
@@ -358,7 +356,9 @@
 
 <div class="viewcode-block" id="nnc_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.nnc.html#ecl2df.nnc.nnc_main">[docs]</a><span class="k">def</span> <span class="nf">nnc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Command line access point from main() or from ecl2csv via subparser&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
     <span class="n">nncdf</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pillars</span><span class="p">)</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
@@ -366,7 +366,7 @@
         <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-        <span class="n">logstr</span><span class="o">=</span><span class="s2">&quot;Wrote to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">),</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Wrote to </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">nncdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </pre></div>

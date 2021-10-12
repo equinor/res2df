@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.rft &mdash; ecl2df 0.14.1.dev17+g8532675 documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.14.1.dev18+g90281ca documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev17+g8532675
+                0.14.1.dev18+g90281ca
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -445,11 +445,11 @@
 
     <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ICD_&quot;</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">icd_seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
-    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Found </span><span class="si">%d</span><span class="s2"> ICD segments, indices </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;Found </span><span class="si">%d</span><span class="s2"> ICD segments, indices </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">icd_seg_data</span><span class="p">),</span>
         <span class="nb">str</span><span class="p">(</span><span class="n">icd_seg_data</span><span class="p">[</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">icd_seg_data</span><span class="p">)</span></div>
 
@@ -616,12 +616,11 @@
             <span class="k">continue</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Extracting </span><span class="si">{}</span><span class="s2"> well </span><span class="si">{:&gt;8}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2">, record index: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellmodel&quot;</span><span class="p">],</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">],</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span>
-                <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">],</span>
-            <span class="p">)</span>
+            <span class="s2">&quot;Extracting </span><span class="si">%s</span><span class="s2"> well </span><span class="si">%s</span><span class="s2"> at </span><span class="si">%s</span><span class="s2">, record index: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellmodel&quot;</span><span class="p">],</span>
+            <span class="nb">str</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;wellname&quot;</span><span class="p">],</span> <span class="mi">8</span><span class="p">),</span>
+            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span>
+            <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">],</span>
         <span class="p">)</span>
 
         <span class="n">headers</span> <span class="o">=</span> <span class="n">rftrecord</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span>
@@ -755,7 +754,9 @@
 
 <div class="viewcode-block" id="rft_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.rft_main">[docs]</a><span class="k">def</span> <span class="nf">rft_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.RFT&quot;</span><span class="p">):</span>
         <span class="c1"># Support the RFT file as an argument also:</span>
         <span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.RFT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">)</span>

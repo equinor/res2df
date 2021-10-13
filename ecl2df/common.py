@@ -502,7 +502,13 @@ def df2ecl(
     consecutive: Optional[str] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate Eclipse include strings from dataframes in ecl2df format
+    """Generate Eclipse include strings from dataframes in ecl2df format.
+
+    This function hands over the actual text generation pr. keyword
+    to functions named df2ecl_<keywordname> in the calling module.
+
+    These functions may again use df2_generic_ecltable() from this module
+    for the actual string construction.
 
     Args:
         dataframe: Dataframe with Eclipse data on ecl2df format.
@@ -602,6 +608,108 @@ def df2ecl(
         Path(filename).parent.mkdir(parents=True, exist_ok=True)
         Path(filename).write_text(string, encoding="utf-8")
     return string
+
+
+def df2_generic_ecltable(
+    dframe: pd.DataFrame,
+    keyword: str,
+    comment: str = None,
+    renamer: Dict[str, str] = None,
+    drop_trailing_columns: bool = True,
+) -> str:
+    """Construct a typical Eclipse table for data following
+    a keyword. Each row (record in Eclipse terms) ends with a slash.
+
+    This function will *not* add a final slash after all rows, as
+    this is keyword dependent. Some keywords require it, some keywords
+    require it to not be there.
+
+    The header is printed as a comment, with header names taken
+    from the dataframe.
+
+    Trailing columns that are all defaulted (that is either np.nan, None)
+    or consisting of only "1*" will be dropped, as Eclipse will always
+    interpret that as "1*".
+    """
+
+    # Start building the string we are to return:
+    string = keyword + "\n"
+    if comment is not None:
+        string += "-- " + comment.strip() + "\n"
+    # Ensure we work on a copy as we are going to modify it in order to have
+    # Pandas make a pretty txt table:
+    dframe = dframe.copy()
+
+    # Column names are pr. ec2ldf standard, redo to opm.common in order to use
+    # sorting from that:
+    if renamer is not None:
+        inv_renamer = {value: key for key, value in renamer.items()}
+        dframe.rename(inv_renamer, axis="columns", inplace=True)
+
+    col_headers = [item["name"] for item in OPMKEYWORDS[keyword]["items"]]
+    for colname in col_headers:
+        # Add those that are missing, as Eclipse defaults
+        # DO THIS BETER AS IN COMPDAT, including trailing colums
+        if colname not in dframe:
+            dframe[colname] = "1*"
+
+    # Reorder columns:
+    dframe = dframe[col_headers]
+
+    # NaN or Nones are assumed to be defaulted, which in Eclipse terminology is
+    # the string "1*":
+    dframe.fillna(value="1*", inplace=True)
+
+    if drop_trailing_columns:
+        for col_name in reversed(col_headers):
+            if col_name not in dframe.columns:
+                continue
+            if set(dframe[col_name].to_numpy()) == {"1*"}:
+                del dframe[col_name]
+            else:
+                break
+
+    # It is critical for opm.common, maybe also E100 to have integers printed
+    # as integers, for correct parsing. Ensure these are integer where the json
+    # says integer before we convert them to strings:
+    integer_cols = {
+        item["name"]
+        for item in OPMKEYWORDS[keyword]["items"]
+        if item["value_type"] == "INT"  # and item["name"] in col_headers
+    }
+    for int_col in integer_cols.intersection(dframe.columns):
+        defaulted_rows = dframe[int_col] == "1*"
+        dframe.loc[~defaulted_rows, int_col] = (
+            dframe.loc[~defaulted_rows, int_col].astype(int).astype(str)
+        )
+
+    # Quote all string data. This is not always needed, but needed
+    # for some colums, for example well-names containing a slash.
+    string_cols = {
+        item["name"]
+        for item in OPMKEYWORDS[keyword]["items"]
+        if item["value_type"] == "STRING"  # and item["name"] in col_headers
+    }
+    for str_col in string_cols.intersection(dframe.columns):
+        # Ensure 1* is not quoted.
+        non_defaulted_rows = dframe[str_col] != "1*"
+        dframe.loc[non_defaulted_rows, str_col].str.replace("'", "")
+        dframe.loc[non_defaulted_rows, str_col] = (
+            "'" + dframe.loc[non_defaulted_rows, str_col] + "'"
+        )
+
+    # Now rename again to have prettier column names:
+    if renamer is not None:
+        dframe.rename(renamer, axis="columns", inplace=True)
+    # Add a final column with the end-slash, invisible header:
+    dframe[" "] = "/"
+    tablestring = dframe.to_string(header=True, index=False)
+    # Indent all lines with two spaces:
+    tablestring = "\n".join(["  " + line.strip() for line in tablestring.splitlines()])
+    # Eclipse comment for the header line:
+    tablestring = "--" + tablestring[2:]
+
+    return string + tablestring + "\n"
 
 
 def runlength_eclcompress(string: str, sep: str = "  ") -> str:

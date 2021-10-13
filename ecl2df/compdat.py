@@ -29,6 +29,7 @@ from ecl2df import common, getLogger_ecl2csv
 
 from .common import (
     datetime_to_eclipsedate,
+    df2_generic_ecltable,
     get_wells_matching_template,
     merge_zones,
     parse_opmio_date_rec,
@@ -909,53 +910,20 @@ def df2ecl_compdat(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         # first DATE command in the Schedule section.
         dframe = dframe.assign(DATE=np.nan)
 
-    supported_columns = COMPDAT_RENAMER.values()
-    supported_columns_reverse = list(supported_columns)
-    supported_columns_reverse.reverse()
-
     for date, dateframe in dframe.groupby("DATE", dropna=False):
         if (isinstance(date, str) and date != "") or (
             isinstance(date, (datetime.date, datetime.datetime))
         ):
             string += "DATE\n  " + datetime_to_eclipsedate(date) + " /\n/\n\n"
 
-        # Fill missing columns:
-        for item in supported_columns:
-            if item not in dateframe:
-                dateframe[item] = np.nan
-
-        # Remove trailing columns with all nans.
-        for item in supported_columns_reverse:
-            if item in dateframe:
-                if dateframe[item].isnull().all():
-                    del dateframe[item]
-                else:
-                    break
-
-        # Remove and reinstate quotes:
-        dateframe["WELL"] = "'" + dateframe["WELL"].replace("'", "") + "'"
-
-        # Slice extraneous columns, and ensure column order is correct:
-        available_columns = [col for col in supported_columns if col in dateframe]
-        dateframe = pd.DataFrame(dateframe[available_columns])
-
-        # Add "/" in a final column:
-        dateframe["slash"] = "/"
-
-        # Use pandas to print the table justified.
-        string += "COMPDAT\n"
-        string += "-- " + " ".join(available_columns) + "\n"
         string += (
-            "\n".join(
-                [
-                    "  " + line
-                    for line in dateframe.to_string(
-                        index=False, na_rep="1*", header=False
-                    ).splitlines()
-                ]
+            df2_generic_ecltable(
+                dateframe,
+                "COMPDAT",
+                comment=comment,
+                renamer=COMPDAT_RENAMER,
+                drop_trailing_columns=True,
             )
-            + "\n"
+            + "/\n\n"
         )
-
-        string += "/\n\n"
     return string

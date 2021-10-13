@@ -77,6 +77,8 @@ def test_equil2df():
     # Check that we can dump from dataframe to include file
     # and reparse to the same dataframe:
     inc = equil.df2ecl(equildf, withphases=True)
+    print("HOOOOOOOOOOOOOOOOOOOOOOOI")
+    print(inc)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(equildf, df_from_inc, check_dtype=False)
 

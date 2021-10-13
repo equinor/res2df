@@ -169,7 +169,7 @@ def datetime_to_eclipsedate(
         if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
             # Need this as dateutil.parser.isoparse() is not in Python 3.6.
             raise ValueError("Use ISO-format for dates")
-        timestamp = dateutil.parser.parse(timestamp)
+        timestamp = dateutil.parser.parse(timestamp)  # noqa  (py36 flake8 bug)
     if not isinstance(timestamp, (datetime.datetime, datetime.date)):
         raise TypeError("Require string or datetime")
     string = f"{timestamp.day} '{NUM2ECLMONTH[timestamp.month]}' {timestamp.year}"

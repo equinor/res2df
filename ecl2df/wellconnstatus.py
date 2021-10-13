@@ -16,8 +16,7 @@ from typing import Any, List, Tuple
 import numpy as np
 import pandas as pd
 
-from ecl2df import getLogger_ecl2csv
-from ecl2df import summary
+from ecl2df import getLogger_ecl2csv, summary
 from ecl2df.eclfiles import EclFiles
 
 from .common import write_dframe_stdout_file

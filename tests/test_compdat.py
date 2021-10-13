@@ -40,6 +40,13 @@ def test_df():
     assert "K1" in compdat_df
     assert "WELL" in compdat_df
 
+    # Dump dataframe to Eclipse include file and re-parse:
+    inc = compdat.df2ecl(compdat_df)
+    df_from_inc = compdat.df(inc)
+    pd.testing.assert_frame_equal(
+        compdat_df.drop("ZONE", axis="columns"), df_from_inc, check_dtype=False
+    )
+
 
 def test_comp2df():
     """Test that dataframes are produced"""

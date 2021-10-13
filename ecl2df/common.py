@@ -166,9 +166,13 @@ def datetime_to_eclipsedate(
 ) -> str:
     """Convert a Python timestamp or date to the Eclipse DATE format"""
     if isinstance(timestamp, str):
-        timestamp = dateutil.parser.isoparse(timestamp)
-    assert isinstance(timestamp, (datetime.datetime, datetime.date))
-    string = f"{timestamp.day} {NUM2ECLMONTH[timestamp.month]} {timestamp.year}"
+        if not list(map(len, timestamp.split(" ")[0].split("-"))) == [4, 2, 2]:
+            # Need this as dateutil.parser.isoparse() is not in Python 3.6.
+            raise ValueError("Use ISO-format for dates")
+        timestamp = dateutil.parser.parse(timestamp)
+    if not isinstance(timestamp, (datetime.datetime, datetime.date)):
+        raise TypeError("Require string or datetime")
+    string = f"{timestamp.day} '{NUM2ECLMONTH[timestamp.month]}' {timestamp.year}"
     if isinstance(timestamp, datetime.datetime):
         string += " " + timestamp.strftime("%H:%M:%S")
     return string.replace("00:00:00", "").strip()
@@ -707,7 +711,7 @@ def df2_generic_ecltable(
     # Indent all lines with two spaces:
     tablestring = "\n".join(["  " + line.strip() for line in tablestring.splitlines()])
     # Eclipse comment for the header line:
-    tablestring = "--" + tablestring[2:]
+    tablestring = "--" + tablestring[1:]
 
     return string + tablestring + "\n"
 

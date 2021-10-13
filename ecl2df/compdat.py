@@ -868,7 +868,10 @@ def compdat_reverse_main(args) -> None:
     write_inc_stdout_file(inc_string, args.output)
 
 
-def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFrame:
+def df(
+    eclfiles: Union[str, EclFiles],
+    initvectors: Optional[List[str]] = None,
+) -> pd.DataFrame:
     """Main function for Python API users
 
     Supports only COMPDAT information for now. Will
@@ -877,18 +880,26 @@ def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFr
     Returns:
         pd.Dataframe with one row pr cell to well connection
     """
-    compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
+    if isinstance(eclfiles, str):
+        deck = EclFiles.str2deck(eclfiles)
+    else:
+        deck = eclfiles.get_ecldeck()
+
+    compdat_df = deck2dfs(deck)["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 
     if initvectors:
+        if isinstance(eclfiles, str):
+            raise ValueError("Need EclFiles and not string deck for adding initvectors")
         compdat_df = merge_initvectors(
             eclfiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
         )
 
-    zonemap = eclfiles.get_zonemap()
-    if zonemap:
-        logger.info("Merging zonemap into compdat")
-        compdat_df = merge_zones(compdat_df, zonemap)
+    if isinstance(eclfiles, EclFiles):
+        zonemap = eclfiles.get_zonemap()
+        if zonemap:
+            logger.info("Merging zonemap into compdat")
+            compdat_df = merge_zones(compdat_df, zonemap)
 
     return compdat_df
 
@@ -914,7 +925,7 @@ def df2ecl_compdat(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         if (isinstance(date, str) and date != "") or (
             isinstance(date, (datetime.date, datetime.datetime))
         ):
-            string += "DATE\n  " + datetime_to_eclipsedate(date) + " /\n/\n\n"
+            string += "DATES\n  " + datetime_to_eclipsedate(date) + " /\n/\n\n"
 
         string += (
             df2_generic_ecltable(

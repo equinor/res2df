@@ -1,5 +1,6 @@
 """Test module for ecl2df.common"""
 
+import datetime
 import os
 from pathlib import Path
 
@@ -219,6 +220,36 @@ def test_df2ecl():
     string = common.df2ecl(tworows, supported=["EQUIL"], consecutive="EQLNUM")
     assert "EQUIL" in string
     assert string.find("3456") > string.find("1234")
+
+
+@pytest.mark.parametrize(
+    "somedate, expected",
+    [
+        pytest.param(None, None, marks=pytest.mark.xfail(raises=TypeError)),
+        pytest.param({}, None, marks=pytest.mark.xfail(raises=TypeError)),
+        pytest.param(
+            "",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError, match="ISO string too short"),
+        ),
+        ("2021-02-01", "1 'FEB' 2021"),
+        ("2021-02-01 010203", "1 'FEB' 2021 01:02:03"),
+        ("2021-02-01 01:02:03", "1 'FEB' 2021 01:02:03"),
+        (datetime.date(2021, 2, 1), "1 'FEB' 2021"),
+        (datetime.datetime(2021, 2, 1, 0, 0, 0), "1 'FEB' 2021"),
+        ("2021-02-01 000000", "1 'FEB' 2021"),
+        (datetime.datetime(2021, 2, 1, 2, 3, 4), "1 'FEB' 2021 02:03:04"),
+        (datetime.datetime(2021, 2, 1, 2, 3, 4, 4433), "1 'FEB' 2021 02:03:04"),
+        pytest.param(
+            "01/02/2021",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError, match="Use ISO"),
+        ),
+    ],
+)
+def test_datetime_to_eclipsedate(somedate, expected):
+    """Test conversion of datetime to Eclipse date or datetime syntax"""
+    assert common.datetime_to_eclipsedate(somedate) == expected
 
 
 def test_eclcompress():

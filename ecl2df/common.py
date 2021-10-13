@@ -166,7 +166,7 @@ def datetime_to_eclipsedate(
 ) -> str:
     """Convert a Python timestamp or date to the Eclipse DATE format"""
     if isinstance(timestamp, str):
-        if not list(map(len, timestamp.split(" ")[0].split("-"))) == [4, 2, 2]:
+        if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
             # Need this as dateutil.parser.isoparse() is not in Python 3.6.
             raise ValueError("Use ISO-format for dates")
         timestamp = dateutil.parser.parse(timestamp)
@@ -322,6 +322,7 @@ def parse_opmio_deckrecord(
                     # OPM DeckItem. A better solution has not yet
                     # been found in the OPM API. See also
                     # https://github.com/OPM/opm-common/issues/2598
+                    # pylint: disable=protected-access
                     if record[item_idx].__defaulted(idx):
                         rec_dict[item_name][idx] = np.nan
         else:

@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 from ecl2df import wellconnstatus
+from ecl2df.eclfiles import EclFiles
 
 try:
     import opm  # noqa
@@ -18,8 +19,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 def test_eightcells_dataset():
     """Test Eightcells dataset"""
-    wellconnstatus_df = wellconnstatus.df(EIGHTCELLS)
-    print(wellconnstatus_df)
+    eclfiles = EclFiles(EIGHTCELLS)
+    wellconnstatus_df = wellconnstatus.df(eclfiles)
     expected_dframe = pd.DataFrame(
         [
             {

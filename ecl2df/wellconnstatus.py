@@ -11,13 +11,13 @@ The output data set is very sparse compared to the CPI summary data.
 import argparse
 import logging
 import re
-from typing import Any, List, Set, Tuple
+from typing import Any, List, Tuple
 
 import numpy as np
 import pandas as pd
-from ecl.summary import EclSumKeyWordVector
 
 from ecl2df import getLogger_ecl2csv
+from ecl2df import summary
 from ecl2df.eclfiles import EclFiles
 
 from .common import write_dframe_stdout_file
@@ -33,13 +33,11 @@ def df(eclfiles: EclFiles) -> pd.DataFrame:
     i.e a cell can not be SHUT before it has been OPEN. This means that any cells
     that are always SHUT will be excluded.
     """
-    eclsum = eclfiles.get_eclsum()
-    column_names: Set[str] = set(EclSumKeyWordVector(eclsum, add_keywords=True))
-    np_dates_ms = eclsum.numpy_dates
+    smry = summary.df(eclfiles, column_keys="CPI*")
 
     cpi_columns = [
         col
-        for col in column_names
+        for col in smry.columns
         if re.match("^CPI:[A-Z0-9_-]{1,8}:[0-9]+,[0-9]+,[0-9]+$", col)
     ]
     dframe = pd.DataFrame(columns=["DATE", "WELL", "I", "J", "K", "OP/SH"])
@@ -49,9 +47,7 @@ def df(eclfiles: EclFiles) -> pd.DataFrame:
         well = colsplit[1]
         i, j, k = colsplit[2].split(",")
 
-        vector = eclsum.numpy_vector(col)
-
-        status_changes = _extract_status_changes(np_dates_ms, vector)
+        status_changes = _extract_status_changes(smry.index, smry[col])
         for date, status in status_changes:
             dframe.loc[dframe.shape[0]] = [date, well, i, j, k, status]
 

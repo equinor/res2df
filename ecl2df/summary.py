@@ -431,7 +431,7 @@ def df(
             "Duplicated columns detected, check your DATA file "
             "for repeated vectors in the SUMMARY section"
         )
-        logger.warning("Duplicates: %s", str(list(dframe.columns[dupes])))
+        logger.warning("Duplicates: %s", list(dframe.columns[dupes]))
         dframe = dframe.loc[:, ~dframe.columns.duplicated()]
     return dframe
 

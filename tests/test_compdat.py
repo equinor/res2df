@@ -1,13 +1,14 @@
 """Test module for compdat"""
 
 import datetime
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat, ecl2csv
+from ecl2df import EclFiles, compdat, csv2ecl, ecl2csv
 
 try:
     import opm  # noqa
@@ -399,6 +400,40 @@ def test_main_subparsers(tmp_path, mocker):
     assert "FIPNUM" in disk_df
     assert "EQLNUM" in disk_df
     assert not disk_df.empty
+
+
+def test_csv2ecl_eightcells(tmp_path, mocker):
+    """Test include file construction from CSV data"""
+    os.chdir(tmp_path)
+    eightcells_compdat = compdat.df(EclFiles(EIGHTCELLS))
+    eightcells_compdat.to_csv("compdat.csv", index=False)
+
+    mocker.patch(
+        "sys.argv",
+        ["csv2ecl", "compdat", "--verbose", "compdat.csv", "--output", "compdat.inc"],
+    )
+    csv2ecl.main()
+    compdatinc = Path("compdat.inc").read_text()
+    assert "'OP1' 1 1  1  1 'OPEN'" in compdatinc
+
+
+def test_csv2ecl_reek(tmp_path, mocker):
+    """Test include file construction from CSV data"""
+    os.chdir(tmp_path)
+    reek_compdat = compdat.df(EclFiles(REEK))
+    reek_compdat.to_csv("compdat.csv", index=False)
+
+    mocker.patch(
+        "sys.argv",
+        ["csv2ecl", "compdat", "--verbose", "compdat.csv", "--output", "compdat.inc"],
+    )
+    csv2ecl.main()
+    compdatinc = Path("compdat.inc").read_text()
+    # Reparse it into a dataframe using opm.common
+    df_from_inc = compdat.df(compdatinc)
+    pd.testing.assert_frame_equal(
+        reek_compdat.drop("ZONE", axis="columns"), df_from_inc
+    )
 
 
 def test_defaulted_compdat_i_j(tmp_path):

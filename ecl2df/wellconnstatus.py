@@ -70,13 +70,18 @@ def _extract_single_connection_status_changes(
 ) -> List[Tuple[Any, str]]:
     """Extracts the status history of a single connection as a list of tuples
     on the form (date, status)
+
+    A CPI value of 0 means that the connection is SHUT
+    A CPI value > 0 means that the connection is OPEN
     """
     status_changes = []
     prev_value = 0
     for date, value in zip(dates, conn_values):
         if value > 0 and prev_value == 0:
+            # Connection is OPEN and was SHUT at previous timestep
             status_changes.append((date, "OPEN"))
         elif prev_value > 0 and value == 0:
+            # Connection is SHUT and was OPEN at previous timestep
             status_changes.append((date, "SHUT"))
         prev_value = value
     return status_changes

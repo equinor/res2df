@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from ecl2df import wellconnstatus
 from ecl2df.eclfiles import EclFiles
@@ -35,3 +36,79 @@ def test_eightcells_dataset():
     )
     expected_dframe["DATE"] = pd.to_datetime(expected_dframe["DATE"])
     pd.testing.assert_frame_equal(wellconnstatus_df, expected_dframe, check_dtype=False)
+
+
+@pytest.mark.parametrize(
+    "smry, expected_wellconnstatus",
+    [
+        # Simple Example with one well that is opened.
+        # Summary vectors on wrong format is ignored
+        (
+            pd.DataFrame(
+                [
+                    ["2000-01-01", 0, 0, 0],
+                    ["2000-01-02", 1.1, 1, 1000],
+                ],
+                columns=["DATE", "CPI:OP1:1,1,1", "CPI:OP1:123", "FOPT"],
+            ),
+            pd.DataFrame(
+                [
+                    ["2000-01-02", "OP1", "1", "1", "1", "OPEN"],
+                ],
+                columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
+            ),
+        ),
+        # Two connections, and only one is never opened which gives no output
+        # The other is opened from first date and then closed
+        (
+            pd.DataFrame(
+                [
+                    ["2000-01-01", 0, 1],
+                    ["2000-01-02", 0, 0],
+                ],
+                columns=["DATE", "CPI:OP1:1,1,1", "CPI:OP1:1,1,2"],
+            ),
+            pd.DataFrame(
+                [
+                    ["2000-01-01", "OP1", "1", "1", "2", "OPEN"],
+                    ["2000-01-02", "OP1", "1", "1", "2", "SHUT"],
+                ],
+                columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
+            ),
+        ),
+        # Two wells. Dates containing hours
+        (
+            pd.DataFrame(
+                [
+                    ["2000-01-01", 1, 0],
+                    ["2000-01-02 12:00:00", 1, 1],
+                    ["2000-01-02", 0, 1],
+                ],
+                columns=["DATE", "CPI:OP1:1,1,1", "CPI:OP2:1,1,1"],
+            ),
+            pd.DataFrame(
+                [
+                    ["2000-01-01", "OP1", "1", "1", "1", "OPEN"],
+                    ["2000-01-02", "OP1", "1", "1", "1", "SHUT"],
+                    ["2000-01-02 12:00:00", "OP2", "1", "1", "1", "OPEN"],
+                ],
+                columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
+            ),
+        ),
+    ],
+)
+def test_extract_status_changes(smry, expected_wellconnstatus):
+    """Testing that the extract_status_changes function is working
+    correctly with various summary input
+    """
+    smry["DATE"] = pd.to_datetime(smry["DATE"])
+    smry.set_index("DATE", inplace=True)
+    expected_wellconnstatus["DATE"] = pd.to_datetime(expected_wellconnstatus["DATE"])
+
+    print(wellconnstatus._extract_status_changes(smry))
+    print(expected_wellconnstatus)
+    pd.testing.assert_frame_equal(
+        wellconnstatus._extract_status_changes(smry),
+        expected_wellconnstatus,
+        check_dtype=False,
+    )

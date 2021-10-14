@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 import numpy as np
-import packaging
+import packaging.version
 import pandas as pd
 import pytest
 

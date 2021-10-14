@@ -4,7 +4,7 @@ import datetime
 import os
 from pathlib import Path
 
-import packaging
+import packaging.version
 import pandas as pd
 import pytest
 

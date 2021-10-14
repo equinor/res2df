@@ -4,7 +4,6 @@ import datetime
 import os
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import pytest
 
@@ -809,24 +808,6 @@ def test_wsegvalv_max_default():
 @pytest.mark.parametrize(
     "dframe, expected",
     [
-        (pd.DataFrame(), ""),
-        (pd.DataFrame([{"WELL": "OP1"}]), "COMPDAT\n  'OP1' /\n/"),
-        pytest.param(
-            pd.DataFrame([{"WELL": "OP1", "DIR": np.nan}]),
-            "COMPDAT\n  'OP1' /\n/",
-            id="nan-column1",
-        ),
-        pytest.param(
-            pd.DataFrame([{"WELL": "OP1", "I": None}]),
-            "COMPDAT\n  'OP1' /\n/",
-            id="nan-column2",
-        ),
-        pytest.param(
-            pd.DataFrame([{"WELL": "OP1", "J": "2"}]),
-            "COMPDAT\n  'OP1' 1* 2 /\n/",
-            # Here, the I column should not be dropped but defaulted
-            id="nan-column3",
-        ),
         pytest.param(
             pd.DataFrame(
                 [
@@ -844,19 +825,19 @@ def test_wsegvalv_max_default():
         ),
         pytest.param(
             pd.DataFrame([{"WELL": "OP1", "DATE": datetime.date(2001, 1, 1)}]),
-            "DATE\n  1 JAN 2001 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
+            "DATES\n  1 'JAN' 2001 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
             id="with-date",
         ),
         pytest.param(
             pd.DataFrame(
                 [{"WELL": "OP1", "DATE": datetime.datetime(2001, 1, 1, 3, 3, 3)}]
             ),
-            "DATE\n  1 JAN 2001 03:03:03 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
+            "DATES\n  1 'JAN' 2001 03:03:03 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
             id="with-datetime",
         ),
         pytest.param(
             pd.DataFrame([{"WELL": "OP1", "DATE": "2000-01-01"}]),
-            "DATE\n  1 JAN 2000 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
+            "DATES\n  1 'JAN' 2000 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
             id="with-isodatestring",
         ),
         pytest.param(
@@ -866,16 +847,16 @@ def test_wsegvalv_max_default():
                     {"WELL": "OP2", "DATE": "3000-01-01"},
                 ]
             ),
-            """DATE
-  1 JAN 2000 /
+            """DATES
+  1 'JAN' 2000 /
 /
 
 COMPDAT
   'OP1' /
 /
 
-DATE
-  1 JAN 3000 /
+DATES
+  1 'JAN' 3000 /
 /
 
 COMPDAT
@@ -886,9 +867,8 @@ COMPDAT
     ],
 )
 def test_df2ecl_compdat(dframe, expected):
-    # Strip comments
+    """Test construction of compdat keyword data from dataframes"""
     result = compdat.df2ecl_compdat(dframe)
-    print(result)
     commentsstripped = "\n".join(
         [line for line in result.splitlines() if not line.startswith("--")]
     )

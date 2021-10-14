@@ -29,7 +29,7 @@ from ecl2df import common, getLogger_ecl2csv
 
 from .common import (
     datetime_to_eclipsedate,
-    df2_generic_ecltable,
+    generic_ecltable,
     get_wells_matching_template,
     merge_zones,
     parse_opmio_date_rec,
@@ -928,7 +928,7 @@ def df2ecl_compdat(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
             string += "DATES\n  " + datetime_to_eclipsedate(date) + " /\n/\n\n"
 
         string += (
-            df2_generic_ecltable(
+            generic_ecltable(
                 dateframe,
                 "COMPDAT",
                 comment=comment,

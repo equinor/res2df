@@ -512,7 +512,7 @@ def df2ecl(
     This function hands over the actual text generation pr. keyword
     to functions named df2ecl_<keywordname> in the calling module.
 
-    These functions may again use df2_generic_ecltable() from this module
+    These functions may again use generic_ecltable() from this module
     for the actual string construction.
 
     Args:
@@ -615,7 +615,7 @@ def df2ecl(
     return string
 
 
-def df2_generic_ecltable(
+def generic_ecltable(
     dframe: pd.DataFrame,
     keyword: str,
     comment: str = None,
@@ -632,6 +632,11 @@ def df2_generic_ecltable(
     The header is printed as a comment, with header names taken
     from the dataframe.
 
+    The renamer is a map that is used to translate your dataframe column
+    names into opm.common item names, and the dictionary should map
+    from opm.common names into your chosen ones. If you have standard named
+    dataframe columns, the renamer is only applied to the column header comment.
+
     Trailing columns that are all defaulted (that is either np.nan, None)
     or consisting of only "1*" will be dropped, as Eclipse will always
     interpret that as "1*".
@@ -639,8 +644,13 @@ def df2_generic_ecltable(
 
     # Start building the string we are to return:
     string = keyword + "\n"
-    if comment is not None:
-        string += "-- " + comment.strip() + "\n"
+    if comment is not None and comment:
+        string += "\n".join(["-- " + line for line in comment.splitlines()]) + "\n"
+
+    # Empty tables are ok with Eclipse (at least sometimes)
+    if dframe.empty:
+        return string
+
     # Ensure we work on a copy as we are going to modify it in order to have
     # Pandas make a pretty txt table:
     dframe = dframe.copy()
@@ -651,22 +661,33 @@ def df2_generic_ecltable(
         inv_renamer = {value: key for key, value in renamer.items()}
         dframe.rename(inv_renamer, axis="columns", inplace=True)
 
-    col_headers = [item["name"] for item in OPMKEYWORDS[keyword]["items"]]
-    for colname in col_headers:
+    keyword_col_headers = [item["name"] for item in OPMKEYWORDS[keyword]["items"]]
+
+    rightmost_column = max(
+        [
+            keyword_col_headers.index(item)
+            for item in set(dframe.columns).intersection(keyword_col_headers)
+        ],
+        default=-1,
+    )
+    if rightmost_column == -1:
+        # No relevant data in the dataframe
+        return string
+    relevant_columns = keyword_col_headers[0 : rightmost_column + 1]  # noqa
+    for colname in relevant_columns:
         # Add those that are missing, as Eclipse defaults
-        # DO THIS BETER AS IN COMPDAT, including trailing colums
         if colname not in dframe:
             dframe[colname] = "1*"
 
-    # Reorder columns:
-    dframe = dframe[col_headers]
+    # Reorder and slice columns:
+    dframe = dframe[relevant_columns]
 
     # NaN or Nones are assumed to be defaulted, which in Eclipse terminology is
     # the string "1*":
     dframe.fillna(value="1*", inplace=True)
 
     if drop_trailing_columns:
-        for col_name in reversed(col_headers):
+        for col_name in reversed(relevant_columns):
             if col_name not in dframe.columns:
                 continue
             if set(dframe[col_name].to_numpy()) == {"1*"}:

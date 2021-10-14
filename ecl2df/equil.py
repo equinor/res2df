@@ -418,7 +418,7 @@ def df2ecl_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     phases = phases_from_columns(subset.columns)
 
-    return common.df2_generic_ecltable(
+    return common.generic_ecltable(
         subset,
         "EQUIL",
         renamer=RENAMERS[phases],  # type: ignore

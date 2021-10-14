@@ -212,7 +212,7 @@ def get_parser() -> argparse.ArgumentParser:
         help="Extract well connection status",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "Each row represent an event where a well connection is changing status."
+            "Each row represents an event where a well connection is changing status."
         ),
     )
     subparsers_dict["wcon"] = subparsers.add_parser(

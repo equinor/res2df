@@ -27,13 +27,19 @@ logger = logging.getLogger(__name__)
 def df(eclfiles: EclFiles) -> pd.DataFrame:
     """Exctracts connection status history for each compdat connection that
     is included in the summary data on the form CPI:WELL,I,J,K. One line is
-    added to the export every time a connection changes status. It is OPEN when
+    added to the export every time a connection changes status. It in
     CPI>0 and SHUT when CPI=0. The earliest date for any connection will be OPEN,
     i.e a cell can not be SHUT before it has been OPEN. This means that any cells
-    that are always SHUT will be excluded.
+    ths OPEN wheat are always SHUT will be excluded.
     """
     smry = summary.df(eclfiles, column_keys="CPI*")
+    return _extract_status_changes(smry)
 
+
+def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
+    """Extracts connections status changes from a dataframe of CPI
+    summary data.
+    """
     cpi_columns = [
         col
         for col in smry.columns
@@ -46,7 +52,9 @@ def df(eclfiles: EclFiles) -> pd.DataFrame:
         well = colsplit[1]
         i, j, k = colsplit[2].split(",")
 
-        status_changes = _extract_status_changes(smry.index, smry[col])
+        status_changes = _extract_single_connection_status_changes(
+            smry.index, smry[col]
+        )
         for date, status in status_changes:
             dframe.loc[dframe.shape[0]] = [date, well, i, j, k, status]
 
@@ -54,10 +62,9 @@ def df(eclfiles: EclFiles) -> pd.DataFrame:
         "Dataframe with well connection status ready, %d rows",
         len(dframe),
     )
-    return dframe
 
 
-def _extract_status_changes(
+def _extract_single_connection_status_changes(
     dates: np.ndarray, conn_values: np.ndarray
 ) -> List[Tuple[Any, str]]:
     """Extracts the status history of a single connection as a list of tuples

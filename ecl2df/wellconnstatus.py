@@ -1,12 +1,4 @@
-"""Exctracts connection status history for each compdat connection that
-is included in the summary data on the form CPI:WELL,I,J,K. One line is
-added to the export every time a connection changes status. It is OPEN when
-CPI>0 and SHUT when CPI=0. The earliest date for any connection will be OPEN,
-i.e a cell can not be SHUT before it has been OPEN. This means that any cells
-that are always SHUT will be excluded.
-
-The output data set is very sparse compared to the CPI summary data.
-"""
+"""Exctracts connection status history for each well connections"""
 
 import argparse
 import logging
@@ -26,11 +18,15 @@ logger = logging.getLogger(__name__)
 
 def df(eclfiles: EclFiles) -> pd.DataFrame:
     """Exctracts connection status history for each compdat connection that
-    is included in the summary data on the form CPI:WELL,I,J,K. One line is
-    added to the export every time a connection changes status. It in
-    CPI>0 and SHUT when CPI=0. The earliest date for any connection will be OPEN,
-    i.e a cell can not be SHUT before it has been OPEN. This means that any cells
-    ths OPEN wheat are always SHUT will be excluded.
+    is included in the summary data on the form CPI:WELL,I,J,K. CPI stands for
+    connection productivity index.
+
+    One line is added to the export every time a connection changes status. It
+    is OPEN when CPI>0 and SHUT when CPI=0. The earliest date for any connection
+    will be OPEN, i.e a cell can not be SHUT before it has been OPEN. This means
+    that any cells that are always SHUT will be excluded.
+
+    The output data set is very sparse compared to the CPI summary data.
     """
     smry = summary.df(eclfiles, column_keys="CPI*")
     return _extract_status_changes(smry)

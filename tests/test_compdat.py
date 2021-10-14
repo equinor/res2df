@@ -4,6 +4,7 @@ import datetime
 import os
 from pathlib import Path
 
+import packaging
 import pandas as pd
 import pytest
 
@@ -413,7 +414,7 @@ def test_csv2ecl_eightcells(tmp_path, mocker):
     )
     csv2ecl.main()
     compdatinc = Path("compdat.inc").read_text()
-    assert "'OP1' 1 1  1  1 'OPEN'" in compdatinc
+    assert "'OP1' 1 1 1 1 'OPEN'" in " ".join(compdatinc.split())
 
 
 def test_csv2ecl_reek(tmp_path, mocker):
@@ -872,5 +873,11 @@ def test_df2ecl_compdat(dframe, expected):
     commentsstripped = "\n".join(
         [line for line in result.splitlines() if not line.startswith("--")]
     )
-    # Ignore leading and trailing whitespace:
-    assert commentsstripped.strip() == expected.strip()
+    # Pandas 1.1.5 gives a different amount of whitespace than what
+    # these tests are written for. If so, be more slack about whitespace.
+    if packaging.version.parse(pd.__version__) < packaging.version.parse("1.2.0"):
+        commentsstripped = " ".join(commentsstripped.split())
+        assert commentsstripped == " ".join(expected.split())
+    else:
+        # Relax about leading and trailing whitespace
+        assert commentsstripped.strip() == expected.strip()

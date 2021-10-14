@@ -731,10 +731,12 @@ def generic_ecltable(
     dframe[" "] = "/"
     tablestring = dframe.to_string(header=True, index=False)
     # Indent all lines with two spaces:
-    tablestring = "\n".join(["  " + line.strip() for line in tablestring.splitlines()])
+    tablestring = "\n".join(
+        ["  " + line.strip().replace("  /", " /") for line in tablestring.splitlines()]
+        # The replace() in there is needed for py36/pandas==1.1.5 only.
+    )
     # Eclipse comment for the header line:
     tablestring = "--" + tablestring[1:]
-
     return string + tablestring + "\n"
 
 

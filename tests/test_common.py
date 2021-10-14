@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 
 import numpy as np
+import packaging
 import pandas as pd
 import pytest
 
@@ -454,4 +455,10 @@ def test_generic_ecltable(
         renamer=renamer,
         drop_trailing_columns=drop_trailing_columns,
     )
-    assert stringtable == expected
+    # Pandas 1.1.5 gives a different amount of whitespace than what
+    # these tests are written for. If so, be more slack about whitespace.
+    if packaging.version.parse(pd.__version__) < packaging.version.parse("1.2.0"):
+        stringtable = " ".join(stringtable.split())
+        assert stringtable == " ".join(expected.split())
+    else:
+        assert stringtable == expected

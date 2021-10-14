@@ -62,6 +62,7 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
         "Dataframe with well connection status ready, %d rows",
         len(dframe),
     )
+    return dframe
 
 
 def _extract_single_connection_status_changes(

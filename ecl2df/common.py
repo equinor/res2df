@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
 
-import dateutil
+import dateutil.parser
 import numpy as np
 import pandas as pd
 

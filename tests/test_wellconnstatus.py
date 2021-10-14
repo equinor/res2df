@@ -105,8 +105,6 @@ def test_extract_status_changes(smry, expected_wellconnstatus):
     smry.set_index("DATE", inplace=True)
     expected_wellconnstatus["DATE"] = pd.to_datetime(expected_wellconnstatus["DATE"])
 
-    print(wellconnstatus._extract_status_changes(smry))
-    print(expected_wellconnstatus)
     pd.testing.assert_frame_equal(
         wellconnstatus._extract_status_changes(smry),
         expected_wellconnstatus,

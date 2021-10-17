@@ -15,6 +15,7 @@ import datetime
 import logging
 from typing import Dict, List, Optional, Union
 
+import numpy as np
 import pandas as pd
 
 try:
@@ -245,7 +246,7 @@ def deck2dfs(
     if not welopen_df.empty:
         compdat_df = applywelopen(
             compdat_df,
-            expand_welopen_wildcards(welopen_df, compdat_df),
+            expand_welopen(welopen_df, compdat_df),
             expand_wlist(wlist_df),
             unroll_complump(complump_df),
         )
@@ -289,7 +290,55 @@ def deck2dfs(
     )
 
 
-def expand_welopen_wildcards(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
+def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame) -> pd.DataFrame:
+    """Expand welopen"""
+
+    exp_welopen_df = expand_welopen_wildcards(welopen_df, compdat_df)
+    return expand_welopen_defaults(exp_welopen_df, compdat_df)
+
+
+def expand_welopen_defaults(
+    welopen_df: pd.DataFrame, compdat_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Filter welopen defaults
+
+    WELOPEN wildcard wells must be expanded before this.
+    COMPDAT must be unrolled before this so that K1=K2
+    """
+
+    def is_default(value: Optional[int]) -> bool:
+        if value is None or np.isnan(value):
+            return True
+        return value <= 0
+
+    exp_welopen = []
+    for _, row in welopen_df.iterrows():
+        print(row)
+
+        if all([is_default(row[coord]) for coord in ["I", "J", "K"]]):
+            exp_welopen.append(row)
+        else:
+            compdat_filtered = compdat_df[compdat_df["WELL"] == row["WELL"]]
+            if not is_default(row["I"]):
+                compdat_filtered = compdat_filtered[compdat_filtered["I"] == row["I"]]
+            if not is_default(row["J"]):
+                compdat_filtered = compdat_filtered[compdat_filtered["J"] == row["J"]]
+            if not is_default(row["K"]):
+                compdat_filtered = compdat_filtered[compdat_filtered["K1"] == row["K"]]
+
+            for _, compdat_row in compdat_filtered.iterrows():
+                exp_row = row.copy()
+                exp_row["I"] = compdat_row["I"]
+                exp_row["J"] = compdat_row["J"]
+                exp_row["K"] = compdat_row["K1"]
+                exp_welopen.append(exp_row)
+
+    return pd.DataFrame(exp_welopen)
+
+
+def expand_welopen_wildcards(
+    welopen_df: pd.DataFrame, compdat_df: pd.DataFrame
+) -> pd.DataFrame:
     """Expand rows in welopen with well names containing wildcard characters,
     with the correct wells from compdat_df that was defined at that date
 

@@ -193,6 +193,83 @@ WELOPEN_CASES = [
         ),
         id="welopen-shut-on-connection",
     ),
+    # Test when one coordinate is defaulted. Shuts all connections in the
+    # well with J==1 and K==1
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP1' 2 1 1 1 'OPEN' /
+     'OP1' 1 1 2 2 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 0 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 2, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+            ],
+        ),
+    ),
+    # Test when two coordinates are defaulted (this time with *).
+    # Shuts all connections in the well with K==1
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP1' 2 1 1 1 'OPEN' /
+     'OP1' 1 1 2 2 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 2* 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 2, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+            ],
+        ),
+    ),
+    # Both wilcard wells, all coordinates defaulted
+    # And no coordinates defined, which closes the well
+    # and not the connections
+    (
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+     'OP2'  1 1 1 1 'OPEN' /
+     'PROD' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP*'  'SHUT' 3* /
+     'PROD' 'SHUT'    /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "PROD", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+    ),
     # Fail with ValueError when both I,J,K (3-5) and completions number (6-7)
     pytest.param(
         """
@@ -685,8 +762,22 @@ def test_welopen(test_input, expected):
     """Test with WELOPEN present"""
     deck = EclFiles.str2deck(test_input)
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
-
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
+
+    print(test_input)
+    print("calc")
+    print(
+        compdf[columns_to_check]
+        .sort_values(by=columns_to_check, axis=0)
+        .reset_index()[columns_to_check]
+    )
+    print("expected")
+    print(
+        expected[columns_to_check]
+        .sort_values(by=columns_to_check, axis=0)
+        .reset_index()[columns_to_check]
+    )
+
     assert (
         compdf[columns_to_check]
         .sort_values(by=columns_to_check, axis=0)

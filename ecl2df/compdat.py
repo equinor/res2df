@@ -185,8 +185,7 @@ def deck2dfs(
                 rec_data = parse_opmio_deckrecord(rec, "WELOPEN")
                 rec_data["DATE"] = date
                 rec_data["KEYWORD_IDX"] = idx
-                if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO"]:
-                    rec_data["STATUS"] = "SHUT"
+                if rec_data["STATUS"] not in ["OPEN", "SHUT", "STOP", "AUTO", "POPN"]:
                     logger.warning(
                         (
                             "WELOPEN status %s is not a valid "
@@ -194,6 +193,7 @@ def deck2dfs(
                         ),
                         rec_data["STATUS"],
                     )
+                    rec_data["STATUS"] = "SHUT"
                 welopenrecords.append(rec_data)
         elif kword.name == "WELSEGS":
             # First record contains meta-information for well
@@ -281,6 +281,7 @@ def deck2dfs(
         COMPDAT=compdat_df,
         COMPSEGS=compsegs_df,
         WELSEGS=welsegs_df,
+        WELOPEN=welopen_df,
         WLIST=wlist_df,
         WSEGSICD=wsegsicd_df,
         WSEGAICD=wsegaicd_df,
@@ -645,7 +646,7 @@ def expand_complump_in_welopen_df(
             if c_1 < 0 or c_2 < 0:
                 raise ValueError(f"Negative values for C1/C2 is not allowed: {row}")
             if c_1 == 0 or c_2 == 0:
-                raise ValueError(f"Defaults (zero) for C1/C2 is not implemented: {row}")
+                raise ValueError(f"Zeros for C1/C2 is not implemented: {row}")
             if c_2 < c_1:
                 raise ValueError(f"C2 must be equal or greater than C1: {row}")
 
@@ -655,6 +656,20 @@ def expand_complump_in_welopen_df(
                 & (complump_df["N"] >= c_1)
                 & (complump_df["N"] <= c_2)
             ]
+            # If I, J and K is also present in the WELOPEN record
+            # we should "and" the complump filter and the i,j,k filter:
+            if (
+                {"I", "J", "K"}.issubset(row.keys())
+                and row["I"]
+                and row["J"]
+                and row["K"]
+            ):
+                relevant_complump_df = relevant_complump_df[
+                    (relevant_complump_df["I"] == row["I"])
+                    & (relevant_complump_df["J"] == row["J"])
+                    & (relevant_complump_df["K1"] == row["K"])
+                    & (relevant_complump_df["K2"] == row["K"])
+                ]
             for _, complump_row in relevant_complump_df.iterrows():
                 if complump_row["K1"] != complump_row["K2"]:
                     raise ValueError(
@@ -731,8 +746,9 @@ def applywelopen(
 
     This deck would define two wells where OP1 and OP2 have two connected grid cells
     each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites
-    this: all connections in OP1 will be SHUT and in OP2 the upper connection will
-    be SHUT.
+    this for OP2 since items 3-5 are not defaulted. The connections in OP1 are untouched
+    when items 3-7 are defaulted in WELOPEN, then the statement applies only to the well
+    state itself, which is not covered by the compdat dataframe.
 
     WELOPEN can also be used at different dates and changes therefore the state of
     connections without explicit use of the COMPDAT keyword. This function translates
@@ -761,15 +777,33 @@ def applywelopen(
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
     welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 
+    # Statements where item 3-7 are defaulted applies to the well and not
+    # to the connections. Drop these.
+    ijkc1c2_cols = set(welopen_df.columns).intersection({"I", "J", "K", "C1", "C2"})
+    if ijkc1c2_cols:
+        welopen_df.dropna(inplace=True, subset=ijkc1c2_cols, how="all")
+
     for _, row in welopen_df.iterrows():
         if (row["I"] is None and row["J"] is None and row["K"] is None) or (
             row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
         ):
+            # Applies to all connections when the completion range
+            # is set zero or negative.
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
-        elif row["I"] and row["J"] and row["K"]:
+        elif (
+            row["I"]
+            and row["J"]
+            and row["K"]
+            and row["C1"] is None
+            and row["C2"] is None
+        ):
+            # The compdat dataframe is assumed unrolled
+            # so that K1 is always equal to K2. Any openings of lumped
+            # connections (C1 and C2) should already be translated to
+            # I, J, and K when we get here.
             previous_state = compdat_df[
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
@@ -798,7 +832,9 @@ def applywelopen(
         # underlying problem is that the opm-common definitions for the state of a
         # well in COMPDAT and WELOPEN are not identical. These translation steps can
         # be dropped when unity in the opm-common keyword definitions is reached.
-        new_state["OP/SH"] = row["STATUS"]
+        new_state["OP/SH"] = (
+            row["STATUS"].replace("STOP", "SHUT").replace("POPN", "OPEN")
+        )
         new_state["KEYWORD_IDX"] = row["KEYWORD_IDX"]
         new_state["DATE"] = row["DATE"]
 

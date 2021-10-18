@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.14.1.dev19+g35a379c documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.14.1.dev20+g4a50664 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev19+g35a379c
+                0.14.1.dev20+g4a50664
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -265,8 +265,7 @@
                 <span class="n">rec_data</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;WELOPEN&quot;</span><span class="p">)</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
-                <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OPEN&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">,</span> <span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">]:</span>
-                    <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SHUT&quot;</span>
+                <span class="k">if</span> <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OPEN&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">,</span> <span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">,</span> <span class="s2">&quot;POPN&quot;</span><span class="p">]:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                         <span class="p">(</span>
                             <span class="s2">&quot;WELOPEN status </span><span class="si">%s</span><span class="s2"> is not a valid &quot;</span>
@@ -274,6 +273,7 @@
                         <span class="p">),</span>
                         <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">],</span>
                     <span class="p">)</span>
+                    <span class="n">rec_data</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SHUT&quot;</span>
                 <span class="n">welopenrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSEGS&quot;</span><span class="p">:</span>
             <span class="c1"># First record contains meta-information for well</span>
@@ -361,6 +361,7 @@
         <span class="n">COMPDAT</span><span class="o">=</span><span class="n">compdat_df</span><span class="p">,</span>
         <span class="n">COMPSEGS</span><span class="o">=</span><span class="n">compsegs_df</span><span class="p">,</span>
         <span class="n">WELSEGS</span><span class="o">=</span><span class="n">welsegs_df</span><span class="p">,</span>
+        <span class="n">WELOPEN</span><span class="o">=</span><span class="n">welopen_df</span><span class="p">,</span>
         <span class="n">WLIST</span><span class="o">=</span><span class="n">wlist_df</span><span class="p">,</span>
         <span class="n">WSEGSICD</span><span class="o">=</span><span class="n">wsegsicd_df</span><span class="p">,</span>
         <span class="n">WSEGAICD</span><span class="o">=</span><span class="n">wsegaicd_df</span><span class="p">,</span>
@@ -725,7 +726,7 @@
             <span class="k">if</span> <span class="n">c_1</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c_2</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Negative values for C1/C2 is not allowed: </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">c_1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c_2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Defaults (zero) for C1/C2 is not implemented: </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zeros for C1/C2 is not implemented: </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">c_2</span> <span class="o">&lt;</span> <span class="n">c_1</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;C2 must be equal or greater than C1: </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -735,6 +736,20 @@
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">complump_df</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">c_1</span><span class="p">)</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">complump_df</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">c_2</span><span class="p">)</span>
             <span class="p">]</span>
+            <span class="c1"># If I, J and K is also present in the WELOPEN record</span>
+            <span class="c1"># we should &quot;and&quot; the complump filter and the i,j,k filter:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="n">relevant_complump_df</span> <span class="o">=</span> <span class="n">relevant_complump_df</span><span class="p">[</span>
+                    <span class="p">(</span><span class="n">relevant_complump_df</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">])</span>
+                    <span class="o">&amp;</span> <span class="p">(</span><span class="n">relevant_complump_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">])</span>
+                    <span class="o">&amp;</span> <span class="p">(</span><span class="n">relevant_complump_df</span><span class="p">[</span><span class="s2">&quot;K1&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
+                    <span class="o">&amp;</span> <span class="p">(</span><span class="n">relevant_complump_df</span><span class="p">[</span><span class="s2">&quot;K2&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">])</span>
+                <span class="p">]</span>
             <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">complump_row</span> <span class="ow">in</span> <span class="n">relevant_complump_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">complump_row</span><span class="p">[</span><span class="s2">&quot;K1&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">complump_row</span><span class="p">[</span><span class="s2">&quot;K2&quot;</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -811,8 +826,9 @@
 
 <span class="sd">    This deck would define two wells where OP1 and OP2 have two connected grid cells</span>
 <span class="sd">    each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites</span>
-<span class="sd">    this: all connections in OP1 will be SHUT and in OP2 the upper connection will</span>
-<span class="sd">    be SHUT.</span>
+<span class="sd">    this for OP2 since items 3-5 are not defaulted. The connections in OP1 are untouched</span>
+<span class="sd">    when items 3-7 are defaulted in WELOPEN, then the statement applies only to the well</span>
+<span class="sd">    state itself, which is not covered by the compdat dataframe.</span>
 
 <span class="sd">    WELOPEN can also be used at different dates and changes therefore the state of</span>
 <span class="sd">    connections without explicit use of the COMPDAT keyword. This function translates</span>
@@ -841,15 +857,33 @@
     <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">expand_wlist_in_welopen_df</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">wlist_df</span><span class="p">)</span>
     <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">expand_complump_in_welopen_df</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">complump_df</span><span class="p">)</span>
 
+    <span class="c1"># Statements where item 3-7 are defaulted applies to the well and not</span>
+    <span class="c1"># to the connections. Drop these.</span>
+    <span class="n">ijkc1c2_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">welopen_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">({</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">ijkc1c2_cols</span><span class="p">:</span>
+        <span class="n">welopen_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">ijkc1c2_cols</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
             <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span>
         <span class="p">):</span>
+            <span class="c1"># Applies to all connections when the completion range</span>
+            <span class="c1"># is set zero or negative.</span>
             <span class="n">previous_state</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[</span>
                 <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">])</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
             <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;C2&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="c1"># The compdat dataframe is assumed unrolled</span>
+            <span class="c1"># so that K1 is always equal to K2. Any openings of lumped</span>
+            <span class="c1"># connections (C1 and C2) should already be translated to</span>
+            <span class="c1"># I, J, and K when we get here.</span>
             <span class="n">previous_state</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[</span>
                 <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">])</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
@@ -878,7 +912,9 @@
         <span class="c1"># underlying problem is that the opm-common definitions for the state of a</span>
         <span class="c1"># well in COMPDAT and WELOPEN are not identical. These translation steps can</span>
         <span class="c1"># be dropped when unity in the opm-common keyword definitions is reached.</span>
-        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span>
+        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;POPN&quot;</span><span class="p">,</span> <span class="s2">&quot;OPEN&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span>
         <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span>
 

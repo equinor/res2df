@@ -86,8 +86,8 @@ def test_df_column_keys():
     assert set(sumdf.columns) == {"FOPT", "FOPR"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
-    with pytest.raises(ValueError, match="No valid key"):
-        summary.df(EclFiles(REEK), column_keys=["BOGUS"])
+    sumdf = summary.df(EclFiles(REEK), column_keys=["BOGUS"])
+    assert sumdf.columns.empty
 
 
 def test_summary2df_dates():

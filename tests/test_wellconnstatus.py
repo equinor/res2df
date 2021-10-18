@@ -18,8 +18,17 @@ REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
+def test_reek_dataset():
+    """Test Reek dataset. It contains no CPI data and should return
+    an empty dataframe.
+    """
+    eclfiles = EclFiles(REEK)
+    wellconnstatus_df = wellconnstatus.df(eclfiles)
+    assert wellconnstatus_df.empty
+
+
 def test_eightcells_dataset():
-    """Test Eightcells dataset"""
+    """Test the Eightcells dataset which has CPI data"""
     eclfiles = EclFiles(EIGHTCELLS)
     wellconnstatus_df = wellconnstatus.df(eclfiles)
     expected_dframe = pd.DataFrame(

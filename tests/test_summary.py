@@ -88,6 +88,7 @@ def test_df_column_keys():
 
     sumdf = summary.df(EclFiles(REEK), column_keys=["BOGUS"])
     assert sumdf.columns.empty
+    assert not sumdf.index.empty
 
 
 def test_summary2df_dates():

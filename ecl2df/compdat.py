@@ -752,7 +752,7 @@ def applywelopen(
     in the simulator. The Eclipse manual states that 'If items 3 - 7 are all defaulted,
     the Open/Shut/Stop command applies to the well, leaving the connections unchanged',
     but this has been proven to be wrong. The state of the connection can be tested
-    by looking at the CPI summary vectors. The connection is SHUT if CPI==0 and open
+    by looking at the CPI summary vectors. The connection is SHUT if CPI==0 and OPEN
     if CPI>0.
 
     WELOPEN can also be used at different dates and changes therefore the state of

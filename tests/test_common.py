@@ -1,8 +1,11 @@
 """Test module for ecl2df.common"""
 
+import datetime
 import os
 from pathlib import Path
 
+import numpy as np
+import packaging.version
 import pandas as pd
 import pytest
 
@@ -221,6 +224,36 @@ def test_df2ecl():
     assert string.find("3456") > string.find("1234")
 
 
+@pytest.mark.parametrize(
+    "somedate, expected",
+    [
+        pytest.param(None, None, marks=pytest.mark.xfail(raises=TypeError)),
+        pytest.param({}, None, marks=pytest.mark.xfail(raises=TypeError)),
+        pytest.param(
+            "",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError, match="ISO string too short"),
+        ),
+        ("2021-02-01", "1 'FEB' 2021"),
+        ("2021-02-01 010203", "1 'FEB' 2021 01:02:03"),
+        ("2021-02-01 01:02:03", "1 'FEB' 2021 01:02:03"),
+        (datetime.date(2021, 2, 1), "1 'FEB' 2021"),
+        (datetime.datetime(2021, 2, 1, 0, 0, 0), "1 'FEB' 2021"),
+        ("2021-02-01 000000", "1 'FEB' 2021"),
+        (datetime.datetime(2021, 2, 1, 2, 3, 4), "1 'FEB' 2021 02:03:04"),
+        (datetime.datetime(2021, 2, 1, 2, 3, 4, 4433), "1 'FEB' 2021 02:03:04"),
+        pytest.param(
+            "01/02/2021",
+            None,
+            marks=pytest.mark.xfail(raises=ValueError, match="Use ISO"),
+        ),
+    ],
+)
+def test_datetime_to_eclipsedate(somedate, expected):
+    """Test conversion of datetime to Eclipse date or datetime syntax"""
+    assert common.datetime_to_eclipsedate(somedate) == expected
+
+
 def test_eclcompress():
     """Test that we can compress string using Eclipse style
     run-length encoding"""
@@ -268,3 +301,164 @@ def test_eclcompress():
 def test_well_matching_template(template, wells, output):
     "Test that get_wells_matching_template is working as intended."
     assert common.get_wells_matching_template(template, wells) == output
+
+
+@pytest.mark.parametrize(
+    "dframe, keyword, comment, renamer, drop_trailing_columns, expected",
+    [
+        pytest.param(
+            pd.DataFrame(),
+            "FOO",
+            None,
+            None,
+            False,
+            "FOO\n",
+            marks=pytest.mark.xfail(raises=KeyError, match="FOO"),
+            id="unknown-keyword",
+        ),
+        pytest.param(
+            pd.DataFrame(),
+            "COMPDAT",
+            None,
+            None,
+            False,
+            "COMPDAT\n",
+            id="empty-frame",
+        ),
+        pytest.param(
+            pd.DataFrame(),
+            "COMPDAT",
+            "foobar",
+            None,
+            False,
+            "COMPDAT\n-- foobar\n",
+            id="comment",
+        ),
+        pytest.param(
+            pd.DataFrame(),
+            "COMPDAT",
+            "",
+            None,
+            False,
+            "COMPDAT\n",
+            id="comment-empty-string",
+        ),
+        pytest.param(
+            pd.DataFrame(),
+            "COMPDAT",
+            "foo\nbar",
+            None,
+            False,
+            "COMPDAT\n-- foo\n-- bar\n",
+            id="comment-multiline",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1"}]),
+            "COMPDAT",
+            None,
+            None,
+            True,
+            "COMPDAT\n-- WELL\n  'OP1' /\n",
+            id="OP1",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1"}, {"WELL": "OP2"}]),
+            "COMPDAT",
+            None,
+            None,
+            True,
+            "COMPDAT\n-- WELL\n  'OP1' /\n  'OP2' /\n",
+            id="two-rows",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1", "DIR": np.nan}]),
+            "COMPDAT",
+            None,
+            None,
+            True,
+            "COMPDAT\n-- WELL\n  'OP1' /\n",
+            id="nan-column1",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1", "I": None}]),
+            "COMPDAT",
+            None,
+            None,
+            True,
+            "COMPDAT\n-- WELL\n  'OP1' /\n",
+            id="nan-column2",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1", "I": None}]),
+            "COMPDAT",
+            None,
+            None,
+            False,
+            "COMPDAT\n-- WELL  I\n  'OP1' 1* /\n",
+            id="nan-column2-no-drop",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1", "J": "2"}]),
+            "COMPDAT",
+            None,
+            None,
+            True,
+            "COMPDAT\n-- WELL  I J\n  'OP1' 1* 2 /\n",
+            # Here, the I column should not be dropped but defaulted
+            id="nan-column3",
+        ),
+        pytest.param(
+            pd.DataFrame([{"FOOWELL": "OP1"}]),
+            "COMPDAT",
+            None,
+            {"WELL": "FOOWELL"},
+            True,
+            "COMPDAT\n-- FOOWELL\n  'OP1' /\n",
+            id="renamer-strange-input-column-names",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1"}]),
+            "COMPDAT",
+            None,
+            {"WELL": "FOO"},
+            True,
+            "COMPDAT\n-- FOO\n  'OP1' /\n",
+            id="renamer-only-for-header-line",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1"}]),
+            "COMPDAT",
+            None,
+            {"bogus": "morebogus"},
+            True,
+            "COMPDAT\n-- WELL\n  'OP1' /\n",
+            id="irrelevant-renamer",
+        ),
+        pytest.param(
+            pd.DataFrame([{"BOGUS": "OP1"}]),
+            "COMPDAT",
+            None,
+            None,
+            True,
+            "COMPDAT\n",
+            id="bogus-column",
+        ),
+    ],
+)
+def test_generic_ecltable(
+    dframe, keyword, comment, renamer, drop_trailing_columns, expected
+):
+    stringtable = common.generic_ecltable(
+        dframe,
+        keyword,
+        comment=comment,
+        renamer=renamer,
+        drop_trailing_columns=drop_trailing_columns,
+    )
+    # Pandas 1.1.5 gives a different amount of whitespace than what
+    # these tests are written for. If so, be more slack about whitespace.
+    if packaging.version.parse(pd.__version__) < packaging.version.parse("1.2.0"):
+        stringtable = " ".join(stringtable.split())
+        assert stringtable == " ".join(expected.split())
+    else:
+        assert stringtable == expected

@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
 
+import dateutil.parser
 import numpy as np
 import pandas as pd
 
@@ -90,6 +91,22 @@ SVG_COLOR_NAMES = [
         .splitlines()
     )
 ]
+ECLMONTH2NUM = {
+    "JAN": 1,
+    "FEB": 2,
+    "MAR": 3,
+    "APR": 4,
+    "MAY": 5,
+    "JUN": 6,
+    "JUL": 7,
+    "JLY": 7,
+    "AUG": 8,
+    "SEP": 9,
+    "OCT": 10,
+    "NOV": 11,
+    "DEC": 12,
+}
+NUM2ECLMONTH = {num: month for month, num in ECLMONTH2NUM.items()}
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -141,22 +158,24 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
 
 def parse_ecl_month(eclmonth: str) -> int:
     """Translate Eclipse month strings to integer months"""
-    eclmonth2num = {
-        "JAN": 1,
-        "FEB": 2,
-        "MAR": 3,
-        "APR": 4,
-        "MAY": 5,
-        "JUN": 6,
-        "JUL": 7,
-        "JLY": 7,
-        "AUG": 8,
-        "SEP": 9,
-        "OCT": 10,
-        "NOV": 11,
-        "DEC": 12,
-    }
-    return eclmonth2num[eclmonth]
+    return ECLMONTH2NUM[eclmonth]
+
+
+def datetime_to_eclipsedate(
+    timestamp: Union[str, datetime.datetime, datetime.date]
+) -> str:
+    """Convert a Python timestamp or date to the Eclipse DATE format"""
+    if isinstance(timestamp, str):
+        if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
+            # Need this as dateutil.parser.isoparse() is not in Python 3.6.
+            raise ValueError("Use ISO-format for dates")
+        timestamp = dateutil.parser.parse(timestamp)  # noqa  (py36 flake8 bug)
+    if not isinstance(timestamp, (datetime.datetime, datetime.date)):
+        raise TypeError("Require string or datetime")
+    string = f"{timestamp.day} '{NUM2ECLMONTH[timestamp.month]}' {timestamp.year}"
+    if isinstance(timestamp, datetime.datetime):
+        string += " " + timestamp.strftime("%H:%M:%S")
+    return string.replace("00:00:00", "").strip()
 
 
 def ecl_keyworddata_to_df(
@@ -303,6 +322,7 @@ def parse_opmio_deckrecord(
                     # OPM DeckItem. A better solution has not yet
                     # been found in the OPM API. See also
                     # https://github.com/OPM/opm-common/issues/2598
+                    # pylint: disable=protected-access
                     if record[item_idx].__defaulted(idx):
                         rec_dict[item_name][idx] = np.nan
         else:
@@ -487,7 +507,13 @@ def df2ecl(
     consecutive: Optional[str] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate Eclipse include strings from dataframes in ecl2df format
+    """Generate Eclipse include strings from dataframes in ecl2df format.
+
+    This function hands over the actual text generation pr. keyword
+    to functions named df2ecl_<keywordname> in the calling module.
+
+    These functions may again use generic_ecltable() from this module
+    for the actual string construction.
 
     Args:
         dataframe: Dataframe with Eclipse data on ecl2df format.
@@ -587,6 +613,131 @@ def df2ecl(
         Path(filename).parent.mkdir(parents=True, exist_ok=True)
         Path(filename).write_text(string, encoding="utf-8")
     return string
+
+
+def generic_ecltable(
+    dframe: pd.DataFrame,
+    keyword: str,
+    comment: str = None,
+    renamer: Dict[str, str] = None,
+    drop_trailing_columns: bool = True,
+) -> str:
+    """Construct a typical Eclipse table for data following
+    a keyword. Each row (record in Eclipse terms) ends with a slash.
+
+    This function will *not* add a final slash after all rows, as
+    this is keyword dependent. Some keywords require it, some keywords
+    require it to not be there.
+
+    The header is printed as a comment, with header names taken
+    from the dataframe.
+
+    The renamer is a map that is used to translate your dataframe column
+    names into opm.common item names, and the dictionary should map
+    from opm.common names into your chosen ones. If you have standard named
+    dataframe columns, the renamer is only applied to the column header comment.
+
+    Trailing columns that are all defaulted (that is either np.nan, None)
+    or consisting of only "1*" will be dropped, as Eclipse will always
+    interpret that as "1*".
+    """
+
+    # Start building the string we are to return:
+    string = keyword + "\n"
+    if comment is not None and comment:
+        string += "\n".join(["-- " + line for line in comment.splitlines()]) + "\n"
+
+    # Empty tables are ok with Eclipse (at least sometimes)
+    if dframe.empty:
+        return string
+
+    # Ensure we work on a copy as we are going to modify it in order to have
+    # Pandas make a pretty txt table:
+    dframe = dframe.copy()
+
+    # Column names are pr. ec2ldf standard, redo to opm.common in order to use
+    # sorting from that:
+    if renamer is not None:
+        inv_renamer = {value: key for key, value in renamer.items()}
+        dframe.rename(inv_renamer, axis="columns", inplace=True)
+
+    keyword_col_headers = [item["name"] for item in OPMKEYWORDS[keyword]["items"]]
+
+    rightmost_column = max(
+        [
+            keyword_col_headers.index(item)
+            for item in set(dframe.columns).intersection(keyword_col_headers)
+        ],
+        default=-1,
+    )
+    if rightmost_column == -1:
+        # No relevant data in the dataframe
+        return string
+    relevant_columns = keyword_col_headers[0 : rightmost_column + 1]  # noqa
+    for colname in relevant_columns:
+        # Add those that are missing, as Eclipse defaults
+        if colname not in dframe:
+            dframe[colname] = "1*"
+
+    # Reorder and slice columns:
+    dframe = dframe[relevant_columns]
+
+    # NaN or Nones are assumed to be defaulted, which in Eclipse terminology is
+    # the string "1*":
+    dframe.fillna(value="1*", inplace=True)
+
+    if drop_trailing_columns:
+        for col_name in reversed(relevant_columns):
+            if col_name not in dframe.columns:
+                continue
+            if set(dframe[col_name].to_numpy()) == {"1*"}:
+                del dframe[col_name]
+            else:
+                break
+
+    # It is critical for opm.common, maybe also E100 to have integers printed
+    # as integers, for correct parsing. Ensure these are integer where the json
+    # says integer before we convert them to strings:
+    integer_cols = {
+        item["name"]
+        for item in OPMKEYWORDS[keyword]["items"]
+        if item["value_type"] == "INT"  # and item["name"] in col_headers
+    }
+    for int_col in integer_cols.intersection(dframe.columns):
+        defaulted_rows = dframe[int_col] == "1*"
+        dframe.loc[~defaulted_rows, int_col] = (
+            dframe.loc[~defaulted_rows, int_col].astype(int).astype(str)
+        )
+
+    # Quote all string data. This is not always needed, but needed
+    # for some colums, for example well-names containing a slash.
+    string_cols = {
+        item["name"]
+        for item in OPMKEYWORDS[keyword]["items"]
+        if item["value_type"] == "STRING"  # and item["name"] in col_headers
+    }
+    for str_col in string_cols.intersection(dframe.columns):
+        # Ensure 1* is not quoted.
+        non_defaulted_rows = dframe[str_col] != "1*"
+        dframe.loc[non_defaulted_rows, str_col].str.replace("'", "")
+        dframe.loc[non_defaulted_rows, str_col] = (
+            "'" + dframe.loc[non_defaulted_rows, str_col] + "'"
+        )
+
+    # Now rename again to have prettier column names:
+    if renamer is not None:
+        dframe.rename(renamer, axis="columns", inplace=True)
+    # Add a final column with the end-slash, invisible header:
+    dframe[" "] = "/"
+    tablestring = dframe.to_string(header=True, index=False)
+    # Indent all lines with two spaces:
+    tablestring = "\n".join(
+        ["  " + line.strip().replace("  /", " /") for line in tablestring.splitlines()]
+        # The replace() in there is needed for py36/pandas==1.1.5 only.
+    )
+    # Eclipse comment for the header line:
+    tablestring = "--" + tablestring[1:]
+    return string + tablestring + "\n"
 
 
 def runlength_eclcompress(string: str, sep: str = "  ") -> str:

@@ -688,8 +688,6 @@ def generic_ecltable(
 
     if drop_trailing_columns:
         for col_name in reversed(relevant_columns):
-            if col_name not in dframe.columns:
-                continue
             if set(dframe[col_name].to_numpy()) == {"1*"}:
                 del dframe[col_name]
             else:

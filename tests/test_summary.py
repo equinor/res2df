@@ -86,9 +86,9 @@ def test_df_column_keys():
     assert set(sumdf.columns) == {"FOPT", "FOPR"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
-    sumdf = summary.df(EclFiles(REEK), column_keys=["BOGUS"])
-    assert sumdf.columns.empty
-    assert not sumdf.index.empty
+    sumdf_no_columns = summary.df(EclFiles(REEK), column_keys=["BOGUS"])
+    assert sumdf_no_columns.columns.empty
+    assert all(sumdf_no_columns.index == sumdf.index)
 
 
 def test_summary2df_dates():

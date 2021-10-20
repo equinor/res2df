@@ -745,10 +745,10 @@ def applywelopen(
       /
 
     This deck would define two wells where OP1 and OP2 have two connected grid cells
-    each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites
-    this for OP2 since items 3-5 are not defaulted. The connections in OP1 are untouched
-    when items 3-7 are defaulted in WELOPEN, then the statement applies only to the well
-    state itself, which is not covered by the compdat dataframe.
+    each. The first welopen statment acts on the whole well, closing both the well and
+    the connections. If this statement used STOP instead of SHUT, the connections would
+    be left open. The second welopen statement acts on a single connection. Here SHUT
+    and STOP would give the same result. The Eclipse manual is unclear about this logic.
 
     WELOPEN can also be used at different dates and changes therefore the state of
     connections without explicit use of the COMPDAT keyword. This function translates
@@ -777,13 +777,8 @@ def applywelopen(
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
     welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 
-    # Statements where item 3-7 are defaulted applies to the well and not
-    # to the connections. Drop these.
-    ijkc1c2_cols = set(welopen_df.columns).intersection({"I", "J", "K", "C1", "C2"})
-    if ijkc1c2_cols:
-        welopen_df.dropna(inplace=True, subset=ijkc1c2_cols, how="all")
-
     for _, row in welopen_df.iterrows():
+        acts_on_well = False
         if (row["I"] is None and row["J"] is None and row["K"] is None) or (
             row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
         ):
@@ -793,6 +788,7 @@ def applywelopen(
                 (compdat_df["WELL"] == row["WELL"])
                 & (compdat_df["KEYWORD_IDX"] < row["KEYWORD_IDX"])
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
+            acts_on_well = True
         elif (
             row["I"]
             and row["J"]
@@ -832,9 +828,16 @@ def applywelopen(
         # underlying problem is that the opm-common definitions for the state of a
         # well in COMPDAT and WELOPEN are not identical. These translation steps can
         # be dropped when unity in the opm-common keyword definitions is reached.
-        new_state["OP/SH"] = (
-            row["STATUS"].replace("STOP", "SHUT").replace("POPN", "OPEN")
-        )
+        new_state["OP/SH"] = row["STATUS"].replace("POPN", "OPEN")
+
+        # If the welopen statement acts on the whole well, then STOP closes the well
+        # but opens the connections. If the welopen statement applies to selected
+        # connections, then STOP means the same as SHUT.
+        if acts_on_well:
+            new_state["OP/SH"] = new_state["OP/SH"].replace("STOP", "OPEN")
+        else:
+            new_state["OP/SH"] = new_state["OP/SH"].replace("STOP", "SHUT")
+
         new_state["KEYWORD_IDX"] = row["KEYWORD_IDX"]
         new_state["DATE"] = row["DATE"]
 

@@ -140,6 +140,12 @@ WELOPEN_CASES = [
         ),
         id="welopen-stop-on-well-explicit-defaults",
     ),
+    # In this test, the well connection is first SHUT, but then
+    # actually opened by applying STOP on the well. The well is still
+    # closed but the connection is open. Note that applying STOP to
+    # the connection instead of the well ('OP1' 'STOP' 1 1 1 /) would
+    # leave the connection still shut. This behavior has been tested
+    # in the simulator.
     pytest.param(
         """
     DATES

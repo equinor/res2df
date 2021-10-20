@@ -748,7 +748,12 @@ def applywelopen(
     each. The first welopen statment acts on the whole well, closing both the well and
     the connections. If this statement used STOP instead of SHUT, the connections would
     be left open. The second welopen statement acts on a single connection. Here SHUT
-    and STOP would give the same result. The Eclipse manual is unclear about this logic.
+    and STOP would give the same result. This behavior has been proven to be correct
+    in the simulator. The Eclipse manual states that 'If items 3 - 7 are all defaulted,
+    the Open/Shut/Stop command applies to the well, leaving the connections unchanged',
+    but this has been proven to be wrong. The state of the connection can be tested
+    by looking at the CPI summary vectors. The connection is SHUT if CPI==0 and open
+    if CPI>0.
 
     WELOPEN can also be used at different dates and changes therefore the state of
     connections without explicit use of the COMPDAT keyword. This function translates

@@ -621,9 +621,6 @@ def _libecl_eclsum_pandas_frame(
         for key in column_keys:
             keywords.add_keywords(key)
 
-    if len(keywords) == 0:
-        raise ValueError("No valid key")
-
     # pylint: disable=protected-access
     if time_index is None:
         time_index = eclsum.dates  # Changed from libecl

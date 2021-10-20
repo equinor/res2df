@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.14.1.dev20+g4a50664 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.14.1.dev21+gffd9d48 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev20+g4a50664
+                0.14.1.dev21+gffd9d48
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -700,9 +700,6 @@
         <span class="n">keywords</span> <span class="o">=</span> <span class="n">EclSumKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">column_keys</span><span class="p">:</span>
             <span class="n">keywords</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No valid key&quot;</span><span class="p">)</span>
 
     <span class="c1"># pylint: disable=protected-access</span>
     <span class="k">if</span> <span class="n">time_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

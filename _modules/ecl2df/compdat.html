@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.14.1.dev23+ge105ca4 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.14.1.dev24+geef5eeb documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev23+ge105ca4
+                0.14.1.dev24+geef5eeb
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -825,10 +825,15 @@
 <span class="sd">      /</span>
 
 <span class="sd">    This deck would define two wells where OP1 and OP2 have two connected grid cells</span>
-<span class="sd">    each. Although the COMPDAT defines all connections to be open, WELOPEN overwrites</span>
-<span class="sd">    this for OP2 since items 3-5 are not defaulted. The connections in OP1 are untouched</span>
-<span class="sd">    when items 3-7 are defaulted in WELOPEN, then the statement applies only to the well</span>
-<span class="sd">    state itself, which is not covered by the compdat dataframe.</span>
+<span class="sd">    each. The first welopen statment acts on the whole well, closing both the well and</span>
+<span class="sd">    the connections. If this statement used STOP instead of SHUT, the connections would</span>
+<span class="sd">    be left open. The second welopen statement acts on a single connection. Here SHUT</span>
+<span class="sd">    and STOP would give the same result. This behavior has been proven to be correct</span>
+<span class="sd">    in the simulator. The Eclipse manual states that &#39;If items 3 - 7 are all defaulted,</span>
+<span class="sd">    the Open/Shut/Stop command applies to the well, leaving the connections unchanged&#39;,</span>
+<span class="sd">    but this has been proven to be wrong. The state of the connection can be tested</span>
+<span class="sd">    by looking at the CPI summary vectors. The connection is SHUT if CPI==0 and OPEN</span>
+<span class="sd">    if CPI&gt;0.</span>
 
 <span class="sd">    WELOPEN can also be used at different dates and changes therefore the state of</span>
 <span class="sd">    connections without explicit use of the COMPDAT keyword. This function translates</span>
@@ -857,13 +862,8 @@
     <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">expand_wlist_in_welopen_df</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">wlist_df</span><span class="p">)</span>
     <span class="n">welopen_df</span> <span class="o">=</span> <span class="n">expand_complump_in_welopen_df</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">complump_df</span><span class="p">)</span>
 
-    <span class="c1"># Statements where item 3-7 are defaulted applies to the well and not</span>
-    <span class="c1"># to the connections. Drop these.</span>
-    <span class="n">ijkc1c2_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">welopen_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">({</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">})</span>
-    <span class="k">if</span> <span class="n">ijkc1c2_cols</span><span class="p">:</span>
-        <span class="n">welopen_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">ijkc1c2_cols</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
-
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">acts_on_well</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
             <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span>
         <span class="p">):</span>
@@ -873,6 +873,7 @@
                 <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">])</span>
                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">])</span>
             <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+            <span class="n">acts_on_well</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="p">(</span>
             <span class="n">row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span>
             <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span>
@@ -912,9 +913,16 @@
         <span class="c1"># underlying problem is that the opm-common definitions for the state of a</span>
         <span class="c1"># well in COMPDAT and WELOPEN are not identical. These translation steps can</span>
         <span class="c1"># be dropped when unity in the opm-common keyword definitions is reached.</span>
-        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;POPN&quot;</span><span class="p">,</span> <span class="s2">&quot;OPEN&quot;</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;STATUS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;POPN&quot;</span><span class="p">,</span> <span class="s2">&quot;OPEN&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If the welopen statement acts on the whole well, then STOP closes the well</span>
+        <span class="c1"># but opens the connections. If the welopen statement applies to selected</span>
+        <span class="c1"># connections, then STOP means the same as SHUT.</span>
+        <span class="k">if</span> <span class="n">acts_on_well</span><span class="p">:</span>
+            <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;OPEN&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;STOP&quot;</span><span class="p">,</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">)</span>
+
         <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;KEYWORD_IDX&quot;</span><span class="p">]</span>
         <span class="n">new_state</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span>
 

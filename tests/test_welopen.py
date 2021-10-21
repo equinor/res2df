@@ -14,7 +14,7 @@ except ImportError:
     )
 
 WELOPEN_CASES = [
-    # WELOPEN operating on well state, not on connections:
+    # WELOPEN SHUT closes both well and connections
     pytest.param(
         """
     DATES
@@ -30,12 +30,12 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
-        id="on-wellstate",
+        id="welopen-shut",
     ),
-    # Test the defaults handling in WELOPEN, it will still operate on well state:
+    # WELOPEN SHUT with explicit defaults, still closes both well and connections
     pytest.param(
         """
     DATES
@@ -51,10 +51,10 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
             ],
         ),
-        id="on-wellstate-explicit-defaults",
+        id="welopen-shut-explicit-defaults",
     ),
     # Test the zero handling in WELOPEN (zero value means apply to all)
     pytest.param(
@@ -98,6 +98,8 @@ WELOPEN_CASES = [
         ),
         id="negative-values",
     ),
+    # When item 3-7 are defaulted, the action applies to the well and not the
+    # connections. Thus they should be kept open.
     pytest.param(
         """
     DATES
@@ -107,8 +109,6 @@ WELOPEN_CASES = [
      'OP1' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     -- When item 3-7 are defaulted, the action applies to the well and not the
-     -- connections. Thus they should be kept open.
      'OP1' 'STOP' /
     /
     """,
@@ -139,6 +139,39 @@ WELOPEN_CASES = [
             ],
         ),
         id="welopen-stop-on-well-explicit-defaults",
+    ),
+    # In this test, the well connection is first SHUT, but then
+    # actually opened by applying STOP on the well. The well is still
+    # closed but the connection is open. Note that applying STOP to
+    # the connection instead of the well ('OP1' 'STOP' 1 1 1 /) would
+    # leave the connection still shut. This behavior has been tested
+    # in the simulator.
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' /
+    /
+    DATES
+     1 FEB 2000 /
+    /
+    WELOPEN
+     'OP1' 'STOP' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 2, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+            ],
+        ),
+        id="welopen-shut-then-stop-on-well",
     ),
     pytest.param(
         """

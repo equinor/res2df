@@ -138,6 +138,9 @@ WOPT
 /
 WOPR
 /
+CPI
+  OP1 /
+/
 
 SCHEDULE
 

@@ -185,7 +185,6 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0:   1 1 1 1 2 2 2 2
  0: /
  0: 
- 0: 
  0: SOLUTION
  0: 
  0: EQUIL
@@ -202,6 +201,9 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  0: WOPT
  0: /
  0: WOPR
+ 0: /
+ 0: CPI
+ 0:   OP1 /
  0: /
  0: 
  0: SCHEDULE
@@ -303,13 +305,14 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
     37 READING FOPT    
     38 READING WOPT    
     39 READING WOPR    
-    40 READING SCHEDULE
-    41 READING WELSPECS
-    42 READING COMPDAT 
-    43 READING WELSEGS 
-    44 READING COMPSEGS
-    45 READING WRFTPLT 
-    46 READING WCONPROD
+    40 READING CPI     
+    41 READING SCHEDULE
+    42 READING WELSPECS
+    43 READING COMPDAT 
+    44 READING WELSEGS 
+    45 READING COMPSEGS
+    46 READING WRFTPLT 
+    47 READING WCONPROD
 
  @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           THE BOTTOM HOLE PRESSURE LIMIT FOR WELL OP1                     
@@ -319,13 +322,13 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           OPENING WELL OP1      AT TIME      0.00   DAYS                  
  @           CONTROLLED BY OIL RATE                                          
-    47 READING TSTEP   
+    48 READING TSTEP   
 
  @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2000):
  @           RESTART FILE WRITTEN   REPORT     0                             
 1                             **********************************************************************   1
   SIMULATE AT      0.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2     
-  REPORT   0     1 JAN 2000   *EIGHTCELLS                                                              * RUN AT 14:58 ON 20 SEP 2021 
+  REPORT   0     1 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021 
                               **************************************************************************
 
  STEP    1 TIME=      1.00  DAYS (    +1.0  DAYS REPT  2 ITS) (2-JAN-2000)       
@@ -335,7 +338,7 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  @           RESTART FILE WRITTEN   REPORT     1                             
 1                             **********************************************************************   2
   SIMULATE AT      1.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2     
-  REPORT   1     2 JAN 2000   *EIGHTCELLS                                                              * RUN AT 14:58 ON 20 SEP 2021 
+  REPORT   1     2 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021 
                               **************************************************************************
 
  STEP    2 TIME=      2.00  DAYS (    +1.0  DAYS REPT  2 ITS) (3-JAN-2000)       
@@ -343,14 +346,14 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
 
  @--MESSAGE  AT TIME        2.0   DAYS    ( 3-JAN-2000):
  @           RESTART FILE WRITTEN   REPORT     2                             
-    48 READING END     
+    49 READING END     
 1                             **********************************************************************   3
   END      AT      2.00  DAYS *                                                                        * ECLIPSE  VERSION 2020.2     
-  REPORT   2     3 JAN 2000   *EIGHTCELLS                                                              * RUN AT 14:58 ON 20 SEP 2021 
+  REPORT   2     3 JAN 2000   *EIGHTCELLS                                                              * RUN AT 15:17 ON 12 OCT 2021 
                               **************************************************************************
             8 Mbytes of storage required                         
     1031.5912 KB/active cell                                     
-          228 Mbytes (image size)                                
+          208 Mbytes (image size)                                
 
  Error summary 
  Comments               1
@@ -358,5 +361,5 @@ utility  | 07-AUG-2020 12:21:12 | 15-JUL-2020 13:49:54 | 2020.2_631174
  Problems               0
  Errors                 0
  Bugs                   0
- Final cpu       0.13 elapsed       0.56
+ Final cpu       0.03 elapsed       0.97
  Total number of time steps forced to be accepted          0

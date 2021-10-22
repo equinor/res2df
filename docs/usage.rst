@@ -18,5 +18,5 @@ This section will go through each module in more detail, with examples.
    usage/satfunc
    usage/summary
    usage/trans
-   usage/wellconnstatus
    usage/wcon
+   usage/wellconnstatus

@@ -1,5 +1,5 @@
 wellconnstatus
---------
+--------------
 
 Exctracts connection status history for each compdat connection that is included
 in the summary data on the form CPI:WELL,I,J,K. CPI stands for connection

@@ -36,5 +36,6 @@ Submodules
    ecl2df.trans
    ecl2df.version
    ecl2df.wcon
+   ecl2df.wellconnstatus
 
 .. currentmodule:: ecl2df

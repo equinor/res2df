@@ -1,0 +1,10 @@
+=========================
+``ecl2df.wellconnstatus``
+=========================
+
+.. automodule:: ecl2df.wellconnstatus
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.wellconnstatus

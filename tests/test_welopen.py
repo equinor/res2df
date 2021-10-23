@@ -120,6 +120,8 @@ WELOPEN_CASES = [
         ),
         id="welopen-stop-on-well",
     ),
+    # Both 1*, 0 and -1 are default values and give the same result:
+    # When all coordinates are defaulted, the connections are left OPEN
     pytest.param(
         """
     DATES
@@ -127,15 +129,21 @@ WELOPEN_CASES = [
     /
     COMPDAT
      'OP1' 1 1 1 1 'OPEN' /
+     'OP2' 1 1 1 1 'OPEN' /
+     'OP3' 1 1 1 1 'OPEN' /
     /
     WELOPEN
      'OP1' 'STOP' 1* 1* 1* /
+     'OP2' 'STOP' 0  0  0  /
+     'OP3' 'STOP' -1 -1 -1 /
     /
     """,
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP3", 1, 1, 1, 1, "OPEN"],
             ],
         ),
         id="welopen-stop-on-well-explicit-defaults",
@@ -173,6 +181,7 @@ WELOPEN_CASES = [
         ),
         id="welopen-shut-then-stop-on-well",
     ),
+    # Closes a connection with specified I, J, K
     pytest.param(
         """
     DATES
@@ -243,9 +252,7 @@ WELOPEN_CASES = [
             ],
         ),
     ),
-    # Both wilcard wells, all coordinates defaulted
-    # And no coordinates defined, which closes the well
-    # and not the connections
+    # Both wilcard well names and K coordinate defaulted with -1
     (
         """
     DATES
@@ -253,24 +260,24 @@ WELOPEN_CASES = [
     /
     COMPDAT
      'OP1'  1 1 1 1 'OPEN' /
-     'OP2'  1 1 1 1 'OPEN' /
+     'OP2'  1 1 2 2 'OPEN' /
      'PROD' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     'OP*'  'SHUT' 3* /
-     'PROD' 'SHUT'    /
+     'OP*'  'SHUT' 1 1 -1 /
     /
     """,
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 2, 2, "SHUT"],
                 [datetime.date(2000, 1, 1), "PROD", 1, 1, 1, 1, "OPEN"],
             ],
         ),
     ),
-    # Fail with ValueError when both I,J,K (3-5) and completions number (6-7)
+    # STOP on connection is the same as SHUT
+    # (not that STOP on well gives OPEN connections)
     pytest.param(
         """
     DATES
@@ -291,6 +298,7 @@ WELOPEN_CASES = [
         ),
         id="welopen-stop-on-connection-is-shut",
     ),
+    # POPN is the same as OPEN
     pytest.param(
         """
     DATES
@@ -311,6 +319,7 @@ WELOPEN_CASES = [
         ),
         id="welopen-popn-on-connection-is-open",
     ),
+    # WELOPEN refers to a lumped connection, but COMPLUMP is missing
     pytest.param(
         """
     DATES
@@ -320,7 +329,6 @@ WELOPEN_CASES = [
      'OP1' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     -- This points to a lumped connection, but COMPLUMP is missing
      'OP1' 'SHUT' 1 1 1 1 1 /
     /
     """,
@@ -328,6 +336,7 @@ WELOPEN_CASES = [
         id="complump_missing",
         marks=pytest.mark.xfail(raises=ValueError),
     ),
+    # Well is missing
     pytest.param(
         """
     DATES

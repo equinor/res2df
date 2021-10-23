@@ -313,9 +313,10 @@ def expand_welopen_defaults(
 
     exp_welopen = []
     for _, row in welopen_df.iterrows():
-        print(row)
+        # print(row)
 
-        if all([is_default(row[coord]) for coord in ["I", "J", "K"]]):
+        coord_defaulted = [is_default(row[coord]) for coord in ["I", "J", "K"]]
+        if all(coord_defaulted) or not any(coord_defaulted):
             exp_welopen.append(row)
         else:
             compdat_filtered = compdat_df[compdat_df["WELL"] == row["WELL"]]
@@ -326,12 +327,18 @@ def expand_welopen_defaults(
             if not is_default(row["K"]):
                 compdat_filtered = compdat_filtered[compdat_filtered["K1"] == row["K"]]
 
-            for _, compdat_row in compdat_filtered.iterrows():
-                exp_row = row.copy()
-                exp_row["I"] = compdat_row["I"]
-                exp_row["J"] = compdat_row["J"]
-                exp_row["K"] = compdat_row["K1"]
-                exp_welopen.append(exp_row)
+            # If compdat_filtered is empty it means that no connection is matching
+            # the criterias in WELOPEN, this will fail in applywelopen so we are
+            # letting it pass here
+            if compdat_filtered.empty:
+                exp_welopen.append(row)
+            else:
+                for _, compdat_row in compdat_filtered.iterrows():
+                    exp_row = row.copy()
+                    exp_row["I"] = compdat_row["I"]
+                    exp_row["J"] = compdat_row["J"]
+                    exp_row["K"] = compdat_row["K1"]
+                    exp_welopen.append(exp_row)
 
     return pd.DataFrame(exp_welopen)
 

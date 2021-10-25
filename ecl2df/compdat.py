@@ -291,8 +291,9 @@ def deck2dfs(
 
 
 def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame) -> pd.DataFrame:
-    """Expand welopen"""
-
+    """Expands WELOPEN. First wildcard wells are expanded and then default
+    coordinates are expanded. The order of the expansion is important.
+    """
     exp_welopen_df = expand_welopen_wildcards(welopen_df, compdat_df)
     return expand_welopen_defaults(exp_welopen_df, compdat_df)
 
@@ -300,10 +301,17 @@ def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame) -> pd.Dat
 def expand_welopen_defaults(
     welopen_df: pd.DataFrame, compdat_df: pd.DataFrame
 ) -> pd.DataFrame:
-    """Filter welopen defaults
+    """Expands rows in WELOPEN where one or two coordinates are defaulted.
+    Expansion happens by filtering on compdat rows that are matching the
+    well name and the coordinates that are not defaulted.
 
-    WELOPEN wildcard wells must be expanded before this.
-    COMPDAT must be unrolled before this so that K1=K2
+    If all coordinates (I, J, K) are defaulted then the WELOPEN keyword
+    is acting on the well and not on the connections, and shall not be
+    expanded.
+
+    It is important that expansion of wildcard wells is done prior to
+    this function and that COMPDAT is unrolled so that K1=K2 in the input
+    to this functions.
     """
 
     def is_default(value: Optional[int]) -> bool:
@@ -313,33 +321,39 @@ def expand_welopen_defaults(
 
     exp_welopen = []
     for _, row in welopen_df.iterrows():
-        # print(row)
-
         coord_defaulted = [is_default(row[coord]) for coord in ["I", "J", "K"]]
         if all(coord_defaulted) or not any(coord_defaulted):
+            # If all coordinates are defaulted, the WELOPEN keyword is acting on
+            # the well and not the connections, and shall not be expanded.
+            # If no coordinates are defaulted, there is nothing to expand.
             exp_welopen.append(row)
         else:
+            # If some of the coordinates is defaulted then we filter the
+            # compdat dataframe to find the matching connections and expand
+            # the WELOPEN row with those
             compdat_filtered = compdat_df[compdat_df["WELL"] == row["WELL"]]
-            if not is_default(row["I"]):
-                compdat_filtered = compdat_filtered[compdat_filtered["I"] == row["I"]]
-            if not is_default(row["J"]):
-                compdat_filtered = compdat_filtered[compdat_filtered["J"] == row["J"]]
-            if not is_default(row["K"]):
-                compdat_filtered = compdat_filtered[compdat_filtered["K1"] == row["K"]]
+            for coord in ["I", "J", "K"]:
+                compdat_coord = coord + "1" if coord == "K" else coord
+                if not is_default(row[coord]):
+                    compdat_filtered = compdat_filtered[
+                        compdat_filtered[compdat_coord] == row[coord]
+                    ]
 
-            # If compdat_filtered is empty it means that no connection is matching
-            # the criterias in WELOPEN, this will fail in applywelopen so we are
-            # letting it pass here
+            # If compdat_filtered is empty it means that no connections are matching
+            # the criterias in the WELOPEN row.
             if compdat_filtered.empty:
-                exp_welopen.append(row)
-            else:
-                for _, compdat_row in compdat_filtered.iterrows():
-                    exp_row = row.copy()
-                    exp_row["I"] = compdat_row["I"]
-                    exp_row["J"] = compdat_row["J"]
-                    exp_row["K"] = compdat_row["K1"]
-                    exp_welopen.append(exp_row)
+                raise ValueError(
+                    "No connections are matching WELOPEN keyword with defaulted "
+                    "coordinates:"
+                    f"\n {str(row)} "
+                )
 
+            for _, compdat_row in compdat_filtered.iterrows():
+                exp_row = row.copy()
+                exp_row["I"] = compdat_row["I"]
+                exp_row["J"] = compdat_row["J"]
+                exp_row["K"] = compdat_row["K1"]
+                exp_welopen.append(exp_row)
     return pd.DataFrame(exp_welopen)
 
 

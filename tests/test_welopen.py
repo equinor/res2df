@@ -204,7 +204,7 @@ WELOPEN_CASES = [
     ),
     # Test when one coordinate is defaulted. Shuts all connections in the
     # well with J==1 and K==1
-    (
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -226,34 +226,43 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
             ],
         ),
+        id="welopen-with-defaulted-I-coordinate",
     ),
-    # Test when two coordinates are defaulted (this time with *).
-    # Shuts all connections in the well with K==1
-    (
+    # Test that all combinations of two defaulted coordinates are working
+    # And that defaulting with *, 0 and -1 is treated the same
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
     /
     COMPDAT
-     'OP1' 1 1 1 1 'OPEN' /
-     'OP1' 2 1 1 1 'OPEN' /
-     'OP1' 1 1 2 2 'OPEN' /
+     'OP1' 1 1 1 2 'OPEN' /
+     'OP2' 1 1 1 1 'OPEN' /
+     'OP2' 2 2 2 2 'OPEN' /
+     'OP3' 1 1 1 1 'OPEN' /
+     'OP3' 2 1 1 1 'OPEN' /
     /
     WELOPEN
-     'OP1' 'SHUT' 2* 1 /
+     'OP1' 'SHUT' 2*    1 /
+     'OP2' 'SHUT' 0  1  0 /
+     'OP3' 'SHUT' 1 -1 -1 /
     /
     """,
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-                [datetime.date(2000, 1, 1), "OP1", 2, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP3", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP3", 2, 1, 1, 1, "OPEN"],
             ],
         ),
+        id="welopen-combinations-of-defaulted-coordinates",
     ),
-    # Both wilcard well names and K coordinate defaulted with -1
-    (
+    # Both wilcard well name and K coordinate defaulted
+    pytest.param(
         """
     DATES
      1 JAN 2000 /
@@ -264,7 +273,7 @@ WELOPEN_CASES = [
      'PROD' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     'OP*'  'SHUT' 1 1 -1 /
+     'OP*'  'SHUT' 1 1 0 /
     /
     """,
         pd.DataFrame(
@@ -275,9 +284,41 @@ WELOPEN_CASES = [
                 [datetime.date(2000, 1, 1), "PROD", 1, 1, 1, 1, "OPEN"],
             ],
         ),
+        id="both-wildcard-wellname-and-defaulted-coordinates",
+    ),
+    # Defaulted COMPLUMPs in WELOPEN not supported
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 2 'OPEN' /
+    /
+    COMPLUMP
+     'OP1' 1 1 1 1 1 /
+     'OP1' 1 1 1 1 2 /
+    /
+
+    WELOPEN
+     'OP1'  'SHUT' 3* 1 0 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+            ],
+        ),
+        id="defaulted-complump-in-welopen-not-supported",
+        marks=pytest.mark.xfail(
+            raises=ValueError,
+            match="Defaulted COMPLUMPs in WELOPEN not supported",
+        ),
     ),
     # STOP on connection is the same as SHUT
-    # (not that STOP on well gives OPEN connections)
+    # (note that STOP on well gives OPEN connections)
     pytest.param(
         """
     DATES

@@ -58,26 +58,28 @@ def report_block_lineparser(line: str) -> tuple:
         row_name = " ".join(colonsections[1].strip().upper().split())
 
     # Oil section:
-    liquid_oil: Optional[float]
-    vapour_oil: Optional[float]
-    total_oil: Optional[float]
+    liquid_oil: Optional[float] = None
+    vapour_oil: Optional[float] = None
+    total_oil: Optional[float] = None
     if len(colonsections[2].split()) == 3:
-        # yes we have:
         (liquid_oil, vapour_oil, total_oil) = map(
             float_or_nan, colonsections[2].split()
         )
     elif len(colonsections[2].split()) == 1:
         total_oil = float_or_nan(colonsections[2])
-        (liquid_oil, vapour_oil) = (None, None)
     else:
         (liquid_oil, total_oil) = map(float_or_nan, colonsections[2].split())
-        vapour_oil = None
+
     total_water = float_or_nan(colonsections[3])
 
     # Gas section:
+    free_gas = None
+    dissolved_gas = None
+    total_gas = None
     if len(colonsections[4].split()) == 1:
         total_gas = float_or_nan(colonsections[4])
-        (free_gas, dissolved_gas) = (None, None)
+    elif len(colonsections[4].split()) == 2:
+        (free_gas, total_gas) = map(float_or_nan, colonsections[4].split())
     else:
         (free_gas, dissolved_gas, total_gas) = map(
             float_or_nan, colonsections[4].split()

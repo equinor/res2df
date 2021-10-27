@@ -814,20 +814,6 @@ def test_welopen(test_input, expected):
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
 
-    print(test_input)
-    print("calc")
-    print(
-        compdf[columns_to_check]
-        .sort_values(by=columns_to_check, axis=0)
-        .reset_index()[columns_to_check]
-    )
-    print("expected")
-    print(
-        expected[columns_to_check]
-        .sort_values(by=columns_to_check, axis=0)
-        .reset_index()[columns_to_check]
-    )
-
     assert (
         compdf[columns_to_check]
         .sort_values(by=columns_to_check, axis=0)

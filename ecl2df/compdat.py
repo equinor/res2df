@@ -328,11 +328,12 @@ def expand_welopen_defaults(
             # If no coordinates are defaulted, there is nothing to expand.
             exp_welopen.append(row)
         else:
-            # If some of the coordinates is defaulted then we filter the
+            # If some of the coordinates are defaulted then we filter the
             # compdat dataframe to find the matching connections and expand
             # the WELOPEN row with those
             compdat_filtered = compdat_df[compdat_df["WELL"] == row["WELL"]]
             for coord in ["I", "J", "K"]:
+                # In COMPDAT the K coordinate is named K1/K2.
                 compdat_coord = coord + "1" if coord == "K" else coord
                 if not is_default(row[coord]):
                     compdat_filtered = compdat_filtered[
@@ -345,7 +346,7 @@ def expand_welopen_defaults(
                 raise ValueError(
                     "No connections are matching WELOPEN keyword with defaulted "
                     "coordinates:"
-                    f"\n {str(row)} "
+                    f"\n {row} "
                 )
 
             for _, compdat_row in compdat_filtered.iterrows():
@@ -886,13 +887,13 @@ def applywelopen(
         else:
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
-                f"\n {str(row)} "
+                f"\n {row} "
             )
 
         if previous_state.empty:
             raise ValueError(
                 "A WELOPEN keyword is not acting on any existing connection. "
-                f"\n {str(row)} "
+                f"\n {row} "
             )
 
         new_state = previous_state

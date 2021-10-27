@@ -331,7 +331,9 @@ def expand_welopen_defaults(
             # If some of the coordinates are defaulted then we filter the
             # compdat dataframe to find the matching connections and expand
             # the WELOPEN row with those
-            compdat_filtered = compdat_df[compdat_df["WELL"] == row["WELL"]]
+            compdat_filtered = compdat_df[compdat_df["DATE"] <= row["DATE"]]
+            compdat_filtered = compdat_filtered[compdat_filtered["WELL"] == row["WELL"]]
+
             for coord in ["I", "J", "K"]:
                 # In COMPDAT the K coordinate is named K1/K2.
                 compdat_coord = coord + "1" if coord == "K" else coord

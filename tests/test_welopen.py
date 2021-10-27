@@ -286,6 +286,44 @@ WELOPEN_CASES = [
         ),
         id="both-wildcard-wellname-and-defaulted-coordinates",
     ),
+    # Compdat changing with time. The WELOPEN statement is only acting on
+    # connections that have been defined at that date. In this test, the
+    # connections with I==1 and I==2 will be SHUT, but not I==3
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    DATES
+     1 FEB 2000 /
+    /
+    COMPDAT
+     'OP1'  2 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+    DATES
+     1 MAR 2000 /
+    /
+    COMPDAT
+     'OP1'  3 1 1 1 'OPEN' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 2, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 2, 1), "OP1", 2, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 3, 1), "OP1", 3, 1, 1, 1, "OPEN"],
+            ],
+        ),
+        id="welopen-defaults-compdat-changing-with-time",
+    ),
     pytest.param(
         """
     DATES
@@ -333,7 +371,7 @@ WELOPEN_CASES = [
         id="defaulted-complump-in-welopen-not-supported",
         marks=pytest.mark.xfail(
             raises=ValueError,
-            match="Defaulted COMPLUMPs in WELOPEN not supported",
+            match="Zeros for C1/C2 is not implemented",
         ),
     ),
     # STOP on connection is the same as SHUT

@@ -286,6 +286,25 @@ WELOPEN_CASES = [
         ),
         id="both-wildcard-wellname-and-defaulted-coordinates",
     ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 2 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 0 3 /
+    /
+    """,
+        None,
+        id="no-connections-matching-welopen-defaults",
+        marks=pytest.mark.xfail(
+            raises=ValueError,
+            match="No connections are matching WELOPEN keyword",
+        ),
+    ),
     # Defaulted COMPLUMPs in WELOPEN not supported
     pytest.param(
         """

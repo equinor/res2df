@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>summary &mdash; ecl2df 0.15.1.dev2+g0e30fb8 documentation</title>
+  <title>wellconnstatus &mdash; ecl2df 0.15.1.dev2+g0e30fb8 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="trans" href="trans.html" />
-    <link rel="prev" title="satfunc" href="satfunc.html" /> 
+    <link rel="next" title="ecl2csv" href="../ecl2csv.html" />
+    <link rel="prev" title="wcon" href="wcon.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,13 +54,10 @@
 <li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
 <li class="toctree-l2"><a class="reference internal" href="satfunc.html">satfunc</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">summary</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#rate-handling-in-eclipse-summary-vectors">Rate handling in Eclipse summary vectors</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trans.html">trans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="wcon.html">wcon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">wellconnstatus</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
@@ -89,9 +86,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../usage.html">Usage and examples</a> &raquo;</li>
-      <li>summary</li>
+      <li>wellconnstatus</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/usage/summary.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/usage/wellconnstatus.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -99,90 +96,71 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="summary">
-<h1>summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h1>
-<p>This module extracts summary information from UNSMRY-files into
-Pandas Dataframes.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">summary</span><span class="p">,</span> <span class="n">EclFiles</span>
-
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*PT&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;yearly&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If you don’t specify <code class="docutils literal notranslate"><span class="pre">column_keys</span></code>, all included summary vectors will be
-retrieved. Default for <code class="docutils literal notranslate"><span class="pre">time_index</span></code> is the report datetimes written by
-Eclipse equivalent to <code class="docutils literal notranslate"><span class="pre">time_index=&quot;raw&quot;</span></code>, other options are <em>daily</em>, <em>weekly</em>,
-<em>monthly</em> or <em>yearly</em>.  See below for how to interpred “interpolated” summary
-data.</p>
+  <section id="wellconnstatus">
+<h1>wellconnstatus<a class="headerlink" href="#wellconnstatus" title="Permalink to this headline"></a></h1>
+<p>Extracts connection status history for each compdat connection that is included
+in the summary data on the form <code class="docutils literal notranslate"><span class="pre">CPI:WELL,I,J,K</span></code>. CPI stands for connection
+productivity index.</p>
+<p>One line is added to the export every time a connection changes status. It
+is <code class="docutils literal notranslate"><span class="pre">OPEN</span></code> when CPI&gt;0 and <code class="docutils literal notranslate"><span class="pre">SHUT</span></code> when CPI=0. The earliest date for any connection
+will be <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>, i.e a cell can not be <code class="docutils literal notranslate"><span class="pre">SHUT</span></code> before it has been OPEN. This means
+that any cells that are always <code class="docutils literal notranslate"><span class="pre">SHUT</span></code> will be excluded.</p>
+<p>The output data set is very sparse compared to the CPI summary data.</p>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Example summary table</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Well connection status example dataframe</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>DATE</p></th>
-<th class="head"><p>FGPT</p></th>
-<th class="head"><p>FOPT</p></th>
-<th class="head"><p>FVPT</p></th>
-<th class="head"><p>FWPT</p></th>
+<th class="head"><p>WELL</p></th>
+<th class="head"><p>I</p></th>
+<th class="head"><p>J</p></th>
+<th class="head"><p>K</p></th>
+<th class="head"><p>OP/SH</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>2000-01-01</p></td>
-<td><p>0.0</p></td>
-<td><p>0.0</p></td>
-<td><p>0.0</p></td>
-<td><p>0.0</p></td>
+<td><p>OP1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>OPEN</p></td>
 </tr>
-<tr class="row-odd"><td><p>2001-01-01</p></td>
-<td><p>475826688.0</p></td>
-<td><p>2591849.0</p></td>
-<td><p>4628205.0</p></td>
-<td><p>439485.375</p></td>
+<tr class="row-odd"><td><p>2000-02-01</p></td>
+<td><p>OP1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>SHUT</p></td>
 </tr>
-<tr class="row-even"><td><p>2002-01-01</p></td>
-<td><p>919193216.0</p></td>
-<td><p>5062933.5</p></td>
-<td><p>9755398.0</p></td>
-<td><p>1565453.125</p></td>
-</tr>
-<tr class="row-odd"><td><p>2003-01-01</p></td>
-<td><p>1206145664.0</p></td>
-<td><p>6665779.0</p></td>
-<td><p>14876264.0</p></td>
-<td><p>4038432.5</p></td>
-</tr>
-<tr class="row-even"><td><p>2004-01-01</p></td>
-<td><p>1206714880.0</p></td>
-<td><p>6668939.5</p></td>
-<td><p>14889953.0</p></td>
-<td><p>4046778.5</p></td>
+<tr class="row-even"><td><p>2000-01-01</p></td>
+<td><p>OP2</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>OPEN</p></td>
 </tr>
 </tbody>
 </table>
-<section id="rate-handling-in-eclipse-summary-vectors">
-<h2>Rate handling in Eclipse summary vectors<a class="headerlink" href="#rate-handling-in-eclipse-summary-vectors" title="Permalink to this headline"></a></h2>
-<p>Eclipse summary vectors with of rate type (oil rate, water rate etc.) are to be
-interpreted carefully. A value of e.g. FOPR at a specific date means that the
-value is valid <em>backwards</em> in time, until the prior point in time where data is
-available. For correct rates, you must use the raw time index for get_smry(),
-anything else will only give you an approximation. Also, you can not assume that
-summing the rates at every point in time corresponds to the associated
-cumulative summary vectors, e.g. FOPT, as there are multiple features into play
-here with efficienty factors etc.</p>
-</section>
+<p>The reason for extracting the well connection statuses from the summary data
+is that it cannot always be extracted from parsing the schedule section like
+the compdat module is doing. F.ex when ACTIONs are used to close/open connections
+based on specific criterias.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="satfunc.html" class="btn btn-neutral float-left" title="satfunc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="trans.html" class="btn btn-neutral float-right" title="trans" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="wcon.html" class="btn btn-neutral float-left" title="wcon" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../ecl2csv.html" class="btn btn-neutral float-right" title="ecl2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

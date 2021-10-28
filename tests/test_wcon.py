@@ -11,6 +11,7 @@ from ecl2df import ecl2csv, wcon
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(

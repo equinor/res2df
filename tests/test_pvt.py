@@ -12,6 +12,7 @@ from ecl2df import csv2ecl, ecl2csv, pvt
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -414,7 +415,7 @@ def test_main(tmp_path, mocker):
     # Reparse the include file on disk back to dataframe
     # and check dataframe equality
     assert Path(incfile).is_file()
-    disk_inc_df = pvt.df(open(incfile).read())
+    disk_inc_df = pvt.df(Path(incfile).read_text(encoding="utf8"))
     pd.testing.assert_frame_equal(disk_df, disk_inc_df)
 
     # Test entry point towards include file:
@@ -424,7 +425,8 @@ def test_main(tmp_path, mocker):
          200 1.000  1.001 /
     18    25 1.14  0.59 /
     /
-    """
+    """,
+        encoding="utf8",
     )
     mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "pvto.inc", "-o", "pvto.csv"])
     ecl2csv.main()
@@ -435,11 +437,12 @@ def test_main(tmp_path, mocker):
         """SWOF
     0      1 1.0001 1 /
     /
-    """
+    """,
+        encoding="utf8",
     )
     mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "empty.inc", "-o", "empty.csv"])
     ecl2csv.main()
-    assert not Path("empty.csv").read_text().strip()
+    assert not Path("empty.csv").read_text(encoding="utf8").strip()
 
 
 def test_magic_stdout(tmp_path):
@@ -458,6 +461,7 @@ def test_magic_stdout(tmp_path):
         stdout=subprocess.PIPE,
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
+    # pylint: disable=no-member  # false positive on Dataframes
     assert not df_stdout.empty
 
     # Pipe back to csv2ecl:

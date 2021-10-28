@@ -24,6 +24,7 @@ from ecl2df.summary import (
 )
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 
     HAVE_OPM = True
@@ -47,7 +48,7 @@ def test_df():
     sumdf = summary.df(eclfiles)
 
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
+    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     assert not sumdf.empty
     assert sumdf.index.name == "DATE"
@@ -57,7 +58,7 @@ def test_df():
     sumdf = summary.df(eclfiles, datetime=True)
     # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
+    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     # Metadata should be attached using the attrs attribute on a Pandas
     # Dataframe (considered experimental by Pandas)
@@ -111,7 +112,7 @@ def test_summary2df_dates():
         datetime=True,
     )
     assert sumdf.index.name == "DATE"
-    assert sumdf.index.dtype == "datetime64[ns]" or sumdf.index.dtype == "datetime64"
+    assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     assert len(sumdf) == 59
     assert str(sumdf.index.values[0])[0:10] == "2002-01-02"
@@ -518,6 +519,8 @@ def test_foreseeable_future(tmp_path):
     ],
 )
 def test_fallback_date_roll(rollme, direction, freq, expected):
+    """The pandas date rolling does not always work for years beyound 2262. The
+    code should fallback automatically to hide that Pandas limitation"""
     assert _fallback_date_roll(rollme, direction, freq) == expected
 
 
@@ -618,7 +621,8 @@ def test_fallback_date_roll(rollme, direction, freq, expected):
     ],
 )
 def test_date_range(start, end, freq, expected):
-    # When dates are beyond year 2262, the function _fallback_date_range() is triggered.
+    """When dates are beyond year 2262,
+    the function _fallback_date_range() is triggered."""
     assert date_range(start, end, freq) == expected
 
 
@@ -816,7 +820,7 @@ def test_smry_meta():
     # Can create dataframes like this:
     meta_df = pd.DataFrame.from_dict(meta, orient="index")
     hist_keys = meta_df[meta_df["is_historical"]].index
-    assert all([key.split(":")[0].endswith("H") for key in hist_keys])
+    assert all(key.split(":")[0].endswith("H") for key in hist_keys)
 
 
 def test_smry_meta_synthetic():
@@ -1099,6 +1103,7 @@ def test_df2pyarrow_500years():
     dframe.index.name = "BOGUS"
     pyat = _df2pyarrow(dframe)
 
+    # pylint: disable=c-extension-no-member
     with pytest.raises(pyarrow.lib.ArrowInvalid):
         # We cannot convert this back to Pandas, since it will bail on failing
         # to use nanosecond timestamps in the dataframe object for these dates.
@@ -1152,7 +1157,7 @@ def test_ecl2df_errors(tmp_path):
 
     # But EclFiles should be more tolerant, as it should be possible
     # to extract other data if SMRY is corrupted
-    Path("FOO.DATA").write_text("RUNSPEC")
+    Path("FOO.DATA").write_text("RUNSPEC", encoding="utf8")
     assert str(EclFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
     with pytest.raises(OSError):
         EclFiles("FOO").get_eclsum()

@@ -8,6 +8,7 @@ import pytest
 from ecl2df import EclFiles, compdat, ecl2csv
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -340,7 +341,7 @@ def test_main_subparsers(tmp_path, mocker):
     assert not disk_df.empty
 
 
-def test_defaulted_compdat_i_j(tmp_path):
+def test_defaulted_compdat_i_j():
     """I and J can be defaulted (that is 1* or 0) in COMPDAT records, then
     that information should be fetched from the most recent WELSPECS keyword
     """
@@ -366,6 +367,7 @@ COMPDAT
 /
 """
 
+    # pylint: disable=expression-not-assigned
     with pytest.raises(ValueError, match="WELSPECS must be provided when I"):
         compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i))["COMPDAT"]
 

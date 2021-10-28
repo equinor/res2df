@@ -12,6 +12,7 @@ from ecl2df import csv2ecl, ecl2csv, equil
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -94,7 +95,7 @@ def test_df2ecl(tmp_path):
     assert Path("eclipse/include/equil.inc").is_file()
 
 
-def test_df2ecl_equil(tmp_path):
+def test_df2ecl_equil():
     """Test the underlying function directly"""
     dframe = pd.DataFrame(
         [
@@ -438,8 +439,7 @@ RSVD
  50 100
  60 1000 /"""
     rsvd_df = equil.df(deckstr)
-    with open("rsvd.inc", "w") as filehandle:
-        filehandle.write(deckstr)
+    Path("rsvd.inc").write_text(deckstr, encoding="utf8")
     mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "rsvd.inc", "-o", "rsvd.csv"])
     ecl2csv.main()
     rsvd_df_fromcsv = pd.read_csv("rsvd.csv")
@@ -537,7 +537,7 @@ def test_eclipse_rounding(somefloat, expected):
     assert expected in equil.df2ecl(dframe, withphases=False)
 
 
-def test_main_subparser(tmp_path, mocker, capsys):
+def test_main_subparser(tmp_path, mocker):
     """Test command line interface"""
     os.chdir(tmp_path)
     tmpcsvfile = "equil.csv"
@@ -556,14 +556,20 @@ def test_main_subparser(tmp_path, mocker, capsys):
     # NB: cvs2ecl does not output the phase configuration!
     phases = "WATER\nGAS\nOIL\n\n"
     ph_equil_inc = Path("phasesequil.inc")
-    ph_equil_inc.write_text(phases + Path("equil.inc").read_text())
+    ph_equil_inc.write_text(
+        phases + Path("equil.inc", encoding="utf8").read_text(encoding="utf8"),
+        encoding="utf8",
+    )
 
-    pd.testing.assert_frame_equal(equil.df(ph_equil_inc.read_text()), disk_df)
+    pd.testing.assert_frame_equal(
+        equil.df(ph_equil_inc.read_text(encoding="utf8")), disk_df
+    )
 
     # Test via stdout:
     result = subprocess.run(
         ["csv2ecl", "equil", "--output", "-", tmpcsvfile],
         stdout=subprocess.PIPE,
+        check=True,
     )
     pd.testing.assert_frame_equal(
         equil.df(phases + result.stdout.decode()),
@@ -579,11 +585,12 @@ OIL
 
 PORO
 0.1 0.1 /
-"""
+""",
+        encoding="utf8",
     )
     mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "poro.inc", "-o", "empty.csv"])
     ecl2csv.main()
-    assert not Path("empty.csv").read_text().strip()
+    assert not Path("empty.csv").read_text(encoding="utf8").strip()
 
 
 @pytest.mark.parametrize(

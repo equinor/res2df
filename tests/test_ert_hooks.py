@@ -57,9 +57,8 @@ def test_ecl2csv_through_ert(tmp_path):
 
     for subcommand in ecl2df.SUBMODULES:
         ert_config.append(
-            "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={0}, <OUTPUT>={0}.csv)".format(
-                subcommand
-            )
+            f"FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={subcommand}, "
+            f"<OUTPUT>={subcommand}.csv)"
         )
 
     # Test what we can also supply additional options for some submodules:
@@ -82,9 +81,8 @@ def test_ecl2csv_through_ert(tmp_path):
 
     for subcommand in csv2ecl_subcommands:
         ert_config.append(
-            "FORWARD_MODEL CSV2ECL("
-            + "<SUBCOMMAND>={0}, <CSVFILE>={0}.csv, <OUTPUT>={0}.inc".format(subcommand)
-            + ")"
+            f"FORWARD_MODEL CSV2ECL(<SUBCOMMAND>={subcommand}, "
+            f"<CSVFILE>={subcommand}.csv, <OUTPUT>={subcommand}.inc)"
         )
     ert_config.append(
         "FORWARD_MODEL CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv), "
@@ -113,6 +111,7 @@ def test_ecl2csv_through_ert(tmp_path):
 
 @pytest.mark.skipif(not HAVE_ERT, reason="ERT is not installed")
 def test_job_documentation():
+    """Test that for registered ERT forward models the documentation is non-empty"""
     if HAVE_ERT:
         assert (
             type(jobs.job_documentation("ECL2CSV"))
@@ -122,6 +121,7 @@ def test_job_documentation():
             type(jobs.job_documentation("CSV2ECL"))
             == ert.shared.plugins.plugin_response.PluginResponse
         )
+
     else:
         assert jobs.job_documentation("ECL2CSV") is None
         assert jobs.job_documentation("CSV2ECL") is None
@@ -134,6 +134,7 @@ def test_get_module_variable():
 
     This is independent whether ERT is installed or not
     """
+    # pylint: disable=protected-access
     assert jobs._get_module_variable_if_exists("foo", "bar") == ""
     assert jobs._get_module_variable_if_exists(
         "ecl2df.ecl2csv", "DESCRIPTION"
@@ -144,4 +145,6 @@ def test_get_module_variable():
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")
 def test_no_erthooks():
     """Test that we can import the hook implementations even when ERT is unavailable."""
+    # pylint: disable=redefined-outer-name, unused-import
+    # pylint: disable=reimported, import-outside-toplevel
     from ecl2df.hook_implementations import jobs  # noqa

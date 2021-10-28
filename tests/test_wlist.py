@@ -6,6 +6,7 @@ import pytest
 from ecl2df import EclFiles, compdat
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -143,6 +144,7 @@ except ImportError:
     ],
 )
 def test_parse_wlist(deckstr, expected_df):
+    """Test basic parsing of WLIST keywords into a dataframe representation"""
     deck = EclFiles.str2deck(deckstr)
     wlistdf = compdat.deck2dfs(deck)["WLIST"]
     pd.testing.assert_frame_equal(wlistdf, expected_df, check_like=True)
@@ -625,6 +627,8 @@ def test_parse_wlist(deckstr, expected_df):
     ],
 )
 def test_expand_wlist(wlist_df, expected_df):
+    """Test expansion of a WLIST dataframe into a new WLIST dataframe
+    with only "NEW" actions"""
     pd.testing.assert_frame_equal(
         compdat.expand_wlist(wlist_df), expected_df, check_like=True
     )

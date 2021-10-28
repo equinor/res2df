@@ -11,6 +11,7 @@ from ecl2df import ecl2csv, gruptree
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -213,6 +214,7 @@ foo
     ],
 )
 def test_tree_from_dict(dicttree, expected_str):
+    """Test pretty-printing of trees provided as dictionaries"""
     assert str(gruptree.tree_from_dict(dicttree)).strip() == expected_str.strip()
 
 
@@ -405,6 +407,7 @@ def test_multiple_roots():
     ],
 )
 def test_edge_dataframe2dict(dframe, expected):
+    """Test building a tree as a dictionary from a dataframe of edges"""
     assert gruptree.edge_dataframe2dict(dframe) == expected
 
 
@@ -424,8 +427,9 @@ def test_emptytree_strdeck():
 
 
 def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
+    """Test the command line tool on an Eclipse deck which is empty"""
     os.chdir(tmp_path)
-    Path("EMPTY.DATA").write_text("")
+    Path("EMPTY.DATA").write_text("", encoding="utf8")
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
     ecl2csv.main()
     assert "No tree data to prettyprint" in caplog.text
@@ -730,7 +734,7 @@ def test_branprop_nodeprop(schstr, expected_dframe, check_columns):
     )
 
 
-def test_prettyprint(tmp_path, mocker, caplog):
+def test_prettyprint():
     """ "Test prettyprinting with multiple dates and both
     GRUPTREE and BRANPROP trees"""
     schstr = """

@@ -7,6 +7,7 @@ import pytest
 import ecl2df
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(

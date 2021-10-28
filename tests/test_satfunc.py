@@ -12,6 +12,7 @@ from ecl2df import csv2ecl, ecl2csv, inferdims, satfunc
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -277,7 +278,7 @@ SGOF
 
     # Write to file and try to parse it with command line:
     sgoffile = "__sgof_tmp.txt"
-    Path(sgoffile).write_text(sgofstr)
+    Path(sgoffile).write_text(sgofstr, encoding="utf8")
     mocker.patch(
         "sys.argv", ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
     )
@@ -627,7 +628,7 @@ def test_interpolate_defaults(dframe, expected):
 
 
 def test_multiple_keywords_family2():
-
+    """Test parsing strings with multiple family 2 keywords"""
     satnumstr = """
 SWFN
 -- Sw           Krw           Pcow
@@ -697,14 +698,18 @@ def test_csv2ecl(tmp_path, mocker):
     mocker.patch("sys.argv", ["csv2ecl", "satfunc", "--output", "swof.inc", tmpcsvfile])
     csv2ecl.main()
     pd.testing.assert_frame_equal(
-        satfunc.df(open("swof.inc").read()).drop("SATNUM", axis="columns"),
+        satfunc.df(Path("swof.inc").read_text(encoding="utf8")).drop(
+            "SATNUM", axis="columns"
+        ),
         swof_df,
         check_like=True,
     )
 
     # Test writing to stdout:
     result = subprocess.run(
-        ["csv2ecl", "satfunc", "--output", "-", tmpcsvfile], stdout=subprocess.PIPE
+        ["csv2ecl", "satfunc", "--output", "-", tmpcsvfile],
+        stdout=subprocess.PIPE,
+        check=True,
     )
     pd.testing.assert_frame_equal(
         satfunc.df(result.stdout.decode()).drop("SATNUM", axis="columns"),

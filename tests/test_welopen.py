@@ -6,6 +6,7 @@ import pytest
 from ecl2df import EclFiles, compdat
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(
@@ -1129,6 +1130,7 @@ def test_welopen(test_input, expected):
     ],
 )
 def test_welopen_wlist(test_input, expected):
+    """Test that WELOPEN can be used on well lists determined by WLIST"""
     deck = EclFiles.str2deck(test_input)
     dfs = compdat.deck2dfs(deck)
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)
@@ -1659,6 +1661,7 @@ def test_welopen_complump_direct(welopen, complump, expected):
 def test_applywelopen(
     compdat_rows, welopen_rows, wlist_rows, complump_rows, expected_rows
 ):
+    """Test applying a WELOPEN-dataframe onto a dataframe of COMPDAT data"""
     print(
         compdat.applywelopen(
             pd.DataFrame(compdat_rows),

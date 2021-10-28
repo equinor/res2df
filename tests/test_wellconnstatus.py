@@ -7,6 +7,7 @@ from ecl2df import wellconnstatus
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 
     HAVE_OPM = True
@@ -114,6 +115,7 @@ def test_extract_status_changes(smry, expected_wellconnstatus):
     smry.set_index("DATE", inplace=True)
     expected_wellconnstatus["DATE"] = pd.to_datetime(expected_wellconnstatus["DATE"])
 
+    # pylint: disable=protected-access
     pd.testing.assert_frame_equal(
         wellconnstatus._extract_status_changes(smry),
         expected_wellconnstatus,

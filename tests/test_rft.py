@@ -277,7 +277,10 @@ def test_longer_branched_icd_well():
     random.shuffle(shuffled)
     print(shuffled)
     wellseg = pd.DataFrame(
-        {segname: [wellseg[segname][idx] for idx in shuffled] for segname in wellseg}
+        {
+            segname: [seglist[idx] for idx in shuffled]
+            for segname, seglist in wellseg.items()
+        }
     )
 
     con_data = pd.DataFrame(
@@ -360,6 +363,7 @@ def test_longer_branched_partly_icd_well():
 
 
 def test_seg2dicttree():
+    """Test making a dictionary tree from segment structure as a dataframe"""
     assert rft.seg2dicttree(pd.DataFrame()) == {}
     with pytest.raises(ValueError):
         rft.seg2dicttree(pd.DataFrame({"SEGIDX": [1]}))

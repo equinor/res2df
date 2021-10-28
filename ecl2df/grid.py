@@ -20,6 +20,8 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 import dateutil.parser
 import numpy as np
 import pandas as pd
+import pyarrow
+import pyarrow.feather
 from ecl.eclfile import EclFile
 
 from ecl2df import __version__, common, getLogger_ecl2csv
@@ -113,6 +115,29 @@ def dates2rstindices(
     rstindices = [availabledates.index(x) for x in chosendates]
     isostrings = [x.isoformat() for x in chosendates]
     return (rstindices, chosendates, isostrings)
+
+
+def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
+    """Construct a pyarrow table from dataframe with
+    grid information
+
+    The index in the dataframe will be ignored
+
+    32-bit types will be used for integers and floats (todo)
+    """
+    field_list: List[pyarrow.Field] = []
+    for colname in dframe.columns:
+        if pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
+            dtype = pyarrow.int32()
+        elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
+            # Parameters are potentially merged into the dataframe.
+            dtype = pyarrow.string()
+        else:
+            dtype = pyarrow.float32()
+        field_list.append(pyarrow.field(colname, dtype))
+
+    schema = pyarrow.schema(field_list)
+    return pyarrow.Table.from_pandas(dframe, schema=schema, preserve_index=False)
 
 
 def rst2df(
@@ -551,6 +576,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         help="Drop constant columns from the dataset",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
     return parser
 
 
@@ -743,6 +769,8 @@ def grid_main(args) -> None:
         dropconstants=args.dropconstants,
         stackdates=args.stackdates,
     )
+    if args.arrow:
+        grid_df = _df2pyarrow(grid_df)
     common.write_dframe_stdout_file(
         grid_df, args.output, index=False, caller_logger=logger
     )

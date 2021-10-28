@@ -23,7 +23,7 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install ecl2df 
+    - name: Install ecl2df
       run: |
         pip install pip -U
         pip install .[tests,ert]
@@ -32,7 +32,7 @@ jobs:
       run: |
         pytest tests --disable-warnings --cov=ecl2df --cov-report=xml
         # Uninstall packages that ecl2df supports not being installed:
-        pip uninstall --yes ert networkx
+        pip uninstall --yes ert networkx opm
         # Run tests again in cov-append-mode:
         pytest tests --disable-warnings --cov=ecl2df --cov-report=xml --cov-append
         bash <(curl -s https://codecov.io/bash)

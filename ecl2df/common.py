@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional, Set, Union
 
 import numpy as np
 import pandas as pd
+import pyarrow
 
 try:
     # pylint: disable=unused-import
@@ -95,7 +96,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 def write_dframe_stdout_file(
-    dframe: pd.DataFrame,
+    dframe: Union[pd.DataFrame, pyarrow.Table],
     output: str,
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
@@ -116,15 +117,21 @@ def write_dframe_stdout_file(
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        dframe.to_csv(sys.stdout, index=index)
+        if isinstance(dframe, pd.DataFrame):
+            dframe.to_csv(sys.stdout, index=index)
+        else:
+            raise SystemExit("Not possible to write arrow format to stdout")
     else:
-        if caller_logger and dframe.empty:
+        if caller_logger and isinstance(dframe, pd.DataFrame) and dframe.empty:
             caller_logger.warning("Empty dataframe being written to disk")
         if caller_logger and not logstr:
             caller_logger.info("Writing to file %s", str(output))
         elif caller_logger and logstr:
             caller_logger.info(logstr)
-        dframe.to_csv(output, index=index)
+        if isinstance(dframe, pd.DataFrame):
+            dframe.to_csv(output, index=index)
+        else:
+            pyarrow.feather.write_feather(dframe, dest=output)
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:

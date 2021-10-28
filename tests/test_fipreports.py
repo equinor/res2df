@@ -229,8 +229,101 @@ def test_prtstring(tmp_path):
     pd.testing.assert_frame_equal(dframe, expected_dframe)
 
 
+def test_drygas_report(tmp_path):
+    """Excerpt from a two-phase gas water run"""
+    prtstring = """
+                                                =================================
+                                                : FIPNUM  REPORT REGION    2    :
+                                                :     PAV =        909.34  BARSA:
+                                                :     PORV=    150001895.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :            0.                           0.:      10476036. :   1815774165.                  1815774165.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.                           0.:             0. :            0.                           0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                        -0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :            0.                           0.:      10476036. :   1815774165.                  1815774165.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+"""  # noqa
+    os.chdir(tmp_path)
+    Path("FOO.PRT").write_text(prtstring)
+    dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
+    assert dframe["REGION"].unique() == [2]
+    pd.testing.assert_frame_equal(
+        dframe.reset_index().drop(["DATE", "REGION"], axis="columns"),
+        pd.DataFrame(
+            [
+                {
+                    "DATATYPE": "CURRENTLY IN PLACE",
+                    "FIPNAME": "FIPNUM",
+                    "TO_REGION": None,
+                    "STOIIP_OIL": 0.0,
+                    "ASSOCIATEDOIL_GAS": None,
+                    "STOIIP_TOTAL": 0.0,
+                    "WIIP_TOTAL": 10476036.0,
+                    "GIIP_GAS": 1815774165.0,
+                    "ASSOCIATEDGAS_OIL": None,
+                    "GIIP_TOTAL": 1815774165.0,
+                },
+                {
+                    "DATATYPE": "OUTFLOW TO OTHER REGIONS",
+                    "FIPNAME": "FIPNUM",
+                    "TO_REGION": None,
+                    "STOIIP_OIL": 0.0,
+                    "ASSOCIATEDOIL_GAS": None,
+                    "STOIIP_TOTAL": 0.0,
+                    "WIIP_TOTAL": 0.0,
+                    "GIIP_GAS": 0.0,
+                    "ASSOCIATEDGAS_OIL": None,
+                    "GIIP_TOTAL": 0.0,
+                },
+                {
+                    "DATATYPE": "OUTFLOW THROUGH WELLS",
+                    "FIPNAME": "FIPNUM",
+                    "TO_REGION": None,
+                    "STOIIP_OIL": np.nan,
+                    "ASSOCIATEDOIL_GAS": None,
+                    "STOIIP_TOTAL": 0.0,
+                    "WIIP_TOTAL": 0.0,
+                    "GIIP_GAS": np.nan,
+                    "ASSOCIATEDGAS_OIL": None,
+                    "GIIP_TOTAL": 0.0,
+                },
+                {
+                    "DATATYPE": "MATERIAL BALANCE ERROR.",
+                    "FIPNAME": "FIPNUM",
+                    "TO_REGION": None,
+                    "STOIIP_OIL": np.nan,
+                    "ASSOCIATEDOIL_GAS": None,
+                    "STOIIP_TOTAL": -0.0,
+                    "WIIP_TOTAL": 0.0,
+                    "GIIP_GAS": np.nan,
+                    "ASSOCIATEDGAS_OIL": None,
+                    "GIIP_TOTAL": 0.0,
+                },
+                {
+                    "DATATYPE": "ORIGINALLY IN PLACE",
+                    "FIPNAME": "FIPNUM",
+                    "TO_REGION": None,
+                    "STOIIP_OIL": 0.0,
+                    "ASSOCIATEDOIL_GAS": None,
+                    "STOIIP_TOTAL": 0.0,
+                    "WIIP_TOTAL": 10476036.0,
+                    "GIIP_GAS": 1815774165.0,
+                    "ASSOCIATEDGAS_OIL": None,
+                    "GIIP_TOTAL": 1815774165.0,
+                },
+            ]
+        ),
+    )
+
+
 def test_rogue_eclipse_output(tmp_path):
-    """The starts in the material balance error line has been observed in reality."""
+    """The stars in the material balance error line has been observed in reality."""
     prtstring = """
                                                 =================================
                                                 : FIPNUM  REPORT REGION  120    :

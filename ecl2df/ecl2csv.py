@@ -207,6 +207,14 @@ def get_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=("Each row represents an edge in the GRUPTREE at a specific date."),
     )
+    subparsers_dict["wellconnstatus"] = subparsers.add_parser(
+        "wellconnstatus",
+        help="Extract well connection status",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Each row represents an event where a well connection is changing status."
+        ),
+    )
     subparsers_dict["wcon"] = subparsers.add_parser(
         "wcon",
         help="Extract well control data",
@@ -286,6 +294,8 @@ def main() -> None:
     """Entry point"""
     parser = get_parser()
     args = parser.parse_args()
+    if "arrow" in parser.prog:
+        args.__dict__["arrow"] = True
     args.func(args)
 
 

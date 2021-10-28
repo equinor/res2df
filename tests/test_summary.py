@@ -6,12 +6,14 @@ from pathlib import Path
 import ecl
 import numpy as np
 import pandas as pd
+import pyarrow
 import pytest
 import yaml
 
 from ecl2df import csv2ecl, ecl2csv, summary
 from ecl2df.eclfiles import EclFiles
 from ecl2df.summary import (
+    _df2pyarrow,
     _fallback_date_roll,
     _fix_dframe_for_libecl,
     date_range,
@@ -284,7 +286,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
 
 
 def test_main_subparser(tmp_path, mocker):
-    """Test command line interface"""
+    """Test command line interface with output to both CSV and arrow/feather."""
     tmpcsvfile = tmp_path / "sum.csv"
     mocker.patch("sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)])
     ecl2csv.main()
@@ -293,6 +295,32 @@ def test_main_subparser(tmp_path, mocker):
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
     assert "FOPT" in disk_df
+
+    # Test arrow output format:
+    tmparrowfile = tmp_path / "sum.arrow"
+    mocker.patch(
+        "sys.argv",
+        ["ecl2csv", "summary", "--arrow", EIGHTCELLS, "-o", str(tmparrowfile)],
+    )
+    ecl2csv.main()
+    assert Path(tmpcsvfile).is_file()
+    disk_arraydf = pyarrow.feather.read_table(tmparrowfile).to_pandas()
+    assert "FOPT" in disk_arraydf
+
+    # Alternative and equivalent command line syntax for arrow output:
+    tmparrowfile_alt = tmp_path / "sum2.arrow"
+    mocker.patch(
+        "sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
+    )
+    ecl2csv.main()
+    pd.testing.assert_frame_equal(
+        disk_arraydf, pyarrow.feather.read_table(str(tmparrowfile_alt)).to_pandas()
+    )
+
+    # Not possible (yet?) to write arrow to stdout:
+    mocker.patch("sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", "-"])
+    with pytest.raises(SystemExit):
+        ecl2csv.main()
 
 
 def test_datenormalization():
@@ -1014,6 +1042,89 @@ def test_duplicated_summary_vectors(caplog):
     deduplicated_dframe = df(EclFiles(dupe_datafile))
     assert (deduplicated_dframe.columns == ["YEARS", "FOPR"]).all()
     assert "Duplicated columns detected" in caplog.text
+
+
+def test_df2pyarrow_ints():
+    """Test a dummy integer table converted into PyArrow"""
+    dframe = pd.DataFrame(columns=["FOO", "BAR"], data=[[1, 2], [3, 4]]).astype("int32")
+    pyat_df = _df2pyarrow(dframe).to_pandas()
+
+    pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
+
+    # Millisecond datetimes:
+    assert (
+        pyat_df["DATE"].to_numpy()
+        == [
+            np.datetime64("1970-01-01T00:00:00.000000000"),
+            np.datetime64("1970-01-01T00:00:00.001000000"),  # Milliseconds
+        ]
+    ).all()
+
+
+def test_df2pyarrow_mix_int_float():
+    """Test that mixed integer and float columns are conserved"""
+    dframe = pd.DataFrame(columns=["FOO", "BAR"], data=[[1, 2], [3, 4]]).astype("int32")
+    dframe["BAR"] *= 1.1  # Make it into a float type.
+    pyat_df = _df2pyarrow(dframe).to_pandas()
+
+    # For the comparison:
+    dframe["BAR"] = dframe["BAR"].astype("float32")
+
+    pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
+
+
+def test_df2pyarrow_500years():
+    """Summary files can have DATE columns with timespans outside the
+    Pandas dataframe nanosecond limitation. This should not present
+    a problem to the PyArrow conversion"""
+    dateindex = [dt(1000, 1, 1, 0, 0, 0), dt(3000, 1, 1, 0, 0, 0)]
+    dframe = pd.DataFrame(
+        columns=["FOO", "BAR"], index=dateindex, data=[[1, 2], [3, 4]]
+    ).astype("int32")
+
+    # The index name should be ignored:
+    dframe.index.name = "BOGUS"
+    pyat = _df2pyarrow(dframe)
+
+    with pytest.raises(pyarrow.lib.ArrowInvalid):
+        # We cannot convert this back to Pandas, since it will bail on failing
+        # to use nanosecond timestamps in the dataframe object for these dates.
+        # This is maybe a PyArrow bug/limitation that we must be aware of.
+        pyat.to_pandas()
+
+    assert (
+        np.array(pyat.column(0))
+        == [
+            np.datetime64("1000-01-01T00:00:00.000000000"),
+            np.datetime64("3000-01-01T00:00:00.000000000"),
+        ]
+    ).all()
+
+
+def test_df2pyarrow_meta():
+    """Test that metadata in summary dataframes dframe.attrs are passed on to
+    pyarrow tables"""
+    dframe = pd.DataFrame(columns=["FOO", "BAR"], data=[[1, 2], [3, 4]]).astype("int32")
+    dframe.attrs["meta"] = {
+        "FOO": {"unit": "barf", "is_interesting": False},
+        "ignoreme": "ignored",
+    }
+    pyat = _df2pyarrow(dframe)
+    assert pyat.select(["FOO"]).schema[0].metadata == {
+        b"unit": b"barf",
+        b"is_interesting": b"False",
+    }
+    assert pyat.select(["BAR"]).schema[0].metadata == {}
+
+    assert "is_interesting" in pyat.schema.to_string()
+    assert "ignored" not in pyat.schema.to_string()
+
+
+def test_df2pyarrow_strings():
+    """Check that dataframes can have string columns passing through PyArrow"""
+    dframe = pd.DataFrame(columns=["FOO", "BAR"], data=[["hei", "hopp"]])
+    pyat_df = _df2pyarrow(dframe).to_pandas()
+    pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")

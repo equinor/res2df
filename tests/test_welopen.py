@@ -324,6 +324,28 @@ WELOPEN_CASES = [
         ),
         id="welopen-defaults-compdat-changing-with-time",
     ),
+    # Welopen defaults with START instead of DATES in the first timestep
+    pytest.param(
+        """
+    START
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-defaults-start",
+    ),
     pytest.param(
         """
     DATES

@@ -221,9 +221,9 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP1", 2, 1, 1, 1, "SHUT"],
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
             ],
         ),
         id="welopen-with-defaulted-I-coordinate",
@@ -251,12 +251,12 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
-                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "OPEN"],
-                [datetime.date(2000, 1, 1), "OP3", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP3", 2, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP3", 1, 1, 1, 1, "SHUT"],
             ],
         ),
         id="welopen-combinations-of-defaulted-coordinates",
@@ -279,9 +279,9 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
+                [datetime.date(2000, 1, 1), "PROD", 1, 1, 1, 1, "OPEN"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP2", 1, 1, 2, 2, "SHUT"],
-                [datetime.date(2000, 1, 1), "PROD", 1, 1, 1, 1, "OPEN"],
             ],
         ),
         id="both-wildcard-wellname-and-defaulted-coordinates",
@@ -345,6 +345,46 @@ WELOPEN_CASES = [
             ],
         ),
         id="welopen-defaults-start",
+    ),
+    # No dates at all
+    pytest.param(
+        """
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [None, "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-defaults-no-dates",
+    ),
+    # No start date, then a date later
+    pytest.param(
+        """
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    DATES
+     1 JAN 2000 /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [None, "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-defaults-no-start-date",
     ),
     pytest.param(
         """
@@ -490,8 +530,8 @@ WELOPEN_CASES = [
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
             ],
         ),
         id="j-slicing",
@@ -843,9 +883,9 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
                 [datetime.date(2000, 1, 1), "B_1H", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "B_2H", 2, 2, 2, 2, "SHUT"],
-                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
             ],
         ),
         id="multiple-wells-via-wildcard",
@@ -875,9 +915,9 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "SHUT"],
-                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
                 [datetime.date(2000, 2, 1), "OP3", 4, 4, 4, 4, "OPEN"],
             ],
         ),
@@ -893,14 +933,7 @@ def test_welopen(test_input, expected):
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
 
-    assert (
-        compdf[columns_to_check]
-        .sort_values(by=columns_to_check, axis=0)
-        .reset_index()[columns_to_check]
-        == expected[columns_to_check]
-        .sort_values(by=columns_to_check, axis=0)
-        .reset_index()[columns_to_check]
-    ).all(axis=None)
+    pd.testing.assert_frame_equal(compdf[columns_to_check], expected[columns_to_check])
 
 
 @pytest.mark.parametrize(

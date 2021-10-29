@@ -331,9 +331,22 @@ def expand_welopen_defaults(
             # If some of the coordinates are defaulted then we filter the
             # compdat dataframe to find the matching connections and expand
             # the WELOPEN row with those
-            compdat_filtered = compdat_df[compdat_df["DATE"] <= row["DATE"]]
+
+            # Any compdat entry with DATE==None are kept as they
+            # are assumed to have an earlier date than any dates defined
+            compdat_filtered = compdat_df[compdat_df["DATE"].isnull()]
+
+            # If the welopen entry DATE!=None we filter on compdat entries
+            # <= this date
+            if row["DATE"] is not None:
+                compdat_filtered = pd.concat(
+                    [compdat_filtered, compdat_df[compdat_df["DATE"] <= row["DATE"]]]
+                )
+
+            # Filter on well name
             compdat_filtered = compdat_filtered[compdat_filtered["WELL"] == row["WELL"]]
 
+            # Filter on coordinates
             for coord in ["I", "J", "K"]:
                 # In COMPDAT the K coordinate is named K1/K2.
                 compdat_coord = coord + "1" if coord == "K" else coord

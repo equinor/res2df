@@ -120,6 +120,8 @@ WELOPEN_CASES = [
         ),
         id="welopen-stop-on-well",
     ),
+    # Both 1*, 0 and -1 are default values and give the same result:
+    # When all coordinates are defaulted, the connections are left OPEN
     pytest.param(
         """
     DATES
@@ -127,15 +129,21 @@ WELOPEN_CASES = [
     /
     COMPDAT
      'OP1' 1 1 1 1 'OPEN' /
+     'OP2' 1 1 1 1 'OPEN' /
+     'OP3' 1 1 1 1 'OPEN' /
     /
     WELOPEN
      'OP1' 'STOP' 1* 1* 1* /
+     'OP2' 'STOP' 0  0  0  /
+     'OP3' 'STOP' -1 -1 -1 /
     /
     """,
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP3", 1, 1, 1, 1, "OPEN"],
             ],
         ),
         id="welopen-stop-on-well-explicit-defaults",
@@ -173,6 +181,7 @@ WELOPEN_CASES = [
         ),
         id="welopen-shut-then-stop-on-well",
     ),
+    # Closes a connection with specified I, J, K
     pytest.param(
         """
     DATES
@@ -193,7 +202,242 @@ WELOPEN_CASES = [
         ),
         id="welopen-shut-on-connection",
     ),
-    # Fail with ValueError when both I,J,K (3-5) and completions number (6-7)
+    # Test when one coordinate is defaulted. Shuts all connections in the
+    # well with J==1 and K==1
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 1 'OPEN' /
+     'OP1' 2 1 1 1 'OPEN' /
+     'OP1' 1 1 2 2 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 0 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 2, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-with-defaulted-I-coordinate",
+    ),
+    # Test that all combinations of two defaulted coordinates are working
+    # And that defaulting with *, 0 and -1 is treated the same
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1' 1 1 1 2 'OPEN' /
+     'OP2' 1 1 1 1 'OPEN' /
+     'OP2' 2 2 2 2 'OPEN' /
+     'OP3' 1 1 1 1 'OPEN' /
+     'OP3' 2 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1' 'SHUT' 2*    1 /
+     'OP2' 'SHUT' 0  1  0 /
+     'OP3' 'SHUT' 1 -1 -1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP3", 2, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP3", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-combinations-of-defaulted-coordinates",
+    ),
+    # Both wilcard well name and K coordinate defaulted
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+     'OP2'  1 1 2 2 'OPEN' /
+     'PROD' 1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP*'  'SHUT' 1 1 0 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "PROD", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP2", 1, 1, 2, 2, "SHUT"],
+            ],
+        ),
+        id="both-wildcard-wellname-and-defaulted-coordinates",
+    ),
+    # Compdat changing with time. The WELOPEN statement is only acting on
+    # connections that have been defined at that date. In this test, the
+    # connections with I==1 and I==2 will be SHUT, but not I==3
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    DATES
+     1 FEB 2000 /
+    /
+    COMPDAT
+     'OP1'  2 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+    DATES
+     1 MAR 2000 /
+    /
+    COMPDAT
+     'OP1'  3 1 1 1 'OPEN' /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 2, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 2, 1), "OP1", 2, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 3, 1), "OP1", 3, 1, 1, 1, "OPEN"],
+            ],
+        ),
+        id="welopen-defaults-compdat-changing-with-time",
+    ),
+    # Welopen defaults with START instead of DATES in the first timestep
+    pytest.param(
+        """
+    START
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-defaults-start",
+    ),
+    # No dates at all
+    pytest.param(
+        """
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [None, "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-defaults-no-dates",
+    ),
+    # No start date, then a date later
+    pytest.param(
+        """
+    COMPDAT
+     'OP1'  1 1 1 1 'OPEN' /
+    /
+    DATES
+     1 JAN 2000 /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 1 1 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [None, "OP1", 1, 1, 1, 1, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+            ],
+        ),
+        id="welopen-defaults-no-start-date",
+    ),
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 2 'OPEN' /
+    /
+    WELOPEN
+     'OP1'  'SHUT' 0 0 3 /
+    /
+    """,
+        None,
+        id="no-connections-matching-welopen-defaults",
+        marks=pytest.mark.xfail(
+            raises=ValueError,
+            match="No connections are matching WELOPEN keyword",
+        ),
+    ),
+    # Defaulted COMPLUMPs in WELOPEN not supported
+    pytest.param(
+        """
+    DATES
+     1 JAN 2000 /
+    /
+    COMPDAT
+     'OP1'  1 1 1 2 'OPEN' /
+    /
+    COMPLUMP
+     'OP1' 1 1 1 1 1 /
+     'OP1' 1 1 1 1 2 /
+    /
+
+    WELOPEN
+     'OP1'  'SHUT' 3* 1 0 /
+    /
+    """,
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+            data=[
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
+            ],
+        ),
+        id="defaulted-complump-in-welopen-not-supported",
+        marks=pytest.mark.xfail(
+            raises=ValueError,
+            match="Zeros for C1/C2 is not implemented",
+        ),
+    ),
+    # STOP on connection is the same as SHUT
+    # (note that STOP on well gives OPEN connections)
     pytest.param(
         """
     DATES
@@ -214,6 +458,7 @@ WELOPEN_CASES = [
         ),
         id="welopen-stop-on-connection-is-shut",
     ),
+    # POPN is the same as OPEN
     pytest.param(
         """
     DATES
@@ -234,6 +479,7 @@ WELOPEN_CASES = [
         ),
         id="welopen-popn-on-connection-is-open",
     ),
+    # WELOPEN refers to a lumped connection, but COMPLUMP is missing
     pytest.param(
         """
     DATES
@@ -243,7 +489,6 @@ WELOPEN_CASES = [
      'OP1' 1 1 1 1 'OPEN' /
     /
     WELOPEN
-     -- This points to a lumped connection, but COMPLUMP is missing
      'OP1' 'SHUT' 1 1 1 1 1 /
     /
     """,
@@ -251,6 +496,7 @@ WELOPEN_CASES = [
         id="complump_missing",
         marks=pytest.mark.xfail(raises=ValueError),
     ),
+    # Well is missing
     pytest.param(
         """
     DATES
@@ -284,8 +530,8 @@ WELOPEN_CASES = [
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "OPEN"],
-                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 3, 3, "OPEN"],
+                [datetime.date(2000, 1, 1), "OP1", 1, 1, 2, 2, "SHUT"],
             ],
         ),
         id="j-slicing",
@@ -637,9 +883,9 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
                 [datetime.date(2000, 1, 1), "B_1H", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "B_2H", 2, 2, 2, 2, "SHUT"],
-                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
             ],
         ),
         id="multiple-wells-via-wildcard",
@@ -669,9 +915,9 @@ WELOPEN_CASES = [
         pd.DataFrame(
             columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
             data=[
+                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
                 [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
                 [datetime.date(2000, 1, 1), "OP2", 2, 2, 2, 2, "SHUT"],
-                [datetime.date(2000, 1, 1), "WI1", 3, 3, 3, 3, "OPEN"],
                 [datetime.date(2000, 2, 1), "OP3", 4, 4, 4, 4, "OPEN"],
             ],
         ),
@@ -685,16 +931,9 @@ def test_welopen(test_input, expected):
     """Test with WELOPEN present"""
     deck = EclFiles.str2deck(test_input)
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
-
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
-    assert (
-        compdf[columns_to_check]
-        .sort_values(by=columns_to_check, axis=0)
-        .reset_index()[columns_to_check]
-        == expected[columns_to_check]
-        .sort_values(by=columns_to_check, axis=0)
-        .reset_index()[columns_to_check]
-    ).all(axis=None)
+
+    pd.testing.assert_frame_equal(compdf[columns_to_check], expected[columns_to_check])
 
 
 @pytest.mark.parametrize(

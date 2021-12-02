@@ -15,6 +15,7 @@ import datetime
 import logging
 from typing import Dict, List, Optional, Union
 
+import numpy as np
 import pandas as pd
 
 try:
@@ -245,7 +246,7 @@ def deck2dfs(
     if not welopen_df.empty:
         compdat_df = applywelopen(
             compdat_df,
-            expand_welopen_wildcards(welopen_df, compdat_df),
+            expand_welopen(welopen_df, compdat_df),
             expand_wlist(wlist_df),
             unroll_complump(complump_df),
         )
@@ -289,7 +290,92 @@ def deck2dfs(
     )
 
 
-def expand_welopen_wildcards(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame):
+def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame) -> pd.DataFrame:
+    """Expands WELOPEN. First wildcard wells are expanded and then default
+    coordinates are expanded. The order of the expansion is important.
+    """
+    exp_welopen_df = expand_welopen_wildcards(welopen_df, compdat_df)
+    return expand_welopen_defaults(exp_welopen_df, compdat_df)
+
+
+def expand_welopen_defaults(
+    welopen_df: pd.DataFrame, compdat_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Expands rows in WELOPEN where one or two coordinates are defaulted.
+    Expansion happens by filtering on compdat rows that are matching the
+    well name and the coordinates that are not defaulted.
+
+    If all coordinates (I, J, K) are defaulted then the WELOPEN keyword
+    is acting on the well and not on the connections, and shall not be
+    expanded.
+
+    It is important that expansion of wildcard wells is done prior to
+    this function and that COMPDAT is unrolled so that K1=K2 in the input
+    to this functions.
+    """
+
+    def is_default(value: Optional[int]) -> bool:
+        if value is None or np.isnan(value):
+            return True
+        return value <= 0
+
+    exp_welopen = []
+    for _, row in welopen_df.iterrows():
+        coord_defaulted = [is_default(row[coord]) for coord in ["I", "J", "K"]]
+        if all(coord_defaulted) or not any(coord_defaulted):
+            # If all coordinates are defaulted, the WELOPEN keyword is acting on
+            # the well and not the connections, and shall not be expanded.
+            # If no coordinates are defaulted, there is nothing to expand.
+            exp_welopen.append(row)
+        else:
+            # If some of the coordinates are defaulted then we filter the
+            # compdat dataframe to find the matching connections and expand
+            # the WELOPEN row with those
+
+            # Any compdat entry with DATE==None are kept as they
+            # are assumed to have an earlier date than any dates defined
+            compdat_filtered = compdat_df[compdat_df["DATE"].isnull()]
+
+            # If the welopen entry DATE!=None we filter on compdat entries
+            # <= this date
+            if row["DATE"] is not None:
+                compdat_filtered = pd.concat(
+                    [compdat_filtered, compdat_df[compdat_df["DATE"] <= row["DATE"]]]
+                )
+
+            # Filter on well name
+            compdat_filtered = compdat_filtered[compdat_filtered["WELL"] == row["WELL"]]
+
+            # Filter on coordinates
+            for coord in ["I", "J", "K"]:
+                # In COMPDAT the K coordinate is named K1/K2.
+                compdat_coord = coord + "1" if coord == "K" else coord
+                if not is_default(row[coord]):
+                    compdat_filtered = compdat_filtered[
+                        compdat_filtered[compdat_coord] == row[coord]
+                    ]
+
+            # If compdat_filtered is empty it means that no connections are matching
+            # the criterias in the WELOPEN row.
+            if compdat_filtered.empty:
+                raise ValueError(
+                    "No connections are matching WELOPEN keyword with defaulted "
+                    "coordinates:"
+                    f"\n {row} "
+                )
+
+            for _, compdat_row in compdat_filtered.iterrows():
+                exp_row = row.copy()
+                exp_row["I"] = compdat_row["I"]
+                exp_row["J"] = compdat_row["J"]
+                exp_row["K"] = compdat_row["K1"]
+                exp_welopen.append(exp_row)
+    return pd.DataFrame(exp_welopen)
+
+
+def expand_welopen_wildcards(
+    welopen_df: pd.DataFrame, compdat_df: pd.DataFrame
+) -> pd.DataFrame:
     """Expand rows in welopen with well names containing wildcard characters,
     with the correct wells from compdat_df that was defined at that date
 
@@ -816,13 +902,13 @@ def applywelopen(
         else:
             raise ValueError(
                 "A WELOPEN keyword contains data that could not be parsed. "
-                f"\n {str(row)} "
+                f"\n {row} "
             )
 
         if previous_state.empty:
             raise ValueError(
                 "A WELOPEN keyword is not acting on any existing connection. "
-                f"\n {str(row)} "
+                f"\n {row} "
             )
 
         new_state = previous_state

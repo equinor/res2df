@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.15.1.dev2+g0e30fb8 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.15.1.dev4+ged0dcb0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.15.1.dev2+g0e30fb8
+                0.15.1.dev4+ged0dcb0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -257,6 +257,37 @@ connections were refered to explicitly in WELOPEN:</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.compdat.expand_welopen">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#expand_welopen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.expand_welopen" title="Permalink to this definition"></a></dt>
+<dd><p>Expands WELOPEN. First wildcard wells are expanded and then default
+coordinates are expanded. The order of the expansion is important.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.compdat.expand_welopen_defaults">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#expand_welopen_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.expand_welopen_defaults" title="Permalink to this definition"></a></dt>
+<dd><p>Expands rows in WELOPEN where one or two coordinates are defaulted.
+Expansion happens by filtering on compdat rows that are matching the
+well name and the coordinates that are not defaulted.</p>
+<p>If all coordinates (I, J, K) are defaulted then the WELOPEN keyword
+is acting on the well and not on the connections, and shall not be
+expanded.</p>
+<p>It is important that expansion of wildcard wells is done prior to
+this function and that COMPDAT is unrolled so that K1=K2 in the input
+to this functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.compdat.expand_welopen_wildcards">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">expand_welopen_wildcards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">welopen_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compdat_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#expand_welopen_wildcards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.expand_welopen_wildcards" title="Permalink to this definition"></a></dt>
 <dd><p>Expand rows in welopen with well names containing wildcard characters,
@@ -282,8 +313,11 @@ with the correct wells from compdat_df that was defined at that date</p>
 <li><p><strong>compdat_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – DataFrame with compdat</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Expanded welopen dataframe</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Expanded welopen dataframe</p>
 </dd>
 </dl>
 </dd></dl>
@@ -357,7 +391,7 @@ inputted explicitly without the use of WLIST.</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="ecl2df.compdat.logger">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;Logger</span> <span class="pre">ecl2df.compdat</span> <span class="pre">(WARNING)&gt;</span></em><a class="headerlink" href="#ecl2df.compdat.logger" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Logger</span> <span class="pre">ecl2df.compdat</span> <span class="pre">(WARNING)&gt;</span></em><a class="headerlink" href="#ecl2df.compdat.logger" title="Permalink to this definition"></a></dt>
 <dd><p>OPM authors and Roxar RMS authors have interpreted the Eclipse
 documentation ever so slightly different when naming the data.</p>
 <p>For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
@@ -448,7 +482,7 @@ rows had any ranges.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2021.</p>
+    <p>&#169; Copyright Equinor 2019-2022.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

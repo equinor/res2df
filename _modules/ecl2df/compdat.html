@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.15.1.dev2+g0e30fb8 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.15.1.dev4+ged0dcb0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.15.1.dev2+g0e30fb8
+                0.15.1.dev4+ged0dcb0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -95,6 +95,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -325,7 +326,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">applywelopen</span><span class="p">(</span>
             <span class="n">compdat_df</span><span class="p">,</span>
-            <span class="n">expand_welopen_wildcards</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">),</span>
+            <span class="n">expand_welopen</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">),</span>
             <span class="n">expand_wlist</span><span class="p">(</span><span class="n">wlist_df</span><span class="p">),</span>
             <span class="n">unroll_complump</span><span class="p">(</span><span class="n">complump_df</span><span class="p">),</span>
         <span class="p">)</span>
@@ -369,7 +370,92 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_welopen_wildcards"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen_wildcards">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_wildcards</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<div class="viewcode-block" id="expand_welopen"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Expands WELOPEN. First wildcard wells are expanded and then default</span>
+<span class="sd">    coordinates are expanded. The order of the expansion is important.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exp_welopen_df</span> <span class="o">=</span> <span class="n">expand_welopen_wildcards</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">expand_welopen_defaults</span><span class="p">(</span><span class="n">exp_welopen_df</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="expand_welopen_defaults"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen_defaults">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_defaults</span><span class="p">(</span>
+    <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Expands rows in WELOPEN where one or two coordinates are defaulted.</span>
+<span class="sd">    Expansion happens by filtering on compdat rows that are matching the</span>
+<span class="sd">    well name and the coordinates that are not defaulted.</span>
+
+<span class="sd">    If all coordinates (I, J, K) are defaulted then the WELOPEN keyword</span>
+<span class="sd">    is acting on the well and not on the connections, and shall not be</span>
+<span class="sd">    expanded.</span>
+
+<span class="sd">    It is important that expansion of wildcard wells is done prior to</span>
+<span class="sd">    this function and that COMPDAT is unrolled so that K1=K2 in the input</span>
+<span class="sd">    to this functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">is_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+
+    <span class="n">exp_welopen</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">welopen_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">coord_defaulted</span> <span class="o">=</span> <span class="p">[</span><span class="n">is_default</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">coord</span><span class="p">])</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">coord_defaulted</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">coord_defaulted</span><span class="p">):</span>
+            <span class="c1"># If all coordinates are defaulted, the WELOPEN keyword is acting on</span>
+            <span class="c1"># the well and not the connections, and shall not be expanded.</span>
+            <span class="c1"># If no coordinates are defaulted, there is nothing to expand.</span>
+            <span class="n">exp_welopen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If some of the coordinates are defaulted then we filter the</span>
+            <span class="c1"># compdat dataframe to find the matching connections and expand</span>
+            <span class="c1"># the WELOPEN row with those</span>
+
+            <span class="c1"># Any compdat entry with DATE==None are kept as they</span>
+            <span class="c1"># are assumed to have an earlier date than any dates defined</span>
+            <span class="n">compdat_filtered</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span>
+
+            <span class="c1"># If the welopen entry DATE!=None we filter on compdat entries</span>
+            <span class="c1"># &lt;= this date</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">compdat_filtered</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">compdat_filtered</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">[</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]]]</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Filter on well name</span>
+            <span class="n">compdat_filtered</span> <span class="o">=</span> <span class="n">compdat_filtered</span><span class="p">[</span><span class="n">compdat_filtered</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]]</span>
+
+            <span class="c1"># Filter on coordinates</span>
+            <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">]:</span>
+                <span class="c1"># In COMPDAT the K coordinate is named K1/K2.</span>
+                <span class="n">compdat_coord</span> <span class="o">=</span> <span class="n">coord</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span> <span class="k">if</span> <span class="n">coord</span> <span class="o">==</span> <span class="s2">&quot;K&quot;</span> <span class="k">else</span> <span class="n">coord</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_default</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">coord</span><span class="p">]):</span>
+                    <span class="n">compdat_filtered</span> <span class="o">=</span> <span class="n">compdat_filtered</span><span class="p">[</span>
+                        <span class="n">compdat_filtered</span><span class="p">[</span><span class="n">compdat_coord</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="n">coord</span><span class="p">]</span>
+                    <span class="p">]</span>
+
+            <span class="c1"># If compdat_filtered is empty it means that no connections are matching</span>
+            <span class="c1"># the criterias in the WELOPEN row.</span>
+            <span class="k">if</span> <span class="n">compdat_filtered</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;No connections are matching WELOPEN keyword with defaulted &quot;</span>
+                    <span class="s2">&quot;coordinates:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">compdat_row</span> <span class="ow">in</span> <span class="n">compdat_filtered</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="n">exp_row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">exp_row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compdat_row</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span>
+                <span class="n">exp_row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compdat_row</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span>
+                <span class="n">exp_row</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compdat_row</span><span class="p">[</span><span class="s2">&quot;K1&quot;</span><span class="p">]</span>
+                <span class="n">exp_welopen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_row</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">exp_welopen</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="expand_welopen_wildcards"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen_wildcards">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_wildcards</span><span class="p">(</span>
+    <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Expand rows in welopen with well names containing wildcard characters,</span>
 <span class="sd">    with the correct wells from compdat_df that was defined at that date</span>
 
@@ -896,13 +982,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;A WELOPEN keyword contains data that could not be parsed. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2"> &quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">previous_state</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;A WELOPEN keyword is not acting on any existing connection. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2"> &quot;</span>
             <span class="p">)</span>
 
         <span class="n">new_state</span> <span class="o">=</span> <span class="n">previous_state</span>
@@ -1004,7 +1090,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2021.</p>
+    <p>&#169; Copyright Equinor 2019-2022.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

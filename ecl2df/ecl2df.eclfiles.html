@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.15.1.dev2+g0e30fb8 documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.15.1.dev4+ged0dcb0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.15.1.dev2+g0e30fb8
+                0.15.1.dev4+ged0dcb0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -114,7 +114,7 @@
 <p>Module to hold Eclipse input and output filenames</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">ecl2df.eclfiles.</span></span><span class="sig-name descname"><span class="pre">EclFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclbase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ecl2df.eclfiles.</span></span><span class="sig-name descname"><span class="pre">EclFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclbase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles" title="Permalink to this definition"></a></dt>
 <dd><p>Class for holding an Eclipse deck with result files</p>
 <p>Exists only for convenience, so that loading of
 EclFile/EclSum objects is easy for users, and with
@@ -137,7 +137,7 @@ for this function.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.file2deck">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">file2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.file2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.file2deck" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.file2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.file2deck" title="Permalink to this definition"></a></dt>
 <dd><p>Try to convert standalone files into opm.io Deck objects</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -293,7 +293,7 @@ returned and a warning issued.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.str2deck">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">str2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parsecontext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.str2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.str2deck" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">str2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parsecontext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.str2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.str2deck" title="Permalink to this definition"></a></dt>
 <dd><p>Produce a opm.io deck from a string, using permissive
 parsing by default</p>
 <dl class="field-list simple">
@@ -329,7 +329,7 @@ parsing by default</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2021.</p>
+    <p>&#169; Copyright Equinor 2019-2022.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

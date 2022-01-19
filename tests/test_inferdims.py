@@ -1,4 +1,5 @@
 """Test module for satfunc2df"""
+import re
 
 import pytest
 
@@ -96,10 +97,23 @@ def test_inject_xxxdims_ntxxx():
     deck_with_injection = inferdims.inject_xxxdims_ntxxx(
         "TABDIMS", "NTSFUN", "SWOF\n0/\n0/\n", 1
     )
-    assert "TABDIMS\n   1 /" in str(
-        inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck_with_injection, 10)
+
+    assert "TABDIMS\n 1 /" in re.sub(
+        " +",
+        " ",
+        str(
+            inferdims.inject_xxxdims_ntxxx(
+                "TABDIMS", "NTSFUN", deck_with_injection, None
+            )
+        ),
     )
     # If no number is supplied, return the deck untouched:
-    assert "TABDIMS\n   1 /" in str(
-        inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck_with_injection, None)
+    assert "TABDIMS\n 1 /" in re.sub(
+        " +",
+        " ",
+        str(
+            inferdims.inject_xxxdims_ntxxx(
+                "TABDIMS", "NTSFUN", deck_with_injection, None
+            )
+        ),
     )

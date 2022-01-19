@@ -18,7 +18,7 @@ SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm < 6.1"]
 REQUIREMENTS = [
     "ecl",
     "numpy",
-    "opm==2021.04.0",  # NB: Pypi versions.
+    "opm>=2020.10.2",  # NB: Pypi versions.
     "pandas",
     "pyarrow",
     "pyyaml>=5.1",

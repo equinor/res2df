@@ -19,7 +19,7 @@ REQUIREMENTS = [
     "ecl",
     "numpy",
     "opm>=2020.10.2",  # NB: Pypi versions.
-    "pandas",
+    "pandas<1.4.0",
     "pyarrow",
     "pyyaml>=5.1",
     "treelib",

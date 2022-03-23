@@ -418,41 +418,13 @@ def df2ecl_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     phases = phases_from_columns(subset.columns)
 
-    # Make a copy as we are going to modify it in order to have Pandas
-    # make a pretty txt table:
-    equildf = subset.copy()
-    # Column names are pr. ec2ldf standard, redo to opm.common in order
-    # to use sorting from that:
-    inv_renamer = {value: key for key, value in RENAMERS[phases].items()}
-    # print(inv_renamer)
-    equildf.rename(inv_renamer, axis="columns", inplace=True)
-    col_headers = [item["name"] for item in common.OPMKEYWORDS["EQUIL"]["items"]]
-    for colname in col_headers:
-        # Add those that are missing, as Eclipse defaults
-        if colname not in equildf:
-            equildf[colname] = "1*"
-    # Reorder columns:
-    equildf = equildf[col_headers]
-
-    # It is critical for opm.common, maybe also E100 to have integers printed
-    # as integers, for correct parsing. Ensure integer types where
-    # the json says integer:
-    integer_cols = [
-        item["name"]
-        for item in common.OPMKEYWORDS["EQUIL"]["items"]
-        if item["value_type"] == "INT"
-    ]
-    for int_col in integer_cols:
-        # But allow these columns to contain "1*"
-        if set(equildf[int_col]) != {"1*"}:
-            equildf[int_col] = equildf[int_col].astype(int)
-
-    # Now rename again to have prettier column names:
-    equildf.rename(RENAMERS[phases], axis="columns", inplace=True)
-    # Add a final column with the end-slash, invisible header:
-    equildf[" "] = "/"
-    string += "-- " + equildf.to_string(header=True, index=False)
-    return string + "\n\n"
+    return common.generic_ecltable(
+        subset,
+        "EQUIL",
+        renamer=RENAMERS[phases],  # type: ignore
+        comment=comment,
+        drop_trailing_columns=False,
+    )
 
 
 def df2ecl_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:

@@ -1,11 +1,14 @@
 """Test module for compdat"""
 
+import datetime
+import os
 from pathlib import Path
 
+import packaging.version
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat, ecl2csv
+from ecl2df import EclFiles, compdat, csv2ecl, ecl2csv
 
 try:
     import opm  # noqa
@@ -37,6 +40,13 @@ def test_df():
     assert "ZONE" in compdat_df
     assert "K1" in compdat_df
     assert "WELL" in compdat_df
+
+    # Dump dataframe to Eclipse include file and re-parse:
+    inc = compdat.df2ecl(compdat_df)
+    df_from_inc = compdat.df(inc)
+    pd.testing.assert_frame_equal(
+        compdat_df.drop("ZONE", axis="columns"), df_from_inc, check_dtype=False
+    )
 
 
 def test_comp2df():
@@ -338,6 +348,40 @@ def test_main_subparsers(tmp_path, mocker):
     assert "FIPNUM" in disk_df
     assert "EQLNUM" in disk_df
     assert not disk_df.empty
+
+
+def test_csv2ecl_eightcells(tmp_path, mocker):
+    """Test include file construction from CSV data"""
+    os.chdir(tmp_path)
+    eightcells_compdat = compdat.df(EclFiles(EIGHTCELLS))
+    eightcells_compdat.to_csv("compdat.csv", index=False)
+
+    mocker.patch(
+        "sys.argv",
+        ["csv2ecl", "compdat", "--verbose", "compdat.csv", "--output", "compdat.inc"],
+    )
+    csv2ecl.main()
+    compdatinc = Path("compdat.inc").read_text()
+    assert "'OP1' 1 1 1 1 'OPEN'" in " ".join(compdatinc.split())
+
+
+def test_csv2ecl_reek(tmp_path, mocker):
+    """Test include file construction from CSV data"""
+    os.chdir(tmp_path)
+    reek_compdat = compdat.df(EclFiles(REEK))
+    reek_compdat.to_csv("compdat.csv", index=False)
+
+    mocker.patch(
+        "sys.argv",
+        ["csv2ecl", "compdat", "--verbose", "compdat.csv", "--output", "compdat.inc"],
+    )
+    csv2ecl.main()
+    compdatinc = Path("compdat.inc").read_text()
+    # Reparse it into a dataframe using opm.common
+    df_from_inc = compdat.df(compdatinc)
+    pd.testing.assert_frame_equal(
+        reek_compdat.drop("ZONE", axis="columns"), df_from_inc
+    )
 
 
 def test_defaulted_compdat_i_j(tmp_path):
@@ -708,3 +752,80 @@ def test_wsegvalv_max_default():
             ]
         ),
     )
+
+
+@pytest.mark.parametrize(
+    "dframe, expected",
+    [
+        pytest.param(
+            pd.DataFrame(
+                [
+                    # This also tests that dataframe column
+                    # order is arbitrary
+                    {"WELL": "OP1", "J": "200", "I": 10},
+                    {"WELL": "OP2", "I": 1000, "J": 1},
+                ]
+            ),
+            """COMPDAT
+  'OP1'   10 200 /
+  'OP2' 1000   1 /
+/""",
+            id="column_alignment",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1", "DATE": datetime.date(2001, 1, 1)}]),
+            "DATES\n  1 'JAN' 2001 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
+            id="with-date",
+        ),
+        pytest.param(
+            pd.DataFrame(
+                [{"WELL": "OP1", "DATE": datetime.datetime(2001, 1, 1, 3, 3, 3)}]
+            ),
+            "DATES\n  1 'JAN' 2001 03:03:03 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
+            id="with-datetime",
+        ),
+        pytest.param(
+            pd.DataFrame([{"WELL": "OP1", "DATE": "2000-01-01"}]),
+            "DATES\n  1 'JAN' 2000 /\n/\n\nCOMPDAT\n  'OP1' /\n/",
+            id="with-isodatestring",
+        ),
+        pytest.param(
+            pd.DataFrame(
+                [
+                    {"WELL": "OP1", "DATE": "2000-01-01"},
+                    {"WELL": "OP2", "DATE": "3000-01-01"},
+                ]
+            ),
+            """DATES
+  1 'JAN' 2000 /
+/
+
+COMPDAT
+  'OP1' /
+/
+
+DATES
+  1 'JAN' 3000 /
+/
+
+COMPDAT
+  'OP2' /
+/""",
+            id="multiple-dates",
+        ),
+    ],
+)
+def test_df2ecl_compdat(dframe, expected):
+    """Test construction of compdat keyword data from dataframes"""
+    result = compdat.df2ecl_compdat(dframe)
+    commentsstripped = "\n".join(
+        [line for line in result.splitlines() if not line.startswith("--")]
+    )
+    # Pandas 1.1.5 gives a different amount of whitespace than what
+    # these tests are written for. If so, be more slack about whitespace.
+    if packaging.version.parse(pd.__version__) < packaging.version.parse("1.2.0"):
+        commentsstripped = " ".join(commentsstripped.split())
+        assert commentsstripped == " ".join(expected.split())
+    else:
+        # Relax about leading and trailing whitespace
+        assert commentsstripped.strip() == expected.strip()

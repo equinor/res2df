@@ -755,27 +755,21 @@ def test_resample_smry_dates():
     )
 
     # Verify boundary date bug up to and including ecl2df v0.13.2
-    assert (
-        resample_smry_dates(
-            ecldates,
-            start_date="2300-06-05",
-            end_date="2301-06-07",
-            freq="yearly",
-            normalize=False,
-        )
-        == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
-    )
+    assert resample_smry_dates(
+        ecldates,
+        start_date="2300-06-05",
+        end_date="2301-06-07",
+        freq="yearly",
+        normalize=False,
+    ) == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
     # Normalization should not change anything when dates are explicit:
-    assert (
-        resample_smry_dates(
-            ecldates,
-            start_date="2300-06-05",
-            end_date="2301-06-07",
-            freq="yearly",
-            normalize=True,
-        )
-        == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
-    )
+    assert resample_smry_dates(
+        ecldates,
+        start_date="2300-06-05",
+        end_date="2301-06-07",
+        freq="yearly",
+        normalize=True,
+    ) == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
 
 
 def test_smry_meta():

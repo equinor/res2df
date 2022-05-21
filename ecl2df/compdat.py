@@ -978,7 +978,11 @@ def compdat_main(args):
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
 
 
-def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFrame:
+def df(
+    eclfiles: EclFiles,
+    initvectors: Optional[List[str]] = None,
+    zonemap_filename: Optional[str] = None,
+) -> pd.DataFrame:
     """Main function for Python API users
 
     Supports only COMPDAT information for now. Will
@@ -995,7 +999,7 @@ def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFr
             eclfiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
         )
 
-    zonemap = eclfiles.get_zonemap()
+    zonemap = eclfiles.get_zonemap(zonemap_filename)
     if zonemap:
         logger.info("Merging zonemap into compdat")
         compdat_df = merge_zones(compdat_df, zonemap)

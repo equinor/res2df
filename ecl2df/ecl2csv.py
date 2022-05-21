@@ -207,6 +207,14 @@ def get_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=("Each row represents an edge in the GRUPTREE at a specific date."),
     )
+    subparsers_dict["wellcompletiondata"] = subparsers.add_parser(
+        "wellcompletiondata",
+        help="Extract well completion data",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Each row represents a completion, aggregated from layer to zone."
+        ),
+    )
     subparsers_dict["wellconnstatus"] = subparsers.add_parser(
         "wellconnstatus",
         help="Extract well connection status",

@@ -15,8 +15,10 @@ def df(
     eclfiles: EclFiles, zonemap_filename: str, use_wellconnstatus: bool
 ) -> pd.DataFrame:
     """Info"""
-    compdat_df = compdat.df(eclfiles, zonemap_filename=zonemap_filename)
-
+    compdat_df = compdat.df(eclfiles, zonemap_filename=zonemap_filename)[
+        ["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"]
+    ]
+    compdat_df["DATE"] = pd.to_datetime(compdat_df["DATE"])
     if use_wellconnstatus:
         wellconnstatus_df = wellconnstatus.df(eclfiles)
         compdat_df = _merge_compdat_and_connstatus(compdat_df, wellconnstatus_df)
@@ -57,9 +59,16 @@ def _merge_compdat_and_connstatus(
     * if connection status is missing for a realization, but compdat exists, compdat
     will also be ignored.
     """
-    match_on = ["REAL", "WELL", "I", "J", "K1"]
+    match_on = ["WELL", "I", "J", "K1"]
+    wellconnstatus_df.rename({"K": "K1"}, axis=1, inplace=True)
+    print(compdat_df)
+    print(wellconnstatus_df)
+
     dframe = pd.merge(
-        wellconnstatus_df, compdat_df[match_on + ["KH"]], on=match_on, how="left"
+        wellconnstatus_df,
+        compdat_df[match_on + ["KH", "ZONE"]],
+        on=match_on,
+        how="left",
     )
 
     # There will often be several rows (with different OP/SH) matching in compdat.
@@ -68,9 +77,8 @@ def _merge_compdat_and_connstatus(
 
     # Concat from compdat the wells that are not in well connection status
     dframe = pd.concat(
-        [dframe, compdat_df[~compdat_df.WELL.isin(dframe["WELL"].unique())]]
+        [dframe, compdat_df[~compdat_df["WELL"].isin(dframe["WELL"].unique())]]
     )
-
     dframe = dframe.reset_index(drop=True)
     dframe["KH"] = dframe["KH"].fillna(0)
     return dframe

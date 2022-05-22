@@ -54,6 +54,10 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
         for date, status in status_changes:
             dframe.loc[dframe.shape[0]] = [date, well, i, j, k, status]
 
+    dframe["I"] = dframe["I"].astype(int)
+    dframe["J"] = dframe["J"].astype(int)
+    dframe["K"] = dframe["K"].astype(int)
+
     logger.info(
         "Dataframe with well connection status ready, %d rows",
         len(dframe),

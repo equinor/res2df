@@ -19,10 +19,16 @@ def df(
         ["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"]
     ]
     compdat_df["DATE"] = pd.to_datetime(compdat_df["DATE"])
+
     if use_wellconnstatus:
         wellconnstatus_df = wellconnstatus.df(eclfiles)
         compdat_df = _merge_compdat_and_connstatus(compdat_df, wellconnstatus_df)
 
+    return _aggregate_layer_to_zone(compdat_df)
+
+
+def _aggregate_layer_to_zone(compdat_df: pd.DataFrame) -> pd.DataFrame:
+    """Descr"""
     records = []
     for (well, zone, date), group_df in compdat_df.groupby(["WELL", "ZONE", "DATE"]):
         open_compl_df = group_df[group_df["OP/SH"] == "OPEN"]

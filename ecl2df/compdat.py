@@ -981,7 +981,7 @@ def compdat_main(args):
 def df(
     eclfiles: EclFiles,
     initvectors: Optional[List[str]] = None,
-    zonemap_filename: Optional[str] = None,
+    zonemap: Optional[Dict[int, str]] = None,
 ) -> pd.DataFrame:
     """Main function for Python API users
 
@@ -999,7 +999,10 @@ def df(
             eclfiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
         )
 
-    zonemap = eclfiles.get_zonemap(zonemap_filename)
+    if zonemap is None:
+        # If no zonemap is submittet, search for zonemap in default location
+        zonemap = eclfiles.get_zonemap()
+
     if zonemap:
         logger.info("Merging zonemap into compdat")
         compdat_df = merge_zones(compdat_df, zonemap)

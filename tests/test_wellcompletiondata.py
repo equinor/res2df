@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ecl2df import wellcompletiondata
+from ecl2df import common, wellcompletiondata
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wellcompletiondata import _merge_compdat_and_connstatus
 
@@ -17,7 +17,10 @@ except ImportError:
 
 TESTDIR = Path(__file__).absolute().parent
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
-EIGHTCELLS_ZONEMAP = str(TESTDIR / "data/eightcells/zones.lyr")
+# EIGHTCELLS_ZONEMAP = str(TESTDIR / "data/eightcells/zones.lyr")
+EIGHTCELLS_ZONEMAP = common.convert_lyrlist_to_zonemap(
+    common.parse_lyrfile(str(TESTDIR / "data/eightcells/zones.lyr"))
+)
 
 
 def test_eightcells_with_wellconnstatus():
@@ -38,7 +41,7 @@ def test_eightcells_with_wellconnstatus():
     )
     pd.testing.assert_frame_equal(
         wellcompletiondata.df(
-            eclfiles, zonemap_filename=EIGHTCELLS_ZONEMAP, use_wellconnstatus=True
+            eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=True
         ),
         expected_dframe,
         check_dtype=False,
@@ -62,7 +65,7 @@ def test_eightcells_without_wellconnstatus():
     )
     pd.testing.assert_frame_equal(
         wellcompletiondata.df(
-            eclfiles, zonemap_filename=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
+            eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
         ),
         expected_dframe,
         check_dtype=False,

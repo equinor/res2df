@@ -2,20 +2,21 @@
 
 import argparse
 from pathlib import Path
+from typing import Dict
 
 import pandas as pd
 
-from ecl2df import compdat, getLogger_ecl2csv, wellconnstatus
+from ecl2df import common, compdat, getLogger_ecl2csv, wellconnstatus
 from ecl2df.eclfiles import EclFiles
 
 from .common import write_dframe_stdout_file
 
 
 def df(
-    eclfiles: EclFiles, zonemap_filename: str, use_wellconnstatus: bool
+    eclfiles: EclFiles, zonemap: Dict[int, str], use_wellconnstatus: bool
 ) -> pd.DataFrame:
     """Info"""
-    compdat_df = compdat.df(eclfiles, zonemap_filename=zonemap_filename)[
+    compdat_df = compdat.df(eclfiles, zonemap=zonemap)[
         ["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"]
     ]
     compdat_df["DATE"] = pd.to_datetime(compdat_df["DATE"])
@@ -131,8 +132,9 @@ def wellcompletiondata_main(args):
 
     if not Path(args.zonemap).is_file():
         raise FileNotFoundError(f"{args.zonemap} does not exists.")
+    zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
 
-    wellcompletiondata_df = df(eclfiles, args.zonemap, args.use_wellconnstatus)
+    wellcompletiondata_df = df(eclfiles, zonemap, args.use_wellconnstatus)
     write_dframe_stdout_file(
         wellcompletiondata_df, args.output, index=False, caller_logger=logger
     )

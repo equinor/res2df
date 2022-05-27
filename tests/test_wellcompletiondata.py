@@ -3,10 +3,14 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import pytest
 
-from ecl2df import common, wellcompletiondata
+from ecl2df import common, compdat, wellcompletiondata
 from ecl2df.eclfiles import EclFiles
-from ecl2df.wellcompletiondata import _merge_compdat_and_connstatus
+from ecl2df.wellcompletiondata import (
+    _aggregate_layer_to_zone,
+    _merge_compdat_and_connstatus,
+)
 
 try:
     import opm  # noqa
@@ -17,7 +21,7 @@ except ImportError:
 
 TESTDIR = Path(__file__).absolute().parent
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
-# EIGHTCELLS_ZONEMAP = str(TESTDIR / "data/eightcells/zones.lyr")
+REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS_ZONEMAP = common.convert_lyrlist_to_zonemap(
     common.parse_lyrfile(str(TESTDIR / "data/eightcells/zones.lyr"))
 )
@@ -73,10 +77,35 @@ def test_eightcells_without_wellconnstatus():
 
 
 def test_empty_zonemap():
-    """Test empty zonemap"""
+    """Test empty zonemap and zonemap with layers that doesn't exist in the compdat
+    table. Both returns an empty dataframe
+    """
     eclfiles = EclFiles(EIGHTCELLS)
     df = wellcompletiondata.df(eclfiles, zonemap={}, use_wellconnstatus=False)
     assert df.empty
+
+    zonemap = {1000: "ZONE1", -1: "ZONE1"}
+    df = wellcompletiondata.df(eclfiles, zonemap=zonemap, use_wellconnstatus=False)
+    assert df.empty
+
+
+def test_zonemap_with_some_undefined_layers():
+    """Layers in the zonemap that don't exist in the compdat output will be ignored."""
+    eclfiles = EclFiles(REEK)
+    zonemap = {1: "ZONE1", 2: "ZONE1"}
+    df = wellcompletiondata.df(eclfiles, zonemap=zonemap, use_wellconnstatus=False)
+    compdat_df = compdat.df(eclfiles)
+
+    # Filter compdat on layer 1 and 2
+    compdat_df = compdat_df[compdat_df["K1"] <= 2]
+
+    # Check for all wells that the aggregated KH is the same as the sum of all
+    # the compdat entries in the same layers
+    for well, well_df in df.groupby("WELL"):
+        assert (
+            well_df["KH"].values[0]
+            == compdat_df[compdat_df["WELL"] == well]["KH"].sum()
+        )
 
 
 def test_merge_compdat_and_connstatus():
@@ -142,3 +171,14 @@ def test_merge_compdat_and_connstatus():
 
     df_result = _merge_compdat_and_connstatus(df_compdat, df_connstatus)
     pd.testing.assert_frame_equal(df_result, df_output, check_like=True)
+
+
+CASES = ()
+
+
+@pytest.mark.parametrize("compdat_df, wellcompletion_df", CASES)
+def test_aggregate_layer_to_zone(compdat_df, wellcompletion_df):
+    """Descr"""
+    pd.testing.assert_frame_equal(
+        _aggregate_layer_to_zone(compdat_df), wellcompletion_df
+    )

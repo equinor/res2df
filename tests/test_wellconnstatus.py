@@ -36,9 +36,9 @@ def test_eightcells_dataset():
             {
                 "DATE": "2000-01-02",
                 "WELL": "OP1",
-                "I": "1",
-                "J": "1",
-                "K": "1",
+                "I": 1,
+                "J": 1,
+                "K": 1,
                 "OP/SH": "OPEN",
             }
         ],
@@ -62,7 +62,7 @@ def test_eightcells_dataset():
             ),
             pd.DataFrame(
                 [
-                    ["2000-01-02", "OP1", "1", "1", "1", "OPEN"],
+                    ["2000-01-02", "OP1", 1, 1, 1, "OPEN"],
                 ],
                 columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
             ),
@@ -79,8 +79,8 @@ def test_eightcells_dataset():
             ),
             pd.DataFrame(
                 [
-                    ["2000-01-01", "OP1", "1", "1", "2", "OPEN"],
-                    ["2000-01-02", "OP1", "1", "1", "2", "SHUT"],
+                    ["2000-01-01", "OP1", 1, 1, 2, "OPEN"],
+                    ["2000-01-02", "OP1", 1, 1, 2, "SHUT"],
                 ],
                 columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
             ),
@@ -97,9 +97,9 @@ def test_eightcells_dataset():
             ),
             pd.DataFrame(
                 [
-                    ["2000-01-01", "OP1", "1", "1", "1", "OPEN"],
-                    ["2000-01-02", "OP1", "1", "1", "1", "SHUT"],
-                    ["2000-01-02 12:00:00", "OP2", "1", "1", "1", "OPEN"],
+                    ["2000-01-01", "OP1", 1, 1, 1, "OPEN"],
+                    ["2000-01-02", "OP1", 1, 1, 1, "SHUT"],
+                    ["2000-01-02 12:00:00", "OP2", 1, 1, 1, "OPEN"],
                 ],
                 columns=["DATE", "WELL", "I", "J", "K", "OP/SH"],
             ),

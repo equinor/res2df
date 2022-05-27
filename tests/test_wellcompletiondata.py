@@ -72,6 +72,13 @@ def test_eightcells_without_wellconnstatus():
     )
 
 
+def test_empty_zonemap():
+    """Test empty zonemap"""
+    eclfiles = EclFiles(EIGHTCELLS)
+    df = wellcompletiondata.df(eclfiles, zonemap={}, use_wellconnstatus=False)
+    assert df.empty
+
+
 def test_merge_compdat_and_connstatus():
     """Tests the functionality of the merge_compdat_and_connstatus function.
 

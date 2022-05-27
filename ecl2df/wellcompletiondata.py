@@ -1,6 +1,7 @@
 """Aggregates completion data from layer to zone"""
 
 import argparse
+import logging
 from pathlib import Path
 from typing import Dict
 
@@ -11,14 +12,25 @@ from ecl2df.eclfiles import EclFiles
 
 from .common import write_dframe_stdout_file
 
+logger = logging.getLogger(__name__)
+
 
 def df(
     eclfiles: EclFiles, zonemap: Dict[int, str], use_wellconnstatus: bool
 ) -> pd.DataFrame:
     """Info"""
-    compdat_df = compdat.df(eclfiles, zonemap=zonemap)[
-        ["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"]
-    ]
+    compdat_df = compdat.df(eclfiles, zonemap=zonemap)
+    if "ZONE" not in compdat_df.columns:
+        logger.warning(
+            "ZONE column not generated in compdat table. "
+            "Empty dataframe will be returned."
+            f"Zonemap used: {zonemap}"
+        )
+        return pd.DataFrame()
+
+    # Filter only the columns needed.
+    compdat_df = compdat_df[["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"]]
+    # Convert DATE column to datetime format
     compdat_df["DATE"] = pd.to_datetime(compdat_df["DATE"])
 
     if use_wellconnstatus:
@@ -122,19 +134,25 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         help="Use well connection status extracted from CPI* summary data.",
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
 
 
 def wellcompletiondata_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(__name__, vars(args))
+
     eclfiles = EclFiles(args.DATAFILE)
-
     if not Path(args.zonemap).is_file():
-        raise FileNotFoundError(f"{args.zonemap} does not exists.")
-    zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
+        wellcompletiondata_df = pd.DataFrame()
+        logger.info(f"Zonemap not found: {args.zonemap}")
+    else:
+        zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
+        wellcompletiondata_df = df(eclfiles, zonemap, args.use_wellconnstatus)
+        logger.info(
+            f"Well completion data successfully generated with zonemap: {zonemap}"
+        )
 
-    wellcompletiondata_df = df(eclfiles, zonemap, args.use_wellconnstatus)
     write_dframe_stdout_file(
         wellcompletiondata_df, args.output, index=False, caller_logger=logger
     )

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -37,7 +37,7 @@ def test_eightcells_with_wellconnstatus():
             {
                 "WELL": "OP1",
                 "ZONE": "Upper",
-                "DATE": datetime.datetime(year=2000, month=1, day=2),
+                "DATE": datetime(year=2000, month=1, day=2),
                 "KH": -1,
                 "OP/SH": "OPEN",
             }
@@ -61,7 +61,7 @@ def test_eightcells_without_wellconnstatus():
             {
                 "WELL": "OP1",
                 "ZONE": "Upper",
-                "DATE": datetime.datetime(year=2000, month=1, day=1),
+                "DATE": datetime(year=2000, month=1, day=1),
                 "KH": -1,
                 "OP/SH": "OPEN",
             }
@@ -173,12 +173,78 @@ def test_merge_compdat_and_connstatus():
     pd.testing.assert_frame_equal(df_result, df_output, check_like=True)
 
 
-CASES = ()
+CASES = [
+    # Simple case. Two layers in the same zone. Only the open one will be aggregated and
+    # the resulting KH is therefore 1.
+    pytest.param(
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"],
+            data=[
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 1, "OPEN", 1, "Z1"],
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 2, "SHUT", 1, "Z1"],
+            ],
+        ),
+        pd.DataFrame(
+            columns=["DATE", "WELL", "OP/SH", "KH", "ZONE"],
+            data=[[datetime(year=2000, month=1, day=1), "OP1", "OPEN", 1, "Z1"]],
+        ),
+        id="Simple case",
+    ),
+    # Case with multiple dates. KH is 0 in OP2 because is it SHUT in all layers.
+    pytest.param(
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"],
+            data=[
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 1, "OPEN", 1, "Z1"],
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 2, "SHUT", 1, "Z1"],
+                [datetime(year=2000, month=2, day=1), "OP1", 1, 1, 1, "SHUT", 1, "Z1"],
+                [datetime(year=2000, month=2, day=1), "OP1", 1, 1, 2, "SHUT", 1, "Z1"],
+            ],
+        ),
+        pd.DataFrame(
+            columns=["DATE", "WELL", "OP/SH", "KH", "ZONE"],
+            data=[
+                [datetime(year=2000, month=1, day=1), "OP1", "OPEN", 1, "Z1"],
+                [datetime(year=2000, month=2, day=1), "OP1", "SHUT", 0, "Z1"],
+            ],
+        ),
+        id="Multiple dates",
+    ),
+    # Case with multiple wells and zones.
+    pytest.param(
+        pd.DataFrame(
+            columns=["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"],
+            data=[
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 1, "OPEN", 1, "Z1"],
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 2, "OPEN", 1, "Z1"],
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 3, "OPEN", 1, "Z2"],
+                [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 4, "OPEN", 1, "Z3"],
+                [datetime(year=2000, month=1, day=1), "OP2", 1, 1, 5, "OPEN", 1, "Z4"],
+                [datetime(year=2000, month=1, day=1), "OP2", 1, 1, 6, "OPEN", 1, "Z4"],
+                [datetime(year=2000, month=1, day=1), "OP2", 1, 1, 7, "OPEN", 1, "Z4"],
+                [datetime(year=2000, month=1, day=1), "OP2", 1, 1, 8, "OPEN", 1, "Z5"],
+            ],
+        ),
+        pd.DataFrame(
+            columns=["DATE", "WELL", "OP/SH", "KH", "ZONE"],
+            data=[
+                [datetime(year=2000, month=1, day=1), "OP1", "OPEN", 2, "Z1"],
+                [datetime(year=2000, month=1, day=1), "OP1", "OPEN", 1, "Z2"],
+                [datetime(year=2000, month=1, day=1), "OP1", "OPEN", 1, "Z3"],
+                [datetime(year=2000, month=1, day=1), "OP2", "OPEN", 3, "Z4"],
+                [datetime(year=2000, month=1, day=1), "OP2", "OPEN", 1, "Z5"],
+            ],
+        ),
+        id="Multiple wells and zones",
+    ),
+]
 
 
 @pytest.mark.parametrize("compdat_df, wellcompletion_df", CASES)
 def test_aggregate_layer_to_zone(compdat_df, wellcompletion_df):
     """Descr"""
+    print(compdat_df)
+    print(wellcompletion_df)
     pd.testing.assert_frame_equal(
-        _aggregate_layer_to_zone(compdat_df), wellcompletion_df
+        _aggregate_layer_to_zone(compdat_df), wellcompletion_df, check_like=True
     )

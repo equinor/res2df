@@ -14,10 +14,11 @@ from ecl2df.wellcompletiondata import (
 
 try:
     import opm  # noqa
-
-    HAVE_OPM = True
 except ImportError:
-    HAVE_OPM = False
+    pytest.skip(
+        "OPM is not installed",
+        allow_module_level=True,
+    )
 
 TESTDIR = Path(__file__).absolute().parent
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")

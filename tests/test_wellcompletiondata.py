@@ -243,7 +243,7 @@ CASES = [
 
 @pytest.mark.parametrize("compdat_df, wellcompletion_df", CASES)
 def test_aggregate_layer_to_zone(compdat_df, wellcompletion_df):
-    """Descr"""
+    """Tests the _aggregate_layer_to_zone function in wellcompletionsdata"""
     print(compdat_df)
     print(wellcompletion_df)
     pd.testing.assert_frame_equal(

@@ -18,7 +18,24 @@ logger = logging.getLogger(__name__)
 def df(
     eclfiles: EclFiles, zonemap: Dict[int, str], use_wellconnstatus: bool
 ) -> pd.DataFrame:
-    """Info"""
+    """Aggregates compdat to zone level. If use_wellconnstatus is True,
+    the actual OP/SH status of a connection will be extracted from summary
+    data using the wellconnstatus module. If not, connection status is taken
+    directly from parsing the schedule file, using the compdat module.
+
+    The aggregation is done according to the following rules. A zone is
+    regarded as open if one or more connections are open, regardless of
+    if other connections are closed. And the KH is summed over open connections
+    only.
+
+    Args:
+        eclfiles; EclFiles object
+        zonemap: dictionary with layer->zone mapping
+        use_wellconnstatus: boolean
+
+    Returns:
+        pd.DataFrame with one row per unique combination of well, zone and date.
+    """
     compdat_df = compdat.df(eclfiles, zonemap=zonemap)
     if "ZONE" not in compdat_df.columns:
         logger.warning(
@@ -41,7 +58,16 @@ def df(
 
 
 def _aggregate_layer_to_zone(compdat_df: pd.DataFrame) -> pd.DataFrame:
-    """Descr"""
+    """Aggregates well completion data from layer to zone.
+
+    Args:
+        compdat_df: pd.DataFrame with compdat data. Must have the following columns:
+        DATE, WELL, OP/SH, KH and ZONE
+
+    Returns:
+        pd.DataFrame with one row per unique combination of well, zone and date.
+
+    """
     records = []
     for (well, zone, date), group_df in compdat_df.groupby(["WELL", "ZONE", "DATE"]):
         open_compl_df = group_df[group_df["OP/SH"] == "OPEN"]
@@ -77,6 +103,14 @@ def _merge_compdat_and_connstatus(
     function significantly)
     * if connection status is missing for a realization, but compdat exists, compdat
     will also be ignored.
+
+    Args:
+        compdat_df: pd.DataFrame with compdat data, from parsing the sch file
+        wellconnstatus_df: pd.DataFrame with well connection status data, extracted
+        from summary data
+
+    Returns:
+        pd.DataFrame with one row per unique combination of well, zone and date.
     """
     match_on = ["WELL", "I", "J", "K1"]
     wellconnstatus_df.rename({"K": "K1"}, axis=1, inplace=True)

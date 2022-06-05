@@ -3,9 +3,11 @@
 import argparse
 import logging
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import pandas as pd
+import pyarrow
+import pyarrow.feather
 
 from ecl2df import common, compdat, getLogger_ecl2csv, wellconnstatus
 from ecl2df.eclfiles import EclFiles
@@ -135,6 +137,30 @@ def _merge_compdat_and_connstatus(
     return dframe
 
 
+def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
+    """Construct a pyarrow table from dataframe with well
+    completion data.
+
+    The index in the dataframe will be ignored
+
+    32-bit types will be used for integers and floats
+    """
+    field_list: List[pyarrow.Field] = []
+    for colname in dframe.columns:
+        if colname == "DATE":
+            dtype = pyarrow.timestamp("ms")
+        elif pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
+            dtype = pyarrow.int32()
+        elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
+            dtype = pyarrow.string()
+        else:
+            dtype = pyarrow.float32()
+        field_list.append(pyarrow.field(colname, dtype))
+
+    schema = pyarrow.schema(field_list)
+    return pyarrow.Table.from_pandas(dframe, schema=schema, preserve_index=False)
+
+
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers.
 
@@ -160,7 +186,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
             "Name of output csv file. Use '-' to write to stdout. "
             "Default 'well_completion_data.csv'"
         ),
-        default="well_completion_data.csv",
+        default="well_completion_data",
     )
     parser.add_argument(
         "--use_wellconnstatus",
@@ -186,6 +212,9 @@ def wellcompletiondata_main(args):
         logger.info(
             f"Well completion data successfully generated with zonemap: {zonemap}"
         )
+
+    if args.arrow:
+        wellcompletiondata_df = _df2pyarrow(wellcompletiondata_df)
 
     write_dframe_stdout_file(
         wellcompletiondata_df, args.output, index=False, caller_logger=logger

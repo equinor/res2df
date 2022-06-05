@@ -3,7 +3,7 @@
 import argparse
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 import pyarrow
@@ -18,7 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 def df(
-    eclfiles: EclFiles, zonemap: Dict[int, str], use_wellconnstatus: bool
+    eclfiles: EclFiles,
+    zonemap: Dict[int, str],
+    use_wellconnstatus: bool = False,
+    excl_well_startswith: Optional[str] = None,
 ) -> pd.DataFrame:
     """Aggregates compdat to zone level. If use_wellconnstatus is True,
     the actual OP/SH status of a connection will be extracted from summary
@@ -51,6 +54,15 @@ def df(
     compdat_df = compdat_df[["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"]]
     # Convert DATE column to datetime format
     compdat_df["DATE"] = pd.to_datetime(compdat_df["DATE"])
+
+    # If excl_well_startswith is not None, filter out wells that starts with this
+    if excl_well_startswith is not None:
+        keep_wells = [
+            well
+            for well in compdat_df["WELL"].unique()
+            if not well.startswith(excl_well_startswith)
+        ]
+        compdat_df = compdat_df[compdat_df["WELL"].isin(keep_wells)]
 
     if use_wellconnstatus:
         wellconnstatus_df = wellconnstatus.df(eclfiles)
@@ -193,6 +205,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         action="store_true",
         help="Use well connection status extracted from CPI* summary data.",
     )
+    parser.add_argument(
+        "--excl_well_startswith",
+        type=str,
+        help="Exludes wells that starts with this string from the export.",
+        default=None,
+    )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -208,7 +226,9 @@ def wellcompletiondata_main(args):
         logger.info(f"Zonemap not found: {args.zonemap}")
     else:
         zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
-        wellcompletiondata_df = df(eclfiles, zonemap, args.use_wellconnstatus)
+        wellcompletiondata_df = df(
+            eclfiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
+        )
         logger.info(
             f"Well completion data successfully generated with zonemap: {zonemap}"
         )

@@ -9,6 +9,7 @@ from ecl2df import common, compdat, wellcompletiondata
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wellcompletiondata import (
     _aggregate_layer_to_zone,
+    _excl_well_startswith,
     _merge_compdat_and_connstatus,
 )
 
@@ -244,8 +245,32 @@ CASES = [
 @pytest.mark.parametrize("compdat_df, wellcompletion_df", CASES)
 def test_aggregate_layer_to_zone(compdat_df, wellcompletion_df):
     """Tests the _aggregate_layer_to_zone function in wellcompletionsdata"""
-    print(compdat_df)
-    print(wellcompletion_df)
     pd.testing.assert_frame_equal(
         _aggregate_layer_to_zone(compdat_df), wellcompletion_df, check_like=True
+    )
+
+
+def test_excl_well_startswith():
+    """Tests the _excl_well_startswith function in wellcompletiondata.
+    Only the well that starts with R_ is filtered out.
+    """
+    input_df = pd.DataFrame(
+        columns=["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"],
+        data=[
+            [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 1, "OPEN", 1, "Z1"],
+            [datetime(year=2000, month=1, day=1), "R_OP1", 1, 1, 1, "OPEN", 1, "Z1"],
+            [datetime(year=2000, month=1, day=1), "OP1R_", 1, 1, 1, "OPEN", 1, "Z1"],
+        ],
+    )
+    expected_df = pd.DataFrame(
+        columns=["DATE", "WELL", "I", "J", "K1", "OP/SH", "KH", "ZONE"],
+        data=[
+            [datetime(year=2000, month=1, day=1), "OP1", 1, 1, 1, "OPEN", 1, "Z1"],
+            [datetime(year=2000, month=1, day=1), "OP1R_", 1, 1, 1, "OPEN", 1, "Z1"],
+        ],
+    )
+    pd.testing.assert_frame_equal(
+        _excl_well_startswith(input_df, "R_").reset_index(drop=True),
+        expected_df,
+        check_like=True,
     )

@@ -57,18 +57,25 @@ def df(
 
     # If excl_well_startswith is not None, filter out wells that starts with this
     if excl_well_startswith is not None:
-        keep_wells = [
-            well
-            for well in compdat_df["WELL"].unique()
-            if not well.startswith(excl_well_startswith)
-        ]
-        compdat_df = compdat_df[compdat_df["WELL"].isin(keep_wells)]
+        compdat_df = _excl_well_startswith(compdat_df, excl_well_startswith)
 
     if use_wellconnstatus:
         wellconnstatus_df = wellconnstatus.df(eclfiles)
         compdat_df = _merge_compdat_and_connstatus(compdat_df, wellconnstatus_df)
 
     return _aggregate_layer_to_zone(compdat_df)
+
+
+def _excl_well_startswith(
+    compdat_df: pd.DataFrame, excl_well_startswith: str
+) -> pd.DataFrame:
+    "Filters out rows where the well name startswith a given string"
+    keep_wells = [
+        well
+        for well in compdat_df["WELL"].unique()
+        if not well.startswith(excl_well_startswith)
+    ]
+    return compdat_df[compdat_df["WELL"].isin(keep_wells)]
 
 
 def _aggregate_layer_to_zone(compdat_df: pd.DataFrame) -> pd.DataFrame:

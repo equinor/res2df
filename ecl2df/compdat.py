@@ -986,7 +986,8 @@ def df(
     """Main function for Python API users
 
     Supports only COMPDAT information for now. Will
-    add a zone-name if a zonefile is found alongside
+    add a zone-name if a zonefile is found alongside.
+    If a zonemap is passed it will override the zonefile.
 
     Returns:
         pd.Dataframe with one row pr cell to well connection
@@ -1000,7 +1001,7 @@ def df(
         )
 
     if zonemap is None:
-        # If no zonemap is submittet, search for zonemap in default location
+        # If no zonemap is submitted, search for zonemap in default location
         zonemap = eclfiles.get_zonemap()
 
     if zonemap:

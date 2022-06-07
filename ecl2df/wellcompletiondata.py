@@ -69,7 +69,7 @@ def df(
 def _excl_well_startswith(
     compdat_df: pd.DataFrame, excl_well_startswith: str
 ) -> pd.DataFrame:
-    "Filters out rows where the well name startswith a given string"
+    """Filters out rows where the well name starts with a given string"""
     keep_wells = [
         well
         for well in compdat_df["WELL"].unique()

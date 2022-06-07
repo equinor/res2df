@@ -9,6 +9,7 @@ from ecl2df import common, compdat, wellcompletiondata
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wellcompletiondata import (
     _aggregate_layer_to_zone,
+    _df2pyarrow,
     _excl_well_startswith,
     _merge_compdat_and_connstatus,
 )
@@ -76,6 +77,16 @@ def test_eightcells_without_wellconnstatus():
         expected_dframe,
         check_dtype=False,
     )
+
+
+def test_df2pyarrow():
+    """Test that dataframe is conserved using _df2pyarrow"""
+    eclfiles = EclFiles(EIGHTCELLS)
+    df = wellcompletiondata.df(
+        eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
+    )
+    df["KH"] = df["KH"].astype(np.int32)
+    pd.testing.assert_frame_equal(df, _df2pyarrow(df).to_pandas(), check_like=True)
 
 
 def test_empty_zonemap():

@@ -215,6 +215,14 @@ def get_parser() -> argparse.ArgumentParser:
             "Each row represents a completion, aggregated from layer to zone."
         ),
     )
+    subparsers_dict["vfp"] = subparsers.add_parser(
+        "vfp",
+        help="Extract VFPINJ/VFPPROD data",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "Each row represent BHP value for given value of interpolation values"
+        ),
+    )
     subparsers_dict["wellconnstatus"] = subparsers.add_parser(
         "wellconnstatus",
         help="Extract well connection status",

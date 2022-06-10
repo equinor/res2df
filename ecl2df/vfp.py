@@ -346,13 +346,13 @@ UNITS = {VFPTYPE.VFPPROD: VFPPROD_UNITS, VFPTYPE.VFPINJ: VFPINJ_UNITS}
 TABTYPE = {VFPTYPE.VFPPROD: VFPPROD_TABTYPE, VFPTYPE.VFPINJ: VFPINJ_TABTYPE}
 
 
-def vfpprod2df(keyword: DeckKeyword) -> pd.DataFrame:
+def vfpprod2df(keyword: "opm.io.DeckKeyword") -> pd.DataFrame:
     """Return a dataframes of a single VFPPROD table from an Eclipse deck.
 
     Data from the VFPPROD keyword are stacked into a Pandas Dataframe
 
      Args:
-         deck:    Eclipse deck
+         keyword:    Eclipse deck keyword
     """
 
     # Number of records in keyword
@@ -542,13 +542,13 @@ def vfpprod2df(keyword: DeckKeyword) -> pd.DataFrame:
     return df_bhp_stacked
 
 
-def vfpinj2df(keyword: DeckKeyword) -> pd.DataFrame:
+def vfpinj2df(keyword: "opm.io.DeckKeyword") -> pd.DataFrame:
     """Return a dataframes of a single VFPINJ table from an Eclipse deck
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
 
      Args:
-         deck:    Eclipse deck
+         keyword:    Eclipse deck keyword
     """
 
     # Number of record in keyword

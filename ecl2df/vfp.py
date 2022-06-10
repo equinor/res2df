@@ -6,12 +6,13 @@ Data can be extracted from a full Eclipse deck or from individual files.
 
 import argparse
 import logging
-from typing import Dict, List, Optional, Union, Any
-import pandas as pd
-import numpy as np
 import numbers
 import sys
 from enum import Enum
+from typing import Any, Dict, List, Optional, Union
+
+import numpy as np
+import pandas as pd
 
 try:
     # Needed for mypy
@@ -21,16 +22,9 @@ try:
 except ImportError:
     pass
 
-from ecl2df import EclFiles, getLogger_ecl2csv
-from ecl2df.common import (
-    parse_opmio_deckrecord,
-    write_dframe_stdout_file,
-    write_inc_stdout_file,
-    comment_formatter,
-    fill_reverse_parser as common_fill_reverse_parser,
-)
-
 from opm.io.deck import DeckKeyword
+
+from ecl2df import EclFiles, common, getLogger_ecl2csv
 
 logger = logging.getLogger(__name__)
 
@@ -363,14 +357,12 @@ def vfpprod2df(keyword: DeckKeyword) -> pd.DataFrame:
     num_rec = len(keyword)
 
     # Parse records with basic information and interpolation ranges
-    print(keyword.name)
-    print(keyword)
-    basic_record = parse_opmio_deckrecord(keyword[0], "VFPPROD", "records", 0)
-    flow_record = parse_opmio_deckrecord(keyword[1], "VFPPROD", "records", 1)
-    thp_record = parse_opmio_deckrecord(keyword[2], "VFPPROD", "records", 2)
-    wfr_record = parse_opmio_deckrecord(keyword[3], "VFPPROD", "records", 3)
-    gfr_record = parse_opmio_deckrecord(keyword[4], "VFPPROD", "records", 4)
-    alq_record = parse_opmio_deckrecord(keyword[5], "VFPPROD", "records", 5)
+    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPPROD", "records", 0)
+    flow_record = common.parse_opmio_deckrecord(keyword[1], "VFPPROD", "records", 1)
+    thp_record = common.parse_opmio_deckrecord(keyword[2], "VFPPROD", "records", 2)
+    wfr_record = common.parse_opmio_deckrecord(keyword[3], "VFPPROD", "records", 3)
+    gfr_record = common.parse_opmio_deckrecord(keyword[4], "VFPPROD", "records", 4)
+    alq_record = common.parse_opmio_deckrecord(keyword[5], "VFPPROD", "records", 5)
 
     flow_values: Union[Any, List[float]]
     thp_values: Union[Any, List[float]]
@@ -443,7 +435,7 @@ def vfpprod2df(keyword: DeckKeyword) -> pd.DataFrame:
     # Extract tabulated values (BHP values)
     bhp_array_values: List[Any] = []
     for n in range(6, num_rec):
-        bhp_record = parse_opmio_deckrecord(keyword[n], "VFPPROD", "records", 6)
+        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPPROD", "records", 6)
         bhp_values: Union[Any, List[float]]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
@@ -474,15 +466,15 @@ def vfpprod2df(keyword: DeckKeyword) -> pd.DataFrame:
     df_bhp = pd.DataFrame(bhp_array_values)
 
     indextuples = [
-        ("PRESSURE", -1.0),
-        ("WFR", -1.0),
-        ("GFR", -1.0),
-        ("ALQ", -1.0),
+        ("PRESSURE", "DELETE"),
+        ("WFR", "DELETE"),
+        ("GFR", "DELETE"),
+        ("ALQ", "DELETE"),
     ]
 
     flow_vals: List[float] = [float(val) for val in flow_values]
     for flowvalue in flow_vals:
-        indextuples.append(("TAB", flowvalue))
+        indextuples.append(("TAB", str(flowvalue)))
 
     # Set the columns to a MultiIndex, to facilitate stacking
     df_bhp.columns = pd.MultiIndex.from_tuples(indextuples)
@@ -503,12 +495,13 @@ def vfpprod2df(keyword: DeckKeyword) -> pd.DataFrame:
     # Delete rows that does not belong to any flow rate (this is
     # possibly a by-product of not doing the stacking in an
     # optimal way)
-    df_bhp_stacked = df_bhp_stacked[df_bhp_stacked["level_1"] != -1.0]
+    df_bhp_stacked = df_bhp_stacked[df_bhp_stacked["level_1"] != "DELETE"]
 
     # Add correct column name for the flow values that we have stacked
     cols = list(df_bhp_stacked.columns)
     cols[cols.index("level_1")] = "RATE"
     df_bhp_stacked.columns = cols
+    df_bhp_stacked["RATE"] = df_bhp_stacked["RATE"].astype(float)
 
     # Add meta-data
     df_bhp_stacked["VFP_TYPE"] = "VFPPROD"
@@ -560,9 +553,9 @@ def vfpinj2df(keyword: DeckKeyword) -> pd.DataFrame:
     num_rec = len(keyword)
 
     # Parse records with basic information and interpolation ranges
-    basic_record = parse_opmio_deckrecord(keyword[0], "VFPINJ", "records", 0)
-    flow_record = parse_opmio_deckrecord(keyword[1], "VFPINJ", "records", 1)
-    thp_record = parse_opmio_deckrecord(keyword[2], "VFPINJ", "records", 2)
+    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPINJ", "records", 0)
+    flow_record = common.parse_opmio_deckrecord(keyword[1], "VFPINJ", "records", 1)
+    thp_record = common.parse_opmio_deckrecord(keyword[2], "VFPINJ", "records", 2)
 
     # Extract interpolation ranges
     flow_values: Union[Any, List[float]]
@@ -607,7 +600,7 @@ def vfpinj2df(keyword: DeckKeyword) -> pd.DataFrame:
     # Extract tabulated values (BHP values)
     bhp_array_values = []
     for n in range(3, num_rec):
-        bhp_record = parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
+        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
         bhp_values: Union[Any, List[float]]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
@@ -628,10 +621,10 @@ def vfpinj2df(keyword: DeckKeyword) -> pd.DataFrame:
 
     df_bhp = pd.DataFrame(bhp_array_values)
 
-    indextuples = [("PRESSURE", -1.0)]
+    indextuples = [("PRESSURE", "DELETE")]
 
     for flowvalue in flow_values:
-        indextuples.append(("TAB", flowvalue))
+        indextuples.append(("TAB", str(flowvalue)))
 
     # Set the columns to a MultiIndex, to facilitate stacking
     df_bhp.columns = pd.MultiIndex.from_tuples(indextuples)
@@ -652,12 +645,13 @@ def vfpinj2df(keyword: DeckKeyword) -> pd.DataFrame:
     # Delete rows that does not belong to any flow rate (this is
     # possibly a by-product of not doing the stacking in an
     # optimal way)
-    df_bhp_stacked = df_bhp_stacked[df_bhp_stacked["level_1"] != -1.0]
+    df_bhp_stacked = df_bhp_stacked[df_bhp_stacked["level_1"] != "DELETE"]
 
     # Add correct column name for the flow values that we have stacked
     cols = list(df_bhp_stacked.columns)
     cols[cols.index("level_1")] = "RATE"
     df_bhp_stacked.columns = cols
+    df_bhp_stacked["RATE"] = df_bhp_stacked["RATE"].astype(float)
 
     # Add meta-data
     df_bhp_stacked["VFP_TYPE"] = "VFPINJ"
@@ -1084,7 +1078,7 @@ def df2ecl_vfpprod(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     # Write dataframe to string with Eclipse format for VFPPROD
     ecl_str = "VFPPROD\n"
     if comment:
-        ecl_str += comment_formatter(comment)
+        ecl_str += common.comment_formatter(comment)
     else:
         ecl_str += "\n"
 
@@ -1208,7 +1202,7 @@ def df2ecl_vfpinj(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     # Write dataframe to string with Eclipse format for VFPINJ
     ecl_str = "VFPINJ\n"
     if comment:
-        ecl_str += comment_formatter(comment)
+        ecl_str += common.comment_formatter(comment)
     else:
         ecl_str += "\n"
 
@@ -1307,7 +1301,7 @@ def df2ecl(
     str_vfps = ""
 
     if comments and "master" in comments.keys():
-        str_vfps += comment_formatter(comments["master"])
+        str_vfps += common.comment_formatter(comments["master"])
     for str_vfp in strs_vfp:
         str_vfps += str_vfp
         str_vfps += "\n"
@@ -1380,7 +1374,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> eclipse include file"""
-    return common_fill_reverse_parser(parser, "VFPPROD, VFPINJ", "vfp.inc")
+    return common.fill_reverse_parser(parser, "VFPPROD, VFPINJ", "vfp.inc")
 
 
 def vfp_main(args) -> None:
@@ -1399,7 +1393,9 @@ def vfp_main(args) -> None:
     eclfiles = EclFiles(args.DATAFILE)
     dframe = df(eclfiles.get_ecldeck(), keywords=args.keywords)
     if args.output:
-        write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+        common.write_dframe_stdout_file(
+            dframe, args.output, index=False, caller_logger=logger
+        )
     logger.info("Parsed file %s for vfp.df" % (args.DATAFILE))
 
 
@@ -1412,4 +1408,4 @@ def vfp_reverse_main(args) -> None:
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2ecl(vfp_df, args.keywords)
     if args.output:
-        write_inc_stdout_file(inc_string, args.output)
+        common.write_inc_stdout_file(inc_string, args.output)

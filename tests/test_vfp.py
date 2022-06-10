@@ -30,7 +30,6 @@ def test_vfp2df():
 
     for vfpfile in VFPPRODFILES:
         vfp_filename = VFPDIR + vfpfile
-        print(vfp_filename)
         eclfiles = EclFiles(vfp_filename)
         vfp_df = vfp.df(eclfiles,keywords=['VFPPROD'])
         assert not vfp_df.empty
@@ -59,8 +58,6 @@ def test_df2ecl(tmp_path):
         disk_df = pd.read_csv(csv_filename)
         disk_df.index = vfp_df.index
         assert len(vfp_df) == len(disk_df)
-        print(vfp_df['RATE'])
-        print(disk_df['RATE'])
         pd.testing.assert_frame_equal(vfp_df, disk_df, check_dtype=False)
         
     for i, vfpfile in enumerate(VFPINJFILES):

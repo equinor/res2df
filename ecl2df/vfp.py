@@ -19,10 +19,12 @@ try:
 
     # pylint: disable=unused-import
     import opm.io
+
+    # This import is seemingly not used, but necessary for some attributes
+    # to be included in DeckItem objects.
+    from opm.io.deck import DeckKeyword
 except ImportError:
     pass
-
-from opm.io.deck import DeckKeyword
 
 from ecl2df import EclFiles, common, getLogger_ecl2csv
 

@@ -22,7 +22,7 @@ try:
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword    # noqa
+    from opm.io.deck import DeckKeyword  # noqa
 except ImportError:
     pass
 

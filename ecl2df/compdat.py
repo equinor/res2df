@@ -978,11 +978,16 @@ def compdat_main(args):
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
 
 
-def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFrame:
+def df(
+    eclfiles: EclFiles,
+    initvectors: Optional[List[str]] = None,
+    zonemap: Optional[Dict[int, str]] = None,
+) -> pd.DataFrame:
     """Main function for Python API users
 
     Supports only COMPDAT information for now. Will
-    add a zone-name if a zonefile is found alongside
+    add a zone-name if a zonefile is found alongside.
+    If a zonemap is passed it will override the zonefile.
 
     Returns:
         pd.Dataframe with one row pr cell to well connection
@@ -995,7 +1000,10 @@ def df(eclfiles: EclFiles, initvectors: Optional[List[str]] = None) -> pd.DataFr
             eclfiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
         )
 
-    zonemap = eclfiles.get_zonemap()
+    if zonemap is None:
+        # If no zonemap is submitted, search for zonemap in default location
+        zonemap = eclfiles.get_zonemap()
+
     if zonemap:
         logger.info("Merging zonemap into compdat")
         compdat_df = merge_zones(compdat_df, zonemap)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.16.3.dev3+g81a24ac documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev3+g81a24ac
+                0.16.3.dev4+g1cd9d88
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -1058,11 +1058,16 @@
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">initvectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span>
+    <span class="n">initvectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zonemap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Main function for Python API users</span>
 
 <span class="sd">    Supports only COMPDAT information for now. Will</span>
-<span class="sd">    add a zone-name if a zonefile is found alongside</span>
+<span class="sd">    add a zone-name if a zonefile is found alongside.</span>
+<span class="sd">    If a zonemap is passed it will override the zonefile.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.Dataframe with one row pr cell to well connection</span>
@@ -1075,7 +1080,10 @@
             <span class="n">eclfiles</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">,</span> <span class="n">initvectors</span><span class="p">,</span> <span class="n">ijknames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 
-    <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zonemap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># If no zonemap is submitted, search for zonemap in default location</span>
+        <span class="n">zonemap</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_zonemap</span><span class="p">()</span>
+
     <span class="k">if</span> <span class="n">zonemap</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Merging zonemap into compdat&quot;</span><span class="p">)</span>
         <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">merge_zones</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">)</span>

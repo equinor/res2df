@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2csv &mdash; ecl2df 0.16.3.dev3+g81a24ac documentation</title>
+  <title>ecl2csv &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev3+g81a24ac
+                0.16.3.dev4+g1cd9d88
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -112,14 +112,19 @@
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat13">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#wellconnstatus">wellconnstatus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wellcompletiondata">wellcompletiondata</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat13">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat14">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wellconnstatus">wellconnstatus</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat14">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat15">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#wcon">wcon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat15">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat16">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -168,10 +173,10 @@ the submodule (subcommand) from which you want functionality. Mandatory argument
 always an Eclipse deck or sometimes individual Eclipse include files, and
 there is usually an <code class="docutils literal notranslate"><span class="pre">--output</span></code> option to specify which file to dump
 the CSV to. If you want output to your terminal, use <code class="docutils literal notranslate"><span class="pre">-</span></code> as the output filename.</p>
-<p><p>ecl2csv (0.16.3.dev3+g81a24ac) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
+<p><p>ecl2csv (0.16.3.dev4+g1cd9d88) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecl2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
-               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">fipreports</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wellconnstatus</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
+               <span class="p">{</span><span class="n">grid</span><span class="p">,</span><span class="n">summary</span><span class="p">,</span><span class="n">nnc</span><span class="p">,</span><span class="n">faults</span><span class="p">,</span><span class="n">trans</span><span class="p">,</span><span class="n">pillars</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">rft</span><span class="p">,</span><span class="n">fipreports</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">compdat</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">gruptree</span><span class="p">,</span><span class="n">wellcompletiondata</span><span class="p">,</span><span class="n">wellconnstatus</span><span class="p">,</span><span class="n">wcon</span><span class="p">}</span>
                <span class="o">...</span>
 </pre></div>
 </div>
@@ -711,10 +716,14 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 </dl>
 </section>
 </section>
-<section id="wellconnstatus">
-<h3>wellconnstatus<a class="headerlink" href="#wellconnstatus" title="Permalink to this headline"></a></h3>
-<p>Each row represents an event where a well connection is changing status.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wellconnstatus</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+<section id="wellcompletiondata">
+<h3>wellcompletiondata<a class="headerlink" href="#wellcompletiondata" title="Permalink to this headline"></a></h3>
+<p>Each row represents a completion, aggregated from layer to zone.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wellcompletiondata</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">zonemap</span> <span class="n">ZONEMAP</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span>
+                           <span class="p">[</span><span class="o">--</span><span class="n">use_wellconnstatus</span><span class="p">]</span>
+                           <span class="p">[</span><span class="o">--</span><span class="n">excl_well_startswith</span> <span class="n">EXCL_WELL_STARTSWITH</span><span class="p">]</span>
+                           <span class="p">[</span><span class="o">--</span><span class="n">arrow</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                           <span class="n">DATAFILE</span>
 </pre></div>
 </div>
 <section id="Positional Arguments_repeat13">
@@ -727,6 +736,49 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 </section>
 <section id="Named Arguments_repeat14">
 <h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat14" title="Permalink to this headline"></a></h4>
+<dl class="option-list">
+<dt><kbd>--zonemap</kbd></dt>
+<dd><p>Name of lyr file with layer-&gt;zone mapping</p>
+<p>Default: “rms/output/zone/simgrid_zone_layer_mapping.lyr”</p>
+</dd>
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Name of output csv file. Use ‘-’ to write to stdout. Default ‘well_completion_data.csv’</p>
+<p>Default: “well_completion_data”</p>
+</dd>
+<dt><kbd>--use_wellconnstatus</kbd></dt>
+<dd><p>Use well connection status extracted from CPI* summary data.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--excl_well_startswith</kbd></dt>
+<dd><p>Exludes wells that starts with this string from the export.</p>
+</dd>
+<dt><kbd>--arrow</kbd></dt>
+<dd><p>Write to pyarrow format</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="wellconnstatus">
+<h3>wellconnstatus<a class="headerlink" href="#wellconnstatus" title="Permalink to this headline"></a></h3>
+<p>Each row represents an event where a well connection is changing status.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wellconnstatus</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
+</pre></div>
+</div>
+<section id="Positional Arguments_repeat14">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat14" title="Permalink to this headline"></a></h4>
+<dl class="option-list">
+<dt><kbd>DATAFILE</kbd></dt>
+<dd><p>Name of Eclipse DATA file. UNSMRY file must lie alongside.</p>
+</dd>
+</dl>
+</section>
+<section id="Named Arguments_repeat15">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat15" title="Permalink to this headline"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file. Use ‘-’ to write to stdout. Default ‘well_connection_status.csv’</p>
@@ -745,16 +797,16 @@ the CSV to. If you want output to your terminal, use <code class="docutils liter
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecl2csv</span> <span class="n">wcon</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat14">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat14" title="Permalink to this headline"></a></h4>
+<section id="Positional Arguments_repeat15">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat15" title="Permalink to this headline"></a></h4>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Name of Eclipse DATA file or Eclipse include file.</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments_repeat15">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat15" title="Permalink to this headline"></a></h4>
+<section id="Named Arguments_repeat16">
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat16" title="Permalink to this headline"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file.</p>

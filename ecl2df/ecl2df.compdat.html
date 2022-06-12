@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.16.3.dev3+g81a24ac documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev3+g81a24ac
+                0.16.3.dev4+g1cd9d88
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -77,6 +77,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.trans.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.trans</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.version.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.version</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wcon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wellcompletiondata.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wellcompletiondata</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.wellconnstatus.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wellconnstatus</span></code></a></li>
 </ul>
 </li>
@@ -201,10 +202,11 @@ like K1 and K2 in COMPDAT and in WELSEGS. Defaults to True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.compdat.df">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initvectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.compdat.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initvectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/compdat.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.compdat.df" title="Permalink to this definition"></a></dt>
 <dd><p>Main function for Python API users</p>
 <p>Supports only COMPDAT information for now. Will
-add a zone-name if a zonefile is found alongside</p>
+add a zone-name if a zonefile is found alongside.
+If a zonemap is passed it will override the zonefile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>

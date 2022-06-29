@@ -1416,8 +1416,8 @@ def vfp_main(args) -> None:
         __name__, vars(args)
     )
     if args.keyword:
-        if keyword not in SUPPORTED_KEYWORDS:
-            raise ValueError(f"Keyword argument {keyword} not supported")
+        if args.keyword not in SUPPORTED_KEYWORDS:
+            raise ValueError(f"Keyword argument {args.keyword} not supported")
     if not args.output:
         logger.info("Nothing to do. Set --output")
         sys.exit(0)

@@ -341,13 +341,13 @@ VFPINJ_UNITS = {
 
 
 def deckrecord2list(
-    record:      "opm.libopmcommon_python.DeckRecord",
-    keyword:     str,
+    record: "opm.libopmcommon_python.DeckRecord",
+    keyword: str,
     recordindex: int,
-    recordname:  str,
+    recordname: str,
 ) -> Union[Any, List[float]]:
     """
-    Parse an opm.libopmcommon_python.DeckRecord belonging to a certain keyword 
+    Parse an opm.libopmcommon_python.DeckRecord belonging to a certain keyword
     and return as list of numbers
 
     Args:
@@ -373,28 +373,28 @@ def deckrecord2list(
 
     return values
 
-def vfptable2df(index_names_list:  List[str], 
-                index_values_list: List[List[float]],
-                flow_values_list:  List[float],
-                table_values_list: List[List[float]],
-)->pd.DataFrame:
+
+def vfptable2df(
+    index_names_list: List[str],
+    index_values_list: List[List[float]],
+    flow_values_list: List[float],
+    table_values_list: List[List[float]],
+) -> pd.DataFrame:
     """Return a dataframe from a list of interpolation ranges and tabulated values
 
-     Args:
-         index_names_list:  List with name of each interpolated 
-                            quantity (i.e. THP, WFR, GFR, ALQ)
-         index_values_list: List of list with values for 
-                            each interpolated quantity for
-                            each row in vfp table (each record)
-                            (dim (no index names) x (no records))
-         flow_values_list:  List of flow values (dim (no flow_values))
-         table_values_list: List of list with tabulated values
-                            (dim (no records) x  (no flow_values))
+    Args:
+        index_names_list:  List with name of each interpolated
+                           quantity (i.e. THP, WFR, GFR, ALQ)
+        index_values_list: List of list with values for
+                           each interpolated quantity for
+                           each row in vfp table (each record)
+                           (dim (no index names) x (no records))
+        flow_values_list:  List of flow values (dim (no flow_values))
+        table_values_list: List of list with tabulated values
+                           (dim (no records) x  (no flow_values))
     """
     if len(index_names_list) != len(index_values_list):
-        raise ValueError(
-            "Number of index names not equal to number of index lists"
-        )
+        raise ValueError("Number of index names not equal to number of index lists")
     for index_values in index_values_list:
         if len(index_values) != len(table_values_list):
             raise ValueError(
@@ -408,16 +408,15 @@ def vfptable2df(index_names_list:  List[str],
 
     df_vfptable = pd.DataFrame(table_values_list)
     no_indices = len(index_names_list)
-    no_table_records = len(table_values_list)
 
     # insert index values as first columns in dataframe
-    for i in range(0,no_indices):
-        df_vfptable.insert(i,index_names_list[i],index_values_list[i])
+    for i in range(0, no_indices):
+        df_vfptable.insert(i, index_names_list[i], index_values_list[i])
 
     #  create multi-index for columns
     indextuples = []
     for index_name in index_names_list:
-        indextuples.append((index_name,"DELETE"))
+        indextuples.append((index_name, "DELETE"))
     for flowvalue in flow_values_list:
         indextuples.append(("TAB", str(flowvalue)))
 
@@ -440,7 +439,9 @@ def vfptable2df(index_names_list:  List[str],
     # Delete rows that does not belong to any flow rate (this is
     # possibly a by-product of not doing the stacking in an
     # optimal way)
-    df_vfptable_stacked = df_vfptable_stacked[df_vfptable_stacked["level_1"] != "DELETE"]
+    df_vfptable_stacked = df_vfptable_stacked[
+        df_vfptable_stacked["level_1"] != "DELETE"
+    ]
 
     # Add correct column name for the flow values that we have stacked
     cols = list(df_vfptable_stacked.columns)
@@ -449,6 +450,7 @@ def vfptable2df(index_names_list:  List[str],
     df_vfptable_stacked["RATE"] = df_vfptable_stacked["RATE"].astype(float)
 
     return df_vfptable_stacked
+
 
 def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
     """Return a dataframes of a single VFPPROD table from an Eclipse deck.
@@ -548,12 +550,10 @@ def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
         bhp_table_values.append(bhp_values)
 
     # create stacked dataframe from VFP table values
-    index_names = ['PRESSURE','WFR','GFR','ALQ']
-    index_values = [thp_values_list,wfr_values_list,gfr_values_list,alq_values_list]
-    df_bhp_stacked = vfptable2df(index_names,
-                                 index_values,
-                                 flow_values,
-                                 bhp_table_values
+    index_names = ["PRESSURE", "WFR", "GFR", "ALQ"]
+    index_values = [thp_values_list, wfr_values_list, gfr_values_list, alq_values_list]
+    df_bhp_stacked = vfptable2df(
+        index_names, index_values, flow_values, bhp_table_values
     )
 
     # Add meta-data
@@ -591,7 +591,7 @@ def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
     ]
 
     # reset index (not used other than tests)
-    df_bhp_stacked.reset_index(inplace=True,drop=True)
+    df_bhp_stacked.reset_index(inplace=True, drop=True)
     return df_bhp_stacked
 
 
@@ -664,12 +664,10 @@ def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
         bhp_table_values.append(bhp_values)
 
     # create stacked dataframe from VFP table values
-    index_names = ['PRESSURE']
+    index_names = ["PRESSURE"]
     index_values = [thp_values_list]
-    df_bhp_stacked = vfptable2df(index_names,
-                                 index_values,
-                                 flow_values,
-                                 bhp_table_values
+    df_bhp_stacked = vfptable2df(
+        index_names, index_values, flow_values, bhp_table_values
     )
 
     # Add meta-data
@@ -698,13 +696,13 @@ def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
     ]
 
     # reset index (not used other than tests)
-    df_bhp_stacked.reset_index(inplace=True,drop=True)
+    df_bhp_stacked.reset_index(inplace=True, drop=True)
     return df_bhp_stacked
 
 
 def dfs(
     deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
-    keyword: "VFPPROD",
+    keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
 ) -> List[pd.DataFrame]:
     """Produce a list of dataframes of vfp tables from a deck
@@ -729,7 +727,7 @@ def dfs(
 
     vfpnumbers = None
     if vfpnumbers_str:
-         vfpnumbers = string2intlist(str(vfpnumbers_str))
+        vfpnumbers = string2intlist(str(vfpnumbers_str))
 
     dfs_vfp = []
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
@@ -739,17 +737,17 @@ def dfs(
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
                 df_vfpprod = vfpprod2df(deck_keyword)
-                if not vfpnumbers or df_vfpprod.loc[0,'TABLE_NUMBER'] in vfpnumbers:
+                if not vfpnumbers or df_vfpprod.loc[0, "TABLE_NUMBER"] in vfpnumbers:
                     dfs_vfp.append(df_vfpprod)
             elif deck_keyword.name == "VFPINJ":
                 df_vfpinj = vfpinj2df(deck_keyword)
-                if not vfpnumbers or df_vfpinj.loc[0,'TABLE_NUMBER'] in vfpnumbers:
+                if not vfpnumbers or df_vfpinj.loc[0, "TABLE_NUMBER"] in vfpnumbers:
                     dfs_vfp.append(df_vfpinj)
 
     return dfs_vfp
 
 
-def string2intlist(list_def_str:str)->List[int]:
+def string2intlist(list_def_str: str) -> List[int]:
     """Produce a list of int from input string
 
     Args:
@@ -758,9 +756,9 @@ def string2intlist(list_def_str:str)->List[int]:
     """
     list = []
     list_def = list_def_str.strip().strip("[").strip("]")
-    if list_def.strip(): 
+    if list_def.strip():
         list_items = []
-        if ',' in list_def:
+        if "," in list_def:
             list_items = list_def.split(",")
         else:
             list_items = [list_def]
@@ -773,6 +771,7 @@ def string2intlist(list_def_str:str)->List[int]:
                 list.append(int(item))
 
     return list
+
 
 def write_eclipse_comment(comment: str, max_char_per_line: int = 72) -> str:
     """Produce a string representing comment in Eclipse file
@@ -911,6 +910,7 @@ def write_vfp_range(
     ecl_str += "\n"
 
     return ecl_str
+
 
 def write_vfpprod_table(
     table: pd.DataFrame,
@@ -1262,7 +1262,7 @@ def df2ecl_vfpinj(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 def df2ecls_vfp(
     dframe: pd.DataFrame,
-    keyword: 'VFPPROD',
+    keyword: str = "VFPPROD",
     comments: Optional[Dict[str, str]] = None,
 ) -> List[str]:
     """Produce a list of strings defining VFPPROD/VFPINJ Eclipse input from a dataframe
@@ -1280,9 +1280,7 @@ def df2ecls_vfp(
         return []
 
     if keyword not in SUPPORTED_KEYWORDS:
-            raise ValueError(
-                f"Given keyword {keyword} is not in supported keywords"
-            )
+        raise ValueError(f"Given keyword {keyword} is not in supported keywords")
 
     vfp_strs = []
     vfp_numbers = dframe["TABLE_NUMBER"].unique()
@@ -1290,14 +1288,14 @@ def df2ecls_vfp(
         df_vfp = dframe[dframe["TABLE_NUMBER"] == vfpno]
         if np.all(df_vfp["VFP_TYPE"] == keyword):
             if comments and keyword in comments.keys():
-                if keyword == 'VFPPROD':
+                if keyword == "VFPPROD":
                     vfp_strs.append(df2ecl_vfpprod(df_vfp, comments["VFPPROD"]))
-                elif keyword == 'VFPINJ':
+                elif keyword == "VFPINJ":
                     vfp_strs.append(df2ecl_vfpinj(df_vfp, comments["VFPINJ"]))
             else:
-                if keyword == 'VFPPROD':
+                if keyword == "VFPPROD":
                     vfp_strs.append(df2ecl_vfpprod(df_vfp))
-                elif keyword == 'VFPINJ':
+                elif keyword == "VFPINJ":
                     vfp_strs.append(df2ecl_vfpinj(df_vfp))
         else:
             raise ValueError(
@@ -1309,8 +1307,8 @@ def df2ecls_vfp(
 
 
 def df2ecl(
-    dframe:   pd.DataFrame,
-    keyword:  'VFPPROD',
+    dframe: pd.DataFrame,
+    keyword: str = "VFPPROD",
     comments: Optional[Dict[str, str]] = None,
     filename: Optional[str] = None,
 ) -> str:
@@ -1345,8 +1343,8 @@ def df2ecl(
 
 def df(
     deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
-    keyword: 'VFPPROD',
-    vfpnumbers_str: Optional[str] = None
+    keyword: str = "VFPPROD",
+    vfpnumbers_str: Optional[str] = None,
 ) -> pd.DataFrame:
     """Produce a dataframes of all vfp tables from a deck
 
@@ -1368,7 +1366,7 @@ def df(
         deck = EclFiles.str2deck(deck)
 
     # Extract all VFPROD/VFPINJ as separate dataframes
-    dfs_vfp = dfs(deck, keyword,vfpnumbers_str)
+    dfs_vfp = dfs(deck, keyword, vfpnumbers_str)
     # Concat all dataframes into one dataframe
     if dfs_vfp:
         return pd.concat(dfs_vfp)
@@ -1391,9 +1389,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "-k",
-        "--keywords",
-        nargs="+",
-        help="List of VFP keywords to include, i.e. VFPPROD/VFPINJ",
+        "--keyword",
+        type=str,
+        help="VFP keywords to include, i.e. VFPPROD or VFPINJ",
         default=None,
     )
     parser.add_argument(
@@ -1417,10 +1415,9 @@ def vfp_main(args) -> None:
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    if args.keywords:
-        for keyword in args.keywords:
-            if keyword not in SUPPORTED_KEYWORDS:
-                raise ValueError(f"Keyword argument {keyword} not supported")
+    if args.keyword:
+        if keyword not in SUPPORTED_KEYWORDS:
+            raise ValueError(f"Keyword argument {keyword} not supported")
     if not args.output:
         logger.info("Nothing to do. Set --output")
         sys.exit(0)
@@ -1429,7 +1426,7 @@ def vfp_main(args) -> None:
         vfpnumbers = str(args.vfpnumbers)
 
     eclfiles = EclFiles(args.DATAFILE)
-    dframe = df(eclfiles.get_ecldeck(), keywords=args.keywords, vfpnumbers=vfpnumbers)
+    dframe = df(eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers)
     if args.output:
         common.write_dframe_stdout_file(
             dframe, args.output, index=False, caller_logger=logger
@@ -1444,6 +1441,6 @@ def vfp_reverse_main(args) -> None:
     )
     vfp_df = pd.read_csv(args.csvfile)
     logger.info("Parsed {args.csvfile}")
-    inc_string = df2ecl(vfp_df, args.keywords)
+    inc_string = df2ecl(vfp_df, args.keyword)
     if args.output:
         common.write_inc_stdout_file(inc_string, args.output)

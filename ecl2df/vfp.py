@@ -374,7 +374,7 @@ def deckrecord2list(
     return values
 
 
-def vfptable2df(
+def _vfptable2df(
     index_names_list: List[str],
     index_values_list: List[List[float]],
     flow_values_list: List[float],
@@ -452,13 +452,17 @@ def vfptable2df(
     return df_vfptable_stacked
 
 
-def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
+def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword",
+               vfpnumbers_str: Optional[str] = None,
+) -> pd.DataFrame:
     """Return a dataframes of a single VFPPROD table from an Eclipse deck.
 
     Data from the VFPPROD keyword are stacked into a Pandas Dataframe
 
      Args:
-         keyword:    Eclipse deck keyword
+         keyword:        Eclipse deck keyword
+         vfpnumbers_str: String with list of vfp table numbers to extract.
+                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
     # Number of records in keyword
@@ -469,6 +473,10 @@ def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
 
     # Extract basic table information
     table = int(basic_record["TABLE"])
+    if vfpnumbers_str:
+        vfpnumbers = _string2intlist(vfpnumbers_str)
+        if table not in vfpnumbers:
+            return pd.DataFrame()
     datum = float(basic_record["DATUM_DEPTH"])
     rate = VFPPROD_FLO.GAS
     if basic_record["RATE_TYPE"]:
@@ -552,7 +560,7 @@ def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
     # create stacked dataframe from VFP table values
     index_names = ["PRESSURE", "WFR", "GFR", "ALQ"]
     index_values = [thp_values_list, wfr_values_list, gfr_values_list, alq_values_list]
-    df_bhp_stacked = vfptable2df(
+    df_bhp_stacked = _vfptable2df(
         index_names, index_values, flow_values, bhp_table_values
     )
 
@@ -591,17 +599,20 @@ def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
     ]
 
     # reset index (not used other than tests)
-    df_bhp_stacked.reset_index(inplace=True, drop=True)
-    return df_bhp_stacked
+    return df_bhp_stacked.reset_index(drop=True)
 
 
-def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
+def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword",
+              vfpnumbers_str: Optional[str] = None,
+) -> pd.DataFrame:
     """Return a dataframes of a single VFPINJ table from an Eclipse deck
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
 
      Args:
-         keyword:    Eclipse deck keyword
+         keyword:        Eclipse deck keyword
+         vfpnumbers_str: String with list of vfp table numbers to extract.
+                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
     # Number of record in keyword
@@ -612,6 +623,10 @@ def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
 
     # Extract basic table information
     table = basic_record["TABLE"]
+    if vfpnumbers_str:
+        vfpnumbers = _string2intlist(vfpnumbers_str)
+        if table not in vfpnumbers:
+            return pd.DataFrame()
     datum = basic_record["DATUM_DEPTH"]
     rate = VFPINJ_FLO.GAS
     if basic_record["RATE_TYPE"]:
@@ -666,7 +681,7 @@ def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword") -> pd.DataFrame:
     # create stacked dataframe from VFP table values
     index_names = ["PRESSURE"]
     index_values = [thp_values_list]
-    df_bhp_stacked = vfptable2df(
+    df_bhp_stacked = _vfptable2df(
         index_names, index_values, flow_values, bhp_table_values
     )
 
@@ -725,10 +740,6 @@ def dfs(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
-    vfpnumbers = None
-    if vfpnumbers_str:
-        vfpnumbers = string2intlist(str(vfpnumbers_str))
-
     dfs_vfp = []
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
@@ -736,18 +747,18 @@ def dfs(
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                df_vfpprod = vfpprod2df(deck_keyword)
-                if not vfpnumbers or df_vfpprod.loc[0, "TABLE_NUMBER"] in vfpnumbers:
+                df_vfpprod = vfpprod2df(deck_keyword,vfpnumbers_str)
+                if not df_vfpprod.empty:
                     dfs_vfp.append(df_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                df_vfpinj = vfpinj2df(deck_keyword)
-                if not vfpnumbers or df_vfpinj.loc[0, "TABLE_NUMBER"] in vfpnumbers:
+                df_vfpinj = vfpinj2df(deck_keyword,vfpnumbers_str)
+                if not df_vfpinj.empty:
                     dfs_vfp.append(df_vfpinj)
 
     return dfs_vfp
 
 
-def string2intlist(list_def_str: str) -> List[int]:
+def _string2intlist(list_def_str: str) -> List[int]:
     """Produce a list of int from input string
 
     Args:
@@ -1370,6 +1381,8 @@ def df(
     # Concat all dataframes into one dataframe
     if dfs_vfp:
         return pd.concat(dfs_vfp)
+    else:
+        return pd.DataFrame()
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

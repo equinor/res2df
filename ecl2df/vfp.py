@@ -452,8 +452,9 @@ def _vfptable2df(
     return df_vfptable_stacked
 
 
-def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword",
-               vfpnumbers_str: Optional[str] = None,
+def vfpprod2df(
+    keyword: "opm.libopmcommon_python.DeckKeyword",
+    vfpnumbers_str: Optional[str] = None,
 ) -> pd.DataFrame:
     """Return a dataframes of a single VFPPROD table from an Eclipse deck.
 
@@ -602,8 +603,9 @@ def vfpprod2df(keyword: "opm.libopmcommon_python.DeckKeyword",
     return df_bhp_stacked.reset_index(drop=True)
 
 
-def vfpinj2df(keyword: "opm.libopmcommon_python.DeckKeyword",
-              vfpnumbers_str: Optional[str] = None,
+def vfpinj2df(
+    keyword: "opm.libopmcommon_python.DeckKeyword",
+    vfpnumbers_str: Optional[str] = None,
 ) -> pd.DataFrame:
     """Return a dataframes of a single VFPINJ table from an Eclipse deck
 
@@ -747,11 +749,11 @@ def dfs(
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                df_vfpprod = vfpprod2df(deck_keyword,vfpnumbers_str)
+                df_vfpprod = vfpprod2df(deck_keyword, vfpnumbers_str)
                 if not df_vfpprod.empty:
                     dfs_vfp.append(df_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                df_vfpinj = vfpinj2df(deck_keyword,vfpnumbers_str)
+                df_vfpinj = vfpinj2df(deck_keyword, vfpnumbers_str)
                 if not df_vfpinj.empty:
                     dfs_vfp.append(df_vfpinj)
 

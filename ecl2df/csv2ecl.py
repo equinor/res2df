@@ -93,7 +93,8 @@ def get_parser() -> argparse.ArgumentParser:
         "vfp",
         help="Write VFPPROD/VFPINJ include files",
         description=(
-            "Write VFPPROD/VFPINJ include files from CSV files on " "the ecl2df format."
+            "Write VFPPROD/VFPINJ include files from CSV files on "
+            "the ecl2df format."
         ),
     )
     vfp.fill_reverse_parser(vfp_parser)

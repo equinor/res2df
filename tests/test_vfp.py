@@ -1037,7 +1037,7 @@ def test_ecl2df_vfpprod_no(test_input, expected):
 def test_ecl2df_vfpinj_no(test_input, expected):
     """Test ecl2df for files with multiple VFPINJ with vfp number argument"""
     deck = EclFiles.str2deck(test_input)
-    vfpdfs = vfp.dfs(deck, "VFPINJ", 4)
+    vfpdfs = vfp.dfs(deck, "VFPINJ", "4")
 
     # VFPINJ curve with VFP number 4 is curve 3 in file
     pd.testing.assert_frame_equal(vfpdfs[0], expected[3])

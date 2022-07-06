@@ -92,7 +92,8 @@ def _get_metadata(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for the well completion data export"""
     meta: Dict[str, Dict[str, Any]] = {}
     unitsystem = _get_ecl_unit_system(eclfiles)
-    kh_units = {"METRIC": "mD·m", "FIELD": "mD·ft", "LAB": "mD·cm", "PVT-M": "mD·m"}
+    kh_units = {"METRIC": "mDm", "FIELD": "mDft", "LAB": "mDcm", "PVT-M": "mDm"}
+    meta["KH"] = {}
     meta["KH"]["unit"] = kh_units[unitsystem]
     return meta
 

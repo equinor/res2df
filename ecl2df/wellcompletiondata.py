@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -15,6 +16,13 @@ from ecl2df.eclfiles import EclFiles
 from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
+
+
+class EclipseUnitSystem(str, Enum):
+    METRIC = "METRIC"
+    FIELD = "FIELD"
+    LAB = "LAB"
+    PVTM = "PVT-M"
 
 
 def df(
@@ -75,24 +83,30 @@ def df(
     return compdat_df
 
 
-def _get_ecl_unit_system(eclfiles: EclFiles) -> str:
+def _get_ecl_unit_system(eclfiles: EclFiles) -> EclipseUnitSystem:
     """Returns the unit system of an eclipse deck. The options are \
     METRIC, FIELD, LAB and PVT-M.
 
     If none of these are found, the function returns METRIC which is the
     default unit system in Eclipse.
     """
+    unit_systems = [unitsystem.value for unitsystem in EclipseUnitSystem]
     for keyword in eclfiles.get_ecldeck():
-        if keyword.name in ["METRIC", "FIELD", "LAB", "PVT-M"]:
-            return keyword.name
-    return "METRIC"
+        if keyword.name in unit_systems:
+            return EclipseUnitSystem(keyword.name)
+    return EclipseUnitSystem.METRIC
 
 
 def _get_metadata(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for the well completion data export"""
     meta: Dict[str, Dict[str, Any]] = {}
     unitsystem = _get_ecl_unit_system(eclfiles)
-    kh_units = {"METRIC": "mDm", "FIELD": "mDft", "LAB": "mDcm", "PVT-M": "mDm"}
+    kh_units = {
+        EclipseUnitSystem.METRIC: "mDm",
+        EclipseUnitSystem.FIELD: "mDft",
+        EclipseUnitSystem.LAB: "mDcm",
+        EclipseUnitSystem.PVTM: "mDm",
+    }
     meta["KH"] = {}
     meta["KH"]["unit"] = kh_units[unitsystem]
     return meta

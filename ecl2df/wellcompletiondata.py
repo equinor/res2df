@@ -3,7 +3,7 @@
 import argparse
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import pyarrow
@@ -63,7 +63,38 @@ def df(
         wellconnstatus_df = wellconnstatus.df(eclfiles)
         compdat_df = _merge_compdat_and_connstatus(compdat_df, wellconnstatus_df)
 
-    return _aggregate_layer_to_zone(compdat_df)
+    compdat_df = _aggregate_layer_to_zone(compdat_df)
+
+    # Add metadata as an attribute the dataframe
+    meta = _get_metadata(eclfiles)
+    # Slice meta to dataframe columns:
+    compdat_df.attrs["meta"] = {
+        column_key: meta[column_key] for column_key in compdat_df if column_key in meta
+    }
+
+    return compdat_df
+
+
+def _get_ecl_unit_system(eclfiles: EclFiles) -> str:
+    """Returns the unit system of an eclipse deck. The options are \
+    METRIC, FIELD, LAB and PVT-M.
+
+    If none of these are found, the function returns METRIC which is the
+    default unit system in Eclipse.
+    """
+    for keyword in eclfiles.get_ecldeck():
+        if keyword.name in ["METRIC", "FIELD", "LAB", "PVT-M"]:
+            return keyword.name
+    return "METRIC"
+
+
+def _get_metadata(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
+    """Provide metadata for the well completion data export"""
+    meta: Dict[str, Dict[str, Any]] = {}
+    unitsystem = _get_ecl_unit_system(eclfiles)
+    kh_units = {"METRIC": "mD·m", "FIELD": "mD·ft", "LAB": "mD·cm", "PVT-M": "mD·m"}
+    meta["KH"]["unit"] = kh_units[unitsystem]
+    return meta
 
 
 def _excl_well_startswith(
@@ -166,6 +197,14 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
     """
     field_list: List[pyarrow.Field] = []
     for colname in dframe.columns:
+        if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
+            # Boolean objects in the metadata dictionary must be converted to bytes:
+            field_metadata = {
+                bytes(key, encoding="ascii"): bytes(str(value), encoding="ascii")
+                for key, value in dframe.attrs["meta"][colname].items()
+            }
+        else:
+            field_metadata = {}
         if colname == "DATE":
             dtype = pyarrow.timestamp("ms")
         elif pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
@@ -174,7 +213,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
             dtype = pyarrow.string()
         else:
             dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype))
+        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
 
     schema = pyarrow.schema(field_list)
     return pyarrow.Table.from_pandas(dframe, schema=schema, preserve_index=False)

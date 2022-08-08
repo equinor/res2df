@@ -1407,14 +1407,14 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--keyword",
         type=str,
         help="VFP keywords to include, i.e. VFPPROD or VFPINJ",
-        default=None,
+        default="",
     )
     parser.add_argument(
         "-n",
         "--vfpnumbers",
-        nargs="+",
+        type=str,
         help="List of VFP table numbers to include. Format [1,2,4:10]",
-        default=None,
+        default="",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser

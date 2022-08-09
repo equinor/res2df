@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rft &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>rft &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -31,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -104,7 +105,7 @@
            <div itemprop="articleBody">
              
   <section id="rft">
-<h1>rft<a class="headerlink" href="#rft" title="Permalink to this headline"></a></h1>
+<h1>rft<a class="headerlink" href="#rft" title="Permalink to this heading"></a></h1>
 <p>rft will convert the binary RFT files from Eclipse to dataframes or CSV files,
 facilitating analysis of inflow and pressure for each connection the well
 has to the reservoir grid.</p>
@@ -117,7 +118,7 @@ through <code class="docutils literal notranslate"><span class="pre">--debug</sp
 of each wells topology, and also three extra CSV files printed for the last
 processed well.</p>
 <section id="eclipse-usage">
-<h2>Eclipse usage<a class="headerlink" href="#eclipse-usage" title="Permalink to this headline"></a></h2>
+<h2>Eclipse usage<a class="headerlink" href="#eclipse-usage" title="Permalink to this heading"></a></h2>
 <p>In order to get RFT files emitted from Eclipse, you need the <code class="docutils literal notranslate"><span class="pre">WRFTPLT</span></code> keyword
 in your DATA-file, example:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">WRFTPLT</span>
@@ -134,7 +135,7 @@ in your DATA-file, example:</p>
 specified date format).</p>
 </section>
 <section id="segment-and-icd-analysis">
-<h2>Segment and ICD analysis<a class="headerlink" href="#segment-and-icd-analysis" title="Permalink to this headline"></a></h2>
+<h2>Segment and ICD analysis<a class="headerlink" href="#segment-and-icd-analysis" title="Permalink to this heading"></a></h2>
 <p>For multisegment wells, reservoir connections (<code class="docutils literal notranslate"><span class="pre">CONxxxxx</span></code> data) are matched
 to their corresponding well segment (<code class="docutils literal notranslate"><span class="pre">SEGxxxxx</span></code> data) and the matched data is
 returned on the same row in the CSV file, facilitating cross-plot of data.</p>
@@ -145,14 +146,14 @@ This facilitates analysis of f.ex. pressure drop from the reservoir, in the ICD,
 and in the tubing.</p>
 </section>
 <section id="limitations">
-<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline"></a></h2>
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading"></a></h2>
 <p>Each segment must correspond to no more than one reservoir connection. This is the
 recommended way to model multisegment wells.</p>
 <p>Segments not related to a reservoir connection are not included in the outputted
 CSV file.</p>
 </section>
 <section id="analysis-examples">
-<h2>Analysis examples<a class="headerlink" href="#analysis-examples" title="Permalink to this headline"></a></h2>
+<h2>Analysis examples<a class="headerlink" href="#analysis-examples" title="Permalink to this heading"></a></h2>
 <p>Example illustrating inflow analysis of a two-branch well in a visual tool for
 tabular data. From the data in the emitted CSV, branch lengths can be computed,
 inflow pr. phase can be plotted versus segment index or depth, or phase flow
@@ -166,7 +167,7 @@ no segment data is available.</p>
 <a class="reference internal image-reference" href="../_images/injectoranalysis.png"><img alt="../_images/injectoranalysis.png" src="../_images/injectoranalysis.png" style="width: 200px;" /></a>
 </section>
 <section id="column-names">
-<h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline"></a></h2>
+<h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this heading"></a></h2>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Column names and explanations</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>

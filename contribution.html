@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to ecl2df &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>Contributing to ecl2df &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -31,7 +32,7 @@
             <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -88,11 +89,11 @@
            <div itemprop="articleBody">
              
   <section id="contributing-to-ecl2df">
-<h1>Contributing to ecl2df<a class="headerlink" href="#contributing-to-ecl2df" title="Permalink to this headline"></a></h1>
+<h1>Contributing to ecl2df<a class="headerlink" href="#contributing-to-ecl2df" title="Permalink to this heading"></a></h1>
 <p>Contributing to ecl2df is easiest on Linux computers. Windows has not been
 tested, and for Mac you will have to compile OPM yourself.</p>
 <section id="getting-started-as-a-developer">
-<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this headline"></a></h2>
+<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this heading"></a></h2>
 <p>The first thing to do, is to create a fork of ecl2df to your personal
 github account. Go to <a class="reference external" href="https://github.com/equinor/ecl2df">https://github.com/equinor/ecl2df</a> and click the Fork
 button.</p>
@@ -127,7 +128,7 @@ repository, which you can do by running:</p>
 </div>
 </section>
 <section id="getting-started-on-equinor-linux-computers">
-<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this headline"></a></h2>
+<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this heading"></a></h2>
 <p>On Equinor Linux computers, is is recommended to run with the Komodo
 environment, which will provide an analogue to <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> for
 making the virtual environment.</p>
@@ -141,7 +142,7 @@ Komodo in order to prepare for the command:</p>
 <p>NB: For every monthly Komodo release, you might have to remake your komodo-venv.</p>
 </section>
 <section id="using-ecl2df-without-opm">
-<h2>Using ecl2df without OPM<a class="headerlink" href="#using-ecl2df-without-opm" title="Permalink to this headline"></a></h2>
+<h2>Using ecl2df without OPM<a class="headerlink" href="#using-ecl2df-without-opm" title="Permalink to this heading"></a></h2>
 <p>OPM is only pip-installable on Linux. To use the non-OPM dependent ecl2df
 modules on something else than Linux (but with libecl installed), you should
 install all the dependencies (except OPM) using <code class="docutils literal notranslate"><span class="pre">pip</span></code> (see <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> for
@@ -150,7 +151,7 @@ to <code class="docutils literal notranslate"><span class="pre">pip</span></code
 fail with import errors.</p>
 </section>
 <section id="development-workflow">
-<h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this headline"></a></h2>
+<h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading"></a></h2>
 <p>If you have a feature or bugfix, a typical procedure is to:</p>
 <ul class="simple">
 <li><p>Consider writing an issue on <a class="reference external" href="https://github.com/equinor/ecl2df/issues">https://github.com/equinor/ecl2df/issues</a> describing
@@ -177,7 +178,7 @@ commit that is rebased on top of the current master.</p></li>
 </ul>
 </section>
 <section id="continuous-integration">
-<h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline"></a></h2>
+<h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this heading"></a></h2>
 <p>A pull request that has been pushed to Github will be subject to automatic
 testing, for code style, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and for documentation validity. If your code
 does not pass <code class="docutils literal notranslate"><span class="pre">black</span></code> or <code class="docutils literal notranslate"><span class="pre">flake8</span></code> verification it will fail the CI workflows.</p>
@@ -190,7 +191,7 @@ in place before a commit is accepted. Issue the command <code class="docutils li
 in your copy to get started with this.</p>
 </section>
 <section id="writing-documentation">
-<h2>Writing documentation<a class="headerlink" href="#writing-documentation" title="Permalink to this headline"></a></h2>
+<h2>Writing documentation<a class="headerlink" href="#writing-documentation" title="Permalink to this heading"></a></h2>
 <p>Write good docstrings for each function, and use Google style for arguments.
 See <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html</a>
 for specification.</p>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nnc &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>nnc &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -31,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -100,7 +101,7 @@
            <div itemprop="articleBody">
              
   <section id="nnc">
-<h1>nnc<a class="headerlink" href="#nnc" title="Permalink to this headline"></a></h1>
+<h1>nnc<a class="headerlink" href="#nnc" title="Permalink to this heading"></a></h1>
 <p>nnc will extract Non-Neighbour-Connections from your Eclipse grid as pairs
 of <em>ijk</em> indices together with their associated transmissibilities.</p>
 <p>See also the <a class="reference internal" href="trans.html"><span class="doc">trans</span></a> module, which can extract all transmissibilities, not only
@@ -267,7 +268,7 @@ extra columns.</p>
 <p>If you only want vertical connections, add the option <code class="docutils literal notranslate"><span class="pre">--pillars</span></code> or <code class="docutils literal notranslate"><span class="pre">-vertical</span></code>,
 or set <code class="docutils literal notranslate"><span class="pre">pillars=True</span></code> if using the Python API (<a class="reference internal" href="../ecl2df/ecl2df.nnc.html#ecl2df.nnc.df" title="ecl2df.nnc.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.nnc.df()</span></code></a>)</p>
 <section id="editnnc-export">
-<h2><code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> export<a class="headerlink" href="#editnnc-export" title="Permalink to this headline"></a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> export<a class="headerlink" href="#editnnc-export" title="Permalink to this heading"></a></h2>
 <p>Data for the <code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> keyword can be dumped, in order to scale the NNC connections
 using Pandas operations. Select the connections you want to scale by slicing
 the nnc dataframe (either from the nnc module, or from the trans module), and fill

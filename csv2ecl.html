@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csv2ecl &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>csv2ecl &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -31,7 +32,7 @@
             <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -46,25 +47,26 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecl2csv.html">ecl2csv</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csv2ecl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Sub-commands:">Sub-commands:</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#summary">summary</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat1">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat1">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat1">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat2">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat2">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#pvt">pvt</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat2">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat3">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat3">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat3">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments_repeat4">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments_repeat4">Named Arguments</a></li>
 </ul>
 </li>
@@ -106,7 +108,7 @@
            <div itemprop="articleBody">
              
   <section id="csv2ecl">
-<h1>csv2ecl<a class="headerlink" href="#csv2ecl" title="Permalink to this headline"></a></h1>
+<h1>csv2ecl<a class="headerlink" href="#csv2ecl" title="Permalink to this heading"></a></h1>
 <p>Some of the modules inside ecl2df is able to write Eclipse include files
 from dataframes (in the format dumped by ecl2df). This makes it possible
 to produce Eclipse input data in any application that can write CSV files,
@@ -121,13 +123,21 @@ If you want output to your terminal, use <code class="docutils literal notransla
 you also specify the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> argument with a list of wanted keywords, all
 supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to output file.</p>
-<p><p>csv2ecl (0.16.3.dev4+g1cd9d88) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
+<p><p>csv2ecl (0.16.3.dev5+g1527e10) is a command line frontend to ecl2df. Documentation at <a class="reference external" href="https://equinor.github.io/ecl2df/">https://equinor.github.io/ecl2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv2ecl</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="p">{</span><span class="n">summary</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">satfunc</span><span class="p">}</span> <span class="o">...</span>
 </pre></div>
 </div>
+<section id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this heading"></a></h2>
+<dl class="option-list">
+<dt><kbd>subcommand</kbd></dt>
+<dd><p>Possible choices: summary, equil, pvt, satfunc</p>
+</dd>
+</dl>
+</section>
 <section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h2>
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -135,15 +145,15 @@ will be dumped to output file.</p>
 </dl>
 </section>
 <section id="Sub-commands:">
-<h2>Sub-commands:<a class="headerlink" href="#Sub-commands:" title="Permalink to this headline"></a></h2>
+<h2>Sub-commands:<a class="headerlink" href="#Sub-commands:" title="Permalink to this heading"></a></h2>
 <section id="summary">
-<h3>summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h3>
+<h3>summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h3>
 <p>Write Eclipse UNSMRY files from CSV files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h4>
+<section id="Positional Arguments_repeat1">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat1" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with summary data.</p>
@@ -151,7 +161,7 @@ will be dumped to output file.</p>
 </dl>
 </section>
 <section id="Named Arguments_repeat1">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this headline"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat1" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Basename for Eclipse output files</p>
@@ -169,13 +179,13 @@ will be dumped to output file.</p>
 </section>
 </section>
 <section id="equil">
-<h3>equil<a class="headerlink" href="#equil" title="Permalink to this headline"></a></h3>
+<h3>equil<a class="headerlink" href="#equil" title="Permalink to this heading"></a></h3>
 <p>Write SOLUTION keywords (EQUIL, RSVD, RVVD) to Eclipse include files from CSV in ecl2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat1">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat1" title="Permalink to this headline"></a></h4>
+<section id="Positional Arguments_repeat2">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat2" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with EQUIL, RSVD++ data on ecl2df format</p>
@@ -183,7 +193,7 @@ will be dumped to output file.</p>
 </dl>
 </section>
 <section id="Named Arguments_repeat2">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat2" title="Permalink to this headline"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat2" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output Eclipse include file file, default solution.inc. Use ‘-’ for stdout.</p>
@@ -200,13 +210,13 @@ will be dumped to output file.</p>
 </section>
 </section>
 <section id="pvt">
-<h3>pvt<a class="headerlink" href="#pvt" title="Permalink to this headline"></a></h3>
+<h3>pvt<a class="headerlink" href="#pvt" title="Permalink to this heading"></a></h3>
 <p>Write Eclipse include files from CSV files on the ecl2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">pvt</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat2">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat2" title="Permalink to this headline"></a></h4>
+<section id="Positional Arguments_repeat3">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat3" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with PVT data on ecl2df format</p>
@@ -214,7 +224,7 @@ will be dumped to output file.</p>
 </dl>
 </section>
 <section id="Named Arguments_repeat3">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat3" title="Permalink to this headline"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat3" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output Eclipse include file file, default pvt.inc. Use ‘-’ for stdout.</p>
@@ -231,13 +241,13 @@ will be dumped to output file.</p>
 </section>
 </section>
 <section id="satfunc">
-<h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline"></a></h3>
+<h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this heading"></a></h3>
 <p>Write saturation function include files from CSV files on the ecl2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2ecl</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="Positional Arguments_repeat3">
-<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat3" title="Permalink to this headline"></a></h4>
+<section id="Positional Arguments_repeat4">
+<h4>Positional Arguments<a class="headerlink" href="#Positional Arguments_repeat4" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with SWOF, SGOF++ data on ecl2df format</p>
@@ -245,7 +255,7 @@ will be dumped to output file.</p>
 </dl>
 </section>
 <section id="Named Arguments_repeat4">
-<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat4" title="Permalink to this headline"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#Named Arguments_repeat4" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output Eclipse include file file, default relperm.inc. Use ‘-’ for stdout.</p>

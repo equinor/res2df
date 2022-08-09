@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trans &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>trans &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -31,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -102,7 +103,7 @@
            <div itemprop="articleBody">
              
   <section id="trans">
-<h1>trans<a class="headerlink" href="#trans" title="Permalink to this headline"></a></h1>
+<h1>trans<a class="headerlink" href="#trans" title="Permalink to this heading"></a></h1>
 <p>The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
 from a simulation grid.</p>
 <p>Python API: <a class="reference internal" href="../ecl2df/ecl2df.trans.html#ecl2df.trans.df" title="ecl2df.trans.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.trans.df()</span></code></a></p>
@@ -212,7 +213,7 @@ command line:</p>
 </pre></div>
 </div>
 <section id="adding-more-data-for-each-connection">
-<h2>Adding more data for each connection<a class="headerlink" href="#adding-more-data-for-each-connection" title="Permalink to this headline"></a></h2>
+<h2>Adding more data for each connection<a class="headerlink" href="#adding-more-data-for-each-connection" title="Permalink to this heading"></a></h2>
 <p>You can add <code class="docutils literal notranslate"><span class="pre">coords=True</span></code> to the <code class="docutils literal notranslate"><span class="pre">df()</span></code> call, which will add the columns <code class="docutils literal notranslate"><span class="pre">X</span></code>,
 <code class="docutils literal notranslate"><span class="pre">Y</span></code>, <code class="docutils literal notranslate"><span class="pre">Z</span></code> (which will be the average of the coordinates for the two cell
 centerpoints) and also <code class="docutils literal notranslate"><span class="pre">DX</span></code>, <code class="docutils literal notranslate"><span class="pre">DY</span></code> and <code class="docutils literal notranslate"><span class="pre">DZ</span></code> being the distance between the
@@ -228,7 +229,7 @@ see below.</p>
 column.</p>
 </section>
 <section id="filtering-connections">
-<h2>Filtering connections<a class="headerlink" href="#filtering-connections" title="Permalink to this headline"></a></h2>
+<h2>Filtering connections<a class="headerlink" href="#filtering-connections" title="Permalink to this heading"></a></h2>
 <p>The API supports some filtering directly in the <code class="docutils literal notranslate"><span class="pre">df()</span></code> function call for
 convenience.</p>
 <p>Simple filtering based on vertical vs horizontal can be accomplished
@@ -391,7 +392,7 @@ like this. Example:</p>
 all your region connections in 3D, coloured by transmissibility.</p>
 </section>
 <section id="aggregating-connection-data-over-region-interfaces">
-<h2>Aggregating connection data over region interfaces<a class="headerlink" href="#aggregating-connection-data-over-region-interfaces" title="Permalink to this headline"></a></h2>
+<h2>Aggregating connection data over region interfaces<a class="headerlink" href="#aggregating-connection-data-over-region-interfaces" title="Permalink to this heading"></a></h2>
 <p>The example above with filtering to wherever for example <code class="docutils literal notranslate"><span class="pre">FIPNUM</span></code> is changing,
 naturally leads over to an application where transmissibility data is aggregated
 over a region interface. This is accomplished by adding the <code class="docutils literal notranslate"><span class="pre">group=True</span></code> option.

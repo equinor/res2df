@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>grid &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>grid &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -31,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -103,7 +104,7 @@
            <div itemprop="articleBody">
              
   <section id="grid">
-<h1>grid<a class="headerlink" href="#grid" title="Permalink to this headline"></a></h1>
+<h1>grid<a class="headerlink" href="#grid" title="Permalink to this heading"></a></h1>
 <p>The grid module will extract static and dynamic cell properties from
 an Eclipse grid (from the binary output files from Eclipse). Each row
 in a returned dataframe represents one cell.</p>
@@ -650,7 +651,7 @@ in a returned dataframe represents one cell.</p>
 </pre></div>
 </div>
 <section id="example-computations-on-a-grid-dataframe">
-<h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this headline"></a></h2>
+<h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this heading"></a></h2>
 <p>Some grid statistic operations are very neatly expressed using Python and
 Pandas. Some examples (provided that the <code class="docutils literal notranslate"><span class="pre">dframe</span></code> object is initialized as in
 the topmost example):</p>
@@ -692,7 +693,7 @@ compute values for every SATNUM, EQLNUM or similar. Example:</p>
 </div>
 </section>
 <section id="zone-information">
-<h2>Zone information<a class="headerlink" href="#zone-information" title="Permalink to this headline"></a></h2>
+<h2>Zone information<a class="headerlink" href="#zone-information" title="Permalink to this heading"></a></h2>
 <p>As mentioned in <a class="reference internal" href="../introduction.html#zone-names"><span class="std std-ref">Zone names</span></a>, if the text file called <cite>zones.lyr</cite> is found
 alongside, zone information will automatically be merged into each row based on the <cite>K</cite>
 column. This can be used for statistics pr. zone,</p>
@@ -724,7 +725,7 @@ the function <a class="reference internal" href="../ecl2df/ecl2df.common.html#ec
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">ecl2df.common.parse_zonemapfile()</span></code></p>
 </section>
 <section id="dynamic-data">
-<h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this headline"></a></h2>
+<h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this heading"></a></h2>
 <p>By adding a restart date, dynamic data for one particular restart date can be
 added, through the API option <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> or the command line option
 <code class="docutils literal notranslate"><span class="pre">--rstdates</span></code>.</p>
@@ -737,7 +738,7 @@ Calculating volumes of dynamic data (pr. some region parameter) can be obtained
 from that module as a by-product of the pillar computations.</p>
 </section>
 <section id="generating-eclipse-include-files-from-grid-data">
-<h2>Generating Eclipse include files from grid data<a class="headerlink" href="#generating-eclipse-include-files-from-grid-data" title="Permalink to this headline"></a></h2>
+<h2>Generating Eclipse include files from grid data<a class="headerlink" href="#generating-eclipse-include-files-from-grid-data" title="Permalink to this heading"></a></h2>
 <p>If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
 <a class="reference internal" href="../ecl2df/ecl2df.grid.html#ecl2df.grid.df2ecl" title="ecl2df.grid.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.grid.df2ecl()</span></code></a> function these manipulated vectors can be written back as

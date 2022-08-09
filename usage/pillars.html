@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pillars &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>pillars &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -31,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -103,11 +104,11 @@
            <div itemprop="articleBody">
              
   <section id="pillars">
-<span id="usage-pillars"></span><h1>pillars<a class="headerlink" href="#pillars" title="Permalink to this headline"></a></h1>
+<span id="usage-pillars"></span><h1>pillars<a class="headerlink" href="#pillars" title="Permalink to this heading"></a></h1>
 <p>pillars is a module to compute data on “pillars” in the grid from an
 Eclipse simulation, including both static and dynamic data from the grid.</p>
 <section id="static-data">
-<h2>Static data<a class="headerlink" href="#static-data" title="Permalink to this headline"></a></h2>
+<h2>Static data<a class="headerlink" href="#static-data" title="Permalink to this heading"></a></h2>
 <p>Typical usage is to obtain property statistics, and compute contacts pr.
 pillar (and optionally pr some region parameter).</p>
 <table class="docutils align-default" id="id1">
@@ -203,7 +204,7 @@ will be added in an extra column called <code class="docutils literal notranslat
 repeated for each region value where it exists.</p>
 </section>
 <section id="dynamic-data-volumes-and-fluid-contacts">
-<h2>Dynamic data, volumes and fluid contacts<a class="headerlink" href="#dynamic-data-volumes-and-fluid-contacts" title="Permalink to this headline"></a></h2>
+<h2>Dynamic data, volumes and fluid contacts<a class="headerlink" href="#dynamic-data-volumes-and-fluid-contacts" title="Permalink to this heading"></a></h2>
 <p>The API <a class="reference internal" href="../ecl2df/ecl2df.pillars.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a> and command line client allows specifying
 dates if dynamic data should be included through the <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> option to the
 API or the <code class="docutils literal notranslate"><span class="pre">--rstdates</span></code> option on the command line. Providing dates as an
@@ -237,7 +238,7 @@ computation (sometimes that explains the need for calibration to initial
 contacts).</p>
 </section>
 <section id="grouping-data">
-<h2>Grouping data<a class="headerlink" href="#grouping-data" title="Permalink to this headline"></a></h2>
+<h2>Grouping data<a class="headerlink" href="#grouping-data" title="Permalink to this heading"></a></h2>
 <p>It is possible to aggregate data over all pillars after computation. Activate
 using <code class="docutils literal notranslate"><span class="pre">--group</span></code> to the command line client, and add optionally a <code class="docutils literal notranslate"><span class="pre">--region</span></code>
 parameter to group over a particular region, typically <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>.</p>
@@ -245,7 +246,7 @@ parameter to group over a particular region, typically <code class="docutils lit
 option, check <a class="reference internal" href="../ecl2df/ecl2df.pillars.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a></p>
 </section>
 <section id="stacked-version">
-<h2>Stacked version<a class="headerlink" href="#stacked-version" title="Permalink to this headline"></a></h2>
+<h2>Stacked version<a class="headerlink" href="#stacked-version" title="Permalink to this heading"></a></h2>
 <p>By default, dynamic data are added as a set of columns for every date, like in
 this example:</p>
 <table class="docutils align-default" id="id2">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>satfunc &mdash; ecl2df 0.16.3.dev4+g1cd9d88 documentation</title>
+  <title>satfunc &mdash; ecl2df 0.16.3.dev5+g1527e10 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -31,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev4+g1cd9d88
+                0.16.3.dev5+g1527e10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -102,7 +103,7 @@
            <div itemprop="articleBody">
              
   <section id="satfunc">
-<h1>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this headline"></a></h1>
+<h1>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this heading"></a></h1>
 <p>satfunc will extract saturation functions from Eclipse decks or from Eclipse
 include files, these are the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGWFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SWFN</span></code>,
 <code class="docutils literal notranslate"><span class="pre">SOF2</span></code>, <code class="docutils literal notranslate"><span class="pre">SGFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SOF3</span></code> and  <code class="docutils literal notranslate"><span class="pre">SLGOF</span></code>.</p>
@@ -319,7 +320,7 @@ line option.</p>
 <p>Instead of Eclipse data decks, individual include files may also be parsed, but
 only one at a time.</p>
 <section id="generating-eclipse-include-files-from-dataframes">
-<h2>Generating Eclipse include files from dataframes<a class="headerlink" href="#generating-eclipse-include-files-from-dataframes" title="Permalink to this headline"></a></h2>
+<h2>Generating Eclipse include files from dataframes<a class="headerlink" href="#generating-eclipse-include-files-from-dataframes" title="Permalink to this heading"></a></h2>
 <p>When a dataframe of saturation function data is loaded into Python, any operation
 may be applied on the data. Simple operations would typically be scaling, perhaps
 individual pr. SATNUM. Still, read below on pyscal before embarking on too many
@@ -345,7 +346,7 @@ data for more keywords in the dataframe).</p>
 <p>There are no automated checks for validity of the dumped include files.</p>
 </section>
 <section id="extracting-properties-pr-satnum">
-<h2>Extracting properties pr. SATNUM<a class="headerlink" href="#extracting-properties-pr-satnum" title="Permalink to this headline"></a></h2>
+<h2>Extracting properties pr. SATNUM<a class="headerlink" href="#extracting-properties-pr-satnum" title="Permalink to this heading"></a></h2>
 <p>If you have an include file prepared (from any source), you might need to
 determine certain properties like endpoint. If you need to determine for
 example “SOWCR” - the largest oil saturation for which oil is immobile,
@@ -376,7 +377,7 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
 </div>
 </section>
 <section id="the-pyscal-library">
-<h2>The pyscal library<a class="headerlink" href="#the-pyscal-library" title="Permalink to this headline"></a></h2>
+<h2>The pyscal library<a class="headerlink" href="#the-pyscal-library" title="Permalink to this heading"></a></h2>
 <p>Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
 <code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code>, consider if it is better to implement the manipulations

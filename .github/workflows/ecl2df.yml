@@ -23,12 +23,12 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8', '3.9']
+        python-version: ['3.8', '3.9', '3.10']
         include:
           # For one of the Python versions we
           # install the extra dependency ert
           # (in order to not double the job matrix)
-          - python-version: '3.6'
+          - python-version: '3.8'
             install-ert: true
     steps:
       - name: Checkout commit locally
@@ -81,7 +81,7 @@ jobs:
           python setup.py build_sphinx
 
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.6'
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
         run: |
             cp -R ./build/sphinx/html ../html
 
@@ -104,7 +104,7 @@ jobs:
             fi
 
       - name: Build python package and publish to pypi
-        if: github.event_name == 'release' && matrix.python-version == '3.6'
+        if: github.event_name == 'release' && matrix.python-version == '3.8'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.ecl2df_pypi_token }}

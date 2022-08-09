@@ -457,13 +457,12 @@ def vfpprod2df(
     vfpnumbers_str: Optional[str] = None,
 ) -> pd.DataFrame:
     """Return a dataframes of a single VFPPROD table from an Eclipse deck.
-
     Data from the VFPPROD keyword are stacked into a Pandas Dataframe
 
-     Args:
-         keyword:        Eclipse deck keyword
-         vfpnumbers_str: String with list of vfp table numbers to extract.
-                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+    Args:
+        keyword:        Eclipse deck keyword
+        vfpnumbers_str: String with list of vfp table numbers to extract.
+                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
     # Number of records in keyword
@@ -611,10 +610,10 @@ def vfpinj2df(
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
 
-     Args:
-         keyword:        Eclipse deck keyword
-         vfpnumbers_str: String with list of vfp table numbers to extract.
-                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+    Args:
+        keyword:        Eclipse deck keyword
+        vfpnumbers_str: String with list of vfp table numbers to extract.
+                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
     # Number of record in keyword

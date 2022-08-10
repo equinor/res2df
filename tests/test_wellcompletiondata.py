@@ -95,9 +95,10 @@ def test_metadata():
     df = wellcompletiondata.df(
         eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
     )
+    assert df.attrs["meta"] == {"KH": {"unit": "mDm"}}
+
     table = _df2pyarrow(df)
-    schema = table.schema
-    field = schema.field("KH")
+    field = table.schema.field("KH")
     assert field.metadata is not None
     assert field.metadata[b"unit"] == b"mDm"
 

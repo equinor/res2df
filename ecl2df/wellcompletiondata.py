@@ -25,6 +25,13 @@ class EclipseUnitSystem(str, Enum):
     PVTM = "PVT-M"
 
 
+class KHUnit(Enum):
+    METRIC = "mDm"
+    FIELD = "mDft"
+    LAB = "mDcm"
+    PVTM = "mDm"
+
+
 def df(
     eclfiles: EclFiles,
     zonemap: Dict[int, str],
@@ -102,13 +109,13 @@ def _get_metadata(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     meta: Dict[str, Dict[str, Any]] = {}
     unitsystem = _get_ecl_unit_system(eclfiles)
     kh_units = {
-        EclipseUnitSystem.METRIC: "mDm",
-        EclipseUnitSystem.FIELD: "mDft",
-        EclipseUnitSystem.LAB: "mDcm",
-        EclipseUnitSystem.PVTM: "mDm",
+        EclipseUnitSystem.METRIC: KHUnit.METRIC,
+        EclipseUnitSystem.FIELD: KHUnit.FIELD,
+        EclipseUnitSystem.LAB: KHUnit.LAB,
+        EclipseUnitSystem.PVTM: KHUnit.PVTM,
     }
     meta["KH"] = {}
-    meta["KH"]["unit"] = kh_units[unitsystem]
+    meta["KH"]["unit"] = kh_units[unitsystem].value
     return meta
 
 

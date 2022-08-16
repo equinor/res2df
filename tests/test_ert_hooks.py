@@ -11,7 +11,7 @@ from ecl2df.hook_implementations import jobs
 try:
     # pylint: disable=unused-import
 
-    import ert_shared  # noqa
+    import ert.shared  # noqa
 
     HAVE_ERT = True
 except ImportError:
@@ -116,11 +116,11 @@ def test_job_documentation():
     if HAVE_ERT:
         assert (
             type(jobs.job_documentation("ECL2CSV"))
-            == ert_shared.plugins.plugin_response.PluginResponse
+            == ert.shared.plugins.plugin_response.PluginResponse
         )
         assert (
             type(jobs.job_documentation("CSV2ECL"))
-            == ert_shared.plugins.plugin_response.PluginResponse
+            == ert.shared.plugins.plugin_response.PluginResponse
         )
     else:
         assert jobs.job_documentation("ECL2CSV") is None

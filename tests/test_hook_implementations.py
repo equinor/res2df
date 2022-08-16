@@ -7,14 +7,14 @@ import pytest
 try:
     # pylint: disable=unused-import
 
-    import ert_shared  # noqa
+    import ert.shared  # noqa
 except ImportError:
     pytest.skip(
         "ERT is not installed. Skipping hook implementations.",
         allow_module_level=True,
     )
 
-from ert_shared.plugins.plugin_manager import ErtPluginManager
+from ert.shared.plugins.plugin_manager import ErtPluginManager
 
 import ecl2df.hook_implementations.jobs
 

@@ -106,7 +106,7 @@ def _get_ecl_unit_system(eclfiles: EclFiles) -> EclipseUnitSystem:
 
 def _get_metadata(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for the well completion data export"""
-    meta: Dict[str, Dict[str, Any]] = {}
+    meta: Dict[str, Dict[str, str]] = {}
     unitsystem = _get_ecl_unit_system(eclfiles)
     kh_units = {
         EclipseUnitSystem.METRIC: KHUnit.METRIC,

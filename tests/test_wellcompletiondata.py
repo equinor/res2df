@@ -89,6 +89,20 @@ def test_df2pyarrow():
     pd.testing.assert_frame_equal(df, _df2pyarrow(df).to_pandas(), check_like=True)
 
 
+def test_metadata():
+    """Test that the KH column has metadata and that unit is mDm"""
+    eclfiles = EclFiles(EIGHTCELLS)
+    df = wellcompletiondata.df(
+        eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
+    )
+    assert df.attrs["meta"] == {"KH": {"unit": "mDm"}}
+
+    table = _df2pyarrow(df)
+    field = table.schema.field("KH")
+    assert field.metadata is not None
+    assert field.metadata[b"unit"] == b"mDm"
+
+
 def test_empty_zonemap():
     """Test empty zonemap and zonemap with layers that doesn't exist in the compdat
     table. Both returns an empty dataframe

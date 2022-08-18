@@ -33,6 +33,12 @@ except ImportError:
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
+SHORT_STEP = str(TESTDIR / "data/timesteps/SHORT_STEP")
+SHORT_STEP_WITH_TIMESTEP = str(TESTDIR / "data/timesteps/SHORT_STEP_WITH_TIMESTEP")
+SHORT_STEP_LONG = str(TESTDIR / "data/timesteps/SHORT_STEP_LONG")
+SHORT_STEP_WITH_TIMESTEP_LONG = str(
+    TESTDIR / "data/timesteps/SHORT_STEP_WITH_TIMESTEP_LONG"
+)
 
 
 def test_df():
@@ -770,6 +776,19 @@ def test_resample_smry_dates():
         freq="yearly",
         normalize=True,
     ) == [dt(2300, 6, 5).date(), dt(2301, 1, 1).date(), dt(2301, 6, 7).date()]
+
+
+@pytest.mark.parametrize(
+    "filepath",
+    [
+        pytest.param(SHORT_STEP, marks=pytest.mark.xfail(raises=ValueError)),
+        SHORT_STEP_WITH_TIMESTEP,
+        pytest.param(SHORT_STEP_LONG, marks=pytest.mark.xfail(raises=ValueError)),
+        SHORT_STEP_WITH_TIMESTEP_LONG,
+    ],
+)
+def test_unique_datetime_for_short_timesteps(filepath):
+    assert summary.df(EclFiles(filepath)).index.is_unique
 
 
 def test_smry_meta():

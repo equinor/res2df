@@ -411,7 +411,6 @@ def df(
         len(dframe),
     )
     dframe.index.name = "DATE"
-
     if params or paramfile:
         dframe = _merge_params(dframe, paramfile, eclfiles)
 
@@ -433,6 +432,16 @@ def df(
         logger.warning("Duplicates: %s", list(dframe.columns[dupes]))
         dframe = dframe.loc[:, ~dframe.columns.duplicated()]
 
+    dframe = _ensure_unique_datetime_index(dframe)
+
+    if datetime is True:
+        if dframe.index.dtype == "object":
+            dframe.index = pd.to_datetime(dframe.index)
+
+    return dframe
+
+
+def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
     index_duplicates = dframe.index.duplicated(keep="first")
     if any(index_duplicates):
         index_duplicate_log_string = ""
@@ -471,10 +480,6 @@ def df(
                 "the SUMMARY section of the simulation deck, as it may be utilized to",
                 " separate duplicate timestamps.",
             )
-    if datetime is True:
-        if dframe.index.dtype == "object":
-            dframe.index = pd.to_datetime(dframe.index)
-
     return dframe
 
 

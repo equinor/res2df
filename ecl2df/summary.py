@@ -442,6 +442,17 @@ def df(
 
 
 def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    The TIME vector may be stored with a lower resolution than individual
+    timesteps, leading ecl to return non-unique datetimes.
+
+    Non-unique datetimes may cause troubles for the consumer. Therefore
+    attempting to utilize the TIMESTEP vector to separate non-unique datetimes.
+
+    If the optional TIMESTEP vector is not available, a ValueError is raised with a
+    recommendation to rerun the simulation with the TIMESTEP vector in the SUMMARY
+    section of the.
+    """
     index_duplicates = dframe.index.duplicated(keep="first")
     if any(index_duplicates):
         index_duplicate_log_string = ""

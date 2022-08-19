@@ -3,6 +3,7 @@ related to Eclipse runs"""
 
 import json
 import logging
+import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
@@ -65,9 +66,20 @@ def load_parameterstxt(filename: Union[str, Path]) -> Dict[str, Any]:
         filename: file containing one key-value pair pr. line,
             separated by whitespace
     """
-    dframe = pd.read_csv(
-        filename, comment="#", sep=r"\s", engine="python", names=["KEY", "VALUE"]
-    )
+    with warnings.catch_warnings(record=True):
+        warnings.filterwarnings("error")
+        try:
+            dframe = pd.read_csv(
+                filename,
+                comment="#",
+                sep=r"\s",
+                engine="python",
+                names=["KEY", "VALUE"],
+                index_col=False,
+            )
+        except pd.errors.ParserWarning as txt_exc:
+            raise pd.errors.ParserError(txt_exc)
+
     return dframe.set_index("KEY")["VALUE"].to_dict()
 
 

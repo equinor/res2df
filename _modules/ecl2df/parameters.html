@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.parameters &mdash; ecl2df 0.16.3.dev7+g2f01e0bc documentation</title>
+  <title>ecl2df.parameters &mdash; ecl2df 0.16.3.dev8+g4552f5df documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.3.dev7+g2f01e0bc
+                0.16.3.dev8+g4552f5df
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -84,6 +84,7 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -146,9 +147,23 @@
 <span class="sd">        filename: file containing one key-value pair pr. line,</span>
 <span class="sd">            separated by whitespace</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
-        <span class="n">filename</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\s&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># From pandas 1.4, too many columns result in a ParserWarning for dropped</span>
+        <span class="c1"># data. This is risky, and therefore catching the warning and raising a</span>
+        <span class="c1"># ParserError instead.</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">filename</span><span class="p">,</span>
+                <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\s&quot;</span><span class="p">,</span>
+                <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+                <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">],</span>
+                <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserWarning</span> <span class="k">as</span> <span class="n">txt_exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserError</span><span class="p">(</span><span class="n">txt_exc</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;KEY&quot;</span><span class="p">)[</span><span class="s2">&quot;VALUE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 
 

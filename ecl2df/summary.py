@@ -421,10 +421,6 @@ def df(
         column_key: meta[column_key] for column_key in dframe if column_key in meta
     }
 
-    if datetime is True:
-        if dframe.index.dtype == "object":
-            dframe.index = pd.to_datetime(dframe.index)
-
     # Remove duplicated column names. These will occur from libecl
     # when the user has repeated vector names in the summary SECTION
     dupes = dframe.columns.duplicated()
@@ -435,6 +431,66 @@ def df(
         )
         logger.warning("Duplicates: %s", list(dframe.columns[dupes]))
         dframe = dframe.loc[:, ~dframe.columns.duplicated()]
+
+    dframe = _ensure_unique_datetime_index(dframe)
+
+    if datetime is True:
+        if dframe.index.dtype == "object":
+            dframe.index = pd.to_datetime(dframe.index)
+
+    return dframe
+
+
+def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    The TIME vector may be stored with a lower resolution than individual
+    timesteps, leading ecl to return non-unique datetimes.
+
+    Non-unique datetimes may cause troubles for the consumer. Therefore
+    attempting to utilize the TIMESTEP vector to separate non-unique datetimes.
+
+    If the optional TIMESTEP vector is not available, a ValueError is raised with a
+    recommendation to rerun the simulation with the TIMESTEP vector in the SUMMARY
+    section of the.
+    """
+    index_duplicates = dframe.index.duplicated(keep="first")
+    if any(index_duplicates):
+        index_duplicate_log_string = ""
+        for idx in dframe.index[index_duplicates]:
+            index_duplicate_log_string += f"\n{idx}"
+
+        if "TIMESTEP" in dframe:
+            logger.info(
+                "Dataframe of smry data contained duplicate timestamps due to limited",
+                " output resolution. Vector TIMESTEP exists, utilizing it to create "
+                "discrete timestamps",
+                f"Original duplicates were:{index_duplicate_log_string}",
+            )
+            index_as_list = dframe.index.to_list()
+
+            if dframe.attrs["meta"]["TIMESTEP"]["unit"] == "DAYS":
+                for idx in np.where(index_duplicates)[0]:
+                    index_as_list[idx] = index_as_list[idx] + dt.timedelta(
+                        days=dframe["TIMESTEP"][idx]
+                    )
+            elif dframe.attrs["meta"]["TIMESTEP"]["unit"] == "HOURS":
+                for idx in np.where(index_duplicates)[0]:
+                    index_as_list[idx] = index_as_list[idx] + dt.timedelta(
+                        hours=dframe["TIMESTEP"][idx]
+                    )
+            else:
+                raise ValueError(
+                    "Dataframe of smry data contained duplicate timestamps",
+                    "Vector TIMESTEP exists, but unit could not be identified",
+                )
+            dframe.index = index_as_list
+        else:
+            raise ValueError(
+                "Dataframe of smry data contained duplicate timestamps due to limited.",
+                " output resolution. Vector TIMESTEP was not found. Try to add it to ",
+                "the SUMMARY section of the simulation deck, as it may be utilized to",
+                " separate duplicate timestamps.",
+            )
     return dframe
 
 
@@ -454,7 +510,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
 
     field_list: List[pyarrow.Field] = []
     field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
-    column_arrays = [dframe.index.to_numpy()]
+    column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
 
     for colname in dframe.columns:
         if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:

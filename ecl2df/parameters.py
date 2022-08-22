@@ -67,6 +67,9 @@ def load_parameterstxt(filename: Union[str, Path]) -> Dict[str, Any]:
             separated by whitespace
     """
     with warnings.catch_warnings(record=True):
+        # From pandas 1.4, too many columns result in a ParserWarning for dropped
+        # data. This is risky, and therefore catching the warning and raising a
+        # ParserError instead.
         warnings.filterwarnings("error")
         try:
             dframe = pd.read_csv(

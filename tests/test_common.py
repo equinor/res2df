@@ -9,6 +9,7 @@ import pytest
 from ecl2df import common, eclfiles, equil
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 
     HAVE_OPM = True
@@ -110,7 +111,7 @@ def test_write_inc_file(tmp_path):
     os.chdir(tmp_path)
     string = "PORO\n0\n/"
     common.write_inc_stdout_file(string, "poro.inc")
-    assert Path("poro.inc").read_text() == string
+    assert Path("poro.inc").read_text(encoding="utf8") == string
 
 
 def test_write_inc_stdout(capsys):
@@ -194,7 +195,7 @@ def test_df2ecl():
     assert "2469" in string
     assert "-- Output file printed by tests.test_common" in string
 
-    assert "" == common.df2ecl(dframe, supported=["PORO"])
+    assert common.df2ecl(dframe, supported=["PORO"]) == ""
 
     assert "EQUIL\n-- foobar" in common.df2ecl(
         dframe, comments={"EQUIL": "foobar"}, supported=["EQUIL"]

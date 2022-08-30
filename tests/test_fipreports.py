@@ -107,7 +107,7 @@ def test_prtstring(tmp_path):
  ====================================================================================================================================
 """  # noqa
     os.chdir(tmp_path)
-    Path("FOO.PRT").write_text(prtstring)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT")
     expected_dframe = pd.DataFrame(
         [
@@ -250,7 +250,7 @@ def test_drygas_report(tmp_path):
  ====================================================================================================================================
 """  # noqa
     os.chdir(tmp_path)
-    Path("FOO.PRT").write_text(prtstring)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
     assert dframe["REGION"].unique() == [2]
     pd.testing.assert_frame_equal(
@@ -340,7 +340,7 @@ def test_rogue_eclipse_output(tmp_path):
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
 """  # noqa
     os.chdir(tmp_path)
-    Path("FOO.PRT").write_text(prtstring)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
     assert np.isnan(dframe.loc["MATERIAL BALANCE ERROR.", "GIIP_TOTAL"])
 
@@ -363,7 +363,7 @@ Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 :========================:==========================================:================:==========================================:
 """  # noqa
     os.chdir(tmp_path)
-    Path("FOO.PRT").write_text(prtstring)
+    Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT")
     print(dframe.to_dict(orient="records"))
     expected_dframe = pd.DataFrame(

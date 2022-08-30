@@ -6,6 +6,7 @@ import ecl2df
 
 
 def test_init():
+    """Test the top level properties of the ecl2df package"""
     assert "ecl2df.compdat" in sys.modules
 
     # This should be a list of all submodules

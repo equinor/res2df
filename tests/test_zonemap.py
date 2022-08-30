@@ -250,6 +250,7 @@ def test_nonstandardzones(tmp_path):
     ],
 )
 def test_merge_zones(dframe, zonedict, zoneheader, kname, expected_df):
+    """Test merging of zone information into a (mocked) grid dataframe"""
     pd.testing.assert_frame_equal(
         ecl2df.common.merge_zones(dframe, zonedict, zoneheader, kname),
         expected_df,

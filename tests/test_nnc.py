@@ -12,6 +12,7 @@ from ecl2df import ecl2csv, faults, nnc, trans
 from ecl2df.eclfiles import EclFiles
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 
     HAVE_OPM = True
@@ -94,7 +95,7 @@ def test_df2ecl_editnnc(tmp_path):
 
     nncdf["TRANM"] = 2
     editnnc = nnc.df2ecl_editnnc(nncdf, filename="editnnc.inc")
-    editnnc_fromfile = "".join(open("editnnc.inc").readlines())
+    editnnc_fromfile = Path("editnnc.inc").read_text(encoding="utf8")
     assert editnnc == editnnc_fromfile
     assert "EDITNNC" in editnnc
     assert editnnc.count("/") == len(nncdf) + 1

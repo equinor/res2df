@@ -62,9 +62,13 @@ def test_job_config_syntax(expected_jobs):
 @pytest.mark.integration
 def test_executables(expected_jobs):
     """Test executables listed in job configurations exist in $PATH"""
+    src_path = Path(__file__).parent.parent
     for _, job_config in expected_jobs.items():
         executable = (
-            Path(job_config).read_text(encoding="utf8").splitlines()[0].split()[1]
+            Path(src_path / job_config)
+            .read_text(encoding="utf8")
+            .splitlines()[0]
+            .split()[1]
         )
         assert shutil.which(executable)
 

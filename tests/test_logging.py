@@ -7,6 +7,7 @@ import ecl2df
 from .test_grid import EIGHTCELLS, REEK
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 
     HAVE_OPM = True
@@ -82,8 +83,8 @@ def test_ecl2csv_logging(tmp_path, ecl2df_module, verbose, fileexport, mocker, c
     work, this is related (?) to loggers not being properly reset between each
     test invocation.
     """
-
-    if "nnc" == ecl2df_module:
+    # pylint: disable=too-many-arguments
+    if ecl2df_module == "nnc":
         # There are no nnc's in EIGHTCELLS, so for that test
         # we need the REEK dataset:
         commands = ["ecl2csv", ecl2df_module, REEK, "--output"]

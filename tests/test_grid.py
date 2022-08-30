@@ -42,6 +42,7 @@ def test_gridgeometry2df(mocker):
     assert (grid_geom["Z_MAX"] > grid_geom["Z_MIN"]).all()
 
     with pytest.raises(TypeError, match="missing 1 required positional"):
+        # pylint: disable=no-value-for-parameter
         grid.gridgeometry2df()
 
     with pytest.raises(AttributeError):
@@ -105,6 +106,7 @@ def test_gridzonemap():
 
 
 def test_merge_initvectors():
+    """Test merging of INIT-vectors into the grid dataframe"""
     eclfiles = EclFiles(REEK)
     assert grid.merge_initvectors(eclfiles, pd.DataFrame(), []).empty
     foo_df = pd.DataFrame([{"FOO": 1}])
@@ -140,6 +142,7 @@ def test_init2df():
     init_df = grid.init2df(eclfiles)
 
     assert isinstance(init_df, pd.DataFrame)
+    # pylint: disable=unsupported-membership-test  # false positive on Dataframe
     assert not init_df.empty
     assert "PERMX" in init_df
     assert "PORO" in init_df
@@ -220,7 +223,7 @@ def test_df2ecl(tmp_path):
     os.chdir(tmp_path)
     grid.df2ecl(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
     assert Path("perm.inc").is_file()
-    incstring = open("perm.inc").readlines()
+    incstring = Path("perm.inc").read_text(encoding="utf8").splitlines()
     assert sum([1 for line in incstring if "PERM" in line]) == 6
 
     assert grid.df2ecl(grid_df, ["PERMX"], dtype=float, nocomments=True) == grid.df2ecl(

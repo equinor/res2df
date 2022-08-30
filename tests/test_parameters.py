@@ -194,6 +194,7 @@ def test_load(tmp_path):
     # txt file errors:
     Path("error.txt").write_text("foo bar com")
     with pytest.raises(ValueError, match="Could not parse error.txt"):
+        # pylint: disable=expression-not-assigned
         load("error.txt") == {"foo": "bar"}
 
     with pytest.raises(FileNotFoundError, match="notexisting not found"):

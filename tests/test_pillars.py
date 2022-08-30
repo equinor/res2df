@@ -251,6 +251,7 @@ PILLARS_GAS_IN_WATER = pd.DataFrame(
     ],
 )
 def test_compute_pillar_contacts(pillar_df, args, expectedrows):
+    """Test parametrized computations of contacts on individual pillars"""
     pd.testing.assert_frame_equal(
         pillars.compute_pillar_contacts(pillar_df, **args), pd.DataFrame(expectedrows)
     )
@@ -316,6 +317,7 @@ def test_compute_pillar_contacts(pillar_df, args, expectedrows):
     ],
 )
 def test_compute_volumes(dframe, datestr, expectedrows):
+    """Test computation of volumes from dataframes with grid data"""
     pd.testing.assert_frame_equal(
         pillars.compute_volumes(dframe, datestr), pd.DataFrame(expectedrows)
     )

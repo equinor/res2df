@@ -6,6 +6,7 @@ import pytest
 from ecl2df import inferdims
 
 try:
+    # pylint: disable=unused-import
     import opm  # noqa
 except ImportError:
     pytest.skip(

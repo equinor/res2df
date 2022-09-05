@@ -976,12 +976,79 @@ def test_ecl2df_vfpprod(test_input, expected):
     pd.testing.assert_frame_equal(vfpdf, expected)
 
 
+@pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
+def test_ecl2pyarrow_vfpprod(test_input, expected):
+    """Test ecl2pyarrow for VFPPROD"""
+    deck = EclFiles.str2deck(test_input)
+    # Read first into pyarrow tables
+    vfppa = vfp.pas(deck, "VFPPROD")
+    # Convert pyarrow table to basic data types for VFPPROD
+    vfpprod_data = vfp.pyarrow2vfpprod_basic_data(vfppa[0])
+    # Convert basic data types to ecl2df DataFrame for VFPPROD
+    vfpdf = vfp.basic_data_vfpprod2df(
+        tableno=vfpprod_data["TABLE_NUMBER"],
+        datum=vfpprod_data["DATUM"],
+        rate_type=vfpprod_data["RATE_TYPE"],
+        wfr_type=vfpprod_data["WFR_TYPE"],
+        gfr_type=vfpprod_data["GFR_TYPE"],
+        alq_type=vfpprod_data["ALQ_TYPE"],
+        thp_type=vfpprod_data["THP_TYPE"],
+        unit_type=vfpprod_data["UNIT_TYPE"],
+        tab_type=vfpprod_data["TAB_TYPE"],
+        flow_values=vfpprod_data["FLOW_VALUES"],
+        thp_values=vfpprod_data["THP_VALUES"],
+        wfr_values=vfpprod_data["WFR_VALUES"],
+        gfr_values=vfpprod_data["GFR_VALUES"],
+        alq_values=vfpprod_data["ALQ_VALUES"],
+        thp_indices=vfpprod_data["THP_INDICES"],
+        wfr_indices=vfpprod_data["WFR_INDICES"],
+        gfr_indices=vfpprod_data["GFR_INDICES"],
+        alq_indices=vfpprod_data["ALQ_INDICES"],
+        tab_data=vfpprod_data["BHP_TABLE"],
+    )
+
+    # Check that all steps lead to desired end result
+    pd.testing.assert_frame_equal(vfpdf, expected)
+
+
 @pytest.mark.parametrize("test_input, expected", [VFPPROD_CASES[0]])
 def test_df2ecl_vfpprod(test_input, expected):
     """Test df2ecl for VFPPROD (case without default values)"""
     ecl_vfpprod = vfp.df2ecl_vfpprod(expected)
 
     assert ecl_vfpprod.strip() == test_input.strip()
+
+
+@pytest.mark.parametrize("test_input, expected", [VFPPROD_CASES[0]])
+def test_pyarrow2ecl_vfpprod(test_input, expected):
+    """Test pyarrow2ecl for VFPPROD (case without default values)"""
+    deck = EclFiles.str2deck(vfp.df2ecl_vfpprod(expected))
+    vfpprod_pa = vfp.pas(deck, "VFPPROD")[0]
+    vfpprod_data = vfp.pyarrow2vfpprod_basic_data(vfpprod_pa)
+    vfpprod_df = vfp.basic_data_vfpprod2df(
+        tableno=vfpprod_data["TABLE_NUMBER"],
+        datum=vfpprod_data["DATUM"],
+        rate_type=vfpprod_data["RATE_TYPE"],
+        wfr_type=vfpprod_data["WFR_TYPE"],
+        gfr_type=vfpprod_data["GFR_TYPE"],
+        alq_type=vfpprod_data["ALQ_TYPE"],
+        thp_type=vfpprod_data["THP_TYPE"],
+        unit_type=vfpprod_data["UNIT_TYPE"],
+        tab_type=vfpprod_data["TAB_TYPE"],
+        flow_values=vfpprod_data["FLOW_VALUES"],
+        thp_values=vfpprod_data["THP_VALUES"],
+        wfr_values=vfpprod_data["WFR_VALUES"],
+        gfr_values=vfpprod_data["GFR_VALUES"],
+        alq_values=vfpprod_data["ALQ_VALUES"],
+        thp_indices=vfpprod_data["THP_INDICES"],
+        wfr_indices=vfpprod_data["WFR_INDICES"],
+        gfr_indices=vfpprod_data["GFR_INDICES"],
+        alq_indices=vfpprod_data["ALQ_INDICES"],
+        tab_data=vfpprod_data["BHP_TABLE"],
+    )
+    vfpprod_ecl = vfp.df2ecl_vfpprod(vfpprod_df)
+
+    assert vfpprod_ecl.strip() == test_input.strip()
 
 
 @pytest.mark.parametrize("test_input, expected", VFPINJ_CASES)
@@ -1001,6 +1068,29 @@ def test_df2ecl_vfpinj(test_input, expected):
     assert ecl_vfpinj.strip() == test_input.strip()
 
 
+@pytest.mark.parametrize("test_input, expected", [VFPINJ_CASES[0]])
+def test_pyarrow2ecl_vfpinj(test_input, expected):
+    """Test pyarrow2ecl for VFPPROD (case without default values)"""
+    deck = EclFiles.str2deck(vfp.df2ecl_vfpinj(expected))
+    vfpinj_pa = vfp.pas(deck, "VFPINJ")[0]
+    vfpinj_data = vfp.pyarrow2vfpinj_basic_data(vfpinj_pa)
+    vfpinj_df = vfp.basic_data_vfpinj2df(
+        tableno=vfpinj_data["TABLE_NUMBER"],
+        datum=vfpinj_data["DATUM"],
+        rate_type=vfpinj_data["RATE_TYPE"],
+        thp_type=vfpinj_data["THP_TYPE"],
+        unit_type=vfpinj_data["UNIT_TYPE"],
+        tab_type=vfpinj_data["TAB_TYPE"],
+        flow_values=vfpinj_data["FLOW_VALUES"],
+        thp_values=vfpinj_data["THP_VALUES"],
+        thp_indices=vfpinj_data["THP_INDICES"],
+        tab_data=vfpinj_data["BHP_TABLE"],
+    )
+    vfpinj_ecl = vfp.df2ecl_vfpinj(vfpinj_df)
+
+    assert vfpinj_ecl.strip() == test_input.strip()
+
+
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_ecl2df_vfpprods(test_input, expected):
     """Test ecl2df for files with multiple VFPPROD"""
@@ -1010,6 +1100,39 @@ def test_ecl2df_vfpprods(test_input, expected):
     # Two VFPPROD curves in file corresponding to curves 0 and 1
     for i, n in enumerate([0, 1]):
         pd.testing.assert_frame_equal(vfpdfs[i], expected[n])
+
+
+@pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
+def test_ecl2pyarrow_vfpprods(test_input, expected):
+    """Test ecl2df with pyarrow for files with multiple VFPPROD"""
+    deck = EclFiles.str2deck(test_input)
+    vfppas = vfp.pas(deck, "VFPPROD")
+
+    # Two VFPPROD curves in file corresponding to curves 0 and 1
+    for i, n in enumerate([0, 1]):
+        vfpprod_data = vfp.pyarrow2vfpprod_basic_data(vfppas[i])
+        vfpdf = vfp.basic_data_vfpprod2df(
+            tableno=vfpprod_data["TABLE_NUMBER"],
+            datum=vfpprod_data["DATUM"],
+            rate_type=vfpprod_data["RATE_TYPE"],
+            wfr_type=vfpprod_data["WFR_TYPE"],
+            gfr_type=vfpprod_data["GFR_TYPE"],
+            alq_type=vfpprod_data["ALQ_TYPE"],
+            thp_type=vfpprod_data["THP_TYPE"],
+            unit_type=vfpprod_data["UNIT_TYPE"],
+            tab_type=vfpprod_data["TAB_TYPE"],
+            flow_values=vfpprod_data["FLOW_VALUES"],
+            thp_values=vfpprod_data["THP_VALUES"],
+            wfr_values=vfpprod_data["WFR_VALUES"],
+            gfr_values=vfpprod_data["GFR_VALUES"],
+            alq_values=vfpprod_data["ALQ_VALUES"],
+            thp_indices=vfpprod_data["THP_INDICES"],
+            wfr_indices=vfpprod_data["WFR_INDICES"],
+            gfr_indices=vfpprod_data["GFR_INDICES"],
+            alq_indices=vfpprod_data["ALQ_INDICES"],
+            tab_data=vfpprod_data["BHP_TABLE"],
+        )
+        pd.testing.assert_frame_equal(vfpdf, expected[n])
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
@@ -1024,6 +1147,31 @@ def test_ecl2df_vfpinjs(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
+def test_eclpyarrow_vfpinjs(test_input, expected):
+    """Test ecl2df for pyarrow for files with multiple VFPINJ"""
+    deck = EclFiles.str2deck(test_input)
+    vfppas = vfp.pas(deck, "VFPINJ")
+
+    # Two VFPINJ curves in file corresponding to curves 2 and 3
+    for i, n in enumerate([2, 3]):
+        vfpinj_data = vfp.pyarrow2vfpinj_basic_data(vfppas[i])
+        vfpdf = vfp.basic_data_vfpinj2df(
+            tableno=vfpinj_data["TABLE_NUMBER"],
+            datum=vfpinj_data["DATUM"],
+            rate_type=vfpinj_data["RATE_TYPE"],
+            thp_type=vfpinj_data["THP_TYPE"],
+            unit_type=vfpinj_data["UNIT_TYPE"],
+            tab_type=vfpinj_data["TAB_TYPE"],
+            flow_values=vfpinj_data["FLOW_VALUES"],
+            thp_values=vfpinj_data["THP_VALUES"],
+            thp_indices=vfpinj_data["THP_INDICES"],
+            tab_data=vfpinj_data["BHP_TABLE"],
+        )
+
+        pd.testing.assert_frame_equal(vfpdf, expected[n])
+
+
+@pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_ecl2df_vfpprod_no(test_input, expected):
     """Test ecl2df for files with multiple VFPPROD with vfp number argument"""
     deck = EclFiles.str2deck(test_input)
@@ -1034,6 +1182,40 @@ def test_ecl2df_vfpprod_no(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
+def test_ecl2pyarrow_vfpprod_no(test_input, expected):
+    """Test ecl2df for pyarrow for files with multiple
+    VFPPROD with vfp number argument
+    """
+    deck = EclFiles.str2deck(test_input)
+    vfppas = vfp.pas(deck, "VFPPROD", "2")
+    vfpprod_data = vfp.pyarrow2vfpprod_basic_data(vfppas[0])
+    vfpdf = vfp.basic_data_vfpprod2df(
+        tableno=vfpprod_data["TABLE_NUMBER"],
+        datum=vfpprod_data["DATUM"],
+        rate_type=vfpprod_data["RATE_TYPE"],
+        wfr_type=vfpprod_data["WFR_TYPE"],
+        gfr_type=vfpprod_data["GFR_TYPE"],
+        alq_type=vfpprod_data["ALQ_TYPE"],
+        thp_type=vfpprod_data["THP_TYPE"],
+        unit_type=vfpprod_data["UNIT_TYPE"],
+        tab_type=vfpprod_data["TAB_TYPE"],
+        flow_values=vfpprod_data["FLOW_VALUES"],
+        thp_values=vfpprod_data["THP_VALUES"],
+        wfr_values=vfpprod_data["WFR_VALUES"],
+        gfr_values=vfpprod_data["GFR_VALUES"],
+        alq_values=vfpprod_data["ALQ_VALUES"],
+        thp_indices=vfpprod_data["THP_INDICES"],
+        wfr_indices=vfpprod_data["WFR_INDICES"],
+        gfr_indices=vfpprod_data["GFR_INDICES"],
+        alq_indices=vfpprod_data["ALQ_INDICES"],
+        tab_data=vfpprod_data["BHP_TABLE"],
+    )
+
+    # VFPPROD curve with VFP number 2 is curve 1 in file
+    pd.testing.assert_frame_equal(vfpdf, expected[1])
+
+
+@pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_ecl2df_vfpinj_no(test_input, expected):
     """Test ecl2df for files with multiple VFPINJ with vfp number argument"""
     deck = EclFiles.str2deck(test_input)
@@ -1041,6 +1223,30 @@ def test_ecl2df_vfpinj_no(test_input, expected):
 
     # VFPINJ curve with VFP number 4 is curve 3 in file
     pd.testing.assert_frame_equal(vfpdfs[0], expected[3])
+
+
+@pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
+def test_ecl2pyarrow_vfpinj_no(test_input, expected):
+    """Test ecl2df for pyarrow files with multiple VFPINJ with vfp number argument"""
+    deck = EclFiles.str2deck(test_input)
+    vfppas = vfp.pas(deck, "VFPINJ", "4")
+
+    vfpinj_data = vfp.pyarrow2vfpinj_basic_data(vfppas[0])
+    vfpdf = vfp.basic_data_vfpinj2df(
+        tableno=vfpinj_data["TABLE_NUMBER"],
+        datum=vfpinj_data["DATUM"],
+        rate_type=vfpinj_data["RATE_TYPE"],
+        thp_type=vfpinj_data["THP_TYPE"],
+        unit_type=vfpinj_data["UNIT_TYPE"],
+        tab_type=vfpinj_data["TAB_TYPE"],
+        flow_values=vfpinj_data["FLOW_VALUES"],
+        thp_values=vfpinj_data["THP_VALUES"],
+        thp_indices=vfpinj_data["THP_INDICES"],
+        tab_data=vfpinj_data["BHP_TABLE"],
+    )
+
+    # VFPINJ curve with VFP number 4 is curve 3 in file
+    pd.testing.assert_frame_equal(vfpdf, expected[3])
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
@@ -1055,11 +1261,74 @@ def test_ecl2df_vfpprods_no(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
+def test_ecl2pyarrow_vfpprods_no(test_input, expected):
+    """Test ecl2df for pyarrow for files with multiple VFPPROD
+    with vfp number argument as range
+    """
+    deck = EclFiles.str2deck(test_input)
+    vfppas = vfp.pas(deck, "VFPPROD", "[1:2]")
+
+    # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
+    for i, n in enumerate([0, 1]):
+        vfpprod_data = vfp.pyarrow2vfpprod_basic_data(vfppas[i])
+        vfpdf = vfp.basic_data_vfpprod2df(
+            tableno=vfpprod_data["TABLE_NUMBER"],
+            datum=vfpprod_data["DATUM"],
+            rate_type=vfpprod_data["RATE_TYPE"],
+            wfr_type=vfpprod_data["WFR_TYPE"],
+            gfr_type=vfpprod_data["GFR_TYPE"],
+            alq_type=vfpprod_data["ALQ_TYPE"],
+            thp_type=vfpprod_data["THP_TYPE"],
+            unit_type=vfpprod_data["UNIT_TYPE"],
+            tab_type=vfpprod_data["TAB_TYPE"],
+            flow_values=vfpprod_data["FLOW_VALUES"],
+            thp_values=vfpprod_data["THP_VALUES"],
+            wfr_values=vfpprod_data["WFR_VALUES"],
+            gfr_values=vfpprod_data["GFR_VALUES"],
+            alq_values=vfpprod_data["ALQ_VALUES"],
+            thp_indices=vfpprod_data["THP_INDICES"],
+            wfr_indices=vfpprod_data["WFR_INDICES"],
+            gfr_indices=vfpprod_data["GFR_INDICES"],
+            alq_indices=vfpprod_data["ALQ_INDICES"],
+            tab_data=vfpprod_data["BHP_TABLE"],
+        )
+        pd.testing.assert_frame_equal(vfpdf, expected[n])
+
+
+@pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_ecl2df_vfpinjs_no(test_input, expected):
-    """Test ecl2df for files with multiple VFPINJ with vfp number argument as range"""
+    """Test ecl2df for files with multiple VFPINJ with vfp number
+    argument as range
+    """
     deck = EclFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPINJ", "[3:4]")
 
     # VFPINJ curves with VFP numbers 3 and 4 are curves 2 and 3
     for i, n in enumerate([2, 3]):
         pd.testing.assert_frame_equal(vfpdfs[i], expected[n])
+
+
+@pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
+def test_ecl2pyarrow_vfpinjs_no(test_input, expected):
+    """Test ecl2df for pyararow for files with multiple VFPINJ with vfp
+    number argument as range
+    """
+    deck = EclFiles.str2deck(test_input)
+    vfppas = vfp.pas(deck, "VFPINJ", "[3:4]")
+
+    # VFPINJ curves with VFP numbers 3 and 4 are curves 2 and 3
+    for i, n in enumerate([2, 3]):
+        vfpinj_data = vfp.pyarrow2vfpinj_basic_data(vfppas[i])
+        vfpdf = vfp.basic_data_vfpinj2df(
+            tableno=vfpinj_data["TABLE_NUMBER"],
+            datum=vfpinj_data["DATUM"],
+            rate_type=vfpinj_data["RATE_TYPE"],
+            thp_type=vfpinj_data["THP_TYPE"],
+            unit_type=vfpinj_data["UNIT_TYPE"],
+            tab_type=vfpinj_data["TAB_TYPE"],
+            flow_values=vfpinj_data["FLOW_VALUES"],
+            thp_values=vfpinj_data["THP_VALUES"],
+            thp_indices=vfpinj_data["THP_INDICES"],
+            tab_data=vfpinj_data["BHP_TABLE"],
+        )
+        pd.testing.assert_frame_equal(vfpdf, expected[n])

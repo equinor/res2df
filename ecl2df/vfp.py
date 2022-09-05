@@ -1537,7 +1537,8 @@ def vfpprod2df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, None]:
-    """Return a dataframe or pyarrow Table of a single VFPPROD table from an Eclipse deck.
+    """Return a dataframe or pyarrow Table of a single VFPPROD table
+    from an Eclipse deck.
 
     Args:
         keyword:        Eclipse deck keyword

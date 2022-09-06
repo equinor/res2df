@@ -603,15 +603,15 @@ def basic_data_vfpinj2df(
         tableno     : table number
         datum       : datum depth
         rate_type   : rate type used for flow values
-        thp_type    : thp type
+        thp_type    : thp type used for THP values
         unit_type   : unit type
-        tab_type    : tab type
+        tab_type    : type for tabulated (record) values
         flow_values : rate values used to generate table
-        thp_values  : THP values used to generate table
-        thp_indices : which index in thp value table a given
-                      BHP value corresponds to (1-base)
+        thp_type    : thp type
+        thp_indices : which index in thp value table a given BHP value
+                      corresponds to (1-base)
         tab_data    : tabulated (BHP) data
-                      (ordered according to thp- and flow-values)
+                      (ordered as thp- and flow-values)
     """
 
     # Generate list with values instead of indices

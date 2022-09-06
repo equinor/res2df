@@ -496,16 +496,16 @@ def basic_data_vfpprod2df(
     thp_type: THPTYPE,
     unit_type: UNITTYPE,
     tab_type: VFPPROD_TABTYPE,
-    flow_values: np.array,
-    thp_values: np.array,
-    wfr_values: np.array,
-    gfr_values: np.array,
-    alq_values: np.array,
-    thp_indices: np.array,
-    wfr_indices: np.array,
-    gfr_indices: np.array,
-    alq_indices: np.array,
-    tab_data: np.array,
+    flow_values: np.ndarray,
+    thp_values: np.ndarray,
+    wfr_values: np.ndarray,
+    gfr_values: np.ndarray,
+    alq_values: np.ndarray,
+    thp_indices: np.ndarray,
+    wfr_indices: np.ndarray,
+    gfr_indices: np.ndarray,
+    alq_indices: np.ndarray,
+    tab_data: np.ndarray,
 ) -> pd.DataFrame:
     """Return a pandas DataFrame from VFPPROD liftcurve data
     Args:
@@ -593,10 +593,10 @@ def basic_data_vfpinj2df(
     thp_type: THPTYPE,
     unit_type: UNITTYPE,
     tab_type: VFPINJ_TABTYPE,
-    flow_values: np.array,
-    thp_values: np.array,
-    thp_indices: np.array,
-    tab_data: np.array,
+    flow_values: np.ndarray,
+    thp_values: np.ndarray,
+    thp_indices: np.ndarray,
+    tab_data: np.ndarray,
 ) -> pd.DataFrame:
     """Return a pandas DataFrame from VFPINJ liftcurve data
     Args:
@@ -664,16 +664,16 @@ def basic_data_vfpprod2pyarrow(
     thp_type: THPTYPE,
     unit_type: UNITTYPE,
     tab_type: VFPPROD_TABTYPE,
-    flow_values: np.array,
-    thp_values: np.array,
-    wfr_values: np.array,
-    gfr_values: np.array,
-    alq_values: np.array,
-    thp_indices: np.array,
-    wfr_indices: np.array,
-    gfr_indices: np.array,
-    alq_indices: np.array,
-    tab_data: np.array,
+    flow_values: np.ndarray,
+    thp_values: np.ndarray,
+    wfr_values: np.ndarray,
+    gfr_values: np.ndarray,
+    alq_values: np.ndarray,
+    thp_indices: np.ndarray,
+    wfr_indices: np.ndarray,
+    gfr_indices: np.ndarray,
+    alq_indices: np.ndarray,
+    tab_data: np.ndarray,
 ) -> pa.Table:
     """Return a pyarrow Table from VFPPROD liftcurve data
 
@@ -773,10 +773,10 @@ def basic_data_vfpinj2pyarrow(
     thp_type: THPTYPE,
     unit_type: UNITTYPE,
     tab_type: VFPINJ_TABTYPE,
-    flow_values: np.array,
-    thp_values: np.array,
-    thp_indices: np.array,
-    tab_data: np.array,
+    flow_values: np.ndarray,
+    thp_values: np.ndarray,
+    thp_indices: np.ndarray,
+    tab_data: np.ndarray,
 ) -> pa.Table:
     """Return a pyarrow Table from a VFPINJ record data
 
@@ -1960,11 +1960,11 @@ def write_vfpprod_table(
 
 
 def write_vfpprod_table_records(
-    thp_indices: np.array,
-    wfr_indices: np.array,
-    gfr_indices: np.array,
-    alq_indices: np.array,
-    table: np.array,
+    thp_indices: np.ndarray,
+    wfr_indices: np.ndarray,
+    gfr_indices: np.ndarray,
+    alq_indices: np.ndarray,
+    table: np.ndarray,
     format: str = "%10.3",
     values_per_line: int = 5,
 ) -> str:
@@ -2046,7 +2046,7 @@ def write_vfpinj_table(
 
 
 def write_vfpinj_table_records(
-    thp_indices: np.array,
+    thp_indices: np.ndarray,
     table: pd.DataFrame,
     format: str = "%10.6g",
     values_per_line: int = 5,

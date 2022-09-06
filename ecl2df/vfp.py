@@ -508,6 +508,7 @@ def basic_data_vfpprod2df(
     tab_data: np.ndarray,
 ) -> pd.DataFrame:
     """Return a pandas DataFrame from VFPPROD liftcurve data
+
     Args:
         tableno     : table number
         datum       : datum depth
@@ -599,6 +600,7 @@ def basic_data_vfpinj2df(
     tab_data: np.ndarray,
 ) -> pd.DataFrame:
     """Return a pandas DataFrame from VFPINJ liftcurve data
+
     Args:
         tableno     : table number
         datum       : datum depth

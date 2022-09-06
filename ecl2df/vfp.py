@@ -404,9 +404,9 @@ def deckrecord2list(
 
 def _stack_vfptable2df(
     index_names_list: List[str],
-    index_values_list: List[List[float]],
-    flow_values_list: List[float],
-    table_values_list: List[List[float]],
+    index_values_list: Union[np.ndarray, List[List[float]]],
+    flow_values_list: Union[np.ndarray, List[float]],
+    table_values_list: Union[np.ndarray, List[List[float]]],
 ) -> pd.DataFrame:
     """Return a dataframe from a list of interpolation ranges and tabulated values
 

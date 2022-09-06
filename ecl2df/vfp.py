@@ -447,7 +447,7 @@ def _stack_vfptable2df(
     for index_name in index_names_list:
         indextuples.append((index_name, "DELETE"))
     for flowvalue in flow_values_list:
-        indextuples.append(("TAB", flowvalue))
+        indextuples.append(("TAB", str(flowvalue)))
 
     # Set the columns to a MultiIndex, to facilitate stacking
     df_vfptable.columns = pd.MultiIndex.from_tuples(indextuples)
@@ -477,6 +477,11 @@ def _stack_vfptable2df(
     cols[cols.index("level_1")] = "RATE"
     df_vfptable_stacked.columns = cols
     df_vfptable_stacked["RATE"] = df_vfptable_stacked["RATE"].astype(float)
+
+    # Sort values in correct order
+    df_vfptable_stacked.sort_values(
+        by=index_names_list + ["RATE"], ascending=True, inplace=True, ignore_index=True
+    )
 
     return df_vfptable_stacked
 
@@ -1212,7 +1217,7 @@ def read_vfpprod_basic_data(
 
     # Extract basic table information
     tableno = int(basic_record["TABLE"])
-    if vfpnumbers_str is not None:
+    if vfpnumbers_str:
         vfpnumbers = _string2intlist(vfpnumbers_str)
         if tableno not in vfpnumbers:
             return pd.DataFrame()
@@ -1338,7 +1343,7 @@ def read_vfpinj_basic_data(
 
     # Extract basic table information
     tableno = basic_record["TABLE"]
-    if vfpnumbers_str is not None:
+    if vfpnumbers_str:
         vfpnumbers = _string2intlist(vfpnumbers_str)
         if tableno not in vfpnumbers:
             return pd.DataFrame()
@@ -1546,7 +1551,6 @@ def vfpprod2df(
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
-    # Get basic data from VFPPROD tables
     vfpprod_data = read_vfpprod_basic_data(keyword, vfpnumbers_str)
 
     # Check if vfp number exists. If not return empry DataFrame

@@ -1196,7 +1196,7 @@ def test_basic_data_vfpprods_no(test_input, expected):
     """
     deck = EclFiles.str2deck(test_input)
     basic_data_vfps = vfp.basic_data(deck, "VFPPROD", "[1:2]")
-    
+
     # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
     for i, n in enumerate([0, 1]):
         df_vfp = vfp.basic_data2df(basic_data_vfps[i])
@@ -1224,7 +1224,7 @@ def test_pyarrow2basic_data_vfpprods_no(test_input, expected):
     """
     deck = EclFiles.str2deck(test_input)
     pyarrow_vfps = vfp.pyarrow_tables(deck, "VFPPROD", "[1:2]")
-    
+
     # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
     for i, n in enumerate([0, 1]):
         basic_data_vfp = vfp.pyarrow2basic_data(pyarrow_vfps[i])

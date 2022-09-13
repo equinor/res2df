@@ -49,7 +49,158 @@ from ._vfpdefs import (
     WFR,
 )
 
+# Keys used for basic data dictionary representation of VFPPROD
+BASIC_DATA_KEYS = [
+    "VFP_TYPE",
+    "TABLE_NUMBER",
+    "DATUM",
+    "RATE_TYPE",
+    "WFR_TYPE",
+    "GFR_TYPE",
+    "ALQ_TYPE",
+    "THP_TYPE",
+    "UNIT_TYPE",
+    "TAB_TYPE",
+    "THP_VALUES",
+    "WFR_VALUES",
+    "GFR_VALUES",
+    "ALQ_VALUES",
+    "FLOW_VALUES",
+    "THP_INDICES",
+    "WFR_INDICES",
+    "GFR_INDICES",
+    "ALQ_INDICES",
+    "BHP_TABLE",
+]
+
+
 logger = logging.getLogger(__name__)
+
+
+def basic_data(
+    keyword: "opm.libopmcommon_python.DeckKeyword",
+    vfpnumbers_str: Optional[str] = None,
+) -> Union[Dict[str, Any], None]:
+    """Read and return all data for Eclipse VFPPROD keyword as basic data types
+
+    Empty string returned if vfp table number does not match any number in list
+
+    Args:
+        keyword:        Eclipse deck keyword
+        vfpnumbers_str: String with list of vfp table numbers to extract.
+                        Syntax "[0,1,8:11]" corresponds
+    """
+    # Number of records in keyword
+    num_rec = len(keyword)
+
+    # Parse records with basic information and interpolation ranges
+    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPPROD", "records", 0)
+
+    # Extract basic table information
+    tableno = int(basic_record["TABLE"])
+    if vfpnumbers_str:
+        vfpnumbers = _string2intlist(vfpnumbers_str)
+        if tableno not in vfpnumbers:
+            return None
+    datum = float(basic_record["DATUM_DEPTH"])
+    rate_type = VFPPROD_FLO.GAS
+    if basic_record["RATE_TYPE"]:
+        rate_type = VFPPROD_FLO[basic_record["RATE_TYPE"]]
+    wfr_type = WFR.WCT
+    if basic_record["WFR"]:
+        wfr_type = WFR[basic_record["WFR"]]
+    gfr_type = GFR.GOR
+    if basic_record["GFR"]:
+        gfr_type = GFR[basic_record["GFR"]]
+    thp_type = THPTYPE.THP
+    if basic_record["PRESSURE_DEF"]:
+        thp_type = THPTYPE[basic_record["PRESSURE_DEF"]]
+    alq_type = ALQ.UNDEFINED
+    if basic_record["ALQ_DEF"]:
+        if basic_record["ALQ_DEF"].strip():
+            alq_type = ALQ[basic_record["ALQ_DEF"]]
+    unit_type = UNITTYPE.DEFAULT
+    if basic_record["UNITS"]:
+        unit_type = UNITTYPE[basic_record["UNITS"]]
+    tab_type = VFPPROD_TABTYPE.BHP
+    if basic_record["BODY_DEF"]:
+        tab_type = VFPPROD_TABTYPE[basic_record["BODY_DEF"]]
+
+    flow_values = _deckrecord2list(keyword[1], "VFPPROD", 1, "FLOW_VALUES")
+    thp_values = _deckrecord2list(keyword[2], "VFPPROD", 2, "THP_VALUES")
+    wfr_values = _deckrecord2list(keyword[3], "VFPPROD", 3, "WFR_VALUES")
+    gfr_values = _deckrecord2list(keyword[4], "VFPPROD", 4, "GFR_VALUES")
+    alq_values = _deckrecord2list(keyword[5], "VFPPROD", 5, "ALQ_VALUES")
+
+    # Check of consistent dimensions
+    no_flow_values = len(flow_values)
+    no_thp_values = len(thp_values)
+    no_wfr_values = len(wfr_values)
+    no_gfr_values = len(gfr_values)
+    no_alq_values = len(alq_values)
+    no_interp_values = no_thp_values * no_wfr_values * no_gfr_values * no_alq_values
+    no_tab_records = num_rec - 6
+    if no_interp_values != no_tab_records:
+        raise ValueError(
+            "Dimensions of interpolation ranges "
+            "does not match number of tabulated records"
+        )
+
+    # Extract interpolation values and tabulated values (BHP values)
+    bhp_table: List[List[float]] = []
+    thp_indices: List[float] = []
+    wfr_indices: List[float] = []
+    gfr_indices: List[float] = []
+    alq_indices: List[float] = []
+    for n in range(6, num_rec):
+        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPPROD", "records", 6)
+        bhp_values: Union[Any, List[float]]
+        if isinstance(bhp_record.get("VALUES"), list):
+            bhp_values = bhp_record.get("VALUES")
+        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
+            bhp_values = [bhp_record.get("VALUES")]
+
+        thp_index = bhp_record["THP_INDEX"]
+        wfr_index = bhp_record["WFR_INDEX"]
+        gfr_index = bhp_record["GFR_INDEX"]
+        alq_index = bhp_record["ALQ_INDEX"]
+
+        thp_indices.append(thp_index)
+        wfr_indices.append(wfr_index)
+        gfr_indices.append(gfr_index)
+        alq_indices.append(alq_index)
+
+        if len(bhp_values) != no_flow_values:
+            raise ValueError(
+                "Dimension of record of tabulated "
+                "values does not match number of flow values"
+            )
+        bhp_table.append(bhp_values)
+
+    vfpprod_data = {
+        "VFP_TYPE": VFPTYPE.VFPPROD,
+        "TABLE_NUMBER": tableno,
+        "DATUM": datum,
+        "RATE_TYPE": rate_type,
+        "WFR_TYPE": wfr_type,
+        "GFR_TYPE": gfr_type,
+        "ALQ_TYPE": alq_type,
+        "THP_TYPE": thp_type,
+        "UNIT_TYPE": unit_type,
+        "TAB_TYPE": tab_type,
+        "THP_VALUES": np.array(thp_values),
+        "WFR_VALUES": np.array(wfr_values),
+        "GFR_VALUES": np.array(gfr_values),
+        "ALQ_VALUES": np.array(alq_values),
+        "FLOW_VALUES": np.array(flow_values),
+        "THP_INDICES": np.array(thp_indices),
+        "WFR_INDICES": np.array(wfr_indices),
+        "GFR_INDICES": np.array(gfr_indices),
+        "ALQ_INDICES": np.array(alq_indices),
+        "BHP_TABLE": np.array(bhp_table),
+    }
+
+    return vfpprod_data
 
 
 def basic_data2df(
@@ -501,132 +652,6 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
     return vfpprod_data
 
 
-def basic_data(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Union[Dict[str, Any], None]:
-    """Read and return all data for Eclipse VFPPROD keyword as basic data types
-
-    Empty string returned if vfp table number does not match any number in list
-
-    Args:
-        keyword:        Eclipse deck keyword
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds
-    """
-    # Number of records in keyword
-    num_rec = len(keyword)
-
-    # Parse records with basic information and interpolation ranges
-    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPPROD", "records", 0)
-
-    # Extract basic table information
-    tableno = int(basic_record["TABLE"])
-    if vfpnumbers_str:
-        vfpnumbers = _string2intlist(vfpnumbers_str)
-        if tableno not in vfpnumbers:
-            return None
-    datum = float(basic_record["DATUM_DEPTH"])
-    rate_type = VFPPROD_FLO.GAS
-    if basic_record["RATE_TYPE"]:
-        rate_type = VFPPROD_FLO[basic_record["RATE_TYPE"]]
-    wfr_type = WFR.WCT
-    if basic_record["WFR"]:
-        wfr_type = WFR[basic_record["WFR"]]
-    gfr_type = GFR.GOR
-    if basic_record["GFR"]:
-        gfr_type = GFR[basic_record["GFR"]]
-    thp_type = THPTYPE.THP
-    if basic_record["PRESSURE_DEF"]:
-        thp_type = THPTYPE[basic_record["PRESSURE_DEF"]]
-    alq_type = ALQ.UNDEFINED
-    if basic_record["ALQ_DEF"]:
-        if basic_record["ALQ_DEF"].strip():
-            alq_type = ALQ[basic_record["ALQ_DEF"]]
-    unit_type = UNITTYPE.DEFAULT
-    if basic_record["UNITS"]:
-        unit_type = UNITTYPE[basic_record["UNITS"]]
-    tab_type = VFPPROD_TABTYPE.BHP
-    if basic_record["BODY_DEF"]:
-        tab_type = VFPPROD_TABTYPE[basic_record["BODY_DEF"]]
-
-    flow_values = _deckrecord2list(keyword[1], "VFPPROD", 1, "FLOW_VALUES")
-    thp_values = _deckrecord2list(keyword[2], "VFPPROD", 2, "THP_VALUES")
-    wfr_values = _deckrecord2list(keyword[3], "VFPPROD", 3, "WFR_VALUES")
-    gfr_values = _deckrecord2list(keyword[4], "VFPPROD", 4, "GFR_VALUES")
-    alq_values = _deckrecord2list(keyword[5], "VFPPROD", 5, "ALQ_VALUES")
-
-    # Check of consistent dimensions
-    no_flow_values = len(flow_values)
-    no_thp_values = len(thp_values)
-    no_wfr_values = len(wfr_values)
-    no_gfr_values = len(gfr_values)
-    no_alq_values = len(alq_values)
-    no_interp_values = no_thp_values * no_wfr_values * no_gfr_values * no_alq_values
-    no_tab_records = num_rec - 6
-    if no_interp_values != no_tab_records:
-        raise ValueError(
-            "Dimensions of interpolation ranges "
-            "does not match number of tabulated records"
-        )
-
-    # Extract interpolation values and tabulated values (BHP values)
-    bhp_table: List[List[float]] = []
-    thp_indices: List[float] = []
-    wfr_indices: List[float] = []
-    gfr_indices: List[float] = []
-    alq_indices: List[float] = []
-    for n in range(6, num_rec):
-        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPPROD", "records", 6)
-        bhp_values: Union[Any, List[float]]
-        if isinstance(bhp_record.get("VALUES"), list):
-            bhp_values = bhp_record.get("VALUES")
-        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
-            bhp_values = [bhp_record.get("VALUES")]
-
-        thp_index = bhp_record["THP_INDEX"]
-        wfr_index = bhp_record["WFR_INDEX"]
-        gfr_index = bhp_record["GFR_INDEX"]
-        alq_index = bhp_record["ALQ_INDEX"]
-
-        thp_indices.append(thp_index)
-        wfr_indices.append(wfr_index)
-        gfr_indices.append(gfr_index)
-        alq_indices.append(alq_index)
-
-        if len(bhp_values) != no_flow_values:
-            raise ValueError(
-                "Dimension of record of tabulated "
-                "values does not match number of flow values"
-            )
-        bhp_table.append(bhp_values)
-
-    vfpprod_data = {
-        "VFP_TYPE": VFPTYPE.VFPPROD,
-        "TABLE_NUMBER": tableno,
-        "DATUM": datum,
-        "RATE_TYPE": rate_type,
-        "WFR_TYPE": wfr_type,
-        "GFR_TYPE": gfr_type,
-        "ALQ_TYPE": alq_type,
-        "THP_TYPE": thp_type,
-        "UNIT_TYPE": unit_type,
-        "TAB_TYPE": tab_type,
-        "THP_VALUES": np.array(thp_values),
-        "WFR_VALUES": np.array(wfr_values),
-        "GFR_VALUES": np.array(gfr_values),
-        "ALQ_VALUES": np.array(alq_values),
-        "FLOW_VALUES": np.array(flow_values),
-        "THP_INDICES": np.array(thp_indices),
-        "WFR_INDICES": np.array(wfr_indices),
-        "GFR_INDICES": np.array(gfr_indices),
-        "ALQ_INDICES": np.array(alq_indices),
-        "BHP_TABLE": np.array(bhp_table),
-    }
-
-    return vfpprod_data
-
-
 def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """Perform a check of the VFPPROD data contained in the dictionary.
     Checks if all data is present and if the dimensions of the arrays
@@ -637,43 +662,12 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """
 
     # Check if all data is present
-    if "VFP_NUMBER" not in vfp_data.keys():
-        return False
-    if "DATUM" not in vfp_data.keys():
-        return False
-    if "RATE_TYPE" not in vfp_data.keys():
-        return False
-    if "WFR_TYPE" not in vfp_data.keys():
-        return False
-    if "GFR_TYPE" not in vfp_data.keys():
-        return False
-    if "ALQ_TYPE" not in vfp_data.keys():
-        return False
-    if "THP_TYPE" not in vfp_data.keys():
-        return False
-    if "UNIT_TYPE" not in vfp_data.keys():
-        return False
-    if "TAB_TYPE" not in vfp_data.keys():
-        return False
-    if "THP_VALUES" not in vfp_data.keys():
-        return False
-    if "WFR_VALUES" not in vfp_data.keys():
-        return False
-    if "GFR_VALUES" not in vfp_data.keys():
-        return False
-    if "ALQ_VALUES" not in vfp_data.keys():
-        return False
-    if "FLOW_VALUES" not in vfp_data.keys():
-        return False
-    if "THP_INDICES" not in vfp_data.keys():
-        return False
-    if "WFR_INDICES" not in vfp_data.keys():
-        return False
-    if "GFR_INDICES" not in vfp_data.keys():
-        return False
-    if "ALQ_INDICES" not in vfp_data.keys():
-        return False
-    if "BHP_TABLE" not in vfp_data.keys():
+    for key in BASIC_DATA_KEYS:
+        if key not in vfp_data.keys():
+            raise KeyError("{key} key is not in basic data dictionary VFPPROD")
+            return False
+    if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPPROD:
+        raise KeyError("VFPTYPE must be VFPPROD")
         return False
 
     no_thp_indices = vfp_data["THP_INDICES"].size
@@ -688,16 +682,41 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     no_tab_values = vfp_data["BHP_TABLE"].flatten().size
 
     if no_thp_indices != no_wfr_indices:
+        raise ValueError(
+            f"Number of THP_INDICES {no_thp_indices} does not match"
+            f"number of WFR_INDICES {no_wfr_indices} in basic data dictionary"
+            f"for VFPPROD"
+        )
         return False
     if no_thp_indices != no_gfr_indices:
+        raise ValueError(
+            f"Number of THP_INDICES {no_thp_indices} does not match"
+            f"number of GFR_INDICES {no_gfr_indices} in basic data dictionary"
+            f"for VFPPROD"
+        )
         return False
     if no_thp_indices != no_alq_indices:
+        raise ValueError(
+            f"Number of THP_INDICES {no_thp_indices} does not match"
+            f"number of ALQ_INDICES {no_alq_indices} in basic data dictionary"
+            f"for VFPPROD"
+        )
         return False
 
     no_records = no_thp_values * no_wfr_values * no_gfr_values * no_alq_values
     if no_tab_values % no_flow_values > 0:
+        raise ValueError(
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
+            f"of number of THP_VALUES {no_thp_values} in basic data dictionary"
+            f"for VFPPROD"
+        )
         return False
     elif no_tab_values // no_flow_values != no_records:
+        raise ValueError(
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
+            f"of number of FLOW_VALUES {no_flow_values} in basic data dictionary"
+            f"for VFPPROD"
+        )
         return False
 
     return True

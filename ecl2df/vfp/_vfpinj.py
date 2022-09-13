@@ -46,7 +46,116 @@ from ._vfpdefs import (
     VFPTYPE,
 )
 
+# Keys used for basic data dictionary representation of VFPINJ
+BASIC_DATA_KEYS = [
+    "VFP_TYPE",
+    "TABLE_NUMBER",
+    "DATUM",
+    "RATE_TYPE",
+    "THP_TYPE",
+    "UNIT_TYPE",
+    "TAB_TYPE",
+    "THP_VALUES",
+    "FLOW_VALUES",
+    "THP_INDICES",
+    "BHP_TABLE",
+]
+
+
 logger = logging.getLogger(__name__)
+
+
+def basic_data(
+    keyword: "opm.libopmcommon_python.DeckKeyword",
+    vfpnumbers_str: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Read and return all data for Eclipse VFPINJ keyword as basic data types
+
+    Empty string returned if vfp table number does not match any number in list
+
+    Args:
+        keyword:        Eclipse deck keyword
+        vfpnumbers_str: String with list of vfp table numbers to extract.
+                        Syntax "[0,1,8:11]" corresponds
+    """
+
+    # Number of record in keyword
+    num_rec = len(keyword)
+
+    # Parse records with basic information and interpolation ranges
+    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPINJ", "records", 0)
+
+    # Extract basic table information
+    tableno = basic_record["TABLE"]
+    if vfpnumbers_str:
+        vfpnumbers = _string2intlist(vfpnumbers_str)
+        if tableno not in vfpnumbers:
+            return pd.DataFrame()
+    datum = basic_record["DATUM_DEPTH"]
+    rate_type = VFPINJ_FLO.GAS
+    if basic_record["RATE_TYPE"]:
+        rate_type = VFPINJ_FLO[basic_record["RATE_TYPE"]]
+    thp_type = THPTYPE.THP
+    if basic_record["PRESSURE_DEF"]:
+        thp_type = THPTYPE[basic_record["PRESSURE_DEF"]]
+    unit_type = UNITTYPE.DEFAULT
+    if basic_record["UNITS"]:
+        unit_type = UNITTYPE[basic_record["UNITS"]]
+    tab_type = VFPINJ_TABTYPE.BHP
+    if basic_record["BODY_DEF"]:
+        tab_type = VFPINJ_TABTYPE[basic_record["BODY_DEF"]]
+
+    # Extract interpolation ranges
+    flow_values = _deckrecord2list(keyword[1], "VFPINJ", 1, "FLOW_VALUES")
+    thp_values = _deckrecord2list(keyword[2], "VFPINJ", 2, "THP_VALUES")
+
+    # Check of consistent dimensions
+    no_flow_values = len(flow_values)
+    no_thp_values = len(thp_values)
+    no_interp_values = no_thp_values
+    no_tab_records = num_rec - 3
+    if no_interp_values != no_tab_records:
+        raise ValueError(
+            "Dimensions of interpolation ranges does "
+            "not match number of tabulated records"
+        )
+
+    # Extract interpolation values and tabulated values (BHP values)
+    bhp_table: List[List[float]] = []
+    thp_indices: List[float] = []
+    for n in range(3, num_rec):
+        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
+        bhp_values: Union[Any, List[float]]
+        if isinstance(bhp_record.get("VALUES"), list):
+            bhp_values = bhp_record.get("VALUES")
+        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
+            bhp_values = [bhp_record.get("VALUES")]
+
+        thp_index = bhp_record["THP_INDEX"]
+        thp_indices.append(thp_index)
+
+        if len(bhp_values) != no_flow_values:
+            raise ValueError(
+                "Dimension of record of tabulated values "
+                "does not match number of flow values"
+            )
+        bhp_table.append(bhp_values)
+
+    vfpinj_data = {
+        "VFP_TYPE": VFPTYPE.VFPINJ,
+        "TABLE_NUMBER": tableno,
+        "DATUM": datum,
+        "RATE_TYPE": rate_type,
+        "THP_TYPE": thp_type,
+        "UNIT_TYPE": unit_type,
+        "TAB_TYPE": tab_type,
+        "THP_VALUES": np.array(thp_values),
+        "FLOW_VALUES": np.array(flow_values),
+        "THP_INDICES": np.array(thp_indices),
+        "BHP_TABLE": np.array(bhp_table),
+    }
+
+    return vfpinj_data
 
 
 def basic_data2df(
@@ -130,7 +239,7 @@ def basic_data2pyarrow(
     thp_indices: np.ndarray,
     tab_data: np.ndarray,
 ) -> pa.Table:
-    """Return a pyarrow Table from a VFPINJ record data
+    """Return a pyarrow Table from VFPINJ record data
 
     Args:
         tableno     : table number
@@ -312,129 +421,56 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
     return vfpinj_data
 
 
-def basic_data(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Dict[str, Any]:
-    """Read and return all data for Eclipse VFPINJ keyword as basic data types
-
-    Empty string returned if vfp table number does not match any number in list
-
-    Args:
-        keyword:        Eclipse deck keyword
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds
-    """
-
-    # Number of record in keyword
-    num_rec = len(keyword)
-
-    # Parse records with basic information and interpolation ranges
-    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPINJ", "records", 0)
-
-    # Extract basic table information
-    tableno = basic_record["TABLE"]
-    if vfpnumbers_str:
-        vfpnumbers = _string2intlist(vfpnumbers_str)
-        if tableno not in vfpnumbers:
-            return pd.DataFrame()
-    datum = basic_record["DATUM_DEPTH"]
-    rate_type = VFPINJ_FLO.GAS
-    if basic_record["RATE_TYPE"]:
-        rate_type = VFPINJ_FLO[basic_record["RATE_TYPE"]]
-    thp_type = THPTYPE.THP
-    if basic_record["PRESSURE_DEF"]:
-        thp_type = THPTYPE[basic_record["PRESSURE_DEF"]]
-    unit_type = UNITTYPE.DEFAULT
-    if basic_record["UNITS"]:
-        unit_type = UNITTYPE[basic_record["UNITS"]]
-    tab_type = VFPINJ_TABTYPE.BHP
-    if basic_record["BODY_DEF"]:
-        tab_type = VFPINJ_TABTYPE[basic_record["BODY_DEF"]]
-
-    # Extract interpolation ranges
-    flow_values = _deckrecord2list(keyword[1], "VFPPROD", 1, "FLOW_VALUES")
-    thp_values = _deckrecord2list(keyword[2], "VFPPROD", 2, "THP_VALUES")
-
-    # Check of consistent dimensions
-    no_flow_values = len(flow_values)
-    no_thp_values = len(thp_values)
-    no_interp_values = no_thp_values
-    no_tab_records = num_rec - 3
-    if no_interp_values != no_tab_records:
-        raise ValueError(
-            "Dimensions of interpolation ranges does "
-            "not match number of tabulated records"
-        )
-
-    # Extract interpolation values and tabulated values (BHP values)
-    bhp_table: List[List[float]] = []
-    thp_indices: List[float] = []
-    for n in range(3, num_rec):
-        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
-        bhp_values: Union[Any, List[float]]
-        if isinstance(bhp_record.get("VALUES"), list):
-            bhp_values = bhp_record.get("VALUES")
-        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
-            bhp_values = [bhp_record.get("VALUES")]
-
-        thp_index = bhp_record["THP_INDEX"]
-        thp_indices.append(thp_index)
-
-        if len(bhp_values) != no_flow_values:
-            raise ValueError(
-                "Dimension of record of tabulated values "
-                "does not match number of flow values"
-            )
-        bhp_table.append(bhp_values)
-
-    vfpinj_data = {
-        "VFP_TYPE": VFPTYPE.VFPINJ,
-        "TABLE_NUMBER": tableno,
-        "DATUM": datum,
-        "RATE_TYPE": rate_type,
-        "THP_TYPE": thp_type,
-        "UNIT_TYPE": unit_type,
-        "TAB_TYPE": tab_type,
-        "THP_VALUES": np.array(thp_values),
-        "FLOW_VALUES": np.array(flow_values),
-        "THP_INDICES": np.array(thp_indices),
-        "BHP_TABLE": np.array(bhp_table),
-    }
-
-    return vfpinj_data
-
-
 def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """Perform a check of the VFPINJ data contained in the dictionary.
     Checks if all data is present and if the dimensions of the arrays
     are consisitent.
 
     Args:
-        vfp_data:   Dictionary containing all data for a VFPPROD keyword in Eclipse
+        vfp_data:   Dictionary containing all data for a VFPINJ keyword in Eclipse
     """
 
     # Check if all data is present
-    if "VFP_NUMBER" not in vfp_data.keys():
-        return False
-    if "DATUM" not in vfp_data.keys():
-        return False
-    if "RATE_TYPE" not in vfp_data.keys():
+    for key in BASIC_DATA_KEYS:
+        if key not in vfp_data.keys():
+            raise KeyError("{key} key is not in basic data dictionary VFPINJ")
+            return False
+    if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPINJ:
+        raise KeyError("VFPTYPE must be VFPINJ")
         return False
 
+    if "VFP_TYPE" not in vfp_data.keys() or vfp_data["VFP_TYPE"] != VFPTYPE.VFPINJ:
+        raise KeyError('"VFP_TYPE" key is not in basic data dictionary VFPINJ')
+        return False
+    if "TABLE_NUMBER" not in vfp_data.keys():
+        raise KeyError('"TABLE_NUMBER" key is not in basic data dictionary VFPINJ')
+        return False
+    if "DATUM" not in vfp_data.keys():
+        raise KeyError('"DATUM" key is not in basic data dictionary VFPINJ')
+        return False
+    if "RATE_TYPE" not in vfp_data.keys():
+        raise KeyError('"RATE_TYPE" key is not in basic data dictionary VFPINJ')
+        return False
     if "THP_TYPE" not in vfp_data.keys():
+        raise KeyError('"THP_TYPE" key is not in basic data dictionary VFPINJ')
         return False
     if "UNIT_TYPE" not in vfp_data.keys():
+        raise KeyError('"UNIT_TYPE" key is not in basic data dictionary VFPINJ')
         return False
     if "TAB_TYPE" not in vfp_data.keys():
+        raise KeyError('"TAB_TYPE" key is not in basic data dictionary VFPINJ')
         return False
     if "THP_VALUES" not in vfp_data.keys():
+        raise KeyError('"THP_VALUES" key is not in basic data dictionary VFPINJ')
         return False
     if "FLOW_VALUES" not in vfp_data.keys():
+        raise KeyError('"FLOW_VALUES" key is not in basic data dictionary VFPINJ')
         return False
     if "THP_INDICES" not in vfp_data.keys():
+        raise KeyError('"THP_INDICES" key is not in basic data dictionary VFPINJ')
         return False
     if "BHP_TABLE" not in vfp_data.keys():
+        raise KeyError('"BHP_TABLE" key is not in basic data dictionary VFPINJ')
         return False
 
     no_thp_indices = vfp_data["THP_INDICES"].size
@@ -442,13 +478,26 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     no_flow_values = vfp_data["FLOW_VALUES"].size
     no_tab_values = vfp_data["BHP_TABLE"].flatten().size
 
-    if no_thp_indices != no_thp_values:
-        return False
-
-    no_records = no_thp_indices
     if no_tab_values % no_flow_values > 0:
+        raise ValueError(
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
+            f"of number of FLOW_VALUES {no_flow_values} in basic data dictionary"
+            f"for VFPINJ"
+        )
         return False
-    elif no_tab_values // no_flow_values != no_records:
+    if no_tab_values % no_thp_values > 0:
+        raise ValueError(
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
+            f"of number of THP_VALUES {no_thp_values} in basic data dictionary"
+            f"for VFPINJ"
+        )
+        return False
+    if no_tab_values != no_flow_values * no_thp_indices:
+        raise ValueError(
+            f"Number of BHP_TABLE values {no_tab_values} is not equal to"
+            f"of number of THP_VALUES {no_thp_values} times number of"
+            f"FLOW_VALUES {no_flow_values}"
+        )
         return False
 
     return True
@@ -474,7 +523,7 @@ def df(
     if len(vfpinj_data) == 0:
         return None
 
-    # Put VFPPROD data into pandas DataFrame
+    # Put VFPINJ data into pandas DataFrame
     df_vfpinj = basic_data2df(
         tableno=vfpinj_data["TABLE_NUMBER"],
         datum=vfpinj_data["DATUM"],
@@ -510,7 +559,7 @@ def pyarrow(
     if len(vfpinj_data) == 0:
         return None
 
-    # Put VFPPROD data into pandas DataFrame
+    # Put VFPINJ data into pandas DataFrame
     pa_vfpinj = basic_data2pyarrow(
         tableno=vfpinj_data["TABLE_NUMBER"],
         datum=vfpinj_data["DATUM"],

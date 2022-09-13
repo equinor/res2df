@@ -45,37 +45,39 @@ def basic_data(
     returned
 
     VFPPROD
-        "TABLE_NUMBER": table number (int)
-        "DATUM":        datum depth (float)
-        "RATE_TYPE":    rate type   (str)
-        "WFR_TYPE":     water-fraction type (str)
-        "GFR_TYPE":     gas-fraction type (str)
-        "ALQ_TYPE":     artificial-liquid type (str)
-        "THP_TYPE":     THP type (str)
-        "UNIT_TYPE":    Unit type (str)
-        "TAB_TYPE":     Tabulated value (BHP) type (str)
-        "THP_VALUES":   THP range (numpy.ndarray)
-        "WFR_VALUES":   WFR range (numpy.ndarray)
-        "GFR_VALUES":   GFR range (numpy.ndarray)
-        "ALQ_VALUES":   ALQ range (numpy.ndarray)
-        "FLOW_VALUES":  rate values (numpy.ndarray)
-        "THP_INDICES":  indices of THP values for each record in BHP table
-        "WFR_INDICES":  indices of WFR values for each record in BHP table
-        "GFR_INDICES":  indices of GFR values for each record in BHP table
-        "ALQ_INDICES":  indices of ALQ values for each record in BHP table
-        "BHP_TABLE":    BHP table values (numpy.ndarray) with dimension
+    "VFP_TYPE":     vfp type, i.e. (VFPPROD/VFPINJ) (VFPTYPE enum, see _vfpdefs)
+    "TABLE_NUMBER": table number (int)
+    "DATUM":        datum depth (float)
+    "RATE_TYPE":    rate type   (str)
+    "WFR_TYPE":     water-fraction type (str)
+    "GFR_TYPE":     gas-fraction type (str)
+    "ALQ_TYPE":     artificial-liquid type (str)
+    "THP_TYPE":     THP type (str)
+    "UNIT_TYPE":    Unit type (str)
+    "TAB_TYPE":     Tabulated value (BHP) type (str)
+    "THP_VALUES":   THP range (numpy.ndarray)
+    "WFR_VALUES":   WFR range (numpy.ndarray)
+    "GFR_VALUES":   GFR range (numpy.ndarray)
+    "ALQ_VALUES":   ALQ range (numpy.ndarray)
+    "FLOW_VALUES":  rate values (numpy.ndarray)
+    "THP_INDICES":  indices of THP values for each record in BHP table
+    "WFR_INDICES":  indices of WFR values for each record in BHP table
+    "GFR_INDICES":  indices of GFR values for each record in BHP table
+    "ALQ_INDICES":  indices of ALQ values for each record in BHP table
+    "BHP_TABLE":    BHP table values (numpy.ndarray) with dimension
 
     VFPINJ
-        "TABLE_NUMBER": table number (int)
-        "DATUM":        datum depth (float)
-        "RATE_TYPE":    rate type   (str)
-        "THP_TYPE":     THP type (str)
-        "UNIT_TYPE":    Unit type (str)
-        "TAB_TYPE":     Tabulated value (BHP) type (str)
-        "THP_VALUES":   THP range (numpy.ndarray)
-        "FLOW_VALUES":  rate values (numpy.ndarray)
-        "THP_INDICES":  indices of THP values for each record in BHP table
-        "BHP_TABLE":    BHP table values (numpy.ndarray) with dimension
+    "VFP_TYPE":     vfp type, i.e. (VFPPROD/VFPINJ) (str)
+    "TABLE_NUMBER": table number (int)
+    "DATUM":        datum depth (float)
+    "RATE_TYPE":    rate type   (str)
+    "THP_TYPE":     THP type (str)
+    "UNIT_TYPE":    Unit type (str)
+    "TAB_TYPE":     Tabulated value (BHP) type (str)
+    "THP_VALUES":   THP range (numpy.ndarray)
+    "FLOW_VALUES":  rate values (numpy.ndarray)
+    "THP_INDICES":  indices of THP values for each record in BHP table
+    "BHP_TABLE":    BHP table values (numpy.ndarray) with dimension
 
     Args:
         deck:           Eclipse deck or string with deck
@@ -93,10 +95,10 @@ def basic_data(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
-    basic_data_vfps = []
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
+    basic_data_vfps = []
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
@@ -118,12 +120,16 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
 
     Args:
         data:  Dictionary with basic data representation of
-               VFPPROD or VFPINJ
+               VFPPROD or VFPINJ (see basic_data)
     """
 
     if "VFP_TYPE" in data.keys():
         vfp_type = data["VFP_TYPE"]
         if vfp_type == VFPTYPE.VFPPROD:
+            # Check consistency of basic data
+            if not vfpprod._check_basic_data(data):
+                return pd.DataFrame()
+
             return vfpprod.basic_data2df(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
@@ -146,6 +152,9 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
                 tab_data=data["BHP_TABLE"],
             )
         elif vfp_type == VFPTYPE.VFPINJ:
+            # Check consistency of basic data
+            if not vfpinj._check_basic_data(data):
+                return pd.DataFrame()
             return vfpinj.basic_data2df(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
@@ -159,7 +168,7 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
                 tab_data=data["BHP_TABLE"],
             )
         else:
-            raise ValueError("Unknown VFP_TYPE")
+            raise ValueError(f"Unknown VFP_TYPE {vfp_type.value}")
 
     raise ValueError("VFP_TYPE not found in basic data")
 
@@ -177,6 +186,10 @@ def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
     if "VFP_TYPE" in data.keys():
         vfp_type = data["VFP_TYPE"]
         if vfp_type == VFPTYPE.VFPPROD:
+            # Check consistency of basic data
+            if not vfpprod._check_basic_data(data):
+                return pd.DataFrame()
+
             return vfpprod.basic_data2pyarrow(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
@@ -199,6 +212,9 @@ def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
                 tab_data=data["BHP_TABLE"],
             )
         elif vfp_type == VFPTYPE.VFPINJ:
+            # Check consistency of basic data
+            if not vfpinj._check_basic_data(data):
+                return pd.DataFrame()
             return vfpinj.basic_data2pyarrow(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
@@ -212,7 +228,7 @@ def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
                 tab_data=data["BHP_TABLE"],
             )
         else:
-            raise ValueError("Unknown VFP_TYPE")
+            raise ValueError(f"Unknown VFP_TYPE {vfp_type.value}")
 
     raise ValueError("VFP_TYPE not found in basic data")
 
@@ -233,7 +249,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Union[Dict[str, Any], None]:
             elif vfp_type == VFPTYPE.VFPINJ:
                 return vfpinj.df2basic_data(dframe)
     else:
-        raise ValueError("Inconsistent VFP_TYPE definition")
+        raise ValueError("Inconsistent VFP_TYPE definition in dataframe")
 
     return None
 
@@ -283,10 +299,10 @@ def dfs(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
-    dfs_vfp = []
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
+    dfs_vfp = []
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
@@ -326,10 +342,10 @@ def pyarrow_tables(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
-    pyarrow_tables_vfp = []
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
+    pyarrow_tables_vfp = []
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
@@ -342,35 +358,6 @@ def pyarrow_tables(
                     pyarrow_tables_vfp.append(pa_table_vfpinj)
 
     return pyarrow_tables_vfp
-
-
-def _write_eclipse_comment(comment: str, max_char_per_line: int = 72) -> str:
-    """Produce a string representing comment in Eclipse file
-
-    Args:
-        comment:           comment to be included in Eclipse output
-        max_char_per_line: max number of characters per line
-    """
-
-    max_char = max_char_per_line - 2
-    comment_str = ""
-
-    # Respect original line shifts, but add additional line shift
-    # when line is longer than maximum number of characters allowed
-    comment_lines = comment.split("\n")
-    for line in comment_lines:
-        words = line.split()
-        while words:
-            new_line = ""
-            while words and len(new_line) + len(words[0]) <= max_char:
-                if new_line:
-                    new_line += " " + words[0]
-                else:
-                    new_line += words[0]
-                words.pop(0)
-            comment_str += new_line + "\n"
-
-    return comment_str
 
 
 def df2ecls(

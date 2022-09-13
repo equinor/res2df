@@ -1,5 +1,4 @@
-"""
-Utilities to extract the VFPINJ data from an Eclipse (input) deck.
+"""Utilities to extract the VFPINJ data from an Eclipse (input) deck.
 Data can be extracted from Eclipse (*.Ecl format) in 3 different formats
 
     * basic_data:    data for VFPINJ is returned as a dictionary where

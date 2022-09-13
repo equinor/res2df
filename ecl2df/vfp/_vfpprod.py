@@ -1,18 +1,7 @@
 """Utilities to extract the VFPPROD data from an Eclipse (input) deck.
-Data can be extracted from Eclipse (*.Ecl format) in 3 different formats
-
-    * basic_data:    data for VFPPROD is returned as a dictionary where
-                     each item is represented as a basic data type
-                     (string, int , float or numpy,ndarray). This data
-                     can then be converted to other formats
-                     (DataFrame or pyarrow.Table)
-    * DataFrame:     as a stacked pandas.DataFrame where each column
-                     represents one data item in the VFPPROD keyword
-                     definition
-    * pyarrow.Table: as a pyarrow.Table where the table values corresponds
-                     to the tabulated BHP values, while the other data
-                     (table number, datum, rates, thps, wfrs, gfrs, alqs
-                      etc are represented as meta data.
+Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
+basic_data (dictionary with basic data types), df (pandas DataFrame) or
+pyarrow_tables (pyarrow.Tables).
 
 Data can be extracted from a full Eclipse deck or from individual files.
 Supports output both in csv format as a pandas DataFrame or in pyarrow

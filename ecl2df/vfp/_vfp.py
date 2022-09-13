@@ -41,43 +41,8 @@ def basic_data(
 ) -> List[Dict[str, Any]]:
     """Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ
     Dictionary returned contains items for liftcuve tables as simple datatypes
-    (str, float, int or numpy.ndarray). The following key/value pairs are
-    returned
-
-    VFPPROD
-    "VFP_TYPE":     vfp type, i.e. (VFPPROD/VFPINJ) (VFPTYPE enum, see _vfpdefs)
-    "TABLE_NUMBER": table number (int)
-    "DATUM":        datum depth (float)
-    "RATE_TYPE":    rate type   (str)
-    "WFR_TYPE":     water-fraction type (str)
-    "GFR_TYPE":     gas-fraction type (str)
-    "ALQ_TYPE":     artificial-liquid type (str)
-    "THP_TYPE":     THP type (str)
-    "UNIT_TYPE":    Unit type (str)
-    "TAB_TYPE":     Tabulated value (BHP) type (str)
-    "THP_VALUES":   THP range (numpy.ndarray)
-    "WFR_VALUES":   WFR range (numpy.ndarray)
-    "GFR_VALUES":   GFR range (numpy.ndarray)
-    "ALQ_VALUES":   ALQ range (numpy.ndarray)
-    "FLOW_VALUES":  rate values (numpy.ndarray)
-    "THP_INDICES":  indices of THP values for each record in BHP table
-    "WFR_INDICES":  indices of WFR values for each record in BHP table
-    "GFR_INDICES":  indices of GFR values for each record in BHP table
-    "ALQ_INDICES":  indices of ALQ values for each record in BHP table
-    "BHP_TABLE":    BHP table values (numpy.ndarray) with dimension
-
-    VFPINJ
-    "VFP_TYPE":     vfp type, i.e. (VFPPROD/VFPINJ) (str)
-    "TABLE_NUMBER": table number (int)
-    "DATUM":        datum depth (float)
-    "RATE_TYPE":    rate type   (str)
-    "THP_TYPE":     THP type (str)
-    "UNIT_TYPE":    Unit type (str)
-    "TAB_TYPE":     Tabulated value (BHP) type (str)
-    "THP_VALUES":   THP range (numpy.ndarray)
-    "FLOW_VALUES":  rate values (numpy.ndarray)
-    "THP_INDICES":  indices of THP values for each record in BHP table
-    "BHP_TABLE":    BHP table values (numpy.ndarray) with dimension
+    (str, float, int or numpy.ndarray). Required keys in dictionary for VFPPROD
+    and VFPINJ can be found in BASIC_DATA_KEYS in _vfpprod and _vfpinj.
 
     Args:
         deck:           Eclipse deck or string with deck

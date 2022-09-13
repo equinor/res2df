@@ -39,17 +39,17 @@ def basic_data(
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    #    """Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.
-    #    Dictionary returned contains items for liftcuve tables as simple datatypes
-    #    Required keys in dictionary for VFPPROD and VFPINJ can be found in BASIC_
-    #    DATA_KEYS in _vfpprod and _vfpinj.
-    #
-    #    Args:
-    #        deck:           Eclipse deck or string with deck
-    #        keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
-    #        vfpnumbers_str: String with list of vfp table numbers to extract.
-    #                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
-    #    """
+    """Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.
+    Dictionary returned contains items for liftcuve tables as simple datatypes
+    Required keys in dictionary for VFPPROD and VFPINJ can be found in BASIC_
+    DATA_KEYS in _vfpprod and _vfpinj.
+
+    Args:
+        deck:           Eclipse deck or string with deck
+        keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+        vfpnumbers_str: String with list of vfp table numbers to extract.
+                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+    """
 
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()

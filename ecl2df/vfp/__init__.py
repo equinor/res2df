@@ -1,7 +1,7 @@
 """ Module with interface for ecl2df to VFPPROD and VFPINJ
 keywords in Eclipse.
 """
-from ._vfp import (
+from ._vfp import (  # noqa: F401
     basic_data,
     basic_data2df,
     basic_data2pyarrow,

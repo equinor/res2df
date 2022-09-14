@@ -64,7 +64,7 @@ _VFPINJ_BASIC_DATA_KEYS = [
 logger = logging.getLogger(__name__)
 
 
-def basic_data(
+def _basic_data(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -157,7 +157,7 @@ def basic_data(
     return vfpinj_data
 
 
-def basic_data2df(
+def _basic_data2df(
     tableno: int,
     datum: float,
     rate_type: VFPINJ_FLO,
@@ -226,7 +226,7 @@ def basic_data2df(
     return df_bhp_stacked
 
 
-def basic_data2pyarrow(
+def _basic_data2pyarrow(
     tableno: int,
     datum: float,
     rate_type: VFPINJ_FLO,
@@ -293,7 +293,7 @@ def basic_data2pyarrow(
     return pa_table
 
 
-def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
+def _df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     """Return basic data type for VFPINJ from a pandas dataframe.
 
     Return format is a dictionary all data in VFPINJ in basic data types
@@ -383,7 +383,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     return vfpinj_data
 
 
-def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
+def _pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
     """Return basic data type for VFPINJ from a pyarrow.Table.
 
     Return format is a dictionary all data in VFPINJ in basic data types
@@ -502,7 +502,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     return True
 
 
-def df(
+def _df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, None]:
@@ -517,13 +517,13 @@ def df(
     """
 
     # Get basic data from VFPINJ tables
-    vfpinj_data = basic_data(keyword, vfpnumbers_str)
+    vfpinj_data = _basic_data(keyword, vfpnumbers_str)
 
     if len(vfpinj_data) == 0:
         return None
 
     # Put VFPINJ data into pandas DataFrame
-    df_vfpinj = basic_data2df(
+    df_vfpinj = _basic_data2df(
         tableno=vfpinj_data["TABLE_NUMBER"],
         datum=vfpinj_data["DATUM"],
         rate_type=vfpinj_data["RATE_TYPE"],
@@ -539,7 +539,7 @@ def df(
     return df_vfpinj
 
 
-def pyarrow(
+def _pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pa.Table, None]:
@@ -553,13 +553,13 @@ def pyarrow(
     """
 
     # Get basic data from VFPINJ tables
-    vfpinj_data = basic_data(keyword, vfpnumbers_str)
+    vfpinj_data = _basic_data(keyword, vfpnumbers_str)
 
     if len(vfpinj_data) == 0:
         return None
 
     # Put VFPINJ data into pandas DataFrame
-    pa_vfpinj = basic_data2pyarrow(
+    pa_vfpinj = _basic_data2pyarrow(
         tableno=vfpinj_data["TABLE_NUMBER"],
         datum=vfpinj_data["DATUM"],
         rate_type=vfpinj_data["RATE_TYPE"],
@@ -685,7 +685,7 @@ def _write_table_records(
     return ecl_str
 
 
-def df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def _df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Produce a string defining single VFPINJ Eclipse input from a dataframe
 
     All data for the keywords VFPINJ will be returned.
@@ -698,7 +698,7 @@ def df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
 
     # Extract basic data structutes for VFPINJ
-    vfpinj_data = df2basic_data(dframe)
+    vfpinj_data = _df2basic_data(dframe)
     rate_type = vfpinj_data["RATE_TYPE"]
     thp_type = vfpinj_data["THP_TYPE"]
     unit_type = vfpinj_data["UNIT_TYPE"]

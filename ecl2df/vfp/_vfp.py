@@ -68,11 +68,11 @@ def basic_data(
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                basic_data_vfpprod = vfpprod.basic_data(deck_keyword, vfpnumbers_str)
+                basic_data_vfpprod = vfpprod._basic_data(deck_keyword, vfpnumbers_str)
                 if basic_data_vfpprod is not None:
                     basic_data_vfps.append(basic_data_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                basic_data_vfpinj = vfpinj.basic_data(deck_keyword, vfpnumbers_str)
+                basic_data_vfpinj = vfpinj._basic_data(deck_keyword, vfpnumbers_str)
                 if basic_data_vfpinj is not None:
                     basic_data_vfps.append(basic_data_vfpinj)
 
@@ -96,7 +96,7 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
             if not vfpprod._check_basic_data(data):
                 return pd.DataFrame()
 
-            return vfpprod.basic_data2df(
+            return vfpprod._basic_data2df(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
                 rate_type=data["RATE_TYPE"],
@@ -121,7 +121,7 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
             # Check consistency of basic data
             if not vfpinj._check_basic_data(data):
                 return pd.DataFrame()
-            return vfpinj.basic_data2df(
+            return vfpinj._basic_data2df(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
                 rate_type=data["RATE_TYPE"],
@@ -156,7 +156,7 @@ def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
             if not vfpprod._check_basic_data(data):
                 return pd.DataFrame()
 
-            return vfpprod.basic_data2pyarrow(
+            return vfpprod._basic_data2pyarrow(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
                 rate_type=data["RATE_TYPE"],
@@ -181,7 +181,7 @@ def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
             # Check consistency of basic data
             if not vfpinj._check_basic_data(data):
                 return pd.DataFrame()
-            return vfpinj.basic_data2pyarrow(
+            return vfpinj._basic_data2pyarrow(
                 tableno=data["TABLE_NUMBER"],
                 datum=data["DATUM"],
                 rate_type=data["RATE_TYPE"],
@@ -211,9 +211,9 @@ def df2basic_data(dframe: pd.DataFrame) -> Union[Dict[str, Any], None]:
         if len(dframe["VFP_TYPE"].unique()) == 1:
             vfp_type = VFPTYPE[dframe["VFP_TYPE"].unique()[0]]
             if vfp_type == VFPTYPE.VFPPROD:
-                return vfpprod.df2basic_data(dframe)
+                return vfpprod._df2basic_data(dframe)
             elif vfp_type == VFPTYPE.VFPINJ:
-                return vfpinj.df2basic_data(dframe)
+                return vfpinj._df2basic_data(dframe)
     else:
         raise ValueError("Inconsistent VFP_TYPE definition in dataframe")
 
@@ -231,9 +231,9 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Union[Dict[str, Any], None]:
     # Check VFP type
     vfp_type = VFPTYPE[pa_table.schema.metadata[b"VFP_TYPE"].decode("utf-8")]
     if vfp_type == VFPTYPE.VFPPROD:
-        return vfpprod.pyarrow2basic_data(pa_table)
+        return vfpprod._pyarrow2basic_data(pa_table)
     elif vfp_type == VFPTYPE.VFPINJ:
-        return vfpinj.pyarrow2basic_data(pa_table)
+        return vfpinj._pyarrow2basic_data(pa_table)
     else:
         raise ValueError("Unknown VFP_TYPE definition")
 
@@ -272,11 +272,11 @@ def dfs(
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                df_vfpprod = vfpprod.df(deck_keyword, vfpnumbers_str)
+                df_vfpprod = vfpprod._df(deck_keyword, vfpnumbers_str)
                 if df_vfpprod is not None:
                     dfs_vfp.append(df_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                df_vfpinj = vfpinj.df(deck_keyword, vfpnumbers_str)
+                df_vfpinj = vfpinj._df(deck_keyword, vfpnumbers_str)
                 if df_vfpinj is not None:
                     dfs_vfp.append(df_vfpinj)
 
@@ -315,11 +315,11 @@ def pyarrow_tables(
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                pa_table_vfpprod = vfpprod.pyarrow(deck_keyword, vfpnumbers_str)
+                pa_table_vfpprod = vfpprod._pyarrow(deck_keyword, vfpnumbers_str)
                 if pa_table_vfpprod is not None:
                     pyarrow_tables_vfp.append(pa_table_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                pa_table_vfpinj = vfpinj.pyarrow(deck_keyword, vfpnumbers_str)
+                pa_table_vfpinj = vfpinj._pyarrow(deck_keyword, vfpnumbers_str)
                 if pa_table_vfpinj is not None:
                     pyarrow_tables_vfp.append(pa_table_vfpinj)
 
@@ -355,14 +355,14 @@ def df2ecls(
         if np.all(df_vfp["VFP_TYPE"] == keyword):
             if comments and keyword in comments.keys():
                 if keyword == "VFPPROD":
-                    vfp_strs.append(vfpprod.df2ecl(df_vfp, comments["VFPPROD"]))
+                    vfp_strs.append(vfpprod._df2ecl(df_vfp, comments["VFPPROD"]))
                 elif keyword == "VFPINJ":
-                    vfp_strs.append(vfpinj.df2ecl(df_vfp, comments["VFPINJ"]))
+                    vfp_strs.append(vfpinj._df2ecl(df_vfp, comments["VFPINJ"]))
             else:
                 if keyword == "VFPPROD":
-                    vfp_strs.append(vfpprod.df2ecl(df_vfp))
+                    vfp_strs.append(vfpprod._df2ecl(df_vfp))
                 elif keyword == "VFPINJ":
-                    vfp_strs.append(vfpinj.df2ecl(df_vfp))
+                    vfp_strs.append(vfpinj._df2ecl(df_vfp))
         else:
             raise ValueError(
                 f"VFP number {vfpno} does not have consistent "

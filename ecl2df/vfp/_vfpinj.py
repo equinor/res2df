@@ -10,7 +10,6 @@ pyarrow.Table to file as Eclipse .Ecl format
 """
 
 import logging
-import numbers
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
@@ -128,7 +127,7 @@ def basic_data(
         bhp_values: Union[Any, List[float]]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
-        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
+        elif isinstance(bhp_record.get("VALUES"), float):
             bhp_values = [bhp_record.get("VALUES")]
 
         thp_index = bhp_record["THP_INDEX"]

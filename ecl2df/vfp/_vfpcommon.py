@@ -5,7 +5,6 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 """
 
 import logging
-import numbers
 from typing import Any, List, Union
 
 import numpy as np
@@ -77,7 +76,7 @@ def _deckrecord2list(
     # Extract interpolation ranges into lists
     if isinstance(record.get(recordname), list):
         values = record.get(recordname)
-    elif isinstance(record.get(recordname), numbers.Number):
+    elif isinstance(record.get(recordname), float):
         values = [record.get(recordname)]
     else:
         raise ValueError(

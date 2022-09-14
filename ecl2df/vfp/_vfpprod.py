@@ -76,7 +76,7 @@ _VFPPROD_BASIC_DATA_KEYS = [
 logger = logging.getLogger(__name__)
 
 
-def _basic_data(
+def basic_data(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[Dict[str, Any], None]:
@@ -202,7 +202,7 @@ def _basic_data(
     return vfpprod_data
 
 
-def _basic_data2df(
+def basic_data2df(
     tableno: int,
     datum: float,
     rate_type: VFPPROD_FLO,
@@ -303,7 +303,7 @@ def _basic_data2df(
     return df_bhp_stacked.reset_index(drop=True)
 
 
-def _basic_data2pyarrow(
+def basic_data2pyarrow(
     tableno: int,
     datum: float,
     rate_type: VFPPROD_FLO,
@@ -413,7 +413,7 @@ def _basic_data2pyarrow(
     return pa_table
 
 
-def _df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
+def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     """Return basic data type for VFPPROD from a pandas dataframe.
 
     Return format is a dictionary all data in VFPPROD in basic data types
@@ -583,7 +583,7 @@ def _df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     return vfpprod_data
 
 
-def _pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
+def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
     """Return basic data type for VFPPROD from a pyarrow.Table.
 
     Return format is a dictionary all data in VFPPROD in basic data types
@@ -721,7 +721,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     return True
 
 
-def _df(
+def df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, None]:
@@ -734,14 +734,14 @@ def _df(
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
-    vfpprod_data = _basic_data(keyword, vfpnumbers_str)
+    vfpprod_data = basic_data(keyword, vfpnumbers_str)
 
     # Check if vfp number exists. If not return empry DataFrame
     if vfpprod_data is None:
         return None
 
     # Put VFPPROD data into pandas DataFrame
-    df_vfpprod = _basic_data2df(
+    df_vfpprod = basic_data2df(
         tableno=vfpprod_data["TABLE_NUMBER"],
         datum=vfpprod_data["DATUM"],
         rate_type=vfpprod_data["RATE_TYPE"],
@@ -766,7 +766,7 @@ def _df(
     return df_vfpprod
 
 
-def _pyarrow(
+def pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pa.Table, None]:
@@ -780,13 +780,13 @@ def _pyarrow(
     """
 
     # Get basic data from VFPPROD tables
-    vfpprod_data = _basic_data(keyword, vfpnumbers_str)
+    vfpprod_data = basic_data(keyword, vfpnumbers_str)
 
     if vfpprod_data is None:
         return None
 
     # Put VFPPROD data into pandas DataFrame
-    pa_vfpprod = _basic_data2pyarrow(
+    pa_vfpprod = basic_data2pyarrow(
         tableno=vfpprod_data["TABLE_NUMBER"],
         datum=vfpprod_data["DATUM"],
         rate_type=vfpprod_data["RATE_TYPE"],
@@ -942,7 +942,7 @@ def _write_table_records(
     return ecl_str
 
 
-def _df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Produce a string defining single VFPPROD Eclipse input from a dataframe
 
     All data for the keywords VFPPROD will be returned.
@@ -955,7 +955,7 @@ def _df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
 
     # Extract basic data structutes for VFPPROD
-    vfpprod_data = _df2basic_data(dframe)
+    vfpprod_data = df2basic_data(dframe)
     rate_type = vfpprod_data["RATE_TYPE"]
     wfr_type = vfpprod_data["WFR_TYPE"]
     gfr_type = vfpprod_data["GFR_TYPE"]

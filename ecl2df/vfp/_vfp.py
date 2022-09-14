@@ -41,7 +41,7 @@ def basic_data(
 ) -> List[Dict[str, Any]]:
     """Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.
     Dictionary returned contains items for liftcuve tables as simple datatypes
-    Required keys in dictionary for VFPPROD and VFPINJ can be found in 
+    Required keys in dictionary for VFPPROD and VFPINJ can be found in
     BASIC_DATA_KEYS in _vfpprod and _vfpinj.
 
     Args:

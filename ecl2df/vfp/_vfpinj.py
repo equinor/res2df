@@ -47,7 +47,7 @@ from ._vfpdefs import (
 )
 
 # Keys used for basic data dictionary representation of VFPINJ
-BASIC_DATA_KEYS = [
+_VFPINJ_BASIC_DATA_KEYS = [
     "VFP_TYPE",
     "TABLE_NUMBER",
     "DATUM",
@@ -431,7 +431,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """
 
     # Check if all data is present
-    for key in BASIC_DATA_KEYS:
+    for key in _VFPINJ_BASIC_DATA_KEYS:
         if key not in vfp_data.keys():
             raise KeyError("{key} key is not in basic data dictionary VFPINJ")
             return False

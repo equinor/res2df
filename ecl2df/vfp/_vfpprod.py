@@ -10,6 +10,7 @@ pyarrow.Table to file as Eclipse .Ecl format.
 """
 
 import logging
+import numbers
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
@@ -49,7 +50,7 @@ from ._vfpdefs import (
 )
 
 # Keys used for basic data dictionary representation of VFPPROD
-_VFPPROD_BASIC_DATA_KEYS = [
+BASIC_DATA_KEYS = [
     "VFP_TYPE",
     "TABLE_NUMBER",
     "DATUM",
@@ -156,7 +157,7 @@ def basic_data(
         bhp_values: Union[Any, List[float]]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
-        elif isinstance(bhp_record.get("VALUES"), float):
+        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
             bhp_values = [bhp_record.get("VALUES")]
 
         thp_index = bhp_record["THP_INDEX"]
@@ -661,13 +662,11 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """
 
     # Check if all data is present
-    for key in _VFPPROD_BASIC_DATA_KEYS:
+    for key in BASIC_DATA_KEYS:
         if key not in vfp_data.keys():
             raise KeyError("{key} key is not in basic data dictionary VFPPROD")
-            return False
     if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPPROD:
         raise KeyError("VFPTYPE must be VFPPROD")
-        return False
 
     no_thp_indices = vfp_data["THP_INDICES"].size
     no_wfr_indices = vfp_data["WFR_INDICES"].size

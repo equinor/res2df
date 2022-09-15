@@ -1,10 +1,14 @@
-"""Extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas Dataframes
+"""Common functionality for vfp module to extract VFPPROD/VFPINJ data from Eclipse
+deck 
+
+to extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas Dataframes
 
 Data can be extracted from a full Eclipse deck or from individual files. Supports
 output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 """
 
 import logging
+import numbers
 from typing import Any, List, Union
 
 import numpy as np
@@ -76,7 +80,7 @@ def _deckrecord2list(
     # Extract interpolation ranges into lists
     if isinstance(record.get(recordname), list):
         values = record.get(recordname)
-    elif isinstance(record.get(recordname), float):
+    elif isinstance(record.get(recordname), numbers.Number):
         values = [record.get(recordname)]
     else:
         raise ValueError(

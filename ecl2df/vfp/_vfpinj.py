@@ -10,6 +10,7 @@ pyarrow.Table to file as Eclipse .Ecl format
 """
 
 import logging
+import numbers
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
@@ -46,7 +47,7 @@ from ._vfpdefs import (
 )
 
 # Keys used for basic data dictionary representation of VFPINJ
-_VFPINJ_BASIC_DATA_KEYS = [
+BASIC_DATA_KEYS = [
     "VFP_TYPE",
     "TABLE_NUMBER",
     "DATUM",
@@ -127,7 +128,7 @@ def basic_data(
         bhp_values: Union[Any, List[float]]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
-        elif isinstance(bhp_record.get("VALUES"), float):
+        elif isinstance(bhp_record.get("VALUES"), numbers.Number):
             bhp_values = [bhp_record.get("VALUES")]
 
         thp_index = bhp_record["THP_INDEX"]
@@ -430,47 +431,11 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """
 
     # Check if all data is present
-    for key in _VFPINJ_BASIC_DATA_KEYS:
+    for key in BASIC_DATA_KEYS:
         if key not in vfp_data.keys():
             raise KeyError("{key} key is not in basic data dictionary VFPINJ")
-            return False
     if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPINJ:
         raise KeyError("VFPTYPE must be VFPINJ")
-        return False
-
-    if "VFP_TYPE" not in vfp_data.keys() or vfp_data["VFP_TYPE"] != VFPTYPE.VFPINJ:
-        raise KeyError('"VFP_TYPE" key is not in basic data dictionary VFPINJ')
-        return False
-    if "TABLE_NUMBER" not in vfp_data.keys():
-        raise KeyError('"TABLE_NUMBER" key is not in basic data dictionary VFPINJ')
-        return False
-    if "DATUM" not in vfp_data.keys():
-        raise KeyError('"DATUM" key is not in basic data dictionary VFPINJ')
-        return False
-    if "RATE_TYPE" not in vfp_data.keys():
-        raise KeyError('"RATE_TYPE" key is not in basic data dictionary VFPINJ')
-        return False
-    if "THP_TYPE" not in vfp_data.keys():
-        raise KeyError('"THP_TYPE" key is not in basic data dictionary VFPINJ')
-        return False
-    if "UNIT_TYPE" not in vfp_data.keys():
-        raise KeyError('"UNIT_TYPE" key is not in basic data dictionary VFPINJ')
-        return False
-    if "TAB_TYPE" not in vfp_data.keys():
-        raise KeyError('"TAB_TYPE" key is not in basic data dictionary VFPINJ')
-        return False
-    if "THP_VALUES" not in vfp_data.keys():
-        raise KeyError('"THP_VALUES" key is not in basic data dictionary VFPINJ')
-        return False
-    if "FLOW_VALUES" not in vfp_data.keys():
-        raise KeyError('"FLOW_VALUES" key is not in basic data dictionary VFPINJ')
-        return False
-    if "THP_INDICES" not in vfp_data.keys():
-        raise KeyError('"THP_INDICES" key is not in basic data dictionary VFPINJ')
-        return False
-    if "BHP_TABLE" not in vfp_data.keys():
-        raise KeyError('"BHP_TABLE" key is not in basic data dictionary VFPINJ')
-        return False
 
     no_thp_indices = vfp_data["THP_INDICES"].size
     no_thp_values = vfp_data["THP_VALUES"].size

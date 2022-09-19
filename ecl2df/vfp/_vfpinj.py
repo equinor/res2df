@@ -433,7 +433,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     # Check if all data is present
     for key in BASIC_DATA_KEYS:
         if key not in vfp_data.keys():
-            raise KeyError("{key} key is not in basic data dictionary VFPINJ")
+            raise KeyError(f"{key} key is not in basic data dictionary VFPINJ")
     if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPINJ:
         raise KeyError("VFPTYPE must be VFPINJ")
 
@@ -444,25 +444,27 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 
     if no_tab_values % no_flow_values > 0:
         raise ValueError(
-            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
-            f"of number of FLOW_VALUES {no_flow_values} in basic data dictionary"
-            f"for VFPINJ"
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum "
+            f"of number of FLOW_VALUES {no_flow_values} in basic data dictionary "
+            f"for VFPINJ "
         )
-        return False
     if no_tab_values % no_thp_values > 0:
         raise ValueError(
-            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
-            f"of number of THP_VALUES {no_thp_values} in basic data dictionary"
-            f"for VFPINJ"
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum "
+            f"of number of THP_VALUES {no_thp_values} in basic data dictionary "
+            f"for VFPINJ "
         )
-        return False
+    if no_thp_indices != no_thp_values:
+        raise ValueError(
+            f"Number of THP_VALUES values {no_thp_values} is not equal to "
+            f"of number of THP_INDICES {no_thp_indices}"
+        )
     if no_tab_values != no_flow_values * no_thp_indices:
         raise ValueError(
-            f"Number of BHP_TABLE values {no_tab_values} is not equal to"
-            f"of number of THP_VALUES {no_thp_values} times number of"
-            f"FLOW_VALUES {no_flow_values}"
+            f"Number of BHP_TABLE values {no_tab_values} is not equal to "
+            f"of number of THP_VALUES {no_thp_values} times number of "
+            f"FLOW_VALUES {no_flow_values} "
         )
-        return False
 
     return True
 
@@ -627,7 +629,6 @@ def _write_table_records(
     no_flow_values = table.size // no_records
     if table.size % no_records > 0:
         raise ValueError("Incompatible BHP table size")
-        return ecl_str
     else:
         table = table.reshape(no_records, no_flow_values)
 

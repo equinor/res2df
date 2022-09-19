@@ -664,7 +664,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     # Check if all data is present
     for key in BASIC_DATA_KEYS:
         if key not in vfp_data.keys():
-            raise KeyError("{key} key is not in basic data dictionary VFPPROD")
+            raise KeyError(f"{key} key is not in basic data dictionary VFPPROD")
     if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPPROD:
         raise KeyError("VFPTYPE must be VFPPROD")
 
@@ -681,41 +681,36 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 
     if no_thp_indices != no_wfr_indices:
         raise ValueError(
-            f"Number of THP_INDICES {no_thp_indices} does not match"
-            f"number of WFR_INDICES {no_wfr_indices} in basic data dictionary"
+            f"Number of THP_INDICES {no_thp_indices} does not match "
+            f"number of WFR_INDICES {no_wfr_indices} in basic data dictionary "
             f"for VFPPROD"
         )
-        return False
     if no_thp_indices != no_gfr_indices:
         raise ValueError(
-            f"Number of THP_INDICES {no_thp_indices} does not match"
-            f"number of GFR_INDICES {no_gfr_indices} in basic data dictionary"
+            f"Number of THP_INDICES {no_thp_indices} does not match "
+            f"number of GFR_INDICES {no_gfr_indices} in basic data dictionary "
             f"for VFPPROD"
         )
-        return False
     if no_thp_indices != no_alq_indices:
         raise ValueError(
-            f"Number of THP_INDICES {no_thp_indices} does not match"
-            f"number of ALQ_INDICES {no_alq_indices} in basic data dictionary"
+            f"Number of THP_INDICES {no_thp_indices} does not match "
+            f"number of ALQ_INDICES {no_alq_indices} in basic data dictionary "
             f"for VFPPROD"
         )
-        return False
 
     no_records = no_thp_values * no_wfr_values * no_gfr_values * no_alq_values
     if no_tab_values % no_flow_values > 0:
         raise ValueError(
-            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
-            f"of number of THP_VALUES {no_thp_values} in basic data dictionary"
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum "
+            f"of number of THP_VALUES {no_thp_values} in basic data dictionary "
             f"for VFPPROD"
         )
-        return False
     elif no_tab_values // no_flow_values != no_records:
         raise ValueError(
-            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum"
-            f"of number of FLOW_VALUES {no_flow_values} in basic data dictionary"
+            f"Number of BHP_TABLE values {no_tab_values} is not a multiplum "
+            f"of number of FLOW_VALUES {no_flow_values} in basic data dictionary "
             f"for VFPPROD"
         )
-        return False
 
     return True
 
@@ -915,7 +910,6 @@ def _write_table_records(
     no_flow_values = table.size // no_records
     if table.size % no_records > 0:
         raise ValueError("Incompatible BHP table size")
-        return ecl_str
     else:
         table = table.reshape(no_records, no_flow_values)
 

@@ -1272,9 +1272,7 @@ def test_pyarrow2basic_data_vfpinjs_no(test_input, expected):
 
 @pytest.fixture(scope="class", params=vfp._vfpprod.BASIC_DATA_KEYS)
 def vfpprod_key(request):
-    print("\n SETUP", request.param)
     yield request.param
-    # print("\n UNDO", request.param)
 
 
 class Test_Exceptions_vfpprod_keys:

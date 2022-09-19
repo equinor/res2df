@@ -1,3 +1,5 @@
+import copy
+
 import pandas as pd
 import pytest
 
@@ -10,6 +12,27 @@ except ImportError:
         "OPM is not installed",
         allow_module_level=True,
     )
+
+VFPPROD_ARRAY_NAMES = [
+    "THP_INDICES",
+    "WFR_INDICES",
+    "GFR_INDICES",
+    "THP_VALUES",
+    "FLOW_VALUES",
+    "THP_VALUES",
+    "WFR_VALUES",
+    "GFR_VALUES",
+    "BHP_TABLE",
+]
+
+VFPINJ_ARRAY_NAMES = [
+    "THP_INDICES",
+    "THP_VALUES",
+    "FLOW_VALUES",
+    "THP_VALUES",
+    "BHP_TABLE",
+]
+
 
 VFPPROD_CASES = [
     # Test cases for VFPPROD
@@ -1245,3 +1268,122 @@ def test_pyarrow2basic_data_vfpinjs_no(test_input, expected):
         basic_data_vfp = vfp.pyarrow2basic_data(pyarrow_vfps[i])
         df_vfp = vfp.basic_data2df(basic_data_vfp)
         pd.testing.assert_frame_equal(df_vfp, expected[n])
+
+
+@pytest.fixture(scope="class", params=vfp._vfpprod.BASIC_DATA_KEYS)
+def vfpprod_key(request):
+    print("\n SETUP", request.param)
+    yield request.param
+    # print("\n UNDO", request.param)
+
+
+class Test_Exceptions_vfpprod_keys:
+    @pytest.mark.parametrize("test_input, dummy", VFPPROD_CASES)
+    def test_basic_data_key_exceptions_vfpprods(self, vfpprod_key, test_input, dummy):
+        """Test exceptions for basic data format (not containing all
+        required keywords) for VFPPROD"
+        """
+        deck = EclFiles.str2deck(test_input)
+        basic_data_vfpprods = vfp.basic_data(deck, "VFPPROD")
+
+        # Check if exception is raises if one key is missing
+        basic_data_vfpprod_no_key = copy.deepcopy(basic_data_vfpprods[0])
+        del basic_data_vfpprod_no_key[vfpprod_key]
+        with pytest.raises(
+            KeyError, match=f"{vfpprod_key} key is not in basic data dictionary VFPPROD"
+        ):
+            vfp._vfpprod._check_basic_data(basic_data_vfpprod_no_key)
+
+
+@pytest.fixture(scope="class", params=VFPPROD_ARRAY_NAMES)
+def vfpprod_array_name(request):
+    print("\n SETUP", request.param)
+    yield request.param
+    # print("\n UNDO", request.param)
+
+
+class Test_Exceptions_vfpprod_dims:
+    @pytest.mark.parametrize("test_input, dummy", [VFPPROD_CASES[0]])
+    def test_basic_data_array_dim_exceptions_vfpprods(
+        self, vfpprod_array_name, test_input, dummy
+    ):
+        """Test exceptions for basic data format
+        (inconsistency in array dimensions) for VFPPROD"
+        """
+        deck = EclFiles.str2deck(test_input)
+        basic_data_vfpprods = vfp.basic_data(deck, "VFPPROD")
+
+        # Check if exception is raises if array dimension is wrong
+        basic_data_vfpprod_wrong_dim = copy.deepcopy(basic_data_vfpprods[0])
+        basic_data_vfpprod_wrong_dim[vfpprod_array_name] = basic_data_vfpprod_wrong_dim[
+            vfpprod_array_name
+        ][1:]
+        with pytest.raises(ValueError):
+            vfp._vfpprod._check_basic_data(basic_data_vfpprod_wrong_dim)
+
+
+@pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
+def test_basic_data_dims_vfpprods(test_input, expected):
+    """Test exceptions for dimensions consistency for basic data format
+    (not containing all required keywords) for VFPPROD"
+    """
+    deck = EclFiles.str2deck(test_input)
+    basic_data_vfpprods = vfp.basic_data(deck, "VFPPROD")
+
+    # Check if exception is raised if dimensions are wrong
+    basic_data_vfpprod = copy.deepcopy(basic_data_vfpprods[0])
+    basic_data_vfpprod["THP_INDICES"] = basic_data_vfpprod["THP_INDICES"][1:]
+    with pytest.raises(ValueError):
+        vfp._vfpprod._check_basic_data(basic_data_vfpprod)
+
+
+@pytest.fixture(scope="class", params=vfp._vfpinj.BASIC_DATA_KEYS)
+def vfpinj_key(request):
+    print("\n SETUP", request.param)
+    yield request.param
+    # print("\n UNDO", request.param)
+
+
+class Test_Exceptions_vfpinj_keys:
+    @pytest.mark.parametrize("test_input, dummy", VFPINJ_CASES)
+    def test_basic_data_key_exceptions_vfpinjs(self, vfpinj_key, test_input, dummy):
+        """Test exceptions for basic data format (not containing all
+        required keywords) for VFPINJ"
+        """
+        deck = EclFiles.str2deck(test_input)
+        basic_data_vfpinjs = vfp.basic_data(deck, "VFPINJ")
+
+        # Check if exception is raises if one key is missing
+        basic_data_vfpinj_no_key = copy.deepcopy(basic_data_vfpinjs[0])
+        del basic_data_vfpinj_no_key[vfpinj_key]
+        with pytest.raises(
+            KeyError, match=f"{vfpinj_key} key is not in basic data dictionary VFPINJ"
+        ):
+            vfp._vfpinj._check_basic_data(basic_data_vfpinj_no_key)
+
+
+@pytest.fixture(scope="class", params=VFPINJ_ARRAY_NAMES)
+def vfpinj_array_name(request):
+    print("\n SETUP", request.param)
+    yield request.param
+    # print("\n UNDO", request.param)
+
+
+class Test_Exceptions_vfpinj_dims:
+    @pytest.mark.parametrize("test_input, dummy", [VFPINJ_CASES[0]])
+    def test_basic_data_array_dim_exceptions_vfpinjs(
+        self, vfpinj_array_name, test_input, dummy
+    ):
+        """Test exceptions for basic data format
+        (inconsistency in array dimensions) for VFPINJ"
+        """
+        deck = EclFiles.str2deck(test_input)
+        basic_data_vfpinjs = vfp.basic_data(deck, "VFPINJ")
+
+        # Check if exception is raises if array dimension if wrong
+        basic_data_vfpinj_wrong_dim = copy.deepcopy(basic_data_vfpinjs[0])
+        basic_data_vfpinj_wrong_dim[vfpinj_array_name] = basic_data_vfpinj_wrong_dim[
+            vfpinj_array_name
+        ][1:]
+        with pytest.raises(ValueError):
+            vfp._vfpinj._check_basic_data(basic_data_vfpinj_wrong_dim)

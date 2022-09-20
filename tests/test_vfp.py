@@ -1057,7 +1057,7 @@ def test_df2ecl_vfpinj(test_input, expected):
 def test_pyarrow2ecl_vfpinj(test_input, expected):
     """Test pyarrow2ecl for VFPPROD (case without default values)"""
     deck = EclFiles.str2deck(vfp.df2ecl(expected, "VFPINJ"))
-    vfpinj_df = vfp.df(deck,"VFPINJ")
+    vfpinj_df = vfp.df(deck, "VFPINJ")
     vfpinj_data = vfp.df2basic_data(vfpinj_df)
     vfpinj_pa = vfp.basic_data2pyarrow(vfpinj_data)
     vfpinj_data = vfp.pyarrow2basic_data(vfpinj_pa)

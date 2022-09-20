@@ -1026,7 +1026,9 @@ def test_df2ecl_vfpprod(test_input, expected):
 def test_pyarrow2ecl_vfpprod(test_input, expected):
     """Test pyarrow2ecl for VFPPROD (case without default values)"""
     deck = EclFiles.str2deck(vfp.df2ecl(expected, "VFPPROD"))
-    vfpprod_pa = vfp.pyarrow_tables(deck, "VFPPROD")[0]
+    vfpprod_df = vfp.df(deck, "VFPPROD")
+    vfpprod_data = vfp.df2basic_data(vfpprod_df)
+    vfpprod_pa = vfp.basic_data2pyarrow(vfpprod_data)
     vfpprod_data = vfp.pyarrow2basic_data(vfpprod_pa)
     vfpprod_df = vfp.basic_data2df(vfpprod_data)
     vfpprod_ecl = vfp.df2ecl(vfpprod_df, "VFPPROD")
@@ -1055,7 +1057,9 @@ def test_df2ecl_vfpinj(test_input, expected):
 def test_pyarrow2ecl_vfpinj(test_input, expected):
     """Test pyarrow2ecl for VFPPROD (case without default values)"""
     deck = EclFiles.str2deck(vfp.df2ecl(expected, "VFPINJ"))
-    vfpinj_pa = vfp.pyarrow_tables(deck, "VFPINJ")[0]
+    vfpinj_df = vfp.df(deck,"VFPINJ")
+    vfpinj_data = vfp.df2basic_data(vfpinj_df)
+    vfpinj_pa = vfp.basic_data2pyarrow(vfpinj_data)
     vfpinj_data = vfp.pyarrow2basic_data(vfpinj_pa)
     vfpinj_df = vfp.basic_data2df(vfpinj_data)
     vfpinj_ecl = vfp.df2ecl(vfpinj_df, "VFPINJ")

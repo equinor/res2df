@@ -207,7 +207,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Union[Dict[str, Any], None]:
         dframe:    Dataframe containing complete description of VFPPROD/VFPINJ input
     """
 
-    if "VFP_TYPE" in dframe.colums:
+    if "VFP_TYPE" in dframe.columns:
         if len(dframe["VFP_TYPE"].unique()) == 1:
             vfp_type = VFPTYPE[dframe["VFP_TYPE"].unique()[0]]
             if vfp_type == VFPTYPE.VFPPROD:

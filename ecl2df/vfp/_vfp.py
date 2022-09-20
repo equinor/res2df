@@ -139,7 +139,7 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
     raise ValueError("VFP_TYPE not found in basic data")
 
 
-def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
+def basic_data2pyarrow(data: Dict[str, Any],/) -> pa.Table:
     """Convert basic_data representation of VFPPROD/VFPINF
     (see function basic_data for defintion of data) into
     pyarrow.Table representation
@@ -199,7 +199,7 @@ def basic_data2pyarrow(data: Dict[str, Any]) -> pa.Table:
     raise ValueError("VFP_TYPE not found in basic data")
 
 
-def df2basic_data(dframe: pd.DataFrame) -> Union[Dict[str, Any], None]:
+def df2basic_data(dframe: pd.DataFrame,/) -> Union[Dict[str, Any], None]:
     """Produce a dictionary with basic data types for a VFPPROD/VFPINJ
     liftcurve table represented as a Pandas DataFrame
 

@@ -27,6 +27,7 @@ SUBMODULES: List[str] = [
     "satfunc",
     "summary",
     "trans",
+    "vfp",
     "wellcompletiondata",
     "wellconnstatus",
     "wcon",

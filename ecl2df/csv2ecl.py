@@ -7,7 +7,7 @@ for selected keywords
 import argparse
 import sys
 
-from ecl2df import __version__, equil, pvt, satfunc, summary
+from ecl2df import __version__, equil, pvt, satfunc, summary, vfp
 
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION: str = """Convert CSV files into Eclipse include files. Uses the command
@@ -88,6 +88,16 @@ def get_parser() -> argparse.ArgumentParser:
     )
     satfunc.fill_reverse_parser(satfunc_parser)
     satfunc_parser.set_defaults(func=satfunc.satfunc_reverse_main)
+
+    vfp_parser = subparsers.add_parser(
+        "vfp",
+        help="Write VFPPROD/VFPINJ include files",
+        description=(
+            "Write VFPPROD/VFPINJ include files from CSV files on the ecl2df format."
+        ),
+    )
+    vfp.fill_reverse_parser(vfp_parser)
+    vfp_parser.set_defaults(func=vfp.vfp_reverse_main)
 
     return parser
 

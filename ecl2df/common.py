@@ -66,6 +66,8 @@ for keyw in [
     "SWFN",
     "SWOF",
     "TABDIMS",
+    "VFPPROD",
+    "VFPINJ",
     "WCONHIST",
     "WCONINJE",
     "WCONINJH",

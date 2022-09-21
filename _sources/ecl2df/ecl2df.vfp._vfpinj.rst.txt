@@ -1,0 +1,10 @@
+======================
+``ecl2df.vfp._vfpinj``
+======================
+
+.. automodule:: ecl2df.vfp._vfpinj
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.vfp._vfpinj

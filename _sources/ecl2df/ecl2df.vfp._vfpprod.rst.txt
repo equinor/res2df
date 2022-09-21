@@ -1,0 +1,10 @@
+=======================
+``ecl2df.vfp._vfpprod``
+=======================
+
+.. automodule:: ecl2df.vfp._vfpprod
+
+   .. contents::
+      :local:
+
+.. currentmodule:: ecl2df.vfp._vfpprod

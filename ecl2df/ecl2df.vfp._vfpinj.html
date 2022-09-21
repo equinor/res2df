@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ecl2df.vfp._vfpinj &mdash; ecl2df 0.16.4.dev2+g5d699200 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ecl2df.vfp._vfpprod" href="ecl2df.vfp._vfpprod.html" />
+    <link rel="prev" title="ecl2df.vfp._vfpdefs" href="ecl2df.vfp._vfpdefs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> ecl2df
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.16.4.dev2+g5d699200
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.constants.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.constants</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.csv2ecl.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.equil.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.faults.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.fipreports.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.fipreports</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.grid.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.gruptree.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.inferdims.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.inferdims</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.nnc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.nnc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.parameters.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pillars.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pillars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.pvt.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.pvt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.rft.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.satfunc.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.summary.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.trans.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.trans</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.version.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.version</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ecl2df.vfp.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.vfp</span></code></a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="ecl2df.vfp.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wcon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wellcompletiondata.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wellcompletiondata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecl2df.wellconnstatus.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.wellconnstatus</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ecl2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a> &raquo;</li>
+          <li><a href="ecl2df.vfp.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.vfp</span></code></a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">ecl2df.vfp._vfpinj</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/ecl2df/ecl2df.vfp._vfpinj.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ecl2df.vfp._vfpinj">
+<span id="ecl2df-vfp-vfpinj"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.vfp._vfpinj</span></code><a class="headerlink" href="#module-ecl2df.vfp._vfpinj" title="Permalink to this heading"></a></h1>
+<p>Utilities to extract the VFPINJ data from an Eclipse (input) deck.
+Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
+basic_data (dictionary with basic data types), df (pandas DataFrame) or
+pyarrow_tables (pyarrow.Tables).</p>
+<p>Data can be extracted from a full Eclipse deck or from individual files.
+Supports output both in csv format as a pandas DataFrame or in pyarrow
+a pyarrow.Table. Also functionality to write pandas DataFrame and
+pyarrow.Table to file as Eclipse .Ecl format</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.basic_data">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.basic_data" title="Permalink to this definition"></a></dt>
+<dd><p>Read and return all data for Eclipse VFPINJ keyword as basic data types</p>
+<p>Empty string returned if vfp table number does not match any number in list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DeckKeyword</span></code>) – Eclipse deck keyword</p></li>
+<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String with list of vfp table numbers to extract.
+Syntax “[0,1,8:11]” corresponds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.basic_data2df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#basic_data2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.basic_data2df" title="Permalink to this definition"></a></dt>
+<dd><p>Return a pandas DataFrame from VFPINJ liftcurve data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tableno</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – table number</p></li>
+<li><p><strong>datum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – datum depth</p></li>
+<li><p><strong>rate_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.VFPINJ_FLO" title="ecl2df.vfp._vfpdefs.VFPINJ_FLO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_FLO</span></code></a>) – rate type used for flow values</p></li>
+<li><p><strong>thp_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.THPTYPE" title="ecl2df.vfp._vfpdefs.THPTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">THPTYPE</span></code></a>) – thp type used for THP values</p></li>
+<li><p><strong>unit_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.UNITTYPE" title="ecl2df.vfp._vfpdefs.UNITTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNITTYPE</span></code></a>) – unit type</p></li>
+<li><p><strong>tab_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="ecl2df.vfp._vfpdefs.VFPINJ_TABTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_TABTYPE</span></code></a>) – type for tabulated (record) values</p></li>
+<li><p><strong>flow_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – rate values used to generate table</p></li>
+<li><p><strong>thp_type</strong> – thp type</p></li>
+<li><p><strong>thp_indices</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – which index in thp value table a given BHP value
+corresponds to (1-base)</p></li>
+<li><p><strong>tab_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – tabulated (BHP) data
+(ordered as thp- and flow-values)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.basic_data2pyarrow">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#basic_data2pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.basic_data2pyarrow" title="Permalink to this definition"></a></dt>
+<dd><p>Return a pyarrow Table from VFPINJ record data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tableno</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – table number</p></li>
+<li><p><strong>datum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – datum depth</p></li>
+<li><p><strong>rate_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.VFPINJ_FLO" title="ecl2df.vfp._vfpdefs.VFPINJ_FLO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_FLO</span></code></a>) – rate type used for flow values</p></li>
+<li><p><strong>thp_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.THPTYPE" title="ecl2df.vfp._vfpdefs.THPTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">THPTYPE</span></code></a>) – thp type</p></li>
+<li><p><strong>unit_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.UNITTYPE" title="ecl2df.vfp._vfpdefs.UNITTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNITTYPE</span></code></a>) – unit type</p></li>
+<li><p><strong>tab_type</strong> (<a class="reference internal" href="ecl2df.vfp._vfpdefs.html#ecl2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="ecl2df.vfp._vfpdefs.VFPINJ_TABTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_TABTYPE</span></code></a>) – type for tabulated (record) values</p></li>
+<li><p><strong>flow_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – rate values used to generate table</p></li>
+<li><p><strong>thp_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – THP values used to generate table</p></li>
+<li><p><strong>thp_indices</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – THP indices for each record in tabulated data</p></li>
+<li><p><strong>tab_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – tabulated (BHP) data
+(ordered according to thp- and flow-values)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.df">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.df" title="Permalink to this definition"></a></dt>
+<dd><p>Return a dataframes of a single VFPINJ table from an Eclipse deck</p>
+<p>Data from the VFPINJ keyword are stacked into a Pandas Dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DeckKeyword</span></code>) – Eclipse deck keyword</p></li>
+<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String with list of vfp table numbers to extract.
+Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.df2basic_data">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#df2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.df2basic_data" title="Permalink to this definition"></a></dt>
+<dd><p>Return basic data type for VFPINJ from a pandas dataframe.</p>
+<p>Return format is a dictionary all data in VFPINJ in basic data types
+(str, int, float, numpy.array)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – pandas DataFrame for VFPINJ</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.df2ecl">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2ecl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#df2ecl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.df2ecl" title="Permalink to this definition"></a></dt>
+<dd><p>Produce a string defining single VFPINJ Eclipse input from a dataframe</p>
+<p>All data for the keywords VFPINJ will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of single VFPINJ input</p></li>
+<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as comment</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.pyarrow">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.pyarrow" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Return a pyarrow Table of a single VFPINJ table from an Eclipse deck</dt><dd><p>If no VFPINJ table found, return None</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DeckKeyword</span></code>) – Eclipse deck keyword</p></li>
+<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String with list of vfp table numbers to extract.
+Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.vfp._vfpinj.pyarrow2basic_data">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfpinj.html#pyarrow2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfpinj.pyarrow2basic_data" title="Permalink to this definition"></a></dt>
+<dd><p>Return basic data type for VFPINJ from a pyarrow.Table.</p>
+<p>Return format is a dictionary all data in VFPINJ in basic data types
+(str, int, float, numpy.array)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pa_table</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>) – pyarrow Table with data for VFPINJ</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ecl2df.vfp._vfpdefs.html" class="btn btn-neutral float-left" title="ecl2df.vfp._vfpdefs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ecl2df.vfp._vfpprod.html" class="btn btn-neutral float-right" title="ecl2df.vfp._vfpprod" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2022.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

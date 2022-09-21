@@ -35,6 +35,7 @@ Submodules
    ecl2df.summary
    ecl2df.trans
    ecl2df.version
+   ecl2df.vfp
    ecl2df.wcon
    ecl2df.wellcompletiondata
    ecl2df.wellconnstatus

@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10.5']
         include:
           # For one of the Python versions we
           # install the extra dependency ert

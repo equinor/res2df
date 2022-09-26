@@ -402,8 +402,9 @@ def df2ecl(
         str_vfps += "\n"
 
     if filename:
-        with open(filename, "r") as fout:
+        with open(filename, "w") as fout:
             fout.write(str_vfp)
+
     return str_vfps
 
 

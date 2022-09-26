@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.faults &mdash; ecl2df 0.17.0 documentation</title>
+  <title>ecl2df.faults &mdash; ecl2df 0.17.1.dev2+g04369aa1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -32,7 +33,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.0
+                0.17.1.dev2+g04369aa1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -54,6 +55,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ecl2df.html#ecl2df.getLogger_ecl2csv"><code class="docutils literal notranslate"><span class="pre">getLogger_ecl2csv()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
@@ -62,7 +64,12 @@
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.equil.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.faults.df"><code class="docutils literal notranslate"><span class="pre">df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.faults.faults_main"><code class="docutils literal notranslate"><span class="pre">faults_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.faults.fill_parser"><code class="docutils literal notranslate"><span class="pre">fill_parser()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.fipreports.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.fipreports</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.grid.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.grid</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.gruptree.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.gruptree</span></code></a></li>
@@ -112,11 +119,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-ecl2df.faults">
-<span id="ecl2df-faults"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code><a class="headerlink" href="#module-ecl2df.faults" title="Permalink to this heading"></a></h1>
+  <section id="ecl2df-faults">
+<h1><code class="docutils literal notranslate"><span class="pre">ecl2df.faults</span></code><a class="headerlink" href="#ecl2df-faults" title="Permalink to this heading"></a></h1>
 <p>Extract the contents of the FAULTS keyword into
 a DataFrame</p>
-<dl class="py function">
+<span class="target" id="module-ecl2df.faults"></span><dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.faults.df">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.faults.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/faults.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.faults.df" title="Permalink to this definition"></a></dt>
 <dd><p>Produce a dataframe of fault data from a deck</p>

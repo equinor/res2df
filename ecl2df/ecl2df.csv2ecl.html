@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.csv2ecl &mdash; ecl2df 0.17.0 documentation</title>
+  <title>ecl2df.csv2ecl &mdash; ecl2df 0.17.1.dev2+g04369aa1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -32,7 +33,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.0
+                0.17.1.dev2+g04369aa1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -54,11 +55,16 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ecl2df.html#ecl2df.getLogger_ecl2csv"><code class="docutils literal notranslate"><span class="pre">getLogger_ecl2csv()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ecl2df.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.compdat</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.constants.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.constants</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.csv2ecl.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.csv2ecl.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.ecl2csv.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.ecl2csv</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.eclfiles.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecl2df.equil.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.equil</span></code></a></li>
@@ -112,11 +118,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-ecl2df.csv2ecl">
-<span id="ecl2df-csv2ecl"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code><a class="headerlink" href="#module-ecl2df.csv2ecl" title="Permalink to this heading"></a></h1>
+  <section id="ecl2df-csv2ecl">
+<h1><code class="docutils literal notranslate"><span class="pre">ecl2df.csv2ecl</span></code><a class="headerlink" href="#ecl2df-csv2ecl" title="Permalink to this heading"></a></h1>
 <p>Convert dataframes (in ecl2df format) to Eclipse include files,
 for selected keywords</p>
-<dl class="py function">
+<span class="target" id="module-ecl2df.csv2ecl"></span><dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.csv2ecl.get_parser">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.csv2ecl.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/csv2ecl.html#get_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.csv2ecl.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Make parser</p>

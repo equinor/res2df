@@ -869,6 +869,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         default="summary.csv",
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
+    parser.add_argument("--include_restart", action="store_true", help="Attempt to include data from before restart")
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -906,6 +907,7 @@ def summary_main(args) -> None:
         column_keys=args.column_keys,
         start_date=args.start_date,
         end_date=args.end_date,
+        include_restart=args.include_restart,
         params=args.params,
         paramfile=args.paramfile,
         datetime=False,

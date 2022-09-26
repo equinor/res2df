@@ -869,7 +869,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         default="summary.csv",
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
-    parser.add_argument("--include_restart", action="store_true", help="Attempt to include data from before restart")
+    parser.add_argument(
+        "--include_restart",
+        action="store_true",
+        help="Attempt to include data from before restart",
+    )
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser

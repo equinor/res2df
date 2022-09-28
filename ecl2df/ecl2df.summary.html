@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.17.1.dev3+gfbe053e1 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.17.1.dev4+gdf10aa0a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.1.dev3+gfbe053e1
+                0.17.1.dev4+gdf10aa0a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -162,7 +162,7 @@ frequency.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.summary.df">
-<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition"></a></dt>
 <dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
 <p>This is a thin wrapper for EclSum.pandas_frame, by adding
 support for string mnenomics for the time index.</p>
@@ -189,7 +189,7 @@ start_date will always be included.</p></li>
 Dates past this date will be dropped, supplied
 end_date will always be included. Overriden if time_index
 is ‘last’.</p></li>
-<li><p><strong>include_restart</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – boolean sent to libecl for wheter restarts
+<li><p><strong>include_restart</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – boolean sent to libecl for whether restart
 files should be traversed</p></li>
 <li><p><strong>params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If set, parameters.txt will be attempted loaded
 and merged with the summary data.</p></li>

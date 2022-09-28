@@ -20,6 +20,10 @@ Eclipse equivalent to ``time_index="raw"``, other options are *daily*, *weekly*,
 *monthly* or *yearly*.  See below for how to interpred "interpolated" summary
 data.
 
+Additional arguments are available, see the
+`API documentation <https://equinor.github.io/ecl2df/ecl2df/ecl2df.summary.html#ecl2df.summary.df>`_
+for an extensive overview.
+
 .. csv-table:: Example summary table
    :file: summary.csv
    :header-rows: 1

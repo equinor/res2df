@@ -12,13 +12,12 @@ on:
       - published
   schedule:
     # Run CI every night and check that tests are working with latest dependencies
-    - cron:  '0 0 * * *'
+    - cron: '0 0 * * *'
 
 env:
   ERT_SHOW_BACKTRACE: 1
 
 jobs:
-
   ecl2df:
     runs-on: ubuntu-18.04
     strategy:
@@ -112,3 +111,4 @@ jobs:
           python -m pip install --upgrade setuptools wheel twine
           python setup.py sdist bdist_wheel
           twine upload dist/*
+

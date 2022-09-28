@@ -302,7 +302,7 @@ def df(
     column_keys: Union[List[str], str] = None,
     start_date: Optional[Union[str, dt.date]] = None,
     end_date: Optional[Union[str, dt.date]] = None,
-    include_restart: bool = True,
+    include_restart: bool = False,
     params: bool = False,
     paramfile: Optional[str] = None,
     datetime: bool = False,  # A very poor choice of argument name [pylint]
@@ -336,7 +336,7 @@ def df(
             Dates past this date will be dropped, supplied
             end_date will always be included. Overriden if time_index
             is 'last'.
-        include_restart: boolean sent to libecl for wheter restarts
+        include_restart: boolean sent to libecl for whether restart
             files should be traversed
         params: If set, parameters.txt will be attempted loaded
             and merged with the summary data.

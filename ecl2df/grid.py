@@ -444,6 +444,14 @@ def init2df(eclfiles: EclFiles, vectors: Union[str, List[str]] = None) -> pd.Dat
                 ]
             ),
         )
+
+        # np.hstack homogenizes the values' type to float, this brings
+        # the types back as it was defined when parsing it
+        for vec in usevectors:
+            init_df[vec] = init_df[vec].astype(
+                init.iget_named_kw(vec, 0).numpyView().dtype
+            )
+
         # libecl emits a number around -1.0000000200408773e+20 which
         # should be considered Not-a-number
         init_df = init_df.where(init_df > -1e20 + 1e13)  # some trial and error

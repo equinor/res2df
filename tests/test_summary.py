@@ -804,7 +804,7 @@ def test_unique_datetime_for_short_timesteps(filepath):
 )
 def test_unique_datetime_retain_index_name(filepath):
     """Test _ensure_unique_datetime_index method retain index name"""
-    assert summary.df(EclFiles(filepath)).index.name is not None
+    assert summary.df(EclFiles(filepath)).index.name == "DATE"
 
 
 def test_smry_meta():

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.17.1 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.17.2.dev1+g198a5116 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.1
+                0.17.2.dev1+g198a5116
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -565,7 +565,7 @@
                     <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;Vector TIMESTEP exists, but unit could not be identified&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index_as_list</span>
+            <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">index_as_list</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps due to limited.&quot;</span><span class="p">,</span>

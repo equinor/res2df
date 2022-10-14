@@ -483,7 +483,7 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
                     "Dataframe of smry data contained duplicate timestamps",
                     "Vector TIMESTEP exists, but unit could not be identified",
                 )
-            dframe.index = index_as_list
+            dframe.index = pd.Series(data=index_as_list, name=dframe.index.name)
         else:
             raise ValueError(
                 "Dataframe of smry data contained duplicate timestamps due to limited.",

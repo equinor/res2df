@@ -795,6 +795,18 @@ def test_unique_datetime_for_short_timesteps(filepath):
     assert summary.df(EclFiles(filepath)).index.is_unique
 
 
+@pytest.mark.parametrize(
+    "filepath",
+    [
+        SHORT_STEP_WITH_TIMESTEP,
+        SHORT_STEP_WITH_TIMESTEP_LONG,
+    ],
+)
+def test_unique_datetime_retain_index_name(filepath):
+    """Test _ensure_unique_datetime_index method retain index name"""
+    assert summary.df(EclFiles(filepath)).index.name == "DATE"
+
+
 def test_smry_meta():
     """Test obtaining metadata dictionary for summary vectors from an EclSum object"""
     meta = smry_meta(EclFiles(REEK))

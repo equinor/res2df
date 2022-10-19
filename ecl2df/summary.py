@@ -461,10 +461,10 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
 
         if "TIMESTEP" in dframe:
             logger.info(
-                "Dataframe of smry data contained duplicate timestamps due to limited",
-                " output resolution. Vector TIMESTEP exists, utilizing it to create "
-                "discrete timestamps",
-                f"Original duplicates were:{index_duplicate_log_string}",
+                "Dataframe of summary data contained duplicate timestamps due to "
+                "limited output resolution. Vector TIMESTEP exists, utilizing it to "
+                "create discrete timestamps."
+                f"Original duplicates were:{index_duplicate_log_string}"
             )
             index_as_list = dframe.index.to_list()
 
@@ -480,16 +480,16 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
                     )
             else:
                 raise ValueError(
-                    "Dataframe of smry data contained duplicate timestamps",
-                    "Vector TIMESTEP exists, but unit could not be identified",
+                    "Dataframe of smry data contained duplicate timestamps. "
+                    "Vector TIMESTEP exists, but unit could not be identified."
                 )
             dframe.index = pd.Series(data=index_as_list, name=dframe.index.name)
         else:
             raise ValueError(
-                "Dataframe of smry data contained duplicate timestamps due to limited.",
-                " output resolution. Vector TIMESTEP was not found. Try to add it to ",
-                "the SUMMARY section of the simulation deck, as it may be utilized to",
-                " separate duplicate timestamps.",
+                "Dataframe of summary data contained duplicate timestamps due to "
+                "limited output resolution. Vector TIMESTEP was not found. Try to add "
+                "it to the SUMMARY section of the simulation deck, as it may be "
+                "utilized to separate duplicate timestamps."
             )
     return dframe
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.17.2.dev1+g198a5116 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.17.2.dev2+g4f929a82 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev1+g198a5116
+                0.17.2.dev2+g4f929a82
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -543,10 +543,10 @@
 
         <span class="k">if</span> <span class="s2">&quot;TIMESTEP&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps due to limited&quot;</span><span class="p">,</span>
-                <span class="s2">&quot; output resolution. Vector TIMESTEP exists, utilizing it to create &quot;</span>
-                <span class="s2">&quot;discrete timestamps&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Original duplicates were:</span><span class="si">{</span><span class="n">index_duplicate_log_string</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Dataframe of summary data contained duplicate timestamps due to &quot;</span>
+                <span class="s2">&quot;limited output resolution. Vector TIMESTEP exists, utilizing it to &quot;</span>
+                <span class="s2">&quot;create discrete timestamps.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Original duplicates were:</span><span class="si">{</span><span class="n">index_duplicate_log_string</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
             <span class="n">index_as_list</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
 
@@ -562,16 +562,16 @@
                     <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Vector TIMESTEP exists, but unit could not be identified&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps. &quot;</span>
+                    <span class="s2">&quot;Vector TIMESTEP exists, but unit could not be identified.&quot;</span>
                 <span class="p">)</span>
             <span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">index_as_list</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Dataframe of smry data contained duplicate timestamps due to limited.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot; output resolution. Vector TIMESTEP was not found. Try to add it to &quot;</span><span class="p">,</span>
-                <span class="s2">&quot;the SUMMARY section of the simulation deck, as it may be utilized to&quot;</span><span class="p">,</span>
-                <span class="s2">&quot; separate duplicate timestamps.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Dataframe of summary data contained duplicate timestamps due to &quot;</span>
+                <span class="s2">&quot;limited output resolution. Vector TIMESTEP was not found. Try to add &quot;</span>
+                <span class="s2">&quot;it to the SUMMARY section of the simulation deck, as it may be &quot;</span>
+                <span class="s2">&quot;utilized to separate duplicate timestamps.&quot;</span>
             <span class="p">)</span>
     <span class="k">return</span> <span class="n">dframe</span>
 

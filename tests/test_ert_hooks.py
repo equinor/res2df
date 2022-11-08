@@ -85,7 +85,7 @@ def test_ecl2csv_through_ert(tmp_path):
             f"<CSVFILE>={subcommand}.csv, <OUTPUT>={subcommand}.inc)"
         )
     ert_config.append(
-        "FORWARD_MODEL CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv), "
+        "FORWARD_MODEL CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv, "
         "<OUTPUT>=SUMYEARLY)"
     )
 

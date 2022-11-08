@@ -1,7 +1,7 @@
 import importlib
 import logging
 import sys
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 try:
     from .version import version  # type: ignore
@@ -35,7 +35,7 @@ SUBMODULES: List[str] = [
 
 
 def getLogger_ecl2csv(
-    module_name: str = "ecl2df", args_dict: Dict[str, Union[str, bool]] = None
+    module_name: str = "ecl2df", args_dict: Optional[Dict[str, Union[str, bool]]] = None
 ) -> logging.Logger:
     # pylint: disable=invalid-name
     """Provide a custom logger for ecl2csv and csv2ecl

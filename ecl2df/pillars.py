@@ -34,7 +34,7 @@ AGGREGATORS: Dict[str, str] = {
 
 def df(
     eclfiles: EclFiles,
-    region: str = None,
+    region: Optional[str] = None,
     rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
     soilcutoff: float = 0.2,
     sgascutoff: float = 0.7,

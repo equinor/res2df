@@ -360,7 +360,7 @@ def merge_initvectors(
     eclfiles: EclFiles,
     dframe: pd.DataFrame,
     initvectors: List[str],
-    ijknames: List[str] = None,
+    ijknames: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """Merge in INIT vectors to a dataframe by I, J, K.
 
@@ -402,7 +402,9 @@ def merge_initvectors(
     return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
 
-def init2df(eclfiles: EclFiles, vectors: Union[str, List[str]] = None) -> pd.DataFrame:
+def init2df(
+    eclfiles: EclFiles, vectors: Optional[Union[str, List[str]]] = None
+) -> pd.DataFrame:
     """Extract information from INIT file with cell data
 
     Normally, you would use the df() function which will

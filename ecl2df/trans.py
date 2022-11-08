@@ -4,7 +4,7 @@ Extract transmissibility information from Eclipse output files as Dataframes.
 """
 import argparse
 import logging
-from typing import List, Union
+from typing import List, Optional, Union
 
 import pandas as pd
 
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 def df(
     eclfiles: EclFiles,
-    vectors: Union[str, List[str]] = None,
+    vectors: Optional[Union[str, List[str]]] = None,
     boundaryfilter: bool = False,
     group: bool = False,
     coords: bool = False,

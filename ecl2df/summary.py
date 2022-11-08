@@ -299,7 +299,7 @@ def resample_smry_dates(
 def df(
     eclfiles: EclFiles,
     time_index: Optional[str] = None,
-    column_keys: Union[List[str], str] = None,
+    column_keys: Optional[Union[List[str], str]] = None,
     start_date: Optional[Union[str, dt.date]] = None,
     end_date: Optional[Union[str, dt.date]] = None,
     include_restart: bool = False,
@@ -539,7 +539,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
 def _merge_params(
     dframe: pd.DataFrame,
     paramfile: Optional[Union[str, Path]] = None,
-    eclfiles: Union[str, EclFiles] = None,
+    eclfiles: Optional[Union[str, EclFiles]] = None,
 ) -> pd.DataFrame:
     """Locate parameters in a <key> <value> file and add to the dataframe.
 

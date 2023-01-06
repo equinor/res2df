@@ -718,14 +718,16 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 def df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
+    default_unittype: Optional[UNITTYPE] = None,
 ) -> Union[pd.DataFrame, None]:
     """Return a dataframe or pyarrow Table of a single VFPPROD table
     from an Eclipse deck.
 
     Args:
-        keyword:        Eclipse deck keyword
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        keyword:           Eclipse deck keyword
+        vfpnumbers_str:    String with list of vfp table numbers to extract.
+                           Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        default_unittype:  Unit type used if unit type is set to default for Eclipse
     """
 
     vfpprod_data = basic_data(keyword, vfpnumbers_str)
@@ -733,6 +735,11 @@ def df(
     # Check if vfp number exists. If not return empry DataFrame
     if vfpprod_data is None:
         return None
+
+    # Change unit type if defaulted to default for Eclipse
+    if vfpprod_data["UNIT_TYPE"] == UNITTYPE.DEFAULT:
+        if default_unittype is not None:
+            vfpprod_data["UNIT_TYPE"] = default_unittype
 
     # Put VFPPROD data into pandas DataFrame
     df_vfpprod = basic_data2df(
@@ -763,14 +770,16 @@ def df(
 def pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
+    default_unittype: Optional[UNITTYPE] = None,
 ) -> Union[pa.Table, None]:
     """Return a pyarrow Table of a single VFPPROD table from an Eclipse deck.
        If no VFPPROD curve found, return None
 
     Args:
-        keyword:        Eclipse deck keyword
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        keyword:           Eclipse deck keyword
+        vfpnumbers_str:    String with list of vfp table numbers to extract.
+                           Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        default_unittype:  Unit type used if unit type is set to default for Eclipse
     """
 
     # Get basic data from VFPPROD tables
@@ -778,6 +787,11 @@ def pyarrow(
 
     if vfpprod_data is None:
         return None
+
+    # Change unit type if defaulted to default for Eclipse
+    if vfpprod_data["UNIT_TYPE"] == UNITTYPE.DEFAULT:
+        if default_unittype is not None:
+            vfpprod_data["UNIT_TYPE"] = default_unittype
 
     # Put VFPPROD data into pandas DataFrame
     pa_vfpprod = basic_data2pyarrow(

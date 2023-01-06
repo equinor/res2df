@@ -12,6 +12,9 @@ from typing import Any, List, Union
 
 import numpy as np
 import pandas as pd
+import pyarrow as pa
+
+from ecl2df.vfp._vfpdefs import UNITTYPE
 
 try:
     # Needed for mypy
@@ -25,7 +28,7 @@ try:
 except ImportError:
     pass
 
-from ecl2df import common
+from ecl2df import EclFiles, common
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +59,28 @@ def _string2intlist(list_def_str: str) -> List[int]:
     return list
 
 
+def _string2stringlist(list_def_str: str) -> List[str]:
+    """Produce a list of string from input string
+
+    Args:
+        list_def_str: String defining list of string
+                      Format "["str1","str2","str3"]"
+                      to define list ["str1","str2","str3"]
+    """
+    list = []
+    list_def = list_def_str.strip().strip("[").strip("]")
+    if list_def.strip():
+        list_items = []
+        if "," in list_def:
+            list_items = list_def.split(",")
+        else:
+            list_items = [list_def]
+        for item in list_items:
+            list.append(str(item))
+
+    return list
+
+
 def _deckrecord2list(
     record: "opm.libopmcommon_python.DeckRecord",
     keyword: str,
@@ -63,8 +88,8 @@ def _deckrecord2list(
     recordname: str,
 ) -> Union[Any, List[float]]:
     """
-    Parse an opm.libopmcommon_python.DeckRecord belonging to a certain keyword
-    and return as list of numbers
+    Parse an opm.libopmcommon_python.DeckRecord belonging to a
+    certain keyword and return as list of numbers
 
     Args:
         record:      Record be parsed
@@ -204,3 +229,75 @@ def _write_vfp_range(
     ecl_str += "\n"
 
     return ecl_str
+
+
+def _ecl_unit_system(
+    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"]
+) -> UNITTYPE:
+    """Extract Eclipse unit system definition from Eclipse deck.
+       The unit system in Eclipse should be one of
+       "METRIC", "FIELD", "LAB" or "PVT-M" and the corresponding
+       Enum type METRIC, FIELD, LAB or PVT-M is returned
+       If unit system not found METRIC unit system is returned
+       as default.
+
+    Args:
+        deck: Eclipse deck or string with deck
+    """
+    
+    ecl_deck = deck
+    if isinstance(deck, EclFiles):
+        ecl_deck = deck.get_ecldeck()
+    elif isinstance(deck, str):
+        ecl_deck = EclFiles.str2deck(deck)
+
+    for keyword in ecl_deck:
+        if keyword.name in ["METRIC", "FIELD", "LAB", "PVT-M"]:
+            return UNITTYPE[keyword.name]
+    return UNITTYPE.DEFAULT
+
+
+def _unique_vfps(
+    vfps: Union[List[pd.DataFrame], List[pa.Table]]
+) -> Union[List[pd.DataFrame], List[pa.Table]]:
+    """Extract list of VFPs with unique VFP number from original list of VFPs.
+    If same VFP number is used for several curves, the last curve is included
+    in the list returned.
+
+    Args:
+        vfps: list of VFP curves as DataFrames of pyarrow.Table
+    """
+
+    vfp_numbers = []
+    for vfp in vfps:
+        if isinstance(vfp, pd.DataFrame):
+            vfp_number = vfp["TABLE_NUMBER"].unique()
+            vfp_numbers.append(vfp_number[0])
+        elif isinstance(vfp, pa.Table):
+            vfp_number = int(vfp.schema.metadata[b"TABLE_NUMBER"].decode("utf-8"))
+            vfp_numbers.append(vfp_number)
+
+    vfp_unique_numbers = []
+    vfp_duplicate_numbers = []
+    for n, vfp_number in enumerate(vfp_numbers):
+        if vfp_number in vfp_numbers[(n + 1) :]:  # noqa: E203
+            vfp_duplicate_numbers.append(vfp_number)
+            vfp_unique_numbers.append(-1)
+        else:
+            vfp_unique_numbers.append(vfp_number)
+
+    vfps_unique = []
+    for n, vfp in enumerate(vfps):
+        if vfp_unique_numbers[n] > -1:
+            vfps_unique.append(vfp)
+
+    if len(vfp_duplicate_numbers) > 0:
+        logger.warning(
+            (
+                f"The following VFP numbers are used "
+                f"for more than one VFP table: "
+                f"{*vfp_duplicate_numbers,}"
+            )
+        )
+
+    return vfps_unique

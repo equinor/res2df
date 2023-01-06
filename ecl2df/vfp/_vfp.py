@@ -247,7 +247,6 @@ def dfs(
     deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
-    default_unittype: Optional[UNITTYPE] = None,
 ) -> List[pd.DataFrame]:
     """Produce a list of dataframes of vfp tables from a deck
 
@@ -258,7 +257,6 @@ def dfs(
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
-        default_unittype: Optional[UNITTYPE] = None,
     """
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()
@@ -270,6 +268,8 @@ def dfs(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
+    eclipse_unittype = ecl_unit_system(deck)
+
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
@@ -277,11 +277,11 @@ def dfs(
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                df_vfpprod = vfpprod.df(deck_keyword, vfpnumbers_str, default_unittype)
+                df_vfpprod = vfpprod.df(deck_keyword, vfpnumbers_str, eclipse_unittype)
                 if df_vfpprod is not None:
                     dfs_vfp_all.append(df_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                df_vfpinj = vfpinj.df(deck_keyword, vfpnumbers_str, default_unittype)
+                df_vfpinj = vfpinj.df(deck_keyword, vfpnumbers_str, eclipse_unittype)
                 if df_vfpinj is not None:
                     dfs_vfp_all.append(df_vfpinj)
 
@@ -293,7 +293,6 @@ def pyarrow_tables(
     deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
-    default_unittype: Optional[UNITTYPE] = None,
 ) -> List[pa.Table]:
     """Produce a list of pyarrow.Table of vfp tables from a deck
 
@@ -304,7 +303,6 @@ def pyarrow_tables(
         keyword:          VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str:   String with list of vfp table numbers to extract.
                           Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
-        default_unittype:  Unit type used if unit type is set to default for Eclipse
     """
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()
@@ -316,6 +314,8 @@ def pyarrow_tables(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
+    eclipse_unittype = ecl_unit_system(deck)
+
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
@@ -324,13 +324,13 @@ def pyarrow_tables(
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
                 pa_table_vfpprod = vfpprod.pyarrow(
-                    deck_keyword, vfpnumbers_str, default_unittype
+                    deck_keyword, vfpnumbers_str, eclipse_unittype
                 )
                 if pa_table_vfpprod is not None:
                     pyarrow_tables_vfp_all.append(pa_table_vfpprod)
             elif deck_keyword.name == "VFPINJ":
                 pa_table_vfpinj = vfpinj.pyarrow(
-                    deck_keyword, vfpnumbers_str, default_unittype
+                    deck_keyword, vfpnumbers_str, eclipse_unittype
                 )
                 if pa_table_vfpinj is not None:
                     pyarrow_tables_vfp_all.append(pa_table_vfpinj)
@@ -425,7 +425,6 @@ def df(
     deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
-    default_unittype: Optional[UNITTYPE] = None,
 ) -> pd.DataFrame:
     """Produce a dataframes of all vfp tables from a deck
 
@@ -435,7 +434,6 @@ def df(
         deck:             Eclipse deck or string wit deck
         keyword:          VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str:   str with list of VFP table numbers to extract
-        default_unittype: Optional[UNITTYPE] = None,
     """
 
     if not keyword:
@@ -448,7 +446,7 @@ def df(
         deck = EclFiles.str2deck(deck)
 
     # Extract all VFPROD/VFPINJ as separate dataframes
-    dfs_vfp = dfs(deck, keyword, vfpnumbers_str, default_unittype)
+    dfs_vfp = dfs(deck, keyword, vfpnumbers_str)
 
     # Concat all dataframes into one dataframe
     if dfs_vfp:
@@ -521,8 +519,11 @@ def vfp_main(args) -> None:
         vfpnumbers = str(args.vfpnumbers)
 
     eclfiles = EclFiles(args.DATAFILE)
-    eclipse_unittype = ecl_unit_system(eclfiles)
+#    eclipse_unittype = ecl_unit_system(eclfiles)
     vfptypes = string2stringlist(args.keyword)
+    prefix = args.output
+    if prefix and prefix[-1] != "_":
+        prefix = prefix+"_"
 
     if args.arrow:
         # Loop over vtptype (VFPPROD and/or VFPINJ)
@@ -533,11 +534,11 @@ def vfp_main(args) -> None:
                     eclfiles.get_ecldeck(),
                     keyword=vfptype,
                     vfpnumbers_str=vfpnumbers,
-                    default_unittype=eclipse_unittype,
                 )
                 # Remove VFP curves with same number. Keep last curve with given number.
                 vfp_arrow_tables = unique_vfps(vfp_arrow_tables_all)
 
+                
                 for i in range(0, len(vfp_arrow_tables)):
                     vfp_table = vfp_arrow_tables[i]
                     table_number = int(
@@ -546,12 +547,12 @@ def vfp_main(args) -> None:
                     vfp_filename = ""
                     if args.output_dir:
                         vfp_filename = (
-                            f"{args.output_dir}/{args.output}"
+                            f"{args.output_dir}/{prefix}"
                             f"{vfptype.lower()}_{str(table_number)}.arrow"
                         )
                     else:
                         vfp_filename = (
-                            f"{args.output}{vfptype.lower()}_{str(table_number)}.arrow"
+                            f"{prefix}{vfptype.lower()}{str(table_number)}.arrow"
                         )
                     common.write_dframe_stdout_file(
                         vfp_table, vfp_filename, index=False, caller_logger=logger
@@ -570,16 +571,15 @@ def vfp_main(args) -> None:
                     eclfiles.get_ecldeck(),
                     keyword=vfptype,
                     vfpnumbers_str=vfpnumbers,
-                    default_unittype=eclipse_unittype,
                 )
 
                 vfp_filename = ""
                 if args.output_dir:
                     vfp_filename = (
-                        f"{args.output_dir}/{args.output}{vfptype.lower()}.csv"
+                        f"{args.output_dir}/{prefix}{vfptype.lower()}.csv"
                     )
                 else:
-                    vfp_filename = f"{args.output}{vfptype.lower()}.csv"
+                    vfp_filename = f"{prefix}{vfptype.lower()}.csv"
                 common.write_dframe_stdout_file(
                     dframe, vfp_filename, index=False, caller_logger=logger
                 )

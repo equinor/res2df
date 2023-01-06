@@ -32,7 +32,7 @@ from . import _vfpprod as vfpprod
 from ._vfpcommon import _ecl_unit_system as ecl_unit_system
 from ._vfpcommon import _string2stringlist as string2stringlist
 from ._vfpcommon import _unique_vfps as unique_vfps
-from ._vfpdefs import SUPPORTED_KEYWORDS, UNITTYPE, VFPTYPE
+from ._vfpdefs import SUPPORTED_KEYWORDS, VFPTYPE
 
 logger = logging.getLogger(__name__)
 
@@ -519,11 +519,11 @@ def vfp_main(args) -> None:
         vfpnumbers = str(args.vfpnumbers)
 
     eclfiles = EclFiles(args.DATAFILE)
-#    eclipse_unittype = ecl_unit_system(eclfiles)
+    #    eclipse_unittype = ecl_unit_system(eclfiles)
     vfptypes = string2stringlist(args.keyword)
     prefix = args.output
     if prefix and prefix[-1] != "_":
-        prefix = prefix+"_"
+        prefix = prefix + "_"
 
     if args.arrow:
         # Loop over vtptype (VFPPROD and/or VFPINJ)
@@ -538,7 +538,6 @@ def vfp_main(args) -> None:
                 # Remove VFP curves with same number. Keep last curve with given number.
                 vfp_arrow_tables = unique_vfps(vfp_arrow_tables_all)
 
-                
                 for i in range(0, len(vfp_arrow_tables)):
                     vfp_table = vfp_arrow_tables[i]
                     table_number = int(
@@ -575,9 +574,7 @@ def vfp_main(args) -> None:
 
                 vfp_filename = ""
                 if args.output_dir:
-                    vfp_filename = (
-                        f"{args.output_dir}/{prefix}{vfptype.lower()}.csv"
-                    )
+                    vfp_filename = f"{args.output_dir}/{prefix}{vfptype.lower()}.csv"
                 else:
                     vfp_filename = f"{prefix}{vfptype.lower()}.csv"
                 common.write_dframe_stdout_file(

@@ -1500,7 +1500,6 @@ class Test_Exceptions_vfpinj_dims:
 def test_ecl2df_vfpprod_same_number_default_unit(test_input, expected):
     """Test ecl2df for VFPPROD"""
     deck = EclFiles.str2deck(test_input)
-    eclipse_unittype = ecl_unit_system(deck)
-    vfpdf = vfp.df(deck, "VFPPROD","[1,2]",eclipse_unittype)
+    vfpdf = vfp.df(deck, "VFPPROD","[1,2]")
 
     pd.testing.assert_frame_equal(vfpdf.reset_index(drop=True), expected[0].reset_index(drop=True))

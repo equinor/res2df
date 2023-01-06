@@ -244,13 +244,14 @@ def _ecl_unit_system(
     Args:
         deck: Eclipse deck or string with deck
     """
-    
-    ecl_deck = deck
-    if isinstance(deck, EclFiles):
-        ecl_deck = deck.get_ecldeck()
-    elif isinstance(deck, str):
-        ecl_deck = EclFiles.str2deck(deck)
 
+    eclipse_deck = deck
+    if isinstance(deck, EclFiles):
+        eclipse_deck = deck.get_ecldeck()
+    elif isinstance(deck, str):
+        eclipse_deck = EclFiles.str2deck(deck)
+
+    ecl_deck: "opm.libopmcommon_python.Deck" = eclipse_deck
     for keyword in ecl_deck:
         if keyword.name in ["METRIC", "FIELD", "LAB", "PVT-M"]:
             return UNITTYPE[keyword.name]
@@ -296,7 +297,8 @@ def _unique_vfps(
             (
                 f"The following VFP numbers are used "
                 f"for more than one VFP table: "
-                f"{*vfp_duplicate_numbers,}"
+                f"{*vfp_duplicate_numbers,}. "
+                f"Only the last defined VFP curve is kept."
             )
         )
 

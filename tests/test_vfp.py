@@ -4,8 +4,6 @@ import pandas as pd
 import pytest
 
 from ecl2df import EclFiles, vfp
-from ecl2df.vfp._vfpdefs import UNITTYPE
-from ecl2df.vfp._vfpcommon import _ecl_unit_system as ecl_unit_system
 
 try:
     import opm  # noqa
@@ -1096,7 +1094,6 @@ VFPPROD
 ]
 
 
-
 @pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
 def test_ecl2df_vfpprod(test_input, expected):
     """Test ecl2df for VFPPROD"""
@@ -1410,6 +1407,7 @@ def vfpprod_array_name(request):
     yield request.param
     # print("\n UNDO", request.param)
 
+
 class Test_Exceptions_vfpprod_dims:
     @pytest.mark.parametrize("test_input, dummy", [VFPPROD_CASES[0]])
     def test_basic_data_array_dim_exceptions_vfpprods(
@@ -1496,10 +1494,13 @@ class Test_Exceptions_vfpinj_dims:
         with pytest.raises(ValueError):
             vfp._vfpinj._check_basic_data(basic_data_vfpinj_wrong_dim)
 
+
 @pytest.mark.parametrize("test_input, expected", VFPPROD_DEFAULT_UNIT_CASES)
 def test_ecl2df_vfpprod_same_number_default_unit(test_input, expected):
     """Test ecl2df for VFPPROD"""
     deck = EclFiles.str2deck(test_input)
-    vfpdf = vfp.df(deck, "VFPPROD","[1,2]")
+    vfpdf = vfp.df(deck, "VFPPROD", "[1,2]")
 
-    pd.testing.assert_frame_equal(vfpdf.reset_index(drop=True), expected[0].reset_index(drop=True))
+    pd.testing.assert_frame_equal(
+        vfpdf.reset_index(drop=True), expected[0].reset_index(drop=True)
+    )

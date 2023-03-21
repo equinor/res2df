@@ -106,7 +106,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
             "Name of output csv file. Use '-' to write to stdout. "
             "Default 'well_connection_status.csv'"
         ),
-        default="well_connection_status.csv",
+        default="wellconnstatus.csv",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser

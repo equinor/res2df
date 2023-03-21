@@ -266,7 +266,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
             "Name of output csv file. Use '-' to write to stdout. "
             "Default 'well_completion_data.csv'"
         ),
-        default="well_completion_data",
+        default="wellcompletiondata.csv",
     )
     parser.add_argument(
         "--use_wellconnstatus",

@@ -202,7 +202,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         default="FIPNUM",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Output CSV filename", default="outflow.csv"
+        "-o", "--output", type=str, help="Output CSV filename", default="fipreports.csv"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Debug mode for logging")

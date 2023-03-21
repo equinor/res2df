@@ -167,7 +167,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help="Name of output csv file.",
-        default="satfuncs.csv",
+        default="satfunc.csv",
     )
     parser.add_argument(
         "-k",

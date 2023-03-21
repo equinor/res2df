@@ -560,7 +560,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help="Name of output csv file. Use '-' for stdout.",
-        default="eclgrid.csv",
+        default="grid.csv",
     )
     parser.add_argument(
         "--stackdates",

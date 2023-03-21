@@ -97,13 +97,39 @@ SVG_COLOR_NAMES = [
 logger: logging.Logger = logging.getLogger(__name__)
 
 
+def set_name_from_args(args):
+    """Set name from input arguments, mainly name of ecl file
+
+    Args:
+        args (dict): input arguments
+
+    Returns:
+        str: the name to use when exporting
+    """
+    try:
+        out_name = Path(args.DATAFILE).name
+    except AttributeError:
+        print(args)
+        out_name = Path(args.PRTFILE).name
+
+    tagname = Path(args.output).name
+    args.output = re.sub(r"-\d+\..*", "", out_name) + "--" + tagname  # + ".csv"
+    try:
+        if args.arrow:
+            args.output = args.output.replace(".csv", ".arrow")
+    except AttributeError:
+        print("No arrow format to write")
+    return args.output
+
+
 def write_dframe_stdout_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
-    output: str,
+    args: dict,
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
-) -> None:
+    autodetect: bool = True,
+) -> str:
     """Write a dataframe to either stdout or a file
 
     If output is the magic string "-", output is written
@@ -116,6 +142,8 @@ def write_dframe_stdout_file(
         caller_logger: Used if not stdout
         logstr: Logged if not stdout.
     """
+    if autodetect:
+        output = set_name_from_args(args)
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
@@ -134,6 +162,8 @@ def write_dframe_stdout_file(
             dframe.to_csv(output, index=index)
         else:
             pyarrow.feather.write_feather(dframe, dest=output)
+    print(f"I am returning {output}")
+    return output
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:

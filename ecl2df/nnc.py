@@ -283,7 +283,7 @@ def nnc_main(args) -> None:
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(
         nncdf,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",

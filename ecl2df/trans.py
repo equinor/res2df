@@ -318,4 +318,4 @@ def trans_main(args):
         addnnc=args.nnc,
     )
 
-    write_dframe_stdout_file(trans_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(trans_df, args, index=False, caller_logger=logger)

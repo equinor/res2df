@@ -773,6 +773,4 @@ def grid_main(args) -> None:
     )
     if args.arrow:
         grid_df = _df2pyarrow(grid_df)
-    common.write_dframe_stdout_file(
-        grid_df, args.output, index=False, caller_logger=logger
-    )
+    common.write_dframe_stdout_file(grid_df, args, index=False, caller_logger=logger)

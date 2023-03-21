@@ -118,6 +118,4 @@ def wellconnstatus_main(args):
     eclfiles = EclFiles(args.DATAFILE)
 
     wellconnstatus_df = df(eclfiles)
-    write_dframe_stdout_file(
-        wellconnstatus_df, args.output, index=False, caller_logger=logger
-    )
+    write_dframe_stdout_file(wellconnstatus_df, args, index=False, caller_logger=logger)

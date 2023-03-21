@@ -92,7 +92,7 @@ def faults_main(args) -> None:
     faults_df = df(deck)
     write_dframe_stdout_file(
         faults_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",

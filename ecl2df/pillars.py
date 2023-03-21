@@ -440,6 +440,4 @@ def pillars_main(args) -> None:
     elif args.group:
         dframe = dframe.drop("PILLAR", axis=1).mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    common.write_dframe_stdout_file(
-        dframe, args.output, index=False, caller_logger=logger
-    )
+    common.write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

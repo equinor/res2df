@@ -44,8 +44,11 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "ecl2csv (" + __version__ + ") is a command line frontend to ecl2df. "
-            "Documentation at https://equinor.github.io/ecl2df/ "
+            "ecl2csv ("
+            + __version__
+            + ") is a command line frontend to ecl2df. "
+            + "Documentation at https://equinor.github.io/ecl2df/ \n"
+            + "Choose one of the options in the positional arguments below:\n"
         ),
     )
     parser.add_argument(
@@ -312,7 +315,7 @@ def main() -> None:
     args = parser.parse_args()
     if "arrow" in parser.prog:
         args.__dict__["arrow"] = True
-    args.func(args)
+    return args.func(args)
 
 
 if __name__ == "__main__":

@@ -334,7 +334,7 @@ def equil_main(args) -> None:
         keywords = "-"
     common.write_dframe_stdout_file(
         equil_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Unique EQLNUMs: {eqlnums}, keywords: {keywords}",

@@ -305,7 +305,7 @@ def pvt_main(args) -> None:
         keywords = "-"
     common.write_dframe_stdout_file(
         pvt_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Unique PVTNUMs: {pvtnums}, PVT keywords: {keywords}",

@@ -461,4 +461,4 @@ def gruptree_main(args) -> None:
         else:
             logger.warning("No tree data to prettyprint")
     elif args.output:
-        write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+        write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

@@ -100,7 +100,7 @@ def wcon_main(args) -> None:
     wcon_df = df(deck)
     write_dframe_stdout_file(
         wcon_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",

@@ -689,7 +689,7 @@ def rft_main(args) -> None:
         else:
             logger.error("No data found. Bug?")
         return
-    write_dframe_stdout_file(rft_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(rft_df, args, index=False, caller_logger=logger)
 
 
 # Vector  Description

@@ -305,5 +305,5 @@ def wellcompletiondata_main(args):
         wellcompletiondata_df = _df2pyarrow(wellcompletiondata_df)
 
     write_dframe_stdout_file(
-        wellcompletiondata_df, args.output, index=False, caller_logger=logger
+        wellcompletiondata_df, args, index=False, caller_logger=logger
     )

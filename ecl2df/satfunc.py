@@ -213,7 +213,7 @@ def satfunc_main(args) -> None:
         keywords = "-"
     write_dframe_stdout_file(
         satfunc_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Unique SATNUMs: {satnums}, saturation keywords: {keywords}",

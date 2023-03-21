@@ -975,7 +975,7 @@ def compdat_main(args):
     )
     eclfiles = EclFiles(args.DATAFILE)
     compdat_df = df(eclfiles, initvectors=args.initvectors)
-    write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(compdat_df, args, index=False, caller_logger=logger)
 
 
 def df(

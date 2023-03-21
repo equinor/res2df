@@ -10,5 +10,6 @@ docs/modules.rst
 docs/ecl2df.rst
 ecl2df/version.py
 ecl2df_env/
+build/
 \#*
 .\#*

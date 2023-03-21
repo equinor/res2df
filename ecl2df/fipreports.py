@@ -219,4 +219,4 @@ def fipreports_main(args) -> None:
     else:
         prtfile = EclFiles(args.PRTFILE).get_prtfilename()
     dframe = df(prtfile, args.fipname)
-    write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

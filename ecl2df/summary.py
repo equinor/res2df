@@ -918,8 +918,7 @@ def summary_main(args) -> None:
     )
     if args.arrow:
         sum_df = _df2pyarrow(sum_df)
-
-    write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
+    return write_dframe_stdout_file(sum_df, args, index=True, caller_logger=logger)
 
 
 def summary_reverse_main(args) -> None:

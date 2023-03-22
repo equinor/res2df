@@ -45,13 +45,11 @@ def test_summmary_name(mocker):
         outpath = tmp_path.glob("*.csv")
         file_names = list(outpath)
         # assert len(file_names) == 1, "Produced more than one file"
-        try:
-            file_name = file_names[0]
-            name, tagname = file_name.name.replace(file_name.suffix, "").split("--")
-            file_name.unlink()
-            print(name)
-            print(tagname)
-            assert name == "2_R001_REEK", f"{name} is not as planned"
-            assert tagname == module_name, f"tag {tagname} not as planned"
-        except IndexError:
-            print("No csv file produced")
+        file_name = file_names[0]
+        print(f" file name in test {file_name}")
+        name, tagname = file_name.name.replace(file_name.suffix, "").split("--")
+        file_name.unlink()
+        print(name)
+        print(tagname)
+        assert name == "2_R001_REEK", f"{name} is not as planned"
+        assert tagname == module_name, f"tag {tagname} not as planned"

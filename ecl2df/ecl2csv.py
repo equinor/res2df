@@ -54,6 +54,9 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
+    # parser.add_argument(
+    # "--metadata", type=str, help="metadata file for exporting with metadata"
+    # )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
         subparsers = parser.add_subparsers(  # type: ignore

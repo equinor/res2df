@@ -288,4 +288,3 @@ def nnc_main(args) -> None:
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",
     )
-    nncdf.to_csv(args.output, index=False)

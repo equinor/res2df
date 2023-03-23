@@ -140,7 +140,6 @@ def get_names_from_args(args):
     try:
         file_name = Path(args.DATAFILE).name
     except AttributeError:
-        print(args)
         file_name = Path(args.PRTFILE).name
 
     print("File name: " + file_name)
@@ -186,19 +185,24 @@ def write_dframe_to_file(
 
 def write_dframe_and_meta_to_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
-    metadata_path: str,
     args: dict,
     # caller_logger: Optional[logging.Logger] = None,
     # logstr: Optional[str] = None,
 ):
+    """Write dataframe with metadata
+
+    Args:
+        dframe (Union[pd.DataFrame, pyarrow.Table]): the data
+        args (dict): input arguments for including metadata
+    """
     name, tagname, content = get_names_from_args(args)
     exp = ExportData(
-        config=yaml_load(metadata_path),
+        config=yaml_load(args.metadata),
         name=name,
-        tagname=tagname,
+        tagname=re.sub(r"\..*", "", tagname),
         content=content,
     )
-    exp.export(dframe)
+    exp.export(dframe.reset_index())
 
 
 def write_dframe_stdout_file(
@@ -221,6 +225,10 @@ def write_dframe_stdout_file(
         caller_logger: Used if not stdout
         logstr: Logged if not stdout.
     """
+    # If not defined metata is set here as a temporary fix, later it should be
+    # set through command line functionality
+    if "metadata" not in args:
+        args.metadata = None
     if autodetect:
         output = set_name_from_args(args)
     else:
@@ -234,7 +242,10 @@ def write_dframe_stdout_file(
         else:
             raise SystemExit("Not possible to write arrow format to stdout")
     else:
-        write_dframe_to_file(dframe, output, index, caller_logger, logstr)
+        if args.metadata is not None:
+            write_dframe_and_meta_to_file(dframe, args)
+        else:
+            write_dframe_to_file(dframe, output, index, caller_logger, logstr)
     print(f"I am returning {output}")
     return output
 

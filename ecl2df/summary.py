@@ -895,6 +895,48 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return parser
 
 
+def export_w_metadata(
+    eclpath: str,
+    metadata_path: str,
+    time_index="raw",
+    column_keys=None,
+    start_date="",
+    end_date="",
+    params=False,
+    paramfile=None,
+    arrow=False,
+    include_restart=False,
+):
+    """Read summary data from disk, write csv/arrow back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        time_index (str, optional): define what sampling for time index, raw is no resampling. Defaults to "raw".
+        column_keys (_type_, optional): What columns to extract, use summary column wildcards, None means all. Defaults to None.
+        start_date (str, optional): From when index should start. Defaults to "".
+        end_date (str, optional): From when time index should end. Defaults to "".
+        params (bool, optional): inlclude parameters from ert run. Defaults to False.
+        paramfile (str, optional): path to parameter file. Defaults to None.
+        arrow (bool, optional): write arrow file, not csv. Defaults to False.
+        include_restart (bool, optional): Attempt to include data before restart. Defaults to False.
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        output="summary.csv",
+        time_index=time_index,
+        column_keys=column_keys,
+        start_date=start_date,
+        end_date=end_date,
+        params=params,
+        paramfile=paramfile,
+        arrow=arrow,
+        include_restart=include_restart,
+    )
+    summary_main(args)
+
+
 def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -903,7 +945,6 @@ def summary_main(args) -> None:
     eclbase = (
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
-
     eclfiles = EclFiles(eclbase)
     sum_df = df(
         eclfiles,
@@ -918,7 +959,8 @@ def summary_main(args) -> None:
     )
     if args.arrow:
         sum_df = _df2pyarrow(sum_df)
-    return write_dframe_stdout_file(sum_df, args, index=True, caller_logger=logger)
+
+    write_dframe_stdout_file(sum_df, args, index=True, caller_logger=logger)
 
 
 def summary_reverse_main(args) -> None:

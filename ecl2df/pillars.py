@@ -409,6 +409,46 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def export_w_metadata(
+    eclpath: str,
+    metadata_path: str,
+    region: str = "",
+    rstdates: str = "",
+    stackdates: bool = False,
+    soilcutoff: float = 0.5,
+    sgascutoff: float = 0.5,
+    swatcutoff: float = 0.5,
+    group: bool = False,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        region (str): region parameter to separate by, empty string give no sep
+        rstdates (str): Point in time to grab restart data from,
+                either 'first' or 'last', 'all' or a date in YYYY-MM-DD format
+        stackdates (bool): ,
+        soilcutoff (float): default 0.5
+        sgascutoff (float): default 0.5,
+        swatcutoff: (float): default 0.5,
+        group (bool): default False,
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        output="pillars.csv",
+        region=region,
+        rstdates=rstdates,
+        stackdates=stackdates,
+        soilcutoff=soilcutoff,
+        sgascutoff=sgascutoff,
+        swatcutoff=swatcutoff,
+        group=group,
+    )
+    pillars_main(args)
+
+
 def pillars_main(args) -> None:
     """This is the command line API"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name

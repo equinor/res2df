@@ -278,6 +278,27 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return common.fill_reverse_parser(parser, "PVT", "pvt.inc")
 
 
+def export_w_metadata(
+    eclpath: str,
+    metadata_path: str,
+    keywords: List = None,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        keywords (list): list of keywords to include, None gives all, default None
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        output="pvt.csv",
+        keywords=keywords,
+    )
+    pvt_main(args)
+
+
 def pvt_main(args) -> None:
     """Entry-point for module, for command line utility for Eclipse to CSV"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name

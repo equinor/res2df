@@ -672,6 +672,30 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def export_w_metadata(
+    eclpath: str,
+    metadata_path: str,
+    wellname: str = None,
+    date: str = None,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        wellname (str): restrict to one well, None gives all, default None
+        date (str): restrict to one date, None gives all, format is iso  8601 YYYY-MM-DD, default None
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        wellname=wellname,
+        date=date,
+        output="rft.csv",
+    )
+    rft_main(args)
+
+
 def rft_main(args) -> None:
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name

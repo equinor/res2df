@@ -968,6 +968,23 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def export_w_metadata(eclpath: str, metadata_path: str, initvectors: List[str] = None):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        fipname (str, optional): Region parameter name of interest, default: FIPNUM
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        output="compdat.csv",
+        initvectors=initvectors,
+    )
+    compdat_main(args)
+
+
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name

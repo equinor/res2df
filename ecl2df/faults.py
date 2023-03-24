@@ -81,6 +81,25 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def export_w_metadata(
+    eclpath: str,
+    metadata_path: str,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        fipname (str, optional): Region parameter name of interest, default: FIPNUM
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        output="faults.csv",
+    )
+    faults_main(args)
+
+
 def faults_main(args) -> None:
     """Read from disk and write CSV back to disk"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name

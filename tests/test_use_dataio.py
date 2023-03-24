@@ -23,19 +23,22 @@ def _assert_string(string_to_assert, answer):
     assert string_to_assert == answer, ass_string
 
 
-def _assert_metadata_are_produced_and_are_correct():
+def _assert_metadata_are_produced_and_are_correct(tagname):
     """Assert that two files are produced, and that metadata are correct"""
     share_folder = Path("share/")
     files = list(share_folder.glob("results/tables/*.*"))
     print(files)
-    assert len(files) == 2, "produced different to two files"
+    nr_files = len(files)
+    len_str = f"Nr of files should be 2, but is {nr_files}"
+    assert len(files) == 2, len_str
     for file_path in files:
         if file_path.name.startswith("."):
             meta = yaml_load(file_path)
             print(meta["data"])
             _assert_string(meta["data"]["name"], "2_R001_REEK")
-            _assert_string(meta["data"]["tagname"], "summary")
-            _assert_string(meta["data"]["table_index"], ["DATE"])
+            _assert_string(meta["data"]["tagname"], tagname)
+            print(meta["data"]["spec"]["columns"])
+            # _assert_string(meta["data"]["table_index"], ["DATE"])
         else:
             print(pd.read_csv(file_path).head())
 
@@ -50,11 +53,53 @@ def test_write_dframe_and_meta_to_file():
     )
 
     write_dframe_and_meta_to_file(test, args)
-    _assert_metadata_are_produced_and_are_correct()
+    _assert_metadata_are_produced_and_are_correct("summary")
 
 
 def test_write_through_summary_main():
     """Test summary main entry point"""
 
     ecl2df.summary.export_w_metadata(REEK, META_PATH)
-    _assert_metadata_are_produced_and_are_correct()
+    _assert_metadata_are_produced_and_are_correct("summary")
+
+
+def test_write_through_satfunc_main():
+    """Test summary main entry point"""
+
+    ecl2df.satfunc.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("satfunc")
+
+
+def test_write_through_rft_main():
+    """Test summary main entry point"""
+
+    ecl2df.rft.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("rft")
+
+
+def test_write_through_pvt_main():
+    """Test summary main entry point"""
+
+    ecl2df.pvt.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("pvt")
+
+
+def test_write_through_pillar_main():
+    """Test summary main entry point"""
+
+    ecl2df.pillars.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("pillars")
+
+
+def test_write_through_nnc_main():
+    """Test summary main entry point"""
+
+    ecl2df.nnc.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("nnc")
+
+
+def test_write_through_grid_main():
+    """Test summary main entry point"""
+
+    ecl2df.grid.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("grid")

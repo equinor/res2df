@@ -51,5 +51,6 @@ def test_summmary_name(mocker):
         file_name.unlink()
         print(name)
         print(tagname)
-        assert name == "2_R001_REEK", f"{name} is not as planned"
-        assert tagname == module_name, f"tag {tagname} not as planned"
+        correct_name = "2_R001_REEK"
+        assert name == correct_name, f"{name} is not as planned {correct_name}"
+        assert tagname == module_name, f"tag {tagname} not as planned {module_name}"

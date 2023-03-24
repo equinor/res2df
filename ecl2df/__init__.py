@@ -10,28 +10,8 @@ try:
 except ImportError:
     __version__ = "v0.0.0"
 
-from .constants import MAGIC_STDOUT
+from .constants import MAGIC_STDOUT, SUBMODULES
 from .eclfiles import EclFiles
-
-SUBMODULES: List[str] = [
-    "compdat",
-    "equil",
-    "faults",
-    "fipreports",
-    "grid",
-    "gruptree",
-    "nnc",
-    "pillars",
-    "pvt",
-    "rft",
-    "satfunc",
-    "summary",
-    "trans",
-    "vfp",
-    "wellcompletiondata",
-    "wellconnstatus",
-    "wcon",
-]
 
 
 def getLogger_ecl2csv(

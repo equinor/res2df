@@ -274,6 +274,30 @@ def df2ecl_editnnc(
     return string
 
 
+def export_w_metadata(
+    eclpath: str,
+    metadata_path: str,
+    coords: bool = False,
+    pillars: bool = False,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        metadata_path (str): path to metadata file
+        coords (bool, optional): Add xyz coords of connection midpoint, default False
+        pillars (bool, optional): Only dump vertical (along pillars) connections, default False
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        metadata=metadata_path,
+        output="nnc.csv",
+        coords=coords,
+        pillars=pillars,
+    )
+    nnc_main(args)
+
+
 def nnc_main(args) -> None:
     """Command line access point from main() or from ecl2csv via subparser"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name

@@ -95,7 +95,7 @@ def test_write_dframe_file(tmp_path):
     """Test that we can write dataframes to files."""
     os.chdir(tmp_path)
     dframe = pd.DataFrame([{"foo": "bar"}])
-    common.write_dframe_stdout_file(dframe, "foo.csv")
+    common.write_dframe_to_file(dframe, "foo.csv")
     pd.testing.assert_frame_equal(pd.read_csv("foo.csv"), dframe)
 
 

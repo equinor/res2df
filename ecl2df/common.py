@@ -108,7 +108,7 @@ def set_name_from_args(args):
     Returns:
         str: name of file to
     """
-    if args.output != MAGIC_STDOUT:
+    if args["output"] != MAGIC_STDOUT:
         name, tagname, _ = get_names_from_args(args)
         out_name = f"{name}--{tagname}"
         try:
@@ -117,7 +117,7 @@ def set_name_from_args(args):
         except AttributeError:
             print("No arrow format to write")
     else:
-        out_name = args.output
+        out_name = args["output"]
     return out_name
 
 
@@ -138,14 +138,14 @@ def get_names_from_args(args):
     if "subcommand" in contents:
         content = contents["subcommand"]
     try:
-        file_name = Path(args.DATAFILE).name
-    except AttributeError:
-        file_name = Path(args.PRTFILE).name
+        file_name = Path(args["DATAFILE"]).name
+    except KeyError:
+        file_name = Path(args["PRTFILE"]).name
 
     print("File name: " + file_name)
-    print("Out name: " + args.output)
-    tagname = Path(args.output).name
-    name = re.sub(r"-\d+\..*", "", file_name)
+    print("Out name: " + args["output"])
+    tagname = Path(args["output"]).name
+    name = re.sub(r"(-\d+)?\..*", "", file_name)
     print("Name and tag " + name + "|" + tagname)
 
     return name, tagname, content
@@ -154,7 +154,7 @@ def get_names_from_args(args):
 def write_dframe_to_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
     output: str,
-    index: bool,
+    index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
 ):
@@ -197,7 +197,7 @@ def write_dframe_and_meta_to_file(
     """
     name, tagname, content = get_names_from_args(args)
     exp = ExportData(
-        config=yaml_load(args.metadata),
+        config=yaml_load(args["metadata"]),
         name=name,
         tagname=re.sub(r"\..*", "", tagname),
         content=content,
@@ -207,7 +207,7 @@ def write_dframe_and_meta_to_file(
 
 def write_dframe_stdout_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
-    args: dict,
+    args: Union[dict, argparse.Namespace, str],
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
@@ -227,12 +227,17 @@ def write_dframe_stdout_file(
     """
     # If not defined metata is set here as a temporary fix, later it should be
     # set through command line functionality
-    if "metadata" not in args:
-        args.metadata = None
-    if autodetect:
-        output = set_name_from_args(args)
+    if isinstance(args, str):
+        output = args
     else:
-        output = args.output
+        if isinstance(args, argparse.Namespace):
+            args = vars(args)
+        if "metadata" not in args:
+            args["metadata"] = None
+        if autodetect:
+            output = set_name_from_args(args)
+        else:
+            output = args["output"]
 
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
@@ -242,10 +247,13 @@ def write_dframe_stdout_file(
         else:
             raise SystemExit("Not possible to write arrow format to stdout")
     else:
-        if args.metadata is not None:
+        if isinstance(args, str):
+            write_dframe_to_file(dframe, output, index, caller_logger, logstr)
+
+        elif args["metadata"] is not None:
             write_dframe_and_meta_to_file(dframe, args)
         else:
-            write_dframe_to_file(dframe, output, index, caller_logger, logstr)
+            print("No writing att all")
     print(f"I am returning {output}")
     return output
 

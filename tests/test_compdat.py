@@ -202,7 +202,7 @@ COMPDAT
  'OP1' 34 111 32 32 'OPEN' /
 /
     """
-    assert compdat.deck2dfs(EclFiles.str2deck(schstr_nodate)) == {}
+    assert not compdat.deck2dfs(EclFiles.str2deck(schstr_nodate))
     # (critical error logged)
 
 
@@ -289,16 +289,17 @@ def test_initmerging():
 
 def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
-    tmpcsvfile = tmp_path / "compdat.csv"
+    tmpcsvfile = tmp_path / "EIGHTCELLS--compdat.csv"
     mocker.patch(
         "sys.argv", ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
     ecl2csv.main()
 
-    assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert "ZONE" in disk_df
-    assert not disk_df.empty
+    assert Path(
+        tmpcsvfile
+    ).is_file(), f"could not find {tmpcsvfile} in list {list[tmp_path.glob('*.csv')]}"
+    disk_df_cols = pd.read_csv(str(tmpcsvfile)).columns.tolist()
+    assert "ZONE" in disk_df_cols, f"ZONE not in {disk_df_cols}"
 
     mocker.patch(
         "sys.argv",
@@ -315,9 +316,9 @@ def test_main_subparsers(tmp_path, mocker):
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert "FIPNUM" in disk_df
-    assert not disk_df.empty
+    disk_df_cols = pd.read_csv(str(tmpcsvfile))
+    assert "FIPNUM" in disk_df_cols, f"FIPNUM not in {disk_df_cols} when single list"
+    assert not disk_df_cols.empty, "Compdat results with single list is empty"
 
     mocker.patch(
         "sys.argv",
@@ -335,10 +336,10 @@ def test_main_subparsers(tmp_path, mocker):
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
-    disk_df = pd.read_csv(str(tmpcsvfile))
-    assert "FIPNUM" in disk_df
-    assert "EQLNUM" in disk_df
-    assert not disk_df.empty
+    disk_df_cols = pd.read_csv(str(tmpcsvfile)).columns.tolist()
+    assert "FIPNUM" in disk_df_cols, f"FIPNUM not in {disk_df_cols} when double list"
+    assert "EQLNUM" in disk_df_cols, f"EQLNUM not in {disk_df_cols} when double list"
+    assert not disk_df_cols.empty
 
 
 def test_defaulted_compdat_i_j():

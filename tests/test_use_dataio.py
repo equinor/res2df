@@ -48,9 +48,12 @@ def _assert_metadata_are_produced_and_are_correct(tagname):
 def test_write_dframe_and_meta_to_file():
     """Test function write_dframe_and_meta_to_file"""
     test = pd.DataFrame({"DATE": [1, 2, 3], "FOPT": [0, 1, 2]})
-    args = Namespace(
-        DATAFILE=REEK, metadata=META_PATH, output="summary.csv", subcommand="summary"
-    )
+    args = {
+        "DATAFILE": REEK,
+        "metadata": META_PATH,
+        "output": "summary.csv",
+        "subcommand": "summary",
+    }
 
     write_dframe_and_meta_to_file(test, args)
     _assert_metadata_are_produced_and_are_correct("summary")
@@ -103,3 +106,31 @@ def test_write_through_grid_main():
 
     ecl2df.grid.export_w_metadata(REEK, META_PATH)
     _assert_metadata_are_produced_and_are_correct("grid")
+
+
+def test_write_through_fipreports_main():
+    """Test summary main entry point"""
+
+    ecl2df.fipreports.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("fipreports")
+
+
+def test_write_through_faults_main():
+    """Test summary main entry point"""
+
+    ecl2df.faults.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("faults")
+
+
+def test_write_through_equil_main():
+    """Test summary main entry point"""
+
+    ecl2df.equil.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("equil")
+
+
+def test_write_through_compdat_main():
+    """Test summary main entry point"""
+
+    ecl2df.compdat.export_w_metadata(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("compdat")

@@ -134,3 +134,9 @@ def test_write_through_compdat_main():
 
     ecl2df.compdat.export_w_metadata(REEK, META_PATH)
     _assert_metadata_are_produced_and_are_correct("compdat")
+
+def test_bulk_upload():
+    """Test bulk upload"""
+
+    ecl2df.ecl2sumo_bulk.bulk_upload(REEK, META_PATH)
+    _assert_metadata_are_produced_and_are_correct("bulk")

@@ -1,5 +1,5 @@
 """Common functions for ecl2df modules"""
-
+import logging
 import argparse
 import datetime
 import inspect
@@ -115,7 +115,7 @@ def set_name_from_args(args):
             if args.arrow:
                 out_name = out_name.replace(".csv", ".arrow")
         except AttributeError:
-            print("No arrow format to write")
+            logger.debug("No arrow format to write")
     else:
         out_name = args["output"]
     return out_name
@@ -142,11 +142,11 @@ def get_names_from_args(args):
     except KeyError:
         file_name = Path(args["PRTFILE"]).name
 
-    print("File name: " + file_name)
-    print("Out name: " + args["output"])
+    logger.debug("File name: " + file_name)
+    logger.debug("Out name: " + args["output"])
     tagname = Path(args["output"]).name
     name = re.sub(r"(-\d+)?\..*", "", file_name)
-    print("Name and tag " + name + "|" + tagname)
+    logger.debug("Name and tag " + name + "|" + tagname)
 
     return name, tagname, content
 
@@ -176,7 +176,6 @@ def write_dframe_to_file(
         caller_logger.info("Writing to file %s", str(output))
     elif caller_logger and logstr:
         caller_logger.info(logstr)
-    print("writing")
     if isinstance(dframe, pd.DataFrame):
         dframe.to_csv(output, index=index)
     else:
@@ -232,6 +231,7 @@ def write_dframe_stdout_file(
     else:
         if isinstance(args, argparse.Namespace):
             args = vars(args)
+        print(args)
         if "metadata" not in args:
             args["metadata"] = None
         if autodetect:
@@ -247,14 +247,16 @@ def write_dframe_stdout_file(
         else:
             raise SystemExit("Not possible to write arrow format to stdout")
     else:
-        if isinstance(args, str):
+        if args["metadata"] is None:
+            logger.debug("Export of dataframe no metadata")
             write_dframe_to_file(dframe, output, index, caller_logger, logstr)
 
         elif args["metadata"] is not None:
+            logger.debug("Export of dataframe with metadata")
             write_dframe_and_meta_to_file(dframe, args)
         else:
-            print("No writing att all")
-    print(f"I am returning {output}")
+            logger.warning("No writing att all")
+    logger.debug(f"I am returning {output}")
     return output
 
 
@@ -264,10 +266,10 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
     if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        print(string)
+        logger.debug(string)
     else:
         Path(outputfilename).write_text(string, encoding="utf-8")
-        print(f"Wrote to {outputfilename}")
+        logger.debug(f"Wrote to {outputfilename}")
 
 
 def parse_ecl_month(eclmonth: str) -> int:

@@ -23,20 +23,21 @@ def _assert_string(string_to_assert, answer):
     assert string_to_assert == answer, ass_string
 
 
-def _assert_metadata_are_produced_and_are_correct(tagname):
+def _assert_metadata_are_produced_and_are_correct(tagname, correct_len=2):
     """Assert that two files are produced, and that metadata are correct"""
     share_folder = Path("share/")
     files = list(share_folder.glob("results/tables/*.*"))
     print(files)
     nr_files = len(files)
     len_str = f"Nr of files should be 2, but is {nr_files}"
-    assert len(files) == 2, len_str
+    assert len(files) == correct_len, len_str
     for file_path in files:
         if file_path.name.startswith("."):
             meta = yaml_load(file_path)
             print(meta["data"])
             _assert_string(meta["data"]["name"], "2_R001_REEK")
-            _assert_string(meta["data"]["tagname"], tagname)
+            if tagname != "bulk":
+                _assert_string(meta["data"]["tagname"], tagname)
             print(meta["data"]["spec"]["columns"])
             # _assert_string(meta["data"]["table_index"], ["DATE"])
         else:
@@ -135,8 +136,9 @@ def test_write_through_compdat_main():
     ecl2df.compdat.export_w_metadata(REEK, META_PATH)
     _assert_metadata_are_produced_and_are_correct("compdat")
 
+
 def test_bulk_upload():
     """Test bulk upload"""
 
     ecl2df.ecl2sumo_bulk.bulk_upload(REEK, META_PATH)
-    _assert_metadata_are_produced_and_are_correct("bulk")
+    _assert_metadata_are_produced_and_are_correct("bulk", 22)

@@ -276,7 +276,7 @@ def df2ecl_editnnc(
 
 def export_w_metadata(
     eclpath: str,
-    metadata_path: str,
+    config_path: str,
     coords: bool = False,
     pillars: bool = False,
 ):
@@ -284,13 +284,13 @@ def export_w_metadata(
 
     Args:
         eclpath (str): path to eclipse datafile
-        metadata_path (str): path to metadata file
+        config_path (str): path to fmu config file
         coords (bool, optional): Add xyz coords of connection midpoint, default False
         pillars (bool, optional): Only dump vertical (along pillars) connections, default False
     """
     args = argparse.Namespace(
         DATAFILE=eclpath,
-        metadata=metadata_path,
+        config_path=config_path,
         output="nnc.csv",
         coords=coords,
         pillars=pillars,

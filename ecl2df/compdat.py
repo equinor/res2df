@@ -968,17 +968,17 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def export_w_metadata(eclpath: str, metadata_path: str, initvectors: List[str] = None):
+def export_w_metadata(eclpath: str, config_path: str, initvectors: List[str] = None):
     """Read satfunc data from disk, write csv back to disk with metadata
 
     Args:
         eclpath (str): path to eclipse datafile
-        metadata_path (str): path to metadata file
+        config_path (str): path to fmu config file
         fipname (str, optional): Region parameter name of interest, default: FIPNUM
     """
     args = argparse.Namespace(
         DATAFILE=eclpath,
-        metadata=metadata_path,
+        config_path=config_path,
         output="compdat.csv",
         initvectors=initvectors,
     )

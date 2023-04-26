@@ -528,7 +528,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
             dtype = pyarrow.string()
         else:
             dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
+        field_list.append(pyarrow.field(colname, dtype, config_path=field_metadata))
         column_arrays.append(dframe[colname].to_numpy())
 
     schema = pyarrow.schema(field_list)
@@ -897,7 +897,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def export_w_metadata(
     eclpath: str,
-    metadata_path: str,
+    config_path: str,
     time_index="raw",
     column_keys=None,
     start_date="",
@@ -911,7 +911,7 @@ def export_w_metadata(
 
     Args:
         eclpath (str): path to eclipse datafile
-        metadata_path (str): path to metadata file
+        config_path (str): path to fmu config file
         time_index (str, optional): define what sampling for time index, raw is no resampling. Defaults to "raw".
         column_keys (_type_, optional): What columns to extract, use summary column wildcards, None means all. Defaults to None.
         start_date (str, optional): From when index should start. Defaults to "".
@@ -923,7 +923,7 @@ def export_w_metadata(
     """
     args = argparse.Namespace(
         DATAFILE=eclpath,
-        metadata=metadata_path,
+        config_path=config_path,
         output="summary.csv",
         time_index=time_index,
         column_keys=column_keys,

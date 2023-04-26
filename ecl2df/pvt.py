@@ -280,19 +280,19 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def export_w_metadata(
     eclpath: str,
-    metadata_path: str,
+    config_path: str,
     keywords: List = None,
 ):
     """Read satfunc data from disk, write csv back to disk with metadata
 
     Args:
         eclpath (str): path to eclipse datafile
-        metadata_path (str): path to metadata file
+        config_path (str): path to fmu config file
         keywords (list): list of keywords to include, None gives all, default None
     """
     args = argparse.Namespace(
         DATAFILE=eclpath,
-        metadata=metadata_path,
+        config_path=config_path,
         output="pvt.csv",
         keywords=keywords,
     )

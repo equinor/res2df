@@ -235,7 +235,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
             dtype = pyarrow.string()
         else:
             dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
+        field_list.append(pyarrow.field(colname, dtype, config_path=field_metadata))
 
     schema = pyarrow.schema(field_list)
     return pyarrow.Table.from_pandas(dframe, schema=schema, preserve_index=False)

@@ -211,19 +211,19 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def export_w_metadata(
     eclpath: str,
-    metadata_path: str,
+    config_path: str,
     fipname: str = "FIPNUM",
 ):
     """Read satfunc data from disk, write csv back to disk with metadata
 
     Args:
         eclpath (str): path to eclipse datafile
-        metadata_path (str): path to metadata file
+        config_path (str): path to fmu config file
         fipname (str, optional): Region parameter name of interest, default: FIPNUM
     """
     args = argparse.Namespace(
         PRTFILE=eclpath,
-        metadata=metadata_path,
+        config_path=config_path,
         output="fipreports.csv",
         fipname=fipname,
     )

@@ -760,7 +760,7 @@ def df2ecl(
 
 def export_w_metadata(
     eclpath: str,
-    metadata_path: str,
+    config_path: str,
     vectors: List[str] = "*",
     rstdates: str = "",
     stackdates: bool = False,
@@ -771,7 +771,7 @@ def export_w_metadata(
 
     Args:
         eclpath (str): path to eclipse datafile
-        metadata_path (str): path to metadata file
+        config_path (str): path to fmu config file
         region (str): region parameter to separate by, empty string give no sep
         rstdates (str): Point in time to grab restart data from,
                 either 'first' or 'last', 'all' or a date in YYYY-MM-DD format
@@ -780,7 +780,7 @@ def export_w_metadata(
     """
     args = argparse.Namespace(
         DATAFILE=eclpath,
-        metadata=metadata_path,
+        config_path=config_path,
         output="grid.csv",
         vectors=vectors,
         rstdates=rstdates,

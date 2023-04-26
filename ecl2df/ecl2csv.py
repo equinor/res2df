@@ -55,7 +55,9 @@ def get_parser() -> argparse.ArgumentParser:
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
     parser.add_argument(
-        "--metadata", type=str, help="metadata file for exporting with metadata"
+        "--config_path",
+        type=str,
+        help="fmu config file to enable exporting with metadata",
     )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:

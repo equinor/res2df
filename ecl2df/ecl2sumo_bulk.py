@@ -1,16 +1,7 @@
+import importlib
 from inspect import signature, Parameter
 from typing import List
-from ecl2df.compdat import export_w_metadata as compdat
-from ecl2df.equil import export_w_metadata as equil
-from ecl2df.faults import export_w_metadata as faults
-from ecl2df.fipreports import export_w_metadata as fipreports
-from ecl2df.grid import export_w_metadata as grid
-from ecl2df.nnc import export_w_metadata as nnc
-from ecl2df.pillars import export_w_metadata as pillars
-from ecl2df.pvt import export_w_metadata as pvt
-from ecl2df.rft import export_w_metadata as rft
-from ecl2df.satfunc import export_w_metadata as satfunc
-from ecl2df.summary import export_w_metadata as summary
+
 
 standard_options = {
     "initvectors": None,  # List[str]
@@ -40,37 +31,41 @@ standard_options = {
 }
 
 
-def bulk_upload(eclpath, metadata_path, include: List = None, options=None):
+def bulk_upload(eclpath, config_path, include: List = None, options: dict = None):
     """Bulk uploads every module to sumo with metadata
 
     eclpath (str): path to eclipse datafile
-    metadata_path (str): path to metadata file
+    config_path (str): path to fmu config file
     include (List): list of submodules to include. Defaults to None which includes all
     """
     if options is None:
         options = standard_options
 
-    subfunc_list = [
-        compdat,
-        equil,
-        faults,
-        fipreports,
-        grid,
-        nnc,
-        pillars,
-        pvt,
-        rft,
-        satfunc,
-        summary,
+    submod_list = [
+        "compdat",
+        "equil",
+        "faults",
+        "fipreports",
+        "grid",
+        "nnc",
+        "pillars",
+        "pvt",
+        "rft",
+        "satfunc",
+        "summary",
     ]
 
-    for subfunc in subfunc_list:
-        if include is None or subfunc.__name__ in include:
-            sig_items = signature(subfunc).parameters.items()
+    for submod_name in submod_list:
+        if include is None or submod_name in include:
+            func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
+            sig_items = signature(func).parameters.items()
             filtered_options = {
                 name: options[name]
                 for name, param in sig_items
                 if param.kind is not Parameter.empty
-                and name not in {"eclpath", "metadata_path"}
+                and name not in {"eclpath", "config_path"}
             }
-            subfunc(eclpath, metadata_path, **filtered_options)
+            func(eclpath, config_path, **filtered_options)
+
+
+# def bulk_upload_with_configfile(eclpath, config_path):

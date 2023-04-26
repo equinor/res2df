@@ -196,7 +196,7 @@ def write_dframe_and_meta_to_file(
     """
     name, tagname, content = get_names_from_args(args)
     exp = ExportData(
-        config=yaml_load(args["metadata"]),
+        config=yaml_load(args["config_path"]),
         name=name,
         tagname=re.sub(r"\..*", "", tagname),
         content=content,
@@ -232,8 +232,8 @@ def write_dframe_stdout_file(
         if isinstance(args, argparse.Namespace):
             args = vars(args)
         print(args)
-        if "metadata" not in args:
-            args["metadata"] = None
+        if "config_path" not in args:
+            args["config_path"] = None
         if autodetect:
             output = set_name_from_args(args)
         else:
@@ -247,11 +247,11 @@ def write_dframe_stdout_file(
         else:
             raise SystemExit("Not possible to write arrow format to stdout")
     else:
-        if args["metadata"] is None:
+        if args["config_path"] is None:
             logger.debug("Export of dataframe no metadata")
             write_dframe_to_file(dframe, output, index, caller_logger, logstr)
 
-        elif args["metadata"] is not None:
+        elif args["config_path"] is not None:
             logger.debug("Export of dataframe with metadata")
             write_dframe_and_meta_to_file(dframe, args)
         else:

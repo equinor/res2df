@@ -1,4 +1,5 @@
 import logging
+import argparse
 from pathlib import Path
 import importlib
 from inspect import signature, Parameter
@@ -34,6 +35,18 @@ standard_options = {
     "paramfile": None,  # str
     "include_restart": False,  # bool
 }
+
+
+def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """Set up sys.argv parsers.
+
+    Arguments:
+        parser (argparse.ArgumentParser or argparse.subparser): parser to
+            fill with arguments
+    """
+    # parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    return parser
 
 
 def bulk_upload(eclpath, config_path, include: List = None, options: dict = None):
@@ -75,6 +88,15 @@ def bulk_upload(eclpath, config_path, include: List = None, options: dict = None
 
 
 def glob_for_datafiles(path="eclipse/model/"):
+    """glob for data files in folder
+
+    Args:
+        path (str, optional): The folder for eclipse models.
+                              Defaults to "eclipse/model/".
+
+    Returns:
+        generator: the generator made
+    """
     return Path(path).glob("*.DATA")
 
 
@@ -88,20 +110,26 @@ def bulk_upload_with_configfile(config_path):
     try:
         ecl_config = config["ecl2csv"]
         try:
-            eclpaths = ["eclipse/model/" + ecl_config["datafile"]]
+            path = "eclipse/model/" + ecl_config["datafile"]
+            print(path)
+            eclpaths = [path]
             includes = ecl_config.get("datatypes", None)
             options = ecl_config.get("options", None)
-
         except (KeyError, AttributeError, TypeError):
             eclpaths = glob_for_datafiles()
             includes = None
             options = None
-
-        for name in ["access", "masterdata", "model"]:
-            print(config[name])
-
         for eclpath in eclpaths:
             bulk_upload(str(eclpath), config_path, includes, options)
 
     except KeyError:
         logger.warning("No eclipse export set up, you will not get anything exported")
+
+
+def bulk_main(args):
+    """Generate all datatypes
+
+    Args:
+        args (argparse.NameSpace): The input arguments
+    """
+    bulk_upload_with_configfile(args.config_path)

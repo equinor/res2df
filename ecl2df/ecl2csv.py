@@ -248,6 +248,9 @@ def get_parser() -> argparse.ArgumentParser:
             "well or well wildcard at a specific date"
         ),
     )
+    subparsers_dict["bulk"] = subparsers.add_parser(
+        "bulk", help="Bulk upload of all datatypes"
+    )
 
     for submodule, subparser in subparsers_dict.items():
         # Use the submodule's fill_parser() to add the submodule specific
@@ -298,6 +301,7 @@ def run_subparser_main(
             must have a function called <submodule>_main()
         parser: Used for raising errors.
     """
+    positionals = ()
     if "DATAFILE" in args:
         positionals = list(filter(len, [args.DATAFILE] + args.hiddenemptyplaceholders))
         args.DATAFILE = "".join([args.DATAFILE] + args.hiddenemptyplaceholders)

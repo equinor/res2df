@@ -142,8 +142,8 @@ def get_names_from_args(args):
     except KeyError:
         file_name = Path(args["PRTFILE"]).name
 
-    logger.debug("File name: " + file_name)
-    logger.debug("Out name: " + args["output"])
+    logger.debug("File name: %s", file_name)
+    logger.debug("Out name: %s", args["output"])
     tagname = Path(args["output"]).name
     name = re.sub(r"(-\d+)?\..*", "", file_name)
     logger.debug("Name and tag " + name + "|" + tagname)
@@ -184,7 +184,7 @@ def write_dframe_to_file(
 
 def write_dframe_and_meta_to_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
-    args: dict,
+    args: Union[str, dict],
     # caller_logger: Optional[logging.Logger] = None,
     # logstr: Optional[str] = None,
 ):
@@ -195,8 +195,14 @@ def write_dframe_and_meta_to_file(
         args (dict): input arguments for including metadata
     """
     name, tagname, content = get_names_from_args(args)
+    try:
+        config = yaml_load(args["config_path"])
+    except TypeError:
+        logger.debug("Config allready a dictionary, no need to read it")
+        config = args
+    logger.debug(config.keys())
     exp = ExportData(
-        config=yaml_load(args["config_path"]),
+        config=config,
         name=name,
         tagname=re.sub(r"\..*", "", tagname),
         content=content,
@@ -231,7 +237,7 @@ def write_dframe_stdout_file(
     else:
         if isinstance(args, argparse.Namespace):
             args = vars(args)
-        print(args)
+        # print(args)
         if "config_path" not in args:
             args["config_path"] = None
         if autodetect:

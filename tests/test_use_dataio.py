@@ -1,4 +1,5 @@
 """tests of function write_dframe_and_meta_to_file"""
+import os
 from argparse import Namespace
 from pathlib import Path
 from shutil import rmtree
@@ -8,8 +9,9 @@ import ecl2df
 from ecl2df.common import write_dframe_and_meta_to_file
 
 TESTDIR = Path(__file__).absolute().parent
-REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
-CONFIG_PATH = TESTDIR / "data/reek/fmuconfig/output/global_variables.yml"
+REEK_R_0 = TESTDIR / "data/reek/"
+REEK_DATA_FILE = str(REEK_R_0 / "eclipse/model/2_R001_REEK-0.DATA")
+CONFIG_PATH = REEK_R_0 / "fmuconfig/output/global_variables.yml"
 
 
 def _assert_string(string_to_assert, answer):
@@ -23,9 +25,11 @@ def _assert_string(string_to_assert, answer):
     assert string_to_assert == answer, ass_string
 
 
-def _assert_metadata_are_produced_and_are_correct(tagname, correct_len=2):
+def _assert_metadata_are_produced_and_are_correct(
+    tagname, correct_len=2, path="share/"
+):
     """Assert that two files are produced, and that metadata are correct"""
-    share_folder = Path("share/")
+    share_folder = Path(path)
     files = list(share_folder.glob("results/tables/*.*"))
     print(files)
     nr_files = len(files)
@@ -50,7 +54,7 @@ def test_write_dframe_and_meta_to_file():
     """Test function write_dframe_and_meta_to_file"""
     test = pd.DataFrame({"DATE": [1, 2, 3], "FOPT": [0, 1, 2]})
     args = {
-        "DATAFILE": REEK,
+        "DATAFILE": REEK_DATA_FILE,
         "config_path": CONFIG_PATH,
         "output": "summary.csv",
         "subcommand": "summary",
@@ -63,89 +67,99 @@ def test_write_dframe_and_meta_to_file():
 def test_write_through_summary_main():
     """Test summary main entry point"""
 
-    ecl2df.summary.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.summary.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("summary")
 
 
 def test_write_through_satfunc_main():
     """Test summary main entry point"""
 
-    ecl2df.satfunc.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.satfunc.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("satfunc")
 
 
 def test_write_through_rft_main():
     """Test summary main entry point"""
 
-    ecl2df.rft.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.rft.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("rft")
 
 
 def test_write_through_pvt_main():
     """Test summary main entry point"""
 
-    ecl2df.pvt.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.pvt.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("pvt")
 
 
 def test_write_through_pillar_main():
     """Test summary main entry point"""
 
-    ecl2df.pillars.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.pillars.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("pillars")
 
 
 def test_write_through_nnc_main():
     """Test summary main entry point"""
 
-    ecl2df.nnc.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.nnc.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("nnc")
 
 
 def test_write_through_grid_main():
     """Test summary main entry point"""
 
-    ecl2df.grid.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.grid.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("grid")
 
 
 def test_write_through_fipreports_main():
     """Test summary main entry point"""
 
-    ecl2df.fipreports.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.fipreports.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("fipreports")
 
 
 def test_write_through_faults_main():
     """Test summary main entry point"""
 
-    ecl2df.faults.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.faults.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("faults")
 
 
 def test_write_through_equil_main():
     """Test summary main entry point"""
 
-    ecl2df.equil.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.equil.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("equil")
 
 
 def test_write_through_compdat_main():
     """Test summary main entry point"""
 
-    ecl2df.compdat.export_w_metadata(REEK, CONFIG_PATH)
+    ecl2df.compdat.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("compdat")
 
 
 def test_bulk_upload():
     """Test bulk upload"""
 
-    ecl2df.ecl2sumo_bulk.bulk_upload(REEK, CONFIG_PATH)
+    ecl2df.ecl2sumo_bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("bulk", 22)
 
 
 def test_limiting_bulk_upload():
     """Test bulk upload with only one submodule"""
 
-    ecl2df.ecl2sumo_bulk.bulk_upload(REEK, CONFIG_PATH, ["rft"])
+    ecl2df.ecl2sumo_bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH, ["rft"])
     _assert_metadata_are_produced_and_are_correct("rft")
+
+
+def test_bulk_upload_from_config():
+    os.chdir(REEK_R_0)
+    ecl2df.ecl2sumo_bulk.bulk_upload_with_configfile(CONFIG_PATH)
+    _assert_metadata_are_produced_and_are_correct("bulk", 22, path=REEK_R_0 / "share")
+
+
+if __name__ == "__main__":
+    test_bulk_upload_from_config()

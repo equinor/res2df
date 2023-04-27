@@ -397,8 +397,13 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. No CSV dump if empty",
-        default="",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+            + "No csv dump if empty"
+        ),
+        default=None,
     )
     parser.add_argument(
         "-p",

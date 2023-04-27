@@ -955,8 +955,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="compdat.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "--initvectors",
@@ -979,8 +983,9 @@ def export_w_metadata(eclpath: str, config_path: str, initvectors: List[str] = N
     args = argparse.Namespace(
         DATAFILE=eclpath,
         config_path=config_path,
-        output="compdat.csv",
+        output=None,
         initvectors=initvectors,
+        subcommand="compdat",
     )
     compdat_main(args)
 

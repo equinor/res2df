@@ -34,7 +34,7 @@ def _assert_metadata_are_produced_and_are_correct(
     files = list(share_folder.glob("results/tables/*.*"))
     print(files)
     nr_files = len(files)
-    len_str = f"Nr of files should be 2, but is {nr_files}"
+    len_str = f"Nr of files should be {correct_len}, but is {nr_files}"
     assert len(files) == correct_len, len_str
     for file_path in files:
         if file_path.name.startswith("."):
@@ -65,93 +65,93 @@ def test_write_dframe_and_meta_to_file():
     _assert_metadata_are_produced_and_are_correct("summary")
 
 
-def test_write_through_summary_main():
+def test_write_through_summary_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.summary.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("summary")
 
 
-def test_write_through_satfunc_main():
+def test_write_through_satfunc_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.satfunc.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("satfunc")
 
 
-def test_write_through_rft_main():
+def test_write_through_rft_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.rft.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("rft")
 
 
-def test_write_through_pvt_main():
+def test_write_through_pvt_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.pvt.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("pvt")
 
 
-def test_write_through_pillar_main():
+def test_write_through_pillar_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.pillars.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("pillars")
 
 
-def test_write_through_nnc_main():
+def test_write_through_nnc_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.nnc.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("nnc")
 
 
-def test_write_through_grid_main():
+def test_write_through_grid_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.grid.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("grid")
 
 
-def test_write_through_fipreports_main():
+def test_write_through_fipreports_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.fipreports.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("fipreports")
 
 
-def test_write_through_faults_main():
+def test_write_through_faults_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.faults.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("faults")
 
 
-def test_write_through_equil_main():
+def test_write_through_equil_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.equil.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("equil")
 
 
-def test_write_through_compdat_main():
+def test_write_through_compdat_main(tmp_path):
     """Test summary main entry point"""
-
+    os.chdir(tmp_path)
     ecl2df.compdat.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("compdat")
 
 
-def test_bulk_upload():
+def test_bulk_upload(tmp_path):
     """Test bulk upload"""
-
+    os.chdir(tmp_path)
     ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("bulk", 22)
 
 
-def test_limiting_bulk_upload():
+def test_limiting_bulk_upload(tmp_path):
     """Test bulk upload with only one submodule"""
-
+    os.chdir(tmp_path)
     ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH, ["rft"])
     _assert_metadata_are_produced_and_are_correct("rft")
 

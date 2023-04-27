@@ -191,7 +191,15 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         help="Only dump vertical (along pillars) connections",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -291,9 +299,10 @@ def export_w_metadata(
     args = argparse.Namespace(
         DATAFILE=eclpath,
         config_path=config_path,
-        output="nnc.csv",
+        output=None,
         coords=coords,
         pillars=pillars,
+        subcommand="nnc",
     )
     nnc_main(args)
 

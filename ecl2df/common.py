@@ -108,16 +108,15 @@ def set_name_from_args(args):
     Returns:
         str: name of file to
     """
-    if args["output"] != MAGIC_STDOUT:
-        name, tagname, _ = get_names_from_args(args)
-        out_name = f"{name}--{tagname}"
-        try:
-            if args.arrow:
-                out_name = out_name.replace(".csv", ".arrow")
-        except AttributeError:
-            logger.debug("No arrow format to write")
-    else:
-        out_name = args["output"]
+
+    name, tagname, _ = get_names_from_args(args)
+    out_name = f"{name}--{tagname}.csv"
+    try:
+        if args.arrow:
+            out_name = out_name.replace(".csv", ".arrow")
+    except AttributeError:
+        logger.debug("No arrow format to write")
+
     return out_name
 
 
@@ -130,22 +129,25 @@ def get_names_from_args(args):
     Returns:
         str: the name to use when exporting
     """
+    subcommand = args["subcommand"]
+
     content = "property"
     contents = {
         "summary": "timeseries",
     }
 
-    if "subcommand" in contents:
-        content = contents["subcommand"]
+    if subcommand in contents:
+        content = contents[subcommand]
+
     try:
-        file_name = Path(args["DATAFILE"]).name
+        file_name = Path(args["DATAFILE"])
     except KeyError:
-        file_name = Path(args["PRTFILE"]).name
+        file_name = Path(args["PRTFILE"])
 
     logger.debug("File name: %s", file_name)
-    logger.debug("Out name: %s", args["output"])
-    tagname = Path(args["output"]).name
-    name = re.sub(r"(-\d+)?\..*", "", file_name)
+
+    tagname = args["subcommand"]
+    name = re.sub(r"(-\d+)?\..*", "", file_name.name)
     logger.debug("Name and tag " + name + "|" + tagname)
 
     return name, tagname, content
@@ -216,7 +218,6 @@ def write_dframe_stdout_file(
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
-    autodetect: bool = True,
 ) -> str:
     """Write a dataframe to either stdout or a file
 
@@ -240,7 +241,7 @@ def write_dframe_stdout_file(
         # print(args)
         if "config_path" not in args:
             args["config_path"] = None
-        if autodetect:
+        if args["output"] is None:
             output = set_name_from_args(args)
         else:
             output = args["output"]
@@ -262,20 +263,22 @@ def write_dframe_stdout_file(
             write_dframe_and_meta_to_file(dframe, args)
         else:
             logger.warning("No writing att all")
-    logger.debug(f"I am returning {output}")
+    logger.debug(f"Written to %s", output)
     return output
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:
     """Write a string (typically an include file string) to stdout
     or to a named file"""
+    logger.debug("String to write: |%s|", string)
+    logger.debug("Will be written to: %s", outputfilename)
     if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        logger.debug(string)
+        logger.debug("Wrote to STDOUT")
     else:
         Path(outputfilename).write_text(string, encoding="utf-8")
-        logger.debug(f"Wrote to {outputfilename}")
+        logger.debug("Wrote to %s ", outputfilename)
 
 
 def parse_ecl_month(eclmonth: str) -> int:

@@ -660,12 +660,20 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--wellname", type=str, help="Restrict data to one named well", default=None
     )
-
     parser.add_argument(
         "--date", type=str, help="Restrict data to one date, YYYY-MM-DD", default=None
     )
+
     parser.add_argument(
-        "-o", "--output", type=str, help="Name of output CSV file.", default="rft.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Debug mode")
@@ -691,7 +699,8 @@ def export_w_metadata(
         config_path=config_path,
         wellname=wellname,
         date=date,
-        output="rft.csv",
+        output=None,
+        subcommand="rft",
     )
     rft_main(args)
 

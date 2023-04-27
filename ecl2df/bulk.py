@@ -4,6 +4,7 @@ from pathlib import Path
 import importlib
 from inspect import signature, Parameter
 from typing import List
+from ecl2df.constants import SUBMODULES
 from fmu.config.utilities import yaml_load
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,14 @@ standard_options = {
     "params": False,  # bool
     "paramfile": None,  # str
     "include_restart": False,  # bool
+    "boundaryfilter": False,
+    "onlyk": False,
+    "onlyij": False,
+    "nnc": False,
+    "verbose": False,
+    "zonemap": "tut",
+    "use_wellconnstatus": False,
+    "excl_well_startswith": None,
 }
 
 
@@ -59,21 +68,12 @@ def bulk_upload(eclpath, config_path, include: List = None, options: dict = None
     if options is None:
         options = standard_options
 
-    submod_list = [
-        "compdat",
-        "equil",
-        "faults",
-        "fipreports",
-        "grid",
-        "nnc",
-        "pillars",
-        "pvt",
-        "rft",
-        "satfunc",
-        "summary",
-    ]
-
-    for submod_name in submod_list:
+    for submod_name in SUBMODULES:
+        if submod_name in ["gruptree", "vfp", "bulk"]:
+            # something wrong with gruptree issue, see issue on github
+            # vfp is different to all the others
+            # bulk is this one
+            continue
         if include is None or submod_name in include:
             func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
             sig_items = signature(func).parameters.items()

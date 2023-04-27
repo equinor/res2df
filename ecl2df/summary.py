@@ -528,7 +528,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
             dtype = pyarrow.string()
         else:
             dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype, config_path=field_metadata))
+        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
         column_arrays.append(dframe[colname].to_numpy())
 
     schema = pyarrow.schema(field_list)
@@ -864,9 +864,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output file. Use '-' to write to stdout. " "Default 'summary.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="summary.csv",
+        default=None,
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
     parser.add_argument(
@@ -924,7 +926,7 @@ def export_w_metadata(
     args = argparse.Namespace(
         DATAFILE=eclpath,
         config_path=config_path,
-        output="summary.csv",
+        output=None,
         time_index=time_index,
         column_keys=column_keys,
         start_date=start_date,
@@ -933,6 +935,7 @@ def export_w_metadata(
         paramfile=paramfile,
         arrow=arrow,
         include_restart=include_restart,
+        subcommand="summary",
     )
     summary_main(args)
 

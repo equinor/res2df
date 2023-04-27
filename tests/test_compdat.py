@@ -295,9 +295,9 @@ def test_main_subparsers(tmp_path, mocker):
     )
     ecl2csv.main()
 
-    assert Path(
-        tmpcsvfile
-    ).is_file(), f"could not find {tmpcsvfile} in list {list[tmp_path.glob('*.csv')]}"
+    assert (
+        tmpcsvfile.is_file()
+    ), f"could not find {tmpcsvfile} in list {list(tmp_path.glob('*.csv'))}"
     disk_df_cols = pd.read_csv(str(tmpcsvfile)).columns.tolist()
     assert "ZONE" in disk_df_cols, f"ZONE not in {disk_df_cols}"
 
@@ -336,7 +336,7 @@ def test_main_subparsers(tmp_path, mocker):
     ecl2csv.main()
 
     assert Path(tmpcsvfile).is_file()
-    disk_df_cols = pd.read_csv(str(tmpcsvfile)).columns.tolist()
+    disk_df_cols = pd.read_csv(str(tmpcsvfile)).columns
     assert "FIPNUM" in disk_df_cols, f"FIPNUM not in {disk_df_cols} when double list"
     assert "EQLNUM" in disk_df_cols, f"EQLNUM not in {disk_df_cols} when double list"
     assert not disk_df_cols.empty

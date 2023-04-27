@@ -288,8 +288,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help=("Name of output csv file. " "Use '-' for stdout."),
-        default="equil.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -322,7 +326,11 @@ def export_w_metadata(
         fipname (str, optional): Region parameter name of interest, default: FIPNUM
     """
     args = argparse.Namespace(
-        DATAFILE=eclpath, config_path=config_path, output="equil.csv", keywords=keywords
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        keywords=keywords,
+        subcommand="equil",
     )
     equil_main(args)
 

@@ -572,6 +572,7 @@ def test_main_subparser(tmp_path, mocker):
         stdout=subprocess.PIPE,
         check=True,
     )
+
     pd.testing.assert_frame_equal(
         equil.df(phases + result.stdout.decode()),
         disk_df,

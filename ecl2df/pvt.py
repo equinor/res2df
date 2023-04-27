@@ -252,8 +252,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file, default pvt.csv. Use '-' for stdout.",
-        default="pvt.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -293,8 +297,9 @@ def export_w_metadata(
     args = argparse.Namespace(
         DATAFILE=eclpath,
         config_path=config_path,
-        output="pvt.csv",
+        output=None,
         keywords=keywords,
+        subcommand="pvt",
     )
     pvt_main(args)
 

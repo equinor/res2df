@@ -263,10 +263,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output csv file. Use '-' to write to stdout. "
-            "Default 'well_completion_data.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="wellcompletiondata.csv",
+        default=None,
     )
     parser.add_argument(
         "--use_wellconnstatus",
@@ -282,6 +283,37 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    zonemap: str = "rms/output/zone/simgrid_zone_layer_mapping.lyr",
+    use_wellconnstatus: bool = False,
+    excl_well_startswith: str = None,
+    arrow: bool = False,
+):
+    """Read wellconnection data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        zonemap (str): Name of lyr file with layer->zone mapping, default rms/output/zone/simgrid_zone_layer_mapping.lyr
+        use_wellconnstatus (bool): Use well connection status extracted from CPI* summary data, default false
+        excl_well_startswith (bool): Exlude wells that starts with this string from the export, default false
+        arrow (bool) : Write to pyarrow format, default false
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        zonemap=zonemap,
+        use_wellconnstatus=use_wellconnstatus,
+        excl_well_startswith=excl_well_startswith,
+        arrow=arrow,
+        subcommand="wellcompletiondata",
+    )
+    wellcompletiondata_main(args)
 
 
 def wellcompletiondata_main(args):

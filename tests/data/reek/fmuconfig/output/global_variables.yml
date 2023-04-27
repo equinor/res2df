@@ -1313,3 +1313,5 @@ stratigraphy:
   Below:
     stratigraphic: false
     name: Below
+
+ecl2csv: True

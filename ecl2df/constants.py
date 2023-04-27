@@ -24,5 +24,5 @@ SUBMODULES: List[str] = [
     "wellcompletiondata",
     "wellconnstatus",
     "wcon",
-    "ecl2sumo_bulk"
+    "bulk"
 ]

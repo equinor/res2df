@@ -12,6 +12,7 @@ TESTDIR = Path(__file__).absolute().parent
 REEK_R_0 = TESTDIR / "data/reek/"
 REEK_DATA_FILE = str(REEK_R_0 / "eclipse/model/2_R001_REEK-0.DATA")
 CONFIG_PATH = REEK_R_0 / "fmuconfig/output/global_variables.yml"
+CONFIG_PATH_W_PATH = REEK_R_0 / "fmuconfig/output/global_variables_w_eclpath.yml"
 
 
 def _assert_string(string_to_assert, answer):
@@ -144,20 +145,35 @@ def test_write_through_compdat_main():
 def test_bulk_upload():
     """Test bulk upload"""
 
-    ecl2df.ecl2sumo_bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH)
+    ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("bulk", 22)
 
 
 def test_limiting_bulk_upload():
     """Test bulk upload with only one submodule"""
 
-    ecl2df.ecl2sumo_bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH, ["rft"])
+    ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH, ["rft"])
     _assert_metadata_are_produced_and_are_correct("rft")
 
 
 def test_bulk_upload_from_config():
+    """Test bulk upload with config only"""
     os.chdir(REEK_R_0)
-    ecl2df.ecl2sumo_bulk.bulk_upload_with_configfile(CONFIG_PATH)
+    ecl2df.bulk.bulk_upload_with_configfile(CONFIG_PATH)
+    _assert_metadata_are_produced_and_are_correct("bulk", 22, path=REEK_R_0 / "share")
+
+
+def test_bulk_upload_from_command_line(mocker):
+    """Test bulk upload upload option from command line
+
+    Args:
+        mocker (func): mocking function for mimicing command line
+    """
+    os.chdir(REEK_R_0)
+    mocker.patch(
+        "sys.argv", ["ecl2csv", "--config_path", str(CONFIG_PATH_W_PATH), "bulk"]
+    )
+    ecl2df.ecl2csv.main()
     _assert_metadata_are_produced_and_are_correct("bulk", 22, path=REEK_R_0 / "share")
 
 

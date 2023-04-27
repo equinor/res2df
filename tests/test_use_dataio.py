@@ -146,7 +146,7 @@ def test_bulk_upload(tmp_path):
     """Test bulk upload"""
     os.chdir(tmp_path)
     ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("bulk", 22)
+    _assert_metadata_are_produced_and_are_correct("bulk", 30)
 
 
 def test_limiting_bulk_upload(tmp_path):
@@ -160,7 +160,7 @@ def test_bulk_upload_from_config():
     """Test bulk upload with config only"""
     os.chdir(REEK_R_0)
     ecl2df.bulk.bulk_upload_with_configfile(CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("bulk", 22, path=REEK_R_0 / "share")
+    _assert_metadata_are_produced_and_are_correct("bulk", 30, path=REEK_R_0 / "share")
 
 
 def test_bulk_upload_from_command_line(mocker):
@@ -174,7 +174,7 @@ def test_bulk_upload_from_command_line(mocker):
         "sys.argv", ["ecl2csv", "--config_path", str(CONFIG_PATH_W_PATH), "bulk"]
     )
     ecl2df.ecl2csv.main()
-    _assert_metadata_are_produced_and_are_correct("bulk", 22, path=REEK_R_0 / "share")
+    _assert_metadata_are_produced_and_are_correct("bulk", 30, path=REEK_R_0 / "share")
 
 
 if __name__ == "__main__":

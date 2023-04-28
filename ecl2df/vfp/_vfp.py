@@ -460,8 +460,8 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-k",
         "--keyword",
         type=str,
-        help="VFP keywords to include, i.e. VFPPROD or VFPINJ",
-        default="",
+        help="VFP keywords to include, VFPPROD or VFPINJ",
+        default="VFPPROD",
     )
     parser.add_argument(
         "-n",
@@ -480,6 +480,34 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return common.fill_reverse_parser(parser, "VFPPROD, VFPINJ", "vfp.inc")
 
 
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    keyword: str = "VFPPROD",
+    vfpnumbers: list = "",
+    arrow: bool = False,
+):
+    """Read vfp data from disk, write csv/arrow back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        keyword (str): VFP keywords to include, i.e. VFPPROD or VFPINJ
+        vfpnumbers (str): List of VFP table numbers to include. Format [1,2,4:10]
+        arrow (bool, optional): write arrow file, not csv. Defaults to False.
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        keyword=keyword,
+        vfpnumbers=vfpnumbers,
+        arrow=arrow,
+        subcommand="vfp",
+    )
+    vfp_main(args)
+
+
 def vfp_main(args) -> None:
     """Entry-point for module, for command line utility."""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -488,15 +516,14 @@ def vfp_main(args) -> None:
     if args.keyword:
         if args.keyword not in SUPPORTED_KEYWORDS:
             raise ValueError(f"Keyword argument {args.keyword} not supported")
-    if not args.output:
-        logger.info("Nothing to do. Set --output")
-        sys.exit(0)
+
     vfpnumbers = None
     if "vfpnumbers" in args:
         vfpnumbers = str(args.vfpnumbers)
 
     eclfiles = EclFiles(args.DATAFILE)
     if args.arrow:
+        logger.debug("Option: export arrow")
         outputfile = args.output
         outputfile.replace(".arrow", "")
         vfp_arrow_tables = pyarrow_tables(
@@ -510,16 +537,21 @@ def vfp_main(args) -> None:
             common.write_dframe_stdout_file(
                 vfp_table, vfp_filename, index=False, caller_logger=logger
             )
-            logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
+            logger.info("Parsed file %s for vfp.dfs_arrow", args.DATAFILE)
     else:
+        logger.debug("Option: export csv")
         dframe = df(
             eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
+        logger.debug(dframe.head())
+        if dframe.empty:
+            logger.warning("Nothing to export, no vfp's included?")
         if args.output:
+            logger.debug("Here we are!!!")
             common.write_dframe_stdout_file(
-                dframe, args.output, index=False, caller_logger=logger
+                dframe, args, index=False, caller_logger=logger
             )
-            logger.info(f"Parsed file {args.DATAFILE} for vfp.df")
+            logger.info("Parsed file %s for vfp.df", args.DATAFILE)
 
 
 def vfp_reverse_main(args) -> None:

@@ -142,6 +142,15 @@ def test_write_through_compdat_main(tmp_path):
     _assert_metadata_are_produced_and_are_correct("compdat")
 
 
+def test_write_through_vfp_main_no_vfp_data(tmp_path, caplog):
+    # Only test to be done, because no vfp data available in test data
+    """Test vfp main entry point"""
+    os.chdir(tmp_path)
+    ecl2df.vfp.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
+    assert "Nothing to export, no vfp's included?" in caplog.text
+    # _assert_metadata_are_produced_and_are_correct("vfp")
+
+
 def test_bulk_upload(tmp_path):
     """Test bulk upload"""
     os.chdir(tmp_path)

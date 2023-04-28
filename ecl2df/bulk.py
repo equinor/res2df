@@ -4,8 +4,8 @@ from pathlib import Path
 import importlib
 from inspect import signature, Parameter
 from typing import List
-from ecl2df.constants import SUBMODULES
 from fmu.config.utilities import yaml_load
+from ecl2df.constants import SUBMODULES
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 standard_options = {
     "initvectors": None,  # List[str]
     "keywords": None,  # List[str] x3
+    "keyword": "",
+    "vfpnumbers": "",
     "fipname": "FIPNUM",  # str
     "vectors": "*",  # List[str]
     "stackdates": False,  # bool x2
@@ -69,7 +71,7 @@ def bulk_upload(eclpath, config_path, include: List = None, options: dict = None
         options = standard_options
 
     for submod_name in SUBMODULES:
-        if submod_name in ["gruptree", "vfp", "bulk"]:
+        if submod_name in ["gruptree", "bulk"]:
             # something wrong with gruptree issue, see issue on github
             # vfp is different to all the others
             # bulk is this one
@@ -84,6 +86,7 @@ def bulk_upload(eclpath, config_path, include: List = None, options: dict = None
                 and name not in {"eclpath", "config_path"}
             }
             func(eclpath, config_path, **filtered_options)
+            logger.info("Export of %s data", submod_name)
             # break
 
 

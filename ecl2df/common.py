@@ -275,6 +275,7 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
     if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+        print(string, end=None)
         logger.debug("Wrote to STDOUT")
     else:
         Path(outputfilename).write_text(string, encoding="utf-8")

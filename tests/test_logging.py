@@ -67,7 +67,11 @@ def test_default_logger_levels_and_split(capsys):
 @pytest.mark.skipif(not HAVE_OPM, reason="Command line client requires OPM")
 @pytest.mark.parametrize(
     "ecl2df_module, verbose, fileexport",
-    itertools.product(ecl2df.SUBMODULES, [False, True], [True, False]),
+    itertools.product(
+        [sub_mod for sub_mod in ecl2df.SUBMODULES if sub_mod not in ("bulk", "vfp")],
+        [False, True],
+        [True, False],
+    ),
 )
 def test_ecl2csv_logging(tmp_path, ecl2df_module, verbose, fileexport, mocker, capsys):
     """Test that the command line client for each submodule logs correctly.

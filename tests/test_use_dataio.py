@@ -1,6 +1,5 @@
 """tests of function write_dframe_and_meta_to_file"""
 import os
-from argparse import Namespace
 from pathlib import Path
 from shutil import rmtree
 import pandas as pd

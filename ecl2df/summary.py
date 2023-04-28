@@ -464,7 +464,8 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
                 "Dataframe of summary data contained duplicate timestamps due to "
                 "limited output resolution. Vector TIMESTEP exists, utilizing it to "
                 "create discrete timestamps."
-                f"Original duplicates were:{index_duplicate_log_string}"
+                "Original duplicates were:%s ",
+                index_duplicate_log_string,
             )
             index_as_list = dframe.index.to_list()
 

@@ -114,7 +114,7 @@ def bulk_upload_with_configfile(config_path):
         ecl_config = config["ecl2csv"]
         try:
             path = "eclipse/model/" + ecl_config["datafile"]
-            print(path)
+            logging.debug("Path to use for search %s", path)
             eclpaths = [path]
             includes = ecl_config.get("datatypes", None)
             options = ecl_config.get("options", None)

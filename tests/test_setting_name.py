@@ -12,6 +12,11 @@ REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 
 @pytest.fixture(name="name_args", scope="session")
 def _fixture_arg_names():
+    """Return the name variables to test against
+
+    Returns:
+        tuple: name, submodule name, and args dict
+    """
     _keep_name = "TESTING"
     _subcommand = "summary"
     _args = {"DATAFILE": f"{_keep_name}-123.DATA", "subcommand": _subcommand}
@@ -20,7 +25,11 @@ def _fixture_arg_names():
 
 
 def test_get_name_from_args(name_args):
-    """Test function get_name_from_args"""
+    """Test function get_name_from_args
+
+    Args:
+        name_args (tuple): name, submodule name, and args dict
+    """
     keep_name, subcommand, args = name_args
     name, tagname, content = get_names_from_args(args)
     assert name == keep_name, f"Name is {name}, but should be {keep_name}"
@@ -29,6 +38,11 @@ def test_get_name_from_args(name_args):
 
 
 def test_set_name_from_args(name_args):
+    """Test function set_name_from_args
+
+    Args:
+        name_args (tuple): name, submodule name, and args dict
+    """
     keep_name, subcommand, args = name_args
     correct_name = f"{keep_name}--{subcommand}.csv"
     name = set_name_from_args(args)

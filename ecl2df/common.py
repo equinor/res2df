@@ -5,7 +5,6 @@ import datetime
 import inspect
 import itertools
 import json
-import logging
 import re
 import shlex
 import signal
@@ -131,13 +130,11 @@ def get_names_from_args(args):
     """
     subcommand = args["subcommand"]
 
-    content = "property"
     contents = {
         "summary": "timeseries",
     }
 
-    if subcommand in contents:
-        content = contents[subcommand]
+    content = contents.get(subcommand, "property")
 
     try:
         file_name = Path(args["DATAFILE"])
@@ -146,7 +143,7 @@ def get_names_from_args(args):
 
     logger.debug("File name: %s", file_name)
 
-    tagname = args["subcommand"]
+    tagname = subcommand
     name = re.sub(r"(-\d+)?\..*", "", file_name.name)
     logger.debug("Name and tag " + name + "|" + tagname)
 
@@ -238,7 +235,6 @@ def write_dframe_stdout_file(
     else:
         if isinstance(args, argparse.Namespace):
             args = vars(args)
-        # print(args)
         if "config_path" not in args:
             args["config_path"] = None
         if args["output"] is None:
@@ -263,7 +259,7 @@ def write_dframe_stdout_file(
             write_dframe_and_meta_to_file(dframe, args)
         else:
             logger.warning("No writing att all")
-    logger.debug(f"Written to %s", output)
+    logger.debug("Written to %s", output)
     return output
 
 

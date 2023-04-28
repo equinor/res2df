@@ -61,7 +61,8 @@ def df(
         logger.warning(
             "ZONE column not generated in compdat table. "
             "Empty dataframe will be returned."
-            f"Zonemap used: {zonemap}"
+            "Zonemap used: %s",
+            zonemap,
         )
         return pd.DataFrame()
 
@@ -323,14 +324,14 @@ def wellcompletiondata_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     if not Path(args.zonemap).is_file():
         wellcompletiondata_df = pd.DataFrame()
-        logger.info(f"Zonemap not found: {args.zonemap}")
+        logger.info("Zonemap not found: %s", args.zonemap)
     else:
         zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
         wellcompletiondata_df = df(
             eclfiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
         )
         logger.info(
-            f"Well completion data successfully generated with zonemap: {zonemap}"
+            "Well completion data successfully generated with zonemap: %s", zonemap
         )
 
     if args.arrow:

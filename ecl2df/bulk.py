@@ -60,7 +60,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def bulk_upload(eclpath, config_path, include: List = None, options: dict = None):
+def bulk_export(eclpath, config_path, include: List = None, options: dict = None):
     """Bulk uploads every module to sumo with metadata
 
     eclpath (str): path to eclipse datafile
@@ -103,7 +103,7 @@ def glob_for_datafiles(path="eclipse/model/"):
     return Path(path).glob("*.DATA")
 
 
-def bulk_upload_with_configfile(config_path):
+def bulk_export_with_configfile(config_path):
     """Export eclipse results controlled by config file
 
     Args:
@@ -123,7 +123,7 @@ def bulk_upload_with_configfile(config_path):
             includes = None
             options = None
         for eclpath in eclpaths:
-            bulk_upload(str(eclpath), config_path, includes, options)
+            bulk_export(str(eclpath), config_path, includes, options)
 
     except KeyError:
         logger.warning("No eclipse export set up, you will not get anything exported")
@@ -135,4 +135,4 @@ def bulk_main(args):
     Args:
         args (argparse.NameSpace): The input arguments
     """
-    bulk_upload_with_configfile(args.config_path)
+    bulk_export_with_configfile(args.config_path)

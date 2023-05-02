@@ -150,28 +150,28 @@ def test_write_through_vfp_main_no_vfp_data(tmp_path, caplog):
     # _assert_metadata_are_produced_and_are_correct("vfp")
 
 
-def test_bulk_upload(tmp_path):
+def test_bulk_export(tmp_path):
     """Test bulk upload"""
     os.chdir(tmp_path)
-    ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH)
+    ecl2df.bulk.bulk_export(REEK_DATA_FILE, CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("bulk", 30)
 
 
-def test_limiting_bulk_upload(tmp_path):
+def test_limiting_bulk_export(tmp_path):
     """Test bulk upload with only one submodule"""
     os.chdir(tmp_path)
-    ecl2df.bulk.bulk_upload(REEK_DATA_FILE, CONFIG_PATH, ["rft"])
+    ecl2df.bulk.bulk_export(REEK_DATA_FILE, CONFIG_PATH, ["rft"])
     _assert_metadata_are_produced_and_are_correct("rft")
 
 
-def test_bulk_upload_from_config():
+def test_bulk_export_from_config():
     """Test bulk upload with config only"""
     os.chdir(REEK_R_0)
-    ecl2df.bulk.bulk_upload_with_configfile(CONFIG_PATH)
+    ecl2df.bulk.bulk_export_with_configfile(CONFIG_PATH)
     _assert_metadata_are_produced_and_are_correct("bulk", 30, path=REEK_R_0 / "share")
 
 
-def test_bulk_upload_from_command_line(mocker):
+def test_bulk_export_from_command_line(mocker):
     """Test bulk upload upload option from command line
 
     Args:
@@ -186,4 +186,4 @@ def test_bulk_upload_from_command_line(mocker):
 
 
 if __name__ == "__main__":
-    test_bulk_upload_from_config()
+    test_bulk_export_from_config()

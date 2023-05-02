@@ -525,7 +525,10 @@ def vfp_main(args) -> None:
     if args.arrow:
         logger.debug("Option: export arrow")
         outputfile = args.output
-        outputfile.replace(".arrow", "")
+        try:
+            outputfile.replace(".arrow", "")
+        except AttributeError:
+            logger.warning("String is most likely None, cannot replace")
         vfp_arrow_tables = pyarrow_tables(
             eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )

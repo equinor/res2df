@@ -111,9 +111,13 @@ def set_name_from_args(args):
     name, tagname, _ = get_names_from_args(args)
     out_name = f"{name}--{tagname}.csv"
     try:
-        if args.arrow:
-            out_name = out_name.replace(".csv", ".arrow")
-    except AttributeError:
+        if args["arrow"]:
+            try:
+                out_name = out_name.replace(".csv", ".arrow")
+            except AttributeError:
+                print("No replacement here today!")
+
+    except KeyError:
         logger.debug("No arrow format to write")
 
     return out_name
@@ -144,7 +148,13 @@ def get_names_from_args(args):
     logger.debug("File name: %s", file_name)
 
     tagname = subcommand
-    name = re.sub(r"(-\d+)?\..*", "", file_name.name)
+
+    base_name = file_name.name
+    # if no suffix supplied
+    while base_name[-1].isdigit() or base_name.endswith("-"):
+        base_name = base_name[:-1]
+
+    name = re.sub(r"(-\d+)?\..*", "", base_name)
     logger.debug("Name and tag " + name + "|" + tagname)
 
     return name, tagname, content
@@ -182,7 +192,7 @@ def write_dframe_to_file(
 
 
 def write_dframe_and_meta_to_file(
-    dframe: Union[pd.DataFrame, pyarrow.Table],
+    table: Union[pd.DataFrame, pyarrow.Table],
     args: Union[str, dict],
     # caller_logger: Optional[logging.Logger] = None,
     # logstr: Optional[str] = None,
@@ -206,7 +216,13 @@ def write_dframe_and_meta_to_file(
         tagname=re.sub(r"\..*", "", tagname),
         content=content,
     )
-    exp.export(dframe.reset_index())
+    try:
+        obj = table.reset_index()
+    except AttributeError:
+        obj = table
+
+    export_path = exp.export(obj)
+    logger.debug("Exporting to %s", export_path)
 
 
 def write_dframe_stdout_file(

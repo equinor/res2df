@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 standard_options = {
     "initvectors": None,  # List[str]
     "keywords": None,  # List[str] x3
-    "keyword": "",
+    "keyword": "VFPPROD",
     "vfpnumbers": "",
     "fipname": "FIPNUM",  # str
     "vectors": "*",  # List[str]
@@ -33,6 +33,7 @@ standard_options = {
     "time_index": "raw",  # str
     "column_keys": None,
     "start_date": "",  # str
+    "startdate": None,
     "end_date": "",  # str
     "params": False,  # bool
     "paramfile": None,  # str
@@ -67,20 +68,23 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
     config_path (str): path to fmu config file
     include (List): list of submodules to include. Defaults to None which includes all
     """
-    if options is None:
-        options = standard_options
-
-    for submod_name in SUBMODULES:
-        if submod_name in ["gruptree", "bulk"]:
-            # something wrong with gruptree issue, see issue on github
+    # Substituting the options passed in into standard options
+    if options is not None:
+        for key, value in options.items():
+            if key in standard_options:
+                standard_options[key] = value
+    if include is None:
+        include = SUBMODULES
+    for submod_name in include:
+        if submod_name in ["bulk"]:
             # vfp is different to all the others
             # bulk is this one
             continue
-        if include is None or submod_name in include:
+        if submod_name in include:
             func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
             sig_items = signature(func).parameters.items()
             filtered_options = {
-                name: options[name]
+                name: standard_options[name]
                 for name, param in sig_items
                 if param.kind is not Parameter.empty
                 and name not in {"eclpath", "config_path"}
@@ -88,6 +92,8 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
             func(eclpath, config_path, **filtered_options)
             logger.info("Export of %s data", submod_name)
             # break
+        else:
+            logger.warning("This is not included %s", submod_name)
 
 
 def glob_for_datafiles(path="eclipse/model/"):
@@ -117,12 +123,16 @@ def bulk_export_with_configfile(config_path):
             logging.debug("Path to use for search %s", path)
             eclpaths = [path]
             includes = ecl_config.get("datatypes", None)
+            logger.debug("User defined modules %s", includes)
             options = ecl_config.get("options", None)
+            logger.debug("User defined options %s", options)
         except (KeyError, AttributeError, TypeError):
             eclpaths = glob_for_datafiles()
             includes = None
             options = None
+        logger.info("Data files to use: %s", eclpaths)
         for eclpath in eclpaths:
+            logger.info("Working with %s", eclpath)
             bulk_export(str(eclpath), config_path, includes, options)
 
     except KeyError:

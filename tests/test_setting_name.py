@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 import pytest
-from ecl2df.common import get_names_from_args, set_name_from_args
+from ecl2df.common import get_names_from_args, get_names_from_args, set_name_from_args
 from ecl2df import ecl2csv
 
 TESTDIR = Path(__file__).absolute().parent
@@ -37,6 +37,24 @@ def test_get_name_from_args(name_args):
     assert content == "timeseries", f"Content is {content}, but should be timeseries"
 
 
+def test_set_name_from_eclbase():
+    """Test function set_name_from_args when no suffix supplied
+
+    Args:
+        name_args (tuple): name, submodule name, and args dict
+    """
+    args = {
+        "subcommand": "mycommand",
+        "DATAFILE": "/scratch/fmu/dbs/drogon_ahm_future-2023-05-02/realization-0/iter-0/eclipse/model/DROGON-0",
+    }
+
+    correct_name = "DROGON"
+    correct_tag = "mycommand"
+    name, tag, _ = get_names_from_args(args)
+    assert name == correct_name, f"Name is {name}, should be {correct_name}"
+    assert tag == correct_tag, f"Tag is {tag}, should be {correct_tag}"
+
+
 def test_set_name_from_args(name_args):
     """Test function set_name_from_args
 
@@ -53,7 +71,6 @@ def test_set_name_from_args(name_args):
 def test_summmary_name(mocker, tmp_path):
     """Test that the command line utility ecl2csv exports the right names"""
     os.chdir(tmp_path)
-    print(tmp_path)
     module_names = [
         "compdat",
         "equil",

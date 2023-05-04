@@ -295,10 +295,50 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. Use '-' for stdout",
-        default="trans.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     return parser
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    vectors: List = None,
+    boundaryfilter: str = False,
+    onlyk: bool = False,
+    onlyij: bool = False,
+    coords: bool = False,
+    group: bool = False,
+    nnc: bool = False,
+    verbose: bool = False,
+):
+    """Read trans data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        vectors (list): list of extra init vectors to be added, default None
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        vectors=vectors,
+        boundaryfilter=boundaryfilter,
+        onlyk=onlyk,
+        onlyij=onlyij,
+        coords=coords,
+        group=group,
+        nnc=nnc,
+        verbose=verbose,
+        subcommand="trans",
+    )
+    trans_main(args)
 
 
 def trans_main(args):
@@ -318,4 +358,4 @@ def trans_main(args):
         addnnc=args.nnc,
     )
 
-    write_dframe_stdout_file(trans_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(trans_df, args, index=False, caller_logger=logger)

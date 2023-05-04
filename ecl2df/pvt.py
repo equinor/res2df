@@ -252,8 +252,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file, default pvt.csv. Use '-' for stdout.",
-        default="pvt.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -276,6 +280,28 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
         parser (ArgumentParser or subparser): parser to fill with arguments
     """
     return common.fill_reverse_parser(parser, "PVT", "pvt.inc")
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    keywords: List = None,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        keywords (list): list of keywords to include, None gives all, default None
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        keywords=keywords,
+        subcommand="pvt",
+    )
+    pvt_main(args)
 
 
 def pvt_main(args) -> None:
@@ -305,7 +331,7 @@ def pvt_main(args) -> None:
         keywords = "-"
     common.write_dframe_stdout_file(
         pvt_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Unique PVTNUMs: {pvtnums}, PVT keywords: {keywords}",

@@ -16,4 +16,5 @@ from ._vfp import (  # noqa F:401
     pyarrow_tables,
     vfp_main,
     vfp_reverse_main,
+    export_w_metadata,
 )

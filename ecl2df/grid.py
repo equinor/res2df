@@ -559,8 +559,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. Use '-' for stdout.",
-        default="eclgrid.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "--stackdates",
@@ -758,6 +762,40 @@ def df2ecl(
     return string
 
 
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    vectors: List[str] = "*",
+    rstdates: str = "",
+    stackdates: bool = False,
+    dropconstants: bool = False,
+    arrow: bool = False,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        region (str): region parameter to separate by, empty string give no sep
+        rstdates (str): Point in time to grab restart data from,
+                either 'first' or 'last', 'all' or a date in YYYY-MM-DD format
+        stackdates (bool, optional): default False
+        dropconstants (bool, optional):Drop constant columns from the dataset, default False
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        vectors=vectors,
+        rstdates=rstdates,
+        stackdates=stackdates,
+        dropconstants=dropconstants,
+        arrow=arrow,
+        subcommand="grid",
+    )
+    grid_main(args)
+
+
 def grid_main(args) -> None:
     """This is the command line API"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -773,6 +811,4 @@ def grid_main(args) -> None:
     )
     if args.arrow:
         grid_df = _df2pyarrow(grid_df)
-    common.write_dframe_stdout_file(
-        grid_df, args.output, index=False, caller_logger=logger
-    )
+    common.write_dframe_stdout_file(grid_df, args, index=False, caller_logger=logger)

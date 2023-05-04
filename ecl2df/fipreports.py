@@ -202,11 +202,41 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         default="FIPNUM",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Output CSV filename", default="outflow.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Debug mode for logging")
     return parser
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    fipname: str = "FIPNUM",
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        fipname (str, optional): Region parameter name of interest, default: FIPNUM
+    """
+    args = argparse.Namespace(
+        PRTFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        fipname=fipname,
+        subcommand="fipreports",
+    )
+    fipreports_main(args)
 
 
 def fipreports_main(args) -> None:
@@ -219,4 +249,4 @@ def fipreports_main(args) -> None:
     else:
         prtfile = EclFiles(args.PRTFILE).get_prtfilename()
     dframe = df(prtfile, args.fipname)
-    write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

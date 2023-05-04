@@ -955,8 +955,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="compdat.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "--initvectors",
@@ -968,6 +972,24 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def export_w_metadata(eclpath: str, config_path: str, initvectors: List[str] = None):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        fipname (str, optional): Region parameter name of interest, default: FIPNUM
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        initvectors=initvectors,
+        subcommand="compdat",
+    )
+    compdat_main(args)
+
+
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -975,7 +997,7 @@ def compdat_main(args):
     )
     eclfiles = EclFiles(args.DATAFILE)
     compdat_df = df(eclfiles, initvectors=args.initvectors)
-    write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(compdat_df, args, index=False, caller_logger=logger)
 
 
 def df(

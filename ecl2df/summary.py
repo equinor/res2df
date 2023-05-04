@@ -464,7 +464,8 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
                 "Dataframe of summary data contained duplicate timestamps due to "
                 "limited output resolution. Vector TIMESTEP exists, utilizing it to "
                 "create discrete timestamps."
-                f"Original duplicates were:{index_duplicate_log_string}"
+                "Original duplicates were:%s ",
+                index_duplicate_log_string,
             )
             index_as_list = dframe.index.to_list()
 
@@ -864,9 +865,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output file. Use '-' to write to stdout. " "Default 'summary.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="summary.csv",
+        default=None,
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
     parser.add_argument(
@@ -895,6 +898,49 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return parser
 
 
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    time_index="raw",
+    column_keys=None,
+    start_date="",
+    end_date="",
+    params=False,
+    paramfile=None,
+    arrow=False,
+    include_restart=False,
+):
+    """Read summary data from disk, write csv/arrow back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        time_index (str, optional): define what sampling for time index, raw is no resampling. Defaults to "raw".
+        column_keys (_type_, optional): What columns to extract, use summary column wildcards, None means all. Defaults to None.
+        start_date (str, optional): From when index should start. Defaults to "".
+        end_date (str, optional): From when time index should end. Defaults to "".
+        params (bool, optional): inlclude parameters from ert run. Defaults to False.
+        paramfile (str, optional): path to parameter file. Defaults to None.
+        arrow (bool, optional): write arrow file, not csv. Defaults to False.
+        include_restart (bool, optional): Attempt to include data before restart. Defaults to False.
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        time_index=time_index,
+        column_keys=column_keys,
+        start_date=start_date,
+        end_date=end_date,
+        params=params,
+        paramfile=paramfile,
+        arrow=arrow,
+        include_restart=include_restart,
+        subcommand="summary",
+    )
+    summary_main(args)
+
+
 def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -903,7 +949,6 @@ def summary_main(args) -> None:
     eclbase = (
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
-
     eclfiles = EclFiles(eclbase)
     sum_df = df(
         eclfiles,
@@ -918,8 +963,7 @@ def summary_main(args) -> None:
     )
     if args.arrow:
         sum_df = _df2pyarrow(sum_df)
-
-    write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
+    write_dframe_stdout_file(sum_df, args, index=True, caller_logger=logger)
 
 
 def summary_reverse_main(args) -> None:

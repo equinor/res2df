@@ -438,8 +438,11 @@ def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
 def test_cli_nothing_to_do(mocker, capsys):
     """Test that the client says nothing to do when DATA is supplied, but no action."""
     mocker.patch("sys.argv", ["ecl2csv", "gruptree", "EMPTY.DATA"])
-    with pytest.raises(SystemExit):
-        ecl2csv.main()
+
+    # line below commented out, don't want sys.exit to be raised during
+    # bulk export
+    # with pytest.raises(SystemExit):
+    ecl2csv.main()
     assert "Nothing to do" in capsys.readouterr().out
 
 

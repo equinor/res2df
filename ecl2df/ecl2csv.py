@@ -44,12 +44,20 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "ecl2csv (" + __version__ + ") is a command line frontend to ecl2df. "
-            "Documentation at https://equinor.github.io/ecl2df/ "
+            "ecl2csv ("
+            + __version__
+            + ") is a command line frontend to ecl2df. "
+            + "Documentation at https://equinor.github.io/ecl2df/ \n"
+            + "Choose one of the options in the positional arguments below:\n"
         ),
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
+    )
+    parser.add_argument(
+        "--config_path",
+        type=str,
+        help="fmu config file to enable exporting with metadata",
     )
 
     if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
@@ -240,6 +248,9 @@ def get_parser() -> argparse.ArgumentParser:
             "well or well wildcard at a specific date"
         ),
     )
+    subparsers_dict["bulk"] = subparsers.add_parser(
+        "bulk", help="Bulk upload of all datatypes"
+    )
 
     for submodule, subparser in subparsers_dict.items():
         # Use the submodule's fill_parser() to add the submodule specific
@@ -290,6 +301,7 @@ def run_subparser_main(
             must have a function called <submodule>_main()
         parser: Used for raising errors.
     """
+    positionals = ()
     if "DATAFILE" in args:
         positionals = list(filter(len, [args.DATAFILE] + args.hiddenemptyplaceholders))
         args.DATAFILE = "".join([args.DATAFILE] + args.hiddenemptyplaceholders)
@@ -312,7 +324,7 @@ def main() -> None:
     args = parser.parse_args()
     if "arrow" in parser.prog:
         args.__dict__["arrow"] = True
-    args.func(args)
+    return args.func(args)
 
 
 if __name__ == "__main__":

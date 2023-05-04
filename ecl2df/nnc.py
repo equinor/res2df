@@ -191,7 +191,15 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         help="Only dump vertical (along pillars) connections",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -274,6 +282,31 @@ def df2ecl_editnnc(
     return string
 
 
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    coords: bool = False,
+    pillars: bool = False,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        coords (bool, optional): Add xyz coords of connection midpoint, default False
+        pillars (bool, optional): Only dump vertical (along pillars) connections, default False
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        coords=coords,
+        pillars=pillars,
+        subcommand="nnc",
+    )
+    nnc_main(args)
+
+
 def nnc_main(args) -> None:
     """Command line access point from main() or from ecl2csv via subparser"""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -283,9 +316,8 @@ def nnc_main(args) -> None:
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(
         nncdf,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",
     )
-    nncdf.to_csv(args.output, index=False)

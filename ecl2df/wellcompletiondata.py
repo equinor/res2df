@@ -61,7 +61,8 @@ def df(
         logger.warning(
             "ZONE column not generated in compdat table. "
             "Empty dataframe will be returned."
-            f"Zonemap used: {zonemap}"
+            "Zonemap used: %s",
+            zonemap,
         )
         return pd.DataFrame()
 
@@ -263,10 +264,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output csv file. Use '-' to write to stdout. "
-            "Default 'well_completion_data.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="well_completion_data",
+        default=None,
     )
     parser.add_argument(
         "--use_wellconnstatus",
@@ -284,6 +286,37 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    zonemap: str = "rms/output/zone/simgrid_zone_layer_mapping.lyr",
+    use_wellconnstatus: bool = False,
+    excl_well_startswith: str = None,
+    arrow: bool = False,
+):
+    """Read wellconnection data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        zonemap (str): Name of lyr file with layer->zone mapping, default rms/output/zone/simgrid_zone_layer_mapping.lyr
+        use_wellconnstatus (bool): Use well connection status extracted from CPI* summary data, default false
+        excl_well_startswith (bool): Exlude wells that starts with this string from the export, default false
+        arrow (bool) : Write to pyarrow format, default false
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        zonemap=zonemap,
+        use_wellconnstatus=use_wellconnstatus,
+        excl_well_startswith=excl_well_startswith,
+        arrow=arrow,
+        subcommand="wellcompletiondata",
+    )
+    wellcompletiondata_main(args)
+
+
 def wellcompletiondata_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(__name__, vars(args))
@@ -291,19 +324,19 @@ def wellcompletiondata_main(args):
     eclfiles = EclFiles(args.DATAFILE)
     if not Path(args.zonemap).is_file():
         wellcompletiondata_df = pd.DataFrame()
-        logger.info(f"Zonemap not found: {args.zonemap}")
+        logger.info("Zonemap not found: %s", args.zonemap)
     else:
         zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
         wellcompletiondata_df = df(
             eclfiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
         )
         logger.info(
-            f"Well completion data successfully generated with zonemap: {zonemap}"
+            "Well completion data successfully generated with zonemap: %s", zonemap
         )
 
     if args.arrow:
         wellcompletiondata_df = _df2pyarrow(wellcompletiondata_df)
 
     write_dframe_stdout_file(
-        wellcompletiondata_df, args.output, index=False, caller_logger=logger
+        wellcompletiondata_df, args, index=False, caller_logger=logger
     )

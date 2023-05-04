@@ -166,8 +166,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="satfuncs.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -185,6 +189,28 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> eclipse include file"""
     return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    keywords: List = None,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        keywords (list): list of keywords to include, None gives all, default None
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        keywords=keywords,
+        subcommand="satfunc",
+    )
+    satfunc_main(args)
 
 
 def satfunc_main(args) -> None:
@@ -213,7 +239,7 @@ def satfunc_main(args) -> None:
         keywords = "-"
     write_dframe_stdout_file(
         satfunc_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Unique SATNUMs: {satnums}, saturation keywords: {keywords}",

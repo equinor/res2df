@@ -1,11 +1,10 @@
 """Common functions for ecl2df modules"""
-
+import logging
 import argparse
 import datetime
 import inspect
 import itertools
 import json
-import logging
 import re
 import shlex
 import signal
@@ -17,6 +16,8 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 import pyarrow
+from fmu.config.utilities import yaml_load
+from fmu.dataio.dataio import ExportData
 
 try:
     # pylint: disable=unused-import
@@ -114,13 +115,140 @@ NUM2ECLMONTH = {num: month for month, num in ECLMONTH2NUM.items()}
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-def write_dframe_stdout_file(
+def set_name_from_args(args):
+    """Make file name from input arguments
+
+    Args:
+        args (dict): input arguments
+
+    Returns:
+        str: name of file to
+    """
+
+    name, tagname, _ = get_names_from_args(args)
+    out_name = f"{name}--{tagname}.csv"
+    try:
+        if args["arrow"]:
+            try:
+                out_name = out_name.replace(".csv", ".arrow")
+            except AttributeError:
+                print("No replacement here today!")
+
+    except KeyError:
+        logger.debug("No arrow format to write")
+
+    return out_name
+
+
+def get_names_from_args(args):
+    """Get name components from input arguments, mainly name of ecl file
+
+    Args:
+        args (dict): input arguments
+
+    Returns:
+        str: the name to use when exporting
+    """
+    subcommand = args["subcommand"]
+
+    contents = {
+        "summary": "timeseries",
+    }
+
+    content = contents.get(subcommand, "property")
+
+    try:
+        file_name = Path(args["DATAFILE"])
+    except KeyError:
+        file_name = Path(args["PRTFILE"])
+
+    logger.debug("File name: %s", file_name)
+
+    tagname = subcommand
+
+    base_name = file_name.name
+    # if no suffix supplied
+    while base_name[-1].isdigit() or base_name.endswith("-"):
+        base_name = base_name[:-1]
+
+    name = re.sub(r"(-\d+)?\..*", "", base_name)
+    logger.debug("Name and tag " + name + "|" + tagname)
+
+    return name, tagname, content
+
+
+def write_dframe_to_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
     output: str,
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
-) -> None:
+):
+    """Write a dataframe to file
+
+    If output is the magic string "-", output is written
+    to stdout.
+
+    Arguments:
+        dframe: Dataframe to write
+        output: Filename or "-"
+        index: Passed to to_csv()
+        caller_logger: Used if not stdout
+        logstr: Logged if not stdout.
+    """
+    if caller_logger and isinstance(dframe, pd.DataFrame) and dframe.empty:
+        caller_logger.warning("Empty dataframe being written to disk")
+    if caller_logger and not logstr:
+        caller_logger.info("Writing to file %s", str(output))
+    elif caller_logger and logstr:
+        caller_logger.info(logstr)
+    if isinstance(dframe, pd.DataFrame):
+        dframe.to_csv(output, index=index)
+    else:
+        pyarrow.feather.write_feather(dframe, dest=output)
+
+
+def write_dframe_and_meta_to_file(
+    table: Union[pd.DataFrame, pyarrow.Table],
+    args: Union[str, dict],
+    # caller_logger: Optional[logging.Logger] = None,
+    # logstr: Optional[str] = None,
+):
+    """Write dataframe with metadata
+
+    Args:
+        dframe (Union[pd.DataFrame, pyarrow.Table]): the data
+        args (dict): input arguments for including metadata
+    """
+    name, tagname, content = get_names_from_args(args)
+    try:
+        config = yaml_load(args["config_path"])
+    except TypeError:
+        logger.debug("Config allready a dictionary, no need to read it")
+        config = args
+    logger.debug(config.keys())
+    exp = ExportData(
+        config=config,
+        name=name,
+        tagname=re.sub(r"\..*", "", tagname),
+        content=content,
+    )
+    try:
+        obj = table.reset_index()
+    except AttributeError:
+        obj = table
+
+    export_path = exp.export(obj)
+    logger.debug("Exporting to %s", export_path)
+
+
+def write_dframe_stdout_file(
+    dframe: Union[pd.DataFrame, pyarrow.Table],
+    args: Union[dict, argparse.Namespace, str],
+    index: bool = False,
+    caller_logger: Optional[logging.Logger] = None,
+    logstr: Optional[str] = None,
+) -> str:
     """Write a dataframe to either stdout or a file
 
     If output is the magic string "-", output is written
@@ -133,6 +261,20 @@ def write_dframe_stdout_file(
         caller_logger: Used if not stdout
         logstr: Logged if not stdout.
     """
+    # If not defined metata is set here as a temporary fix, later it should be
+    # set through command line functionality
+    if isinstance(args, str):
+        output = args
+    else:
+        if isinstance(args, argparse.Namespace):
+            args = vars(args)
+        if "config_path" not in args:
+            args["config_path"] = None
+        if args["output"] is None:
+            output = set_name_from_args(args)
+        else:
+            output = args["output"]
+
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
@@ -141,28 +283,32 @@ def write_dframe_stdout_file(
         else:
             raise SystemExit("Not possible to write arrow format to stdout")
     else:
-        if caller_logger and isinstance(dframe, pd.DataFrame) and dframe.empty:
-            caller_logger.warning("Empty dataframe being written to disk")
-        if caller_logger and not logstr:
-            caller_logger.info("Writing to file %s", str(output))
-        elif caller_logger and logstr:
-            caller_logger.info(logstr)
-        if isinstance(dframe, pd.DataFrame):
-            dframe.to_csv(output, index=index)
+        if args["config_path"] is None:
+            logger.debug("Export of dataframe no metadata")
+            write_dframe_to_file(dframe, output, index, caller_logger, logstr)
+
+        elif args["config_path"] is not None:
+            logger.debug("Export of dataframe with metadata")
+            write_dframe_and_meta_to_file(dframe, args)
         else:
-            pyarrow.feather.write_feather(dframe, dest=output)
+            logger.warning("No writing att all")
+    logger.debug("Written to %s", output)
+    return output
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:
     """Write a string (typically an include file string) to stdout
     or to a named file"""
+    logger.debug("String to write: |%s|", string)
+    logger.debug("Will be written to: %s", outputfilename)
     if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        print(string)
+        print(string, end=None)
+        logger.debug("Wrote to STDOUT")
     else:
         Path(outputfilename).write_text(string, encoding="utf-8")
-        print(f"Wrote to {outputfilename}")
+        logger.debug("Wrote to %s ", outputfilename)
 
 
 def parse_ecl_month(eclmonth: str) -> int:

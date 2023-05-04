@@ -103,13 +103,34 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output csv file. Use '-' to write to stdout. "
-            "Default 'well_connection_status.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="well_connection_status.csv",
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+):
+    """Read wellconnstatus data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        subcommand="wellconnstatus",
+    )
+    wellconnstatus_main(args)
 
 
 def wellconnstatus_main(args):
@@ -118,6 +139,4 @@ def wellconnstatus_main(args):
     eclfiles = EclFiles(args.DATAFILE)
 
     wellconnstatus_df = df(eclfiles)
-    write_dframe_stdout_file(
-        wellconnstatus_df, args.output, index=False, caller_logger=logger
-    )
+    write_dframe_stdout_file(wellconnstatus_df, args, index=False, caller_logger=logger)

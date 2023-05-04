@@ -288,8 +288,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help=("Name of output csv file. " "Use '-' for stdout."),
-        default="equil.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -307,6 +311,28 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> eclipse include file"""
     return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    keywords: List[str] = None,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        fipname (str, optional): Region parameter name of interest, default: FIPNUM
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        keywords=keywords,
+        subcommand="equil",
+    )
+    equil_main(args)
 
 
 def equil_main(args) -> None:
@@ -334,7 +360,7 @@ def equil_main(args) -> None:
         keywords = "-"
     common.write_dframe_stdout_file(
         equil_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Unique EQLNUMs: {eqlnums}, keywords: {keywords}",

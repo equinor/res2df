@@ -74,11 +74,32 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="faults.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        fipname (str, optional): Region parameter name of interest, default: FIPNUM
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath, config_path=config_path, output=None, subcommand="faults"
+    )
+    faults_main(args)
 
 
 def faults_main(args) -> None:
@@ -92,7 +113,7 @@ def faults_main(args) -> None:
     faults_df = df(deck)
     write_dframe_stdout_file(
         faults_df,
-        args.output,
+        args,
         index=False,
         caller_logger=logger,
         logstr=f"Wrote to {args.output}",

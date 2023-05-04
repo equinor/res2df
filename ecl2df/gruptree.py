@@ -174,7 +174,7 @@ def df(
     # This happens with WELSPECS if both GRUPTREE and BRANPROP is defined
     # at the same timestep. And when a node is redirected to a new parent node
     dframe = dframe.drop_duplicates(subset=["DATE", "CHILD", "KEYWORD"], keep="last")
-    print(dframe)
+    logger.debug(dframe.head())
     return dframe
 
 
@@ -397,8 +397,13 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. No CSV dump if empty",
-        default="",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+            + "No csv dump if empty"
+        ),
+        default=None,
     )
     parser.add_argument(
         "-p",
@@ -445,6 +450,30 @@ def prettyprint(dframe: pd.DataFrame) -> str:
     return output
 
 
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    startdate: str = None,
+):
+    """Read gruptree data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        pretty (bool): Pretty-print the tree structure
+        startdata (str): First schedule date if not defined in input file, YYYY-MM-DD (default: None)
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        prettyprint=False,  # This option is unneccessary when exporting to disk
+        startdate=startdate,
+        subcommand="gruptree",
+    )
+    gruptree_main(args)
+
+
 def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
@@ -452,7 +481,7 @@ def gruptree_main(args) -> None:
     )
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
-        sys.exit(0)
+
     eclfiles = EclFiles(args.DATAFILE)
     dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
@@ -461,4 +490,4 @@ def gruptree_main(args) -> None:
         else:
             logger.warning("No tree data to prettyprint")
     elif args.output:
-        write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+        write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

@@ -402,11 +402,56 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="pillars.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
+
+
+def export_w_metadata(
+    eclpath: str,
+    config_path: str,
+    region: str = "",
+    rstdates: str = "",
+    stackdates: bool = False,
+    soilcutoff: float = 0.5,
+    sgascutoff: float = 0.5,
+    swatcutoff: float = 0.5,
+    group: bool = False,
+):
+    """Read satfunc data from disk, write csv back to disk with metadata
+
+    Args:
+        eclpath (str): path to eclipse datafile
+        config_path (str): path to fmu config file
+        region (str): region parameter to separate by, empty string give no sep
+        rstdates (str): Point in time to grab restart data from,
+                either 'first' or 'last', 'all' or a date in YYYY-MM-DD format
+        stackdates (bool): ,
+        soilcutoff (float): default 0.5
+        sgascutoff (float): default 0.5,
+        swatcutoff: (float): default 0.5,
+        group (bool): default False,
+    """
+    args = argparse.Namespace(
+        DATAFILE=eclpath,
+        config_path=config_path,
+        output=None,
+        region=region,
+        rstdates=rstdates,
+        stackdates=stackdates,
+        soilcutoff=soilcutoff,
+        sgascutoff=sgascutoff,
+        swatcutoff=swatcutoff,
+        group=group,
+        subcommand="pillars",
+    )
+    pillars_main(args)
 
 
 def pillars_main(args) -> None:
@@ -440,6 +485,4 @@ def pillars_main(args) -> None:
     elif args.group:
         dframe = dframe.drop("PILLAR", axis=1).mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    common.write_dframe_stdout_file(
-        dframe, args.output, index=False, caller_logger=logger
-    )
+    common.write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

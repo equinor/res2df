@@ -23,6 +23,8 @@ REQUIREMENTS = [
     "pyarrow",
     "pyyaml>=5.1",
     "treelib",
+    "fmu-config",
+    "fmu-dataio",
 ]
 
 TEST_REQUIREMENTS = Path("test_requirements.txt").read_text().splitlines()

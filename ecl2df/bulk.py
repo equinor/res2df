@@ -1,3 +1,4 @@
+import sys
 import logging
 import argparse
 from pathlib import Path
@@ -73,6 +74,7 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
         for key, value in options.items():
             if key in standard_options:
                 standard_options[key] = value
+    logger.info("Running bulk export with options: %s", options)
     if include is None:
         include = SUBMODULES
     for submod_name in include:
@@ -89,9 +91,15 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
                 if param.kind is not Parameter.empty
                 and name not in {"eclpath", "config_path"}
             }
-            func(eclpath, config_path, **filtered_options)
-            logger.info("Export of %s data", submod_name)
-            # break
+            try:
+                func(eclpath, config_path, **filtered_options)
+                logger.info("Export of %s data", submod_name)
+            except Exception:
+                exp_type, _, _ = sys.exc_info()
+                logger.warning(
+                    "Exception %s while exporting %s", str(exp_type), submod_name
+                )
+
         else:
             logger.warning("This is not included %s", submod_name)
 
@@ -109,34 +117,79 @@ def glob_for_datafiles(path="eclipse/model/"):
     return Path(path).glob("*.DATA")
 
 
-def bulk_export_with_configfile(config_path):
+def get_ecl2csv_setting(ecl_config, keyword):
+    """Get value from ecl_config dict
+
+    Args:
+        ecl_config (dict, bool): dictionary of ecl2csv key, value pairs, or just bool
+        keyword (str): key in dictionary
+
+    Returns:
+        str, value: _description_
+    """
+    logger.debug("fetching %s", keyword)
+    setting = None
+    try:
+        setting = ecl_config.get(keyword, None)
+    except AttributeError:
+        logger.debug("ecl_config is bool.")
+    return setting
+
+
+def remove_numbers(string):
+    """Remove digits at end of string
+
+    Args:
+        string (str): a string
+
+    Returns:
+        string: string without digit at end
+    """
+    while string[-1].isdigit() or string.endswith("-"):
+        string = string[:-1]
+    return string
+
+
+def bulk_export_with_configfile(config_path, eclpath=None):
     """Export eclipse results controlled by config file
 
     Args:
         config_path (str): path to config file
     """
     config = yaml_load(config_path)
+    eclpaths = ()
+    datatypes = None
+    options = None
+    ecl_config = {}
     try:
         ecl_config = config["ecl2csv"]
-        try:
-            path = "eclipse/model/" + ecl_config["datafile"]
-            logging.debug("Path to use for search %s", path)
-            eclpaths = [path]
-            includes = ecl_config.get("datatypes", None)
-            logger.debug("User defined modules %s", includes)
-            options = ecl_config.get("options", None)
-            logger.debug("User defined options %s", options)
-        except (KeyError, AttributeError, TypeError):
+        datatypes = get_ecl2csv_setting(ecl_config, "datatypes")
+        options = get_ecl2csv_setting(ecl_config, "options")
+        eclpaths = get_ecl2csv_setting(ecl_config, "datafile")
+        if eclpath is not None:
+            eclpath = Path(eclpath)
+            # The complexity of the glob below is to
+            # deal with numbers not in ecl path
+            eclpaths = list(
+                list(
+                    eclpath.parent.glob(
+                        remove_numbers(eclpath.name.replace(eclpath.suffix, ""))
+                        + "*.DATA"
+                    )
+                )
+            )
+        else:
             eclpaths = glob_for_datafiles()
-            includes = None
-            options = None
-        logger.info("Data files to use: %s", eclpaths)
-        for eclpath in eclpaths:
-            logger.info("Working with %s", eclpath)
-            bulk_export(str(eclpath), config_path, includes, options)
+        logger.debug("datatypes: %s", datatypes)
+        logger.debug("options: %s", options)
+        logger.debug("datafiles %s", eclpaths)
 
     except KeyError:
-        logger.warning("No eclipse export set up, you will not get anything exported")
+        logger.warning("No export from ecl included in this setup")
+
+    for eclpath in eclpaths:
+        logger.info("Working with %s", eclpath)
+        bulk_export(str(eclpath), config_path, datatypes, options)
 
 
 def bulk_main(args):

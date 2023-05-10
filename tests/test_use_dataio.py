@@ -199,6 +199,13 @@ def test_bulk_export_from_config_w_settings():
     _assert_metadata_are_produced_and_are_correct("bulk", 3, path=REEK_R_0 / "share")
 
 
+def test_remove_numbers():
+    """Test utility func"""
+    string = "cadoodelo"
+    test_data = string + "--1239"
+    assert ecl2df.bulk.remove_numbers(test_data) == string
+
+
 def test_bulk_export_from_command_line(mocker):
     """Test bulk upload upload option from command line
 

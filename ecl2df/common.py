@@ -11,13 +11,13 @@ import signal
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
-
 import dateutil.parser
 import numpy as np
 import pandas as pd
 import pyarrow
 from fmu.config.utilities import yaml_load
 from fmu.dataio.dataio import ExportData
+from ._table_index import assign_table_index
 
 try:
     # pylint: disable=unused-import
@@ -227,18 +227,19 @@ def write_dframe_and_meta_to_file(
         logger.debug("Config allready a dictionary, no need to read it")
         config = args
     logger.debug(config.keys())
+    try:
+        table = table.reset_index()
+    except AttributeError:
+        logger.debug("No reset of index, arrow format")
     exp = ExportData(
         config=config,
         name=name,
         tagname=re.sub(r"\..*", "", tagname),
         content=content,
+        table_index=assign_table_index(tagname, table),
     )
-    try:
-        obj = table.reset_index()
-    except AttributeError:
-        obj = table
 
-    export_path = exp.export(obj)
+    export_path = exp.export(table)
     logger.debug("Exporting to %s", export_path)
 
 

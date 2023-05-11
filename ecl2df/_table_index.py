@@ -10,6 +10,7 @@ DEFINITIONS = {
     "equil": ["EQLNUM"],
     "compdat": ["WELL", "DATE", "DIR"],
     "faults": ["NAME", "FACE"],
+    "fipreports": ["DATE", "FIPNAME", "REGION"],
     "grid": ["GLOBAL_INDEX", "I", "J", "K"],
     "pillars": ["PILLAR"],
     "pvt": ["PVTNUM", "KEYWORD"],
@@ -38,8 +39,9 @@ def assign_table_index(tagname: str, table: Union[DataFrame, Table]):
     logger.debug("Submodule: %s, table_index: %s", tagname, table_index)
 
     try:
-        # Some datatypes the index is
-        available_columns = table.copy().reset_index().columns
+        available_columns = table.columns
+        if table.index.name is not None:
+            available_columns.append(table.index.name)
 
     except AttributeError:
         available_columns = table.column_names

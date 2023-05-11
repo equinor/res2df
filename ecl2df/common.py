@@ -228,7 +228,8 @@ def write_dframe_and_meta_to_file(
         config = args
     logger.debug(config.keys())
     try:
-        table = table.reset_index()
+        if table.index.name is not None:
+            table = table.reset_index()
     except AttributeError:
         logger.debug("No reset of index, arrow format")
     exp = ExportData(

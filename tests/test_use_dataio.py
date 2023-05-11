@@ -7,6 +7,8 @@ import pyarrow.feather as pf
 from fmu.config.utilities import yaml_load
 import ecl2df
 from ecl2df.common import write_dframe_and_meta_to_file
+import pytest
+import importlib
 
 TESTDIR = Path(__file__).absolute().parent
 REEK_R_0 = TESTDIR / "data/reek/"
@@ -73,99 +75,26 @@ def test_write_dframe_and_meta_to_file():
     _assert_metadata_are_produced_and_are_correct("summary")
 
 
-def test_write_through_summary_main(tmp_path):
-    """Test summary main entry point"""
+@pytest.mark.parametrize(
+    "submod_name,",
+    (
+        submod
+        for submod in ecl2df.constants.SUBMODULES
+        if submod not in ("vfp", "wellcompletiondata")
+    ),
+)
+# vfp and wellcompletion data cannot be testing that easily
+# no vfp data for Reek, no zonemap available for wellcompletion
+def test_export_w_metadata_functions(tmp_path, submod_name):
+    """Test main entry point in each submodule
+
+    Args:
+        tmp_path (_type_): _description_
+    """
     os.chdir(tmp_path)
-    ecl2df.summary.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("summary")
-
-
-def test_write_through_satfunc_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.satfunc.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("satfunc")
-
-
-def test_write_through_rft_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.rft.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("rft")
-
-
-def test_write_through_pvt_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.pvt.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("pvt")
-
-
-def test_write_through_pillar_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.pillars.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("pillars")
-
-
-def test_write_through_nnc_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.nnc.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("nnc")
-
-
-def test_write_through_grid_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.grid.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("grid")
-
-
-def test_write_through_gruptree_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.gruptree.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    # No gruptree data available for reek, so just checking that
-    # nothing fails
-    # _assert_metadata_are_produced_and_are_correct("gruptree")
-
-
-def test_write_through_fipreports_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.fipreports.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("fipreports")
-
-
-def test_write_through_faults_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.faults.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("faults")
-
-
-def test_write_through_equil_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.equil.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("equil")
-
-
-def test_write_through_compdat_main(tmp_path):
-    """Test summary main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.compdat.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("compdat")
-
-
-def test_write_through_vfp_main_no_vfp_data(tmp_path, caplog):
-    # Only test to be done, because no vfp data available in test data
-    """Test vfp main entry point"""
-    os.chdir(tmp_path)
-    ecl2df.vfp.export_w_metadata(REEK_DATA_FILE, CONFIG_PATH)
-    assert "Nothing to export, no vfp's included?" in caplog.text
-    # _assert_metadata_are_produced_and_are_correct("vfp")
+    func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
+    func(REEK_DATA_FILE, CONFIG_PATH)
+    _assert_metadata_are_produced_and_are_correct(submod_name)
 
 
 def test_bulk_export(tmp_path):

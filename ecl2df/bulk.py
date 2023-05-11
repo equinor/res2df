@@ -78,10 +78,6 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
     if include is None:
         include = SUBMODULES
     for submod_name in include:
-        if submod_name in ["bulk"]:
-            # vfp is different to all the others
-            # bulk is this one
-            continue
         if submod_name in include:
             func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
             sig_items = signature(func).parameters.items()

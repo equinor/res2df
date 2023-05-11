@@ -479,9 +479,6 @@ def gruptree_main(args) -> None:
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    if not args.output and not args.prettyprint:
-        print("Nothing to do. Set --output or --prettyprint")
-
     eclfiles = EclFiles(args.DATAFILE)
     dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
@@ -489,5 +486,5 @@ def gruptree_main(args) -> None:
             print(prettyprint(dframe))
         else:
             logger.warning("No tree data to prettyprint")
-    elif args.output:
+    else:
         write_dframe_stdout_file(dframe, args, index=False, caller_logger=logger)

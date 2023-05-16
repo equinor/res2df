@@ -220,6 +220,8 @@ def write_dframe_and_meta_to_file(
         dframe (Union[pd.DataFrame, pyarrow.Table]): the data
         args (dict): input arguments for including metadata
     """
+    date_col = "DATE"
+    time_format = "%Y-%m-%d"
     name, tagname, content = get_names_from_args(args)
     try:
         config = yaml_load(args["config_path"])
@@ -230,6 +232,9 @@ def write_dframe_and_meta_to_file(
     try:
         if table.index.name is not None:
             table = table.reset_index()
+        if date_col in table:
+            table[date_col] = pd.to_datetime(table[date_col]).dt.strftime(time_format)
+            table.attrs[date_col] = "Time"
     except AttributeError:
         logger.debug("No reset of index, arrow format")
     exp = ExportData(
@@ -241,7 +246,8 @@ def write_dframe_and_meta_to_file(
     )
 
     export_path = exp.export(table)
-    logger.debug("Exporting to %s", export_path)
+    logger.debug("Exported to %s", export_path)
+    return export_path
 
 
 def write_dframe_stdout_file(
@@ -263,19 +269,23 @@ def write_dframe_stdout_file(
         caller_logger: Used if not stdout
         logstr: Logged if not stdout.
     """
+    if len(dframe) == 0:
+        logger.warning("There is no data available, no results produced")
     # If not defined metata is set here as a temporary fix, later it should be
     # set through command line functionality
+
     if isinstance(args, str):
-        output = args
+        args = {"output": args}
     else:
         if isinstance(args, argparse.Namespace):
             args = vars(args)
-        if "config_path" not in args:
-            args["config_path"] = None
-        if args["output"] is None:
-            output = set_name_from_args(args)
-        else:
-            output = args["output"]
+
+    if "config_path" not in args:
+        args["config_path"] = None
+    if args["output"] is None:
+        output = set_name_from_args(args)
+    else:
+        output = args["output"]
 
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:

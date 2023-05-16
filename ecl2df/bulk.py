@@ -91,10 +91,8 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
                 func(eclpath, config_path, **filtered_options)
                 logger.info("Export of %s data", submod_name)
             except Exception:
-                exp_type, _, _ = sys.exc_info()
-                logger.warning(
-                    "Exception %s while exporting %s", str(exp_type), submod_name
-                )
+                _, exp_mess, _ = sys.exc_info()
+                logger.warning("Exception %s while exporting %s", exp_mess, submod_name)
 
         else:
             logger.warning("This is not included %s", submod_name)
@@ -129,6 +127,7 @@ def get_ecl2csv_setting(ecl_config, keyword):
         setting = ecl_config.get(keyword, None)
     except AttributeError:
         logger.debug("ecl_config is bool.")
+    logger.debug("Returning ecl setting %s", setting)
     return setting
 
 
@@ -153,15 +152,17 @@ def bulk_export_with_configfile(config_path, eclpath=None):
         config_path (str): path to config file
     """
     config = yaml_load(config_path)
+    print(config["ecl2csv"])
     eclpaths = ()
     datatypes = None
     options = None
     ecl_config = {}
     try:
         ecl_config = config["ecl2csv"]
+        print(ecl_config)
         datatypes = get_ecl2csv_setting(ecl_config, "datatypes")
         options = get_ecl2csv_setting(ecl_config, "options")
-        eclpaths = get_ecl2csv_setting(ecl_config, "datafile")
+        eclpath = get_ecl2csv_setting(ecl_config, "datafile")
         if eclpath is not None:
             eclpath = Path(eclpath)
             # The complexity of the glob below is to
@@ -174,11 +175,14 @@ def bulk_export_with_configfile(config_path, eclpath=None):
                     )
                 )
             )
+
         else:
+            print("Have to look for the files")
             eclpaths = glob_for_datafiles()
+        # print(list(eclpaths))
         logger.debug("datatypes: %s", datatypes)
         logger.debug("options: %s", options)
-        logger.debug("datafiles %s", eclpaths)
+        # logger.debug("datafiles %s", eclpaths)
 
     except KeyError:
         logger.warning("No export from ecl included in this setup")

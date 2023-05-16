@@ -6,7 +6,6 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 
 import argparse
 import logging
-import sys
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
@@ -524,11 +523,6 @@ def vfp_main(args) -> None:
     eclfiles = EclFiles(args.DATAFILE)
     if args.arrow:
         logger.debug("Option: export arrow")
-        outputfile = args.output
-        try:
-            outputfile.replace(".arrow", "")
-        except AttributeError:
-            logger.warning("String is most likely None, cannot replace")
         vfp_arrow_tables = pyarrow_tables(
             eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
@@ -536,11 +530,12 @@ def vfp_main(args) -> None:
             table_number = int(
                 vfp_table.schema.metadata[b"TABLE_NUMBER"].decode("utf-8")
             )
-            vfp_filename = f"{outputfile}_{str(table_number)}.arrow"
+            args.output = f"vfp_{str(table_number)}.arrow"
             common.write_dframe_stdout_file(
-                vfp_table, vfp_filename, index=False, caller_logger=logger
+                vfp_table, args, index=False, caller_logger=logger
             )
             logger.info("Parsed file %s for vfp.dfs_arrow", args.DATAFILE)
+            exit()
     else:
         logger.debug("Option: export csv")
         dframe = df(
@@ -549,8 +544,7 @@ def vfp_main(args) -> None:
         logger.debug(dframe.head())
         if dframe.empty:
             logger.warning("Nothing to export, no vfp's included?")
-        if args.output:
-            logger.debug("Here we are!!!")
+        else:
             common.write_dframe_stdout_file(
                 dframe, args, index=False, caller_logger=logger
             )

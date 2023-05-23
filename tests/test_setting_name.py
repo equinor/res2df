@@ -3,7 +3,8 @@
 import os
 from pathlib import Path
 import pytest
-from ecl2df.common import get_names_from_args, get_names_from_args, set_name_from_args
+import ecl2df
+from ecl2df.common import get_names_from_args, set_name_from_args
 from ecl2df import ecl2csv
 
 TESTDIR = Path(__file__).absolute().parent
@@ -67,48 +68,37 @@ def test_set_name_from_args(name_args):
     assert name == correct_name, f"Name is {name}, should be {correct_name}"
 
 
-@pytest.mark.integration
-def test_summmary_name(mocker, tmp_path):
+@pytest.mark.parametrize(
+    "submod_name",
+    (
+        submod
+        for submod in ecl2df.constants.SUBMODULES
+        if submod not in ("vfp", "wellcompletiondata")
+    ),
+)
+#  vfp and wellcompletion data cannot be testing that easily
+# no vfp data for Reek, no zonemap available for wellcompletion
+def test_command_line_name_setting(mocker, tmp_path, submod_name):
     """Test that the command line utility ecl2csv exports the right names"""
     os.chdir(tmp_path)
-    module_names = [
-        "compdat",
-        "equil",
-        "faults",
-        "fipreports",
-        "grid",
-        # "grouptree",
-        "nnc",
-        "pillars",
-        "pvt",
-        "rft",
-        "summary",
-        "satfunc",
-        "trans",
-        "wcon",
-        "wellcompletiondata",
-        "wellconnstatus",
-    ]
-    for module_name in module_names:
-        print(module_name)
-        mocker.patch(
-            "sys.argv",
-            [
-                "ecl2csv",
-                module_name,
-                REEK,
-            ],
-        )
-        ecl2csv.main()
-        outpath = tmp_path.glob("*.csv")
-        file_names = list(outpath)
-        assert len(file_names) == 1, "Produced more than one file"
-        file_name = file_names[0]
-        print(f" file name in test {file_name}")
-        name, tagname = file_name.name.replace(file_name.suffix, "").split("--")
-        file_name.unlink()
-        print(name)
-        print(tagname)
-        correct_name = "2_R001_REEK"
-        assert name == correct_name, f"{name} is not as planned {correct_name}"
-        assert tagname == module_name, f"tag {tagname} not as planned {module_name}"
+    mocker.patch(
+        "sys.argv",
+        [
+            "ecl2csv",
+            submod_name,
+            REEK,
+        ],
+    )
+    ecl2csv.main()
+    outpath = tmp_path.glob("*.csv")
+    file_names = list(outpath)
+    assert len(file_names) == 1, "Produced more than one file"
+    file_name = file_names[0]
+    print(f" file name in test {file_name}")
+    name, tagname = file_name.name.replace(file_name.suffix, "").split("--")
+    file_name.unlink()
+    print(name)
+    print(tagname)
+    correct_name = "2_R001_REEK"
+    assert name == correct_name, f"{name} is not as planned {correct_name}"
+    assert tagname == submod_name, f"tag {tagname} not as planned {submod_name}"

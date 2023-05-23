@@ -1315,4 +1315,4 @@ stratigraphy:
     name: Below
 
 ecl2csv:
-  datafile: 2_R001_REEK-0.DATA
+  datafile: /private/dbs/git/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA

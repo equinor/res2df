@@ -6,9 +6,10 @@ import pandas as pd
 import pyarrow.feather as pf
 from fmu.config.utilities import yaml_load
 import ecl2df
-from ecl2df.common import write_dframe_and_meta_to_file
 import pytest
 import importlib
+from ecl2df import bulk
+from ecl2df.common import write_dframe_and_meta_to_file
 
 TESTDIR = Path(__file__).absolute().parent
 REEK_R_0 = TESTDIR / "data/reek/"
@@ -32,10 +33,10 @@ def _assert_string(string_to_assert, answer):
 
 
 def _assert_metadata_are_produced_and_are_correct(
-    tagname, correct_len=1, path="share/"
+    tagname, correct_len=1, path=Path(".")
 ):
     """Assert that two files are produced, and that metadata are correct"""
-    share_folder = Path(path)
+    share_folder = path / "share"
     files = list(share_folder.glob("results/tables/[!.]*.*"))
     print(files)
     for file_name in files:
@@ -47,6 +48,8 @@ def _assert_metadata_are_produced_and_are_correct(
             print(pd.read_csv(file_path).head())
         except UnicodeDecodeError:
             print(pf.read_feather(file_path).head())
+        except pd.errors.EmptyDataError:
+            print(f"{file_path} is empty")
 
         meta = yaml_load(file_path.parent / ("." + file_path.name + ".yml"))
 
@@ -61,8 +64,9 @@ def _assert_metadata_are_produced_and_are_correct(
     assert len(files) == correct_len, len_str
 
 
-def test_write_dframe_and_meta_to_file():
+def test_write_dframe_and_meta_to_file(tmp_path):
     """Test function write_dframe_and_meta_to_file"""
+    os.chdir(tmp_path)
     test = pd.DataFrame({"DATE": [1, 2, 3], "FOPT": [0, 1, 2]})
     args = {
         "DATAFILE": REEK_DATA_FILE,
@@ -72,7 +76,7 @@ def test_write_dframe_and_meta_to_file():
     }
 
     write_dframe_and_meta_to_file(test, args)
-    _assert_metadata_are_produced_and_are_correct("summary")
+    _assert_metadata_are_produced_and_are_correct("summary", path=tmp_path)
 
 
 @pytest.mark.parametrize(
@@ -85,16 +89,41 @@ def test_write_dframe_and_meta_to_file():
 )
 # vfp and wellcompletion data cannot be testing that easily
 # no vfp data for Reek, no zonemap available for wellcompletion
-def test_export_w_metadata_functions(tmp_path, submod_name):
-    """Test main entry point in each submodule
+class TestSingles:
+    """Test functions for exporting one by one"""
 
-    Args:
-        tmp_path (_type_): _description_
-    """
-    os.chdir(tmp_path)
-    func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
-    func(REEK_DATA_FILE, CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct(submod_name)
+    def test_export_w_metadata_functions(self, tmp_path, submod_name):
+        """Test main entry point in each submodule
+
+        Args:
+            tmp_path (pathlib.path): temp path for tests
+            submod_name (str): name of submodule
+        """
+        os.chdir(tmp_path)
+        func = importlib.import_module("ecl2df." + submod_name).export_w_metadata
+        func(REEK_DATA_FILE, CONFIG_PATH)
+        _assert_metadata_are_produced_and_are_correct(submod_name)
+
+    def test_ecl2csv_command_line_w_metadata(self, mocker, tmp_path, submod_name):
+        """Test function access through ecl2csv command line tool
+
+        Args:
+            mocker (pytest.mocker): the enabler of mocking
+            tmp_path (pathlib.path): temp path for tests
+            submod_name (str): name of submodule
+        """
+        os.chdir(tmp_path)
+        mocker.patch(
+            "sys.argv",
+            [
+                "ecl2csv",
+                "--config_path",
+                CONFIG_PATH,
+                submod_name,
+                REEK_DATA_FILE,
+            ],
+        )
+        _assert_metadata_are_produced_and_are_correct(submod_name)
 
 
 def test_bulk_export(tmp_path):
@@ -111,21 +140,21 @@ def test_limiting_bulk_export(tmp_path):
     _assert_metadata_are_produced_and_are_correct("rft")
 
 
-def test_bulk_export_from_config():
+def test_bulk_export_from_config(tmp_path):
     """Test bulk upload with config only"""
-    os.chdir(REEK_R_0)
-    ecl2df.bulk.bulk_export_with_configfile(CONFIG_PATH)
-    _assert_metadata_are_produced_and_are_correct("bulk", 15, path=REEK_R_0 / "share")
+    os.chdir(tmp_path)
+    ecl2df.bulk.bulk_export_with_configfile(CONFIG_PATH_W_PATH)
+    _assert_metadata_are_produced_and_are_correct("bulk", 16, path=tmp_path)
 
 
-def test_bulk_export_from_config_w_settings():
+def test_bulk_export_from_config_w_settings(tmp_path):
     """Test bulk upload with config only"""
-    os.chdir(REEK_R_0)
+    os.chdir(tmp_path)
     ecl2df.bulk.bulk_export_with_configfile(CONFIG_PATH_W_SETTINGS)
     # ecl2df.bulk.bulk_export_with_configfile(
     #     "/private/dbs/git/ecl2df/tests/data/reek/fmuconfig/output/global_variables_w_eclpath_and_extras.yml"
     # )
-    _assert_metadata_are_produced_and_are_correct("bulk", 3, path=REEK_R_0 / "share")
+    _assert_metadata_are_produced_and_are_correct("bulk", 3, path=tmp_path)
 
 
 def test_remove_numbers():
@@ -135,18 +164,18 @@ def test_remove_numbers():
     assert ecl2df.bulk.remove_numbers(test_data) == string
 
 
-def test_bulk_export_from_command_line(mocker):
+def test_bulk_export_from_command_line(mocker, tmp_path):
     """Test bulk upload upload option from command line
 
     Args:
         mocker (func): mocking function for mimicing command line
     """
-    os.chdir(REEK_R_0)
+    os.chdir(tmp_path)
     mocker.patch(
         "sys.argv", ["ecl2csv", "--config_path", str(CONFIG_PATH_W_PATH), "bulk"]
     )
     ecl2df.ecl2csv.main()
-    _assert_metadata_are_produced_and_are_correct("bulk", 15, path=REEK_R_0 / "share")
+    _assert_metadata_are_produced_and_are_correct("bulk", 16, path=tmp_path)
 
 
 if __name__ == "__main__":

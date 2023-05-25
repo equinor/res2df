@@ -92,7 +92,9 @@ def bulk_export(eclpath, config_path, include: List = None, options: dict = None
                 logger.info("Export of %s data", submod_name)
             except Exception:
                 _, exp_mess, _ = sys.exc_info()
-                logger.warning("Exception %s while exporting %s", exp_mess, submod_name)
+                logger.warning(
+                    "Exception :%s while exporting %s", exp_mess, submod_name
+                )
 
         else:
             logger.warning("This is not included %s", submod_name)
@@ -140,6 +142,7 @@ def remove_numbers(string):
     Returns:
         string: string without digit at end
     """
+    logger.debug("Will remove numbers from %s", string)
     while string[-1].isdigit() or string.endswith("-"):
         string = string[:-1]
     return string
@@ -162,9 +165,17 @@ def bulk_export_with_configfile(config_path, eclpath=None):
         print(ecl_config)
         datatypes = get_ecl2csv_setting(ecl_config, "datatypes")
         options = get_ecl2csv_setting(ecl_config, "options")
-        eclpath = get_ecl2csv_setting(ecl_config, "datafile")
+
         if eclpath is not None:
             eclpath = Path(eclpath)
+        else:
+            eclpath = get_ecl2csv_setting(ecl_config, "datafile")
+        logger.debug("eclpath: %s", eclpath)
+
+        if eclpath is None:
+            print("Have to look for the files")
+            eclpaths = glob_for_datafiles()
+        else:
             # The complexity of the glob below is to
             # deal with numbers not in ecl path
             eclpaths = list(
@@ -176,13 +187,10 @@ def bulk_export_with_configfile(config_path, eclpath=None):
                 )
             )
 
-        else:
-            print("Have to look for the files")
-            eclpaths = glob_for_datafiles()
         # print(list(eclpaths))
         logger.debug("datatypes: %s", datatypes)
         logger.debug("options: %s", options)
-        # logger.debug("datafiles %s", eclpaths)
+        logger.debug("datafiles %s", eclpaths)
 
     except KeyError:
         logger.warning("No export from ecl included in this setup")

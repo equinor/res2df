@@ -98,14 +98,17 @@ def test_write_dframe_file(tmp_path):
     """Test that we can write dataframes to files."""
     os.chdir(tmp_path)
     dframe = pd.DataFrame([{"foo": "bar"}])
-    common.write_dframe_stdout_file(dframe, "foo.csv")
-    pd.testing.assert_frame_equal(pd.read_csv("foo.csv"), dframe)
+    out_name = "foo.csv"
+    args = {"output": out_name}
+    common.write_dframe_stdout_file(dframe, args)
+    pd.testing.assert_frame_equal(pd.read_csv(out_name), dframe)
 
 
 def test_write_dframe_stdout(capsys):
     """Test that we can write dataframes to stdout."""
     dframe = pd.DataFrame([{"foo": "bar"}])
-    common.write_dframe_stdout_file(dframe, common.MAGIC_STDOUT)
+    args = {"output": common.MAGIC_STDOUT}
+    common.write_dframe_stdout_file(dframe, args)
     assert "foo\nbar" in capsys.readouterr().out
 
 

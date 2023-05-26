@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import pytest
 import ecl2df
-from ecl2df.common import get_names_from_args, set_name_from_args
+from ecl2df.common import find_name_components, make_output_name
 from ecl2df import ecl2csv
 
 TESTDIR = Path(__file__).absolute().parent
@@ -20,22 +20,25 @@ def _fixture_arg_names():
     """
     _keep_name = "TESTING"
     _subcommand = "summary"
-    _args = {"DATAFILE": f"{_keep_name}-123.DATA", "subcommand": _subcommand}
+    _args = {
+        "DATAFILE": f"{_keep_name}-123.DATA",
+        "subcommand": _subcommand,
+        "output": None,
+    }
 
     return _keep_name, _subcommand, _args
 
 
-def test_get_name_from_args(name_args):
+def test_find_name_components(name_args):
     """Test function get_name_from_args
 
     Args:
         name_args (tuple): name, submodule name, and args dict
     """
     keep_name, subcommand, args = name_args
-    name, tagname, content = get_names_from_args(args)
+    name, tagname = find_name_components(args)
     assert name == keep_name, f"Name is {name}, but should be {keep_name}"
     assert tagname == subcommand, f"tagname is {tagname}, but should be {subcommand}"
-    assert content == "timeseries", f"Content is {content}, but should be timeseries"
 
 
 def test_set_name_from_eclbase():
@@ -47,11 +50,12 @@ def test_set_name_from_eclbase():
     args = {
         "subcommand": "mycommand",
         "DATAFILE": "/scratch/fmu/dbs/drogon_ahm_future-2023-05-02/realization-0/iter-0/eclipse/model/DROGON-0",
+        "output": None,
     }
 
     correct_name = "DROGON"
     correct_tag = "mycommand"
-    name, tag, _ = get_names_from_args(args)
+    name, tag = find_name_components(args)
     assert name == correct_name, f"Name is {name}, should be {correct_name}"
     assert tag == correct_tag, f"Tag is {tag}, should be {correct_tag}"
 
@@ -64,7 +68,7 @@ def test_set_name_from_args(name_args):
     """
     keep_name, subcommand, args = name_args
     correct_name = f"{keep_name}--{subcommand}.csv"
-    name = set_name_from_args(args)
+    name = make_output_name(args)
     assert name == correct_name, f"Name is {name}, should be {correct_name}"
 
 

@@ -665,7 +665,15 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--date", type=str, help="Restrict data to one date, YYYY-MM-DD", default=None
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Name of output CSV file.", default="rft.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Debug mode")
@@ -682,6 +690,7 @@ def rft_main(args) -> None:
         eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")
     else:
         eclfiles = EclFiles(args.DATAFILE)
+
     rft_df = df(eclfiles, wellname=args.wellname, date=args.date)
     if rft_df.empty:
         if args.wellname is not None or args.date is not None:
@@ -689,7 +698,7 @@ def rft_main(args) -> None:
         else:
             logger.error("No data found. Bug?")
         return
-    write_dframe_stdout_file(rft_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(rft_df, vars(args), index=False, caller_logger=logger)
 
 
 # Vector  Description

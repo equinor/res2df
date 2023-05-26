@@ -166,8 +166,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="satfuncs.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -213,7 +217,7 @@ def satfunc_main(args) -> None:
         keywords = "-"
     write_dframe_stdout_file(
         satfunc_df,
-        args.output,
+        vars(args),
         index=False,
         caller_logger=logger,
         logstr=f"Unique SATNUMs: {satnums}, saturation keywords: {keywords}",

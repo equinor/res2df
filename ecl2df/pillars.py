@@ -402,8 +402,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file.",
-        default="pillars.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -441,5 +445,5 @@ def pillars_main(args) -> None:
         dframe = dframe.drop("PILLAR", axis=1).mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
     common.write_dframe_stdout_file(
-        dframe, args.output, index=False, caller_logger=logger
+        dframe, vars(args), index=False, caller_logger=logger
     )

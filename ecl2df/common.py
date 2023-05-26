@@ -114,9 +114,65 @@ NUM2ECLMONTH = {num: month for month, num in ECLMONTH2NUM.items()}
 logger: logging.Logger = logging.getLogger(__name__)
 
 
+def find_name_components(args: dict) -> tuple:
+    """Fetch name components from input arguments
+
+    Args:
+        args (dict): the input
+
+    Returns:
+        tuple: the name components
+    """
+
+    if args["output"] == "-":
+        base_name = "-"
+        tagname = None
+    elif args["output"] is not None:
+        base_name = args["output"]
+        tagname = None
+    else:
+        try:
+            file_name = Path(args["DATAFILE"])
+        except KeyError:
+            file_name = Path(args["PRTFILE"])
+
+        base_name = file_name.name.replace(file_name.suffix, "")
+        # if no suffix supplied
+        while base_name[-1].isdigit() or base_name.endswith("-"):
+            base_name = base_name[:-1]
+        tagname = args["subcommand"]
+    logger.debug("Returning %s and %s", base_name, tagname)
+    return base_name, tagname
+
+
+def make_output_name(args: dict) -> str:
+    """Make file output name from arguments
+
+    Args:
+        args (dict): input arguments
+
+    Returns:
+        str: the name of the output file
+    """
+    logger.debug("Here are the args %s", args)
+    name, tagname = find_name_components(args)
+
+    if name == "-":
+        output_name = "-"
+    elif name is not None and tagname is None:
+        output_name = name
+    else:
+        if args.get("arrow", False):
+            suffix = ".arrow"
+        else:
+            suffix = ".csv"
+        output_name = f"{name}--{tagname}{suffix}"
+    return output_name
+
+
 def write_dframe_stdout_file(
     dframe: Union[pd.DataFrame, pyarrow.Table],
-    output: str,
+    input_args: dict,
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
     logstr: Optional[str] = None,
@@ -133,6 +189,7 @@ def write_dframe_stdout_file(
         caller_logger: Used if not stdout
         logstr: Logged if not stdout.
     """
+    output = make_output_name(input_args)
     if output == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)

@@ -202,7 +202,15 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         default="FIPNUM",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Output CSV filename", default="outflow.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Debug mode for logging")
@@ -219,4 +227,4 @@ def fipreports_main(args) -> None:
     else:
         prtfile = EclFiles(args.PRTFILE).get_prtfilename()
     dframe = df(prtfile, args.fipname)
-    write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(dframe, vars(args), index=False, caller_logger=logger)

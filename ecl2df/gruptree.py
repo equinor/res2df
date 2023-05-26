@@ -397,8 +397,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. No CSV dump if empty",
-        default="",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-p",
@@ -450,9 +454,7 @@ def gruptree_main(args) -> None:
     logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    if not args.output and not args.prettyprint:
-        print("Nothing to do. Set --output or --prettyprint")
-        sys.exit(0)
+
     eclfiles = EclFiles(args.DATAFILE)
     dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
@@ -460,5 +462,5 @@ def gruptree_main(args) -> None:
             print(prettyprint(dframe))
         else:
             logger.warning("No tree data to prettyprint")
-    elif args.output:
-        write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)
+    else:
+        write_dframe_stdout_file(dframe, vars(args), index=False, caller_logger=logger)

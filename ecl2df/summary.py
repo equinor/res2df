@@ -864,9 +864,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output file. Use '-' to write to stdout. " "Default 'summary.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="summary.csv",
+        default=None,
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")
     parser.add_argument(
@@ -919,7 +921,7 @@ def summary_main(args) -> None:
     if args.arrow:
         sum_df = _df2pyarrow(sum_df)
 
-    write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
+    write_dframe_stdout_file(sum_df, vars(args), index=True, caller_logger=logger)
 
 
 def summary_reverse_main(args) -> None:

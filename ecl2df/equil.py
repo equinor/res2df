@@ -284,12 +284,17 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
             fill with arguments
     """
     parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
+
     parser.add_argument(
         "-o",
         "--output",
         type=str,
-        help=("Name of output csv file. " "Use '-' for stdout."),
-        default="equil.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "-k",
@@ -334,7 +339,7 @@ def equil_main(args) -> None:
         keywords = "-"
     common.write_dframe_stdout_file(
         equil_df,
-        args.output,
+        vars(args),
         index=False,
         caller_logger=logger,
         logstr=f"Unique EQLNUMs: {eqlnums}, keywords: {keywords}",

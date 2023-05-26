@@ -191,7 +191,15 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         help="Only dump vertical (along pillars) connections",
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Name of output csv file.", default="nnc.csv"
+        "-o",
+        "--output",
+        type=str,
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -283,9 +291,7 @@ def nnc_main(args) -> None:
     nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(
         nncdf,
-        args.output,
+        vars(args),
         index=False,
         caller_logger=logger,
-        logstr=f"Wrote to {args.output}",
     )
-    nncdf.to_csv(args.output, index=False)

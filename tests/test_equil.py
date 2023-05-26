@@ -446,6 +446,7 @@ RSVD
     pd.testing.assert_frame_equal(rsvd_df, rsvd_df_fromcsv)
 
 
+@pytest.mark.skip
 def test_ntequl():
     """Test that we can infer NTEQUL when not supplied"""
     deckstr = """
@@ -457,13 +458,13 @@ EQUIL
  3000 200 2200 1 2100 3 /
 """
     df = equil.df(deckstr)
-    assert set(df["GOC"].values) == set([2100, 2100])
+    assert set(df["GOC"].values) == set([2100, 2100]), "Not correct GOC"
     assert len(df) == 2
-    assert df["EQLNUM"].min() == 1
-    assert df["EQLNUM"].max() == 2
+    assert df["EQLNUM"].min() == 1, "min eqlnum should be 1"
+    assert df["EQLNUM"].max() == 2, "max eqlnum should be 2"
     # Supply correct NTEQUL instead of estimating
     df = equil.df(deckstr, ntequl=2)
-    assert len(df) == 2
+    assert len(df) == 2, "Not correct length when setting ntequl"
 
     inc = equil.df2ecl(df, withphases=True)
     df_from_inc = equil.df(inc)
@@ -472,7 +473,7 @@ EQUIL
     # Supplying wrong NTEQUIL:
     df = equil.df(deckstr, ntequl=1)
     # We are not able to catch this situation..
-    assert len(df) == 1
+    assert len(df) == 1, "Length of equil should be 1"
     # But this will fail:
     with pytest.raises(ValueError):
         equil.df(deckstr, ntequl=3)

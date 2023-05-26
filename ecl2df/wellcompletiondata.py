@@ -263,10 +263,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output csv file. Use '-' to write to stdout. "
-            "Default 'well_completion_data.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="well_completion_data",
+        default=None,
     )
     parser.add_argument(
         "--use_wellconnstatus",
@@ -305,5 +306,5 @@ def wellcompletiondata_main(args):
         wellcompletiondata_df = _df2pyarrow(wellcompletiondata_df)
 
     write_dframe_stdout_file(
-        wellcompletiondata_df, args.output, index=False, caller_logger=logger
+        wellcompletiondata_df, vars(args), index=False, caller_logger=logger
     )

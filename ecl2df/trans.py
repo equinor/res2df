@@ -295,8 +295,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. Use '-' for stdout",
-        default="trans.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     return parser
 
@@ -318,4 +322,4 @@ def trans_main(args):
         addnnc=args.nnc,
     )
 
-    write_dframe_stdout_file(trans_df, args.output, index=False, caller_logger=logger)
+    write_dframe_stdout_file(trans_df, vars(args), index=False, caller_logger=logger)

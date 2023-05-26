@@ -103,10 +103,11 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--output",
         type=str,
         help=(
-            "Name of output csv file. Use '-' to write to stdout. "
-            "Default 'well_connection_status.csv'"
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
         ),
-        default="well_connection_status.csv",
+        default=None,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
@@ -116,8 +117,7 @@ def wellconnstatus_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_ecl2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
-
     wellconnstatus_df = df(eclfiles)
     write_dframe_stdout_file(
-        wellconnstatus_df, args.output, index=False, caller_logger=logger
+        wellconnstatus_df, vars(args), index=False, caller_logger=logger
     )

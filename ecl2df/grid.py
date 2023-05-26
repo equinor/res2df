@@ -559,8 +559,12 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. Use '-' for stdout.",
-        default="eclgrid.csv",
+        help=(
+            "Override name of output csv file.\n"
+            + "Otherwise name is derived from datafile and datatype.\n"
+            + "Use '-' for stdout."
+        ),
+        default=None,
     )
     parser.add_argument(
         "--stackdates",
@@ -774,5 +778,5 @@ def grid_main(args) -> None:
     if args.arrow:
         grid_df = _df2pyarrow(grid_df)
     common.write_dframe_stdout_file(
-        grid_df, args.output, index=False, caller_logger=logger
+        grid_df, vars(args), index=False, caller_logger=logger
     )

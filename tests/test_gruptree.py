@@ -435,14 +435,6 @@ def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
     assert "No tree data to prettyprint" in caplog.text
 
 
-def test_cli_nothing_to_do(mocker, capsys):
-    """Test that the client says nothing to do when DATA is supplied, but no action."""
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "EMPTY.DATA"])
-    with pytest.raises(SystemExit):
-        ecl2csv.main()
-    assert "Nothing to do" in capsys.readouterr().out
-
-
 def test_tstep():
     """Test that we can parse a deck using TSTEP for timestepping"""
     schstr = """

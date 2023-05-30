@@ -2,10 +2,12 @@
 """
 import os
 from pathlib import Path
+
 import pytest
-import ecl2df
-from ecl2df.common import find_name_components, make_output_name
+
 from ecl2df import ecl2csv
+from ecl2df.common import find_name_components, make_output_name
+from ecl2df.constants import SUBMODULES
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -74,11 +76,7 @@ def test_set_name_from_args(name_args):
 
 @pytest.mark.parametrize(
     "submod_name",
-    (
-        submod
-        for submod in ecl2df.constants.SUBMODULES
-        if submod not in ("vfp", "wellcompletiondata")
-    ),
+    (submod for submod in SUBMODULES if submod not in ("vfp", "wellcompletiondata")),
 )
 #  vfp and wellcompletion data cannot be testing that easily
 # no vfp data for Reek, no zonemap available for wellcompletion

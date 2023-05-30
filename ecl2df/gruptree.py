@@ -4,7 +4,6 @@ import argparse
 import collections
 import datetime
 import logging
-import sys
 import warnings
 from typing import Any, Dict, List, Optional, Tuple, Union
 

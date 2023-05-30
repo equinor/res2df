@@ -49,11 +49,11 @@ def test_set_name_from_eclbase():
     """
     args = {
         "subcommand": "mycommand",
-        "DATAFILE": "/scratch/fmu/dbs/drogon_ahm_future-2023-05-02/realization-0/iter-0/eclipse/model/DROGON-0",
+        "DATAFILE": str(REEK),
         "output": None,
     }
 
-    correct_name = "DROGON"
+    correct_name = "2_R001_REEK"
     correct_tag = "mycommand"
     name, tag = find_name_components(args)
     assert name == correct_name, f"Name is {name}, should be {correct_name}"

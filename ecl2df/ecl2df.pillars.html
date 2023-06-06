@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.pillars &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.pillars &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,15 +28,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ecl2df
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -109,7 +112,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">ecl2df.pillars</span></code></li>
       <li class="wy-breadcrumbs-aside">
@@ -139,7 +142,7 @@ among those pillars with at least one cell with non-zero oil saturation</p>
 cell centre with gas saturation above sgascutoff, among those pillars
 with at least one cell above swatcutoff.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>grid_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Representing the grid with geometry and properties</p></li>
 <li><p><strong>region</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Region vector to group by, e.g. FIPNUM or EQLNUM</p></li>
@@ -151,10 +154,10 @@ gas saturation above this</p></li>
 them to be available for OWC/GWC computations.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Index is PILLAR with values I-J. Rows only for
 pillars where a contact was found. Empty dataframe if no contacts found.</p>
 </dd>
@@ -168,7 +171,7 @@ pillars where a contact was found. Empty dataframe if no contacts found.</p>
 UNRST file (SWAT+SGAS)</p>
 <p>SOIL is assumed not be present in grid_df, it will be computed here.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>grid_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – A dataframe with the columns PORV, SWAT and SGAS</p></li>
 <li><p><strong>datestr</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If not none, it should contain an ISO-8601 formatted date that
@@ -178,7 +181,7 @@ If datestr is “2009-01-02”, then the columns will look
 like “<a class="reference external" href="mailto:SOIL&#37;&#52;&#48;2009-01-02">SOIL<span>&#64;</span>2009-01-02</a>”</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -200,7 +203,7 @@ be used to compute volumes pr. phase, WATVOL, OILVOL and GASVOL. The
 columns with dynamic data will include the date in the column headers
 like <a class="reference external" href="mailto:SWAT&#37;&#52;&#48;2009-01-01">SWAT<span>&#64;</span>2009-01-01</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>region</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – A parameter the pillars will be split
 on. Typically EQLNUM or FIPNUM. Set to empty string
@@ -223,7 +226,7 @@ called DATE will be added and data for all restart
 dates will be added in a stacked manner.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -234,10 +237,10 @@ dates will be added in a stacked manner.</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.pillars.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/pillars.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.pillars.fill_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Set up sys.argv parser.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – argparse.ArgumentParser or argparse.subparser</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
 </dl>
@@ -248,7 +251,7 @@ dates will be added in a stacked manner.</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.pillars.</span></span><span class="sig-name descname"><span class="pre">pillars_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/pillars.html#pillars_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.pillars.pillars_main" title="Permalink to this definition"></a></dt>
 <dd><p>This is the command line API</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -267,7 +270,7 @@ dates will be added in a stacked manner.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

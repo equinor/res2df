@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.common &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.common &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,15 +28,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ecl2df
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -60,9 +63,11 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.comment_formatter"><code class="docutils literal notranslate"><span class="pre">comment_formatter()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.convert_lyrlist_to_zonemap"><code class="docutils literal notranslate"><span class="pre">convert_lyrlist_to_zonemap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.datetime_to_eclipsedate"><code class="docutils literal notranslate"><span class="pre">datetime_to_eclipsedate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.df2ecl"><code class="docutils literal notranslate"><span class="pre">df2ecl()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.ecl_keyworddata_to_df"><code class="docutils literal notranslate"><span class="pre">ecl_keyworddata_to_df()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.fill_reverse_parser"><code class="docutils literal notranslate"><span class="pre">fill_reverse_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.generic_ecltable"><code class="docutils literal notranslate"><span class="pre">generic_ecltable()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.get_wells_matching_template"><code class="docutils literal notranslate"><span class="pre">get_wells_matching_template()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.handle_wanted_keywords"><code class="docutils literal notranslate"><span class="pre">handle_wanted_keywords()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ecl2df.common.is_color"><code class="docutils literal notranslate"><span class="pre">is_color()</span></code></a></li>
@@ -122,7 +127,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></li>
       <li class="wy-breadcrumbs-aside">
@@ -143,17 +148,17 @@
 <dd><p>Prepends comment characters to every line in input</p>
 <p>If nothing is supplied, an empty string is returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>multiline</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String that can contain newlines</p></li>
 <li><p><strong>prefix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Comment characters to prepend every line with
 Default is the Eclipse comment syntax ‘– ‘</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><dl class="simple">
 <dt>string, with newlines preserved, and where each line</dt><dd><p>starts with the given prefix. Always ends with a newline.</p>
 </dd>
@@ -168,14 +173,25 @@ Default is the Eclipse comment syntax ‘– ‘</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">convert_lyrlist_to_zonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lyrlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#convert_lyrlist_to_zonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.convert_lyrlist_to_zonemap" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a layer to zone map as a dictionary</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>lyrlist</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – list of dicts coming from parse_lyrfile()</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>“zoneA”, 2: “zoneB”}</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Layer to zone mapping {1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.common.datetime_to_eclipsedate">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">datetime_to_eclipsedate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#datetime_to_eclipsedate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.datetime_to_eclipsedate" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a Python timestamp or date to the Eclipse DATE format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -183,9 +199,13 @@ Default is the Eclipse comment syntax ‘– ‘</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.common.df2ecl">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">df2ecl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consecutive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#df2ecl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.df2ecl" title="Permalink to this definition"></a></dt>
-<dd><p>Generate Eclipse include strings from dataframes in ecl2df format</p>
+<dd><p>Generate Eclipse include strings from dataframes in ecl2df format.</p>
+<p>This function hands over the actual text generation pr. keyword
+to functions named df2ecl_&lt;keywordname&gt; in the calling module.</p>
+<p>These functions may again use generic_ecltable() from this module
+for the actual string construction.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dataframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with Eclipse data on ecl2df format.</p></li>
 <li><p><strong>keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – List of keywords to include. Will be reduced
@@ -201,10 +221,10 @@ numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</p></li>
 to file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string that can be used as an include file for Eclipse.</p>
 </dd>
 </dl>
@@ -219,7 +239,7 @@ will have to find out which one fits your particular keyword. Activate
 by setting recordcountername or emptyrecordcountername to some string, which
 will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> – Parsed deck</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of the keyword for which to extract data.</p></li>
@@ -234,7 +254,7 @@ row based on how many empty records is encountered. For PVTO f.ex,
 this gives the PVTNUM indexing.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -246,12 +266,36 @@ this gives the PVTNUM indexing.</p></li>
 <dd><p>A standardized submodule parser for the command line utility
 to produce Eclipse include files from a CSV file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – parser to fill with arguments</p></li>
 <li><p><strong>modulename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Will be included in the help text</p></li>
 <li><p><strong>defaultoutputfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Default output filename</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ecl2df.common.generic_ecltable">
+<span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">generic_ecltable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_trailing_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#generic_ecltable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.generic_ecltable" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a typical Eclipse table for data following
+a keyword. Each row (record in Eclipse terms) ends with a slash.</p>
+<p>This function will <em>not</em> add a final slash after all rows, as
+this is keyword dependent. Some keywords require it, some keywords
+require it to not be there.</p>
+<p>The header is printed as a comment, with header names taken
+from the dataframe.</p>
+<p>The renamer is a map that is used to translate your dataframe column
+names into opm.common item names, and the dictionary should map
+from opm.common names into your chosen ones. If you have standard named
+dataframe columns, the renamer is only applied to the column header comment.</p>
+<p>Trailing columns that are all defaulted (that is either np.nan, None)
+or consisting of only “1*” will be dropped, as Eclipse will always
+interpret that as “1*”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -268,13 +312,13 @@ must be preceded with a .</p>
 in some contexts, but not in all and will not be permitted here to
 avoid confusion.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>template</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – well name template with wildcard characters</p></li>
 <li><p><strong>wells</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – list of wells to match against the template</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of matched wells</p>
 </dd>
 </dl>
@@ -285,7 +329,7 @@ avoid confusion.</p>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">handle_wanted_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wanted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#handle_wanted_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.handle_wanted_keywords" title="Permalink to this definition"></a></dt>
 <dd><p>Handle three list of keywords, wanted, available and supported</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>keywords</strong> – None, or list of strings of user-requested keywords</p></li>
 <li><p><strong>deck</strong> – Used to query which data is available</p></li>
@@ -303,7 +347,7 @@ avoid confusion.</p>
 That is six-digit hexadecimal, three-digit hexadecimal or
 given as an SVG color keyword name</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
@@ -316,7 +360,7 @@ given as an SVG color keyword name</p>
 k-index to zone name. If the zonemap is not covering all
 zones, cells will be filled with NaN.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe where we should augment a column</p></li>
 <li><p><strong>zonedict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Dictionary with integer keys pointing to strings
@@ -327,7 +371,7 @@ default: ZONE</p></li>
 default K1</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -338,7 +382,7 @@ default K1</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_ecl_month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclmonth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#parse_ecl_month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.parse_ecl_month" title="Permalink to this definition"></a></dt>
 <dd><p>Translate Eclipse month strings to integer months</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
@@ -373,13 +417,13 @@ where the color code is optional:</p>
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Absolute path to a lyr file</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of dictionaries representing the information in the lyr file.</p>
 </dd>
 </dl>
@@ -396,7 +440,7 @@ where the color code is optional:</p>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_deckrecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itemlistname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'items'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordindex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#parse_opmio_deckrecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.parse_opmio_deckrecord" title="Permalink to this definition"></a></dt>
 <dd><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>record</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DeckRecord</span></code>) – Record be parsed</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Which Eclipse keyword this belongs to</p></li>
@@ -411,7 +455,7 @@ value is assumed to be a list of strings to be mapped to
 each subitem.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
@@ -422,7 +466,7 @@ each subitem.</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_tstep_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/common.html#parse_opmio_tstep_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.common.parse_opmio_tstep_rec" title="Permalink to this definition"></a></dt>
 <dd><p>Parse a record with TSTEP data</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of floats or ints</p>
 </dd>
 </dl>
@@ -444,7 +488,7 @@ string must be splittable with split(). Any newlines
 will be replaced by a space prior to split().</p>
 <p>See <a class="reference external" href="https:///en.wikipedia.org/wiki/Run-length_encoding">https:///en.wikipedia.org/wiki/Run-length_encoding</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> (<em>str</em>) – String of space-separated elements to compress</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Separator string used in output. Separator string in
@@ -452,10 +496,10 @@ input is not conserved, but it must be compatible with
 str.split()</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string, shorter or equal-length to the input.</p>
 </dd>
 </dl>
@@ -471,11 +515,6 @@ multiindex into its own column, best understood by this example:</p>
 <p>A dframe like this</p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 44%" />
-<col style="width: 41%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>PORV</p></th>
 <th class="head"><p><a class="reference external" href="mailto:OWC&#37;&#52;&#48;2000-01-01">OWC<span>&#64;</span>2000-01-01</a></p></th>
@@ -493,11 +532,6 @@ multiindex into its own column, best understood by this example:</p>
 <p>will be stacked to</p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 22%" />
-<col style="width: 56%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>PORV</p></th>
 <th class="head"><p>OWC</p></th>
@@ -519,7 +553,7 @@ multiindex into its own column, best understood by this example:</p>
 <p>(for the defaults values for <em>sep</em> and <em>stackcolname</em>)</p>
 <p>Column order is not guaranteed</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – A dataframe to stack</p></li>
 <li><p><strong>sep</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The separator that is used in dframe.columns to define
@@ -528,7 +562,7 @@ the multilevel column names.</p></li>
 of the column multiindex</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -541,7 +575,7 @@ of the column multiindex</p></li>
 <p>If output is the magic string “-”, output is written
 to stdout.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>]) – Dataframe to write</p></li>
 <li><p><strong>output</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Filename or “-”</p></li>
@@ -550,7 +584,7 @@ to stdout.</p>
 <li><p><strong>logstr</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Logged if not stdout.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -562,7 +596,7 @@ to stdout.</p>
 <dd><p>Write a string (typically an include file string) to stdout
 or to a named file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -581,7 +615,7 @@ or to a named file</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

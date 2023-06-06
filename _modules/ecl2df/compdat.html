@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.compdat &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.compdat &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.compdat</li>
@@ -157,7 +160,7 @@
     <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">unroll</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loop through the deck and pick up information found</span>
 
 <span class="sd">    The loop over the deck is a state machine, as it has to pick up dates and</span>
 <span class="sd">    potential information from the WELSPECS keyword.</span>
@@ -373,7 +376,7 @@
 
 
 <div class="viewcode-block" id="expand_welopen"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Expands WELOPEN. First wildcard wells are expanded and then default</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expands WELOPEN. First wildcard wells are expanded and then default</span>
 <span class="sd">    coordinates are expanded. The order of the expansion is important.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">exp_welopen_df</span> <span class="o">=</span> <span class="n">expand_welopen_wildcards</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">)</span>
@@ -383,7 +386,7 @@
 <div class="viewcode-block" id="expand_welopen_defaults"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen_defaults">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_defaults</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Expands rows in WELOPEN where one or two coordinates are defaulted.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expands rows in WELOPEN where one or two coordinates are defaulted.</span>
 <span class="sd">    Expansion happens by filtering on compdat rows that are matching the</span>
 <span class="sd">    well name and the coordinates that are not defaulted.</span>
 
@@ -458,7 +461,7 @@
 <div class="viewcode-block" id="expand_welopen_wildcards"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_welopen_wildcards">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_wildcards</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Expand rows in welopen with well names containing wildcard characters,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand rows in welopen with well names containing wildcard characters,</span>
 <span class="sd">    with the correct wells from compdat_df that was defined at that date</span>
 
 <span class="sd">    Example::</span>
@@ -507,7 +510,7 @@
 <div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">start_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K2&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
 <span class="sd">    a range where data applies.</span>
 
 <span class="sd">    After unrolling, column pairs with ranges are transformed</span>
@@ -563,7 +566,7 @@
 
 
 <div class="viewcode-block" id="unroll_complump"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.unroll_complump">[docs]</a><span class="k">def</span> <span class="nf">unroll_complump</span><span class="p">(</span><span class="n">complump_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Unrolls the COMPLUMP keyword where K2&gt;K1. Uses the unrolldf function,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unrolls the COMPLUMP keyword where K2&gt;K1. Uses the unrolldf function,</span>
 <span class="sd">    but this function gives more precise handling of errors.</span>
 
 <span class="sd">    Example::</span>
@@ -607,7 +610,7 @@
 
 
 <div class="viewcode-block" id="expand_wlist"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_wlist">[docs]</a><span class="k">def</span> <span class="nf">expand_wlist</span><span class="p">(</span><span class="n">wlist_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Expand all WLIST actions in a dataframe into a dataframe with</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand all WLIST actions in a dataframe into a dataframe with</span>
 <span class="sd">    only &quot;NEW&quot; actions. This makes the dataframe cheaper to parse to</span>
 <span class="sd">    get the state of the well lists at a particular date</span>
 
@@ -758,7 +761,7 @@
 <div class="viewcode-block" id="expand_complump_in_welopen_df"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_complump_in_welopen_df">[docs]</a><span class="k">def</span> <span class="nf">expand_complump_in_welopen_df</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">complump_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Go through all elements of WELOPEN and expand the rows</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Go through all elements of WELOPEN and expand the rows</span>
 <span class="sd">    referring to COMPLUMPS. The output dataframe is as if the</span>
 <span class="sd">    connections were refered to explicitly in WELOPEN:</span>
 
@@ -859,7 +862,7 @@
 <div class="viewcode-block" id="expand_wlist_in_welopen_df"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.expand_wlist_in_welopen_df">[docs]</a><span class="k">def</span> <span class="nf">expand_wlist_in_welopen_df</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">wlist_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Go trough a welopen dataframe and expand rows where the well-name refers</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Go trough a welopen dataframe and expand rows where the well-name refers</span>
 <span class="sd">    to a well-list. The returned dataframe is as if the welopen commands were</span>
 <span class="sd">    inputted explicitly without the use of WLIST.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -896,7 +899,7 @@
     <span class="n">wlist_df</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">complump_df</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Apply WELOPEN actions to the COMPDAT dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply WELOPEN actions to the COMPDAT dataframe.</span>
 
 <span class="sd">    Each record in the WELOPEN keyword acts as an operator on existing connections</span>
 <span class="sd">    in existing wells.</span>
@@ -1027,7 +1030,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser: parser to fill with arguments</span>
@@ -1051,7 +1054,7 @@
 
 
 <div class="viewcode-block" id="compdat_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.compdat.html#ecl2df.compdat.compdat_main">[docs]</a><span class="k">def</span> <span class="nf">compdat_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -1065,7 +1068,7 @@
     <span class="n">initvectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">zonemap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Main function for Python API users</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function for Python API users</span>
 
 <span class="sd">    Supports only COMPDAT information for now. Will</span>
 <span class="sd">    add a zone-name if a zonefile is found alongside.</span>
@@ -1100,7 +1103,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

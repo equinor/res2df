@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.inferdims &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.inferdims &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.inferdims</li>
@@ -103,7 +106,7 @@
 
 
 <div class="viewcode-block" id="guess_dim"><a class="viewcode-back" href="../../ecl2df/ecl2df.inferdims.html#ecl2df.inferdims.guess_dim">[docs]</a><span class="k">def</span> <span class="nf">guess_dim</span><span class="p">(</span><span class="n">deckstring</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Guess the correct dimension count for an incoming deck (string)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guess the correct dimension count for an incoming deck (string)</span>
 
 <span class="sd">    The incoming deck must in string form, if not, extra data is most</span>
 <span class="sd">    likely already removed by the opm.io parser. TABDIMS or EQLDIMS</span>
@@ -176,7 +179,7 @@
 <div class="viewcode-block" id="inject_dimcount"><a class="viewcode-back" href="../../ecl2df/ecl2df.inferdims.html#ecl2df.inferdims.inject_dimcount">[docs]</a><span class="k">def</span> <span class="nf">inject_dimcount</span><span class="p">(</span>
     <span class="n">deckstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimkeyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dimitem</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dimvalue</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nowarn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Insert a TABDIMS with NTSFUN into a deck</span>
 
 <span class="sd">    This is simple string manipulation, not opm.io</span>
 <span class="sd">    deck manipulation (which might be possible to do).</span>
@@ -228,7 +231,7 @@
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
     <span class="n">ntxxx_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Ensures TABDIMS/EQLDIMS is present in a deck.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures TABDIMS/EQLDIMS is present in a deck.</span>
 
 <span class="sd">    If ntxxx_value=None and ntxxx_name not in the deck, ntxxx_name will</span>
 <span class="sd">    be inferred through trial-and-error parsing of the deck, and then injected</span>
@@ -289,7 +292,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

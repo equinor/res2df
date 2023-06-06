@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.equil &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.equil &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.equil</li>
@@ -158,7 +161,7 @@
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract EQUIL related keyword data, EQUIL, RSVD, RVVD</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract EQUIL related keyword data, EQUIL, RSVD, RVVD</span>
 <span class="sd">    PBVD and PDVD.</span>
 
 <span class="sd">    How each data value in the EQUIL records are to be interpreted</span>
@@ -214,7 +217,7 @@
 <div class="viewcode-block" id="rsvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.rsvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rsvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract RSVD data from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RSVD data from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -231,7 +234,7 @@
 <div class="viewcode-block" id="rvvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.rvvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rvvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract RVVD data from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RVVD data from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -248,7 +251,7 @@
 <div class="viewcode-block" id="pbvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.pbvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pbvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PBVD data from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PBVD data from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -265,7 +268,7 @@
 <div class="viewcode-block" id="pdvd_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.pdvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pdvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PDVD data from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PDVD data from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -280,7 +283,7 @@
 
 
 <div class="viewcode-block" id="phases_from_deck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.phases_from_deck">[docs]</a><span class="k">def</span> <span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Determined the set of phases from a deck, as</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determined the set of phases from a deck, as</span>
 <span class="sd">    a string with values &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
 <span class="sd">    or &quot;oil-gas&quot;</span>
 
@@ -302,7 +305,7 @@
 
 
 <div class="viewcode-block" id="phases_from_columns"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.phases_from_columns">[docs]</a><span class="k">def</span> <span class="nf">phases_from_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Determine the set of phases available in an</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine the set of phases available in an</span>
 <span class="sd">    equil dataframe, based on which columns are there.</span>
 <span class="sd">    Returns &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
 <span class="sd">    or &quot;oil-gas&quot;</span>
@@ -329,7 +332,7 @@
 <div class="viewcode-block" id="equil_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">equil_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract EQUIL data from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract EQUIL data from a deck</span>
 
 <span class="sd">    If the deck is supplied as a string object, the number</span>
 <span class="sd">    of EQLNUM regions will be inferred if needed.</span>
@@ -359,7 +362,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser to</span>
@@ -387,12 +390,12 @@
 
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;EQUIL, RSVD++&quot;</span><span class="p">,</span> <span class="s2">&quot;solution.inc&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="equil_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_main">[docs]</a><span class="k">def</span> <span class="nf">equil_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -424,7 +427,7 @@
 
 
 <div class="viewcode-block" id="equil_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.equil_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -441,7 +444,7 @@
     <span class="n">withphases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes with</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes with</span>
 <span class="sd">    solution (EQUIL, RSVD++) data.</span>
 
 <span class="sd">    Args:</span>
@@ -475,7 +478,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_equil"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_equil">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_equil</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print EQUIL keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print EQUIL keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing EQUIL data</span>
@@ -500,45 +503,17 @@
 
     <span class="n">phases</span> <span class="o">=</span> <span class="n">phases_from_columns</span><span class="p">(</span><span class="n">subset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
-    <span class="c1"># Make a copy as we are going to modify it in order to have Pandas</span>
-    <span class="c1"># make a pretty txt table:</span>
-    <span class="n">equildf</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="c1"># Column names are pr. ec2ldf standard, redo to opm.common in order</span>
-    <span class="c1"># to use sorting from that:</span>
-    <span class="n">inv_renamer</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">phases</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-    <span class="c1"># print(inv_renamer)</span>
-    <span class="n">equildf</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">inv_renamer</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">col_headers</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">common</span><span class="o">.</span><span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">]]</span>
-    <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">col_headers</span><span class="p">:</span>
-        <span class="c1"># Add those that are missing, as Eclipse defaults</span>
-        <span class="k">if</span> <span class="n">colname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">equildf</span><span class="p">:</span>
-            <span class="n">equildf</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1*&quot;</span>
-    <span class="c1"># Reorder columns:</span>
-    <span class="n">equildf</span> <span class="o">=</span> <span class="n">equildf</span><span class="p">[</span><span class="n">col_headers</span><span class="p">]</span>
-
-    <span class="c1"># It is critical for opm.common, maybe also E100 to have integers printed</span>
-    <span class="c1"># as integers, for correct parsing. Ensure integer types where</span>
-    <span class="c1"># the json says integer:</span>
-    <span class="n">integer_cols</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">common</span><span class="o">.</span><span class="n">OPMKEYWORDS</span><span class="p">[</span><span class="s2">&quot;EQUIL&quot;</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;value_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INT&quot;</span>
-    <span class="p">]</span>
-    <span class="k">for</span> <span class="n">int_col</span> <span class="ow">in</span> <span class="n">integer_cols</span><span class="p">:</span>
-        <span class="c1"># But allow these columns to contain &quot;1*&quot;</span>
-        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">equildf</span><span class="p">[</span><span class="n">int_col</span><span class="p">])</span> <span class="o">!=</span> <span class="p">{</span><span class="s2">&quot;1*&quot;</span><span class="p">}:</span>
-            <span class="n">equildf</span><span class="p">[</span><span class="n">int_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">equildf</span><span class="p">[</span><span class="n">int_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-    <span class="c1"># Now rename again to have prettier column names:</span>
-    <span class="n">equildf</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">phases</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="c1"># Add a final column with the end-slash, invisible header:</span>
-    <span class="n">equildf</span><span class="p">[</span><span class="s2">&quot; &quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- &quot;</span> <span class="o">+</span> <span class="n">equildf</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">generic_ecltable</span><span class="p">(</span>
+        <span class="n">subset</span><span class="p">,</span>
+        <span class="s2">&quot;EQUIL&quot;</span><span class="p">,</span>
+        <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">phases</span><span class="p">],</span>  <span class="c1"># type: ignore</span>
+        <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">,</span>
+        <span class="n">drop_trailing_columns</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df2ecl_rsvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_rsvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print RSVD keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print RSVD keyword with data</span>
 
 <span class="sd">    This data consists of one table (rs as a function</span>
 <span class="sd">    of depth) for each EQLNUM</span>
@@ -551,7 +526,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_rvvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_rvvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print RVVD keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print RVVD keyword with data</span>
 
 <span class="sd">    This data consists of one table (rv as a function</span>
 <span class="sd">    of depth) for each EQLNUM</span>
@@ -564,7 +539,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pbvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_pbvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print PBVD keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PBVD keyword with data</span>
 
 <span class="sd">    Bubble-point versus depth</span>
 
@@ -579,7 +554,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pdvd"><a class="viewcode-back" href="../../ecl2df/ecl2df.equil.html#ecl2df.equil.df2ecl_pdvd">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print PDVD keyword with data.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PDVD keyword with data.</span>
 
 <span class="sd">    Dew-point versus depth.</span>
 
@@ -596,7 +571,7 @@
 <span class="k">def</span> <span class="nf">_df2ecl_equilfuncs</span><span class="p">(</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Internal function to be used by df2ecl_&lt;keyword&gt;() functions&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal function to be used by df2ecl_&lt;keyword&gt;() functions&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -611,7 +586,7 @@
         <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_df2ecl_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Print one equilibriation function table for a specific</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print one equilibriation function table for a specific</span>
 <span class="sd">        EQLNUM</span>
 
 <span class="sd">        Args:</span>
@@ -640,7 +615,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

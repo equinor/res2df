@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,15 +28,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ecl2df
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -102,7 +105,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/ecl2df/ecl2df.rst.txt" rel="nofollow"> View page source</a>
@@ -115,11 +118,11 @@
              
   <section id="module-ecl2df">
 <span id="ecl2df"></span><h1><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code><a class="headerlink" href="#module-ecl2df" title="Permalink to this heading"></a></h1>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
-</div>
+</nav>
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.getLogger_ecl2csv">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.</span></span><span class="sig-name descname"><span class="pre">getLogger_ecl2csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ecl2df'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df.html#getLogger_ecl2csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.getLogger_ecl2csv" title="Permalink to this definition"></a></dt>
@@ -129,7 +132,7 @@ ERROR) to stdout and stderr, each log occurs in only one of the streams.
 This deviates from Unix standard, but is accepted here because the code
 often writes it main output to a dedicated filename.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – A suggested name for the logger, usually
 __name__ should be supplied</p></li>
@@ -138,22 +141,24 @@ Only keys “output”, “verbose” and “debug” will be looked at.
 Use vars(args) in caller code to convert from argparse Namespace object.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 <section id="submodules">
-<h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ecl2df.common.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.common</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.comment_formatter"><code class="docutils literal notranslate"><span class="pre">comment_formatter()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.convert_lyrlist_to_zonemap"><code class="docutils literal notranslate"><span class="pre">convert_lyrlist_to_zonemap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.datetime_to_eclipsedate"><code class="docutils literal notranslate"><span class="pre">datetime_to_eclipsedate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.df2ecl"><code class="docutils literal notranslate"><span class="pre">df2ecl()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.ecl_keyworddata_to_df"><code class="docutils literal notranslate"><span class="pre">ecl_keyworddata_to_df()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.fill_reverse_parser"><code class="docutils literal notranslate"><span class="pre">fill_reverse_parser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.generic_ecltable"><code class="docutils literal notranslate"><span class="pre">generic_ecltable()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.get_wells_matching_template"><code class="docutils literal notranslate"><span class="pre">get_wells_matching_template()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.handle_wanted_keywords"><code class="docutils literal notranslate"><span class="pre">handle_wanted_keywords()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecl2df.common.html#ecl2df.common.is_color"><code class="docutils literal notranslate"><span class="pre">is_color()</span></code></a></li>
@@ -486,7 +491,7 @@ Use vars(args) in caller code to convert from argparse Namespace object.</p></li
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

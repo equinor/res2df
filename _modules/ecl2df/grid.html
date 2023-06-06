@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.grid &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.grid &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.grid</li>
@@ -114,7 +117,7 @@
 
 
 <div class="viewcode-block" id="get_available_rst_dates"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.get_available_rst_dates">[docs]</a><span class="k">def</span> <span class="nf">get_available_rst_dates</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of datetime objects for the available dates in the RST file&quot;&quot;&quot;</span>
     <span class="n">report_indices</span> <span class="o">=</span> <span class="n">EclFile</span><span class="o">.</span><span class="n">file_report_list</span><span class="p">(</span><span class="n">eclfiles</span><span class="o">.</span><span class="n">get_rstfilename</span><span class="p">())</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s2">&quot;Restart report indices (count </span><span class="si">%s</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -130,7 +133,7 @@
 <div class="viewcode-block" id="dates2rstindices"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.dates2rstindices">[docs]</a><span class="k">def</span> <span class="nf">dates2rstindices</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">dates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]]]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;Return the restart index/indices for a given datetime or list of datetimes</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the restart index/indices for a given datetime or list of datetimes</span>
 
 <span class="sd">      dates: datetime.date or list of datetime.date, must</span>
 <span class="sd">          correspond to an existing date. If list, it</span>
@@ -200,7 +203,7 @@
 
 
 <span class="k">def</span> <span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Construct a pyarrow table from dataframe with</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a pyarrow table from dataframe with</span>
 <span class="sd">    grid information</span>
 
 <span class="sd">    The index in the dataframe will be ignored</span>
@@ -229,7 +232,7 @@
     <span class="n">dateinheaders</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">stackdates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dataframe with dynamic data from the restart file</span>
 <span class="sd">    for each cell, at a particular date.</span>
 
 <span class="sd">    The dataframe will have a dummy index. The column named</span>
@@ -363,7 +366,7 @@
 <div class="viewcode-block" id="gridgeometry2df"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.gridgeometry2df">[docs]</a><span class="k">def</span> <span class="nf">gridgeometry2df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with Eclipse gridgeometry</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with Eclipse gridgeometry</span>
 
 <span class="sd">    Order is significant, and is determined by the order from libecl, and used</span>
 <span class="sd">    when merging with other dataframes with cell-data.</span>
@@ -444,7 +447,7 @@
     <span class="n">initvectors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">ijknames</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Merge in INIT vectors to a dataframe by I, J, K.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge in INIT vectors to a dataframe by I, J, K.</span>
 
 <span class="sd">    Utility function for other modules to use. Normally it is sufficient</span>
 <span class="sd">    for API users to only use the df() function.</span>
@@ -487,7 +490,7 @@
 <div class="viewcode-block" id="init2df"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.init2df">[docs]</a><span class="k">def</span> <span class="nf">init2df</span><span class="p">(</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">,</span> <span class="n">vectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract information from INIT file with cell data</span>
 
 <span class="sd">    Normally, you would use the df() function which will</span>
 <span class="sd">    call this function on your behalf.</span>
@@ -560,7 +563,7 @@
     <span class="n">stackdates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">zonemap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dataframe with grid information</span>
 
 <span class="sd">    Grid information (center coordinates x, y, z), cell</span>
 <span class="sd">    indices (i, j, k) (indices follow the Eclipse convention starting</span>
@@ -614,7 +617,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parser.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser: argparse.ArgumentParser or argparse.subparser</span>
@@ -667,7 +670,7 @@
 <div class="viewcode-block" id="drop_constant_columns"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.drop_constant_columns">[docs]</a><span class="k">def</span> <span class="nf">drop_constant_columns</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">alwayskeep</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Drop/delete constant columns from a dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop/delete constant columns from a dataframe.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe</span>
@@ -704,7 +707,7 @@
     <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">nocomments</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write an include file with grid data keyword, like PERMX, PORO,</span>
 <span class="sd">    FIPNUM etc, for the GRID section of the Eclipse deck.</span>
 
@@ -841,7 +844,7 @@
 
 
 <div class="viewcode-block" id="grid_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.grid.html#ecl2df.grid.grid_main">[docs]</a><span class="k">def</span> <span class="nf">grid_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the command line API&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -867,7 +870,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

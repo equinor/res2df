@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.summary</li>
@@ -125,7 +128,7 @@
 
 
 <div class="viewcode-block" id="date_range"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.date_range">[docs]</a><span class="k">def</span> <span class="nf">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for pandas.date_range to allow for extra ecl2df specific mnemonics</span>
 <span class="sd">    &#39;yearly&#39;, &#39;daily&#39;, &#39;weekly&#39;, mapped over to pandas DateOffsets.</span>
 
 <span class="sd">    Args:</span>
@@ -146,7 +149,7 @@
 
 
 <span class="k">def</span> <span class="nf">_ensure_date_or_none</span><span class="p">(</span><span class="n">some_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Ensures an object is either a date or None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures an object is either a date or None</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        some_date: string or a datetime.date</span>
@@ -171,7 +174,7 @@
     <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">end_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;Helper function for resample_smry_dates, taking care of</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function for resample_smry_dates, taking care of</span>
 <span class="sd">    the special cases where the list of dates should not be resampled, but</span>
 <span class="sd">    only cropped or returned as is.</span>
 
@@ -208,7 +211,7 @@
 
 
 <span class="k">def</span> <span class="nf">_fallback_date_roll</span><span class="p">(</span><span class="n">rollme</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fallback function for rolling dates forward or backward onto a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback function for rolling dates forward or backward onto a</span>
 <span class="sd">    date frequency boundary.</span>
 
 <span class="sd">    This function reimplements pandas&#39; DateOffset.roll_forward() and backward()</span>
@@ -246,7 +249,7 @@
 
 
 <span class="k">def</span> <span class="nf">_fallback_date_range</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Fallback routine for generating date ranges beyond Pandas datetime64[ns]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback routine for generating date ranges beyond Pandas datetime64[ns]</span>
 <span class="sd">    year-2262 limit.</span>
 
 <span class="sd">    Assumes that the start and end times already fall on a frequency boundary.</span>
@@ -281,7 +284,7 @@
     <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">end_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resample (optionally) a list of date(time)s to a new datelist according to options.</span>
 
 <span class="sd">    Based on the dates as input, a new list at a finer or coarser time density</span>
@@ -390,7 +393,7 @@
     <span class="n">datetime</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># A very poor choice of argument name [pylint]</span>
 <span class="p">):</span>
     <span class="c1"># pylint: disable=too-many-arguments</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract data from UNSMRY as Pandas dataframes.</span>
 
 <span class="sd">    This is a thin wrapper for EclSum.pandas_frame, by adding</span>
@@ -524,7 +527,7 @@
 
 
 <span class="k">def</span> <span class="nf">_ensure_unique_datetime_index</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The TIME vector may be stored with a lower resolution than individual</span>
 <span class="sd">    timesteps, leading ecl to return non-unique datetimes.</span>
 
@@ -577,7 +580,7 @@
 
 
 <span class="k">def</span> <span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Construct a Pyarrow table from a dataframe, conserving metadata.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a Pyarrow table from a dataframe, conserving metadata.</span>
 
 <span class="sd">    All integer columns will have datatype int32, all floats will have float32</span>
 <span class="sd">    as this is Eclipse specific.</span>
@@ -623,7 +626,7 @@
     <span class="n">paramfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">eclfiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EclFiles</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Locate parameters in a &lt;key&gt; &lt;value&gt; file and add to the dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate parameters in a &lt;key&gt; &lt;value&gt; file and add to the dataframe.</span>
 
 <span class="sd">    Will fetch parameters directly from a text file if provided, or look up</span>
 <span class="sd">    the parameters.txt file based on the location of an Eclise run.</span>
@@ -657,7 +660,7 @@
 
 
 <div class="viewcode-block" id="smry_meta"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.smry_meta">[docs]</a><span class="k">def</span> <span class="nf">smry_meta</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">:</span> <span class="n">EclFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;Provide metadata for summary data vectors.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide metadata for summary data vectors.</span>
 
 <span class="sd">    A dictionary indexed by summary vector name is returned, and each</span>
 <span class="sd">    value is dictionary with the metadata types provided by the underlying</span>
@@ -692,7 +695,7 @@
 
 
 <span class="k">def</span> <span class="nf">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for EclSum.from_pandas()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for EclSum.from_pandas()</span>
 
 <span class="sd">    * Ensures that the index is always datetime, and sorted.</span>
 <span class="sd">    * Removes BLOCK vectors, these are currently not supported as</span>
@@ -763,7 +766,7 @@
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">casename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SYNTHETIC&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclSum</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convert a dataframe to an EclSum object</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dataframe to an EclSum object</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Dataframe with a DATE colum (or with the</span>
@@ -790,7 +793,7 @@
     <span class="n">time_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">column_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Build a Pandas dataframe from an EclSum object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a Pandas dataframe from an EclSum object.</span>
 
 <span class="sd">    Temporarily copied from libecl to circumvent bug</span>
 
@@ -840,7 +843,7 @@
     <span class="n">dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">headers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclSum</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Build an EclSum object from a Pandas dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an EclSum object from a Pandas dataframe.</span>
 
 <span class="sd">    Temporarily copied from libecl to circumvent bug</span>
 
@@ -876,7 +879,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser: parser to fill with arguments</span>
@@ -962,7 +965,7 @@
 
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fill a parser for the operation:  dataframe -&gt; eclsum files&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation:  dataframe -&gt; eclsum files&quot;&quot;&quot;</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
@@ -978,7 +981,7 @@
 
 
 <div class="viewcode-block" id="summary_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.summary_main">[docs]</a><span class="k">def</span> <span class="nf">summary_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -1005,7 +1008,7 @@
 
 
 <div class="viewcode-block" id="summary_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.summary_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry point for usage with &quot;csv2ecl summary&quot; on the command line&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point for usage with &quot;csv2ecl summary&quot; on the command line&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -1035,7 +1038,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

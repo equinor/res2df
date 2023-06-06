@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.vfp._vfp &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.vfp._vfp &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,15 +28,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ecl2df
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -105,7 +108,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
           <li class="breadcrumb-item"><a href="ecl2df.vfp.html"><code class="docutils literal notranslate"><span class="pre">ecl2df.vfp</span></code></a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">ecl2df.vfp._vfp</span></code></li>
@@ -131,7 +134,7 @@ Dictionary returned contains items for liftcuve tables as simple datatypes
 Required keys in dictionary for VFPPROD and VFPINJ can be found in
 BASIC_DATA_KEYS in _vfpprod and _vfpinj.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – Eclipse deck or string with deck</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
@@ -139,7 +142,7 @@ BASIC_DATA_KEYS in _vfpprod and _vfpinj.</p>
 Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
@@ -152,11 +155,11 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 (see function basic_data for defintion of data) into
 pandas DataFrame representation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Dictionary with basic data representation of
 VFPPROD or VFPINJ (see basic_data)</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -169,11 +172,11 @@ VFPPROD or VFPINJ (see basic_data)</p>
 (see function basic_data for defintion of data) into
 pyarrow.Table representation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Dictionary with basic data representation of
 VFPPROD or VFPINJ</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></p>
 </dd>
 </dl>
@@ -185,14 +188,14 @@ VFPPROD or VFPINJ</p>
 <dd><p>Produce a dataframes of all vfp tables from a deck</p>
 <p>All data for the keywords VFPPROD/VFPINJ will be returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – Eclipse deck or string wit deck</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
 <li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – str with list of VFP table numbers to extract</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
@@ -204,10 +207,10 @@ VFPPROD or VFPINJ</p>
 <dd><p>Produce a dictionary with basic data types for a VFPPROD/VFPINJ
 liftcurve table represented as a Pandas DataFrame</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
@@ -219,7 +222,7 @@ liftcurve table represented as a Pandas DataFrame</p>
 <dd><p>Produce a string defining all VFPPROD/VFPINJ Eclipse input from a dataframe</p>
 <p>All data for the keywords VFPPROD/VFPINJ will be returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Keywords to include, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
@@ -230,7 +233,7 @@ it will be used as a master comment for the outputted file.</p></li>
 to file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
@@ -242,7 +245,7 @@ to file.</p></li>
 <dd><p>Produce a list of strings defining VFPPROD/VFPINJ Eclipse input from a dataframe</p>
 <p>All data for the keyword VFPPROD or VFPINJ will be returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p></li>
 <li><p><strong>keywords</strong> – Keyword to include, ‘VFPPROD’ or ‘VFPINJ’</p></li>
@@ -250,7 +253,7 @@ to file.</p></li>
 included pr. keyword.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
 </dl>
@@ -262,7 +265,7 @@ included pr. keyword.</p></li>
 <dd><p>Produce a list of dataframes of vfp tables from a deck</p>
 <p>Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – Eclipse deck or string with deck</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
@@ -270,7 +273,7 @@ included pr. keyword.</p></li>
 Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</p>
 </dd>
 </dl>
@@ -281,11 +284,11 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfp.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfp.fill_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parser</strong> (<em>argparse.ArgumentParser</em><em> or </em><em>argparse.subparser</em>) – parser
 to fill with arguments</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
 </dl>
@@ -296,7 +299,7 @@ to fill with arguments</p>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfp.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfp.fill_reverse_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Fill a parser for the operation dataframe -&gt; eclipse include file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
 </dl>
@@ -308,10 +311,10 @@ to fill with arguments</p>
 <dd><p>Produce a dictionary with basic data types for a VFPPROD/VFPINJ
 liftcurve table represented as a pyarrow Table</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>pa_table</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>) – pyarrow.Table representation of VFPPROD/VFPINJ</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
@@ -323,7 +326,7 @@ liftcurve table represented as a pyarrow Table</p>
 <dd><p>Produce a list of pyarrow.Table of vfp tables from a deck</p>
 <p>Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – Eclipse deck or string with deck</p></li>
 <li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
@@ -331,7 +334,7 @@ liftcurve table represented as a pyarrow Table</p>
 Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>]</p>
 </dd>
 </dl>
@@ -342,7 +345,7 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">vfp_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfp.html#vfp_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfp.vfp_main" title="Permalink to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -353,7 +356,7 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">vfp_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/vfp/_vfp.html#vfp_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.vfp._vfp.vfp_reverse_main" title="Permalink to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility for CSV to Eclipse</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -372,7 +375,7 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

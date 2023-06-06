@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.vfp._vfpprod &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.vfp._vfpprod &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.vfp._vfpprod</li>
@@ -163,7 +166,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckKeyword&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Read and return all data for Eclipse VFPPROD keyword as basic data types</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read and return all data for Eclipse VFPPROD keyword as basic data types</span>
 
 <span class="sd">    Empty string returned if vfp table number does not match any number in list</span>
 
@@ -306,7 +309,7 @@
     <span class="n">alq_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">tab_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Return a pandas DataFrame from VFPPROD liftcurve data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a pandas DataFrame from VFPPROD liftcurve data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tableno     : table number</span>
@@ -407,7 +410,7 @@
     <span class="n">alq_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">tab_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Return a pyarrow Table from VFPPROD liftcurve data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a pyarrow Table from VFPPROD liftcurve data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tableno     : table number</span>
@@ -497,7 +500,7 @@
 
 
 <div class="viewcode-block" id="df2basic_data"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfpprod.html#ecl2df.vfp._vfpprod.df2basic_data">[docs]</a><span class="k">def</span> <span class="nf">df2basic_data</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return basic data type for VFPPROD from a pandas dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return basic data type for VFPPROD from a pandas dataframe.</span>
 
 <span class="sd">    Return format is a dictionary all data in VFPPROD in basic data types</span>
 <span class="sd">    (str, int, float, numpy.array)</span>
@@ -667,7 +670,7 @@
 
 
 <div class="viewcode-block" id="pyarrow2basic_data"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfpprod.html#ecl2df.vfp._vfpprod.pyarrow2basic_data">[docs]</a><span class="k">def</span> <span class="nf">pyarrow2basic_data</span><span class="p">(</span><span class="n">pa_table</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return basic data type for VFPPROD from a pyarrow.Table.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return basic data type for VFPPROD from a pyarrow.Table.</span>
 
 <span class="sd">    Return format is a dictionary all data in VFPPROD in basic data types</span>
 <span class="sd">    (str, int, float, numpy.array)</span>
@@ -735,7 +738,7 @@
 
 
 <span class="k">def</span> <span class="nf">_check_basic_data</span><span class="p">(</span><span class="n">vfp_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Perform a check of the VFPPROD data contained in the dictionary.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform a check of the VFPPROD data contained in the dictionary.</span>
 <span class="sd">    Checks if all data is present and if the dimensions of the arrays</span>
 <span class="sd">    are consisitent.</span>
 
@@ -801,7 +804,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckKeyword&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return a dataframe or pyarrow Table of a single VFPPROD table</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dataframe or pyarrow Table of a single VFPPROD table</span>
 <span class="sd">    from an Eclipse deck.</span>
 
 <span class="sd">    Args:</span>
@@ -846,7 +849,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckKeyword&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return a pyarrow Table of a single VFPPROD table from an Eclipse deck.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a pyarrow Table of a single VFPPROD table from an Eclipse deck.</span>
 <span class="sd">       If no VFPPROD curve found, return None</span>
 
 <span class="sd">    Args:</span>
@@ -898,7 +901,7 @@
     <span class="n">unit_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">tab_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a string representing the first record for Eclipse  VFPPROD keyword</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a string representing the first record for Eclipse  VFPPROD keyword</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tableno:       VFPROD table number</span>
@@ -937,7 +940,7 @@
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;%10.3&quot;</span><span class="p">,</span>
     <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a string representing an Eclipse record for a VFPPROD table (BHP part)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a string representing an Eclipse record for a VFPPROD table (BHP part)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        table:           DataFrame with multiindex for table ranges and colums</span>
@@ -974,7 +977,7 @@
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;%10.3&quot;</span><span class="p">,</span>
     <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a string representing an Eclipse record for a VFPPROD table (BHP part)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a string representing an Eclipse record for a VFPPROD table (BHP part)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        thp_indices:     array of int representing index for THP value for record</span>
@@ -1018,7 +1021,7 @@
 
 
 <div class="viewcode-block" id="df2ecl"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfpprod.html#ecl2df.vfp._vfpprod.df2ecl">[docs]</a><span class="k">def</span> <span class="nf">df2ecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a string defining single VFPPROD Eclipse input from a dataframe</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a string defining single VFPPROD Eclipse input from a dataframe</span>
 
 <span class="sd">    All data for the keywords VFPPROD will be returned.</span>
 
@@ -1108,7 +1111,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

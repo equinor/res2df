@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.pvt &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.pvt &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.pvt</li>
@@ -154,7 +157,7 @@
 <div class="viewcode-block" id="pvtw_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvtw_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvtw_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PVTW from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTW from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -171,7 +174,7 @@
 <div class="viewcode-block" id="density_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.density_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">density_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract DENSITY from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract DENSITY from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -188,7 +191,7 @@
 <div class="viewcode-block" id="rock_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.rock_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rock_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract ROCK from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract ROCK from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -205,7 +208,7 @@
 <div class="viewcode-block" id="pvto_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvto_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvto_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PVTO from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTO from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -223,7 +226,7 @@
 <div class="viewcode-block" id="pvdo_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvdo_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvdo_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PVDO from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVDO from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -241,7 +244,7 @@
 <div class="viewcode-block" id="pvdg_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvdg_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvdg_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PVDG from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVDG from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -259,7 +262,7 @@
 <div class="viewcode-block" id="pvtg_fromdeck"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvtg_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvtg_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract PVTG from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTG from a deck</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        deck</span>
@@ -279,7 +282,7 @@
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract all (most) PVT data from a deck.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract all (most) PVT data from a deck.</span>
 
 <span class="sd">    If you want to call this function on Eclipse include files,</span>
 <span class="sd">    read them in to strings as in this example:</span>
@@ -321,7 +324,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for parsing Eclipse deck or</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for parsing Eclipse deck or</span>
 <span class="sd">    include files into dataframes</span>
 
 <span class="sd">    Arguments:</span>
@@ -351,7 +354,7 @@
 
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for writing Eclipse include files from</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for writing Eclipse include files from</span>
 <span class="sd">    dataframes (as CSV files)</span>
 
 <span class="sd">    Arguments:</span>
@@ -361,7 +364,7 @@
 
 
 <div class="viewcode-block" id="pvt_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvt_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for Eclipse to CSV&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for Eclipse to CSV&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -395,7 +398,7 @@
 
 
 <div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -411,7 +414,7 @@
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from PVT dataframes</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from PVT dataframes</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        pvt_df: Dataframe with PVT data on ecl2df format.</span>
@@ -434,7 +437,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_rock"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_rock">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print ROCK keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print ROCK keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe (pd.DataFrame): Containing ROCK data</span>
@@ -462,7 +465,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_density"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_density">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_density</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print DENSITY keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print DENSITY keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing DENSITY data</span>
@@ -491,7 +494,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pvtw"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_pvtw">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pvtw</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print PVTW keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PVTW keyword with data</span>
 
 <span class="sd">    PVTW is one line/record with data for a reference pressure</span>
 <span class="sd">    for each PVTNUM.</span>
@@ -527,7 +530,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pvtg"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_pvtg">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pvtg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print PVTG keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PVTG keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing PVTG data</span>
@@ -554,7 +557,7 @@
     <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_pvtg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print PVTG-data for a specific PVTNUM&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print PVTG-data for a specific PVTNUM&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">p_gas</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
@@ -562,7 +565,7 @@
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
 
     <span class="k">def</span> <span class="nf">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print PVTG-data for a particular gas phase pressure&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print PVTG-data for a particular gas phase pressure&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
         <span class="n">p_gas</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -586,7 +589,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pvdg"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_pvdg">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pvdg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print PVDG keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PVDG keyword with data</span>
 
 <span class="sd">    This data consists of one table (volumefactor and visosity</span>
 <span class="sd">    as a function of pressure) pr. PVTNUM.</span>
@@ -612,7 +615,7 @@
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_pvdg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print PVDG-data for a specific PVTNUM</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print PVDG-data for a specific PVTNUM</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dframe (pd.DataFrame): Cropped to only contain the relevant data.</span>
@@ -636,7 +639,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pvdo"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_pvdo">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pvdo</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print PVDO keyword with data</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PVDO keyword with data</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing PVDO data</span>
@@ -659,7 +662,7 @@
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_pvdo_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Print PVDO-data for a specific PVTNUM</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print PVDO-data for a specific PVTNUM</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dframe (pd.DataFrame): Cropped to only contain the relevant data.</span>
@@ -683,7 +686,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_pvto"><a class="viewcode-back" href="../../ecl2df/ecl2df.pvt.html#ecl2df.pvt.df2ecl_pvto">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_pvto</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print PVTO-data from a dataframe</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print PVTO-data from a dataframe</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing PVTO data</span>
@@ -708,7 +711,7 @@
     <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_pvto_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Print PVTO-data for a specific PVTNUM&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print PVTO-data for a specific PVTNUM&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;RS&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">rs</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
@@ -716,7 +719,7 @@
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
 
     <span class="k">def</span> <span class="nf">_pvto_pvtnum_rs</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Print PVTO-data for a particular RS&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print PVTO-data for a particular RS&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
         <span class="n">rs</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -746,7 +749,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

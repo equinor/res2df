@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.vfp._vfp &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.vfp._vfp &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.vfp._vfp</li>
@@ -121,7 +124,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.</span>
 <span class="sd">    Dictionary returned contains items for liftcuve tables as simple datatypes</span>
 <span class="sd">    Required keys in dictionary for VFPPROD and VFPINJ can be found in</span>
 <span class="sd">    BASIC_DATA_KEYS in _vfpprod and _vfpinj.</span>
@@ -162,7 +165,7 @@
 
 
 <div class="viewcode-block" id="basic_data2df"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.basic_data2df">[docs]</a><span class="k">def</span> <span class="nf">basic_data2df</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convert basic_data representation of VFPPROD/VFPINF</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert basic_data representation of VFPPROD/VFPINF</span>
 <span class="sd">    (see function basic_data for defintion of data) into</span>
 <span class="sd">    pandas DataFrame representation</span>
 
@@ -222,7 +225,7 @@
 
 
 <div class="viewcode-block" id="basic_data2pyarrow"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.basic_data2pyarrow">[docs]</a><span class="k">def</span> <span class="nf">basic_data2pyarrow</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convert basic_data representation of VFPPROD/VFPINF</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert basic_data representation of VFPPROD/VFPINF</span>
 <span class="sd">    (see function basic_data for defintion of data) into</span>
 <span class="sd">    pyarrow.Table representation</span>
 
@@ -282,7 +285,7 @@
 
 
 <div class="viewcode-block" id="df2basic_data"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.df2basic_data">[docs]</a><span class="k">def</span> <span class="nf">df2basic_data</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data types for a VFPPROD/VFPINJ</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data types for a VFPPROD/VFPINJ</span>
 <span class="sd">    liftcurve table represented as a Pandas DataFrame</span>
 
 <span class="sd">    Args:</span>
@@ -303,7 +306,7 @@
 
 
 <div class="viewcode-block" id="pyarrow2basic_data"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.pyarrow2basic_data">[docs]</a><span class="k">def</span> <span class="nf">pyarrow2basic_data</span><span class="p">(</span><span class="n">pa_table</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data types for a VFPPROD/VFPINJ</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data types for a VFPPROD/VFPINJ</span>
 <span class="sd">    liftcurve table represented as a pyarrow Table</span>
 
 <span class="sd">    Args:</span>
@@ -327,7 +330,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a list of dataframes of vfp tables from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of dataframes of vfp tables from a deck</span>
 
 <span class="sd">    Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</span>
 
@@ -370,7 +373,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a list of pyarrow.Table of vfp tables from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of pyarrow.Table of vfp tables from a deck</span>
 
 <span class="sd">    Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</span>
 
@@ -413,7 +416,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a list of strings defining VFPPROD/VFPINJ Eclipse input from a dataframe</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of strings defining VFPPROD/VFPINJ Eclipse input from a dataframe</span>
 
 <span class="sd">    All data for the keyword VFPPROD or VFPINJ will be returned.</span>
 
@@ -460,7 +463,7 @@
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a string defining all VFPPROD/VFPINJ Eclipse input from a dataframe</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a string defining all VFPPROD/VFPINJ Eclipse input from a dataframe</span>
 
 <span class="sd">    All data for the keywords VFPPROD/VFPINJ will be returned.</span>
 
@@ -495,7 +498,7 @@
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
     <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Produce a dataframes of all vfp tables from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dataframes of all vfp tables from a deck</span>
 
 <span class="sd">    All data for the keywords VFPPROD/VFPINJ will be returned.</span>
 
@@ -524,7 +527,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser</span>
@@ -558,12 +561,12 @@
 
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;VFPPROD, VFPINJ&quot;</span><span class="p">,</span> <span class="s2">&quot;vfp.inc&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="vfp_main"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.vfp_main">[docs]</a><span class="k">def</span> <span class="nf">vfp_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -605,7 +608,7 @@
 
 
 <div class="viewcode-block" id="vfp_reverse_main"><a class="viewcode-back" href="../../../ecl2df/ecl2df.vfp._vfp.html#ecl2df.vfp._vfp.vfp_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">vfp_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -623,7 +626,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

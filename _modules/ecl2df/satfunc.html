@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.satfunc &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.satfunc &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.satfunc</li>
@@ -144,7 +147,7 @@
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntsfun</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract the data in the saturation function keywords as a Pandas</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the data in the saturation function keywords as a Pandas</span>
 <span class="sd">    DataFrames.</span>
 
 <span class="sd">    Data for all saturation functions are merged into one dataframe.</span>
@@ -210,7 +213,7 @@
 
 
 <div class="viewcode-block" id="interpolate_defaults"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.interpolate_defaults">[docs]</a><span class="k">def</span> <span class="nf">interpolate_defaults</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Interpolate NaN&#39;s linearly in saturation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate NaN&#39;s linearly in saturation.</span>
 <span class="sd">    Saturation function tables in Eclipse decks can have certain values defaulted.</span>
 <span class="sd">    When parsed by common.ecl2df, these values are returned as np.nan.</span>
 <span class="sd">    The incoming dataframe must be associated to one keyword only, but</span>
@@ -236,7 +239,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
@@ -265,12 +268,12 @@
 
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; eclipse include file&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;SWOF, SGOF++&quot;</span><span class="p">,</span> <span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="satfunc_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.satfunc_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -303,7 +306,7 @@
 
 
 <div class="viewcode-block" id="satfunc_reverse_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.satfunc_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;For command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;For command line utility for CSV to Eclipse&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -319,7 +322,7 @@
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes with</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate Eclipse include strings from dataframes with</span>
 <span class="sd">    saturation functions (SWOF, SGOF, ...)</span>
 
 <span class="sd">    Args:</span>
@@ -350,7 +353,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_swof"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_swof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SWOF data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SWOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SWOF data</span>
@@ -360,7 +363,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sgof"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_sgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SGOF data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SGOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SGOF data</span>
@@ -370,7 +373,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sgfn"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_sgfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SGFN data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SGFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SGFN data</span>
@@ -380,7 +383,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sgwfn"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_sgwfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sgwfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SGWFN data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SGWFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SGWFN data</span>
@@ -390,7 +393,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_swfn"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_swfn">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_swfn</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SWFN data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SWFN data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SWFN data</span>
@@ -400,7 +403,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_slgof"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_slgof">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_slgof</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SLGOF data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SLGOF data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SLGOF data</span>
@@ -410,7 +413,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sof2"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_sof2">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof2</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SOF2 data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SOF2 data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SOF2 data</span>
@@ -420,7 +423,7 @@
 
 
 <div class="viewcode-block" id="df2ecl_sof3"><a class="viewcode-back" href="../../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl_sof3">[docs]</a><span class="k">def</span> <span class="nf">df2ecl_sof3</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Print SOF3 data. Used by df2ecl().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print SOF3 data. Used by df2ecl().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Containing SOF3 data</span>
@@ -448,7 +451,7 @@
 
     <span class="c1"># Make a function that is to be called for each SATNUM</span>
     <span class="k">def</span> <span class="nf">_df2ecl_satfuncs_satnum</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">dframe</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print one saturation function for one specific SATNUM&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print one saturation function for one specific SATNUM&quot;&quot;&quot;</span>
         <span class="n">col_headers</span> <span class="o">=</span> <span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">][</span><span class="s2">&quot;DATA&quot;</span><span class="p">]</span>
         <span class="n">string</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;-- &quot;</span>
@@ -472,7 +475,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

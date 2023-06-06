@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.gruptree &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.gruptree &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,15 +25,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ecl2df
-            <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +70,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../ecl2df.html">ecl2df</a></li>
       <li class="breadcrumb-item active">ecl2df.gruptree</li>
@@ -117,7 +120,7 @@
     <span class="n">startdate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">welspecs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract all group information from a deck</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract all group information from a deck</span>
 <span class="sd">    and present as a Pandas Dataframe of all edges.</span>
 
 <span class="sd">    Properties for nodes given in GRUPNET/NODEPROP will</span>
@@ -267,7 +270,7 @@
     <span class="n">found_keywords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Writes a new GRUPTREE tree if there are new instances of</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes a new GRUPTREE tree if there are new instances of</span>
 <span class="sd">    GRUPTREE, GRUPNET or WELSPECS and writes a new BRANPROP tree</span>
 <span class="sd">    if there are new instances of BRANPROP, NODEPROP or WELSPECS.</span>
 
@@ -297,7 +300,7 @@
     <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span>
     <span class="n">treetype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Merge a list of edges with information from the nodedata dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge a list of edges with information from the nodedata dataframe.</span>
 
 <span class="sd">    Edges where there is no parent (root nodes) are identified and added</span>
 <span class="sd">    as special cases.</span>
@@ -362,7 +365,7 @@
 
 
 <div class="viewcode-block" id="edge_dataframe2dict"><a class="viewcode-back" href="../../ecl2df/ecl2df.gruptree.html#ecl2df.gruptree.edge_dataframe2dict">[docs]</a><span class="k">def</span> <span class="nf">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Convert list of edges in a dataframe into a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert list of edges in a dataframe into a</span>
 <span class="sd">    nested dictionary (tree).</span>
 
 <span class="sd">    The dataframe cannot have multiple DATEs, filter to the date you</span>
@@ -414,7 +417,7 @@
 
 
 <div class="viewcode-block" id="tree_from_dict"><a class="viewcode-back" href="../../ecl2df/ecl2df.gruptree.html#ecl2df.gruptree.tree_from_dict">[docs]</a><span class="k">def</span> <span class="nf">tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convert a dictionary to a treelib Tree.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dictionary to a treelib Tree.</span>
 
 <span class="sd">    The treelib representation of the trees is used</span>
 <span class="sd">    for pretty-printing (in ASCII) of the tree, you</span>
@@ -441,7 +444,7 @@
 
 
 <div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../ecl2df/ecl2df.gruptree.html#ecl2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convert a nested dictonary to a treelib Tree</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a nested dictonary to a treelib Tree</span>
 <span class="sd">    object. This function is recursive.</span>
 
 <span class="sd">    The treelib representation of the trees is used</span>
@@ -468,7 +471,7 @@
 
 
 <div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../ecl2df/ecl2df.gruptree.html#ecl2df.gruptree.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser</span>
@@ -500,7 +503,7 @@
 
 
 <div class="viewcode-block" id="prettyprint"><a class="viewcode-back" href="../../ecl2df/ecl2df.gruptree.html#ecl2df.gruptree.prettyprint">[docs]</a><span class="k">def</span> <span class="nf">prettyprint</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Returns a string with the prettyprint of a dataframe</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string with the prettyprint of a dataframe</span>
 <span class="sd">    possibly containing multiple dates and both GRUPTREE and</span>
 <span class="sd">    BRANPROP trees&quot;&quot;&quot;</span>
     <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -528,7 +531,7 @@
 
 
 <div class="viewcode-block" id="gruptree_main"><a class="viewcode-back" href="../../ecl2df/ecl2df.gruptree.html#ecl2df.gruptree.gruptree_main">[docs]</a><span class="k">def</span> <span class="nf">gruptree_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_ecl2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="p">)</span>
@@ -553,7 +556,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

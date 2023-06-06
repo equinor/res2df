@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.17.2.dev5+g45578fb0 documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.17.2.dev10+gaeb0953a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -29,15 +28,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ecl2df
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ecl2df
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev5+g45578fb0
+                0.17.2.dev10+gaeb0953a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -106,7 +109,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">ecl2df.eclfiles</span></code></li>
       <li class="wy-breadcrumbs-aside">
@@ -138,7 +141,7 @@ it should be loaded or served from cache.</p>
 an option to close the stream as possible, leaving not much work
 for this function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -149,7 +152,7 @@ for this function.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file2deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.file2deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.file2deck" title="Permalink to this definition"></a></dt>
 <dd><p>Try to convert standalone files into opm.io Deck objects</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code></p>
 </dd>
 </dl>
@@ -160,7 +163,7 @@ for this function.</p>
 <span class="sig-name descname"><span class="pre">get_ecldeck</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_ecldeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_ecldeck" title="Permalink to this definition"></a></dt>
 <dd><p>Return a opm.io deck of the DATA file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code></p>
 </dd>
 </dl>
@@ -172,11 +175,11 @@ for this function.</p>
 <dd><p>Find and return the summary file and
 return as EclSum object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>include_restart</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Sent to libecl for whether restart files
 should be traversed.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclSum</span></code></p>
 </dd>
 </dl>
@@ -187,7 +190,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_egrid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_egrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_egrid" title="Permalink to this definition"></a></dt>
 <dd><p>Find and return EGRID file as an EclGrid object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclGrid</span></code></p>
 </dd>
 </dl>
@@ -199,7 +202,7 @@ should be traversed.</p>
 <dd><p>Find and return the EGRID file as a EclFile object</p>
 <p>This gives access to data vectors defined on the grid.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
 </dd>
 </dl>
@@ -210,7 +213,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_initfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_initfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_initfile" title="Permalink to this definition"></a></dt>
 <dd><p>Find and return the INIT file as an EclFile object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
 </dd>
 </dl>
@@ -221,7 +224,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_path" title="Permalink to this definition"></a></dt>
 <dd><p>Return the full path to the directory with the DATA file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></p>
 </dd>
 </dl>
@@ -232,7 +235,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_prtfilename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_prtfilename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_prtfilename" title="Permalink to this definition"></a></dt>
 <dd><p>Return the inferred name of the PRT file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
@@ -243,7 +246,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_rftfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_rftfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_rftfile" title="Permalink to this definition"></a></dt>
 <dd><p>Find and return the RFT file as an EclFile object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
 </dd>
 </dl>
@@ -254,7 +257,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_rstfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_rstfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_rstfile" title="Permalink to this definition"></a></dt>
 <dd><p>Find and return the UNRST file as an EclFile object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
 </dd>
 </dl>
@@ -265,7 +268,7 @@ should be traversed.</p>
 <span class="sig-name descname"><span class="pre">get_rstfilename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_rstfilename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_rstfilename" title="Permalink to this definition"></a></dt>
 <dd><p>Return the inferred name of the UNRST file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
@@ -285,12 +288,12 @@ should be traversed.</p>
 Write single layer zones as 11-11. NB: ResInsight requires single
 quotes always.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name of file. If relative path, relative to DATA
 file location. If nonexisting file, an empty dict will be
 returned and a warning issued.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>dict, integer keys which are the K layers. Every layer mentioned</dt><dd><p>in the interval in the input file is present. Can be empty.</p>
 </dd>
@@ -306,7 +309,7 @@ returned and a warning issued.</p>
 <dd><p>Produce a opm.io deck from a string, using permissive
 parsing by default</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code></p>
 </dd>
 </dl>
@@ -319,7 +322,7 @@ parsing by default</p>
 <span class="sig-prename descclassname"><span class="pre">ecl2df.eclfiles.</span></span><span class="sig-name descname"><span class="pre">rreplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#rreplace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.rreplace" title="Permalink to this definition"></a></dt>
 <dd><p>Variant of str.replace() that only replaces at the end of the string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
@@ -338,7 +341,7 @@ parsing by default</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2022.</p>
+    <p>&#169; Copyright Equinor 2019-2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

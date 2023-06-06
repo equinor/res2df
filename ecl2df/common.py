@@ -627,8 +627,8 @@ def df2ecl(
 def generic_ecltable(
     dframe: pd.DataFrame,
     keyword: str,
-    comment: str = None,
-    renamer: Dict[str, str] = None,
+    comment: Optional[str] = None,
+    renamer: Optional[Dict[str, str]] = None,
     drop_trailing_columns: bool = True,
 ) -> str:
     """Construct a typical Eclipse table for data following

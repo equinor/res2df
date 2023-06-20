@@ -9,6 +9,14 @@ from ecl2df import ecl2csv
 from ecl2df.common import find_name_components, make_output_name
 from ecl2df.constants import SUBMODULES
 
+try:
+    import opm
+except ImportError:
+    pytest.skip(
+        "OPM is not installed",
+        allow_module_level=True,
+    )
+
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 

@@ -10,7 +10,7 @@ from ecl2df.common import find_name_components, make_output_name
 from ecl2df.constants import SUBMODULES
 
 try:
-    import opm
+    import opm  # noqa
 except ImportError:
     pytest.skip(
         "OPM is not installed",
@@ -104,11 +104,8 @@ def test_command_line_name_setting(mocker, tmp_path, submod_name):
     file_names = list(outpath)
     assert len(file_names) == 1, "Produced more than one file"
     file_name = file_names[0]
-    print(f" file name in test {file_name}")
     name, tagname = file_name.name.replace(file_name.suffix, "").split("--")
     file_name.unlink()
-    print(name)
-    print(tagname)
     correct_name = "2_R001_REEK"
     assert name == correct_name, f"{name} is not as planned {correct_name}"
     assert tagname == submod_name, f"tag {tagname} not as planned {submod_name}"

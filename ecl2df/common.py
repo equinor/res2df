@@ -216,10 +216,10 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
     if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
         signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-        print(string)
+        sys.stdout.write(string)
     else:
         Path(outputfilename).write_text(string, encoding="utf-8")
-        print(f"Wrote to {outputfilename}")
+        logger.info("Wrote to %s ", outputfilename)
 
 
 def parse_ecl_month(eclmonth: str) -> int:

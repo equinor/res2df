@@ -92,7 +92,9 @@ def test_ecl2csv_through_ert(tmp_path):
     ert_config_filename = "ecl2csv_test.ert"
     Path(ert_config_filename).write_text("\n".join(ert_config), encoding="utf-8")
 
-    subprocess.call(["ert", "test_run", ert_config_filename])
+    subprocess.call(
+        ["ert", "test_run", "--port-range", "1024-65535", ert_config_filename]
+    )
 
     assert Path("OK").is_file()
 

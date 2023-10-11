@@ -14,8 +14,8 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import pkg_resources
 import datetime
+from importlib import metadata
 
 # -- Project information -----------------------------------------------------
 
@@ -26,7 +26,7 @@ copyright = f"Equinor 2019-{datetime.datetime.now().year}"
 # The short X.Y version
 import ecl2df  # noqa
 
-release = pkg_resources.get_distribution("ecl2df").version
+release = metadata.version("ecl2df")
 version = release
 
 # -- General configuration ---------------------------------------------------

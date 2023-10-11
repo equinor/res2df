@@ -1,7 +1,6 @@
 import importlib
+import sys
 from pathlib import Path
-
-from pkg_resources import resource_filename
 
 try:
     from ert.shared.plugins.plugin_manager import hook_implementation
@@ -19,7 +18,7 @@ except ModuleNotFoundError:
 
 
 def _get_jobs_from_directory(directory):
-    resource_directory = Path(resource_filename("ecl2df", directory))
+    resource_directory = Path(sys.modules["ecl2df"].__file__).parent / directory
 
     all_files = [
         resource_directory / filename

@@ -31,7 +31,7 @@ DOCS_REQUIREMENTS = [
     "autoapi",
     "ipython",
     "rstcheck",
-    "sphinx",
+    "sphinx<7",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
     "sphinx_rtd_theme",

@@ -11,6 +11,7 @@ try:
 except ImportError:
     HAVE_NETWORKX = False
 
+import numpy as np
 import pandas as pd
 
 from ecl2df import ecl2csv, trans
@@ -91,6 +92,17 @@ def test_nx(tmp_path):
     assert network.number_of_nodes() == 6
     networkx.write_gexf(network, tmp_path / "reek-fipnum-trans.gxf", prettyprint=True)
     assert (tmp_path / "reek-fipnum-trans.gxf").is_file()
+
+
+def test_typenum():
+    """Test FIPNUM and EQLNUM types for integer"""
+    eclfiles = EclFiles(REEK)
+    trans_df = trans.df(eclfiles, vectors=["FIPNUM", "EQLNUM"])
+
+    assert isinstance(trans_df["FIPNUM1"][0], np.integer)
+    assert isinstance(trans_df["FIPNUM2"][0], np.integer)
+    assert isinstance(trans_df["EQLNUM1"][0], np.integer)
+    assert isinstance(trans_df["EQLNUM2"][0], np.integer)
 
 
 def test_main(tmp_path, mocker):

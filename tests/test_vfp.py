@@ -989,6 +989,110 @@ VFPINJ
     ),
 ]
 
+VFPPROD_DEFAULT_UNIT_CASES = [
+    pytest.param(
+        """
+METRIC
+
+VFPPROD
+
+-- Table  Datum Depth  Rate Type  WFR Type  GFR Type  THP Type  ALQ Type  """
+        + """UNITS   TAB Type
+-- -----  -----------  ---------  --------  --------  --------  --------  """
+        + """------  --------
+       1       3000.0        GAS       WGR       GOR       THP        ''  """
+        + """''           BHP /
+
+-- GAS units - sm3/day ( 1 values )
+     50000 /
+
+-- THP units - barsa ( 1 values )
+        40 /
+
+-- WGR units - sm3/sm3 ( 1 values )
+         0 /
+
+-- GOR units - sm3/sm3 ( 1 values )
+       500 /
+
+-- "''" units -  ( 1 values )
+         0 /
+
+ 1  1  1  1    100.0
+/
+
+VFPPROD
+
+-- Table  Datum Depth  Rate Type  WFR Type  GFR Type  THP Type  ALQ Type  """
+        + """UNITS   TAB Type
+-- -----  -----------  ---------  --------  --------  --------  --------  """
+        + """------  --------
+       1       4000.0        GAS       WGR       GOR       THP        ''  """
+        + """''       BHP /
+
+-- GAS units - sm3/day ( 1 values )
+     10000 /
+
+-- THP units - barsa ( 1 values )
+        10 /
+
+-- WGR units - sm3/sm3 ( 1 values )
+         0 /
+
+-- GOR units - sm3/sm3 ( 1 values )
+       50 /
+
+-- "''" units -  ( 1 values )
+         0 /
+
+ 1  1  1  1    200.0
+/
+    """,
+        [
+            pd.DataFrame(
+                columns=[
+                    "RATE",
+                    "PRESSURE",
+                    "WFR",
+                    "GFR",
+                    "ALQ",
+                    "TAB",
+                    "VFP_TYPE",
+                    "TABLE_NUMBER",
+                    "DATUM",
+                    "RATE_TYPE",
+                    "WFR_TYPE",
+                    "GFR_TYPE",
+                    "ALQ_TYPE",
+                    "PRESSURE_TYPE",
+                    "TAB_TYPE",
+                    "UNIT_TYPE",
+                ],
+                data=[
+                    [
+                        10000.0,
+                        10.0,
+                        0.0,
+                        50.0,
+                        0.0,
+                        200.0,
+                        "VFPPROD",
+                        1,
+                        4000.0,
+                        "GAS",
+                        "WGR",
+                        "GOR",
+                        "''",
+                        "THP",
+                        "BHP",
+                        "METRIC",
+                    ],
+                ],
+            ),
+        ],
+    ),
+]
+
 
 @pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
 def test_ecl2df_vfpprod(test_input, expected):
@@ -1389,3 +1493,14 @@ class Test_Exceptions_vfpinj_dims:
         ][1:]
         with pytest.raises(ValueError):
             vfp._vfpinj._check_basic_data(basic_data_vfpinj_wrong_dim)
+
+
+@pytest.mark.parametrize("test_input, expected", VFPPROD_DEFAULT_UNIT_CASES)
+def test_ecl2df_vfpprod_same_number_default_unit(test_input, expected):
+    """Test ecl2df for VFPPROD"""
+    deck = EclFiles.str2deck(test_input)
+    vfpdf = vfp.df(deck, "VFPPROD", "[1,2]")
+
+    pd.testing.assert_frame_equal(
+        vfpdf.reset_index(drop=True), expected[0].reset_index(drop=True)
+    )

@@ -29,6 +29,9 @@ from ecl2df import EclFiles, common, getLogger_ecl2csv
 
 from . import _vfpinj as vfpinj
 from . import _vfpprod as vfpprod
+from ._vfpcommon import _ecl_unit_system as ecl_unit_system
+from ._vfpcommon import _string2stringlist as string2stringlist
+from ._vfpcommon import _unique_vfps as unique_vfps
 from ._vfpdefs import SUPPORTED_KEYWORDS, VFPTYPE
 
 logger = logging.getLogger(__name__)
@@ -265,21 +268,24 @@ def dfs(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
+    eclipse_unittype = ecl_unit_system(deck)
+
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
-    dfs_vfp = []
+    dfs_vfp_all = []
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                df_vfpprod = vfpprod.df(deck_keyword, vfpnumbers_str)
+                df_vfpprod = vfpprod.df(deck_keyword, vfpnumbers_str, eclipse_unittype)
                 if df_vfpprod is not None:
-                    dfs_vfp.append(df_vfpprod)
+                    dfs_vfp_all.append(df_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                df_vfpinj = vfpinj.df(deck_keyword, vfpnumbers_str)
+                df_vfpinj = vfpinj.df(deck_keyword, vfpnumbers_str, eclipse_unittype)
                 if df_vfpinj is not None:
-                    dfs_vfp.append(df_vfpinj)
+                    dfs_vfp_all.append(df_vfpinj)
 
+    dfs_vfp = unique_vfps(dfs_vfp_all)
     return dfs_vfp
 
 
@@ -293,10 +299,10 @@ def pyarrow_tables(
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
 
     Args:
-        deck:           Eclipse deck or string with deck
-        keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        deck:             Eclipse deck or string with deck
+        keyword:          VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+        vfpnumbers_str:   String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
     if isinstance(deck, EclFiles):
         deck = deck.get_ecldeck()
@@ -308,21 +314,28 @@ def pyarrow_tables(
             f"VFP type {keyword} not supported choose 'VFPPROD'or 'VFPINJ'"
         )
 
+    eclipse_unittype = ecl_unit_system(deck)
+
     # The keywords VFPPROD/VFPINJ can be used many times in Eclipse and be introduced in
     # separate files or a common file. Need to loop to find all instances of keyword and
     # store separately
-    pyarrow_tables_vfp = []
+    pyarrow_tables_vfp_all = []
     for deck_keyword in deck:
         if deck_keyword.name == keyword:
             if deck_keyword.name == "VFPPROD":
-                pa_table_vfpprod = vfpprod.pyarrow(deck_keyword, vfpnumbers_str)
+                pa_table_vfpprod = vfpprod.pyarrow(
+                    deck_keyword, vfpnumbers_str, eclipse_unittype
+                )
                 if pa_table_vfpprod is not None:
-                    pyarrow_tables_vfp.append(pa_table_vfpprod)
+                    pyarrow_tables_vfp_all.append(pa_table_vfpprod)
             elif deck_keyword.name == "VFPINJ":
-                pa_table_vfpinj = vfpinj.pyarrow(deck_keyword, vfpnumbers_str)
+                pa_table_vfpinj = vfpinj.pyarrow(
+                    deck_keyword, vfpnumbers_str, eclipse_unittype
+                )
                 if pa_table_vfpinj is not None:
-                    pyarrow_tables_vfp.append(pa_table_vfpinj)
+                    pyarrow_tables_vfp_all.append(pa_table_vfpinj)
 
+    pyarrow_tables_vfp = unique_vfps(pyarrow_tables_vfp_all)
     return pyarrow_tables_vfp
 
 
@@ -418,9 +431,9 @@ def df(
     All data for the keywords VFPPROD/VFPINJ will be returned.
 
     Args:
-        deck:           Eclipse deck or string wit deck
-        keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
-        vfpnumbers_str: str with list of VFP table numbers to extract
+        deck:             Eclipse deck or string wit deck
+        keyword:          VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
+        vfpnumbers_str:   str with list of VFP table numbers to extract
     """
 
     if not keyword:
@@ -434,6 +447,7 @@ def df(
 
     # Extract all VFPROD/VFPINJ as separate dataframes
     dfs_vfp = dfs(deck, keyword, vfpnumbers_str)
+
     # Concat all dataframes into one dataframe
     if dfs_vfp:
         return pd.concat(dfs_vfp)
@@ -453,15 +467,22 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help="Name of output csv file. No CSV dump if empty",
+        help="Name of output file. No output if empty",
+        default="",
+    )
+    parser.add_argument(
+        "-d",
+        "--output_dir",
+        type=str,
+        help="Name of output directory. No output if empty",
         default="",
     )
     parser.add_argument(
         "-k",
         "--keyword",
         type=str,
-        help="VFP keywords to include, i.e. VFPPROD or VFPINJ",
-        default="",
+        help="VFP keywords to include, i.e. VFPPROD, VFPINJ or [VFPPROD,VFPINJ]",
+        default="[VFPPROD,VFPINJ]",
     )
     parser.add_argument(
         "-n",
@@ -486,40 +507,80 @@ def vfp_main(args) -> None:
         __name__, vars(args)
     )
     if args.keyword:
-        if args.keyword not in SUPPORTED_KEYWORDS:
-            raise ValueError(f"Keyword argument {args.keyword} not supported")
-    if not args.output:
-        logger.info("Nothing to do. Set --output")
+        vfptypes = string2stringlist(args.keyword)
+        for vfptype in vfptypes:
+            if vfptype not in SUPPORTED_KEYWORDS:
+                raise ValueError(f"Keyword argument {vfptype} not supported")
+    if not args.output and not args.output_dir:
+        logger.info("Nothing to do. Set --output_dir or --output")
         sys.exit(0)
     vfpnumbers = None
     if "vfpnumbers" in args:
         vfpnumbers = str(args.vfpnumbers)
 
     eclfiles = EclFiles(args.DATAFILE)
+    #    eclipse_unittype = ecl_unit_system(eclfiles)
+    vfptypes = string2stringlist(args.keyword)
+    prefix = args.output
+    if prefix and prefix[-1] != "_":
+        prefix = prefix + "_"
+
     if args.arrow:
-        outputfile = args.output
-        outputfile.replace(".arrow", "")
-        vfp_arrow_tables = pyarrow_tables(
-            eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
-        )
-        for vfp_table in vfp_arrow_tables:
-            table_number = int(
-                vfp_table.schema.metadata[b"TABLE_NUMBER"].decode("utf-8")
-            )
-            vfp_filename = f"{outputfile}_{str(table_number)}.arrow"
-            common.write_dframe_stdout_file(
-                vfp_table, vfp_filename, index=False, caller_logger=logger
-            )
-            logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
+        # Loop over vtptype (VFPPROD and/or VFPINJ)
+        for vfptype in SUPPORTED_KEYWORDS:
+            if vfptype in vfptypes:
+                # Extract all VFP tables from Eclipse deck
+                vfp_arrow_tables_all = pyarrow_tables(
+                    eclfiles.get_ecldeck(),
+                    keyword=vfptype,
+                    vfpnumbers_str=vfpnumbers,
+                )
+                # Remove VFP curves with same number. Keep last curve with given number.
+                vfp_arrow_tables = unique_vfps(vfp_arrow_tables_all)
+
+                for i in range(0, len(vfp_arrow_tables)):
+                    vfp_table = vfp_arrow_tables[i]
+                    table_number = int(
+                        vfp_table.schema.metadata[b"TABLE_NUMBER"].decode("utf-8")
+                    )
+                    vfp_filename = ""
+                    if args.output_dir:
+                        vfp_filename = (
+                            f"{args.output_dir}/{prefix}"
+                            f"{vfptype.lower()}_{str(table_number)}.arrow"
+                        )
+                    else:
+                        vfp_filename = (
+                            f"{prefix}{vfptype.lower()}{str(table_number)}.arrow"
+                        )
+                    common.write_dframe_stdout_file(
+                        vfp_table, vfp_filename, index=False, caller_logger=logger
+                    )
+                logger.info(
+                    (
+                        f"Parsed file {args.DATAFILE} "
+                        f"for vfp.dfs_arrow with keyword {vfptype}"
+                    )
+                )
     else:
-        dframe = df(
-            eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
-        )
-        if args.output:
-            common.write_dframe_stdout_file(
-                dframe, args.output, index=False, caller_logger=logger
-            )
-            logger.info(f"Parsed file {args.DATAFILE} for vfp.df")
+        # Loop over vfptype (VFPPROD and/or VFPINJ)
+        for vfptype in SUPPORTED_KEYWORDS:
+            if vfptype in vfptypes:
+                dframe = df(
+                    eclfiles.get_ecldeck(),
+                    keyword=vfptype,
+                    vfpnumbers_str=vfpnumbers,
+                )
+
+                vfp_filename = ""
+                if args.output_dir:
+                    vfp_filename = f"{args.output_dir}/{prefix}{vfptype.lower()}.csv"
+                else:
+                    vfp_filename = f"{prefix}{vfptype.lower()}.csv"
+                common.write_dframe_stdout_file(
+                    dframe, vfp_filename, index=False, caller_logger=logger
+                )
+    logger.info(f"Parsed file {args.DATAFILE} for vfp.df with keyword {vfptype}")
 
 
 def vfp_reverse_main(args) -> None:
@@ -531,4 +592,4 @@ def vfp_reverse_main(args) -> None:
     logger.info("Parsed {args.csvfile}")
     inc_string = df2ecl(vfp_df, args.keyword)
     if args.output:
-        common.write_inc_stdout_file(inc_string, args.output)
+        common.write_inc_stdout_file(inc_string, f"{args.output}/vfp.ecl")

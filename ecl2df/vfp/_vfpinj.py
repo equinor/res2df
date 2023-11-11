@@ -472,15 +472,17 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 def df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
+    default_unittype: Optional[UNITTYPE] = None,
 ) -> Union[pd.DataFrame, None]:
     """Return a dataframes of a single VFPINJ table from an Eclipse deck
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
 
     Args:
-        keyword:        Eclipse deck keyword
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        keyword:          Eclipse deck keyword
+        vfpnumbers_str:   String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        default_unittype: Unit type used if unit type is set to default for Eclipse
     """
 
     # Get basic data from VFPINJ tables
@@ -488,6 +490,11 @@ def df(
 
     if len(vfpinj_data) == 0:
         return None
+
+    # Change unit type if defaulted to default for Eclipse
+    if vfpinj_data["UNIT_TYPE"] == UNITTYPE.DEFAULT:
+        if default_unittype is not None:
+            vfpinj_data["UNIT_TYPE"] = default_unittype
 
     # Put VFPINJ data into pandas DataFrame
     df_vfpinj = basic_data2df(
@@ -509,14 +516,16 @@ def df(
 def pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
+    default_unittype: Optional[UNITTYPE] = None,
 ) -> Union[pa.Table, None]:
     """Return a pyarrow Table of a single VFPINJ table from an Eclipse deck
        If no VFPINJ table found, return None
 
     Args:
-        keyword:        Eclipse deck keyword
-        vfpnumbers_str: String with list of vfp table numbers to extract.
-                        Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        keyword:          Eclipse deck keyword
+        vfpnumbers_str:   String with list of vfp table numbers to extract.
+                          Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
+        default_unittype: Unit type used if unit type is set to default for Eclipse
     """
 
     # Get basic data from VFPINJ tables
@@ -524,6 +533,11 @@ def pyarrow(
 
     if len(vfpinj_data) == 0:
         return None
+
+    # Change unit type if defaulted to default for Eclipse
+    if vfpinj_data["UNIT_TYPE"] == UNITTYPE.DEFAULT:
+        if default_unittype is not None:
+            vfpinj_data["UNIT_TYPE"] = default_unittype
 
     # Put VFPINJ data into pandas DataFrame
     pa_vfpinj = basic_data2pyarrow(

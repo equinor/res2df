@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pyarrow.feather
-from ecl.summary import EclSum, EclSumKeyWordVector
+from resdata.summary import Summary, SummaryKeyWordVector
 
 from ecl2df import getLogger_ecl2csv
 
@@ -94,7 +94,7 @@ def _crop_datelist(
     only cropped or returned as is.
 
     Args:
-        eclsumsdates: list of datetimes, typically coming from EclSum.dates
+        eclsumsdates: list of datetimes, typically coming from Summary.dates
         freq: Either a date or datetime, or a frequency string
             "raw", "first" or "last".
         start_date: Dates prior to this date will be cropped.
@@ -206,7 +206,7 @@ def resample_smry_dates(
     can be returned, on the same date range. Incoming dates can also be cropped.
 
     Args:
-        eclsumsdates: list of datetimes, typically coming from EclSum.dates
+        eclsumsdates: list of datetimes, typically coming from Summary.dates
         freq: string denoting requested frequency for
             the returned list of datetime. 'raw' will
             return the input datetimes (no resampling).
@@ -311,7 +311,7 @@ def df(
     """
     Extract data from UNSMRY as Pandas dataframes.
 
-    This is a thin wrapper for EclSum.pandas_frame, by adding
+    This is a thin wrapper for Summary.pandas_frame, by adding
     support for string mnenomics for the time index.
 
     The dataframe is always indexed by DATE, and the datatype for the
@@ -322,7 +322,7 @@ def df(
 
     Arguments:
         eclfiles: EclFiles object representing the Eclipse deck. Alternatively
-           an EclSum object.
+           an Summary object.
         time_index: string indicating a resampling frequency,
            'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
            return the simulated report steps (also default).
@@ -354,7 +354,7 @@ def df(
     if isinstance(column_keys, str):
         column_keys = [column_keys]
 
-    if isinstance(eclfiles, EclSum):
+    if isinstance(eclfiles, Summary):
         eclsum = eclfiles
     else:
         try:
@@ -579,7 +579,7 @@ def smry_meta(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
 
     A dictionary indexed by summary vector name is returned, and each
     value is dictionary with the metadata types provided by the underlying
-    EclSum object:
+    Summary object:
 
     * unit (string)
     * is_total (bool)
@@ -589,7 +589,7 @@ def smry_meta(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     * keyword (str)
     * wgname (str or None)
     """
-    if isinstance(eclfiles, EclSum):
+    if isinstance(eclfiles, Summary):
         eclsum = eclfiles
     else:
         eclsum = eclfiles.get_eclsum()
@@ -610,7 +610,7 @@ def smry_meta(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
 
 
 def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
-    """Fix a dataframe making it ready for EclSum.from_pandas()
+    """Fix a dataframe making it ready for Summary.from_pandas()
 
     * Ensures that the index is always datetime, and sorted.
     * Removes BLOCK vectors, these are currently not supported as
@@ -680,14 +680,14 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
 def df2eclsum(
     dframe: pd.DataFrame,
     casename: str = "SYNTHETIC",
-) -> EclSum:
-    """Convert a dataframe to an EclSum object
+) -> Summary:
+    """Convert a dataframe to an Summary object
 
     Args:
         dframe: Dataframe with a DATE colum (or with the
             dates/datetimes in the index).
-        casename: Name of Eclipse casename/basename to be used for the EclSum object
-            If the EclSum object is later written to disk, this will be used
+        casename: Name of Eclipse casename/basename to be used for the Summary object
+            If the Summary object is later written to disk, this will be used
             to construct the filenames.
     """
     if dframe.empty:
@@ -700,24 +700,24 @@ def df2eclsum(
 
     dframe = _fix_dframe_for_libecl(dframe)
     return _libecl_eclsum_from_pandas(casename, dframe)
-    # return EclSum.from_pandas(casename, dframe)
+    # return Summary.from_pandas(casename, dframe)
 
 
 def _libecl_eclsum_pandas_frame(
-    eclsum: EclSum,
+    eclsum: Summary,
     time_index: Optional[Union[List[dt.date], List[dt.datetime]]] = None,
     column_keys: Optional[List[str]] = None,
 ) -> pd.DataFrame:
-    """Build a Pandas dataframe from an EclSum object.
+    """Build a Pandas dataframe from an Summary object.
 
     Temporarily copied from libecl to circumvent bug
 
     https://github.com/equinor/ecl/issues/802
     """
     if column_keys is None:
-        keywords = EclSumKeyWordVector(eclsum, add_keywords=True)
+        keywords = SummaryKeyWordVector(eclsum, add_keywords=True)
     else:
-        keywords = EclSumKeyWordVector(eclsum)
+        keywords = SummaryKeyWordVector(eclsum)
         for key in column_keys:
             keywords.add_keywords(key)
 
@@ -725,13 +725,13 @@ def _libecl_eclsum_pandas_frame(
     if time_index is None:
         time_index = eclsum.dates  # Changed from libecl
         data = np.zeros([len(time_index), len(keywords)])
-        EclSum._init_pandas_frame(
+        Summary._init_pandas_frame(
             eclsum, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
         )
     else:
         time_points = eclsum._make_time_vector(time_index)
         data = np.zeros([len(time_points), len(keywords)])
-        EclSum._init_pandas_frame_interp(
+        Summary._init_pandas_frame_interp(
             eclsum,
             keywords,
             time_points,
@@ -757,8 +757,8 @@ def _libecl_eclsum_from_pandas(
     frame: pd.DataFrame,
     dims: Optional[List[int]] = None,
     headers: Optional[List[tuple]] = None,
-) -> EclSum:
-    """Build an EclSum object from a Pandas dataframe.
+) -> Summary:
+    """Build an Summary object from a Pandas dataframe.
 
     Temporarily copied from libecl to circumvent bug
 
@@ -774,20 +774,20 @@ def _libecl_eclsum_from_pandas(
     var_list = []
     # pylint: disable=protected-access
     if headers is None:
-        header_list = EclSum._compile_headers_list(frame.columns.values, dims)
+        header_list = Summary._compile_headers_list(frame.columns.values, dims)
     else:
-        header_list = EclSum._compile_headers_list(headers, dims)
+        header_list = Summary._compile_headers_list(headers, dims)
     if dims is None:
         dims = [1, 1, 1]
-    ecl_sum = EclSum.writer(case, start_time, dims[0], dims[1], dims[2])
+    ecl_sum = Summary.writer(case, start_time, dims[0], dims[1], dims[2])
     for keyword, wgname, num, unit in header_list:
         var_list.append(
-            ecl_sum.addVariable(keyword, wgname=wgname, num=num, unit=unit).getKey1()
+            ecl_sum.add_variable(keyword, wgname=wgname, num=num, unit=unit).getKey1()
         )
 
     for idx, time in enumerate(frame.index):
         days = (time - start_time).days
-        t_step = ecl_sum.addTStep(idx + 1, days)
+        t_step = ecl_sum.add_t_step(idx + 1, days)
         for var in var_list:
             t_step[var] = frame.iloc[idx][var]
     return ecl_sum
@@ -934,12 +934,12 @@ def summary_reverse_main(args) -> None:
     outputdir = Path(args.output).parent
     eclbase = Path(args.output).name
 
-    # EclSum.fwrite() can only write to current directory:
+    # Summary.fwrite() can only write to current directory:
     cwd = os.getcwd()
     eclsum = df2eclsum(summary_df, eclbase)
     try:
         os.chdir(outputdir)
-        EclSum.fwrite(eclsum)
+        Summary.fwrite(eclsum)
     finally:
         os.chdir(cwd)
 

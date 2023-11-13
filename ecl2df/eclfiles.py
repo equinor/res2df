@@ -13,10 +13,10 @@ try:
 except ImportError:
     HAVE_OPM = False
 
-from ecl import EclFileFlagEnum
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
-from ecl.summary import EclSum
+from resdata.grid import Grid
+from resdata.rd_util import FileMode
+from resdata.resfile import ResdataFile
+from resdata.summary import Summary
 
 from ecl2df import common
 
@@ -44,7 +44,7 @@ class EclFiles(object):
     Class for holding an Eclipse deck with result files
 
     Exists only for convenience, so that loading of
-    EclFile/EclSum objects is easy for users, and with
+    ResdataFile/Summary objects is easy for users, and with
     caching if wanted.
 
     Various functions that needs some of the Eclipse output
@@ -68,14 +68,14 @@ class EclFiles(object):
         self._eclbase = eclbase
 
         # Set class variables to None
-        self._egridfile = None  # Should be EclFile
-        self._initfile = None  # Should be EclFile
-        self._eclsum = None  # Should be EclSum
+        self._egridfile = None  # Should be ResdataFile
+        self._initfile = None  # Should be ResdataFile
+        self._eclsum = None  # Should be Summary
 
-        self._egrid = None  # Should be EclGrid
+        self._egrid = None  # Should be Grid
 
-        self._rstfile = None  # EclFile
-        self._rftfile = None  # EclFile
+        self._rstfile = None  # ResdataFile
+        self._rftfile = None  # ResdataFile
 
         self._deck = None
 
@@ -111,8 +111,8 @@ class EclFiles(object):
         """Try to convert standalone files into opm.io Deck objects"""
         return EclFiles.str2deck(Path(filename).read_text(encoding="utf-8"))
 
-    def get_egrid(self) -> EclGrid:
-        """Find and return EGRID file as an EclGrid object"""
+    def get_egrid(self) -> Grid:
+        """Find and return EGRID file as an Grid object"""
         if not self._egrid:
             egridfilename = self._eclbase + ".EGRID"
             if not Path(egridfilename).is_file():
@@ -120,11 +120,11 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
             logger.info("Opening grid data from EGRID file: %s", egridfilename)
-            self._egrid = EclGrid(egridfilename)
+            self._egrid = Grid(egridfilename)
         return self._egrid
 
-    def get_egridfile(self) -> EclFile:
-        """Find and return the EGRID file as a EclFile object
+    def get_egridfile(self) -> ResdataFile:
+        """Find and return the EGRID file as a ResdataFile object
 
         This gives access to data vectors defined on the grid."""
         if not self._egridfile:
@@ -134,15 +134,13 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), egridfilename
                 )
             logger.info("Opening data vectors from EGRID file: %s", egridfilename)
-            self._egridfile = EclFile(
-                egridfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
-            )
+            self._egridfile = ResdataFile(egridfilename, flags=FileMode.CLOSE_STREAM)
 
         return self._egridfile
 
-    def get_eclsum(self, include_restart: bool = True) -> EclSum:
+    def get_eclsum(self, include_restart: bool = True) -> Summary:
         """Find and return the summary file and
-        return as EclSum object
+        return as Summary object
 
         Args:
             include_restart: Sent to libecl for whether restart files
@@ -155,11 +153,11 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
             logger.info("Opening UNSMRY file: %s", smryfilename)
-            self._eclsum = EclSum(smryfilename, include_restart=include_restart)
+            self._eclsum = Summary(smryfilename, include_restart=include_restart)
         return self._eclsum
 
-    def get_initfile(self) -> EclFile:
-        """Find and return the INIT file as an EclFile object"""
+    def get_initfile(self) -> ResdataFile:
+        """Find and return the INIT file as an ResdataFile object"""
         if not self._initfile:
             initfilename = self._eclbase + ".INIT"
             if not Path(initfilename).is_file():
@@ -167,13 +165,11 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), initfilename
                 )
             logger.info("Opening INIT file: %s", initfilename)
-            self._initfile = EclFile(
-                initfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
-            )
+            self._initfile = ResdataFile(initfilename, flags=FileMode.CLOSE_STREAM)
         return self._initfile
 
-    def get_rftfile(self) -> EclFile:
-        """Find and return the RFT file as an EclFile object"""
+    def get_rftfile(self) -> ResdataFile:
+        """Find and return the RFT file as an ResdataFile object"""
         if not self._rftfile:
             rftfilename = self._eclbase + ".RFT"
             if not Path(rftfilename).is_file():
@@ -181,13 +177,11 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), rftfilename
                 )
             logger.info("Opening RFT file: %s", rftfilename)
-            self._rftfile = EclFile(
-                rftfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
-            )
+            self._rftfile = ResdataFile(rftfilename, flags=FileMode.CLOSE_STREAM)
         return self._rftfile
 
-    def get_rstfile(self) -> EclFile:
-        """Find and return the UNRST file as an EclFile object"""
+    def get_rstfile(self) -> ResdataFile:
+        """Find and return the UNRST file as an ResdataFile object"""
         if not self._rstfile:
             rstfilename = self._eclbase + ".UNRST"
             if not Path(rstfilename).is_file():
@@ -195,9 +189,7 @@ class EclFiles(object):
                     errno.ENOENT, os.strerror(errno.ENOENT), rstfilename
                 )
             logger.info("Opening RST file: %s", rstfilename)
-            self._rstfile = EclFile(
-                rstfilename, flags=EclFileFlagEnum.ECL_FILE_CLOSE_STREAM
-            )
+            self._rstfile = ResdataFile(rstfilename, flags=FileMode.CLOSE_STREAM)
         return self._rstfile
 
     def get_rstfilename(self) -> str:
@@ -214,7 +206,7 @@ class EclFiles(object):
         for this function."""
         self._egridfile = None
         self._initfile = None
-        # This is necessary for garbage collection to close the EclSum file:
+        # This is necessary for garbage collection to close the Summary file:
         self._eclsum = None
         self._rstfile = None
         self._rftfile = None

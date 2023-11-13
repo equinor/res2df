@@ -21,7 +21,7 @@ from typing import Any, Dict, Iterable, Optional, Set
 
 import numpy as np
 import pandas as pd
-from ecl.eclfile import EclFile
+from resdata.resfile import ResdataFile
 
 from ecl2df import getLogger_ecl2csv
 
@@ -60,9 +60,9 @@ ICD_TOPOLOGY_COLS: Set = {
 }
 
 
-def _rftrecords2df(rftfile: EclFile) -> pd.DataFrame:
+def _rftrecords2df(rftfile: ResdataFile) -> pd.DataFrame:
     """Construct a dataframe just for navigation on the RFT records,
-    from the attribute 'headers' in EclFile object constructed from the
+    from the attribute 'headers' in ResdataFile object constructed from the
     binary RFT file
 
     The dataframe will consist of the columns and with example data:
@@ -80,7 +80,7 @@ def _rftrecords2df(rftfile: EclFile) -> pd.DataFrame:
         rftfile[89] = EclKW(size=14, name="SWAT", ...)
 
     Args:
-        rftfile (EclFile)
+        rftfile (ResdataFile)
     """
     nav_df = pd.DataFrame(rftfile.headers)
     nav_df.columns = ["recordname", "recordlength", "recordtype"]
@@ -104,14 +104,14 @@ def _rftrecords2df(rftfile: EclFile) -> pd.DataFrame:
     return nav_df.reset_index()
 
 
-def rftrecords(rftfile: EclFile) -> Iterable[Dict[str, Any]]:
-    """Generator for looping over RFT records in a EclFile object.
+def rftrecords(rftfile: ResdataFile) -> Iterable[Dict[str, Any]]:
+    """Generator for looping over RFT records in a ResdataFile object.
 
     Each returned RFT record is represented as a dict with the keys:
         headers: pd.DataFrame, indexed by recordname
 
     Args:
-        EclFile made from a binary RFT file.
+        ResdataFile made from a binary RFT file.
     """
     navigation_frame = _rftrecords2df(rftfile)
     for timeindex, headers in navigation_frame.groupby("timeindex"):
@@ -138,7 +138,7 @@ def rftrecords(rftfile: EclFile) -> Iterable[Dict[str, Any]]:
 
 
 def get_con_seg_data(
-    rftrecord: Dict[str, Any], rftfile: EclFile, datatype: str
+    rftrecord: Dict[str, Any], rftfile: ResdataFile, datatype: str
 ) -> pd.DataFrame:
     """
     Build a dataframe of CON* or SEG* data for a specific RFT record,

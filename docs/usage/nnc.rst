@@ -49,7 +49,7 @@ to an Eclipse include file:
 
 .. code-block:: python
 
-   from ecl2f import nnc, ResdataFiles
+   from res2f import nnc, ResdataFiles
 
    resdatafiles = ResdataFiles("MYDATADECK.DATA")
    nnc_df = nnc.df(resdatafiles)

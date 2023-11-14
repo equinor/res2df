@@ -501,7 +501,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2cvsv",
+            "res2cvsv",
             "rft",
             "-v",
             REEK.replace(".DATA", ".RFT"),

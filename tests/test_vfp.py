@@ -1000,8 +1000,8 @@ def test_res2df_vfpprod(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
-def test_ecl2pyarrow_vfpprod(test_input, expected):
-    """Test ecl2pyarrow for VFPPROD"""
+def test_res2pyarrow_vfpprod(test_input, expected):
+    """Test res2pyarrow for VFPPROD"""
     deck = ResdataFiles.str2deck(test_input)
     # Read first into pyarrow tables
     vfppa = vfp.pyarrow_tables(deck, "VFPPROD")
@@ -1079,7 +1079,7 @@ def test_res2df_vfpprods(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
-def test_ecl2pyarrow_vfpprods(test_input, expected):
+def test_res2pyarrow_vfpprods(test_input, expected):
     """Test res2df with pyarrow for files with multiple VFPPROD"""
     deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPPROD")
@@ -1126,7 +1126,7 @@ def test_res2df_vfpprod_no(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
-def test_ecl2pyarrow_vfpprod_no(test_input, expected):
+def test_res2pyarrow_vfpprod_no(test_input, expected):
     """Test res2df for pyarrow for files with multiple
     VFPPROD with vfp number argument
     """
@@ -1150,7 +1150,7 @@ def test_res2df_vfpinj_no(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
-def test_ecl2pyarrow_vfpinj_no(test_input, expected):
+def test_res2pyarrow_vfpinj_no(test_input, expected):
     """Test res2df for pyarrow files with multiple VFPINJ with vfp number argument"""
     deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPINJ", "4")
@@ -1174,7 +1174,7 @@ def test_res2df_vfpprods_no(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
-def test_ecl2pyarrow_vfpprods_no(test_input, expected):
+def test_res2pyarrow_vfpprods_no(test_input, expected):
     """Test res2df for pyarrow for files with multiple VFPPROD
     with vfp number argument as range
     """
@@ -1202,7 +1202,7 @@ def test_res2df_vfpinjs_no(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
-def test_ecl2pyarrow_vfpinjs_no(test_input, expected):
+def test_res2pyarrow_vfpinjs_no(test_input, expected):
     """Test res2df for pyararow for files with multiple VFPINJ with vfp
     number argument as range
     """

@@ -147,7 +147,7 @@ Generating include files from grid data
 
 If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
-:func:`res2df.grid.df2ecl()` function these manipulated vectors can be written back as
+:func:`res2df.grid.df2res()` function these manipulated vectors can be written back as
 include files to Eclipse.
 
 Say you want to change the FIPNUM, and that FIPNUM 6 should be removed, and set
@@ -165,11 +165,11 @@ it to FIPNUM 5. This can be accomplished using
    dframe.loc[rows_to_touch, "FIPNUM"] = 5
 
    # Write back to new include file, ensure datatype is integer.
-   grid.df2ecl(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", resdatafiles=resdatafiles)
+   grid.df2res(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", resdatafiles=resdatafiles)
 
 This will produce the file `fipnum.inc` with the contents:
 
 .. literalinclude:: fipnum.inc
 
-It is recommended to supply the ``resdatafiles`` object to ``df2ecl``, if not, correct grid
+It is recommended to supply the ``resdatafiles`` object to ``df2res``, if not, correct grid
 size can not be ensured.

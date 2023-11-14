@@ -200,7 +200,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def df2ecl_editnnc(
+def df2res_editnnc(
     nnc_df: pd.DataFrame, filename: Optional[str] = None, nocomments: bool = False
 ) -> str:
     """Write an EDITNNC keyword

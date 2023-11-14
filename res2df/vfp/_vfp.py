@@ -326,7 +326,7 @@ def pyarrow_tables(
     return pyarrow_tables_vfp
 
 
-def df2ecls(
+def df2ress(
     dframe: pd.DataFrame,
     keyword: str = "VFPPROD",
     comments: Optional[Dict[str, str]] = None,
@@ -355,14 +355,14 @@ def df2ecls(
         if np.all(df_vfp["VFP_TYPE"] == keyword):
             if comments and keyword in comments.keys():
                 if keyword == "VFPPROD":
-                    vfp_strs.append(vfpprod.df2ecl(df_vfp, comments["VFPPROD"]))
+                    vfp_strs.append(vfpprod.df2res(df_vfp, comments["VFPPROD"]))
                 elif keyword == "VFPINJ":
-                    vfp_strs.append(vfpinj.df2ecl(df_vfp, comments["VFPINJ"]))
+                    vfp_strs.append(vfpinj.df2res(df_vfp, comments["VFPINJ"]))
             else:
                 if keyword == "VFPPROD":
-                    vfp_strs.append(vfpprod.df2ecl(df_vfp))
+                    vfp_strs.append(vfpprod.df2res(df_vfp))
                 elif keyword == "VFPINJ":
-                    vfp_strs.append(vfpinj.df2ecl(df_vfp))
+                    vfp_strs.append(vfpinj.df2res(df_vfp))
         else:
             raise ValueError(
                 f"VFP number {vfpno} does not have consistent "
@@ -372,7 +372,7 @@ def df2ecls(
     return vfp_strs
 
 
-def df2ecl(
+def df2res(
     dframe: pd.DataFrame,
     keyword: str = "VFPPROD",
     comments: Optional[Dict[str, str]] = None,
@@ -392,7 +392,7 @@ def df2ecl(
                    to file.
     """
 
-    strs_vfp = df2ecls(dframe, keyword=keyword, comments=comments)
+    strs_vfp = df2ress(dframe, keyword=keyword, comments=comments)
     str_vfps = ""
 
     if comments and "master" in comments.keys():
@@ -529,6 +529,6 @@ def vfp_reverse_main(args) -> None:
     )
     vfp_df = pd.read_csv(args.csvfile)
     logger.info("Parsed {args.csvfile}")
-    inc_string = df2ecl(vfp_df, args.keyword)
+    inc_string = df2res(vfp_df, args.keyword)
     if args.output:
         common.write_inc_stdout_file(inc_string, args.output)

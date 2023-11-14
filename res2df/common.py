@@ -508,7 +508,7 @@ def fill_reverse_parser(
     return parser
 
 
-def df2ecl(
+def df2res(
     dataframe: pd.DataFrame,
     keywords: Optional[Union[str, List[str], List[Optional[str]]]] = None,
     comments: Optional[Dict[str, str]] = None,
@@ -519,7 +519,7 @@ def df2ecl(
     """Generate resdata include strings from dataframes in res2df format.
 
     This function hands over the actual text generation pr. keyword
-    to functions named df2ecl_<keywordname> in the calling module.
+    to functions named df2res_<keywordname> in the calling module.
 
     These functions may again use generic_ecltable() from this module
     for the actual string construction.
@@ -611,7 +611,7 @@ def df2ecl(
         string += comment_formatter(comments["master"])
     for keyword in keywords:
         # Construct the associated function names
-        function_name = "df2ecl_" + keyword.lower()
+        function_name = "df2res_" + keyword.lower()
         function = getattr(calling_module, function_name)
         if keyword in comments:
             string += function(dataframe, comments[keyword])

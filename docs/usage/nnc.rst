@@ -55,12 +55,12 @@ to an include file:
    nnc_df = nnc.df(resdatafiles)
    nnc_df["TRANM"] = 0.1  # Reduce all NNC transmissibilities
 
-   nnc.df2ecl_editnnc(nnc_df, filename="editnnc.inc")
+   nnc.df2res_editnnc(nnc_df, filename="editnnc.inc")
 
 and the contents of the exported file can be:
 
 ..
-   print(nnc.df2ecl_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
+   print(nnc.df2res_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
 
 .. code-block:: console
 

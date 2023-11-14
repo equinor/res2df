@@ -77,25 +77,25 @@ def test_equil2df():
 
     # Check that we can dump from dataframe to include file
     # and reparse to the same dataframe:
-    inc = equil.df2ecl(equildf, withphases=True)
+    inc = equil.df2res(equildf, withphases=True)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(equildf, df_from_inc, check_dtype=False)
 
 
-def test_df2ecl(tmp_path):
+def test_df2res(tmp_path):
     """Test that we can write include files to disk"""
     os.chdir(tmp_path)
     resdatafiles = ResdataFiles(EIGHTCELLS)
     equildf = equil.df(resdatafiles)
-    equil.df2ecl(equildf, filename="equil.inc")
+    equil.df2res(equildf, filename="equil.inc")
     assert Path("equil.inc").is_file()
 
     # Test automatic directory creation:
-    equil.df2ecl(equildf, filename="eclipse/include/equil.inc")
+    equil.df2res(equildf, filename="eclipse/include/equil.inc")
     assert Path("eclipse/include/equil.inc").is_file()
 
 
-def test_df2ecl_equil():
+def test_df2res_equil():
     """Test the underlying function directly"""
     dframe = pd.DataFrame(
         [
@@ -111,18 +111,18 @@ def test_df2ecl_equil():
         ]
     )
     # Check that we don't need the KEYWORD in the underlying function
-    assert equil.df2ecl_equil(dframe) == equil.df2ecl_equil(
+    assert equil.df2res_equil(dframe) == equil.df2res_equil(
         dframe.drop("KEYWORD", axis="columns")
     )
 
     # Can also drop EQLNUM since we have only one row:
-    assert equil.df2ecl_equil(dframe) == equil.df2ecl_equil(
+    assert equil.df2res_equil(dframe) == equil.df2res_equil(
         dframe.drop("EQLNUM", axis="columns")
     )
 
     # Problem if we have two rows, nothing is returned and a critical error is logged
     assert (
-        equil.df2ecl_equil(pd.concat([dframe, dframe]).drop("EQLNUM", axis="columns"))
+        equil.df2res_equil(pd.concat([dframe, dframe]).drop("EQLNUM", axis="columns"))
         == ""
     )
 
@@ -142,22 +142,22 @@ EQUIL
     assert len(df) == 1
     assert "IGNORE1" not in df
     assert df["EQLNUM"].unique()[0] == 1
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
 
     # Test empty data:
-    inc = equil.df2ecl_equil(equil.df(""))
+    inc = equil.df2res_equil(equil.df(""))
     assert "No data" in inc
     assert equil.df(inc).empty
 
     # Test more empty data:
-    assert "No data" in equil.df2ecl_equil(equil.df(""))
-    assert "No data" in equil.df2ecl_rsvd(equil.df(""))
-    assert "No data" in equil.df2ecl_rvvd(equil.df(""))
-    assert "No data" in equil.df2ecl_pbvd(equil.df(""))
-    assert "No data" in equil.df2ecl_pdvd(equil.df(""))
+    assert "No data" in equil.df2res_equil(equil.df(""))
+    assert "No data" in equil.df2res_rsvd(equil.df(""))
+    assert "No data" in equil.df2res_rvvd(equil.df(""))
+    assert "No data" in equil.df2res_pbvd(equil.df(""))
+    assert "No data" in equil.df2res_pdvd(equil.df(""))
 
     deckstr = """
 OIL
@@ -170,7 +170,7 @@ EQUIL
     assert df["OWC"].values == 2200
     assert len(df) == 1
     assert "IGNORE1" not in df
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
@@ -187,7 +187,7 @@ EQUIL
     assert "OWC" not in df
     assert len(df) == 1
     assert "IGNORE2" not in df
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
@@ -205,7 +205,7 @@ EQUIL
     assert "OWC" not in df
     assert len(df) == 1
     assert "IGNORE2" not in df
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
@@ -229,7 +229,7 @@ EQUIL
     assert "OWC" in df
     assert len(df) == 2
     assert "IGNORE2" not in df
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     # 0 columns can be both integers and floats.
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
@@ -294,7 +294,7 @@ RSVD
     assert max(rsvd_df["EQLNUM"]) == 3
     assert set(rsvd_df["Z"].values) == {10, 30, 50}
     assert set(rsvd_df["RS"].values) == {100, 400}
-    inc = equil.df2ecl(rsvd_df)
+    inc = equil.df2res(rsvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rsvd_df, df_from_inc)
 
@@ -317,7 +317,7 @@ RSVD
     assert max(rsvd_df["EQLNUM"]) == 2
     assert set(rsvd_df["Z"].values) == {10, 30, 50, 60}
     assert set(rsvd_df["RS"].values) == {100, 400, 1000}
-    inc = equil.df2ecl(rsvd_df)
+    inc = equil.df2res(rsvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rsvd_df, df_from_inc)
 
@@ -340,7 +340,7 @@ RVVD
     assert set(rvvd_df["Z"].values) == {10, 30, 50}
     assert set(rvvd_df["RV"].values) == {100, 400}
 
-    inc = equil.df2ecl(rvvd_df)
+    inc = equil.df2res(rvvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rvvd_df, df_from_inc)
 
@@ -364,7 +364,7 @@ RVVD
     assert set(rvvd_df["Z"].values) == {10, 30, 50, 60}
     assert set(rvvd_df["RV"].values) == {100, 400, 1000}
 
-    inc = equil.df2ecl(rvvd_df)
+    inc = equil.df2res(rvvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rvvd_df, df_from_inc)
 
@@ -383,7 +383,7 @@ PBVD
     assert set(pbvd_df["Z"].values) == {10, 30, 50}
     assert set(pbvd_df["PB"].values) == {100, 400}
 
-    inc = equil.df2ecl(pbvd_df)
+    inc = equil.df2res(pbvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(pbvd_df, df_from_inc)
 
@@ -394,14 +394,14 @@ PBVD
     pd.testing.assert_frame_equal(pbvd_df.drop("KEYWORD", axis="columns"), pbvd_df2)
 
     # Check that we don't need the KEYWORD column for the underlying function:
-    assert equil.df2ecl_pbvd(pbvd_df) == equil.df2ecl_pbvd(
+    assert equil.df2res_pbvd(pbvd_df) == equil.df2res_pbvd(
         pbvd_df.drop("KEYWORD", axis="columns")
     )
 
     # If EQLNUM column is dropped it is not possible to guess the
     # correct include file, so the code must fail:
     with pytest.raises(KeyError):
-        equil.df2ecl_pbvd(pbvd_df.drop("EQLNUM", axis="columns"))
+        equil.df2res_pbvd(pbvd_df.drop("EQLNUM", axis="columns"))
 
 
 def test_pdvd():
@@ -418,7 +418,7 @@ PDVD
     assert set(pdvd_df["Z"].values) == {10, 30, 50}
     assert set(pdvd_df["PD"].values) == {100, 400}
 
-    inc = equil.df2ecl(pdvd_df)
+    inc = equil.df2res(pdvd_df)
     df_from_inc = equil.df(inc)
     pdvd_df2 = equil.pdvd_fromdeck(deckstr)
     pd.testing.assert_frame_equal(pdvd_df, df_from_inc)
@@ -467,7 +467,7 @@ EQUIL
     df = equil.df(deckstr, ntequl=2)
     assert len(df) == 2
 
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
 
@@ -494,7 +494,7 @@ EQUIL
     assert set(df["GOC"].values) == set([2100, 2100])
     assert len(df) == 2
 
-    inc = equil.df2ecl(df, withphases=True)
+    inc = equil.df2res(df, withphases=True)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(df, df_from_inc, check_dtype=False)
 
@@ -536,7 +536,7 @@ def test_eclipse_rounding(somefloat, expected):
             }
         ]
     )
-    assert expected in equil.df2ecl(dframe, withphases=False)
+    assert expected in equil.df2res(dframe, withphases=False)
 
 
 def test_main_subparser(tmp_path, mocker):

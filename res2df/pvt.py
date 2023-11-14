@@ -319,11 +319,11 @@ def pvt_reverse_main(args) -> None:
     )
     pvt_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
-    inc_string = df2ecl(pvt_df, keywords=args.keywords)
+    inc_string = df2res(pvt_df, keywords=args.keywords)
     common.write_inc_stdout_file(inc_string, args.output)
 
 
-def df2ecl(
+def df2res(
     pvt_df: pd.DataFrame,
     keywords: Optional[Union[str, List[str]]] = None,
     comments: Optional[Dict[str, str]] = None,
@@ -341,7 +341,7 @@ def df2ecl(
         filename: If supplied, the generated text will also be dumped
             to file.
     """
-    return common.df2ecl(
+    return common.df2res(
         pvt_df,
         keywords,
         comments,
@@ -351,7 +351,7 @@ def df2ecl(
     )
 
 
-def df2ecl_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print ROCK keyword with data
 
     Args:
@@ -379,7 +379,7 @@ def df2ecl_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2ecl_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print DENSITY keyword with data
 
     Args:
@@ -408,7 +408,7 @@ def df2ecl_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2ecl_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVTW keyword with data
 
     PVTW is one line/record with data for a reference pressure
@@ -444,7 +444,7 @@ def df2ecl_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2ecl_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVTG keyword with data
 
     Args:
@@ -503,7 +503,7 @@ def df2ecl_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2ecl_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVDG keyword with data
 
     This data consists of one table (volumefactor and visosity
@@ -553,7 +553,7 @@ def df2ecl_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2ecl_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVDO keyword with data
 
     Args:
@@ -600,7 +600,7 @@ def df2ecl_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2ecl_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PVTO-data from a dataframe
 
     Args:

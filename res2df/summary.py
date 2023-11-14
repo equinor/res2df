@@ -679,7 +679,7 @@ def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
     return dframe
 
 
-def df2eclsum(
+def df2ressum(
     dframe: pd.DataFrame,
     casename: str = "SYNTHETIC",
 ) -> Summary:
@@ -938,7 +938,7 @@ def summary_reverse_main(args) -> None:
 
     # Summary.fwrite() can only write to current directory:
     cwd = os.getcwd()
-    eclsum = df2eclsum(summary_df, eclbase)
+    eclsum = df2ressum(summary_df, eclbase)
     try:
         os.chdir(outputdir)
         Summary.fwrite(eclsum)

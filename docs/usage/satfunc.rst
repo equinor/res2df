@@ -57,7 +57,7 @@ the command
 
 For a dataframe or a CSV file in the format provided by this module, an Eclipse
 include file can be generated either with the Python API
-:func:`res2df.satfunc.df2ecl` function or the command
+:func:`res2df.satfunc.df2res` function or the command
 
 .. code-block:: console
 
@@ -117,5 +117,5 @@ Pyscal can create initialize its relperm objects from include files
 though the parsing capabilities of res2df.satfunc.
 
 The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in
-what it produces, and the :func:`res2df.satfunc.df2ecl()` can be used on both
+what it produces, and the :func:`res2df.satfunc.df2res()` can be used on both
 (potentially with some filtering needed.).

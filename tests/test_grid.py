@@ -188,17 +188,17 @@ def test_grid_df():
     )
 
 
-def test_df2ecl(tmp_path):
+def test_df2res(tmp_path):
     """Test if we are able to output include files for grid data"""
     resdatafiles = ResdataFiles(REEK)
     grid_df = grid.df(resdatafiles)
 
-    fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
-    assert grid.df2ecl(grid_df, "FIPNUM", dtype="int", nocomments=True) == grid.df2ecl(
+    fipnum_str = grid.df2res(grid_df, "FIPNUM", dtype=int)
+    assert grid.df2res(grid_df, "FIPNUM", dtype="int", nocomments=True) == grid.df2res(
         grid_df, "FIPNUM", dtype=int, nocomments=True
     )
     with pytest.raises(ValueError, match="Wrong dtype argument foo"):
-        grid.df2ecl(grid_df, "FIPNUM", dtype="foo")
+        grid.df2res(grid_df, "FIPNUM", dtype="foo")
 
     assert "FIPNUM" in fipnum_str
     assert "-- Output file printed by res2df.grid" in fipnum_str
@@ -206,51 +206,51 @@ def test_df2ecl(tmp_path):
     assert "35840 total cell count" in fipnum_str  # (comment at the end)
     assert len(fipnum_str) > 100
 
-    fipnum_str_nocomment = grid.df2ecl(grid_df, "FIPNUM", dtype=int, nocomments=True)
+    fipnum_str_nocomment = grid.df2res(grid_df, "FIPNUM", dtype=int, nocomments=True)
     assert "--" not in fipnum_str_nocomment
-    fipnum2_str = grid.df2ecl(
+    fipnum2_str = grid.df2res(
         grid_df, "FIPNUM", dtype=int, resdatafiles=resdatafiles, nocomments=True
     )
     # This would mean that we guessed the correct global size in the first run
     assert fipnum_str_nocomment == fipnum2_str
 
-    float_fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=float)
+    float_fipnum_str = grid.df2res(grid_df, "FIPNUM", dtype=float)
     assert len(float_fipnum_str) > len(fipnum_str)  # lots of .0 in the string.
 
-    fipsatnum_str = grid.df2ecl(grid_df, ["FIPNUM", "SATNUM"], dtype=int)
+    fipsatnum_str = grid.df2res(grid_df, ["FIPNUM", "SATNUM"], dtype=int)
     assert "FIPNUM" in fipsatnum_str
     assert "SATNUM" in fipsatnum_str
 
     grid_df["FIPNUM"] = grid_df["FIPNUM"] * 3333
-    fipnum_big_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
+    fipnum_big_str = grid.df2res(grid_df, "FIPNUM", dtype=int)
     assert "3333" in fipnum_big_str
     assert len(fipnum_big_str) > len(fipnum_str)
 
     os.chdir(tmp_path)
-    grid.df2ecl(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
+    grid.df2res(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
     assert Path("perm.inc").is_file()
     incstring = Path("perm.inc").read_text(encoding="utf8").splitlines()
     assert sum([1 for line in incstring if "PERM" in line]) == 6
 
-    assert grid.df2ecl(grid_df, ["PERMX"], dtype=float, nocomments=True) == grid.df2ecl(
+    assert grid.df2res(grid_df, ["PERMX"], dtype=float, nocomments=True) == grid.df2res(
         grid_df, ["PERMX"], dtype="float", nocomments=True
     )
 
     # with pytest.raises(ValueError, match="Wrong dtype argument"):
-    grid.df2ecl(grid_df, ["PERMX"], dtype=dict)
+    grid.df2res(grid_df, ["PERMX"], dtype=dict)
 
     with pytest.raises(ValueError):
-        grid.df2ecl(grid_df, ["PERMRR"])
+        grid.df2res(grid_df, ["PERMRR"])
 
     # Check when we have restart info included:
     gr_rst = grid.df(resdatafiles, rstdates="all")
-    fipnum_str_rst = grid.df2ecl(gr_rst, "FIPNUM", dtype=int, nocomments=True)
+    fipnum_str_rst = grid.df2res(gr_rst, "FIPNUM", dtype=int, nocomments=True)
     assert fipnum_str_rst == fipnum_str_nocomment
 
     # When dates are stacked, there are NaN's  in the FIPNUM column,
     # which should be gracefully ignored.
     gr_rst_stacked = grid.df(resdatafiles, rstdates="all", stackdates=True)
-    fipnum_str_rst = grid.df2ecl(gr_rst_stacked, "FIPNUM", dtype=int, nocomments=True)
+    fipnum_str_rst = grid.df2res(gr_rst_stacked, "FIPNUM", dtype=int, nocomments=True)
     assert fipnum_str_rst == fipnum_str_nocomment
 
     # dateinheaders here will be ignored due to stackdates:
@@ -260,10 +260,10 @@ def test_df2ecl(tmp_path):
     )
 
 
-def test_df2ecl_mock():
-    """Test that we can use df2ecl for mocked minimal dataframes"""
+def test_df2res_mock():
+    """Test that we can use df2res for mocked minimal dataframes"""
     a_grid = pd.DataFrame(columns=["FIPNUM"], data=[[1], [2], [3]])
-    simple_fipnum_inc = grid.df2ecl(
+    simple_fipnum_inc = grid.df2res(
         a_grid, keywords="FIPNUM", dtype=int, nocomments=True
     )
     # (A warning is printed, that warning is warranted)

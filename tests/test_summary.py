@@ -18,7 +18,7 @@ from res2df.summary import (
     _fix_dframe_for_libecl,
     date_range,
     df,
-    df2eclsum,
+    df2ressum,
     resample_smry_dates,
     smry_meta,
 )
@@ -411,7 +411,7 @@ def test_foreseeable_future(tmp_path):
             {"DATE": "2500-01-01", "FPR": 180},
         ]
     )
-    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+    eclsum = df2ressum(src_dframe, casename="PLUGABANDON")
 
     dframe = summary.df(eclsum)
     assert (
@@ -437,7 +437,7 @@ def test_foreseeable_future(tmp_path):
             "FPR": range(70),
         }
     )
-    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+    eclsum = df2ressum(src_dframe, casename="PLUGABANDON")
     dframe = summary.df(eclsum)
     # Still buggy:
     assert dframe.index[-1] == dt(2068, 12, 31, 23, 57, 52)
@@ -449,7 +449,7 @@ def test_foreseeable_future(tmp_path):
             "FPR": range(69),
         }
     )
-    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+    eclsum = df2ressum(src_dframe, casename="PLUGABANDON")
     dframe = summary.df(eclsum)
     # Works fine when stepping only 68 years:
     assert dframe.index[-1] == dt(2468, 1, 1, 0, 0, 0)
@@ -850,7 +850,7 @@ def test_smry_meta_synthetic():
             {"DATE": np.datetime64("2016-01-01"), "FOPT": 1000, "FOPR": 100},
         ]
     ).set_index("DATE")
-    synt_meta = smry_meta(df2eclsum(dframe))
+    synt_meta = smry_meta(df2ressum(dframe))
 
     # Dummy unit provided by EclSum:
     assert synt_meta["FOPT"]["unit"] == "UNIT"
@@ -944,7 +944,7 @@ def test_smry_meta_synthetic():
     ],
 )
 def test_fix_dframe_for_libecl(dframe, expected_dframe):
-    """Test the dataframe preprocessor/validator for df2eclsum works"""
+    """Test the dataframe preprocessor/validator for df2ressum works"""
     pd.testing.assert_frame_equal(
         _fix_dframe_for_libecl(dframe), expected_dframe, check_index_type=False
     )
@@ -1019,14 +1019,14 @@ def test_fix_dframe_for_libecl(dframe, expected_dframe):
         ),
     ],
 )
-def test_df2eclsum(dframe):
+def test_df2ressum(dframe):
     """Test that a dataframe can be converted to an EclSum object, and then read
     back again"""
 
     # Massage the dframe first so we can assert on equivalence after.
     dframe = _fix_dframe_for_libecl(dframe)
 
-    eclsum = df2eclsum(dframe)
+    eclsum = df2ressum(dframe)
     if dframe.empty:
         assert eclsum is None
         return
@@ -1039,7 +1039,7 @@ def test_df2eclsum(dframe):
     )
 
 
-def test_df2eclsum_datetimeindex():
+def test_df2ressum_datetimeindex():
     """Test that providing a dataframe with a datetimeindex also works"""
     dframe = pd.DataFrame(
         [
@@ -1049,7 +1049,7 @@ def test_df2eclsum_datetimeindex():
     dframe["DATE"] = pd.to_datetime(dframe["DATE"])
     dframe.set_index("DATE")
 
-    roundtrip = df(df2eclsum(dframe))
+    roundtrip = df(df2ressum(dframe))
     assert isinstance(roundtrip.index, pd.DatetimeIndex)
     assert roundtrip["FOPR"].values == [100]
     assert roundtrip["FOPT"].values == [1000]
@@ -1063,7 +1063,7 @@ def test_duplicated_summary_vectors(caplog):
     res2df.summary.df() should deduplicate this, and give a warning.
     """
 
-    # res2df.df2eclsum() is not able to mock such a UNSMRY file.
+    # res2df.df2ressum() is not able to mock such a UNSMRY file.
     dupe_datafile = (
         TESTDIR
         / "data"
@@ -1182,7 +1182,7 @@ def test_res2df_errors(tmp_path):
     assert df(ResdataFiles("FOO")).empty
 
 
-def test_df2eclsum_errors():
+def test_df2ressum_errors():
     """Test various error conditions, checking that the correct error message
     is emitted"""
     dframe = pd.DataFrame(
@@ -1191,18 +1191,18 @@ def test_df2eclsum_errors():
         ]
     )
     with pytest.raises(ValueError, match="casename foobar must be UPPER CASE"):
-        df2eclsum(dframe, casename="foobar")
+        df2ressum(dframe, casename="foobar")
     with pytest.raises(ValueError, match="Do not use dots in casename"):
-        df2eclsum(dframe, casename="FOOBAR.UNSMRY")  # .UNSMRY should not be included
+        df2ressum(dframe, casename="FOOBAR.UNSMRY")  # .UNSMRY should not be included
 
     # No date included:
     with pytest.raises(ValueError, match="dataframe must have a datetime index"):
-        df2eclsum(pd.DataFrame([{"FOPT": 1000}]))
+        df2ressum(pd.DataFrame([{"FOPT": 1000}]))
 
 
 @pytest.mark.integration
 def test_csv2res_summary(tmp_path, mocker):
-    """Check that we can call df2eclsum through the csv2res command line
+    """Check that we can call df2ressum through the csv2res command line
     utility"""
     dframe = pd.DataFrame(
         [

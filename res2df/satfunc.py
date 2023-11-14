@@ -228,11 +228,11 @@ def satfunc_reverse_main(args) -> None:
     )
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
-    inc_string = df2ecl(satfunc_df, keywords=args.keywords)
+    inc_string = df2res(satfunc_df, keywords=args.keywords)
     common.write_inc_stdout_file(inc_string, args.output)
 
 
-def df2ecl(
+def df2res(
     satfunc_df: pd.DataFrame,
     keywords: Optional[List[str]] = None,
     comments: Optional[Dict[str, str]] = None,
@@ -257,7 +257,7 @@ def df2ecl(
 
     """
     string = ""
-    string += common.df2ecl(
+    string += common.df2res(
         satfunc_df,
         keywords=keywords,
         comments=comments,
@@ -268,87 +268,87 @@ def df2ecl(
     return string
 
 
-def df2ecl_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SWOF data. Used by df2ecl().
+def df2res_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SWOF data. Used by df2res().
 
     Args:
         dframe: Containing SWOF data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SWOF", dframe, comment)
+    return _df2res_satfuncs("SWOF", dframe, comment)
 
 
-def df2ecl_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SGOF data. Used by df2ecl().
+def df2res_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SGOF data. Used by df2res().
 
     Args:
         dframe: Containing SGOF data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SGOF", dframe, comment)
+    return _df2res_satfuncs("SGOF", dframe, comment)
 
 
-def df2ecl_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SGFN data. Used by df2ecl().
+def df2res_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SGFN data. Used by df2res().
 
     Args:
         dframe: Containing SGFN data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SGFN", dframe, comment)
+    return _df2res_satfuncs("SGFN", dframe, comment)
 
 
-def df2ecl_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SGWFN data. Used by df2ecl().
+def df2res_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SGWFN data. Used by df2res().
 
     Args:
         dframe: Containing SGWFN data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SGWFN", dframe, comment)
+    return _df2res_satfuncs("SGWFN", dframe, comment)
 
 
-def df2ecl_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SWFN data. Used by df2ecl().
+def df2res_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SWFN data. Used by df2res().
 
     Args:
         dframe: Containing SWFN data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SWFN", dframe, comment)
+    return _df2res_satfuncs("SWFN", dframe, comment)
 
 
-def df2ecl_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SLGOF data. Used by df2ecl().
+def df2res_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SLGOF data. Used by df2res().
 
     Args:
         dframe: Containing SLGOF data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SLGOF", dframe, comment)
+    return _df2res_satfuncs("SLGOF", dframe, comment)
 
 
-def df2ecl_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SOF2 data. Used by df2ecl().
+def df2res_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SOF2 data. Used by df2res().
 
     Args:
         dframe: Containing SOF2 data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SOF2", dframe, comment)
+    return _df2res_satfuncs("SOF2", dframe, comment)
 
 
-def df2ecl_sof3(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SOF3 data. Used by df2ecl().
+def df2res_sof3(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+    """Print SOF3 data. Used by df2res().
 
     Args:
         dframe: Containing SOF3 data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_satfuncs("SOF3", dframe, comment)
+    return _df2res_satfuncs("SOF3", dframe, comment)
 
 
-def _df2ecl_satfuncs(
+def _df2res_satfuncs(
     keyword: str, dframe: pd.DataFrame, comment: Optional[str] = None
 ) -> str:
     if dframe.empty:
@@ -366,7 +366,7 @@ def _df2ecl_satfuncs(
     subset = subset.set_index("SATNUM").sort_index()
 
     # Make a function that is to be called for each SATNUM
-    def _df2ecl_satfuncs_satnum(keyword, dframe):
+    def _df2res_satfuncs_satnum(keyword, dframe):
         """Print one saturation function for one specific SATNUM"""
         col_headers = RENAMERS[keyword]["DATA"]
         string = (
@@ -380,5 +380,5 @@ def _df2ecl_satfuncs(
     # Loop over every SATNUM
     for satnum in subset.index.unique():
         string += f"-- SATNUM: {satnum}\n"
-        string += _df2ecl_satfuncs_satnum(keyword, subset[subset.index == satnum])
+        string += _df2res_satfuncs_satnum(keyword, subset[subset.index == satnum])
     return string + "\n"

@@ -87,14 +87,14 @@ def test_nnc2df_faultnames():
     # Remove I_x, J_x, K_x (and _y) which is not needed
 
 
-def test_df2ecl_editnnc(tmp_path):
+def test_df2res_editnnc(tmp_path):
     """Test generation of EDITNNC keyword"""
     resdatafiles = ResdataFiles(REEK)
     nncdf = nnc.df(resdatafiles)
     os.chdir(tmp_path)
 
     nncdf["TRANM"] = 2
-    editnnc = nnc.df2ecl_editnnc(nncdf, filename="editnnc.inc")
+    editnnc = nnc.df2res_editnnc(nncdf, filename="editnnc.inc")
     editnnc_fromfile = Path("editnnc.inc").read_text(encoding="utf8")
     assert editnnc == editnnc_fromfile
     assert "EDITNNC" in editnnc
@@ -103,17 +103,17 @@ def test_df2ecl_editnnc(tmp_path):
 
     # Fails when columns are missing
     with pytest.raises((KeyError, ValueError)):
-        nnc.df2ecl_editnnc(nncdf[["I1", "I2"]])
+        nnc.df2res_editnnc(nncdf[["I1", "I2"]])
 
-    editnnc = nnc.df2ecl_editnnc(nncdf, nocomments=True)
+    editnnc = nnc.df2res_editnnc(nncdf, nocomments=True)
     assert "avg multiplier" not in editnnc
 
     # Test compatibility with trans module:
     trans_df = trans.df(resdatafiles, addnnc=True)
-    editnnc = nnc.df2ecl_editnnc(trans_df.assign(TRANM=0.3))
+    editnnc = nnc.df2res_editnnc(trans_df.assign(TRANM=0.3))
     assert "avg multiplier 0.3" in editnnc or "avg multiplier 0.29999" in editnnc
 
-    print(nnc.df2ecl_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
+    print(nnc.df2res_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")

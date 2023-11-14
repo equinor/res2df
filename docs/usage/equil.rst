@@ -58,7 +58,7 @@ When you are done with the table, you can generate new include files from your m
 
 .. code-block:: python
 
-   equil.df2ecl(dframe, filename="solution.inc")
+   equil.df2res(dframe, filename="solution.inc")
 
 The last step can also be done using the ``csv2res`` command line utility
 if you dump to CSV from your Python code instead.

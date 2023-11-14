@@ -74,7 +74,7 @@ When you are done with the table, you can generate new include files from your m
 
 .. code-block:: python
 
-   pvt.df2ecl(dframe, filename="pvt.inc")
+   pvt.df2res(dframe, filename="pvt.inc")
 
 When injecting this produced ``pvt.inc`` into any new input deck, ensure you
 check which keywords have been written out, compared to what you gave in to

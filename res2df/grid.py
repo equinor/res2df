@@ -616,7 +616,7 @@ def drop_constant_columns(
     return dframe.drop(columnstodelete, axis=1)
 
 
-def df2ecl(
+def df2res(
     grid_df: pd.DataFrame,
     keywords: Union[str, List[str]],
     resdatafiles: Optional[ResdataFiles] = None,
@@ -730,7 +730,7 @@ def df2ecl(
             logger.warning(
                 (
                     "Mismatch between dumped vector length "
-                    "%d from df2ecl and assumed grid size %d"
+                    "%d from df2res and assumed grid size %d"
                 ),
                 len(vector),
                 global_size,

@@ -58,7 +58,7 @@ def test_satfunc_roundtrip():
     it back to an include file, and then reinterpret it to the same"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
     satdf = satfunc.df(resdatafiles.get_ecldeck())
-    inc = satfunc.df2ecl(satdf)
+    inc = satfunc.df2res(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(
         satdf.sort_values(["SATNUM", "KEYWORD"]),
@@ -66,20 +66,20 @@ def test_satfunc_roundtrip():
     )
 
 
-def test_df2ecl_order():
+def test_df2res_order():
     """Test that we can control the keyword order in generated
     strings by the list supplied in keywords argument"""
     resdatafiles = ResdataFiles(REEK)
     satdf = satfunc.df(resdatafiles.get_ecldeck())
 
-    swof_sgof = satfunc.df2ecl(satdf, keywords=["SWOF", "SGOF"])
+    swof_sgof = satfunc.df2res(satdf, keywords=["SWOF", "SGOF"])
     assert swof_sgof.find("SWOF") < swof_sgof.find("SGOF")
-    sgof_swof = satfunc.df2ecl(satdf, keywords=["SGOF", "SWOF"])
+    sgof_swof = satfunc.df2res(satdf, keywords=["SGOF", "SWOF"])
     assert sgof_swof.find("SGOF") < sgof_swof.find("SWOF")
 
-    only_swof = satfunc.df2ecl(satdf, keywords=["SWOF"])
+    only_swof = satfunc.df2res(satdf, keywords=["SWOF"])
     assert "SGOF" not in only_swof
-    only_sgof = satfunc.df2ecl(satdf, keywords="SGOF")
+    only_sgof = satfunc.df2res(satdf, keywords="SGOF")
     assert "SWOF" not in only_sgof
 
 
@@ -90,7 +90,7 @@ def test_nodata():
     satdf = satfunc.df(swofstr)
     assert len(satdf) == 0
 
-    inc = satfunc.df2ecl_swof(satdf)
+    inc = satfunc.df2res_swof(satdf)
     assert "No data" in inc
     df_from_inc = satfunc.df(inc)
     assert df_from_inc.empty
@@ -245,7 +245,7 @@ def test_str2df(string, expected_df):
     if expected_df.empty:
         return
 
-    inc = satfunc.df2ecl(satdf)
+    inc = satfunc.df2res(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(df_from_inc, expected_df)
 
@@ -272,7 +272,7 @@ SGOF
     assert "SATNUM" in sgofdf
     assert len(sgofdf["SATNUM"].unique()) == 3
     assert len(sgofdf) == 8
-    inc = satfunc.df2ecl(sgofdf)
+    inc = satfunc.df2res(sgofdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(sgofdf, df_from_inc)
 

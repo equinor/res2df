@@ -348,11 +348,11 @@ def equil_reverse_main(args) -> None:
     )
     equil_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
-    inc_string = df2ecl(equil_df, keywords=args.keywords)
+    inc_string = df2res(equil_df, keywords=args.keywords)
     common.write_inc_stdout_file(inc_string, args.output)
 
 
-def df2ecl(
+def df2res(
     equil_df: pd.DataFrame,
     keywords: Optional[List[str]] = None,
     comments: Optional[Dict[str, str]] = None,
@@ -381,7 +381,7 @@ def df2ecl(
         string += (
             phases_from_columns(equil_df.columns).upper().replace("-", "\n") + "\n\n"
         )
-    string += common.df2ecl(
+    string += common.df2res(
         equil_df,
         keywords=keywords,
         comments=comments,
@@ -392,7 +392,7 @@ def df2ecl(
     return string
 
 
-def df2ecl_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print EQUIL keyword with data
 
     Args:
@@ -427,7 +427,7 @@ def df2ecl_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     )
 
 
-def df2ecl_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print RSVD keyword with data
 
     This data consists of one table (rs as a function
@@ -437,10 +437,10 @@ def df2ecl_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         dframe: Containing RSVD data
         comment Text that will be included as a comment
     """
-    return _df2ecl_equilfuncs("RSVD", dframe, comment)
+    return _df2res_equilfuncs("RSVD", dframe, comment)
 
 
-def df2ecl_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print RVVD keyword with data
 
     This data consists of one table (rv as a function
@@ -450,10 +450,10 @@ def df2ecl_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         dframe: Containing RVVD data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_equilfuncs("RVVD", dframe, comment)
+    return _df2res_equilfuncs("RVVD", dframe, comment)
 
 
-def df2ecl_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Print PBVD keyword with data
 
     Bubble-point versus depth
@@ -465,10 +465,10 @@ def df2ecl_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         dframe: Containing PBVD data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_equilfuncs("PBVD", dframe, comment)
+    return _df2res_equilfuncs("PBVD", dframe, comment)
 
 
-def df2ecl_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
+def df2res_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
     """Print PDVD keyword with data.
 
     Dew-point versus depth.
@@ -480,13 +480,13 @@ def df2ecl_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
         dframe: Containing PDVD data
         comment: Text that will be included as a comment
     """
-    return _df2ecl_equilfuncs("PDVD", dframe, comment)
+    return _df2res_equilfuncs("PDVD", dframe, comment)
 
 
-def _df2ecl_equilfuncs(
+def _df2res_equilfuncs(
     keyword: str, dframe: pd.DataFrame, comment: Optional[str] = None
 ) -> str:
-    """Internal function to be used by df2ecl_<keyword>() functions"""
+    """Internal function to be used by df2res_<keyword>() functions"""
     if dframe.empty:
         return "-- No data!"
     string = f"{keyword}\n"
@@ -500,7 +500,7 @@ def _df2ecl_equilfuncs(
     else:
         subset = dframe[dframe["KEYWORD"] == keyword]
 
-    def _df2ecl_equilfuncs_eqlnum(dframe: pd.DataFrame) -> str:
+    def _df2res_equilfuncs_eqlnum(dframe: pd.DataFrame) -> str:
         """Print one equilibriation function table for a specific
         EQLNUM
 
@@ -519,5 +519,5 @@ def _df2ecl_equilfuncs(
     subset = subset.set_index("EQLNUM").sort_index()
     for eqlnum in subset.index.unique():
         string += f"-- EQLNUM: {eqlnum}\n"
-        string += _df2ecl_equilfuncs_eqlnum(subset[subset.index == eqlnum])
+        string += _df2res_equilfuncs_eqlnum(subset[subset.index == eqlnum])
     return string + "\n"

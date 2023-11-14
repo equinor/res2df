@@ -651,7 +651,7 @@ def _write_table_records(
     return ecl_str
 
 
-def df2ecl(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     """Produce a string defining single VFPINJ Eclipse input from a dataframe
 
     All data for the keywords VFPINJ will be returned.

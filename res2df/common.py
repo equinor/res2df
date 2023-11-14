@@ -473,7 +473,7 @@ def fill_reverse_parser(
     parser: argparse.ArgumentParser, modulename: str, defaultoutputfile: str
 ):
     """A standardized submodule parser for the command line utility
-    to produce Eclipse include files from a CSV file.
+    to produce resdata include files from a CSV file.
 
     Arguments:
         parser: parser to fill with arguments
@@ -488,7 +488,7 @@ def fill_reverse_parser(
         "--output",
         type=str,
         help=(
-            "Name of output Eclipse include file file, default "
+            "Name of output resdata include file file, default "
             + defaultoutputfile
             + ". "
             "Use '-' for stdout."
@@ -516,7 +516,7 @@ def df2ecl(
     consecutive: Optional[str] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate Eclipse include strings from dataframes in res2df format.
+    """Generate resdata include strings from dataframes in res2df format.
 
     This function hands over the actual text generation pr. keyword
     to functions named df2ecl_<keywordname> in the calling module.

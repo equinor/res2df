@@ -127,7 +127,7 @@ More documentation on :doc:`usage/satfunc`.
 ^^^^^^^^^
 
 Extracts the information in the `EQUIL` table, `RSVD` and `RVVD` in the
-input deck. Can write back to Eclipse include files.
+input deck. Can write back to include files.
 
 More documentation on :doc:`usage/equil`.
 
@@ -157,7 +157,7 @@ More documentation on :doc:`usage/gruptree`.
 ^^^^^^^
 
 Extracts PVT data from an input deck, from the keywords `PVTO`, `PVDG`,
-`DENSITY`, `ROCK` etc. Can write data back to Eclipse include files.
+`DENSITY`, `ROCK` etc. Can write data back to include files.
 
 More documentation on :doc:`usage/pvt`.
 

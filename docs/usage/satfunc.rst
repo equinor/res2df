@@ -36,7 +36,7 @@ line option.
 Instead of Eclipse data decks, individual include files may also be parsed, but
 only one at a time.
 
-Generating Eclipse include files from dataframes
+Generating include files from dataframes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When a dataframe of saturation function data is loaded into Python, any operation
@@ -81,7 +81,7 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
 
     from res2df import satfunc
 
-    # Read an Eclipse include file directly into a DataFrame
+    # Read an include file directly into a DataFrame
     with open("relperm.inc") as f_handle:
         sat_df = satfunc.df(f_handle.read())
 
@@ -113,7 +113,7 @@ to do directly on the dataframes. Before doing manipulations of dataframes in
 through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
-Pyscal can create initialize its relperm objects from Eclipse include files
+Pyscal can create initialize its relperm objects from include files
 though the parsing capabilities of res2df.satfunc.
 
 The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in

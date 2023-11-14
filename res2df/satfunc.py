@@ -183,7 +183,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Fill a parser for the operation dataframe -> eclipse include file"""
+    """Fill a parser for the operation dataframe -> resdata include file"""
     return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
 
 
@@ -237,7 +237,7 @@ def df2ecl(
     comments: Optional[Dict[str, str]] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate Eclipse include strings from dataframes with
+    """Generate resdata include strings from dataframes with
     saturation functions (SWOF, SGOF, ...)
 
     Args:
@@ -252,7 +252,7 @@ def df2ecl(
             to file.
 
     Returns:
-        Generated Eclipse include string
+        Generated resdata include string
 
     """
     string = ""

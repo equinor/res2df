@@ -142,7 +142,7 @@ Calculating volumes of dynamic data (pr. some region parameter) can be obtained
 from that module as a by-product of the pillar computations.
 
 
-Generating Eclipse include files from grid data
+Generating include files from grid data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you have loaded grid data into a Pandas frame, some operations are easily performed,

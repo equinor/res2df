@@ -67,11 +67,10 @@ Possibly, different viscosity scaling pr. PVTNUM is needed
 
 Density values are easier to scale up or down to whatever is needed.
 
-Re-exporting tables to Eclipse include files
+Re-exporting tables to include files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you are done with the table, you can generate new include files for
-Eclipse from your modified data by issuing
+When you are done with the table, you can generate new include files from your modified data by issuing
 
 .. code-block:: python
 

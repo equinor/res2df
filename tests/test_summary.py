@@ -10,9 +10,9 @@ import pytest
 import yaml
 from resdata.summary import Summary
 
-from ecl2df import csv2ecl, ecl2csv, summary
-from ecl2df.eclfiles import EclFiles
-from ecl2df.summary import (
+from res2df import csv2ecl, ecl2csv, summary
+from res2df.eclfiles import EclFiles
+from res2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
     _fix_dframe_for_libecl,
@@ -764,7 +764,7 @@ def test_resample_smry_dates():
         == 2 + 300  # boundary dates + 2001-01-01 to 2300-01-01
     )
 
-    # Verify boundary date bug up to and including ecl2df v0.13.2
+    # Verify boundary date bug up to and including res2df v0.13.2
     assert resample_smry_dates(
         ecldates,
         start_date="2300-06-05",
@@ -838,7 +838,7 @@ def test_smry_meta():
 def test_smry_meta_synthetic():
     """What does meta look like when we start from a synthetic summary?
 
-    ecl2df currently does not try to set the units to anything when
+    res2df currently does not try to set the units to anything when
     making synthetic summary.
     """
     dframe = pd.DataFrame(
@@ -1056,10 +1056,10 @@ def test_duplicated_summary_vectors(caplog):
     if the user has inserted a vector name twice in the
     SUMMARY section
 
-    ecl2df.summary.df() should deduplicate this, and give a warning.
+    res2df.summary.df() should deduplicate this, and give a warning.
     """
 
-    # ecl2df.df2eclsum() is not able to mock such a UNSMRY file.
+    # res2df.df2eclsum() is not able to mock such a UNSMRY file.
     dupe_datafile = (
         TESTDIR
         / "data"
@@ -1158,7 +1158,7 @@ def test_df2pyarrow_strings():
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
-def test_ecl2df_errors(tmp_path):
+def test_res2df_errors(tmp_path):
     """Test error handling on bogus/corrupted summary files"""
     os.chdir(tmp_path)
     Path("FOO.UNSMRY").write_bytes(os.urandom(100))

@@ -9,7 +9,7 @@ Example usage:
 
 .. code-block:: python
 
-   from ecl2df import pvt, EclFiles
+   from res2df import pvt, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
    dframe = pvt.df(eclfiles)
@@ -79,8 +79,8 @@ Eclipse from your modified data by issuing
 
 When injecting this produced ``pvt.inc`` into any new Eclipse deck, ensure you
 check which keywords have been written out, compared to what you gave in to
-`ecl2df.pvt` above. Any non-supported keywords will get lost in the import phase
-and need to be catered for outside ecl2df.
+`res2df.pvt` above. Any non-supported keywords will get lost in the import phase
+and need to be catered for outside res2df.
 
 The last step can also be done using the ``csv2ecl`` command line utility
 if you dump to CSV from your Python code instead.

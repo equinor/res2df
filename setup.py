@@ -44,20 +44,20 @@ EXTRAS_REQUIRE = {
 }
 
 setup(
-    name="ecl2df",
-    use_scm_version={"write_to": "ecl2df/version.py"},
+    name="res2df",
+    use_scm_version={"write_to": "res2df/version.py"},
     cmdclass=cmdclass,
     description="Convert Eclipse 100 input and output to DataFrames",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    url="http://github.com/equinor/ecl2df",
+    url="http://github.com/equinor/res2df",
     author="Håvard Berland",
     author_email="havb@equinor.com",
     license="GPLv3",
-    packages=find_packages(include=["ecl2df*"]),
-    package_dir={"ecl2df": "ecl2df"},
+    packages=find_packages(include=["res2df*"]),
+    package_dir={"res2df": "res2df"},
     package_data={
-        "ecl2df": [
+        "res2df": [
             "opmkeywords/*",
             "config_jobs/*",
             "py.typed",
@@ -67,11 +67,11 @@ setup(
     zip_safe=False,
     entry_points={
         "console_scripts": [
-            "csv2ecl=ecl2df.csv2ecl:main",
-            "ecl2csv=ecl2df.ecl2csv:main",
-            "ecl2arrow=ecl2df.ecl2csv:main",
+            "csv2ecl=res2df.csv2ecl:main",
+            "ecl2csv=res2df.ecl2csv:main",
+            "ecl2arrow=res2df.ecl2csv:main",
         ],
-        "ert": ["ecl2df_jobs = ecl2df.hook_implementations.jobs"],
+        "ert": ["res2df_jobs = res2df.hook_implementations.jobs"],
     },
     test_suite="tests",
     install_requires=REQUIREMENTS,

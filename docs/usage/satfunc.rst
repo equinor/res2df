@@ -15,7 +15,7 @@ column.
 
 .. code-block:: python
 
-   from ecl2df import satfunc, EclFiles
+   from res2df import satfunc, EclFiles
 
    eclfiles = EclFiles('MYDATADECK.DATA')
    dframe = satfunc.df(eclfiles)
@@ -57,7 +57,7 @@ the command
 
 For a dataframe or a CSV file in the format provided by this module, an Eclipse
 include file can be generated either with the Python API
-:func:`ecl2df.satfunc.df2ecl` function or the command
+:func:`res2df.satfunc.df2ecl` function or the command
 
 .. code-block:: console
 
@@ -79,7 +79,7 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
 
 .. code-block:: python
 
-    from ecl2df import satfunc
+    from res2df import satfunc
 
     # Read an Eclipse include file directly into a DataFrame
     with open("relperm.inc") as f_handle:
@@ -109,13 +109,13 @@ The pyscal library
 
 Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
-``ecl2df.satfunc``, consider if it is better to implement the manipulations
+``res2df.satfunc``, consider if it is better to implement the manipulations
 through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
 Pyscal can create initialize its relperm objects from Eclipse include files
-though the parsing capabilities of ecl2df.satfunc.
+though the parsing capabilities of res2df.satfunc.
 
-The function ``pyscal.pyscallist.df()`` is analogous to ``ecl2df.satfunc.df()`` in
-what it produces, and the :func:`ecl2df.satfunc.df2ecl()` can be used on both
+The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in
+what it produces, and the :func:`res2df.satfunc.df2ecl()` can be used on both
 (potentially with some filtering needed.).

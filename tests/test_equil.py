@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import csv2ecl, ecl2csv, equil
-from ecl2df.eclfiles import EclFiles
+from res2df import csv2ecl, ecl2csv, equil
+from res2df.eclfiles import EclFiles
 
 try:
     # pylint: disable=unused-import
@@ -215,7 +215,7 @@ OIL
 WATER
 GAS
 
--- Output file printed by ecl2df.equil 0.5.2.dev12+g785dc0d.d20200402
+-- Output file printed by res2df.equil 0.5.2.dev12+g785dc0d.d20200402
 -- at 2020-04-03 16:18:57.450100
 
 EQUIL

@@ -4,7 +4,7 @@ import subprocess
 
 import pytest
 
-import ecl2df
+import res2df
 
 try:
     # pylint: disable=unused-import
@@ -33,7 +33,7 @@ def test_integration():
     # ref: https://stackoverflow.com/questions/23714542/  \
     #              why-does-pythons-argparse-use-an-error-code-of-2-for-systemexit
 
-    for submodule in ecl2df.SUBMODULES:
+    for submodule in res2df.SUBMODULES:
         helptext = subprocess.check_output(["ecl2csv", submodule, "-h"])
         # Test that this option is hidden, the argument is only there
         # to support optional number of arguments in ERT forward models.

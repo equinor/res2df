@@ -7,8 +7,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, wcon
-from ecl2df.eclfiles import EclFiles
+from res2df import ecl2csv, wcon
+from res2df.eclfiles import EclFiles
 
 try:
     # pylint: disable=unused-import

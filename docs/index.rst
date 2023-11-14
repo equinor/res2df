@@ -1,7 +1,7 @@
-ecl2df
+res2df
 ======
 
-ecl2df is a Pandas DataFrame wrapper around libecl and opm.io, which
+res2df is a Pandas DataFrame wrapper around libecl and opm.io, which
 are used to access binary files outputted by the reservoir simulator
 Eclipse, or its input files --- or any other tool outputting to the same
 data format.
@@ -22,7 +22,7 @@ data format.
    :maxdepth: 10
    :caption: Python API
 
-   ecl2df/ecl2df
+   res2df/res2df
 
 Indices and tables
 ==================

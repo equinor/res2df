@@ -1,4 +1,4 @@
--- Output file printed by ecl2df.grid 0.6.0
+-- Output file printed by res2df.grid 0.6.0
 -- at 2020-04-23 10:46:22.529558
 
 FIPNUM

@@ -17,7 +17,7 @@ This table found in a PRT file will be parsed to the following dataframe:
    :header-rows: 1
 
 In this particular example, ``FIPZON`` was selected explicitly, either using the command line client or the Python API
-through an option to the :func:`ecl2df.fipreports.df` function.
+through an option to the :func:`res2df.fipreports.df` function.
 
 Using this module is easiest through ``ecl2csv fipreports``.
 

@@ -1,13 +1,13 @@
 .eggs
 .cache
 .coverage
-ecl2df.egg-info
+res2df.egg-info
 .tox
 *.swp
 *.pyc
 *~
 docs/modules.rst
-docs/ecl2df.rst
-ecl2df/version.py
+docs/res2df.rst
+res2df/version.py
 \#*
 .\#*

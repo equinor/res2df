@@ -10,7 +10,7 @@ statements from the actions in WELOPEN.
   compdat.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/compdat.csv', index=False)
 .. code-block:: python
 
-   from ecl2df import compdat, EclFiles
+   from res2df import compdat, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
    dframe = compdat.df(eclfiles)

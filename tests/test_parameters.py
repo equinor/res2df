@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from ecl2df.eclfiles import EclFiles
-from ecl2df.parameters import find_parameter_files, load, load_all
+from res2df.eclfiles import EclFiles
+from res2df.parameters import find_parameter_files, load, load_all
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

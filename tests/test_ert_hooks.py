@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import ecl2df
-from ecl2df.hook_implementations import jobs
+import res2df
+from res2df.hook_implementations import jobs
 
 try:
     # pylint: disable=unused-import
@@ -55,7 +55,7 @@ def test_ecl2csv_through_ert(tmp_path):
 
     csv2ecl_subcommands = ["equil", "pvt", "satfunc"]
 
-    for subcommand in ecl2df.SUBMODULES:
+    for subcommand in res2df.SUBMODULES:
         ert_config.append(
             f"FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={subcommand}, "
             f"<OUTPUT>={subcommand}.csv)"
@@ -96,7 +96,7 @@ def test_ecl2csv_through_ert(tmp_path):
 
     assert Path("OK").is_file()
 
-    for subcommand in ecl2df.SUBMODULES:
+    for subcommand in res2df.SUBMODULES:
         assert Path(subcommand + ".csv").is_file()
 
     # Check the custom output where options were supplied to the subcommands:
@@ -137,9 +137,9 @@ def test_get_module_variable():
     # pylint: disable=protected-access
     assert jobs._get_module_variable_if_exists("foo", "bar") == ""
     assert jobs._get_module_variable_if_exists(
-        "ecl2df.ecl2csv", "DESCRIPTION"
+        "res2df.ecl2csv", "DESCRIPTION"
     ).startswith("Convert Eclipse input and output")
-    assert jobs._get_module_variable_if_exists("ecl2df.ecl2csv", "NOPE") == ""
+    assert jobs._get_module_variable_if_exists("res2df.ecl2csv", "NOPE") == ""
 
 
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")
@@ -147,4 +147,4 @@ def test_no_erthooks():
     """Test that we can import the hook implementations even when ERT is unavailable."""
     # pylint: disable=redefined-outer-name, unused-import
     # pylint: disable=reimported, import-outside-toplevel
-    from ecl2df.hook_implementations import jobs  # noqa
+    from res2df.hook_implementations import jobs  # noqa

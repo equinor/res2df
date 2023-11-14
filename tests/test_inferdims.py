@@ -3,7 +3,7 @@ import re
 
 import pytest
 
-from ecl2df import inferdims
+from res2df import inferdims
 
 try:
     # pylint: disable=unused-import

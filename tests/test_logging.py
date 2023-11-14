@@ -2,7 +2,7 @@ import itertools
 
 import pytest
 
-import ecl2df
+import res2df
 
 from .test_grid import EIGHTCELLS, REEK
 
@@ -18,7 +18,7 @@ except ImportError:
 def test_default_logger_levels_and_split(capsys):
     """Verify that the intended usage of this logger have expected results"""
 
-    splitlogger = ecl2df.getLogger_ecl2csv("test_levels_split")
+    splitlogger = res2df.getLogger_ecl2csv("test_levels_split")
 
     splitlogger.debug("This DEBUG-text is not to be seen")
     captured = capsys.readouterr()
@@ -40,7 +40,7 @@ def test_default_logger_levels_and_split(capsys):
     assert "ERROR-text" in captured.err
 
     # If output is written to stdout, all logs should go to stderr:
-    nosplit_logger = ecl2df.getLogger_ecl2csv(
+    nosplit_logger = res2df.getLogger_ecl2csv(
         "test_levels_nosplit", args_dict={"output": "-", "debug": True}
     )
     nosplit_logger.debug("This DEBUG-text is to be seen in stderr")
@@ -66,10 +66,10 @@ def test_default_logger_levels_and_split(capsys):
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Command line client requires OPM")
 @pytest.mark.parametrize(
-    "ecl2df_module, verbose, fileexport",
-    itertools.product(ecl2df.SUBMODULES, [False, True], [True, False]),
+    "res2df_module, verbose, fileexport",
+    itertools.product(res2df.SUBMODULES, [False, True], [True, False]),
 )
-def test_ecl2csv_logging(tmp_path, ecl2df_module, verbose, fileexport, mocker, capsys):
+def test_ecl2csv_logging(tmp_path, res2df_module, verbose, fileexport, mocker, capsys):
     """Test that the command line client for each submodule logs correctly.
 
     Each submodule should write logs to stdout for INFO and WARNING messages
@@ -84,24 +84,24 @@ def test_ecl2csv_logging(tmp_path, ecl2df_module, verbose, fileexport, mocker, c
     test invocation.
     """
     # pylint: disable=too-many-arguments
-    if ecl2df_module == "nnc":
+    if res2df_module == "nnc":
         # There are no nnc's in EIGHTCELLS, so for that test
         # we need the REEK dataset:
-        commands = ["ecl2csv", ecl2df_module, REEK, "--output"]
+        commands = ["ecl2csv", res2df_module, REEK, "--output"]
     else:
-        commands = ["ecl2csv", ecl2df_module, EIGHTCELLS, "--output"]
+        commands = ["ecl2csv", res2df_module, EIGHTCELLS, "--output"]
 
     if fileexport:
         commands.append(str(tmp_path / "output.csv"))
     else:
-        commands.append(ecl2df.common.MAGIC_STDOUT)
+        commands.append(res2df.common.MAGIC_STDOUT)
 
     if verbose:
         commands.append("-v")
 
     mocker.patch("sys.argv", commands)
 
-    ecl2df.ecl2csv.main()
+    res2df.ecl2csv.main()
     captured = capsys.readouterr()
     stdout_output = captured.out
     stderr_output = captured.err
@@ -124,8 +124,8 @@ def test_ecl2csv_logging(tmp_path, ecl2df_module, verbose, fileexport, mocker, c
 
 def test_repeated_logger_construction(capsys):
     """If we repeatedly call getLogger(), ensure handlers are not added on top"""
-    logger = ecl2df.getLogger_ecl2csv("nodouble")
-    logger = ecl2df.getLogger_ecl2csv("nodouble")
+    logger = res2df.getLogger_ecl2csv("nodouble")
+    logger = res2df.getLogger_ecl2csv("nodouble")
     logger.warning("Don't repeat me")
     captured = capsys.readouterr()
     assert captured.out.count("Don't repeat me") == 1

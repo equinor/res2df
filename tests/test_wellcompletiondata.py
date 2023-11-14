@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import common, compdat, wellcompletiondata
-from ecl2df.eclfiles import EclFiles
-from ecl2df.wellcompletiondata import (
+from res2df import common, compdat, wellcompletiondata
+from res2df.eclfiles import EclFiles
+from res2df.wellcompletiondata import (
     _aggregate_layer_to_zone,
     _df2pyarrow,
     _excl_well_startswith,

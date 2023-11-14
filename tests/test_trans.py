@@ -1,4 +1,4 @@
-"""Test module for ecl2df.trans"""
+"""Test module for res2df.trans"""
 
 from pathlib import Path
 
@@ -13,8 +13,8 @@ except ImportError:
 
 import pandas as pd
 
-from ecl2df import ecl2csv, trans
-from ecl2df.eclfiles import EclFiles
+from res2df import ecl2csv, trans
+from res2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

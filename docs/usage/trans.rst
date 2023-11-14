@@ -4,20 +4,20 @@ trans
 The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
 from a simulation grid.
 
-Python API: :func:`ecl2df.trans.df`
+Python API: :func:`res2df.trans.df`
 
 Applied on an Eclipse deck, the *trans* module will give out a dataframe of neighbour
 connections
 
 .. code-block:: python
 
-   from ecl2df import trans, EclFiles
+   from res2df import trans, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = ecl2df.trans.df(eclfiles)
+   dframe = res2df.trans.df(eclfiles)
 
 ..
-   ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA")).sample(7)\
+   res2df.trans.df(res2df.EclFiles("2_R001_REEK-0.DATA")).sample(7)\
    .to_csv("trans1.csv", float_format="%.2f", index=False)
 
 .. csv-table:: Neighbour transmissibilities, sample rows from an example simulation.
@@ -79,12 +79,12 @@ like this. Example:
 
 .. code-block:: python
 
-   dframe = ecl2df.trans.df(eclfiles, vectors="FIPNUM", boundaryfilter=True, addnnc=True)
+   dframe = res2df.trans.df(eclfiles, vectors="FIPNUM", boundaryfilter=True, addnnc=True)
 
 which gives the dataframe
 
 ..
-   ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", boundaryfilter=True).sample(10).to_csv("trans-boundaries.csv", index=False, float_format="%.2f")
+   res2df.trans.df(res2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", boundaryfilter=True).sample(10).to_csv("trans-boundaries.csv", index=False, float_format="%.2f")
 
 .. csv-table:: Sample rows from connections where FIPNUM is changing
    :file:  trans-boundaries.csv
@@ -105,13 +105,13 @@ over a region interface. This is accomplished by adding the ``group=True`` optio
 
 .. code-block:: python
 
-   from ecl2df import trans, EclFiles
+   from res2df import trans, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = ecl2df.trans.df(eclfiles, vectors="FIPNUM", addnnc=True, group=True)
+   dframe = res2df.trans.df(eclfiles, vectors="FIPNUM", addnnc=True, group=True)
 
 ..
-   ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", group=True).to_csv("trans-group.csv", index=False, float_format="%.2f")
+   res2df.trans.df(res2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", group=True).to_csv("trans-group.csv", index=False, float_format="%.2f")
 
 .. csv-table:: Transmissibilities summed over each FIPNUM interface
    :file: trans-group.csv

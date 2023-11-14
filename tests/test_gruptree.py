@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, gruptree
-from ecl2df.eclfiles import EclFiles
+from res2df import ecl2csv, gruptree
+from res2df.eclfiles import EclFiles
 
 try:
     # pylint: disable=unused-import

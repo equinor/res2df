@@ -9,12 +9,12 @@ Typical usage
 
 .. code-block:: python
 
-   from ecl2df import grid, EclFiles
+   from res2df import grid, EclFiles
 
    eclfiles = EclFiles('MYDATADECK.DATA')
    dframe = grid.df(eclfiles, rstdates='last')
 
-where the API is documented at :func:`ecl2df.grid.df`.
+where the API is documented at :func:`res2df.grid.df`.
 
 ..
    eclfiles = EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')
@@ -110,20 +110,20 @@ the whereabouts of the file:
 
 .. code-block:: python
 
-   from ecl2df import grid, EclFiles, common
+   from res2df import grid, EclFiles, common
 
    eclfiles = EclFiles("'MYDATADECK.DATA")
    dframe = grid.df(eclfiles)
    # The filename with layers is relative to DATA-file location
    # or an absolute path.
-   subzonemap = ecl2df.common.parse_zonemapfile("subzones.lyr")
+   subzonemap = res2df.common.parse_zonemapfile("subzones.lyr")
    dframe_with_subzones = common.merge_zones(
        dframe, subzonemap, zoneheader="SUBZONE", kname="K"
    )
 
 For more control over merging of zones, check the documentation for
-the function :func:`ecl2df.common.merge_zones` and
-:meth:`ecl2df.common.parse_zonemapfile`
+the function :func:`res2df.common.merge_zones` and
+:meth:`res2df.common.parse_zonemapfile`
 
 Dynamic data
 ^^^^^^^^^^^^
@@ -147,7 +147,7 @@ Generating Eclipse include files from grid data
 
 If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
-:func:`ecl2df.grid.df2ecl()` function these manipulated vectors can be written back as
+:func:`res2df.grid.df2ecl()` function these manipulated vectors can be written back as
 include files to Eclipse.
 
 Say you want to change the FIPNUM, and that FIPNUM 6 should be removed, and set
@@ -155,7 +155,7 @@ it to FIPNUM 5. This can be accomplished using
 
 .. code-block:: python
 
-   from ecl2df import grid, EclFiles, common
+   from res2df import grid, EclFiles, common
 
    eclfiles = EclFiles("'MYDATADECK.DATA")
    dframe = grid.df(eclfiles)

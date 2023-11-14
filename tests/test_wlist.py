@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat
+from res2df import EclFiles, compdat
 
 try:
     # pylint: disable=unused-import

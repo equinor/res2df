@@ -1,8 +1,8 @@
 csv2ecl
 =======
 
-Some of the modules inside ecl2df is able to write Eclipse include files
-from dataframes (in the format dumped by ecl2df). This makes it possible
+Some of the modules inside res2df is able to write Eclipse include files
+from dataframes (in the format dumped by res2df). This makes it possible
 to produce Eclipse input data in any application that can write CSV files,
 and use this tool to convert it into Eclipse include files, or it can
 facilitate operations/manipulations of an existing deck using any tool
@@ -18,5 +18,5 @@ supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to output file.
 
 .. argparse::
-   :ref: ecl2df.csv2ecl.get_parser
+   :ref: res2df.csv2ecl.get_parser
    :prog: csv2ecl

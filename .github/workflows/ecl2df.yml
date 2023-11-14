@@ -1,4 +1,4 @@
-name: ecl2df
+name: res2df
 
 on:
   push:
@@ -15,7 +15,7 @@ env:
   ERT_SHOW_BACKTRACE: 1
 
 jobs:
-  ecl2df:
+  res2df:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,11 +40,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install ecl2df with dependencies
+      - name: Install res2df with dependencies
         run: |
           pip install --upgrade pip
           pip install .
-          python -c "import ecl2df"
+          python -c "import res2df"
 
       - name: Install ert
         if: matrix.install-ert
@@ -55,17 +55,17 @@ jobs:
 
       - name: Check code style and typing
         run: |
-          black --check ecl2df tests setup.py docs/conf.py
-          flake8 ecl2df tests
-          isort --check-only --profile black ecl2df tests
-          mypy ecl2df
+          black --check res2df tests setup.py docs/conf.py
+          flake8 res2df tests
+          isort --check-only --profile black res2df tests
+          mypy res2df
 
       - name: List all installed packages
         run: pip freeze
 
       - name: Run tests
         run: |
-          python -c "import ecl2df"
+          python -c "import res2df"
           pytest tests/
 
       - name: Syntax check documentation
@@ -81,8 +81,8 @@ jobs:
         run: |
             cp -R ./build/sphinx/html ../html
 
-            git config --local user.email "ecl2df-github-action"
-            git config --local user.name "ecl2df-github-action"
+            git config --local user.email "res2df-github-action"
+            git config --local user.name "res2df-github-action"
             git fetch origin gh-pages
             git checkout --track origin/gh-pages
             git clean -f -f -d -x
@@ -103,7 +103,7 @@ jobs:
         if: github.event_name == 'release' && matrix.python-version == '3.8'
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.ecl2df_pypi_token }}
+          TWINE_PASSWORD: ${{ secrets.res2df_pypi_token }}
         run: |
           python -m pip install --upgrade setuptools wheel twine
           python setup.py sdist bdist_wheel

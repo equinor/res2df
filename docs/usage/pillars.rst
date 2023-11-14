@@ -13,9 +13,9 @@ Typical usage is to obtain property statistics, and compute contacts pr.
 pillar (and optionally pr some region parameter).
 
 ..
-  from ecl2df import pillars, EclFiles
-  pillars.df(ecl2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))
-  pillars.df(ecl2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head().to_csv("pillars-example1.csv"float_format="%.1f", index=False))
+  from res2df import pillars, EclFiles
+  pillars.df(res2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))
+  pillars.df(res2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head().to_csv("pillars-example1.csv"float_format="%.1f", index=False))
 
 .. csv-table:: Example pillar table
    :file: pillars-example1.csv
@@ -33,7 +33,7 @@ repeated for each region value where it exists.
 Dynamic data, volumes and fluid contacts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The API :func:`ecl2df.pillars.df` and command line client allows specifying
+The API :func:`res2df.pillars.df` and command line client allows specifying
 dates if dynamic data should be included through the ``rstdates`` option to the
 API or the ``--rstdates`` option on the command line. Providing dates as an
 option will trigger computation of phase volumes ``WATVOL``, ``OILVOL``, and
@@ -55,7 +55,7 @@ Gas-water contact is only computed when ``SOIL`` is not present in the
 simulation (two-phase runs), it will be the deepest cell centre with gas
 saturation above sgascutoff, among those pillars with at least one cell above
 ``swatcutoff``. See the API documentation,
-:func:`ecl2df.pillars.compute_pillar_contacts`.
+:func:`res2df.pillars.compute_pillar_contacts`.
 
 The functionality is also available through the command line tool ``ecl2csv pillars``
 as in the example:
@@ -80,7 +80,7 @@ using ``--group`` to the command line client, and add optionally a ``--region``
 parameter to group over a particular region, typically ``EQLNUM``.
 
 The Python API will group over any data that is supplied via the ``region``
-option, check :func:`ecl2df.pillars.df`
+option, check :func:`res2df.pillars.df`
 
 
 Stacked version
@@ -90,14 +90,14 @@ By default, dynamic data are added as a set of columns for every date, like in
 this example:
 
 ..
-  pillars.df(ecl2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'), rstdates='all').dropna().head().to_csv('pillars-dyn1-unstacked.csv', float_format="%.1f", index=False)
+  pillars.df(res2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'), rstdates='all').dropna().head().to_csv('pillars-dyn1-unstacked.csv', float_format="%.1f", index=False)
 
 .. csv-table:: Example pillar table with dynamical data, unstacked
    :file: pillars-dyn1-unstacked.csv
    :header-rows: 1
 
 This may be what you want, however it is also possible to have ``DATE`` as a column,
-obtained by triggering the stacking option in :func:`ecl2df.pillars.df` or
+obtained by triggering the stacking option in :func:`res2df.pillars.df` or
 ``--stackdates`` on the command line and get data like this:
 
 

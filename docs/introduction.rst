@@ -1,7 +1,7 @@
 Introduction
 ============
 
-*ecl2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
+*res2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
 around `libecl <https://github.com/equinor/libecl/>`_ and `opm.io
 <https://github.com/OPM/opm-common/>`_, which are used to access
 binary files outputted by the reservoir simulator Eclipse, or its
@@ -31,11 +31,11 @@ a Pandas Dataframe.
 
 .. code-block:: python
 
-    import ecl2df
+    import res2df
 
-    eclfiles = ecl2df.EclFiles("MYECLDECK.DATA")
-    smry = ecl2df.summary.df(eclfiles, column_keys="F*", time_index="monthly")
-    hc_contacts = ecl2df.pillars.df(eclfiles, rstdates="all")
+    eclfiles = res2df.EclFiles("MYECLDECK.DATA")
+    smry = res2df.summary.df(eclfiles, column_keys="F*", time_index="monthly")
+    hc_contacts = res2df.pillars.df(eclfiles, rstdates="all")
 
 See the API for more documentation and possibilities for each module.
 

@@ -1,7 +1,7 @@
 equil
 -----
 
-This is the ecl2df module for processing the ``SOLUTION`` section of
+This is the res2df module for processing the ``SOLUTION`` section of
 the Eclipse input deck.
 
 Supported keywords are ``EQUIL``, ``RSVD``, ``RVVD``, ``PBVD`` and
@@ -9,14 +9,14 @@ Supported keywords are ``EQUIL``, ``RSVD``, ``RVVD``, ``PBVD`` and
 
 .. code-block:: python
 
-    from ecl2df import equil, EclFiles
+    from res2df import equil, EclFiles
 
     dframe = equil.df(EclFiles('MYECLDECK.DATA'))
 
 Which will provide a dataframe similar to the example below. Note that the column
 `Z` is used both for datum depth and the depth values in ``RSVD`` tables. The
 amount of columns obtained depends on the input dataset, and should be possible
-to link up with the Eclipse documentation. API doc: :func:`ecl2df.equil.df`
+to link up with the Eclipse documentation. API doc: :func:`res2df.equil.df`
 
 ..
   dframe = equil.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))

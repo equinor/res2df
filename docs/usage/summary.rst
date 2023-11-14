@@ -9,7 +9,7 @@ Pandas Dataframes.
 
 .. code-block:: python
 
-   from ecl2df import summary, EclFiles
+   from res2df import summary, EclFiles
 
    eclfiles = EclFiles("MYDATADECK.DATA")
    dframe = summary.df(eclfiles, column_keys="F*PT", time_index="yearly")
@@ -21,7 +21,7 @@ Eclipse equivalent to ``time_index="raw"``, other options are *daily*, *weekly*,
 data.
 
 Additional arguments are available, see the
-`API documentation <https://equinor.github.io/ecl2df/ecl2df/ecl2df.summary.html#ecl2df.summary.df>`_
+`API documentation <https://equinor.github.io/res2df/res2df/res2df.summary.html#res2df.summary.df>`_
 for an extensive overview.
 
 .. csv-table:: Example summary table

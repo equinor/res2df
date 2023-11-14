@@ -1,4 +1,4 @@
-"""Test module for ecl2df.grid"""
+"""Test module for res2df.grid"""
 import datetime
 import os
 from pathlib import Path
@@ -8,8 +8,8 @@ import pandas as pd
 import pyarrow
 import pytest
 
-from ecl2df import common, ecl2csv, grid
-from ecl2df.eclfiles import EclFiles
+from res2df import common, ecl2csv, grid
+from res2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -50,7 +50,7 @@ def test_gridgeometry2df(mocker):
         grid.gridgeometry2df(None)
 
     with pytest.raises(ValueError, match="No EGRID file supplied"):
-        mocker.patch("ecl2df.eclfiles.EclFiles.get_egridfile", return_value=None)
+        mocker.patch("res2df.eclfiles.EclFiles.get_egridfile", return_value=None)
         grid.gridgeometry2df(eclfiles)
 
 
@@ -150,7 +150,7 @@ def test_init2df():
 
     # The KRO data from the INIT file in Reek contains only NaN's,
     # but libecl gives out a large negative integer/float.
-    # ecl2df should ensure this comes out as a NaN (but it
+    # res2df should ensure this comes out as a NaN (but it
     # should be allowed later to drop columns which have only NaNs))
     if "KRO" in init_df:
         assert np.isnan(init_df["KRO"].unique()).all()
@@ -195,7 +195,7 @@ def test_df2ecl(tmp_path):
         grid.df2ecl(grid_df, "FIPNUM", dtype="foo")
 
     assert "FIPNUM" in fipnum_str
-    assert "-- Output file printed by ecl2df.grid" in fipnum_str
+    assert "-- Output file printed by res2df.grid" in fipnum_str
     assert "35817 active cells" in fipnum_str  # (comment at the end)
     assert "35840 total cell count" in fipnum_str  # (comment at the end)
     assert len(fipnum_str) > 100

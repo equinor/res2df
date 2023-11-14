@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat
+from res2df import EclFiles, compdat
 
 try:
     # pylint: disable=unused-import
@@ -1025,7 +1025,7 @@ def test_welopen(test_input, expected):
       'IN2' 2 1 1 1 'OPEN' /
     /
     WELOPEN
-      -- In ecl2df, the WELOPEN is allowed to be before WLIST
+      -- In res2df, the WELOPEN is allowed to be before WLIST
       '*OP' 'SHUT' 0 0 0 /
     /
     WLIST
@@ -1300,7 +1300,7 @@ WELOPEN
             id="complump_defaults",
             marks=pytest.mark.xfail(
                 raises=ValueError,
-                match="Defaulted COMPLUMP coordinates are not supported in ecl2df",
+                match="Defaulted COMPLUMP coordinates are not supported in res2df",
             ),
         ),
         pytest.param(

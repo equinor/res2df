@@ -1,4 +1,4 @@
-"""Test module for ecl2df.common"""
+"""Test module for res2df.common"""
 
 import datetime
 import os
@@ -9,7 +9,7 @@ import packaging.version
 import pandas as pd
 import pytest
 
-from ecl2df import common, eclfiles, equil
+from res2df import common, eclfiles, equil
 
 try:
     # pylint: disable=unused-import

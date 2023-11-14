@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import csv2ecl, ecl2csv, inferdims, satfunc
-from ecl2df.eclfiles import EclFiles
+from res2df import csv2ecl, ecl2csv, inferdims, satfunc
+from res2df.eclfiles import EclFiles
 
 try:
     # pylint: disable=unused-import

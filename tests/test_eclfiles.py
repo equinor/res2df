@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from ecl2df import EclFiles
+from res2df import EclFiles
 
 try:
     # pylint: disable=unused-import

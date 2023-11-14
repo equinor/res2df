@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat, ecl2csv
+from res2df import EclFiles, compdat, ecl2csv
 
 try:
     # pylint: disable=unused-import

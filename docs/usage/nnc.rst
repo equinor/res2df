@@ -15,7 +15,7 @@ Run in serial to get this output.
 
 .. code-block:: python
 
-   from ecl2df import nnc, EclFiles
+   from res2df import nnc, EclFiles
 
    eclfiles = EclFiles('MYDATADECK.DATA')
    dframe = nnc.df(eclfiles)
@@ -36,7 +36,7 @@ average of the xyz for each of the cells involved in a connection pair) as
 extra columns.
 
 If you only want vertical connections, add the option ``--pillars`` or ``-vertical``,
-or set ``pillars=True`` if using the Python API (:func:`ecl2df.nnc.df`)
+or set ``pillars=True`` if using the Python API (:func:`res2df.nnc.df`)
 
 ``EDITNNC`` export
 ^^^^^^^^^^^^^^^^^^

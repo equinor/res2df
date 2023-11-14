@@ -3,8 +3,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import wellconnstatus
-from ecl2df.eclfiles import EclFiles
+from res2df import wellconnstatus
+from res2df.eclfiles import EclFiles
 
 try:
     # pylint: disable=unused-import

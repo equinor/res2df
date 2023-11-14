@@ -3,12 +3,12 @@ import os
 from datetime import datetime as dt
 from pathlib import Path
 
-import ecl
 import numpy as np
 import pandas as pd
 import pyarrow
 import pytest
 import yaml
+from resdata.summary import Summary
 
 from ecl2df import csv2ecl, ecl2csv, summary
 from ecl2df.eclfiles import EclFiles
@@ -1165,7 +1165,7 @@ def test_ecl2df_errors(tmp_path):
     Path("FOO.SMSPEC").write_bytes(os.urandom(100))
     with pytest.raises(OSError, match="Failed to create summary instance"):
         # This is how libecl reacts to bogus binary data
-        ecl.summary.EclSum("FOO.UNSMRY")
+        Summary("FOO.UNSMRY")
 
     # But EclFiles should be more tolerant, as it should be possible
     # to extract other data if SMRY is corrupted

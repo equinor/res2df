@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pyarrow.feather
-from ecl.eclfile import EclFile
+from resdata.resfile import ResdataFile
 
 from ecl2df import __version__, common, getLogger_ecl2csv
 
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 def get_available_rst_dates(eclfiles: EclFiles) -> List[datetime.date]:
     """Return a list of datetime objects for the available dates in the RST file"""
-    report_indices = EclFile.file_report_list(eclfiles.get_rstfilename())
+    report_indices = ResdataFile.file_report_list(eclfiles.get_rstfilename())
     logger.info(
         "Restart report indices (count %s): %s",
         str(len(report_indices)),
@@ -307,7 +307,7 @@ def gridgeometry2df(
 
     logger.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
-    ijk = index_frame.values[:, 0:3] + 1  # ijk from ecl.grid is off by one
+    ijk = index_frame.values[:, 0:3] + 1  # ijk from resdata.grid is off by one
 
     xyz = grid.export_position(index_frame)
     vol = grid.export_volume(index_frame)

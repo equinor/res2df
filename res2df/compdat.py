@@ -1,4 +1,4 @@
-"""Parser and dataframe generator for the Eclipse keywords:
+"""Parser and dataframe generator for the resdata keywords:
   * COMPDAT
   * COMPLUMP
   * COMPSEGS

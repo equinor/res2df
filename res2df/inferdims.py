@@ -31,7 +31,7 @@ def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
     stricter mode, to detect the correct table dimensionality
 
     Arguments:
-        deck: String containing an input deck or only a few Eclipse keywords
+        deck: String containing an input deck or only a few resdata keywords
         dimkeyword: Either TABDIMS or EQLDIMS
         dimitem: The element number in TABDIMS/EQLDIMS to modify
     Returns:

@@ -1,5 +1,5 @@
 """
-Extract EQUIL from an Eclipse deck as Pandas DataFrame
+Extract EQUIL from an input deck as Pandas DataFrame
 """
 
 import argparse
@@ -92,7 +92,7 @@ def df(
     are possibly already removed by the OPM parser in resdatafiles.str2deck().
 
     Arguments:
-        deck: Eclipse deck or string with deck. If
+        deck: input deck or string with deck. If
            not string, EQLDIMS must be present in the deck.
         keywords: Requested keywords for which to extract data.
         ntequl: If not None, should state the NTEQUL in EQLDIMS. If

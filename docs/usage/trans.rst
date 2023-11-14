@@ -6,7 +6,7 @@ from a simulation grid.
 
 Python API: :func:`res2df.trans.df`
 
-Applied on an Eclipse deck, the *trans* module will give out a dataframe of neighbour
+Applied on an input deck, the *trans* module will give out a dataframe of neighbour
 connections
 
 .. code-block:: python

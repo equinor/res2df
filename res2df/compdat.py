@@ -82,7 +82,7 @@ def deck2dfs(
 
     Args:
         deck: A deck representing the schedule
-            Does not have to be a full Eclipse deck, an include file is sufficient
+            Does not have to be a full input deck, an include file is sufficient
         start_date: The default date to use for
             events where the DATE or START keyword is not found in advance.
             Default: None

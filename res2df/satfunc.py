@@ -1,8 +1,8 @@
 """
 Extract saturation function data (SWOF, SGOF, SWFN, etc.)
-from an Eclipse deck as Pandas DataFrame.
+from an input deck as Pandas DataFrame.
 
-Data can be extracted from a full Eclipse deck (`*.DATA`)
+Data can be extracted from a full input deck (`*.DATA`)
 or from individual files.
 
 Note that when parsing from individual files, it is
@@ -129,7 +129,7 @@ def df(
 
 def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     """Interpolate NaN's linearly in saturation.
-    Saturation function tables in Eclipse decks can have certain values defaulted.
+    Saturation function tables in input decks can have certain values defaulted.
     When parsed by common.res2df, these values are returned as np.nan.
     The incoming dataframe must be associated to one keyword only, but
     can consist of multiple SATNUMs.

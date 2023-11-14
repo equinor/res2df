@@ -625,7 +625,7 @@ def df2ecl(
 ) -> str:
     """
     Write an include file with grid data keyword, like PERMX, PORO,
-    FIPNUM etc, for the GRID section of the Eclipse deck.
+    FIPNUM etc, for the GRID section of the input deck.
 
     Output (returned as string and optionally written to file) will then
     contain f.ex::

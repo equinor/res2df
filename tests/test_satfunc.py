@@ -27,7 +27,7 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_ecldeck_to_satfunc_dframe():
-    """Test that dataframes can be produced from a full Eclipse deck (the
+    """Test that dataframes can be produced from a full input deck (the
     example Reek case)"""
     resdatafiles = ResdataFiles(REEK)
     satdf = satfunc.df(resdatafiles.get_ecldeck())

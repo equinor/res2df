@@ -4,7 +4,7 @@ Introduction
 *res2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
 around `libecl <https://github.com/equinor/libecl/>`_ and `opm.io
 <https://github.com/OPM/opm-common/>`_, which are used to access
-binary files outputted by the reservoir simulator Eclipse, or its
+binary files outputted by reservoir simulators such as Eclipse, or its
 input files --- or any other tool outputting to the same data format,
 f.ex. `flow <https://opm-project.org/?page_id=19>`_.
 
@@ -56,7 +56,7 @@ More documentation on :doc:`usage/summary`.
 Extracts grid data from `.INIT` and `.EGRID` and `.UNRST` files. Restart file
 are optional to extract, and dates must be picked (or all). Data is
 merged into one DataFrame by the `i`, `j` and `k` indices. Bulk cell
-volume is included. Cells are indexed as in Eclipse, starting with 1.
+volume is included. Cells are indexed starting with 1.
 
 More documentation on :doc:`usage/grid`.
 
@@ -106,7 +106,7 @@ More documentation on :doc:`usage/rft`.
 ``fipreports``
 ^^^^^^^^^^^^^^
 
-Parses the PRT file from Eclipse looking for region reports (starting
+Parses the PRT file looking for region reports (starting
 with " ... FIPNUM REPORT REGION". It will extract all the data
 in the ASCII table in the PRT file and organize into a dataframe,
 currently-in-place, outflow to wells, outflows to regions, etc. It also
@@ -156,7 +156,7 @@ More documentation on :doc:`usage/gruptree`.
 ``pvt``
 ^^^^^^^
 
-Extracts PVT data from an Eclipse deck, from the keywords `PVTO`, `PVDG`,
+Extracts PVT data from an input deck, from the keywords `PVTO`, `PVDG`,
 `DENSITY`, `ROCK` etc. Can write data back to Eclipse include files.
 
 More documentation on :doc:`usage/pvt`.
@@ -173,7 +173,7 @@ More documentation on :doc:`usage/wcon`.
 ^^^^^^^^^^^^^^^^
 
 This is an internal helper module in order to represent finished or
-unfinished Eclipse decks and runs. The class ResdataFiles can cache binary
+unfinished input decks and runs. The class ResdataFiles can cache binary
 files that are recently read, and is able to locate the various output
 files based on the basename or the `.DATA` filename.
 
@@ -183,7 +183,7 @@ Metadata support
 parameters.txt
 ^^^^^^^^^^^^^^
 
-Metadata for each Eclipse deck are sometimes added in a text file named
+Metadata for each input deck are sometimes added in a text file named
 ``parameters.txt``, alongside the Eclipse DATA file or one or two directory levels
 above it.
 

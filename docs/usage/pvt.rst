@@ -1,7 +1,7 @@
 pvt
 ---
 
-Extracts PVT related keyword data from the PROPS section in an Eclipse deck,
+Extracts PVT related keyword data from the PROPS section in an input deck,
 typically the keywords ``PVTO``, ``PVDG``, ``DENSITY`` and ``ROCK``. Data from
 all keywords will be merged into one common dataframe.
 
@@ -77,7 +77,7 @@ Eclipse from your modified data by issuing
 
    pvt.df2ecl(dframe, filename="pvt.inc")
 
-When injecting this produced ``pvt.inc`` into any new Eclipse deck, ensure you
+When injecting this produced ``pvt.inc`` into any new input deck, ensure you
 check which keywords have been written out, compared to what you gave in to
 `res2df.pvt` above. Any non-supported keywords will get lost in the import phase
 and need to be catered for outside res2df.

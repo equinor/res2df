@@ -1481,7 +1481,7 @@ WELOPEN
     ],
 )
 def test_welopen_complump(test_input, expected):
-    """Test the welopen_complump functionality through Eclipse decks"""
+    """Test the welopen_complump functionality through input decks"""
     deck = ResdataFiles.str2deck(test_input)
     dfs = compdat.deck2dfs(deck)
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)

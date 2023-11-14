@@ -91,7 +91,7 @@ def df(
 
 
 def _get_ecl_unit_system(resdatafiles: ResdataFiles) -> EclipseUnitSystem:
-    """Returns the unit system of an eclipse deck. The options are \
+    """Returns the unit system of an input deck. The options are \
     METRIC, FIELD, LAB and PVT-M.
 
     If none of these are found, the function returns METRIC which is the

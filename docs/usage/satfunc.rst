@@ -1,7 +1,7 @@
 satfunc
 -------
 
-satfunc will extract saturation functions from Eclipse decks or from Eclipse
+satfunc will extract saturation functions from input decks or from Eclipse
 include files, these are the keywords ``SWOF``, ``SGOF``, ``SGWFN``, ``SWFN``,
 ``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
 

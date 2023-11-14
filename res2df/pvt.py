@@ -1,7 +1,7 @@
 """
 Extract the PVT data from an Eclipse (input) deck as Pandas Dataframes
 
-Data can be extracted from a full Eclipse deck or from individual files.
+Data can be extracted from a full input deck or from individual files.
 """
 
 import argparse
@@ -239,7 +239,7 @@ def df(
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Set up sys.argv parsers for parsing Eclipse deck or
+    """Set up sys.argv parsers for parsing input deck or
     include files into dataframes
 
     Arguments:

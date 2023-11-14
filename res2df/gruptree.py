@@ -1,4 +1,4 @@
-"""Extract GRUPTREE information from an Eclipse deck"""
+"""Extract GRUPTREE information from an input deck"""
 
 import argparse
 import collections

@@ -1,4 +1,4 @@
-"""Extract WCON* from an Eclipse deck"""
+"""Extract WCON* from an input deck"""
 
 import argparse
 import datetime

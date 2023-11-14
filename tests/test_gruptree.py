@@ -427,7 +427,7 @@ def test_emptytree_strdeck():
 
 
 def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
-    """Test the command line tool on an Eclipse deck which is empty"""
+    """Test the command line tool on an input deck which is empty"""
     os.chdir(tmp_path)
     Path("EMPTY.DATA").write_text("", encoding="utf8")
     mocker.patch("sys.argv", ["res2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])

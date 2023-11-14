@@ -47,7 +47,7 @@ setup(
     name="res2df",
     use_scm_version={"write_to": "res2df/version.py"},
     cmdclass=cmdclass,
-    description="Convert Eclipse 100 input and output to DataFrames",
+    description="Convert reservoir simulator input and output to DataFrames",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="http://github.com/equinor/res2df",

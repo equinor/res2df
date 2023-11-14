@@ -41,7 +41,7 @@ if HAVE_OPM:
 
 class ResdataFiles(object):
     """
-    Class for holding an Eclipse deck with result files
+    Class for holding an input deck with result files
 
     Exists only for convenience, so that loading of
     ResdataFile/Summary objects is easy for users, and with

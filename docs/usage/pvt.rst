@@ -82,6 +82,6 @@ check which keywords have been written out, compared to what you gave in to
 `res2df.pvt` above. Any non-supported keywords will get lost in the import phase
 and need to be catered for outside res2df.
 
-The last step can also be done using the ``csv2ecl`` command line utility
+The last step can also be done using the ``csv2res`` command line utility
 if you dump to CSV from your Python code instead.
 

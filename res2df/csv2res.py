@@ -11,16 +11,16 @@ from res2df import __version__, equil, pvt, satfunc, summary, vfp
 
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION: str = """Convert CSV files into Eclipse include files. Uses the command
-line utility ``csv2ecl``. Run ``csv2ecl --help`` to see which subcommands are supported.
+line utility ``csv2res``. Run ``csv2res --help`` to see which subcommands are supported.
 No options other than the output file is possible when used directly as a forward model.
 When writing synthetic summary files, the ECLBASE with no filename suffix is expected
 as the OUTPUT argument."""
 CATEGORY: str = "utility.eclipse"
 EXAMPLES: str = (
     "``FORWARD_MODEL "
-    "CSV2ECL(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
+    "CSV2RES(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
     "<OUTPUT>=eclipse/include/equil.inc)``"
-    "CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-monthly.csv, "
+    "CSV2RES(<SUBCOMMAND>=summary, <CSVFILE>=summary-monthly.csv, "
     "<OUTPUT>=eclipse/model/MONTHLYSUMMARY)``"
 )
 
@@ -30,7 +30,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "csv2ecl (" + __version__ + ") is a command line frontend to res2df. "
+            "csv2res (" + __version__ + ") is a command line frontend to res2df. "
             "Documentation at https://equinor.github.io/res2df/ "
         ),
     )

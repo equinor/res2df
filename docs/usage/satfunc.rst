@@ -61,7 +61,7 @@ include file can be generated either with the Python API
 
 .. code-block:: console
 
-  csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
+  csv2res satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
 
 which should give a file ``relperm.inc`` that can be parsed by Eclipse. The command
 above will only pick the keywords ``SWOF`` and ``SGOF`` (in the case there are

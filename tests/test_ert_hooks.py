@@ -53,7 +53,7 @@ def test_res2csv_through_ert(tmp_path):
         "RUNPATH .",
     ]
 
-    csv2ecl_subcommands = ["equil", "pvt", "satfunc"]
+    csv2res_subcommands = ["equil", "pvt", "satfunc"]
 
     for subcommand in res2df.SUBMODULES:
         ert_config.append(
@@ -79,13 +79,13 @@ def test_res2csv_through_ert(tmp_path):
         '<OUTPUT>=satfunc-swof.csv, <XARG1>="--keywords", <XARG2>="SWOF")'
     )
 
-    for subcommand in csv2ecl_subcommands:
+    for subcommand in csv2res_subcommands:
         ert_config.append(
-            f"FORWARD_MODEL CSV2ECL(<SUBCOMMAND>={subcommand}, "
+            f"FORWARD_MODEL CSV2RES(<SUBCOMMAND>={subcommand}, "
             f"<CSVFILE>={subcommand}.csv, <OUTPUT>={subcommand}.inc)"
         )
     ert_config.append(
-        "FORWARD_MODEL CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv, "
+        "FORWARD_MODEL CSV2RES(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv, "
         "<OUTPUT>=SUMYEARLY)"
     )
 
@@ -105,7 +105,7 @@ def test_res2csv_through_ert(tmp_path):
     assert set(pd.read_csv("pvt-custom.csv")["KEYWORD"]) == set(["PVTO"])
     assert set(pd.read_csv("satfunc-swof.csv")["KEYWORD"]) == set(["SWOF"])
 
-    for subcommand in csv2ecl_subcommands:
+    for subcommand in csv2res_subcommands:
         assert Path(subcommand + ".inc").is_file()
 
 
@@ -118,13 +118,13 @@ def test_job_documentation():
             == ert.shared.plugins.plugin_response.PluginResponse
         )
         assert (
-            type(jobs.job_documentation("CSV2ECL"))
+            type(jobs.job_documentation("CSV2RES"))
             == ert.shared.plugins.plugin_response.PluginResponse
         )
 
     else:
         assert jobs.job_documentation("RES2CSV") is None
-        assert jobs.job_documentation("CSV2ECL") is None
+        assert jobs.job_documentation("CSV2RES") is None
 
     assert jobs.job_documentation("foobar") is None
 

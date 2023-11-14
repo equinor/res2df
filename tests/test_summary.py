@@ -10,7 +10,7 @@ import pytest
 import yaml
 from resdata.summary import Summary
 
-from res2df import csv2ecl, res2csv, summary
+from res2df import csv2res, res2csv, summary
 from res2df.eclfiles import EclFiles
 from res2df.summary import (
     _df2pyarrow,
@@ -1197,8 +1197,8 @@ def test_df2eclsum_errors():
 
 
 @pytest.mark.integration
-def test_csv2ecl_summary(tmp_path, mocker):
-    """Check that we can call df2eclsum through the csv2ecl command line
+def test_csv2res_summary(tmp_path, mocker):
+    """Check that we can call df2eclsum through the csv2res command line
     utility"""
     dframe = pd.DataFrame(
         [
@@ -1211,7 +1211,7 @@ def test_csv2ecl_summary(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "csv2ecl",
+            "csv2res",
             "summary",
             "-v",
             "summary.csv",
@@ -1219,7 +1219,7 @@ def test_csv2ecl_summary(tmp_path, mocker):
             "SYNTHETIC",
         ],
     )
-    csv2ecl.main()
+    csv2res.main()
     assert Path("SYNTHETIC.UNSMRY").is_file()
     assert Path("SYNTHETIC.SMSPEC").is_file()
 
@@ -1228,7 +1228,7 @@ def test_csv2ecl_summary(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "csv2ecl",
+            "csv2res",
             "summary",
             "--debug",
             "summary.csv",
@@ -1236,6 +1236,6 @@ def test_csv2ecl_summary(tmp_path, mocker):
             str(Path("foo") / Path("SYNTHETIC")),
         ],
     )
-    csv2ecl.main()
+    csv2res.main()
     assert ("foo" / Path("SYNTHETIC.UNSMRY")).is_file()
     assert ("foo" / Path("SYNTHETIC.SMSPEC")).is_file()

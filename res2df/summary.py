@@ -923,7 +923,7 @@ def summary_main(args) -> None:
 
 
 def summary_reverse_main(args) -> None:
-    """Entry point for usage with "csv2ecl summary" on the command line"""
+    """Entry point for usage with "csv2res summary" on the command line"""
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )

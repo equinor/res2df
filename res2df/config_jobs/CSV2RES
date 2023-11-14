@@ -1,4 +1,4 @@
-EXECUTABLE csv2ecl
+EXECUTABLE csv2res
 
 ARGLIST <SUBCOMMAND> "--verbose" "--output" <OUTPUT> <CSVFILE>
 

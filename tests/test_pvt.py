@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import csv2ecl, pvt, res2csv
+from res2df import csv2res, pvt, res2csv
 from res2df.eclfiles import EclFiles
 
 try:
@@ -408,9 +408,9 @@ def test_main(tmp_path, mocker):
     # Write back to include file:
     incfile = tmp_path / "pvt.inc"
     mocker.patch(
-        "sys.argv", ["csv2ecl", "pvt", "-v", str(tmpcsvfile), "-o", str(incfile)]
+        "sys.argv", ["csv2res", "pvt", "-v", str(tmpcsvfile), "-o", str(incfile)]
     )
-    csv2ecl.main()
+    csv2res.main()
 
     # Reparse the include file on disk back to dataframe
     # and check dataframe equality
@@ -464,10 +464,10 @@ def test_magic_stdout(tmp_path):
     # pylint: disable=no-member  # false positive on Dataframes
     assert not df_stdout.empty
 
-    # Pipe back to csv2ecl:
+    # Pipe back to csv2res:
     df_stdout.to_csv("pvt.csv", index=False)
     result = subprocess.run(
-        ["csv2ecl", "pvt", "--verbose", "-o", "-", "pvt.csv"],
+        ["csv2res", "pvt", "--verbose", "-o", "-", "pvt.csv"],
         check=True,
         stdout=subprocess.PIPE,
     )

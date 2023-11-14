@@ -67,7 +67,7 @@ setup(
     zip_safe=False,
     entry_points={
         "console_scripts": [
-            "csv2ecl=res2df.csv2ecl:main",
+            "csv2res=res2df.csv2res:main",
             "res2csv=res2df.res2csv:main",
             "ecl2arrow=res2df.res2csv:main",
         ],

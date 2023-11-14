@@ -21,7 +21,7 @@ files (.UNSMRY), one for completion data etc.
 
 There is a command line frontend for almost all functionality, called
 `res2csv`, which converts the Eclipse data to DataFrames, and then dumps
-the dataframes to files in CSV format, and a similar `csv2ecl` for the
+the dataframes to files in CSV format, and a similar `csv2res` for the
 reverse operation.
 
 For documentation, see <https://equinor.github.io/res2df/>

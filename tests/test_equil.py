@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import csv2ecl, equil, res2csv
+from res2df import csv2res, equil, res2csv
 from res2df.eclfiles import EclFiles
 
 try:
@@ -550,9 +550,9 @@ def test_main_subparser(tmp_path, mocker):
 
     # Test the reverse operation:
     mocker.patch(
-        "sys.argv", ["csv2ecl", "equil", "-v", "--output", "equil.inc", tmpcsvfile]
+        "sys.argv", ["csv2res", "equil", "-v", "--output", "equil.inc", tmpcsvfile]
     )
-    csv2ecl.main()
+    csv2res.main()
     # NB: cvs2ecl does not output the phase configuration!
     phases = "WATER\nGAS\nOIL\n\n"
     ph_equil_inc = Path("phasesequil.inc")
@@ -567,7 +567,7 @@ def test_main_subparser(tmp_path, mocker):
 
     # Test via stdout:
     result = subprocess.run(
-        ["csv2ecl", "equil", "--output", "-", tmpcsvfile],
+        ["csv2res", "equil", "--output", "-", tmpcsvfile],
         stdout=subprocess.PIPE,
         check=True,
     )

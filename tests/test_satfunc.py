@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import csv2ecl, inferdims, res2csv, satfunc
+from res2df import csv2res, inferdims, res2csv, satfunc
 from res2df.eclfiles import EclFiles
 
 try:
@@ -685,7 +685,7 @@ def test_main_subparsers(tmp_path, mocker):
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}
 
 
-def test_csv2ecl(tmp_path, mocker):
+def test_csv2res(tmp_path, mocker):
     """Test command line interface for csv to Eclipse include files"""
     os.chdir(tmp_path)
     tmpcsvfile = "satfunc.csv"
@@ -695,8 +695,8 @@ def test_csv2ecl(tmp_path, mocker):
         data=[["SWOF", 0.0, 0.0, 1.0, 0.0], ["SWOF", 1.0, 1.0, 0.0, 0.0]],
     )
     swof_df.to_csv(tmpcsvfile, index=False)
-    mocker.patch("sys.argv", ["csv2ecl", "satfunc", "--output", "swof.inc", tmpcsvfile])
-    csv2ecl.main()
+    mocker.patch("sys.argv", ["csv2res", "satfunc", "--output", "swof.inc", tmpcsvfile])
+    csv2res.main()
     pd.testing.assert_frame_equal(
         satfunc.df(Path("swof.inc").read_text(encoding="utf8")).drop(
             "SATNUM", axis="columns"
@@ -707,7 +707,7 @@ def test_csv2ecl(tmp_path, mocker):
 
     # Test writing to stdout:
     result = subprocess.run(
-        ["csv2ecl", "satfunc", "--output", "-", tmpcsvfile],
+        ["csv2res", "satfunc", "--output", "-", tmpcsvfile],
         stdout=subprocess.PIPE,
         check=True,
     )

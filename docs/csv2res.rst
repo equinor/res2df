@@ -1,4 +1,4 @@
-csv2ecl
+csv2res
 =======
 
 Some of the modules inside res2df is able to write Eclipse include files
@@ -7,9 +7,9 @@ to produce Eclipse input data in any application that can write CSV files,
 and use this tool to convert it into Eclipse include files, or it can
 facilitate operations/manipulations of an existing deck using any tool
 that can work on CSV files, by first running res2csv on an input file,
-transforming it, and writing back using csv2ecl.
+transforming it, and writing back using csv2res.
 
-Mandatory argument for csv2ecl is
+Mandatory argument for csv2res is
 always the submodule responsible, a CSV file, and
 an ``--output`` option to specify which include file to write to.
 If you want output to your terminal, use ``-`` as the output filename. Unless
@@ -18,5 +18,5 @@ supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to output file.
 
 .. argparse::
-   :ref: res2df.csv2ecl.get_parser
-   :prog: csv2ecl
+   :ref: res2df.csv2res.get_parser
+   :prog: csv2res

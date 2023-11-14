@@ -12,7 +12,7 @@ data format.
    introduction
    usage
    res2csv
-   csv2ecl
+   csv2res
    installation
    contribution
    history

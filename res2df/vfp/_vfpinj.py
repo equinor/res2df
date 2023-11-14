@@ -580,7 +580,7 @@ def _write_table(
     format: str = "%10.6g",
     values_per_line: int = 5,
 ) -> str:
-    """Produce a string representing an Eclipse record for a VFPINJ table (BHP part)
+    """Produce a string representing a resdata record for a VFPINJ table (BHP part)
 
     Args:
         table:           DataFrame with multiindex for table ranges and colums
@@ -614,7 +614,7 @@ def _write_table_records(
     format: str = "%10.6g",
     values_per_line: int = 5,
 ) -> str:
-    """Produce a string representing an Eclipse record for a VFPINJ table (BHP part)
+    """Produce a string representing a resdata record for a VFPINJ table (BHP part)
 
     Args:
         thp_indices:     array of int representing index for THP value for record

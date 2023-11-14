@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Union
 import dateutil.parser
 import pandas as pd
 
-from res2df import EclFiles, common, getLogger_res2csv, grid
+from res2df import ResdataFiles, common, getLogger_res2csv, grid
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ AGGREGATORS: Dict[str, str] = {
 
 
 def df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     region: Optional[str] = None,
     rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
     soilcutoff: float = 0.2,
@@ -83,9 +83,11 @@ def df(
     if region:
         vectors.append(region)
     vectors.extend(["POR*", "PERM*", "SWAT", "SGAS", "1OVERBO", "1OVERBG"])
-    grid_df = grid.df(eclfiles, rstdates=rstdates, vectors=vectors, dateinheaders=True)
+    grid_df = grid.df(
+        resdatafiles, rstdates=rstdates, vectors=vectors, dateinheaders=True
+    )
 
-    rstdates_iso = grid.dates2rstindices(eclfiles, rstdates)[2]
+    rstdates_iso = grid.dates2rstindices(resdatafiles, rstdates)[2]
 
     grid_df["PILLAR"] = grid_df["I"].astype(str) + "-" + grid_df["J"].astype(str)
     logger.info("Computing pillar statistics")
@@ -415,9 +417,9 @@ def pillars_main(args) -> None:
         __name__, vars(args)
     )
 
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
     dframe = df(
-        eclfiles,
+        resdatafiles,
         region=args.region,
         rstdates=args.rstdates,
         soilcutoff=args.soilcutoff,

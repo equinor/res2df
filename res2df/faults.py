@@ -10,7 +10,7 @@ from typing import Union
 
 import pandas as pd
 
-from res2df import EclFiles, getLogger_res2csv
+from res2df import ResdataFiles, getLogger_res2csv
 from res2df.common import parse_opmio_deckrecord, write_dframe_stdout_file
 
 try:
@@ -30,7 +30,7 @@ COLUMNS = ["NAME", "I", "J", "K", "FACE"]
 ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
 
 
-def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
+def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
     """Produce a dataframe of fault data from a deck
 
     All data for the keyword FAULTS will be returned.
@@ -38,7 +38,7 @@ def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
     Args:
         deck: Eclipse deck
     """
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
 
     # In[91]: list(deck['FAULTS'][0])
@@ -86,9 +86,9 @@ def faults_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
-    if eclfiles:
-        deck = eclfiles.get_ecldeck()
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    if resdatafiles:
+        deck = resdatafiles.get_ecldeck()
     faults_df = df(deck)
     write_dframe_stdout_file(
         faults_df,

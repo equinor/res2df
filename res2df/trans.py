@@ -13,7 +13,7 @@ import res2df.nnc
 from res2df import getLogger_res2csv
 from res2df.common import write_dframe_stdout_file
 
-from .eclfiles import EclFiles
+from .resdatafiles import ResdataFiles
 
 try:
     import networkx
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 def df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     vectors: Optional[Union[str, List[str]]] = None,
     boundaryfilter: bool = False,
     group: bool = False,
@@ -57,7 +57,7 @@ def df(
     you will get a corresponding FIPNUM1 and FIPNUM2 added.
 
     Args:
-        eclfiles: An object representing your Eclipse run
+        resdatafiles: An object representing your Eclipse run
         vectors: Eclipse INIT vectors that you want to include
         boundaryfilter: Set to true if you want to filter where one INIT
             vector change. Only use for integer INIT vectors.
@@ -101,7 +101,7 @@ def df(
             "Filtering to both k and to ij simultaneously results in empty dataframe"
         )
 
-    grid_df = res2df.grid.df(eclfiles)
+    grid_df = res2df.grid.df(resdatafiles)
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
         logger.warning(
@@ -149,7 +149,7 @@ def df(
 
     if addnnc:
         logger.info("Adding NNC data")
-        nnc_df = res2df.nnc.df(eclfiles, coords=False, pillars=False)
+        nnc_df = res2df.nnc.df(resdatafiles, coords=False, pillars=False)
         nnc_df["DIR"] = "NNC"
         trans_df = pd.concat([trans_df, nnc_df], sort=False)
 
@@ -236,12 +236,14 @@ def df(
     return trans_df
 
 
-def make_nx_graph(eclfiles: EclFiles, region: str = "FIPNUM") -> "networkx.Graph":
+def make_nx_graph(
+    resdatafiles: ResdataFiles, region: str = "FIPNUM"
+) -> "networkx.Graph":
     """Construct a networkx graph for the transmissibilities."""
     if not HAVE_NETWORKX:
         logger.error("Please install networkx for this function to work")
         return None
-    trans_df = df(eclfiles, vectors=[region], coords=True, group=True)
+    trans_df = df(resdatafiles, vectors=[region], coords=True, group=True)
     reg1 = region + "1"
     reg2 = region + "2"
     graph = networkx.Graph()
@@ -306,9 +308,9 @@ def trans_main(args):
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
     trans_df = df(
-        eclfiles,
+        resdatafiles,
         vectors=args.vectors,
         boundaryfilter=args.boundaryfilter,
         onlykdir=args.onlyk,

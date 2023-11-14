@@ -9,8 +9,8 @@ import pandas as pd
 import pytest
 
 from res2df import fipreports, res2csv
-from res2df.eclfiles import EclFiles
 from res2df.fipreports import report_block_lineparser as parser
+from res2df.resdatafiles import ResdataFiles
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -19,7 +19,7 @@ MOCKPRTFILE = str(TESTDIR / "data/fipreports/TEST1.PRT")
 
 def test_fipreports2df():
     """Test parsing of Reek dataset"""
-    prtfile = EclFiles(DATAFILE).get_prtfilename()
+    prtfile = ResdataFiles(DATAFILE).get_prtfilename()
     fipreport_df = fipreports.df(prtfile)
     assert len(fipreport_df["REGION"].unique()) == 6
     assert len(fipreport_df["DATE"].unique()) == 1

@@ -39,7 +39,7 @@ if HAVE_OPM:
     ]
 
 
-class EclFiles(object):
+class ResdataFiles(object):
     """
     Class for holding an Eclipse deck with result files
 
@@ -109,7 +109,7 @@ class EclFiles(object):
     @staticmethod
     def file2deck(filename: Union[str, Path]) -> "opm.libopmcommon_python.Deck":
         """Try to convert standalone files into opm.io Deck objects"""
-        return EclFiles.str2deck(Path(filename).read_text(encoding="utf-8"))
+        return ResdataFiles.str2deck(Path(filename).read_text(encoding="utf-8"))
 
     def get_egrid(self) -> Grid:
         """Find and return EGRID file as an Grid object"""

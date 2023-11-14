@@ -3,7 +3,7 @@ import copy
 import pandas as pd
 import pytest
 
-from res2df import EclFiles, vfp
+from res2df import ResdataFiles, vfp
 
 try:
     import opm  # noqa
@@ -993,7 +993,7 @@ VFPINJ
 @pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
 def test_res2df_vfpprod(test_input, expected):
     """Test res2df for VFPPROD"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdf = vfp.df(deck, "VFPPROD")
 
     pd.testing.assert_frame_equal(vfpdf, expected)
@@ -1002,7 +1002,7 @@ def test_res2df_vfpprod(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", VFPPROD_CASES)
 def test_ecl2pyarrow_vfpprod(test_input, expected):
     """Test ecl2pyarrow for VFPPROD"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     # Read first into pyarrow tables
     vfppa = vfp.pyarrow_tables(deck, "VFPPROD")
     # Convert pyarrow table to basic data types for VFPPROD
@@ -1025,7 +1025,7 @@ def test_df2ecl_vfpprod(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", [VFPPROD_CASES[0]])
 def test_pyarrow2ecl_vfpprod(test_input, expected):
     """Test pyarrow2ecl for VFPPROD (case without default values)"""
-    deck = EclFiles.str2deck(vfp.df2ecl(expected, "VFPPROD"))
+    deck = ResdataFiles.str2deck(vfp.df2ecl(expected, "VFPPROD"))
     vfpprod_df = vfp.df(deck, "VFPPROD")
     vfpprod_data = vfp.df2basic_data(vfpprod_df)
     vfpprod_pa = vfp.basic_data2pyarrow(vfpprod_data)
@@ -1039,7 +1039,7 @@ def test_pyarrow2ecl_vfpprod(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", VFPINJ_CASES)
 def test_res2df_vfpinj(test_input, expected):
     """Test res2df for VFPINJ"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdf = vfp.df(deck, "VFPINJ")
 
     pd.testing.assert_frame_equal(vfpdf, expected)
@@ -1056,7 +1056,7 @@ def test_df2ecl_vfpinj(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", [VFPINJ_CASES[0]])
 def test_pyarrow2ecl_vfpinj(test_input, expected):
     """Test pyarrow2ecl for VFPPROD (case without default values)"""
-    deck = EclFiles.str2deck(vfp.df2ecl(expected, "VFPINJ"))
+    deck = ResdataFiles.str2deck(vfp.df2ecl(expected, "VFPINJ"))
     vfpinj_df = vfp.df(deck, "VFPINJ")
     vfpinj_data = vfp.df2basic_data(vfpinj_df)
     vfpinj_pa = vfp.basic_data2pyarrow(vfpinj_data)
@@ -1070,7 +1070,7 @@ def test_pyarrow2ecl_vfpinj(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_res2df_vfpprods(test_input, expected):
     """Test res2df for files with multiple VFPPROD"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPPROD")
 
     # Two VFPPROD curves in file corresponding to curves 0 and 1
@@ -1081,7 +1081,7 @@ def test_res2df_vfpprods(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_ecl2pyarrow_vfpprods(test_input, expected):
     """Test res2df with pyarrow for files with multiple VFPPROD"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPPROD")
 
     # Two VFPPROD curves in file corresponding to curves 0 and 1
@@ -1094,7 +1094,7 @@ def test_ecl2pyarrow_vfpprods(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_res2df_vfpinjs(test_input, expected):
     """Test res2df for files with multiple VFPINJ"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPINJ")
 
     # Two VFPINJ curves in file corresponding to curves 2 and 3
@@ -1105,7 +1105,7 @@ def test_res2df_vfpinjs(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_eclpyarrow_vfpinjs(test_input, expected):
     """Test res2df for pyarrow for files with multiple VFPINJ"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPINJ")
 
     # Two VFPINJ curves in file corresponding to curves 2 and 3
@@ -1118,7 +1118,7 @@ def test_eclpyarrow_vfpinjs(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_res2df_vfpprod_no(test_input, expected):
     """Test res2df for files with multiple VFPPROD with vfp number argument"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPPROD", "2")
 
     # VFPPROD curve with VFP number 2 is curve 1 in file
@@ -1130,7 +1130,7 @@ def test_ecl2pyarrow_vfpprod_no(test_input, expected):
     """Test res2df for pyarrow for files with multiple
     VFPPROD with vfp number argument
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPPROD", "2")
     vfpprod_data = vfp.pyarrow2basic_data(vfppas[0])
     vfpdf = vfp.basic_data2df(vfpprod_data)
@@ -1142,7 +1142,7 @@ def test_ecl2pyarrow_vfpprod_no(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_res2df_vfpinj_no(test_input, expected):
     """Test res2df for files with multiple VFPINJ with vfp number argument"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPINJ", "4")
 
     # VFPINJ curve with VFP number 4 is curve 3 in file
@@ -1152,7 +1152,7 @@ def test_res2df_vfpinj_no(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_ecl2pyarrow_vfpinj_no(test_input, expected):
     """Test res2df for pyarrow files with multiple VFPINJ with vfp number argument"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPINJ", "4")
 
     vfpinj_data = vfp.pyarrow2basic_data(vfppas[0])
@@ -1165,7 +1165,7 @@ def test_ecl2pyarrow_vfpinj_no(test_input, expected):
 @pytest.mark.parametrize("test_input, expected", MULTIPLE_VFP_CASES)
 def test_res2df_vfpprods_no(test_input, expected):
     """Test res2df for files with multiple VFPPROD with vfp number argument as range"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPPROD", "[1:2]")
 
     # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
@@ -1178,7 +1178,7 @@ def test_ecl2pyarrow_vfpprods_no(test_input, expected):
     """Test res2df for pyarrow for files with multiple VFPPROD
     with vfp number argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPPROD", "[1:2]")
 
     # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
@@ -1193,7 +1193,7 @@ def test_res2df_vfpinjs_no(test_input, expected):
     """Test res2df for files with multiple VFPINJ with vfp number
     argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfpdfs = vfp.dfs(deck, "VFPINJ", "[3:4]")
 
     # VFPINJ curves with VFP numbers 3 and 4 are curves 2 and 3
@@ -1206,7 +1206,7 @@ def test_ecl2pyarrow_vfpinjs_no(test_input, expected):
     """Test res2df for pyararow for files with multiple VFPINJ with vfp
     number argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     vfppas = vfp.pyarrow_tables(deck, "VFPINJ", "[3:4]")
 
     # VFPINJ curves with VFP numbers 3 and 4 are curves 2 and 3
@@ -1221,7 +1221,7 @@ def test_basic_data_vfpprods_no(test_input, expected):
     """Test res2df basic_data reading for files with multiple VFPPROD
     with vfp number argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     basic_data_vfps = vfp.basic_data(deck, "VFPPROD", "[1:2]")
 
     # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
@@ -1235,7 +1235,7 @@ def test_basic_data_vfpinjs_no(test_input, expected):
     """Test res2df basic_data reading for files with multiple VFPINJ with vfp
     number argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     basic_data_vfps = vfp.basic_data(deck, "VFPINJ", "[3:4]")
 
     # VFPINJ curves with VFP numbers 3 and 4 are curves 2 and 3
@@ -1249,7 +1249,7 @@ def test_pyarrow2basic_data_vfpprods_no(test_input, expected):
     """Test res2df pyarrow2basic_data for files with multiple VFPPROD
     with vfp number argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     pyarrow_vfps = vfp.pyarrow_tables(deck, "VFPPROD", "[1:2]")
 
     # VFPPROD curves with VFP numbers 1 and 2 are curves 0 and 1
@@ -1264,7 +1264,7 @@ def test_pyarrow2basic_data_vfpinjs_no(test_input, expected):
     """Test res2df pyarrow2basic_data for files with multiple VFPINJ with vfp
     number argument as range
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     pyarrow_vfps = vfp.pyarrow_tables(deck, "VFPINJ", "[3:4]")
 
     # VFPINJ curves with VFP numbers 3 and 4 are curves 2 and 3
@@ -1285,7 +1285,7 @@ class Test_Exceptions_vfpprod_keys:
         """Test exceptions for basic data format (not containing all
         required keywords) for VFPPROD"
         """
-        deck = EclFiles.str2deck(test_input)
+        deck = ResdataFiles.str2deck(test_input)
         basic_data_vfpprods = vfp.basic_data(deck, "VFPPROD")
 
         # Check if exception is raises if one key is missing
@@ -1312,7 +1312,7 @@ class Test_Exceptions_vfpprod_dims:
         """Test exceptions for basic data format
         (inconsistency in array dimensions) for VFPPROD"
         """
-        deck = EclFiles.str2deck(test_input)
+        deck = ResdataFiles.str2deck(test_input)
         basic_data_vfpprods = vfp.basic_data(deck, "VFPPROD")
 
         # Check if exception is raises if array dimension is wrong
@@ -1329,7 +1329,7 @@ def test_basic_data_dims_vfpprods(test_input, expected):
     """Test exceptions for dimensions consistency for basic data format
     (not containing all required keywords) for VFPPROD"
     """
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     basic_data_vfpprods = vfp.basic_data(deck, "VFPPROD")
 
     # Check if exception is raised if dimensions are wrong
@@ -1352,7 +1352,7 @@ class Test_Exceptions_vfpinj_keys:
         """Test exceptions for basic data format (not containing all
         required keywords) for VFPINJ"
         """
-        deck = EclFiles.str2deck(test_input)
+        deck = ResdataFiles.str2deck(test_input)
         basic_data_vfpinjs = vfp.basic_data(deck, "VFPINJ")
 
         # Check if exception is raises if one key is missing
@@ -1379,7 +1379,7 @@ class Test_Exceptions_vfpinj_dims:
         """Test exceptions for basic data format
         (inconsistency in array dimensions) for VFPINJ"
         """
-        deck = EclFiles.str2deck(test_input)
+        deck = ResdataFiles.str2deck(test_input)
         basic_data_vfpinjs = vfp.basic_data(deck, "VFPINJ")
 
         # Check if exception is raises if array dimension if wrong

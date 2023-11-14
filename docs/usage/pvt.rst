@@ -9,10 +9,10 @@ Example usage:
 
 .. code-block:: python
 
-   from res2df import pvt, EclFiles
+   from res2df import pvt, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = pvt.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = pvt.df(resdatafiles)
 
 Alternatively, we may also read directly from an include file
 if we read the contents of the file and supply it as a string:
@@ -22,7 +22,7 @@ if we read the contents of the file and supply it as a string:
    dframe = pvt.df(open("pvt.inc").read())
 
 ..
-  pvt.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).tail(15).to_csv('docs/usage/pvt.csv', index=False)
+  pvt.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).tail(15).to_csv('docs/usage/pvt.csv', index=False)
 
 
 .. csv-table:: Example PVT table (last 15 rows to show non-Nan data)

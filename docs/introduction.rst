@@ -33,9 +33,9 @@ a Pandas Dataframe.
 
     import res2df
 
-    eclfiles = res2df.EclFiles("MYECLDECK.DATA")
-    smry = res2df.summary.df(eclfiles, column_keys="F*", time_index="monthly")
-    hc_contacts = res2df.pillars.df(eclfiles, rstdates="all")
+    resdatafiles = res2df.ResdataFiles("MYECLDECK.DATA")
+    smry = res2df.summary.df(resdatafiles, column_keys="F*", time_index="monthly")
+    hc_contacts = res2df.pillars.df(resdatafiles, rstdates="all")
 
 See the API for more documentation and possibilities for each module.
 
@@ -169,11 +169,11 @@ associated data in a dataframe format.
 
 More documentation on :doc:`usage/wcon`.
 
-``eclfiles``
-^^^^^^^^^^^^
+``resdatafiles``
+^^^^^^^^^^^^^^^^
 
 This is an internal helper module in order to represent finished or
-unfinished Eclipse decks and runs. The class EclFiles can cache binary
+unfinished Eclipse decks and runs. The class ResdataFiles can cache binary
 files that are recently read, and is able to locate the various output
 files based on the basename or the `.DATA` filename.
 

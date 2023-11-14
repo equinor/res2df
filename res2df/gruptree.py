@@ -19,7 +19,7 @@ try:
 except ImportError:
     pass
 
-from res2df import EclFiles, getLogger_res2csv
+from res2df import ResdataFiles, getLogger_res2csv
 from res2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 def df(
-    deck: Union[EclFiles, "opm.libopmcommon_python.Deck"],
+    deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"],
     startdate: Optional[datetime.date] = None,
     welspecs: bool = True,
 ) -> pd.DataFrame:
@@ -55,7 +55,7 @@ def df(
     startdate is only relevant when START is not in the deck.
 
     Args:
-        deck: opm.io Deck object or EclFiles
+        deck: opm.io Deck object or ResdataFiles
 
     Returns:
         pd.DataFrame with one row pr edge. Empty dataframe if no
@@ -68,7 +68,7 @@ def df(
     else:
         date = None
 
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
 
     edgerecords = []  # list of dict of rows containing an edge.
@@ -453,8 +453,8 @@ def gruptree_main(args) -> None:
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
-    eclfiles = EclFiles(args.DATAFILE)
-    dframe = df(eclfiles.get_ecldeck(), startdate=args.startdate)
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    dframe = df(resdatafiles.get_ecldeck(), startdate=args.startdate)
     if args.prettyprint:
         if "DATE" in dframe:
             print(prettyprint(dframe))

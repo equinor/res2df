@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
-from res2df import EclFiles, compdat
+from res2df import ResdataFiles, compdat
 
 try:
     # pylint: disable=unused-import
@@ -930,7 +930,7 @@ WELOPEN_CASES = [
 @pytest.mark.parametrize("test_input, expected", WELOPEN_CASES)
 def test_welopen(test_input, expected):
     """Test with WELOPEN present"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
     columns_to_check = ["WELL", "I", "J", "K1", "K2", "OP/SH", "DATE"]
 
@@ -1131,7 +1131,7 @@ def test_welopen(test_input, expected):
 )
 def test_welopen_wlist(test_input, expected):
     """Test that WELOPEN can be used on well lists determined by WLIST"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     dfs = compdat.deck2dfs(deck)
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)
 
@@ -1139,7 +1139,7 @@ def test_welopen_wlist(test_input, expected):
 def test_welopen_df():
     """Test that we can obtain WELOPEN information when it applies on well state,
     not on connections."""
-    deck = EclFiles.str2deck(
+    deck = ResdataFiles.str2deck(
         """
     DATES
      1 JAN 2000 /
@@ -1482,7 +1482,7 @@ WELOPEN
 )
 def test_welopen_complump(test_input, expected):
     """Test the welopen_complump functionality through Eclipse decks"""
-    deck = EclFiles.str2deck(test_input)
+    deck = ResdataFiles.str2deck(test_input)
     dfs = compdat.deck2dfs(deck)
     pd.testing.assert_frame_equal(dfs["COMPDAT"][expected.columns], expected)
 

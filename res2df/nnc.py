@@ -10,13 +10,15 @@ from typing import Optional
 
 import pandas as pd
 
-from res2df import EclFiles, __version__, common, getLogger_res2csv, grid
+from res2df import ResdataFiles, __version__, common, getLogger_res2csv, grid
 from res2df.common import write_dframe_stdout_file
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-def df(eclfiles: EclFiles, coords: bool = False, pillars: bool = False) -> pd.DataFrame:
+def df(
+    resdatafiles: ResdataFiles, coords: bool = False, pillars: bool = False
+) -> pd.DataFrame:
     """Produce a Pandas Dataframe with NNC information
 
     A NNC is a pair of cells that are not next to each other
@@ -28,7 +30,7 @@ def df(eclfiles: EclFiles, coords: bool = False, pillars: bool = False) -> pd.Da
     between the two cells)
 
     Args:
-        eclfiles: object that can serve EclFile and EclGrid
+        resdatafiles: object that can serve EclFile and EclGrid
             on demand
         coords: Set to True if you want the midpoint of the two
             connected cells to be computed and added to the columns
@@ -39,9 +41,9 @@ def df(eclfiles: EclFiles, coords: bool = False, pillars: bool = False) -> pd.Da
     Returns:
         Empty if no NNC information found.
     """
-    egrid_file = eclfiles.get_egridfile()
-    egrid_grid = eclfiles.get_egrid()
-    init_file = eclfiles.get_initfile()
+    egrid_file = resdatafiles.get_egridfile()
+    egrid_grid = resdatafiles.get_egrid()
+    init_file = resdatafiles.get_initfile()
 
     if not ("NNC1" in egrid_file and "NNC2" in egrid_file):
         logger.warning("No NNC data in EGRID")
@@ -98,11 +100,11 @@ def df(eclfiles: EclFiles, coords: bool = False, pillars: bool = False) -> pd.Da
     if pillars:
         nncdf = filter_vertical(nncdf)
     if coords:
-        nncdf = add_nnc_coords(nncdf, eclfiles)
+        nncdf = add_nnc_coords(nncdf, resdatafiles)
     return nncdf
 
 
-def add_nnc_coords(nncdf: pd.DataFrame, eclfiles: EclFiles) -> pd.DataFrame:
+def add_nnc_coords(nncdf: pd.DataFrame, resdatafiles: ResdataFiles) -> pd.DataFrame:
     """Add columns X, Y and Z for the connection midpoint
 
     This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
@@ -110,12 +112,12 @@ def add_nnc_coords(nncdf: pd.DataFrame, eclfiles: EclFiles) -> pd.DataFrame:
 
     Arguments:
         nncdf: With grid index columns (I1, J1, K1, I2, J2, K2)
-        eclfiles: Object used to fetch grid data from EGRID.
+        resdatafiles: Object used to fetch grid data from EGRID.
 
     Returns:
         Incoming dataframe augmented with the columns X, Y and Z.
     """
-    gridgeometry = grid.gridgeometry2df(eclfiles)
+    gridgeometry = grid.gridgeometry2df(resdatafiles)
     gnncdf = pd.merge(
         nncdf,
         gridgeometry,
@@ -279,8 +281,8 @@ def nnc_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
-    nncdf = df(eclfiles, coords=args.coords, pillars=args.pillars)
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    nncdf = df(resdatafiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(
         nncdf,
         args.output,

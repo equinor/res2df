@@ -13,9 +13,9 @@ Typical usage is to obtain property statistics, and compute contacts pr.
 pillar (and optionally pr some region parameter).
 
 ..
-  from res2df import pillars, EclFiles
-  pillars.df(res2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))
-  pillars.df(res2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head().to_csv("pillars-example1.csv"float_format="%.1f", index=False))
+  from res2df import pillars, ResdataFiles
+  pillars.df(res2df.ResdataFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))
+  pillars.df(res2df.ResdataFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head().to_csv("pillars-example1.csv"float_format="%.1f", index=False))
 
 .. csv-table:: Example pillar table
    :file: pillars-example1.csv
@@ -90,7 +90,7 @@ By default, dynamic data are added as a set of columns for every date, like in
 this example:
 
 ..
-  pillars.df(res2df.EclFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'), rstdates='all').dropna().head().to_csv('pillars-dyn1-unstacked.csv', float_format="%.1f", index=False)
+  pillars.df(res2df.ResdataFiles('../tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'), rstdates='all').dropna().head().to_csv('pillars-dyn1-unstacked.csv', float_format="%.1f", index=False)
 
 .. csv-table:: Example pillar table with dynamical data, unstacked
    :file: pillars-dyn1-unstacked.csv

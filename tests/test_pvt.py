@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 
 from res2df import csv2res, pvt, res2csv
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -33,7 +33,7 @@ def test_pvto_strings():
     18    25 1.14  0.59 /
     /  -- One table (pvtnum=1), two records (two gor's)
     """
-    dframe = pvt.pvto_fromdeck(EclFiles.str2deck(pvto_deck))
+    dframe = pvt.pvto_fromdeck(ResdataFiles.str2deck(pvto_deck))
     assert "PVTNUM" in dframe
     assert "RS" in dframe
     assert "PRESSURE" in dframe
@@ -64,7 +64,7 @@ def test_pvto_strings():
     19    30 1.14  0.59 /
     /
     """
-    dframe = pvt.pvto_fromdeck(EclFiles.str2deck(pvto_deck))
+    dframe = pvt.pvto_fromdeck(ResdataFiles.str2deck(pvto_deck))
     assert len(dframe) == 6
     assert "PVTNUM" in dframe
     assert set(dframe["PVTNUM"].astype(int).unique()) == {1, 2}
@@ -160,8 +160,8 @@ PVDO
 def test_pvt_reek():
     """Test that the Reek PVT input can be parsed individually"""
 
-    eclfiles = EclFiles(REEK)
-    pvto_df = pvt.pvto_fromdeck(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    pvto_df = pvt.pvto_fromdeck(resdatafiles.get_ecldeck())
     assert "PVTNUM" in pvto_df
     assert "PRESSURE" in pvto_df
     assert "VOLUMEFACTOR" in pvto_df
@@ -180,7 +180,7 @@ def test_pvt_reek():
     dframe_via_string = pvt.pvto_fromdeck(pvt.df2ecl_pvto(pvto_df))
     pd.testing.assert_frame_equal(dframe_via_string, pvto_df)
 
-    density_df = pvt.density_fromdeck(eclfiles.get_ecldeck())
+    density_df = pvt.density_fromdeck(resdatafiles.get_ecldeck())
     pd.testing.assert_frame_equal(
         density_df,
         pd.DataFrame(
@@ -192,14 +192,14 @@ def test_pvt_reek():
     dframe_via_string = pvt.density_fromdeck(pvt.df2ecl_density(density_df))
     pd.testing.assert_frame_equal(dframe_via_string, density_df)
 
-    rock_df = pvt.rock_fromdeck(eclfiles.get_ecldeck())
+    rock_df = pvt.rock_fromdeck(resdatafiles.get_ecldeck())
     assert "PVTNUM" in rock_df
     assert len(rock_df) == 1
     assert "PRESSURE" in rock_df
     assert "COMPRESSIBILITY" in rock_df
     assert rock_df["PRESSURE"].values[0] == 327.3
 
-    pvtw_df = pvt.pvtw_fromdeck(eclfiles.get_ecldeck())
+    pvtw_df = pvt.pvtw_fromdeck(resdatafiles.get_ecldeck())
     assert "PVTNUM" in pvtw_df
     assert pvtw_df["PVTNUM"].values[0] == 1
     assert len(pvtw_df) == 1
@@ -210,7 +210,7 @@ def test_pvt_reek():
     assert "VISCOSIBILITY" in pvtw_df
     assert pvtw_df["VISCOSITY"].values[0] == 0.25
 
-    pvdg_df = pvt.pvdg_fromdeck(eclfiles.get_ecldeck())
+    pvdg_df = pvt.pvdg_fromdeck(resdatafiles.get_ecldeck())
     assert "PVTNUM" in pvdg_df
     assert "PRESSURE" in pvdg_df
     assert "VOLUMEFACTOR" in pvdg_df
@@ -292,8 +292,8 @@ PVTG
 
 def test_density():
     """Test that DENSITY can be parsed from files and from strings"""
-    eclfiles = EclFiles(REEK)
-    density_df = pvt.density_fromdeck(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    density_df = pvt.density_fromdeck(resdatafiles.get_ecldeck())
     assert len(density_df) == 1
     assert "PVTNUM" in density_df
     assert "OILDENSITY" in density_df
@@ -308,7 +308,7 @@ def test_density():
         800      950     1.05
         /
         """
-    density_df = pvt.density_fromdeck(EclFiles.str2deck(two_pvtnum_deck))
+    density_df = pvt.density_fromdeck(ResdataFiles.str2deck(two_pvtnum_deck))
     # (a warning will be printed that we cannot guess)
     assert len(density_df) == 1
     density_df = pvt.density_fromdeck(two_pvtnum_deck)
@@ -329,7 +329,7 @@ def test_pvtw():
     """Test that PVTW can be parsed from a string"""
     deck = """PVTW
      327.3         1.03    4.51E-005         0.25            0 /"""
-    pvtw_df = pvt.pvtw_fromdeck(EclFiles.str2deck(deck))
+    pvtw_df = pvt.pvtw_fromdeck(ResdataFiles.str2deck(deck))
     pd.testing.assert_frame_equal(
         pvtw_df,
         pd.DataFrame(
@@ -362,7 +362,7 @@ def test_rock():
     """Test parsing of the ROCK keyword from a string"""
     deck = """ROCK
      100 1.1 /"""
-    rock_df = pvt.rock_fromdeck(EclFiles.str2deck(deck))
+    rock_df = pvt.rock_fromdeck(ResdataFiles.str2deck(deck))
     assert len(rock_df) == 1
     assert "PRESSURE" in rock_df
     assert "COMPRESSIBILITY" in rock_df
@@ -377,8 +377,8 @@ def test_rock():
 
 def test_df():
     """Test that aggregate dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    pvtdf = pvt.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    pvtdf = pvt.df(resdatafiles)
 
     assert not pvtdf.empty
     assert set(pvtdf["KEYWORD"]) == {"PVTO", "PVDG", "DENSITY", "ROCK", "PVTW"}

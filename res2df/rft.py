@@ -26,8 +26,8 @@ from resdata.resfile import ResdataFile
 from res2df import getLogger_res2csv
 
 from .common import merge_zones, write_dframe_stdout_file
-from .eclfiles import EclFiles
 from .gruptree import tree_from_dict
+from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -515,18 +515,20 @@ def add_extras(dframe: pd.DataFrame, inplace: bool = True) -> pd.DataFrame:
 
 
 def df(
-    eclfiles: EclFiles, wellname: Optional[str] = None, date: Optional[str] = None
+    resdatafiles: ResdataFiles,
+    wellname: Optional[str] = None,
+    date: Optional[str] = None,
 ) -> pd.DataFrame:
     """Loop over an RFT file and construct a dataframe representation
     of the data, ordered by well and date.
 
     Args:
-        eclfiles: Object used to locate the RFT file
+        resdatafiles: Object used to locate the RFT file
         wellname: If provided, only wells matching this string exactly
             will be included
         date: If provided, all other dates will be ignored. YYYY-MM-DD.
     """
-    rftfile = eclfiles.get_rftfile()
+    rftfile = resdatafiles.get_rftfile()
 
     rftdata = []
     for rftrecord in rftrecords(rftfile):
@@ -632,7 +634,7 @@ def df(
             if rftdata_df.HOSTGRID.unique()[0].strip() == "":
                 del rftdata_df["HOSTGRID"]
 
-    zonemap = eclfiles.get_zonemap()
+    zonemap = resdatafiles.get_zonemap()
     if zonemap:
         if "K" in rftdata_df:
             kname = "K"
@@ -679,10 +681,10 @@ def rft_main(args) -> None:
     )
     if args.DATAFILE.endswith(".RFT"):
         # Support the RFT file as an argument also:
-        eclfiles = EclFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")
+        resdatafiles = ResdataFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")
     else:
-        eclfiles = EclFiles(args.DATAFILE)
-    rft_df = df(eclfiles, wellname=args.wellname, date=args.date)
+        resdatafiles = ResdataFiles(args.DATAFILE)
+    rft_df = df(resdatafiles, wellname=args.wellname, date=args.date)
     if rft_df.empty:
         if args.wellname is not None or args.date is not None:
             logger.warning("No data. Check your well and/or date filter")

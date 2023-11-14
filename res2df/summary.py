@@ -20,7 +20,7 @@ from res2df import getLogger_res2csv
 
 from . import parameters
 from .common import write_dframe_stdout_file
-from .eclfiles import EclFiles
+from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -297,7 +297,7 @@ def resample_smry_dates(
 
 
 def df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     time_index: Optional[str] = None,
     column_keys: Optional[Union[List[str], str]] = None,
     start_date: Optional[Union[str, dt.date]] = None,
@@ -321,7 +321,7 @@ def df(
     is always named "DATE".
 
     Arguments:
-        eclfiles: EclFiles object representing the Eclipse deck. Alternatively
+        resdatafiles: ResdataFiles object representing the Eclipse deck. Alternatively
            an Summary object.
         time_index: string indicating a resampling frequency,
            'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
@@ -354,11 +354,11 @@ def df(
     if isinstance(column_keys, str):
         column_keys = [column_keys]
 
-    if isinstance(eclfiles, Summary):
-        eclsum = eclfiles
+    if isinstance(resdatafiles, Summary):
+        eclsum = resdatafiles
     else:
         try:
-            eclsum = eclfiles.get_eclsum(include_restart=include_restart)
+            eclsum = resdatafiles.get_eclsum(include_restart=include_restart)
         except OSError:
             logger.warning("Error reading summary instance, returning empty dataframe")
             return pd.DataFrame()
@@ -412,7 +412,7 @@ def df(
     )
     dframe.index.name = "DATE"
     if params or paramfile:
-        dframe = _merge_params(dframe, paramfile, eclfiles)
+        dframe = _merge_params(dframe, paramfile, resdatafiles)
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
     meta = smry_meta(eclsum)
@@ -539,7 +539,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
 def _merge_params(
     dframe: pd.DataFrame,
     paramfile: Optional[Union[str, Path]] = None,
-    eclfiles: Optional[Union[str, EclFiles]] = None,
+    resdatafiles: Optional[Union[str, ResdataFiles]] = None,
 ) -> pd.DataFrame:
     """Locate parameters in a <key> <value> file and add to the dataframe.
 
@@ -547,16 +547,18 @@ def _merge_params(
     the parameters.txt file based on the location of an Eclise run.
     """
 
-    if paramfile is None and eclfiles is not None:
-        param_files = parameters.find_parameter_files(eclfiles)
+    if paramfile is None and resdatafiles is not None:
+        param_files = parameters.find_parameter_files(resdatafiles)
         logger.info("Loading parameters from files: %s", str(param_files))
         param_dict = parameters.load_all(param_files)
     elif (
         paramfile is not None
-        and eclfiles is not None
+        and resdatafiles is not None
         and not Path(paramfile).is_absolute()
     ):
-        param_files = parameters.find_parameter_files(eclfiles, filebase=str(paramfile))
+        param_files = parameters.find_parameter_files(
+            resdatafiles, filebase=str(paramfile)
+        )
         logger.info("Loading parameters from files: %s", str(param_files))
         param_dict = parameters.load_all(param_files)
     elif paramfile is not None and Path(paramfile).is_absolute():
@@ -574,7 +576,7 @@ def _merge_params(
     return dframe
 
 
-def smry_meta(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
+def smry_meta(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for summary data vectors.
 
     A dictionary indexed by summary vector name is returned, and each
@@ -589,10 +591,10 @@ def smry_meta(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
     * keyword (str)
     * wgname (str or None)
     """
-    if isinstance(eclfiles, Summary):
-        eclsum = eclfiles
+    if isinstance(resdatafiles, Summary):
+        eclsum = resdatafiles
     else:
-        eclsum = eclfiles.get_eclsum()
+        eclsum = resdatafiles.get_eclsum()
 
     meta: Dict[str, Dict[str, Any]] = {}
     for col in eclsum.keys():
@@ -904,9 +906,9 @@ def summary_main(args) -> None:
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
 
-    eclfiles = EclFiles(eclbase)
+    resdatafiles = ResdataFiles(eclbase)
     sum_df = df(
-        eclfiles,
+        resdatafiles,
         time_index=args.time_index,
         column_keys=args.column_keys,
         start_date=args.start_date,

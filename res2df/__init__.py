@@ -11,7 +11,7 @@ except ImportError:
     __version__ = "v0.0.0"
 
 from .constants import MAGIC_STDOUT
-from .eclfiles import EclFiles
+from .resdatafiles import ResdataFiles
 
 SUBMODULES: List[str] = [
     "compdat",

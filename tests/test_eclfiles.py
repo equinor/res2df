@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from res2df import EclFiles
+from res2df import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -29,52 +29,52 @@ def test_filedescriptors():
 
     pre_fd_count = len(list(fd_dir.glob("*")))
 
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     # No opened files yet:
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
 
-    eclfiles.close()
+    resdatafiles.close()
     # No change, no files to close:
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
 
-    eclfiles.get_egrid()
+    resdatafiles.get_egrid()
     # This should not leave any file descriptor open
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
 
-    eclfiles.get_initfile()
+    resdatafiles.get_initfile()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._initfile is not None
-    eclfiles.close()
+    assert resdatafiles._initfile is not None
+    resdatafiles.close()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._initfile is None
+    assert resdatafiles._initfile is None
 
-    eclfiles.get_rstfile()
+    resdatafiles.get_rstfile()
     # Automatically closed by libecl
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._rstfile is not None
-    eclfiles.close()
+    assert resdatafiles._rstfile is not None
+    resdatafiles.close()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._rstfile is None
+    assert resdatafiles._rstfile is None
 
-    eclfiles.get_eclsum()
+    resdatafiles.get_eclsum()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count + 1
-    eclfiles.close()
+    resdatafiles.close()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
 
-    eclfiles.get_egridfile()
+    resdatafiles.get_egridfile()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._egridfile is not None
-    eclfiles.close()
+    assert resdatafiles._egridfile is not None
+    resdatafiles.close()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._egridfile is None
+    assert resdatafiles._egridfile is None
 
-    eclfiles.get_rftfile()
+    resdatafiles.get_rftfile()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._rftfile is not None
-    eclfiles.close()
+    assert resdatafiles._rftfile is not None
+    resdatafiles.close()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
-    assert eclfiles._rftfile is None
+    assert resdatafiles._rftfile is None
 
-    eclfiles.get_ecldeck()
+    resdatafiles.get_ecldeck()
     # This should not leave any file descriptor open
     assert len(list(fd_dir.glob("*"))) == pre_fd_count

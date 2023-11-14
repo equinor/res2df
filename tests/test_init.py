@@ -15,7 +15,7 @@ def test_init():
     for submodule in res2df.SUBMODULES:
         assert "res2df." + submodule in sys.modules
 
-    # The Eclfiles object inside eclfiles should be lifted up to top-level:
-    assert hasattr(res2df, "EclFiles")
+    # The Eclfiles object inside resdatafiles should be lifted up to top-level:
+    assert hasattr(res2df, "ResdataFiles")
 
     assert isinstance(res2df.__version__, str)

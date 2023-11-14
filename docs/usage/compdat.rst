@@ -7,13 +7,13 @@ Additionally, it will parse WELOPEN statements and emit new COMPDAT
 statements from the actions in WELOPEN.
 
 ..
-  compdat.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/compdat.csv', index=False)
+  compdat.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/compdat.csv', index=False)
 .. code-block:: python
 
-   from res2df import compdat, EclFiles
+   from res2df import compdat, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = compdat.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = compdat.df(resdatafiles)
 
 .. csv-table:: Example COMPDAT table
    :file: compdat.csv

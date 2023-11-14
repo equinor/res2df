@@ -35,8 +35,8 @@ from .common import (
     parse_opmio_tstep_rec,
     write_dframe_stdout_file,
 )
-from .eclfiles import EclFiles
 from .grid import merge_initvectors
+from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 
@@ -973,13 +973,13 @@ def compdat_main(args):
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
-    compdat_df = df(eclfiles, initvectors=args.initvectors)
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    compdat_df = df(resdatafiles, initvectors=args.initvectors)
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)
 
 
 def df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     initvectors: Optional[List[str]] = None,
     zonemap: Optional[Dict[int, str]] = None,
 ) -> pd.DataFrame:
@@ -992,17 +992,17 @@ def df(
     Returns:
         pd.Dataframe with one row pr cell to well connection
     """
-    compdat_df = deck2dfs(eclfiles.get_ecldeck())["COMPDAT"]
+    compdat_df = deck2dfs(resdatafiles.get_ecldeck())["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 
     if initvectors:
         compdat_df = merge_initvectors(
-            eclfiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
+            resdatafiles, compdat_df, initvectors, ijknames=["I", "J", "K1"]
         )
 
     if zonemap is None:
         # If no zonemap is submitted, search for zonemap in default location
-        zonemap = eclfiles.get_zonemap()
+        zonemap = resdatafiles.get_zonemap()
 
     if zonemap:
         logger.info("Merging zonemap into compdat")

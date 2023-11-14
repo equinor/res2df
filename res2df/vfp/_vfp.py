@@ -25,7 +25,7 @@ try:
 except ImportError:
     pass
 
-from res2df import EclFiles, common, getLogger_res2csv
+from res2df import ResdataFiles, common, getLogger_res2csv
 
 from . import _vfpinj as vfpinj
 from . import _vfpprod as vfpprod
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 def basic_data(
-    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
+    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
@@ -51,10 +51,10 @@ def basic_data(
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
 
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
     elif isinstance(deck, str):
-        deck = EclFiles.str2deck(deck)
+        deck = ResdataFiles.str2deck(deck)
 
     if keyword not in SUPPORTED_KEYWORDS:
         raise ValueError(
@@ -241,7 +241,7 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Union[Dict[str, Any], None]:
 
 
 def dfs(
-    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
+    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
 ) -> List[pd.DataFrame]:
@@ -255,10 +255,10 @@ def dfs(
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
     elif isinstance(deck, str):
-        deck = EclFiles.str2deck(deck)
+        deck = ResdataFiles.str2deck(deck)
 
     if keyword not in SUPPORTED_KEYWORDS:
         raise ValueError(
@@ -284,7 +284,7 @@ def dfs(
 
 
 def pyarrow_tables(
-    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
+    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
 ) -> List[pa.Table]:
@@ -298,10 +298,10 @@ def pyarrow_tables(
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
     elif isinstance(deck, str):
-        deck = EclFiles.str2deck(deck)
+        deck = ResdataFiles.str2deck(deck)
 
     if keyword not in SUPPORTED_KEYWORDS:
         raise ValueError(
@@ -409,7 +409,7 @@ def df2ecl(
 
 
 def df(
-    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
+    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
     keyword: str = "VFPPROD",
     vfpnumbers_str: Optional[str] = None,
 ) -> pd.DataFrame:
@@ -427,10 +427,10 @@ def df(
         logger.warning("No keywords provided to vfp.df. Empty dataframe returned")
         return pd.DataFrame()
 
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
     elif isinstance(deck, str):
-        deck = EclFiles.str2deck(deck)
+        deck = ResdataFiles.str2deck(deck)
 
     # Extract all VFPROD/VFPINJ as separate dataframes
     dfs_vfp = dfs(deck, keyword, vfpnumbers_str)
@@ -495,12 +495,12 @@ def vfp_main(args) -> None:
     if "vfpnumbers" in args:
         vfpnumbers = str(args.vfpnumbers)
 
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
     if args.arrow:
         outputfile = args.output
         outputfile.replace(".arrow", "")
         vfp_arrow_tables = pyarrow_tables(
-            eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
+            resdatafiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
         for vfp_table in vfp_arrow_tables:
             table_number = int(
@@ -513,7 +513,7 @@ def vfp_main(args) -> None:
             logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
     else:
         dframe = df(
-            eclfiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
+            resdatafiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
         if args.output:
             common.write_dframe_stdout_file(

@@ -9,7 +9,7 @@ import packaging.version
 import pandas as pd
 import pytest
 
-from res2df import common, eclfiles, equil
+from res2df import common, equil, resdatafiles
 
 try:
     # pylint: disable=unused-import
@@ -147,7 +147,7 @@ def test_parse_opmio_deckrecord():
 )
 def test_handle_wanted_keywords(wanted, deckstr, supported, expected):
     """Test that we can handle list of wanted, supported and available keywords."""
-    deck = eclfiles.EclFiles.str2deck(deckstr)
+    deck = resdatafiles.ResdataFiles.str2deck(deckstr)
     assert common.handle_wanted_keywords(wanted, deck, supported) == expected
 
 

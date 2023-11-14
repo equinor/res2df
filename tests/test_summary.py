@@ -11,7 +11,7 @@ import yaml
 from resdata.summary import Summary
 
 from res2df import csv2res, res2csv, summary
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 from res2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
@@ -44,8 +44,8 @@ SHORT_STEP_WITH_TIMESTEP_LONG = str(
 
 def test_df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    sumdf = summary.df(eclfiles)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    sumdf = summary.df(resdatafiles)
 
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
@@ -55,7 +55,7 @@ def test_df():
     assert not sumdf.columns.empty
     assert "FOPT" in sumdf.columns
 
-    sumdf = summary.df(eclfiles, datetime=True)
+    sumdf = summary.df(resdatafiles, datetime=True)
     # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
@@ -68,7 +68,7 @@ def test_df():
 
 def test_df_column_keys():
     """Test that we can slice the dataframe on columns"""
-    sumdf = summary.df(EclFiles(REEK), column_keys="FOPT")
+    sumdf = summary.df(ResdataFiles(REEK), column_keys="FOPT")
     assert set(sumdf.columns) == {"FOPT"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT"}
 
@@ -83,29 +83,29 @@ def test_df_column_keys():
         "FOPTF",
         "FOPP",
     }
-    sumdf = summary.df(EclFiles(REEK), column_keys="FOP*")
+    sumdf = summary.df(ResdataFiles(REEK), column_keys="FOP*")
     assert set(sumdf.columns) == fop_cols
     assert set(sumdf.attrs["meta"].keys()) == fop_cols
 
-    sumdf = summary.df(EclFiles(REEK), column_keys=["FOP*"])
+    sumdf = summary.df(ResdataFiles(REEK), column_keys=["FOP*"])
     assert set(sumdf.columns) == fop_cols
     assert set(sumdf.attrs["meta"].keys()) == fop_cols
 
-    sumdf = summary.df(EclFiles(REEK), column_keys=["FOPR", "FOPT"])
+    sumdf = summary.df(ResdataFiles(REEK), column_keys=["FOPR", "FOPT"])
     assert set(sumdf.columns) == {"FOPT", "FOPR"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
-    sumdf_no_columns = summary.df(EclFiles(REEK), column_keys=["BOGUS"])
+    sumdf_no_columns = summary.df(ResdataFiles(REEK), column_keys=["BOGUS"])
     assert sumdf_no_columns.columns.empty
     assert all(sumdf_no_columns.index == sumdf.index)
 
 
 def test_summary2df_dates():
     """Test that we have some API possibilities with ISO dates"""
-    eclfiles = EclFiles(REEK)
+    resdatafiles = ResdataFiles(REEK)
 
     sumdf = summary.df(
-        eclfiles,
+        resdatafiles,
         start_date=datetime.date(2002, 1, 2),
         end_date="2002-03-01",
         time_index="daily",
@@ -119,12 +119,12 @@ def test_summary2df_dates():
     assert sumdf.index.values[0] == np.datetime64("2002-01-02")
     assert sumdf.index.values[-1] == np.datetime64("2002-03-01")
 
-    sumdf = summary.df(eclfiles, time_index="last", datetime=True)
+    sumdf = summary.df(resdatafiles, time_index="last", datetime=True)
     assert len(sumdf) == 1
     assert sumdf.index.values[0] == np.datetime64("2003-01-02")
 
     # Leave this test for the datetime=False behaviour:
-    sumdf = summary.df(eclfiles, time_index="first")
+    sumdf = summary.df(resdatafiles, time_index="first")
     assert len(sumdf) == 1
     assert str(sumdf.index.values[0]) == "2000-01-01"
 
@@ -191,9 +191,9 @@ def test_paramsupport(tmp_path, mocker):
     """
     tmpcsvfile = tmp_path / "sum.csv"
 
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
 
-    parameterstxt = Path(eclfiles.get_path()) / "parameters.txt"
+    parameterstxt = Path(resdatafiles.get_path()) / "parameters.txt"
     if parameterstxt.is_file():
         parameterstxt.unlink()
     parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
@@ -208,7 +208,7 @@ def test_paramsupport(tmp_path, mocker):
     assert disk_df["BAR"].unique()[0] == 3
     parameterstxt.unlink()
 
-    parametersyml = Path(eclfiles.get_path()) / "parameters.yml"
+    parametersyml = Path(resdatafiles.get_path()) / "parameters.yml"
     if parametersyml.is_file():
         parametersyml.unlink()
     parametersyml.write_text(yaml.dump({"FOO": 1, "BAR": 3}), encoding="utf-8")
@@ -226,22 +226,24 @@ def test_paramsupport(tmp_path, mocker):
     assert disk_df["BAR"].unique()[0] == 3
 
     # Test the merging from summary.df() explicitly:
-    assert "FOO" in summary.df(eclfiles, params=True, paramfile=None)
-    assert "FOO" not in summary.df(eclfiles, params=False, paramfile=None)
-    assert "FOO" not in summary.df(eclfiles, params=None, paramfile=None)
+    assert "FOO" in summary.df(resdatafiles, params=True, paramfile=None)
+    assert "FOO" not in summary.df(resdatafiles, params=False, paramfile=None)
+    assert "FOO" not in summary.df(resdatafiles, params=None, paramfile=None)
 
-    assert "FOO" in summary.df(eclfiles, params=False, paramfile=parametersyml)
-    assert "FOO" in summary.df(eclfiles, params=None, paramfile=parametersyml)
-    assert "FOO" in summary.df(eclfiles, params=None, paramfile="parameters.yml")
+    assert "FOO" in summary.df(resdatafiles, params=False, paramfile=parametersyml)
+    assert "FOO" in summary.df(resdatafiles, params=None, paramfile=parametersyml)
+    assert "FOO" in summary.df(resdatafiles, params=None, paramfile="parameters.yml")
 
     # Non-existing relative path is a soft error:
     assert "FOO" not in summary.df(
-        eclfiles, params=None, paramfile="notexisting/parameters.yml"
+        resdatafiles, params=None, paramfile="notexisting/parameters.yml"
     )
 
     # Non-existing absolute path is a hard error:
     with pytest.raises(FileNotFoundError):
-        summary.df(eclfiles, params=None, paramfile="/tmp/notexisting/parameters.yml")
+        summary.df(
+            resdatafiles, params=None, paramfile="/tmp/notexisting/parameters.yml"
+        )
 
     parametersyml.unlink()
 
@@ -334,15 +336,17 @@ def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
     # realization-0 here has its last summary date at 2003-01-02
-    eclfiles = EclFiles(REEK)
-    daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily", datetime=True)
+    resdatafiles = ResdataFiles(REEK)
+    daily = summary.df(
+        resdatafiles, column_keys="FOPT", time_index="daily", datetime=True
+    )
     assert str(daily.index[-1])[0:10] == "2003-01-02"
     monthly = summary.df(
-        eclfiles, column_keys="FOPT", time_index="monthly", datetime=True
+        resdatafiles, column_keys="FOPT", time_index="monthly", datetime=True
     )
     assert str(monthly.index[-1])[0:10] == "2003-02-01"
     yearly = summary.df(
-        eclfiles, column_keys="FOPT", time_index="yearly", datetime=True
+        resdatafiles, column_keys="FOPT", time_index="yearly", datetime=True
     )
     assert str(yearly.index[-1])[0:10] == "2004-01-01"
 
@@ -350,9 +354,9 @@ def test_datenormalization():
 def test_extrapolation():
     """Summary data should be possible to extrapolate into
     the future, rates should be zero, cumulatives should be constant"""
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     lastfopt = summary.df(
-        eclfiles, column_keys="FOPT", time_index="last", datetime=True
+        resdatafiles, column_keys="FOPT", time_index="last", datetime=True
     )["FOPT"].values[0]
     answer = pd.DataFrame(
         # This is the maximal date for datetime64[ns]
@@ -363,7 +367,7 @@ def test_extrapolation():
 
     pd.testing.assert_frame_equal(
         summary.df(
-            eclfiles,
+            resdatafiles,
             column_keys=["FOPT", "FOPR"],
             time_index="2262-04-11",
             datetime=True,
@@ -372,7 +376,7 @@ def test_extrapolation():
     )
     pd.testing.assert_frame_equal(
         summary.df(
-            eclfiles,
+            resdatafiles,
             column_keys=["FOPT", "FOPR"],
             time_index=[datetime.date(2262, 4, 11)],
             # NB: df() does not support datetime64 for time_index
@@ -384,7 +388,7 @@ def test_extrapolation():
     # Pandas does not support DatetimeIndex beyound 2262:
     with pytest.raises(pd.errors.OutOfBoundsDatetime):
         summary.df(
-            eclfiles,
+            resdatafiles,
             column_keys=["FOPT"],
             time_index=[datetime.date(2300, 1, 1)],
             datetime=True,
@@ -392,7 +396,7 @@ def test_extrapolation():
 
     # But without datetime, we can get it extrapolated by libecl:
     assert summary.df(
-        eclfiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
+        resdatafiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
     )["FOPT"].values == [lastfopt]
 
 
@@ -629,9 +633,9 @@ def test_date_range(start, end, freq, expected):
 def test_resample_smry_dates():
     """Test resampling of summary dates"""
 
-    eclfiles = EclFiles(REEK)
+    resdatafiles = ResdataFiles(REEK)
 
-    ecldates = eclfiles.get_eclsum().dates
+    ecldates = resdatafiles.get_eclsum().dates
 
     assert isinstance(resample_smry_dates(ecldates), list)
     assert isinstance(resample_smry_dates(ecldates, freq="last"), list)
@@ -792,7 +796,7 @@ def test_resample_smry_dates():
     ],
 )
 def test_unique_datetime_for_short_timesteps(filepath):
-    assert summary.df(EclFiles(filepath)).index.is_unique
+    assert summary.df(ResdataFiles(filepath)).index.is_unique
 
 
 @pytest.mark.parametrize(
@@ -804,12 +808,12 @@ def test_unique_datetime_for_short_timesteps(filepath):
 )
 def test_unique_datetime_retain_index_name(filepath):
     """Test _ensure_unique_datetime_index method retain index name"""
-    assert summary.df(EclFiles(filepath)).index.name == "DATE"
+    assert summary.df(ResdataFiles(filepath)).index.name == "DATE"
 
 
 def test_smry_meta():
     """Test obtaining metadata dictionary for summary vectors from an EclSum object"""
-    meta = smry_meta(EclFiles(REEK))
+    meta = smry_meta(ResdataFiles(REEK))
 
     assert isinstance(meta, dict)
     assert "FOPT" in meta
@@ -1068,7 +1072,7 @@ def test_duplicated_summary_vectors(caplog):
         / "EIGHTCELLS_DUPES.DATA"
     )
     assert "SUMMARY\nFOPR\nFOPR" in dupe_datafile.read_text()
-    deduplicated_dframe = df(EclFiles(dupe_datafile))
+    deduplicated_dframe = df(ResdataFiles(dupe_datafile))
     assert (deduplicated_dframe.columns == ["YEARS", "FOPR"]).all()
     assert "Duplicated columns detected" in caplog.text
 
@@ -1167,15 +1171,15 @@ def test_res2df_errors(tmp_path):
         # This is how libecl reacts to bogus binary data
         Summary("FOO.UNSMRY")
 
-    # But EclFiles should be more tolerant, as it should be possible
+    # But ResdataFiles should be more tolerant, as it should be possible
     # to extract other data if SMRY is corrupted
     Path("FOO.DATA").write_text("RUNSPEC", encoding="utf8")
-    assert str(EclFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
+    assert str(ResdataFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
     with pytest.raises(OSError):
-        EclFiles("FOO").get_eclsum()
+        ResdataFiles("FOO").get_eclsum()
 
     # Getting a dataframe from bogus data should give empty data:
-    assert df(EclFiles("FOO")).empty
+    assert df(ResdataFiles("FOO")).empty
 
 
 def test_df2eclsum_errors():

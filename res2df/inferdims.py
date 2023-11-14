@@ -12,7 +12,7 @@ except ImportError:
     # Let parts of res2df work without OPM:
     pass
 
-from res2df import EclFiles
+from res2df import ResdataFiles
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +68,7 @@ def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
             deckstring, dimkeyword, dimitem, dimcountguess, nowarn=True
         )
         try:
-            EclFiles.str2deck(
+            ResdataFiles.str2deck(
                 deck_candidate,
                 parsecontext=opm.io.ParseContext(
                     opmioparser_recovery_fail_extra_records
@@ -170,7 +170,7 @@ def inject_xxxdims_ntxxx(
     if xxxdims in deck and ntxxx_value is None:
         # Then we have nothing to do, but ensure we parse a potential string to a deck
         if isinstance(deck, str):
-            deck = EclFiles.str2deck(deck)
+            deck = ResdataFiles.str2deck(deck)
         return deck
 
     if xxxdims in deck and ntxxx_value is not None:
@@ -195,6 +195,6 @@ def inject_xxxdims_ntxxx(
         str(deck), xxxdims, DIMS_POS[ntxxx_name], ntxxx_estimate, nowarn=True
     )
     # Overwrite the deck object
-    deck = EclFiles.str2deck(augmented_strdeck)
+    deck = ResdataFiles.str2deck(augmented_strdeck)
 
     return deck

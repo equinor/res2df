@@ -9,16 +9,16 @@ Typical usage
 
 .. code-block:: python
 
-   from res2df import grid, EclFiles
+   from res2df import grid, ResdataFiles
 
-   eclfiles = EclFiles('MYDATADECK.DATA')
-   dframe = grid.df(eclfiles, rstdates='last')
+   resdatafiles = ResdataFiles('MYDATADECK.DATA')
+   dframe = grid.df(resdatafiles, rstdates='last')
 
 where the API is documented at :func:`res2df.grid.df`.
 
 ..
-   eclfiles = EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')
-   grid.df(eclfiles).sample(10).to_csv('docs/usage/grid.csv', float_format="%.2f", index=False)
+   resdatafiles = ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')
+   grid.df(resdatafiles).sample(10).to_csv('docs/usage/grid.csv', float_format="%.2f", index=False)
 
 .. csv-table:: Example grid table
    :file: grid.csv
@@ -110,10 +110,10 @@ the whereabouts of the file:
 
 .. code-block:: python
 
-   from res2df import grid, EclFiles, common
+   from res2df import grid, ResdataFiles, common
 
-   eclfiles = EclFiles("'MYDATADECK.DATA")
-   dframe = grid.df(eclfiles)
+   resdatafiles = ResdataFiles("'MYDATADECK.DATA")
+   dframe = grid.df(resdatafiles)
    # The filename with layers is relative to DATA-file location
    # or an absolute path.
    subzonemap = res2df.common.parse_zonemapfile("subzones.lyr")
@@ -155,21 +155,21 @@ it to FIPNUM 5. This can be accomplished using
 
 .. code-block:: python
 
-   from res2df import grid, EclFiles, common
+   from res2df import grid, ResdataFiles, common
 
-   eclfiles = EclFiles("'MYDATADECK.DATA")
-   dframe = grid.df(eclfiles)
+   resdatafiles = ResdataFiles("'MYDATADECK.DATA")
+   dframe = grid.df(resdatafiles)
 
    # Change FIPNUM 6 to FIPNUM 5:
    rows_to_touch = dframe["FIPNUM"] == 6
    dframe.loc[rows_to_touch, "FIPNUM"] = 5
 
    # Write back to new include file, ensure datatype is integer.
-   grid.df2ecl(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", eclfiles=eclfiles)
+   grid.df2ecl(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", resdatafiles=resdatafiles)
 
 This will produce the file `fipnum.inc` with the contents:
 
 .. literalinclude:: fipnum.inc
 
-It is recommended to supply the ``eclfiles`` object to ``df2ecl``, if not, correct grid
+It is recommended to supply the ``resdatafiles`` object to ``df2ecl``, if not, correct grid
 size can not be ensured.

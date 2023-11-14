@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 
 from res2df import csv2res, inferdims, res2csv, satfunc
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -29,8 +29,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 def test_ecldeck_to_satfunc_dframe():
     """Test that dataframes can be produced from a full Eclipse deck (the
     example Reek case)"""
-    eclfiles = EclFiles(REEK)
-    satdf = satfunc.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    satdf = satfunc.df(resdatafiles.get_ecldeck())
 
     assert set(satdf["KEYWORD"]) == {"SWOF", "SGOF"}
     assert set(satdf["SATNUM"]) == {1}
@@ -56,8 +56,8 @@ def test_ecldeck_to_satfunc_dframe():
 def test_satfunc_roundtrip():
     """Test that we can produce a SATNUM dataframe from the Reek case, convert
     it back to an include file, and then reinterpret it to the same"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    satdf = satfunc.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    satdf = satfunc.df(resdatafiles.get_ecldeck())
     inc = satfunc.df2ecl(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(
@@ -69,8 +69,8 @@ def test_satfunc_roundtrip():
 def test_df2ecl_order():
     """Test that we can control the keyword order in generated
     strings by the list supplied in keywords argument"""
-    eclfiles = EclFiles(REEK)
-    satdf = satfunc.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    satdf = satfunc.df(resdatafiles.get_ecldeck())
 
     swof_sgof = satfunc.df2ecl(satdf, keywords=["SWOF", "SGOF"])
     assert swof_sgof.find("SWOF") < swof_sgof.find("SGOF")

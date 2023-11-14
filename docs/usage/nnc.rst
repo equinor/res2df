@@ -11,14 +11,14 @@ Note: Eclipse300 will not export TRANNNC data in parallel mode.
 Run in serial to get this output.
 
 ..
-  nnc.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/nnc.csv', index=False)
+  nnc.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/nnc.csv', index=False)
 
 .. code-block:: python
 
-   from res2df import nnc, EclFiles
+   from res2df import nnc, ResdataFiles
 
-   eclfiles = EclFiles('MYDATADECK.DATA')
-   dframe = nnc.df(eclfiles)
+   resdatafiles = ResdataFiles('MYDATADECK.DATA')
+   dframe = nnc.df(resdatafiles)
 
 .. csv-table:: Example nnc table
    :file: nnc.csv
@@ -49,10 +49,10 @@ to an Eclipse include file:
 
 .. code-block:: python
 
-   from ecl2f import nnc, EclFiles
+   from ecl2f import nnc, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   nnc_df = nnc.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   nnc_df = nnc.df(resdatafiles)
    nnc_df["TRANM"] = 0.1  # Reduce all NNC transmissibilities
 
    nnc.df2ecl_editnnc(nnc_df, filename="editnnc.inc")
@@ -60,7 +60,7 @@ to an Eclipse include file:
 and the contents of the exported file can be:
 
 ..
-   print(nnc.df2ecl_editnnc(nnc.df(eclfiles).head(4).assign(TRANM=0.1)))
+   print(nnc.df2ecl_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
 
 .. code-block:: console
 

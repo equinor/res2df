@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 
 from res2df import faults, nnc, res2csv, trans
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -27,8 +27,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 def test_nnc2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    nncdf = nnc.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    nncdf = nnc.df(resdatafiles)
 
     assert not nncdf.empty
     assert "I1" in nncdf
@@ -48,14 +48,14 @@ def test_nnc2df():
 
 def test_no_nnc():
     """Test nnc on an Eclipse case with no NNCs"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    assert nnc.df(eclfiles).empty
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    assert nnc.df(resdatafiles).empty
 
 
 def test_nnc2df_coords():
     """Test that we are able to add coordinates"""
-    eclfiles = EclFiles(REEK)
-    gnncdf = nnc.df(eclfiles, coords=True)
+    resdatafiles = ResdataFiles(REEK)
+    gnncdf = nnc.df(resdatafiles, coords=True)
     assert not gnncdf.empty
     assert "X" in gnncdf
     assert "Y" in gnncdf
@@ -65,9 +65,9 @@ def test_nnc2df_coords():
 @pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
-    eclfiles = EclFiles(REEK)
-    nncdf = nnc.df(eclfiles)
-    faultsdf = faults.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    nncdf = nnc.df(resdatafiles)
+    faultsdf = faults.df(resdatafiles.get_ecldeck())
 
     merged = pd.merge(
         nncdf,
@@ -89,8 +89,8 @@ def test_nnc2df_faultnames():
 
 def test_df2ecl_editnnc(tmp_path):
     """Test generation of EDITNNC keyword"""
-    eclfiles = EclFiles(REEK)
-    nncdf = nnc.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    nncdf = nnc.df(resdatafiles)
     os.chdir(tmp_path)
 
     nncdf["TRANM"] = 2
@@ -109,11 +109,11 @@ def test_df2ecl_editnnc(tmp_path):
     assert "avg multiplier" not in editnnc
 
     # Test compatibility with trans module:
-    trans_df = trans.df(eclfiles, addnnc=True)
+    trans_df = trans.df(resdatafiles, addnnc=True)
     editnnc = nnc.df2ecl_editnnc(trans_df.assign(TRANM=0.3))
     assert "avg multiplier 0.3" in editnnc or "avg multiplier 0.29999" in editnnc
 
-    print(nnc.df2ecl_editnnc(nnc.df(eclfiles).head(4).assign(TRANM=0.1)))
+    print(nnc.df2ecl_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")

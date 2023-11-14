@@ -15,7 +15,7 @@ try:
 except ImportError:
     pass
 
-from res2df import EclFiles, getLogger_res2csv
+from res2df import ResdataFiles, getLogger_res2csv
 from res2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
@@ -28,13 +28,13 @@ logger = logging.getLogger(__name__)
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
 
-def df(deck: Union[EclFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
+def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
     """Loop through the deck and pick up information found
 
     The loop over the deck is a state machine, as it has to pick up dates
     """
 
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
 
     wconrecords = []  # List of dicts of every line in input file
@@ -94,9 +94,9 @@ def wcon_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable:redefined-outer_name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
-    if eclfiles:
-        deck = eclfiles.get_ecldeck()
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    if resdatafiles:
+        deck = resdatafiles.get_ecldeck()
     wcon_df = df(deck)
     write_dframe_stdout_file(
         wcon_df,

@@ -26,27 +26,28 @@ from resdata.resfile import ResdataFile
 
 from res2df import __version__, common, getLogger_res2csv
 
-from .eclfiles import EclFiles
+from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 
 
-def get_available_rst_dates(eclfiles: EclFiles) -> List[datetime.date]:
+def get_available_rst_dates(resdatafiles: ResdataFiles) -> List[datetime.date]:
     """Return a list of datetime objects for the available dates in the RST file"""
-    report_indices = ResdataFile.file_report_list(eclfiles.get_rstfilename())
+    report_indices = ResdataFile.file_report_list(resdatafiles.get_rstfilename())
     logger.info(
         "Restart report indices (count %s): %s",
         str(len(report_indices)),
         str(report_indices),
     )
     return [
-        eclfiles.get_rstfile().iget_restart_sim_time(index).date()
+        resdatafiles.get_rstfile().iget_restart_sim_time(index).date()
         for index in range(0, len(report_indices))
     ]
 
 
 def dates2rstindices(
-    eclfiles: EclFiles, dates: Optional[Union[str, datetime.date, List[datetime.date]]]
+    resdatafiles: ResdataFiles,
+    dates: Optional[Union[str, datetime.date, List[datetime.date]]],
 ) -> Tuple[List[int], List[datetime.date], List[str]]:
     """Return the restart index/indices for a given datetime or list of datetimes
 
@@ -68,7 +69,7 @@ def dates2rstindices(
     if not dates:
         return ([], [], [])
 
-    availabledates = get_available_rst_dates(eclfiles)
+    availabledates = get_available_rst_dates(resdatafiles)
 
     supportedmnemonics = ["first", "last", "all"]
 
@@ -141,7 +142,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
 
 
 def rst2df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     date: Union[str, datetime.date, List[datetime.date]],
     vectors: Optional[Union[str, List[str]]] = None,
     dateinheaders: bool = False,
@@ -155,7 +156,7 @@ def rst2df(
     when merging with the grid geometry dataframe.
 
     Args:
-        eclfiles: EclFiles object
+        resdatafiles: ResdataFiles object
         date: datetime.date or list of datetime.date, must
             correspond to an existing date. If list, it
             forces dateinheaders to be True.
@@ -183,16 +184,16 @@ def rst2df(
 
     # First task is to determine the restart index to extract
     # data for:
-    (rstindices, chosendates, isodates) = dates2rstindices(eclfiles, date)
+    (rstindices, chosendates, isodates) = dates2rstindices(resdatafiles, date)
 
     logger.info("Extracting restart information at dates %s", str(isodates))
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
     # for all active cells:
-    activecells = eclfiles.get_egrid().getNumActive()
+    activecells = resdatafiles.get_egrid().getNumActive()
     rstvectors = []
-    for vec in eclfiles.get_rstfile().headers:
+    for vec in resdatafiles.get_rstfile().headers:
         if vec[1] == activecells and any(
             fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
@@ -211,7 +212,7 @@ def rst2df(
         present_rstvectors = []
         for vec in rstvectors:
             try:
-                if eclfiles.get_rstfile().iget_named_kw(vec, rstindex):
+                if resdatafiles.get_rstfile().iget_named_kw(vec, rstindex):
                     present_rstvectors.append(vec)
             except IndexError:
                 pass
@@ -232,7 +233,7 @@ def rst2df(
             columns=present_rstvectors,
             data=np.hstack(
                 [
-                    eclfiles.get_rstfile()
+                    resdatafiles.get_rstfile()
                     .iget_named_kw(vec, rstindex)
                     .numpyView()
                     .reshape(-1, 1)
@@ -279,7 +280,7 @@ def rst2df(
 
 
 def gridgeometry2df(
-    eclfiles: EclFiles, zonemap: Optional[Dict[int, str]] = None
+    resdatafiles: ResdataFiles, zonemap: Optional[Dict[int, str]] = None
 ) -> pd.DataFrame:
     """Produce a Pandas Dataframe with Eclipse gridgeometry
 
@@ -287,7 +288,7 @@ def gridgeometry2df(
     when merging with other dataframes with cell-data.
 
     Args:
-        eclfiles: object holding the Eclipse output files.
+        resdatafiles: object holding the Eclipse output files.
         zonemap: A zonemap dictionary mapping every K index to a
             string, which will be put in a column ZONE. If none is provided,
             a zonemap from a default file will be looked for. Provide an empty
@@ -299,8 +300,8 @@ def gridgeometry2df(
         pr. cell. The index of the dataframe are the global indices. If a zonemap
         is provided, zone information will be in the column ZONE.
     """
-    egrid_file = eclfiles.get_egridfile()
-    grid = eclfiles.get_egrid()
+    egrid_file = resdatafiles.get_egridfile()
+    grid = resdatafiles.get_egrid()
 
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
@@ -348,7 +349,7 @@ def gridgeometry2df(
 
     if zonemap is None:
         # Look for default zonemap file:
-        zonemap = eclfiles.get_zonemap()
+        zonemap = resdatafiles.get_zonemap()
     if zonemap:
         logger.info("Merging zonemap into grid")
         grid_df = common.merge_zones(grid_df, zonemap, kname="K")
@@ -357,7 +358,7 @@ def gridgeometry2df(
 
 
 def merge_initvectors(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     dframe: pd.DataFrame,
     initvectors: List[str],
     ijknames: Optional[List[str]] = None,
@@ -368,7 +369,7 @@ def merge_initvectors(
     for API users to only use the df() function.
 
     Args:
-        eclfiles: Object representing the Eclipse output files
+        resdatafiles: Object representing the Eclipse output files
         dframe: Table data to merge with
         initvectors: Names of INIT vectors to merge in.
         ijknames: Three strings that determine the I, J and K columns to use
@@ -385,7 +386,7 @@ def merge_initvectors(
     if len(ijknames) != 3:
         raise ValueError("ijknames must be a list of length 3")
     assert isinstance(dframe, pd.DataFrame)
-    assert isinstance(eclfiles, EclFiles)
+    assert isinstance(resdatafiles, ResdataFiles)
 
     if not set(ijknames).issubset(dframe.columns):
         raise ValueError(
@@ -398,12 +399,12 @@ def merge_initvectors(
     assert isinstance(initvectors, list)
 
     logger.info("Merging INIT data %s into dataframe", str(initvectors))
-    ijkinit = df(eclfiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
+    ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
     return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
 
 def init2df(
-    eclfiles: EclFiles, vectors: Optional[Union[str, List[str]]] = None
+    resdatafiles: ResdataFiles, vectors: Optional[Union[str, List[str]]] = None
 ) -> pd.DataFrame:
     """Extract information from INIT file with cell data
 
@@ -413,7 +414,7 @@ def init2df(
     Order is significant, as index is used for merging
 
     Args:
-        eclfiles: Object that can serve the EGRID and INIT files
+        resdatafiles: Object that can serve the EGRID and INIT files
         vectors: List of vectors to include,
             glob-style wildcards supported.
     """
@@ -422,8 +423,8 @@ def init2df(
     if not isinstance(vectors, list):
         vectors = [vectors]
 
-    init = eclfiles.get_initfile()
-    egrid = eclfiles.get_egrid()
+    init = resdatafiles.get_initfile()
+    egrid = resdatafiles.get_egrid()
 
     # Build list of vector names to include:
     usevectors = []
@@ -470,7 +471,7 @@ def init2df(
 
 
 def df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     vectors: Union[str, List[str]] = "*",
     dropconstants: bool = False,
     rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
@@ -486,7 +487,7 @@ def df(
     any time dependent data from Restart files.
 
     Args:
-        eclfiles: Handle to an Eclipse case
+        resdatafiles: Handle to an Eclipse case
         vectors: Vectors to include, wildcards
             supported. Used to match both
             INIT vectors and RESTART vectors.
@@ -506,12 +507,12 @@ def df(
             dictionary to avoid looking for the default file, and no ZONE
             column will be added.
     """
-    gridgeom = gridgeometry2df(eclfiles, zonemap)
-    initdf = init2df(eclfiles, vectors=vectors)
+    gridgeom = gridgeometry2df(resdatafiles, zonemap)
+    initdf = init2df(resdatafiles, vectors=vectors)
     rst_df = None
     if rstdates:
         rst_df = rst2df(
-            eclfiles,
+            resdatafiles,
             rstdates,
             vectors=vectors,
             dateinheaders=dateinheaders,
@@ -617,7 +618,7 @@ def drop_constant_columns(
 def df2ecl(
     grid_df: pd.DataFrame,
     keywords: Union[str, List[str]],
-    eclfiles: Optional[EclFiles] = None,
+    resdatafiles: Optional[ResdataFiles] = None,
     dtype: Optional[Type] = None,
     filename: Optional[str] = None,
     nocomments: bool = False,
@@ -643,7 +644,7 @@ def df2ecl(
             The grid can contain both active and inactive cells.
         keywords: The keyword(s) to export, with one
             value for every cell.
-        eclfiles: If provided, the total cell count for the grid
+        resdatafiles: If provided, the total cell count for the grid
             will be requested from this object. If not, it will be *guessed*
             from the maximum number of GLOBAL_INDEX, which can be under-estimated
             in the corner-case that the last cells are inactive.
@@ -670,10 +671,10 @@ def df2ecl(
     # Figure out the total number of cells for which we need to export data for:
     global_size = None
     active_cells = None
-    if eclfiles is not None:
-        if eclfiles.get_egrid() is not None:
-            global_size = eclfiles.get_egrid().get_global_size()
-            active_cells = eclfiles.get_egrid().getNumActive()
+    if resdatafiles is not None:
+        if resdatafiles.get_egrid() is not None:
+            global_size = resdatafiles.get_egrid().get_global_size()
+            active_cells = resdatafiles.get_egrid().getNumActive()
 
     if "GLOBAL_INDEX" not in grid_df:
         logger.warning(
@@ -763,9 +764,9 @@ def grid_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
     grid_df = df(
-        eclfiles,
+        resdatafiles,
         vectors=args.vectors,
         rstdates=args.rstdates,
         dropconstants=args.dropconstants,

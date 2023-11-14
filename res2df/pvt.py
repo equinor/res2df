@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from res2df import EclFiles, common, getLogger_res2csv, inferdims
+from res2df import ResdataFiles, common, getLogger_res2csv, inferdims
 
 try:
     # Needed for mypy
@@ -217,7 +217,7 @@ def df(
     Return:
         pd.DataFrame
     """
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
 
     deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -283,10 +283,10 @@ def pvt_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
     logger.info("Parsed %s", args.DATAFILE)
-    if eclfiles:
-        deck = eclfiles.get_ecldeck()
+    if resdatafiles:
+        deck = resdatafiles.get_ecldeck()
     if "TABDIMS" in deck:
         # Things are easier when a full deck with correct TABDIMS
         # is supplied:

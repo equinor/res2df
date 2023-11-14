@@ -9,18 +9,17 @@
 # res2df
 
 res2df is a Pandas DataFrame wrapper around libecl and opm.io, which
-are used to access binary files outputted by the reservoir simulator
-Eclipse, or its input files --- or any other tool outputting to the same
-data format.
+are used to access binary files outputted by reservoir simulators, 
+or its input files --- or any other tool outputting to the same data format.
 
-The reverse operation, from a Pandas DataFrame to Eclipse include files,
+The reverse operation, from a Pandas DataFrame to reservoir include files,
 is provided for some of the modules.
 
 The package consists of a module pr. datatype, e.g. one module for summary
 files (.UNSMRY), one for completion data etc.
 
 There is a command line frontend for almost all functionality, called
-`res2csv`, which converts the Eclipse data to DataFrames, and then dumps
+`res2csv`, which converts the reservoir data to DataFrames, and then dumps
 the dataframes to files in CSV format, and a similar `csv2res` for the
 reverse operation.
 

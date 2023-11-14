@@ -9,7 +9,7 @@ import pyarrow
 import pytest
 
 from res2df import common, grid, res2csv
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -18,8 +18,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS")
 
 def test_gridgeometry2df(mocker):
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    grid_geom = grid.gridgeometry2df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    grid_geom = grid.gridgeometry2df(resdatafiles)
 
     assert isinstance(grid_geom, pd.DataFrame)
     assert not grid_geom.empty
@@ -50,38 +50,40 @@ def test_gridgeometry2df(mocker):
         grid.gridgeometry2df(None)
 
     with pytest.raises(ValueError, match="No EGRID file supplied"):
-        mocker.patch("res2df.eclfiles.EclFiles.get_egridfile", return_value=None)
-        grid.gridgeometry2df(eclfiles)
+        mocker.patch(
+            "res2df.resdatafiles.ResdataFiles.get_egridfile", return_value=None
+        )
+        grid.gridgeometry2df(resdatafiles)
 
 
 def test_wrongfile():
-    """Test the EclFiles object on nonexistent files"""
+    """Test the ResdataFiles object on nonexistent files"""
     # pylint: disable=invalid-name,redefined-builtin
 
     # We can initalize this object with bogus:
-    eclfiles = EclFiles("FOO.DATA")
+    resdatafiles = ResdataFiles("FOO.DATA")
     # but when we try to use it, things should fail:
     with pytest.raises(FileNotFoundError):
-        grid.init2df(eclfiles)
+        grid.init2df(resdatafiles)
 
 
 def test_gridzonemap():
     """Check that zonemap can be merged automatically be default, and also
     that there is some API for supplying the zonemap directly as a dictionary"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    grid_geom = grid.gridgeometry2df(eclfiles, zonemap=None)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    grid_geom = grid.gridgeometry2df(resdatafiles, zonemap=None)
 
     default_zonemap = grid_geom["ZONE"]
 
-    grid_no_zone = grid.gridgeometry2df(eclfiles, zonemap={})
+    grid_no_zone = grid.gridgeometry2df(resdatafiles, zonemap={})
     assert "ZONE" not in grid_no_zone
 
-    assert (grid.df(eclfiles, zonemap=None)["ZONE"] == default_zonemap).all()
+    assert (grid.df(resdatafiles, zonemap=None)["ZONE"] == default_zonemap).all()
 
-    df_no_zone = grid.df(eclfiles, zonemap={})
+    df_no_zone = grid.df(resdatafiles, zonemap={})
     assert "ZONE" not in df_no_zone
 
-    df_custom_zone = grid.gridgeometry2df(eclfiles, zonemap={1: "FIRSTLAYER"})
+    df_custom_zone = grid.gridgeometry2df(resdatafiles, zonemap={1: "FIRSTLAYER"})
     assert "ZONE" in df_custom_zone
     assert set(df_custom_zone[df_custom_zone["K"] == 1]["ZONE"].unique()) == set(
         ["FIRSTLAYER"]
@@ -89,14 +91,14 @@ def test_gridzonemap():
     assert len(df_custom_zone) == len(grid_no_zone)
 
     df_bogus_zones = grid.gridgeometry2df(
-        eclfiles, zonemap={999999: "nonexistinglayer"}
+        resdatafiles, zonemap={999999: "nonexistinglayer"}
     )
     assert pd.isnull(df_bogus_zones["ZONE"]).all()
 
     # Test a custom "subzone" map via direct usage of merge_zone on an dataframe
     # where ZONE already exists:
 
-    dframe = grid.df(eclfiles)
+    dframe = grid.df(resdatafiles)
     subzonemap = {1: "SUBZONE1", 2: "SUBZONE2"}
     dframe = common.merge_zones(dframe, subzonemap, zoneheader="SUBZONE", kname="K")
     assert (dframe["ZONE"] == default_zonemap).all()
@@ -107,20 +109,22 @@ def test_gridzonemap():
 
 def test_merge_initvectors():
     """Test merging of INIT-vectors into the grid dataframe"""
-    eclfiles = EclFiles(REEK)
-    assert grid.merge_initvectors(eclfiles, pd.DataFrame(), []).empty
+    resdatafiles = ResdataFiles(REEK)
+    assert grid.merge_initvectors(resdatafiles, pd.DataFrame(), []).empty
     foo_df = pd.DataFrame([{"FOO": 1}])
-    pd.testing.assert_frame_equal(grid.merge_initvectors(eclfiles, foo_df, []), foo_df)
+    pd.testing.assert_frame_equal(
+        grid.merge_initvectors(resdatafiles, foo_df, []), foo_df
+    )
 
     with pytest.raises(ValueError, match="All of the columns"):
-        grid.merge_initvectors(eclfiles, foo_df, ["NONEXISTING"])
+        grid.merge_initvectors(resdatafiles, foo_df, ["NONEXISTING"])
 
     minimal_df = pd.DataFrame([{"I": 10, "J": 11, "K": 12}])
 
     with pytest.raises(KeyError):
-        grid.merge_initvectors(eclfiles, minimal_df, ["NONEXISTING"])
+        grid.merge_initvectors(resdatafiles, minimal_df, ["NONEXISTING"])
 
-    withporo = grid.merge_initvectors(eclfiles, minimal_df, ["PORO"])
+    withporo = grid.merge_initvectors(resdatafiles, minimal_df, ["PORO"])
     pd.testing.assert_frame_equal(
         withporo, minimal_df.assign(PORO=0.221848), check_dtype=False
     )
@@ -128,18 +132,20 @@ def test_merge_initvectors():
     with pytest.raises(ValueError):
         # ijknames must be length 3
         grid.merge_initvectors(
-            eclfiles, minimal_df, ["PORO"], ijknames=["I", "J", "K", "L"]
+            resdatafiles, minimal_df, ["PORO"], ijknames=["I", "J", "K", "L"]
         )
     with pytest.raises(ValueError):
-        grid.merge_initvectors(eclfiles, minimal_df, ["PORO"], ijknames=["I", "J"])
+        grid.merge_initvectors(resdatafiles, minimal_df, ["PORO"], ijknames=["I", "J"])
     with pytest.raises(ValueError, match="All of the columns"):
-        grid.merge_initvectors(eclfiles, minimal_df, ["PORO"], ijknames=["A", "B", "C"])
+        grid.merge_initvectors(
+            resdatafiles, minimal_df, ["PORO"], ijknames=["A", "B", "C"]
+        )
 
 
 def test_init2df():
     """Test that dataframe with INIT vectors can be produced"""
-    eclfiles = EclFiles(REEK)
-    init_df = grid.init2df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    init_df = grid.init2df(resdatafiles)
 
     assert isinstance(init_df, pd.DataFrame)
     # pylint: disable=unsupported-membership-test  # false positive on Dataframe
@@ -158,8 +164,8 @@ def test_init2df():
 
 def test_grid_df():
     """Test that dataframe with INIT vectors and coordinates can be produced"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    grid_df = grid.df(eclfiles)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    grid_df = grid.df(resdatafiles)
 
     assert isinstance(grid_df, pd.DataFrame)
     assert not grid_df.empty
@@ -184,8 +190,8 @@ def test_grid_df():
 
 def test_df2ecl(tmp_path):
     """Test if we are able to output include files for grid data"""
-    eclfiles = EclFiles(REEK)
-    grid_df = grid.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    grid_df = grid.df(resdatafiles)
 
     fipnum_str = grid.df2ecl(grid_df, "FIPNUM", dtype=int)
     assert grid.df2ecl(grid_df, "FIPNUM", dtype="int", nocomments=True) == grid.df2ecl(
@@ -203,7 +209,7 @@ def test_df2ecl(tmp_path):
     fipnum_str_nocomment = grid.df2ecl(grid_df, "FIPNUM", dtype=int, nocomments=True)
     assert "--" not in fipnum_str_nocomment
     fipnum2_str = grid.df2ecl(
-        grid_df, "FIPNUM", dtype=int, eclfiles=eclfiles, nocomments=True
+        grid_df, "FIPNUM", dtype=int, resdatafiles=resdatafiles, nocomments=True
     )
     # This would mean that we guessed the correct global size in the first run
     assert fipnum_str_nocomment == fipnum2_str
@@ -237,20 +243,20 @@ def test_df2ecl(tmp_path):
         grid.df2ecl(grid_df, ["PERMRR"])
 
     # Check when we have restart info included:
-    gr_rst = grid.df(eclfiles, rstdates="all")
+    gr_rst = grid.df(resdatafiles, rstdates="all")
     fipnum_str_rst = grid.df2ecl(gr_rst, "FIPNUM", dtype=int, nocomments=True)
     assert fipnum_str_rst == fipnum_str_nocomment
 
     # When dates are stacked, there are NaN's  in the FIPNUM column,
     # which should be gracefully ignored.
-    gr_rst_stacked = grid.df(eclfiles, rstdates="all", stackdates=True)
+    gr_rst_stacked = grid.df(resdatafiles, rstdates="all", stackdates=True)
     fipnum_str_rst = grid.df2ecl(gr_rst_stacked, "FIPNUM", dtype=int, nocomments=True)
     assert fipnum_str_rst == fipnum_str_nocomment
 
     # dateinheaders here will be ignored due to stackdates:
     pd.testing.assert_frame_equal(
         gr_rst_stacked,
-        grid.df(eclfiles, rstdates="all", stackdates=True, dateinheaders=True),
+        grid.df(resdatafiles, rstdates="all", stackdates=True, dateinheaders=True),
     )
 
 
@@ -267,25 +273,25 @@ def test_df2ecl_mock():
 
 def test_subvectors():
     """Test that we can ask for a few vectors only"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    init_df = grid.init2df(eclfiles, "PORO")
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    init_df = grid.init2df(resdatafiles, "PORO")
     assert "PORO" in init_df
     assert "PERMX" not in init_df
     assert "PORV" not in init_df
 
-    init_df = grid.init2df(eclfiles, "P*")
+    init_df = grid.init2df(resdatafiles, "P*")
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
     assert "SATNUM" not in init_df
 
-    init_df = grid.init2df(eclfiles, ["P*"])
+    init_df = grid.init2df(resdatafiles, ["P*"])
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
     assert "SATNUM" not in init_df
 
-    init_df = grid.init2df(eclfiles, ["P*", "*NUM"])
+    init_df = grid.init2df(resdatafiles, ["P*", "*NUM"])
     assert "PORO" in init_df
     assert "PERMX" in init_df
     assert "PVTNUM" in init_df
@@ -313,55 +319,59 @@ def test_dropconstants():
 
 def test_df():
     """Test the df function"""
-    eclfiles = EclFiles(REEK)
+    resdatafiles = ResdataFiles(REEK)
     # assert error..
     with pytest.raises(TypeError):
         # pylint: disable=no-value-for-parameter
         grid.df()
 
-    grid_df = grid.df(eclfiles)
+    grid_df = grid.df(resdatafiles)
     assert not grid_df.empty
     assert "I" in grid_df  # From GRID
     assert "PORO" in grid_df  # From INIT
     assert "SOIL" not in grid_df  # We do not get RST unless we ask for it.
 
-    grid_df = grid.df(eclfiles, vectors="*")
+    grid_df = grid.df(resdatafiles, vectors="*")
     assert "I" in grid_df  # From GRID
     assert "PORO" in grid_df  # From INIT
     assert "SOIL" not in grid_df  # We do not get RST unless we ask for it.
 
-    grid_df = grid.df(eclfiles, vectors=["*"])
+    grid_df = grid.df(resdatafiles, vectors=["*"])
     assert "I" in grid_df  # From GRID
     assert "PORO" in grid_df  # From INIT
     assert "SOIL" not in grid_df  # We do not get RST unless we ask for it.
 
-    grid_df = grid.df(eclfiles, vectors="PRESSURE")
+    grid_df = grid.df(resdatafiles, vectors="PRESSURE")
     assert "I" in grid_df
     assert "PRESSURE" not in grid_df  # that vector is only in RST
     assert len(grid_df) == 35817
     assert "VOLUME" in grid_df
 
-    grid_df = grid.df(eclfiles, vectors=["PRESSURE"])
+    grid_df = grid.df(resdatafiles, vectors=["PRESSURE"])
     assert "I" in grid_df
     assert not grid_df.empty
     assert "PRESSURE" not in grid_df
     geometry_cols = len(grid_df.columns)
 
-    grid_df = grid.df(eclfiles, vectors=["PRESSURE"], rstdates="last", stackdates=True)
+    grid_df = grid.df(
+        resdatafiles, vectors=["PRESSURE"], rstdates="last", stackdates=True
+    )
     assert "PRESSURE" in grid_df
     assert len(grid_df.columns) == geometry_cols + 2
     assert "DATE" in grid_df  # Present because of stackdates
 
-    grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="last")
+    grid_df = grid.df(resdatafiles, vectors="PRESSURE", rstdates="last")
     assert "PRESSURE" in grid_df
     assert len(grid_df.columns) == geometry_cols + 1
 
-    grid_df = grid.df(eclfiles, vectors="PRESSURE", rstdates="last", dateinheaders=True)
+    grid_df = grid.df(
+        resdatafiles, vectors="PRESSURE", rstdates="last", dateinheaders=True
+    )
     assert "PRESSURE" not in grid_df
     assert "PRESSURE@2001-08-01" in grid_df
 
     grid_df = grid.df(
-        eclfiles, vectors=["PORO", "PRESSURE"], rstdates="all", stackdates=True
+        resdatafiles, vectors=["PORO", "PRESSURE"], rstdates="all", stackdates=True
     )
     assert "PRESSURE" in grid_df
     assert len(grid_df.columns) == geometry_cols + 3
@@ -393,20 +403,20 @@ def test_df():
     pd.testing.assert_frame_equal(df1, df3)
     pd.testing.assert_frame_equal(df1, df4)
 
-    grid_df = grid.df(eclfiles, vectors="PORO")
+    grid_df = grid.df(resdatafiles, vectors="PORO")
     assert "I" in grid_df
     assert "PORO" in grid_df
     assert len(grid_df) == 35817
     assert "DATE" not in grid_df
 
-    grid_df = grid.df(eclfiles, vectors="PORO", rstdates="all")
+    grid_df = grid.df(resdatafiles, vectors="PORO", rstdates="all")
     assert "I" in grid_df
     assert "PORO" in grid_df
     assert "DATE" not in grid_df
     # (no RST columns, so no DATE info in the dataframe)
     # (warnings should be printed)
 
-    grid_df = grid.df(eclfiles, vectors="PORO", rstdates="all", stackdates=True)
+    grid_df = grid.df(resdatafiles, vectors="PORO", rstdates="all", stackdates=True)
     assert "I" in grid_df
     assert "PORO" in grid_df
     assert "DATE" not in grid_df
@@ -499,13 +509,13 @@ def test_main_arrow(tmp_path, mocker):
 
 def test_get_available_rst_dates():
     """Test the support of dates in restart files"""
-    eclfiles = EclFiles(REEK)
-    # rstfile = eclfiles.get_rstfile()
+    resdatafiles = ResdataFiles(REEK)
+    # rstfile = resdatafiles.get_rstfile()
 
-    alldates = grid.get_available_rst_dates(eclfiles)
+    alldates = grid.get_available_rst_dates(resdatafiles)
     assert len(alldates) == 4
 
-    didx = grid.dates2rstindices(eclfiles, "all")
+    didx = grid.dates2rstindices(resdatafiles, "all")
     assert len(didx[0]) == len(alldates)
     assert len(didx[1]) == len(alldates)
     assert isinstance(didx[0][0], int)
@@ -513,38 +523,40 @@ def test_get_available_rst_dates():
     assert didx[1][0] == alldates[0]
     assert didx[1][-1] == alldates[-1]
 
-    somedate = grid.dates2rstindices(eclfiles, "2000-07-01")
+    somedate = grid.dates2rstindices(resdatafiles, "2000-07-01")
     assert somedate[1] == [alldates[1]]
 
     with pytest.raises(ValueError, match="date 1999-09-09 not found in UNRST file"):
-        grid.dates2rstindices(eclfiles, "1999-09-09")
+        grid.dates2rstindices(resdatafiles, "1999-09-09")
 
     with pytest.raises(ValueError, match="date 1999-0909 not understood"):
-        grid.dates2rstindices(eclfiles, "1999-0909")
+        grid.dates2rstindices(resdatafiles, "1999-0909")
 
-    expl_date = grid.dates2rstindices(eclfiles, datetime.date(2000, 7, 1))
+    expl_date = grid.dates2rstindices(resdatafiles, datetime.date(2000, 7, 1))
     assert expl_date[1] == [alldates[1]]
 
     expl_datetime = grid.dates2rstindices(
-        eclfiles, datetime.datetime(2000, 7, 1, 0, 0, 0)
+        resdatafiles, datetime.datetime(2000, 7, 1, 0, 0, 0)
     )
     assert expl_datetime[1] == [alldates[1]]
 
-    expl_list_datetime = grid.dates2rstindices(eclfiles, [datetime.date(2000, 7, 1)])
+    expl_list_datetime = grid.dates2rstindices(
+        resdatafiles, [datetime.date(2000, 7, 1)]
+    )
     assert expl_list_datetime[1] == [alldates[1]]
 
     # For list input, only datetime.date objects are allowed:
     expl_list2_date = grid.dates2rstindices(
-        eclfiles, [datetime.date(2000, 7, 1), datetime.date(2001, 2, 1)]
+        resdatafiles, [datetime.date(2000, 7, 1), datetime.date(2001, 2, 1)]
     )
     assert expl_list2_date[1] == [alldates[1], alldates[2]]
 
     with pytest.raises(ValueError, match="None of the requested dates were found"):
-        grid.dates2rstindices(eclfiles, ["2000-07-01", "2001-02-01"])
+        grid.dates2rstindices(resdatafiles, ["2000-07-01", "2001-02-01"])
 
     with pytest.raises(ValueError, match="None of the requested dates were found"):
         grid.dates2rstindices(
-            eclfiles,
+            resdatafiles,
             [
                 datetime.datetime(2000, 7, 1, 0, 0, 0),
                 datetime.datetime(2001, 2, 1, 0, 0, 0),
@@ -552,40 +564,43 @@ def test_get_available_rst_dates():
         )
 
     with pytest.raises(ValueError, match="not understood"):
-        grid.dates2rstindices(eclfiles, {"2000-07-01": "2001-02-01"})
+        grid.dates2rstindices(resdatafiles, {"2000-07-01": "2001-02-01"})
 
-    first = grid.dates2rstindices(eclfiles, "first")
+    first = grid.dates2rstindices(resdatafiles, "first")
     assert first[1][0] == alldates[0]
 
-    last = grid.dates2rstindices(eclfiles, "last")
+    last = grid.dates2rstindices(resdatafiles, "last")
     assert last[1][0] == alldates[-1]
 
-    dates = grid.get_available_rst_dates(eclfiles)
+    dates = grid.get_available_rst_dates(resdatafiles)
     assert isinstance(dates, list)
 
     # Test with missing RST file:
-    eclfiles = EclFiles("BOGUS.DATA")
+    resdatafiles = ResdataFiles("BOGUS.DATA")
     with pytest.raises(IOError):
-        eclfiles.get_rstfile()
+        resdatafiles.get_rstfile()
 
 
 def test_rst2df():
     """Test producing dataframes from restart files"""
-    eclfiles = EclFiles(REEK)
-    assert grid.rst2df(eclfiles, "first").shape == (35817, 24)
-    assert grid.rst2df(eclfiles, "last").shape == (35817, 24)
-    assert grid.rst2df(eclfiles, "all").shape == (35817, 23 * 4 + 1)
+    resdatafiles = ResdataFiles(REEK)
+    assert grid.rst2df(resdatafiles, "first").shape == (35817, 24)
+    assert grid.rst2df(resdatafiles, "last").shape == (35817, 24)
+    assert grid.rst2df(resdatafiles, "all").shape == (35817, 23 * 4 + 1)
 
-    assert "SOIL" in grid.rst2df(eclfiles, date="first", dateinheaders=False)
+    assert "SOIL" in grid.rst2df(resdatafiles, date="first", dateinheaders=False)
     assert (
-        "SOIL@2000-01-01" in grid.rst2df(eclfiles, "first", dateinheaders=True).columns
+        "SOIL@2000-01-01"
+        in grid.rst2df(resdatafiles, "first", dateinheaders=True).columns
     )
 
-    rst_df = grid.rst2df(eclfiles, "first", stackdates=True)
+    rst_df = grid.rst2df(resdatafiles, "first", stackdates=True)
     assert "DATE" in rst_df
     assert rst_df["DATE"].unique()[0] == "2000-01-01"
-    rst_df = grid.rst2df(eclfiles, "all", stackdates=True)
-    assert len(rst_df["DATE"].unique()) == len(grid.get_available_rst_dates(eclfiles))
+    rst_df = grid.rst2df(resdatafiles, "all", stackdates=True)
+    assert len(rst_df["DATE"].unique()) == len(
+        grid.get_available_rst_dates(resdatafiles)
+    )
 
     # "DATE" and "active" are now the extra columns:
     assert rst_df.shape == (4 * 35817, 23 + 2)
@@ -599,21 +614,21 @@ def test_rst2df():
     assert sum(nancols) == 1  # All other columns are "False"
 
     # Check vector slicing:
-    rst_df = grid.rst2df(eclfiles, "first", vectors="S???")
+    rst_df = grid.rst2df(resdatafiles, "first", vectors="S???")
     assert rst_df.shape == (35817, 4)
     assert "SGAS" in rst_df
     assert "SWAT" in rst_df
     assert "SOIL" in rst_df  # This is actually computed
     assert "FIPWAT" not in rst_df
 
-    rst_df = grid.rst2df(eclfiles, "first", vectors=["PRESSURE", "SWAT"])
+    rst_df = grid.rst2df(resdatafiles, "first", vectors=["PRESSURE", "SWAT"])
     assert "PRESSURE" in rst_df
     assert "SWAT" in rst_df
     assert "SGAS" not in rst_df
     assert "SOIL" not in rst_df
 
     # Check that we can avoid getting SOIL if we are explicit:
-    rst_df = grid.rst2df(eclfiles, "first", vectors=["SGAS", "SWAT"])
+    rst_df = grid.rst2df(resdatafiles, "first", vectors=["SGAS", "SWAT"])
     assert "SOIL" not in rst_df
     assert "SGAS" in rst_df
     assert "SWAT" in rst_df

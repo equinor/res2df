@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 
 from res2df import res2csv, rft
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -20,7 +20,7 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 def test_rftrecords2df():
     """Test that we can construct a dataframe for navigating in RFT
     records"""
-    rftrecs = rft._rftrecords2df(EclFiles(EIGHTCELLS).get_rftfile())
+    rftrecs = rft._rftrecords2df(ResdataFiles(EIGHTCELLS).get_rftfile())
     assert len(rftrecs[rftrecs["recordname"] == "TIME"]) == len(
         rftrecs["timeindex"].unique()
     )
@@ -35,7 +35,7 @@ def test_rftrecords2df():
 def test_rftrecords_generator():
     """Test the generator that will iterate over an EclFile/RFTFile
     and provide one yield pr.  well pr. date"""
-    for rftrecord in rft.rftrecords(EclFiles(EIGHTCELLS).get_rftfile()):
+    for rftrecord in rft.rftrecords(ResdataFiles(EIGHTCELLS).get_rftfile()):
         assert isinstance(rftrecord, dict)
         assert "date" in rftrecord
         assert isinstance(rftrecord["date"], datetime.date)
@@ -50,7 +50,7 @@ def test_rftrecords_generator():
 
 def test_get_con_seg_data():
     """Get CON data. Later add more code here to defend the name"""
-    rftfile = EclFiles(EIGHTCELLS).get_rftfile()
+    rftfile = ResdataFiles(EIGHTCELLS).get_rftfile()
 
     # Test the first record, it is a CON type (not multisegment)
     rftrecord = next(rft.rftrecords(rftfile))
@@ -464,8 +464,8 @@ def test_add_extras(dframe, inplace, expected):
 
 def test_rft2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    rftdf = rft.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    rftdf = rft.df(resdatafiles)
     assert "ZONE" in rftdf
     assert "LEAF" not in rftdf  # Topology metadata should not be exported
     assert set(rftdf["WELLMODEL"]) == {"STANDARD"}

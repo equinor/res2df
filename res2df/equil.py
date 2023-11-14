@@ -11,7 +11,7 @@ import pandas as pd
 
 from res2df import common, getLogger_res2csv, inferdims
 
-from .eclfiles import EclFiles
+from .resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -72,7 +72,7 @@ RENAMERS["oil-gas"] = {
 
 
 def df(
-    deck: Union[str, EclFiles, "opm.libopmcommon_python.Deck"],
+    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
     keywords: Optional[List[str]] = None,
     ntequl: Optional[int] = None,
 ) -> pd.DataFrame:
@@ -89,7 +89,7 @@ def df(
     that we have to infer the correct number of EQUIL lines from what
     gives us successful parsing from OPM. In those cases, the
     deck must be supplied as a string, if not, extra EQUIL lines
-    are possibly already removed by the OPM parser in eclfiles.str2deck().
+    are possibly already removed by the OPM parser in resdatafiles.str2deck().
 
     Arguments:
         deck: Eclipse deck or string with deck. If
@@ -101,7 +101,7 @@ def df(
     Return:
         pd.DataFrame, at least with columns KEYWORD and EQLNUM
     """
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         deck = deck.get_ecldeck()
 
     deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
@@ -314,9 +314,9 @@ def equil_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
-    if eclfiles:
-        deck = eclfiles.get_ecldeck()
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    if resdatafiles:
+        deck = resdatafiles.get_ecldeck()
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS
         # is supplied:

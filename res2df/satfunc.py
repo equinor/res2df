@@ -28,7 +28,7 @@ except ImportError:
 from res2df import common, getLogger_res2csv, inferdims
 
 from .common import write_dframe_stdout_file
-from .eclfiles import EclFiles
+from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ def df(
     and stating how many saturation functions there should be.
     If you have a string with TABDIMS missing, you must supply
     this as a string to this function, and not a parsed deck, as
-    the default parser in EclFiles is very permissive (and only
+    the default parser in ResdataFiles is very permissive (and only
     returning the first function by default).
 
     Arguments:
@@ -91,7 +91,7 @@ def df(
     Return:
         pd.DataFrame, columns 'KEYWORD', 'SW', 'KRW', 'KROW', 'PC', ..
     """
-    if isinstance(deck, EclFiles):
+    if isinstance(deck, ResdataFiles):
         # NB: If this is done on include files and not on DATA files
         # we can loose data for SATNUM > 1
         deck = deck.get_ecldeck()
@@ -192,13 +192,13 @@ def satfunc_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    eclfiles = EclFiles(args.DATAFILE)
-    if eclfiles:
-        deck = eclfiles.get_ecldeck()
+    resdatafiles = ResdataFiles(args.DATAFILE)
+    if resdatafiles:
+        deck = resdatafiles.get_ecldeck()
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS
         # is supplied:
-        satfunc_df = df(eclfiles, keywords=args.keywords)
+        satfunc_df = df(resdatafiles, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string

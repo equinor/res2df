@@ -5,14 +5,14 @@ This module extracts summary information from UNSMRY-files into
 Pandas Dataframes.
 
 ..
-  summary.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'), column_keys="F*PT", time_index='yearly').to_csv("summary.csv")
+  summary.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'), column_keys="F*PT", time_index='yearly').to_csv("summary.csv")
 
 .. code-block:: python
 
-   from res2df import summary, EclFiles
+   from res2df import summary, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = summary.df(eclfiles, column_keys="F*PT", time_index="yearly")
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = summary.df(resdatafiles, column_keys="F*PT", time_index="yearly")
 
 If you don't specify ``column_keys``, all included summary vectors will be
 retrieved. Default for ``time_index`` is the report datetimes written by

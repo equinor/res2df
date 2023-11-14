@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 
 from res2df import csv2res, equil, res2csv
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -28,8 +28,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 def test_equil2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    equildf = equil.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    equildf = equil.df(resdatafiles)
     expected = {}
     expected["EQUIL"] = pd.DataFrame(
         [
@@ -85,8 +85,8 @@ def test_equil2df():
 def test_df2ecl(tmp_path):
     """Test that we can write include files to disk"""
     os.chdir(tmp_path)
-    eclfiles = EclFiles(EIGHTCELLS)
-    equildf = equil.df(eclfiles)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    equildf = equil.df(resdatafiles)
     equil.df2ecl(equildf, filename="equil.inc")
     assert Path("equil.inc").is_file()
 
@@ -255,7 +255,9 @@ EQUIL
     assert len(equil.equil_fromdeck(deckstr)) == 2  # correct
     assert len(equil.equil_fromdeck(deckstr, 2)) == 2
     assert len(equil.equil_fromdeck(deckstr, 1)) == 1
-    assert len(equil.equil_fromdeck(EclFiles.str2deck(deckstr))) == 1  # (watch out!)
+    assert (
+        len(equil.equil_fromdeck(ResdataFiles.str2deck(deckstr))) == 1
+    )  # (watch out!)
 
     wrongdeck = """
 EQUIL
@@ -611,7 +613,7 @@ PORO
 )
 def test_phases_from_deck(deckstring, expected):
     """Test that we can extract phase configuration from a deck"""
-    deck = EclFiles.str2deck(deckstring)
+    deck = ResdataFiles.str2deck(deckstring)
     assert equil.phases_from_deck(deck) == expected
 
 

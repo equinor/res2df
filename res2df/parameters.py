@@ -10,13 +10,13 @@ from typing import Any, Dict, List, Union
 import pandas as pd
 import yaml
 
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 
 
 def find_parameter_files(
-    ecldeck_or_eclpath: Union[EclFiles, str, Path], filebase: str = "parameters"
+    ecldeck_or_eclpath: Union[ResdataFiles, str, Path], filebase: str = "parameters"
 ) -> List[Path]:
     """Locate a default prioritized list of files to try to read as key-value
 
@@ -24,7 +24,7 @@ def find_parameter_files(
     current dir, one directory up, and two directories up.
 
     Args:
-        ecldeck_or_eclpath: Either an EclFiles object of
+        ecldeck_or_eclpath: Either an ResdataFiles object of
             an Eclipse output set (only the corresponding path will be used),
             or path to a file or directory, that will be used as a starting
             point for locating parameter files
@@ -35,7 +35,7 @@ def find_parameter_files(
     """
     eclbasepath: Path
     fname: str
-    if isinstance(ecldeck_or_eclpath, EclFiles):
+    if isinstance(ecldeck_or_eclpath, ResdataFiles):
         eclbasepath = Path(ecldeck_or_eclpath.get_path())
     elif isinstance(ecldeck_or_eclpath, (str, Path)):
         eclbasepath = Path(ecldeck_or_eclpath).parent.absolute()

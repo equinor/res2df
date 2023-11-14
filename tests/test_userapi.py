@@ -28,22 +28,22 @@ def test_userapi():
     To the user reading the source: Skip all 'assert' lines, read the rest.
 
     """
-    eclfiles = res2df.EclFiles(REEK)
+    resdatafiles = res2df.ResdataFiles(REEK)
 
-    compdatdf = res2df.compdat.df(eclfiles)
-    equil = res2df.equil.df(eclfiles)
-    faults = res2df.faults.df(eclfiles)
-    fipreports = res2df.fipreports.df(eclfiles)
-    grid_df = res2df.grid.df(eclfiles)
-    grst_df = res2df.grid.df(eclfiles, rstdates="last")
-    gruptree = res2df.gruptree.df(eclfiles)
-    nnc = res2df.nnc.df(eclfiles)
-    pillars = res2df.pillars.df(eclfiles)
-    rft = res2df.rft.df(eclfiles)
-    satfunc = res2df.satfunc.df(eclfiles)
-    smry = res2df.summary.df(eclfiles, datetime=True)
-    trans = res2df.trans.df(eclfiles)
-    wcon = res2df.wcon.df(eclfiles)
+    compdatdf = res2df.compdat.df(resdatafiles)
+    equil = res2df.equil.df(resdatafiles)
+    faults = res2df.faults.df(resdatafiles)
+    fipreports = res2df.fipreports.df(resdatafiles)
+    grid_df = res2df.grid.df(resdatafiles)
+    grst_df = res2df.grid.df(resdatafiles, rstdates="last")
+    gruptree = res2df.gruptree.df(resdatafiles)
+    nnc = res2df.nnc.df(resdatafiles)
+    pillars = res2df.pillars.df(resdatafiles)
+    rft = res2df.rft.df(resdatafiles)
+    satfunc = res2df.satfunc.df(resdatafiles)
+    smry = res2df.summary.df(resdatafiles, datetime=True)
+    trans = res2df.trans.df(resdatafiles)
+    wcon = res2df.wcon.df(resdatafiles)
 
     assert "PORV" in grid_df
     assert "SOIL" not in grid_df

@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 
 from res2df import gruptree, res2csv
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -27,8 +27,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 def test_eightcells_dataset():
     """Test Eightcells dataset"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    gruptree_df = gruptree.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    gruptree_df = gruptree.df(resdatafiles.get_ecldeck())
 
     expected_dframe = pd.DataFrame(
         [
@@ -44,8 +44,8 @@ def test_eightcells_dataset():
 
 def test_gruptree2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    grupdf = gruptree.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    grupdf = gruptree.df(resdatafiles.get_ecldeck())
 
     assert not grupdf.empty
     assert len(grupdf["DATE"].unique()) == 5
@@ -53,7 +53,7 @@ def test_gruptree2df():
     assert len(grupdf["PARENT"].dropna().unique()) == 3
     assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
-    grupdfnowells = gruptree.df(eclfiles.get_ecldeck(), welspecs=False)
+    grupdfnowells = gruptree.df(resdatafiles.get_ecldeck(), welspecs=False)
 
     assert len(grupdfnowells["KEYWORD"].unique()) == 1
     assert grupdf["PARENT"].dropna().unique()[0] == "FIELD"
@@ -75,7 +75,7 @@ WELSPECS
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.dropna().empty  # the DATE is empty
 
@@ -118,7 +118,7 @@ WELSPECS
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
     grupdf.to_csv("gruptreenet.csv", index=False)
@@ -161,7 +161,7 @@ GRUPNET
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck, startdate="2000-01-01")
     print(grupdf)
     assert "TERMINAL_PRESSURE" in grupdf
@@ -308,7 +308,7 @@ FIELDB
 def test_grupnetroot(schstr, expected_dframe, expected_tree):
     """Test that terminal pressure of the tree root can be
     included in the dataframe (with an empty parent)"""
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck, startdate="2000-01-01")
     non_default_columns = ["CHILD", "PARENT", "TERMINAL_PRESSURE"]
     pd.testing.assert_frame_equal(
@@ -414,7 +414,7 @@ def test_edge_dataframe2dict(dframe, expected):
 def test_emptytree_strdeck():
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.empty
     gruptreedict = gruptree.edge_dataframe2dict(grupdf)
@@ -461,7 +461,7 @@ WELSPECS
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert len(grupdf["DATE"].unique()) == 2
     print(grupdf)
@@ -724,7 +724,7 @@ def test_branprop_nodeprop(schstr, expected_dframe, check_columns):
     """Testing that the gruptree dataframe works correctly
     when the schedule string contains BRANPROP and NODEPROP
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     dframe = gruptree.df(deck).reset_index()
     expected_dframe.DATE = pd.to_datetime(expected_dframe.DATE)
     pd.testing.assert_frame_equal(
@@ -789,5 +789,5 @@ FIELD
 
 
     """
-    dframe = gruptree.df(EclFiles.str2deck(schstr))
+    dframe = gruptree.df(ResdataFiles.str2deck(schstr))
     assert gruptree.prettyprint(dframe).strip() == expected_prettyprint.strip()

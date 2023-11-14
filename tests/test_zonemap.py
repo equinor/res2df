@@ -14,13 +14,13 @@ REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_stdzoneslyr():
     """Test that we can read zones if the zonemap is in a standard location.
 
-    The eclfiles object defines what is the standard location for the file, while
+    The resdatafiles object defines what is the standard location for the file, while
     the actual parsing is done in res2df.common.parse_lyrfile() and
     converted to zonemap in common.convert_lyrlist_to_zonemap()
     """
-    eclfiles = res2df.EclFiles(REEK)
+    resdatafiles = res2df.ResdataFiles(REEK)
 
-    zonemap = eclfiles.get_zonemap()
+    zonemap = resdatafiles.get_zonemap()
     assert isinstance(zonemap, dict)
     assert zonemap[3] == "UpperReek"
     assert zonemap[10] == "MidReek"
@@ -37,8 +37,8 @@ def test_stdzoneslyr():
 def test_nonexistingzones():
     """Test an Eclipse case with non-existing zonemap (i.e. no zonemap file
     in the standard location)"""
-    eclfiles = res2df.EclFiles(REEK)
-    zonemap = eclfiles.get_zonemap("foobar")
+    resdatafiles = res2df.ResdataFiles(REEK)
+    zonemap = resdatafiles.get_zonemap("foobar")
     # (we got a warning and an empty dict)
     assert not zonemap
 
@@ -74,7 +74,7 @@ foo 2-1
 """,
         encoding="utf-8",
     )
-    assert res2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "From_layer higher than to_layer" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -85,7 +85,7 @@ foo   3- 4 #FFGGHH
 """,
         encoding="utf-8",
     )
-    assert res2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -96,7 +96,7 @@ foo   3- 4 bluez
 """,
         encoding="utf-8",
     )
-    assert res2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 bluez" in caplog.text
 
     lyrfile.write_text(
@@ -105,7 +105,7 @@ invalid 1-2-3
 """,
         encoding="utf-8",
     )
-    assert res2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
 
 
 def test_lyrlist_format(tmp_path):

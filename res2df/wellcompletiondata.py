@@ -11,7 +11,7 @@ import pyarrow
 import pyarrow.feather
 
 from res2df import common, compdat, getLogger_res2csv, wellconnstatus
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 from .common import write_dframe_stdout_file
 
@@ -33,7 +33,7 @@ class KHUnit(Enum):
 
 
 def df(
-    eclfiles: EclFiles,
+    resdatafiles: ResdataFiles,
     zonemap: Dict[int, str],
     use_wellconnstatus: bool = False,
     excl_well_startswith: Optional[str] = None,
@@ -49,14 +49,14 @@ def df(
     only.
 
     Args:
-        eclfiles; EclFiles object
+        resdatafiles; ResdataFiles object
         zonemap: dictionary with layer->zone mapping
         use_wellconnstatus: boolean
 
     Returns:
         pd.DataFrame with one row per unique combination of well, zone and date.
     """
-    compdat_df = compdat.df(eclfiles, zonemap=zonemap)
+    compdat_df = compdat.df(resdatafiles, zonemap=zonemap)
     if "ZONE" not in compdat_df.columns:
         logger.warning(
             "ZONE column not generated in compdat table. "
@@ -75,13 +75,13 @@ def df(
         compdat_df = _excl_well_startswith(compdat_df, excl_well_startswith)
 
     if use_wellconnstatus:
-        wellconnstatus_df = wellconnstatus.df(eclfiles)
+        wellconnstatus_df = wellconnstatus.df(resdatafiles)
         compdat_df = _merge_compdat_and_connstatus(compdat_df, wellconnstatus_df)
 
     compdat_df = _aggregate_layer_to_zone(compdat_df)
 
     # Add metadata as an attribute the dataframe
-    meta = _get_metadata(eclfiles)
+    meta = _get_metadata(resdatafiles)
     # Slice meta to dataframe columns:
     compdat_df.attrs["meta"] = {
         column_key: meta[column_key] for column_key in compdat_df if column_key in meta
@@ -90,7 +90,7 @@ def df(
     return compdat_df
 
 
-def _get_ecl_unit_system(eclfiles: EclFiles) -> EclipseUnitSystem:
+def _get_ecl_unit_system(resdatafiles: ResdataFiles) -> EclipseUnitSystem:
     """Returns the unit system of an eclipse deck. The options are \
     METRIC, FIELD, LAB and PVT-M.
 
@@ -98,16 +98,16 @@ def _get_ecl_unit_system(eclfiles: EclFiles) -> EclipseUnitSystem:
     default unit system in Eclipse.
     """
     unit_systems = [unitsystem.value for unitsystem in EclipseUnitSystem]
-    for keyword in eclfiles.get_ecldeck():
+    for keyword in resdatafiles.get_ecldeck():
         if keyword.name in unit_systems:
             return EclipseUnitSystem(keyword.name)
     return EclipseUnitSystem.METRIC
 
 
-def _get_metadata(eclfiles: EclFiles) -> Dict[str, Dict[str, Any]]:
+def _get_metadata(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for the well completion data export"""
     meta: Dict[str, Dict[str, str]] = {}
-    unitsystem = _get_ecl_unit_system(eclfiles)
+    unitsystem = _get_ecl_unit_system(resdatafiles)
     kh_units = {
         EclipseUnitSystem.METRIC: KHUnit.METRIC,
         EclipseUnitSystem.FIELD: KHUnit.FIELD,
@@ -288,14 +288,14 @@ def wellcompletiondata_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
 
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
     if not Path(args.zonemap).is_file():
         wellcompletiondata_df = pd.DataFrame()
         logger.info(f"Zonemap not found: {args.zonemap}")
     else:
         zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
         wellcompletiondata_df = df(
-            eclfiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
+            resdatafiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
         )
         logger.info(
             f"Well completion data successfully generated with zonemap: {zonemap}"

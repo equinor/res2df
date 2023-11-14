@@ -9,14 +9,14 @@ import numpy as np
 import pandas as pd
 
 from res2df import getLogger_res2csv, summary
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 from .common import write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
 
-def df(eclfiles: EclFiles) -> pd.DataFrame:
+def df(resdatafiles: ResdataFiles) -> pd.DataFrame:
     """Exctracts connection status history for each compdat connection that
     is included in the summary data on the form CPI:WELL,I,J,K. CPI stands for
     connection productivity index.
@@ -28,7 +28,7 @@ def df(eclfiles: EclFiles) -> pd.DataFrame:
 
     The output data set is very sparse compared to the CPI summary data.
     """
-    smry = summary.df(eclfiles, column_keys="CPI*")
+    smry = summary.df(resdatafiles, column_keys="CPI*")
     return _extract_status_changes(smry)
 
 
@@ -115,9 +115,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 def wellconnstatus_main(args):
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
-    eclfiles = EclFiles(args.DATAFILE)
+    resdatafiles = ResdataFiles(args.DATAFILE)
 
-    wellconnstatus_df = df(eclfiles)
+    wellconnstatus_df = df(resdatafiles)
     write_dframe_stdout_file(
         wellconnstatus_df, args.output, index=False, caller_logger=logger
     )

@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 
 from res2df import res2csv, wcon
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -24,8 +24,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 def test_wcon2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    wcondf = wcon.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    wcondf = wcon.df(resdatafiles.get_ecldeck())
 
     assert not wcondf.empty
     assert "DATE" in wcondf  # for all data
@@ -41,7 +41,7 @@ WCONHIST
   'FOO' 0 1 /
  /
 """
-    deck = EclFiles.str2deck(wconstr)
+    deck = ResdataFiles.str2deck(wconstr)
     wconhist_df = wcon.df(deck)
     pd.testing.assert_frame_equal(
         wconhist_df,
@@ -74,7 +74,7 @@ WCONINJH
   'FOO' 0 1 /
  /
 """
-    deck = EclFiles.str2deck(wconstr)
+    deck = ResdataFiles.str2deck(wconstr)
     wconinjh_df = wcon.df(deck)
     pd.testing.assert_frame_equal(
         wconinjh_df,
@@ -108,7 +108,7 @@ WCONINJE
   'FOO' 0 1 /
  /
 """
-    deck = EclFiles.str2deck(wconstr)
+    deck = ResdataFiles.str2deck(wconstr)
     wconinje_df = wcon.df(deck)
     pd.testing.assert_frame_equal(
         wconinje_df,
@@ -145,7 +145,7 @@ WCONPROD
   'FOO' 0 1 /
  /
 """
-    deck = EclFiles.str2deck(wconstr)
+    deck = ResdataFiles.str2deck(wconstr)
     wconprod_df = wcon.df(deck)
     pd.testing.assert_frame_equal(
         wconprod_df,
@@ -207,7 +207,7 @@ WCONHIST
   'OP1' 3000 /
 /
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     wcondf = wcon.df(deck)
     dates = [str(x) for x in wcondf["DATE"].unique()]
     assert len(dates) == 3

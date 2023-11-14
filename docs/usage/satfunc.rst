@@ -11,14 +11,14 @@ column.
 
 ..
   import numpy as np
-  satfunc.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).iloc[np.r_[0:5, 37:42, -5:0]].to_csv('docs/usage/satfunc.csv', index=False)
+  satfunc.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).iloc[np.r_[0:5, 37:42, -5:0]].to_csv('docs/usage/satfunc.csv', index=False)
 
 .. code-block:: python
 
-   from res2df import satfunc, EclFiles
+   from res2df import satfunc, ResdataFiles
 
-   eclfiles = EclFiles('MYDATADECK.DATA')
-   dframe = satfunc.df(eclfiles)
+   resdatafiles = ResdataFiles('MYDATADECK.DATA')
+   dframe = satfunc.df(resdatafiles)
 
 .. csv-table:: Example satfunc table (only a subset of the rows are shown)
    :file: satfunc.csv

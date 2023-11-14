@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 
 from res2df import faults, res2csv
-from res2df.eclfiles import EclFiles
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -26,8 +26,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS")
 
 def test_faults2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    faultsdf = faults.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    faultsdf = faults.df(resdatafiles.get_ecldeck())
 
     assert "NAME" in faultsdf
     assert "I" in faultsdf
@@ -46,7 +46,7 @@ FAULTS
   'B' 2 3 4 5 6 7 'J' /
 /
 """
-    deck = EclFiles.str2deck(deckstr)
+    deck = ResdataFiles.str2deck(deckstr)
     faultsdf = faults.df(deck)
 
     assert len(faultsdf) == 16
@@ -54,8 +54,8 @@ FAULTS
 
 def test_nofaults():
     """Test on a dataset with no faults"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    faultsdf = faults.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    faultsdf = faults.df(resdatafiles.get_ecldeck())
     assert faultsdf.empty
 
 
@@ -71,7 +71,7 @@ FAULTS
   'D' 2 2 4 4 10 10 'J' /
 /
 """
-    deck = EclFiles.str2deck(deckstr)
+    deck = ResdataFiles.str2deck(deckstr)
     faultsdf = faults.df(deck).set_index("NAME")
 
     assert len(faultsdf) == 23

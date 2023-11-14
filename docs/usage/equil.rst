@@ -9,9 +9,9 @@ Supported keywords are ``EQUIL``, ``RSVD``, ``RVVD``, ``PBVD`` and
 
 .. code-block:: python
 
-    from res2df import equil, EclFiles
+    from res2df import equil, ResdataFiles
 
-    dframe = equil.df(EclFiles('MYECLDECK.DATA'))
+    dframe = equil.df(ResdataFiles('MYECLDECK.DATA'))
 
 Which will provide a dataframe similar to the example below. Note that the column
 `Z` is used both for datum depth and the depth values in ``RSVD`` tables. The
@@ -19,7 +19,7 @@ amount of columns obtained depends on the input dataset, and should be possible
 to link up with the Eclipse documentation. API doc: :func:`res2df.equil.df`
 
 ..
-  dframe = equil.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))
+  dframe = equil.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA'))
   dframe[['EQLNUM', 'KEYWORD', 'Z', 'PRESSURE', 'OWC', 'GOC', 'RS']]\
   .to_csv(index=False))
 

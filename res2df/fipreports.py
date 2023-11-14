@@ -10,7 +10,7 @@ from typing import List, Optional, Union
 import numpy as np
 import pandas as pd
 
-from res2df import EclFiles, getLogger_res2csv
+from res2df import ResdataFiles, getLogger_res2csv
 from res2df.common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
@@ -97,7 +97,7 @@ def report_block_lineparser(line: str) -> tuple:
     )
 
 
-def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
+def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
     """
     Parses a PRT file from Eclipse and finds FIPXXXX REGION REPORT blocks and
     organizes those numbers into a dataframe
@@ -106,12 +106,12 @@ def df(prtfile: Union[str, EclFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
     DATE and region index added.
 
     Args:
-        prtfile: filename (PRT) or an EclFiles object
+        prtfile: filename (PRT) or an ResdataFiles object
         fipname: The name of the regport regions, FIPNUM, FIPZON or whatever
             Max length of the string is 8, the first three characters must be FIP,
             and the next 3 characters must be unique for a given Eclipse deck.
     """
-    if isinstance(prtfile, EclFiles):
+    if isinstance(prtfile, ResdataFiles):
         prtfile = prtfile.get_prtfilename()
     if not fipname.startswith("FIP"):
         raise ValueError("fipname must start with FIP")
@@ -217,6 +217,6 @@ def fipreports_main(args) -> None:
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:
-        prtfile = EclFiles(args.PRTFILE).get_prtfilename()
+        prtfile = ResdataFiles(args.PRTFILE).get_prtfilename()
     dframe = df(prtfile, args.fipname)
     write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)

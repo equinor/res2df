@@ -525,7 +525,7 @@ def df2ecl(
     for the actual string construction.
 
     Args:
-        dataframe: Dataframe with Eclipse data on res2df format.
+        dataframe: Dataframe with reservoir DATA on res2df format.
         keywords: List of keywords to include. Will be reduced
             to the set of keywords available in dataframe and to those supported
         comments: Dictionary indexed by keyword with comments to be

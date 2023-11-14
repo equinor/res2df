@@ -69,7 +69,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     Arguments:
         parser: argparse.ArgumentParser or argparse.subparser
     """
-    parser.add_argument("DATAFILE", help="Name of Eclipse DATA file.")
+    parser.add_argument("DATAFILE", help="Name of reservoir DATA file.")
     parser.add_argument(
         "-o",
         "--output",

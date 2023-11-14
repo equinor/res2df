@@ -35,7 +35,7 @@ available (here also wells from WELSPECS is included):
 
 .. code-block:: console
 
-    > ecl2csv gruptree --prettyprint MYDATADECK.DATA
+    > res2csv gruptree --prettyprint MYDATADECK.DATA
     Date: 2000-01-01
     └── NORTHSEA
         └── AREA

@@ -11,7 +11,7 @@ data format.
 
    introduction
    usage
-   ecl2csv
+   res2csv
    csv2ecl
    installation
    contribution

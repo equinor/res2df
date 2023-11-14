@@ -16,7 +16,7 @@ import pyarrow
 import pyarrow.feather
 from resdata.summary import Summary, SummaryKeyWordVector
 
-from res2df import getLogger_ecl2csv
+from res2df import getLogger_res2csv
 
 from . import parameters
 from .common import write_dframe_stdout_file
@@ -897,7 +897,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     eclbase = (
@@ -924,7 +924,7 @@ def summary_main(args) -> None:
 
 def summary_reverse_main(args) -> None:
     """Entry point for usage with "csv2ecl summary" on the command line"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
 

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import csv2ecl, ecl2csv, inferdims, satfunc
+from res2df import csv2ecl, inferdims, res2csv, satfunc
 from res2df.eclfiles import EclFiles
 
 try:
@@ -280,9 +280,9 @@ SGOF
     sgoffile = "__sgof_tmp.txt"
     Path(sgoffile).write_text(sgofstr, encoding="utf8")
     mocker.patch(
-        "sys.argv", ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
+        "sys.argv", ["res2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
     )
-    ecl2csv.main()
+    res2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
 
@@ -657,8 +657,8 @@ SGFN
 def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "satfunc.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "satfunc", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "satfunc", EIGHTCELLS, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -669,7 +669,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "satfunc",
             EIGHTCELLS,
             "--keywords",
@@ -678,7 +678,7 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile2),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile2).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile2))

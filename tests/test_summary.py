@@ -10,7 +10,7 @@ import pytest
 import yaml
 from resdata.summary import Summary
 
-from res2df import csv2ecl, ecl2csv, summary
+from res2df import csv2ecl, res2csv, summary
 from res2df.eclfiles import EclFiles
 from res2df.summary import (
     _df2pyarrow,
@@ -130,14 +130,14 @@ def test_summary2df_dates():
 
 
 @pytest.mark.integration
-def test_ecl2csv_summary(tmp_path, mocker):
-    """Test that the command line utility ecl2csv is installed and
+def test_res2csv_summary(tmp_path, mocker):
+    """Test that the command line utility res2csv is installed and
     works with summary data"""
     tmpcsvfile = tmp_path / "sum.csv"
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             "-v",
             REEK,
@@ -149,7 +149,7 @@ def test_ecl2csv_summary(tmp_path, mocker):
             "2003-01-02",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 97  # Includes timestamps
     assert str(disk_df["DATE"].values[0]) == "2002-01-02 00:00:00"
@@ -159,7 +159,7 @@ def test_ecl2csv_summary(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             REEK,
             "-o",
@@ -172,7 +172,7 @@ def test_ecl2csv_summary(tmp_path, mocker):
             "2003-01-02",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 366
     # Pandas' csv export writes datetime64 as pure date
@@ -198,9 +198,9 @@ def test_paramsupport(tmp_path, mocker):
         parameterstxt.unlink()
     parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
     mocker.patch(
-        "sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+        "sys.argv", ["res2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -213,9 +213,9 @@ def test_paramsupport(tmp_path, mocker):
         parametersyml.unlink()
     parametersyml.write_text(yaml.dump({"FOO": 1, "BAR": 3}), encoding="utf-8")
     mocker.patch(
-        "sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+        "sys.argv", ["res2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -258,7 +258,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             "--verbose",
             EIGHTCELLS,
@@ -268,7 +268,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
             str(randomparamfile),  # Absolute filepath
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert pd.read_csv(tmpcsvfile)["FOO"].unique() == ["barrbarr"]
     assert pd.read_csv(tmpcsvfile)["COM"].unique() == [1234]
 
@@ -278,7 +278,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             "--verbose",
             EIGHTCELLS,
@@ -288,15 +288,15 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
             Path(randomparamfile).name,  # A relative filepath
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert "FOO" not in pd.read_csv("smry_noparams.csv")
 
 
 def test_main_subparser(tmp_path, mocker):
     """Test command line interface with output to both CSV and arrow/feather."""
     tmpcsvfile = tmp_path / "sum.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -307,9 +307,9 @@ def test_main_subparser(tmp_path, mocker):
     tmparrowfile = tmp_path / "sum.arrow"
     mocker.patch(
         "sys.argv",
-        ["ecl2csv", "summary", "--arrow", EIGHTCELLS, "-o", str(tmparrowfile)],
+        ["res2csv", "summary", "--arrow", EIGHTCELLS, "-o", str(tmparrowfile)],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_arraydf = pyarrow.feather.read_table(tmparrowfile).to_pandas()
     assert "FOPT" in disk_arraydf
@@ -319,7 +319,7 @@ def test_main_subparser(tmp_path, mocker):
     mocker.patch(
         "sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
     )
-    ecl2csv.main()
+    res2csv.main()
     pd.testing.assert_frame_equal(
         disk_arraydf, pyarrow.feather.read_table(str(tmparrowfile_alt)).to_pandas()
     )
@@ -327,7 +327,7 @@ def test_main_subparser(tmp_path, mocker):
     # Not possible (yet?) to write arrow to stdout:
     mocker.patch("sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", "-"])
     with pytest.raises(SystemExit):
-        ecl2csv.main()
+        res2csv.main()
 
 
 def test_datenormalization():

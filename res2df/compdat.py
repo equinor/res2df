@@ -25,7 +25,7 @@ except ImportError:
     # Allow parts of res2df to work without OPM:
     pass
 
-from res2df import getLogger_ecl2csv
+from res2df import getLogger_res2csv
 
 from .common import (
     get_wells_matching_template,
@@ -970,7 +970,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     eclfiles = EclFiles(args.DATAFILE)

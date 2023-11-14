@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import EclFiles, compdat, ecl2csv
+from res2df import EclFiles, compdat, res2csv
 
 try:
     # pylint: disable=unused-import
@@ -291,9 +291,9 @@ def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "compdat.csv"
     mocker.patch(
-        "sys.argv", ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+        "sys.argv", ["res2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -303,7 +303,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "compdat",
             EIGHTCELLS,
             "--initvectors",
@@ -312,7 +312,7 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -322,7 +322,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "compdat",
             EIGHTCELLS,
             "--initvectors",
@@ -332,7 +332,7 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))

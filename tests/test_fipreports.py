@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import ecl2csv, fipreports
+from res2df import fipreports, res2csv
 from res2df.eclfiles import EclFiles
 from res2df.fipreports import report_block_lineparser as parser
 
@@ -440,9 +440,9 @@ def test_cmdline(tmp_path, mocker):
     tmpcsvfile = tmp_path / "TMP-fipreports.csv"
     mocker.patch(
         "sys.argv",
-        ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)],
+        ["res2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
@@ -454,7 +454,7 @@ def test_cmdline(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "fipreports",
             "--debug",
             DATAFILE,
@@ -462,19 +462,19 @@ def test_cmdline(tmp_path, mocker):
             "debugmode.csv",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("debugmode.csv"), disk_df)
 
     # Directly on PRT file:
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "fipreports",
             DATAFILE.replace("DATA", "PRT"),
             "--output",
             "fromprtfile.csv",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("fromprtfile.csv"), disk_df)

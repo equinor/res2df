@@ -9,7 +9,7 @@ input files --- or any other tool outputting to the same data format,
 f.ex. `flow <https://opm-project.org/?page_id=19>`_.
 
 Most of the features can be reached from the command line, through the
-command line program ``ecl2csv``. Use the command line tool to dump the
+command line program ``res2csv``. Use the command line tool to dump the
 extracted or computed data to a CSV file, and use any other tool to
 view the CSV data.
 
@@ -18,15 +18,15 @@ Examples
 
 .. code-block:: console
 
-    > ecl2csv --help
-    > ecl2csv summary --help
-    > ecl2csv summary --column_keys "F*" --time_index monthly --output output.csv MYECLDECK.DATA
-    > ecl2csv pillars --help
-    > ecl2csv pillars --rstdates all MYECLDECK.DATA
+    > res2csv --help
+    > res2csv summary --help
+    > res2csv summary --column_keys "F*" --time_index monthly --output output.csv MYECLDECK.DATA
+    > res2csv pillars --help
+    > res2csv pillars --rstdates all MYECLDECK.DATA
 
 If you access the module from within a Python script, for each submodule
 there is a function called ``df()`` which provides more or less the same
-functionality as through ``ecl2csv`` from the command line, but which returns
+functionality as through ``res2csv`` from the command line, but which returns
 a Pandas Dataframe.
 
 .. code-block:: python

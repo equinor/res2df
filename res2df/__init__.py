@@ -34,11 +34,11 @@ SUBMODULES: List[str] = [
 ]
 
 
-def getLogger_ecl2csv(
+def getLogger_res2csv(
     module_name: str = "res2df", args_dict: Optional[Dict[str, Union[str, bool]]] = None
 ) -> logging.Logger:
     # pylint: disable=invalid-name
-    """Provide a custom logger for ecl2csv and csv2ecl
+    """Provide a custom logger for res2csv and csv2ecl
 
     Logging output is by default split by logging levels (split between WARNING and
     ERROR) to stdout and stderr, each log occurs in only one of the streams.
@@ -91,5 +91,5 @@ def getLogger_ecl2csv(
     return logger
 
 
-for submodule in SUBMODULES + ["ecl2csv", "csv2ecl"]:
+for submodule in SUBMODULES + ["res2csv", "csv2ecl"]:
     importlib.import_module("res2df." + submodule)

@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Union
 import dateutil.parser
 import pandas as pd
 
-from res2df import EclFiles, common, getLogger_ecl2csv, grid
+from res2df import EclFiles, common, getLogger_res2csv, grid
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -411,7 +411,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def pillars_main(args) -> None:
     """This is the command line API"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
 

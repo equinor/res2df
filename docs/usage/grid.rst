@@ -29,8 +29,8 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
 .. code-block:: console
 
-  ecl2csv grid --help  # Will display some help text
-  ecl2csv grid MYDATADECK.DATA --rstdates last --verbose --output grid.csv
+  res2csv grid --help  # Will display some help text
+  res2csv grid MYDATADECK.DATA --rstdates last --verbose --output grid.csv
 
 
 Select which vectors to include (INIT and/or restart vectors) with the
@@ -38,7 +38,7 @@ Select which vectors to include (INIT and/or restart vectors) with the
 
 .. code-block:: console
 
-  ecl2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX
+  res2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX
 
 Example computations on a grid dataframe
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

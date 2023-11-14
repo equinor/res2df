@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from res2df import EclFiles, common, getLogger_ecl2csv, inferdims
+from res2df import EclFiles, common, getLogger_res2csv, inferdims
 
 try:
     # Needed for mypy
@@ -280,7 +280,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def pvt_main(args) -> None:
     """Entry-point for module, for command line utility for Eclipse to CSV"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     eclfiles = EclFiles(args.DATAFILE)
@@ -314,7 +314,7 @@ def pvt_main(args) -> None:
 
 def pvt_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     pvt_df = pd.read_csv(args.csvfile)

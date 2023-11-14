@@ -10,7 +10,7 @@ from typing import List, Optional, Union
 import numpy as np
 import pandas as pd
 
-from res2df import EclFiles, getLogger_ecl2csv
+from res2df import EclFiles, getLogger_res2csv
 from res2df.common import parse_ecl_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
@@ -211,7 +211,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fipreports_main(args) -> None:
     """Command line API"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     if args.PRTFILE.endswith(".PRT"):

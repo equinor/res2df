@@ -9,7 +9,7 @@ Typical usage is to generate the CSV from the command line:
 
 .. code-block:: console
 
-  ecl2csv rft MYDATADECK.DATA --verbose --output rft.csv
+  res2csv rft MYDATADECK.DATA --verbose --output rft.csv
 
 It is possible to a specific well, a date (YYYY-MM-DD). If you enable debug mode
 through ``--debug``, more information is printed, including an ASCII representation

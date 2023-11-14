@@ -19,13 +19,13 @@ except ImportError:
 @pytest.mark.integration
 def test_integration():
     """Test that all endpoints that are to be installed are installed"""
-    assert subprocess.check_output(["ecl2csv", "-h"])  # nosec
+    assert subprocess.check_output(["res2csv", "-h"])  # nosec
     assert subprocess.check_output(["csv2ecl", "-h"])  # nosec
 
     # The subparsers should exit "cleanly" with exit code 2 ("Incorrect usage")
     # when no more options are provided on the command line
     with pytest.raises(subprocess.CalledProcessError) as exception:
-        subprocess.check_output(["ecl2csv"])  # nosec
+        subprocess.check_output(["res2csv"])  # nosec
         assert exception.value.returncode == 2
     with pytest.raises(subprocess.CalledProcessError) as exception:
         subprocess.check_output(["csv2ecl"])  # nosec
@@ -34,7 +34,7 @@ def test_integration():
     #              why-does-pythons-argparse-use-an-error-code-of-2-for-systemexit
 
     for submodule in res2df.SUBMODULES:
-        helptext = subprocess.check_output(["ecl2csv", submodule, "-h"])
+        helptext = subprocess.check_output(["res2csv", submodule, "-h"])
         # Test that this option is hidden, the argument is only there
         # to support optional number of arguments in ERT forward models.
         assert "hiddenemptyplaceholders" not in str(helptext)

@@ -24,7 +24,7 @@ DATADIR = TESTDIR / "data/reek/eclipse/model"
 @pytest.mark.skipif(
     not HAVE_ERT, reason="ERT is not installed, skipping hook implementation tests."
 )
-def test_ecl2csv_through_ert(tmp_path):
+def test_res2csv_through_ert(tmp_path):
     """Test running the ERT executable on a mocked config file"""
     os.chdir(tmp_path)
 
@@ -57,25 +57,25 @@ def test_ecl2csv_through_ert(tmp_path):
 
     for subcommand in res2df.SUBMODULES:
         ert_config.append(
-            f"FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={subcommand}, "
+            f"FORWARD_MODEL RES2CSV(<SUBCOMMAND>={subcommand}, "
             f"<OUTPUT>={subcommand}.csv)"
         )
 
     # Test what we can also supply additional options for some submodules:
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=summary, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=summary, "
         '<OUTPUT>=summary-yearly.csv, <XARG1>="--time_index", <XARG2>=yearly)'
     )
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=equil, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=equil, "
         '<OUTPUT>=equil-rsvd.csv, <XARG1>="--keywords", <XARG2>="RSVD")'
     )
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=pvt, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=pvt, "
         '<OUTPUT>=pvt-custom.csv, <XARG1>="--keywords", <XARG2>="PVTO")'
     )
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=satfunc, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=satfunc, "
         '<OUTPUT>=satfunc-swof.csv, <XARG1>="--keywords", <XARG2>="SWOF")'
     )
 
@@ -89,7 +89,7 @@ def test_ecl2csv_through_ert(tmp_path):
         "<OUTPUT>=SUMYEARLY)"
     )
 
-    ert_config_filename = "ecl2csv_test.ert"
+    ert_config_filename = "res2csv_test.ert"
     Path(ert_config_filename).write_text("\n".join(ert_config), encoding="utf-8")
 
     subprocess.call(["ert", "test_run", ert_config_filename])
@@ -114,7 +114,7 @@ def test_job_documentation():
     """Test that for registered ERT forward models the documentation is non-empty"""
     if HAVE_ERT:
         assert (
-            type(jobs.job_documentation("ECL2CSV"))
+            type(jobs.job_documentation("RES2CSV"))
             == ert.shared.plugins.plugin_response.PluginResponse
         )
         assert (
@@ -123,7 +123,7 @@ def test_job_documentation():
         )
 
     else:
-        assert jobs.job_documentation("ECL2CSV") is None
+        assert jobs.job_documentation("RES2CSV") is None
         assert jobs.job_documentation("CSV2ECL") is None
 
     assert jobs.job_documentation("foobar") is None
@@ -137,9 +137,9 @@ def test_get_module_variable():
     # pylint: disable=protected-access
     assert jobs._get_module_variable_if_exists("foo", "bar") == ""
     assert jobs._get_module_variable_if_exists(
-        "res2df.ecl2csv", "DESCRIPTION"
+        "res2df.res2csv", "DESCRIPTION"
     ).startswith("Convert Eclipse input and output")
-    assert jobs._get_module_variable_if_exists("res2df.ecl2csv", "NOPE") == ""
+    assert jobs._get_module_variable_if_exists("res2df.res2csv", "NOPE") == ""
 
 
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")

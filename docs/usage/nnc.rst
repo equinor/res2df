@@ -29,7 +29,7 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
 .. code-block:: console
 
-  ecl2csv nnc MYDATADECK.DATA --verbose --output nnc.csv
+  res2csv nnc MYDATADECK.DATA --verbose --output nnc.csv
 
 It is possible to add *xyz* coordinates for each connection (as the
 average of the xyz for each of the cells involved in a connection pair) as

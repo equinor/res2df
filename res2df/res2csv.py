@@ -13,7 +13,7 @@ from res2df import __version__
 
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION: str = """Convert Eclipse input and output files into CSV files,
-with the command line utility ``ecl2csv``. Run ``ecl2csv --help`` to see
+with the command line utility ``res2csv``. Run ``res2csv --help`` to see
 which subcommands are supported.
 
 For supplying options to subcommands, you can use the arguments ``<XARGn>``
@@ -27,12 +27,12 @@ EXAMPLES: str = """
 Outputting the EQUIL data from an Eclipse deck. The ECLBASE variable from your
 ERT config is supplied implicitly::
 
-   FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
+   FORWARD_MODEL res2csv(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
 
 For a yearly summary export of the realization, options have to be supplied
 with the XARG options::
 
-  FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=summary, <OUTPUT>=yearly.csv, <XARG1>="--time_index", <XARG2>="yearly")
+  FORWARD_MODEL res2csv(<SUBCOMMAND>=summary, <OUTPUT>=yearly.csv, <XARG1>="--time_index", <XARG2>="yearly")
 
 The quotes around double-dashed options are critical to avoid ERT taking for a
 comment. For more options, use ``<XARG3>`` etc.
@@ -44,7 +44,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "ecl2csv (" + __version__ + ") is a command line frontend to res2df. "
+            "res2csv (" + __version__ + ") is a command line frontend to res2df. "
             "Documentation at https://equinor.github.io/res2df/ "
         ),
     )

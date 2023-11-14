@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import ecl2csv, faults
+from res2df import faults, res2csv
 from res2df.eclfiles import EclFiles
 
 try:
@@ -82,8 +82,8 @@ FAULTS
 def test_main_subparser(tmp_path, mocker):
     """Test command line interface with subparsers"""
     tmpcsvfile = tmp_path / "faultsdf.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "faults", REEK, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "faults", REEK, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -93,7 +93,7 @@ def test_main_subparser(tmp_path, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "faults", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
+        ["res2csv", "faults", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty

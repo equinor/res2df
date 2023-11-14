@@ -8,7 +8,7 @@ from typing import Any, List, Tuple
 import numpy as np
 import pandas as pd
 
-from res2df import getLogger_ecl2csv, summary
+from res2df import getLogger_res2csv, summary
 from res2df.eclfiles import EclFiles
 
 from .common import write_dframe_stdout_file
@@ -114,7 +114,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def wellconnstatus_main(args):
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_res2csv(__name__, vars(args))
     eclfiles = EclFiles(args.DATAFILE)
 
     wellconnstatus_df = df(eclfiles)

@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 from resdata.resfile import ResdataFile
 
-from res2df import getLogger_ecl2csv
+from res2df import getLogger_res2csv
 
 from .common import merge_zones, write_dframe_stdout_file
 from .eclfiles import EclFiles
@@ -674,7 +674,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def rft_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     if args.DATAFILE.endswith(".RFT"):

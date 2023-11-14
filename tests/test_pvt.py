@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import csv2ecl, ecl2csv, pvt
+from res2df import csv2ecl, pvt, res2csv
 from res2df.eclfiles import EclFiles
 
 try:
@@ -395,9 +395,9 @@ def test_main(tmp_path, mocker):
     os.chdir(tmp_path)
     tmpcsvfile = tmp_path / "pvt.csv"
     mocker.patch(
-        "sys.argv", ["ecl2csv", "pvt", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+        "sys.argv", ["res2csv", "pvt", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
@@ -428,8 +428,8 @@ def test_main(tmp_path, mocker):
     """,
         encoding="utf8",
     )
-    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "pvto.inc", "-o", "pvto.csv"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "pvt", "-v", "pvto.inc", "-o", "pvto.csv"])
+    res2csv.main()
     assert Path("pvto.csv").is_file()
 
     # Empty data:
@@ -440,8 +440,8 @@ def test_main(tmp_path, mocker):
     """,
         encoding="utf8",
     )
-    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "empty.inc", "-o", "empty.csv"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "pvt", "-v", "empty.inc", "-o", "empty.csv"])
+    res2csv.main()
     assert not Path("empty.csv").read_text(encoding="utf8").strip()
 
 
@@ -449,14 +449,14 @@ def test_magic_stdout(tmp_path):
     """Test writing dataframes and include files to stdout"""
     os.chdir(tmp_path)
     result = subprocess.run(
-        ["ecl2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
+        ["res2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty
 
     # Verbose options should not ruin it:
     result = subprocess.run(
-        ["ecl2csv", "pvt", "--verbose", "-o", "-", EIGHTCELLS],
+        ["res2csv", "pvt", "--verbose", "-o", "-", EIGHTCELLS],
         check=True,
         stdout=subprocess.PIPE,
     )

@@ -9,7 +9,7 @@ from these tables:
 This table found in a PRT file will be parsed to the following dataframe:
 
 ..
-  Generated with ecl2csv fipreports -v --fipname FIPZON fipreports-example.PRT -o fipreports-example.csv
+  Generated with res2csv fipreports -v --fipname FIPZON fipreports-example.PRT -o fipreports-example.csv
   Date added manually
 
 .. csv-table:: FIPZON table from PRT file
@@ -19,7 +19,7 @@ This table found in a PRT file will be parsed to the following dataframe:
 In this particular example, ``FIPZON`` was selected explicitly, either using the command line client or the Python API
 through an option to the :func:`res2df.fipreports.df` function.
 
-Using this module is easiest through ``ecl2csv fipreports``.
+Using this module is easiest through ``res2csv fipreports``.
 
 
 

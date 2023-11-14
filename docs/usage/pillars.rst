@@ -57,13 +57,13 @@ saturation above sgascutoff, among those pillars with at least one cell above
 ``swatcutoff``. See the API documentation,
 :func:`res2df.pillars.compute_pillar_contacts`.
 
-The functionality is also available through the command line tool ``ecl2csv pillars``
+The functionality is also available through the command line tool ``res2csv pillars``
 as in the example:
 
 .. code-block:: console
 
-   ecl2csv pillars --help  # This will display some help text
-   ecl2csv pillars MYDATAFILE.DATA --rstdates all --stackdates
+   res2csv pillars --help  # This will display some help text
+   res2csv pillars MYDATAFILE.DATA --rstdates all --stackdates
 
 It is *strongly* recommended to play with the cutoffs to get the desired result.
 Also calibrate the computed contacts with the initial contacts, you may see that

@@ -20,7 +20,7 @@ The package consists of a module pr. datatype, e.g. one module for summary
 files (.UNSMRY), one for completion data etc.
 
 There is a command line frontend for almost all functionality, called
-`ecl2csv`, which converts the Eclipse data to DataFrames, and then dumps
+`res2csv`, which converts the Eclipse data to DataFrames, and then dumps
 the dataframes to files in CSV format, and a similar `csv2ecl` for the
 reverse operation.
 

@@ -28,7 +28,7 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
 .. code-block:: console
 
-  ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv
+  res2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv
 
 It is possible to extract keywords one at a time using the ``--keywords`` command
 line option.

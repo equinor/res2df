@@ -33,7 +33,7 @@ command line:
 
 .. code-block:: console
 
-   ecl2csv trans MYDATADECK.DATA --verbose --output trans.csv
+   res2csv trans MYDATADECK.DATA --verbose --output trans.csv
 
 Adding more data for each connection
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -121,5 +121,5 @@ where this last table can also be exported directly from the command line using
 
 .. code-block:: console
 
-   ecl2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv
+   res2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv
 

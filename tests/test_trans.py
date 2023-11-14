@@ -13,7 +13,7 @@ except ImportError:
 
 import pandas as pd
 
-from res2df import ecl2csv, trans
+from res2df import res2csv, trans
 from res2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -97,9 +97,9 @@ def test_main(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "trans.csv"
     mocker.patch(
-        "sys.argv", ["ecl2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+        "sys.argv", ["res2csv", "trans", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty

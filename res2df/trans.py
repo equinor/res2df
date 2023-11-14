@@ -10,7 +10,7 @@ import pandas as pd
 
 import res2df.grid
 import res2df.nnc
-from res2df import getLogger_ecl2csv
+from res2df import getLogger_res2csv
 from res2df.common import write_dframe_stdout_file
 
 from .eclfiles import EclFiles
@@ -303,7 +303,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def trans_main(args):
     """This is the command line API"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     eclfiles = EclFiles(args.DATAFILE)

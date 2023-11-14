@@ -68,8 +68,8 @@ setup(
     entry_points={
         "console_scripts": [
             "csv2ecl=res2df.csv2ecl:main",
-            "ecl2csv=res2df.ecl2csv:main",
-            "ecl2arrow=res2df.ecl2csv:main",
+            "res2csv=res2df.res2csv:main",
+            "ecl2arrow=res2df.res2csv:main",
         ],
         "ert": ["res2df_jobs = res2df.hook_implementations.jobs"],
     },

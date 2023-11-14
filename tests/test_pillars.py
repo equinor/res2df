@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import ecl2csv, grid, pillars
+from res2df import grid, pillars, res2csv
 from res2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -326,8 +326,8 @@ def test_compute_volumes(dframe, datestr, expectedrows):
 def test_main(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "pillars.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "pillars", REEK, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "pillars", REEK, "-o", str(tmpcsvfile)])
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
@@ -338,7 +338,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -348,7 +348,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of grouping
@@ -362,7 +362,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -371,7 +371,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
@@ -383,7 +383,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -393,7 +393,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of grouping
@@ -404,7 +404,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -416,7 +416,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
@@ -433,7 +433,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -445,7 +445,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
@@ -462,7 +462,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -474,7 +474,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
@@ -489,7 +489,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -502,7 +502,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" not in disk_df  # because of region averaging
@@ -519,7 +519,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             REEK,
             "--region",
@@ -531,7 +531,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df
@@ -545,7 +545,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "pillars",
             "-v",
             REEK,
@@ -556,7 +556,7 @@ def test_main(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "PILLAR" in disk_df

@@ -8,7 +8,7 @@ import pandas as pd
 import pyarrow
 import pytest
 
-from res2df import common, ecl2csv, grid
+from res2df import common, grid, res2csv
 from res2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -421,7 +421,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "grid",
             EIGHTCELLS,
             "-o",
@@ -432,7 +432,7 @@ def test_main(tmp_path, mocker):
             "PORO",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
@@ -442,7 +442,7 @@ def test_main(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "grid",
             "--verbose",
             EIGHTCELLS,
@@ -455,7 +455,7 @@ def test_main(tmp_path, mocker):
             "PERMX",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
@@ -465,9 +465,9 @@ def test_main(tmp_path, mocker):
 
     # Test with constants dropping
     mocker.patch(
-        "sys.argv", ["ecl2csv", "grid", REEK, "-o", str(tmpcsvfile), "--dropconstants"]
+        "sys.argv", ["res2csv", "grid", REEK, "-o", str(tmpcsvfile), "--dropconstants"]
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     # That PVTNUM is constant is a particular feature
@@ -480,15 +480,15 @@ def test_main_arrow(tmp_path, mocker):
     """Check that we can export grid in arrow format"""
     mocker.patch(
         "sys.argv",
-        ["ecl2csv", "grid", "--arrow", EIGHTCELLS, "-o", str(tmp_path / "grid.arrow")],
+        ["res2csv", "grid", "--arrow", EIGHTCELLS, "-o", str(tmp_path / "grid.arrow")],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     # Obtain the CSV version for comparison:
     mocker.patch(
-        "sys.argv", ["ecl2csv", "grid", EIGHTCELLS, "-o", str(tmp_path / "grid.csv")]
+        "sys.argv", ["res2csv", "grid", EIGHTCELLS, "-o", str(tmp_path / "grid.csv")]
     )
-    ecl2csv.main()
+    res2csv.main()
 
     # Read from disk and verify similarity
     disk_frame_arrow = pyarrow.feather.read_table(tmp_path / "grid.arrow").to_pandas()

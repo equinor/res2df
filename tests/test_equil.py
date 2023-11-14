@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import csv2ecl, ecl2csv, equil
+from res2df import csv2ecl, equil, res2csv
 from res2df.eclfiles import EclFiles
 
 try:
@@ -440,8 +440,8 @@ RSVD
  60 1000 /"""
     rsvd_df = equil.df(deckstr)
     Path("rsvd.inc").write_text(deckstr, encoding="utf8")
-    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "rsvd.inc", "-o", "rsvd.csv"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "equil", "-v", "rsvd.inc", "-o", "rsvd.csv"])
+    res2csv.main()
     rsvd_df_fromcsv = pd.read_csv("rsvd.csv")
     pd.testing.assert_frame_equal(rsvd_df, rsvd_df_fromcsv)
 
@@ -541,8 +541,8 @@ def test_main_subparser(tmp_path, mocker):
     """Test command line interface"""
     os.chdir(tmp_path)
     tmpcsvfile = "equil.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", REEK, "-o", tmpcsvfile])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "equil", "-v", REEK, "-o", tmpcsvfile])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
@@ -588,8 +588,8 @@ PORO
 """,
         encoding="utf8",
     )
-    mocker.patch("sys.argv", ["ecl2csv", "equil", "-v", "poro.inc", "-o", "empty.csv"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "equil", "-v", "poro.inc", "-o", "empty.csv"])
+    res2csv.main()
     assert not Path("empty.csv").read_text(encoding="utf8").strip()
 
 

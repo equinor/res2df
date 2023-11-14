@@ -19,7 +19,7 @@ try:
 except ImportError:
     pass
 
-from res2df import EclFiles, getLogger_ecl2csv
+from res2df import EclFiles, getLogger_res2csv
 from res2df.common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
@@ -447,7 +447,7 @@ def prettyprint(dframe: pd.DataFrame) -> str:
 
 def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     if not args.output and not args.prettyprint:

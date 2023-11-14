@@ -25,7 +25,7 @@ try:
 except ImportError:
     pass
 
-from res2df import common, getLogger_ecl2csv, inferdims
+from res2df import common, getLogger_res2csv, inferdims
 
 from .common import write_dframe_stdout_file
 from .eclfiles import EclFiles
@@ -189,7 +189,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def satfunc_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     eclfiles = EclFiles(args.DATAFILE)
@@ -222,7 +222,7 @@ def satfunc_main(args) -> None:
 
 def satfunc_reverse_main(args) -> None:
     """For command line utility for CSV to Eclipse"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     satfunc_df = pd.read_csv(args.csvfile)

@@ -25,7 +25,7 @@ try:
 except ImportError:
     pass
 
-from res2df import EclFiles, common, getLogger_ecl2csv
+from res2df import EclFiles, common, getLogger_res2csv
 
 from . import _vfpinj as vfpinj
 from . import _vfpprod as vfpprod
@@ -482,7 +482,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def vfp_main(args) -> None:
     """Entry-point for module, for command line utility."""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     if args.keyword:
@@ -524,7 +524,7 @@ def vfp_main(args) -> None:
 
 def vfp_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     vfp_df = pd.read_csv(args.csvfile)

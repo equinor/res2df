@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import ecl2csv, rft
+from res2df import res2csv, rft
 from res2df.eclfiles import EclFiles
 
 TESTDIR = Path(__file__).absolute().parent
@@ -489,8 +489,8 @@ def test_rft2df():
 def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / ".TMP-rft.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "rft", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "rft", EIGHTCELLS, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -509,7 +509,7 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert not disk_df.empty
@@ -519,9 +519,9 @@ def test_main_debugmode(tmp_path, mocker):
     """Test debug mode"""
     os.chdir(tmp_path)
     mocker.patch(
-        "sys.argv", ["ecl2csv", "rft", "--debug", EIGHTCELLS, "-o", "indebugmode.csv"]
+        "sys.argv", ["res2csv", "rft", "--debug", EIGHTCELLS, "-o", "indebugmode.csv"]
     )
-    ecl2csv.main()
+    res2csv.main()
     # Extra files emitted in debug mode:
     assert not pd.read_csv("con.csv").empty
     assert Path("seg.csv").exists()  # too simple example data, no segments.

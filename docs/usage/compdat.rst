@@ -39,5 +39,5 @@ be added to the returned data through the option ``--initvectors``:
 
 .. code-block:: console
 
-   ecl2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX
+   res2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX
    # (put the DATA file first, if not it will be interpreted as a vector)

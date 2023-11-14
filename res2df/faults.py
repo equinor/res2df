@@ -10,7 +10,7 @@ from typing import Union
 
 import pandas as pd
 
-from res2df import EclFiles, getLogger_ecl2csv
+from res2df import EclFiles, getLogger_res2csv
 from res2df.common import parse_opmio_deckrecord, write_dframe_stdout_file
 
 try:
@@ -83,7 +83,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def faults_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    logger = getLogger_ecl2csv(  # pylint: disable=redefined-outer-name
+    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
     eclfiles = EclFiles(args.DATAFILE)

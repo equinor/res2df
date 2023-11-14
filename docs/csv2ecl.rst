@@ -6,7 +6,7 @@ from dataframes (in the format dumped by res2df). This makes it possible
 to produce Eclipse input data in any application that can write CSV files,
 and use this tool to convert it into Eclipse include files, or it can
 facilitate operations/manipulations of an existing deck using any tool
-that can work on CSV files, by first running ecl2csv on an input file,
+that can work on CSV files, by first running res2csv on an input file,
 transforming it, and writing back using csv2ecl.
 
 Mandatory argument for csv2ecl is

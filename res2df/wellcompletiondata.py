@@ -10,7 +10,7 @@ import pandas as pd
 import pyarrow
 import pyarrow.feather
 
-from res2df import common, compdat, getLogger_ecl2csv, wellconnstatus
+from res2df import common, compdat, getLogger_res2csv, wellconnstatus
 from res2df.eclfiles import EclFiles
 
 from .common import write_dframe_stdout_file
@@ -286,7 +286,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def wellcompletiondata_main(args):
     """Entry-point for module, for command line utility"""
-    logger = getLogger_ecl2csv(__name__, vars(args))
+    logger = getLogger_res2csv(__name__, vars(args))
 
     eclfiles = EclFiles(args.DATAFILE)
     if not Path(args.zonemap).is_file():

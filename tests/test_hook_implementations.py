@@ -23,7 +23,7 @@ import res2df.hook_implementations.jobs
 def fixture_expected_jobs(path_to_res2df: Path) -> Dict[str, Path]:
     """Dictionary of installed jobs with location to job configuration"""
     expected_job_names = [
-        "ECL2CSV",
+        "RES2CSV",
         "CSV2ECL",
     ]
     return {name: path_to_res2df / "config_jobs" / name for name in expected_job_names}

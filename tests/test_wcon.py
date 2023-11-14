@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import ecl2csv, wcon
+from res2df import res2csv, wcon
 from res2df.eclfiles import EclFiles
 
 try:
@@ -219,8 +219,8 @@ WCONHIST
 def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / ".TMP-wcondf.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "wcon", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "wcon", EIGHTCELLS, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -230,7 +230,7 @@ def test_main_subparsers(tmp_path, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "wcon", "-v", "-o", "-", EIGHTCELLS],
+        ["res2csv", "wcon", "-v", "-o", "-", EIGHTCELLS],
         check=True,
         stdout=subprocess.PIPE,
     )

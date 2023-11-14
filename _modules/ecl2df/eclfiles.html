@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.17.3.dev3+g7d9a800a documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev3+g7d9a800a
+                0.17.3.dev4+g798ee622
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -98,10 +98,10 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">HAVE_OPM</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="kn">from</span> <span class="nn">ecl</span> <span class="kn">import</span> <span class="n">EclFileFlagEnum</span>
-<span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="kn">import</span> <span class="n">EclFile</span>
-<span class="kn">from</span> <span class="nn">ecl.grid</span> <span class="kn">import</span> <span class="n">EclGrid</span>
-<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="kn">import</span> <span class="n">EclSum</span>
+<span class="kn">from</span> <span class="nn">resdata.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span> <span class="nn">resdata.rd_util</span> <span class="kn">import</span> <span class="n">FileMode</span>
+<span class="kn">from</span> <span class="nn">resdata.resfile</span> <span class="kn">import</span> <span class="n">ResdataFile</span>
+<span class="kn">from</span> <span class="nn">resdata.summary</span> <span class="kn">import</span> <span class="n">Summary</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">common</span>
 
@@ -129,7 +129,7 @@
 <span class="sd">    Class for holding an Eclipse deck with result files</span>
 
 <span class="sd">    Exists only for convenience, so that loading of</span>
-<span class="sd">    EclFile/EclSum objects is easy for users, and with</span>
+<span class="sd">    ResdataFile/Summary objects is easy for users, and with</span>
 <span class="sd">    caching if wanted.</span>
 
 <span class="sd">    Various functions that needs some of the Eclipse output</span>
@@ -153,14 +153,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">=</span> <span class="n">eclbase</span>
 
         <span class="c1"># Set class variables to None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be EclFile</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be EclFile</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be EclSum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be ResdataFile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be ResdataFile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be Summary</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be EclGrid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Should be Grid</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># EclFile</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># EclFile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ResdataFile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ResdataFile</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -196,8 +196,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to convert standalone files into opm.io Deck objects&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EclFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_egrid"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_egrid">[docs]</a>    <span class="k">def</span> <span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclGrid</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return EGRID file as an EclGrid object&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EclFiles.get_egrid"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_egrid">[docs]</a>    <span class="k">def</span> <span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return EGRID file as an Grid object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span><span class="p">:</span>
             <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.EGRID&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -205,11 +205,11 @@
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">egridfilename</span>
                 <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening grid data from EGRID file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="n">EclGrid</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_egridfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_egridfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a EclFile object</span>
+<div class="viewcode-block" id="EclFiles.get_egridfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_egridfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a ResdataFile object</span>
 
 <span class="sd">        This gives access to data vectors defined on the grid.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span><span class="p">:</span>
@@ -219,15 +219,13 @@
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">egridfilename</span>
                 <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening data vectors from EGRID file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">egridfilename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span>
-                <span class="n">egridfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">EclFileFlagEnum</span><span class="o">.</span><span class="n">ECL_FILE_CLOSE_STREAM</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_eclsum"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_eclsum">[docs]</a>    <span class="k">def</span> <span class="nf">get_eclsum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclSum</span><span class="p">:</span>
+<div class="viewcode-block" id="EclFiles.get_eclsum"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_eclsum">[docs]</a>    <span class="k">def</span> <span class="nf">get_eclsum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the summary file and</span>
-<span class="sd">        return as EclSum object</span>
+<span class="sd">        return as Summary object</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            include_restart: Sent to libecl for whether restart files</span>
@@ -240,11 +238,11 @@
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">smryfilename</span>
                 <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening UNSMRY file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">smryfilename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="n">EclSum</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_initfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_initfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the INIT file as an EclFile object&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EclFiles.get_initfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_initfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the INIT file as an ResdataFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span><span class="p">:</span>
             <span class="n">initfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.INIT&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">initfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -252,13 +250,11 @@
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">initfilename</span>
                 <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening INIT file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">initfilename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span>
-                <span class="n">initfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">EclFileFlagEnum</span><span class="o">.</span><span class="n">ECL_FILE_CLOSE_STREAM</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">initfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_rftfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_rftfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the RFT file as an EclFile object&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EclFiles.get_rftfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_rftfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the RFT file as an ResdataFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span><span class="p">:</span>
             <span class="n">rftfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.RFT&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -266,13 +262,11 @@
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">rftfilename</span>
                 <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening RFT file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rftfilename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span>
-                <span class="n">rftfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">EclFileFlagEnum</span><span class="o">.</span><span class="n">ECL_FILE_CLOSE_STREAM</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span></div>
 
-<div class="viewcode-block" id="EclFiles.get_rstfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_rstfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclFile</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the UNRST file as an EclFile object&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EclFiles.get_rstfile"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_rstfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the UNRST file as an ResdataFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span><span class="p">:</span>
             <span class="n">rstfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -280,9 +274,7 @@
                     <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">),</span> <span class="n">rstfilename</span>
                 <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Opening RST file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rstfilename</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="n">EclFile</span><span class="p">(</span>
-                <span class="n">rstfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">EclFileFlagEnum</span><span class="o">.</span><span class="n">ECL_FILE_CLOSE_STREAM</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span></div>
 
 <div class="viewcode-block" id="EclFiles.get_rstfilename"><a class="viewcode-back" href="../../ecl2df/ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles.get_rstfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -299,7 +291,7 @@
 <span class="sd">        for this function.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># This is necessary for garbage collection to close the EclSum file:</span>
+        <span class="c1"># This is necessary for garbage collection to close the Summary file:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eclsum</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="kc">None</span></div>

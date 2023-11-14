@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.17.3.dev3+g7d9a800a documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev3+g7d9a800a
+                0.17.3.dev4+g798ee622
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -167,7 +167,7 @@ frequency.</p></li>
 <dt class="sig sig-object py" id="ecl2df.summary.df">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.df" title="Permalink to this definition"></a></dt>
 <dd><p>Extract data from UNSMRY as Pandas dataframes.</p>
-<p>This is a thin wrapper for EclSum.pandas_frame, by adding
+<p>This is a thin wrapper for Summary.pandas_frame, by adding
 support for string mnenomics for the time index.</p>
 <p>The dataframe is always indexed by DATE, and the datatype for the
 index will usually be datetime64[ns] as long as all dates are
@@ -178,7 +178,7 @@ is always named “DATE”.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eclfiles</strong> (<a class="reference internal" href="ecl2df.eclfiles.html#ecl2df.eclfiles.EclFiles" title="ecl2df.eclfiles.EclFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code></a>) – EclFiles object representing the Eclipse deck. Alternatively
-an EclSum object.</p></li>
+an Summary object.</p></li>
 <li><p><strong>time_index</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – string indicating a resampling frequency,
 ‘yearly’, ‘monthly’, ‘daily’, ‘last’ or ‘raw’, the latter will
 return the simulated report steps (also default).
@@ -213,19 +213,19 @@ column_keys are not existing.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.summary.df2eclsum">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.summary.</span></span><span class="sig-name descname"><span class="pre">df2eclsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SYNTHETIC'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/summary.html#df2eclsum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.summary.df2eclsum" title="Permalink to this definition"></a></dt>
-<dd><p>Convert a dataframe to an EclSum object</p>
+<dd><p>Convert a dataframe to an Summary object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with a DATE colum (or with the
 dates/datetimes in the index).</p></li>
-<li><p><strong>casename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of Eclipse casename/basename to be used for the EclSum object
-If the EclSum object is later written to disk, this will be used
+<li><p><strong>casename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of Eclipse casename/basename to be used for the Summary object
+If the Summary object is later written to disk, this will be used
 to construct the filenames.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclSum</span></code></p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,7 +264,7 @@ can be returned, on the same date range. Incoming dates can also be cropped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eclsumsdates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]) – list of datetimes, typically coming from EclSum.dates</p></li>
+<li><p><strong>eclsumsdates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]) – list of datetimes, typically coming from Summary.dates</p></li>
 <li><p><strong>freq</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – string denoting requested frequency for
 the returned list of datetime. ‘raw’ will
 return the input datetimes (no resampling).
@@ -298,7 +298,7 @@ normalized dates. Overridden if freq is ‘last’.</p></li>
 <dd><p>Provide metadata for summary data vectors.</p>
 <p>A dictionary indexed by summary vector name is returned, and each
 value is dictionary with the metadata types provided by the underlying
-EclSum object:
+Summary object:
 :rtype: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 <ul class="simple">
 <li><p>unit (string)</p></li>

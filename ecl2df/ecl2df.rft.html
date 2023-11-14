@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.rft &mdash; ecl2df 0.17.3.dev3+g7d9a800a documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev3+g7d9a800a
+                0.17.3.dev4+g798ee622
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -238,7 +238,7 @@ and row count will be the number of segments defined in WELSEGS</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rftrecord</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Data for one RFT record, provided by rftrecords()</p></li>
-<li><p><strong>rftfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code>) – </p></li>
+<li><p><strong>rftfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFile</span></code>) – </p></li>
 <li><p><strong>datatype</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Either “CON” or “SEG”</p></li>
 </ul>
 </dd>
@@ -337,14 +337,14 @@ the columns SEGIDX, SEGNXT</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ecl2df.rft.rftrecords">
 <span class="sig-prename descclassname"><span class="pre">ecl2df.rft.</span></span><span class="sig-name descname"><span class="pre">rftrecords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rftfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/rft.html#rftrecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.rft.rftrecords" title="Permalink to this definition"></a></dt>
-<dd><p>Generator for looping over RFT records in a EclFile object.</p>
+<dd><p>Generator for looping over RFT records in a ResdataFile object.</p>
 <dl class="simple">
 <dt>Each returned RFT record is represented as a dict with the keys:</dt><dd><p>headers: pd.DataFrame, indexed by recordname</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file.</strong> (<em>EclFile made from a binary RFT</em>) – </p>
+<dd class="field-odd"><p><strong>file.</strong> (<em>ResdataFile made from a binary RFT</em>) – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>

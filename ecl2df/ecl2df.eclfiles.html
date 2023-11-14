@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.eclfiles &mdash; ecl2df 0.17.3.dev3+g7d9a800a documentation</title>
+  <title>ecl2df.eclfiles &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev3+g7d9a800a
+                0.17.3.dev4+g798ee622
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -129,7 +129,7 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ecl2df.eclfiles.</span></span><span class="sig-name descname"><span class="pre">EclFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclbase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles" title="Permalink to this definition"></a></dt>
 <dd><p>Class for holding an Eclipse deck with result files</p>
 <p>Exists only for convenience, so that loading of
-EclFile/EclSum objects is easy for users, and with
+ResdataFile/Summary objects is easy for users, and with
 caching if wanted.</p>
 <p>Various functions that needs some of the Eclipse output
 (or input file) should be able to ask this class, and
@@ -173,14 +173,14 @@ for this function.</p>
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.get_eclsum">
 <span class="sig-name descname"><span class="pre">get_eclsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_eclsum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_eclsum" title="Permalink to this definition"></a></dt>
 <dd><p>Find and return the summary file and
-return as EclSum object</p>
+return as Summary object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>include_restart</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Sent to libecl for whether restart files
 should be traversed.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclSum</span></code></p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -188,10 +188,10 @@ should be traversed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.get_egrid">
 <span class="sig-name descname"><span class="pre">get_egrid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_egrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_egrid" title="Permalink to this definition"></a></dt>
-<dd><p>Find and return EGRID file as an EclGrid object</p>
+<dd><p>Find and return EGRID file as an Grid object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclGrid</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,11 +199,11 @@ should be traversed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.get_egridfile">
 <span class="sig-name descname"><span class="pre">get_egridfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_egridfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_egridfile" title="Permalink to this definition"></a></dt>
-<dd><p>Find and return the EGRID file as a EclFile object</p>
+<dd><p>Find and return the EGRID file as a ResdataFile object</p>
 <p>This gives access to data vectors defined on the grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFile</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -211,10 +211,10 @@ should be traversed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.get_initfile">
 <span class="sig-name descname"><span class="pre">get_initfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_initfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_initfile" title="Permalink to this definition"></a></dt>
-<dd><p>Find and return the INIT file as an EclFile object</p>
+<dd><p>Find and return the INIT file as an ResdataFile object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFile</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,10 +244,10 @@ should be traversed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.get_rftfile">
 <span class="sig-name descname"><span class="pre">get_rftfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_rftfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_rftfile" title="Permalink to this definition"></a></dt>
-<dd><p>Find and return the RFT file as an EclFile object</p>
+<dd><p>Find and return the RFT file as an ResdataFile object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFile</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -255,10 +255,10 @@ should be traversed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ecl2df.eclfiles.EclFiles.get_rstfile">
 <span class="sig-name descname"><span class="pre">get_rstfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ecl2df/eclfiles.html#EclFiles.get_rstfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ecl2df.eclfiles.EclFiles.get_rstfile" title="Permalink to this definition"></a></dt>
-<dd><p>Find and return the UNRST file as an EclFile object</p>
+<dd><p>Find and return the UNRST file as an ResdataFile object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">EclFile</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFile</span></code></p>
 </dd>
 </dl>
 </dd></dl>

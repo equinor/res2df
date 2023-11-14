@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.summary &mdash; ecl2df 0.17.3.dev3+g7d9a800a documentation</title>
+  <title>ecl2df.summary &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev3+g7d9a800a
+                0.17.3.dev4+g798ee622
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -99,7 +99,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pyarrow</span>
 <span class="kn">import</span> <span class="nn">pyarrow.feather</span>
-<span class="kn">from</span> <span class="nn">ecl.summary</span> <span class="kn">import</span> <span class="n">EclSum</span><span class="p">,</span> <span class="n">EclSumKeyWordVector</span>
+<span class="kn">from</span> <span class="nn">resdata.summary</span> <span class="kn">import</span> <span class="n">Summary</span><span class="p">,</span> <span class="n">SummaryKeyWordVector</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">getLogger_ecl2csv</span>
 
@@ -179,7 +179,7 @@
 <span class="sd">    only cropped or returned as is.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eclsumsdates: list of datetimes, typically coming from EclSum.dates</span>
+<span class="sd">        eclsumsdates: list of datetimes, typically coming from Summary.dates</span>
 <span class="sd">        freq: Either a date or datetime, or a frequency string</span>
 <span class="sd">            &quot;raw&quot;, &quot;first&quot; or &quot;last&quot;.</span>
 <span class="sd">        start_date: Dates prior to this date will be cropped.</span>
@@ -291,7 +291,7 @@
 <span class="sd">    can be returned, on the same date range. Incoming dates can also be cropped.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eclsumsdates: list of datetimes, typically coming from EclSum.dates</span>
+<span class="sd">        eclsumsdates: list of datetimes, typically coming from Summary.dates</span>
 <span class="sd">        freq: string denoting requested frequency for</span>
 <span class="sd">            the returned list of datetime. &#39;raw&#39; will</span>
 <span class="sd">            return the input datetimes (no resampling).</span>
@@ -396,7 +396,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract data from UNSMRY as Pandas dataframes.</span>
 
-<span class="sd">    This is a thin wrapper for EclSum.pandas_frame, by adding</span>
+<span class="sd">    This is a thin wrapper for Summary.pandas_frame, by adding</span>
 <span class="sd">    support for string mnenomics for the time index.</span>
 
 <span class="sd">    The dataframe is always indexed by DATE, and the datatype for the</span>
@@ -407,7 +407,7 @@
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        eclfiles: EclFiles object representing the Eclipse deck. Alternatively</span>
-<span class="sd">           an EclSum object.</span>
+<span class="sd">           an Summary object.</span>
 <span class="sd">        time_index: string indicating a resampling frequency,</span>
 <span class="sd">           &#39;yearly&#39;, &#39;monthly&#39;, &#39;daily&#39;, &#39;last&#39; or &#39;raw&#39;, the latter will</span>
 <span class="sd">           return the simulated report steps (also default).</span>
@@ -439,7 +439,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">column_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_keys</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">EclSum</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
         <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -664,7 +664,7 @@
 
 <span class="sd">    A dictionary indexed by summary vector name is returned, and each</span>
 <span class="sd">    value is dictionary with the metadata types provided by the underlying</span>
-<span class="sd">    EclSum object:</span>
+<span class="sd">    Summary object:</span>
 
 <span class="sd">    * unit (string)</span>
 <span class="sd">    * is_total (bool)</span>
@@ -674,7 +674,7 @@
 <span class="sd">    * keyword (str)</span>
 <span class="sd">    * wgname (str or None)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">EclSum</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">Summary</span><span class="p">):</span>
         <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">eclsum</span> <span class="o">=</span> <span class="n">eclfiles</span><span class="o">.</span><span class="n">get_eclsum</span><span class="p">()</span>
@@ -695,7 +695,7 @@
 
 
 <span class="k">def</span> <span class="nf">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for EclSum.from_pandas()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for Summary.from_pandas()</span>
 
 <span class="sd">    * Ensures that the index is always datetime, and sorted.</span>
 <span class="sd">    * Removes BLOCK vectors, these are currently not supported as</span>
@@ -765,14 +765,14 @@
 <div class="viewcode-block" id="df2eclsum"><a class="viewcode-back" href="../../ecl2df/ecl2df.summary.html#ecl2df.summary.df2eclsum">[docs]</a><span class="k">def</span> <span class="nf">df2eclsum</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">casename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SYNTHETIC&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclSum</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dataframe to an EclSum object</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dataframe to an Summary object</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dframe: Dataframe with a DATE colum (or with the</span>
 <span class="sd">            dates/datetimes in the index).</span>
-<span class="sd">        casename: Name of Eclipse casename/basename to be used for the EclSum object</span>
-<span class="sd">            If the EclSum object is later written to disk, this will be used</span>
+<span class="sd">        casename: Name of Eclipse casename/basename to be used for the Summary object</span>
+<span class="sd">            If the Summary object is later written to disk, this will be used</span>
 <span class="sd">            to construct the filenames.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -785,24 +785,24 @@
 
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">_fix_dframe_for_libecl</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_libecl_eclsum_from_pandas</span><span class="p">(</span><span class="n">casename</span><span class="p">,</span> <span class="n">dframe</span><span class="p">)</span></div>
-    <span class="c1"># return EclSum.from_pandas(casename, dframe)</span>
+    <span class="c1"># return Summary.from_pandas(casename, dframe)</span>
 
 
 <span class="k">def</span> <span class="nf">_libecl_eclsum_pandas_frame</span><span class="p">(</span>
-    <span class="n">eclsum</span><span class="p">:</span> <span class="n">EclSum</span><span class="p">,</span>
+    <span class="n">eclsum</span><span class="p">:</span> <span class="n">Summary</span><span class="p">,</span>
     <span class="n">time_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">column_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a Pandas dataframe from an EclSum object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a Pandas dataframe from an Summary object.</span>
 
 <span class="sd">    Temporarily copied from libecl to circumvent bug</span>
 
 <span class="sd">    https://github.com/equinor/ecl/issues/802</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">column_keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">EclSumKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">,</span> <span class="n">add_keywords</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">SummaryKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">,</span> <span class="n">add_keywords</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">EclSumKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">SummaryKeyWordVector</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">column_keys</span><span class="p">:</span>
             <span class="n">keywords</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
@@ -810,13 +810,13 @@
     <span class="k">if</span> <span class="n">time_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">time_index</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">dates</span>  <span class="c1"># Changed from libecl</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">time_index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)])</span>
-        <span class="n">EclSum</span><span class="o">.</span><span class="n">_init_pandas_frame</span><span class="p">(</span>
+        <span class="n">Summary</span><span class="o">.</span><span class="n">_init_pandas_frame</span><span class="p">(</span>
             <span class="n">eclsum</span><span class="p">,</span> <span class="n">keywords</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_double</span><span class="p">))</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">time_points</span> <span class="o">=</span> <span class="n">eclsum</span><span class="o">.</span><span class="n">_make_time_vector</span><span class="p">(</span><span class="n">time_index</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">time_points</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)])</span>
-        <span class="n">EclSum</span><span class="o">.</span><span class="n">_init_pandas_frame_interp</span><span class="p">(</span>
+        <span class="n">Summary</span><span class="o">.</span><span class="n">_init_pandas_frame_interp</span><span class="p">(</span>
             <span class="n">eclsum</span><span class="p">,</span>
             <span class="n">keywords</span><span class="p">,</span>
             <span class="n">time_points</span><span class="p">,</span>
@@ -842,8 +842,8 @@
     <span class="n">frame</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">headers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EclSum</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an EclSum object from a Pandas dataframe.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an Summary object from a Pandas dataframe.</span>
 
 <span class="sd">    Temporarily copied from libecl to circumvent bug</span>
 
@@ -859,20 +859,20 @@
     <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># pylint: disable=protected-access</span>
     <span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">header_list</span> <span class="o">=</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">_compile_headers_list</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
+        <span class="n">header_list</span> <span class="o">=</span> <span class="n">Summary</span><span class="o">.</span><span class="n">_compile_headers_list</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">header_list</span> <span class="o">=</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">_compile_headers_list</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
+        <span class="n">header_list</span> <span class="o">=</span> <span class="n">Summary</span><span class="o">.</span><span class="n">_compile_headers_list</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">ecl_sum</span> <span class="o">=</span> <span class="n">EclSum</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ecl_sum</span> <span class="o">=</span> <span class="n">Summary</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">wgname</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">header_list</span><span class="p">:</span>
         <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">ecl_sum</span><span class="o">.</span><span class="n">addVariable</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">wgname</span><span class="o">=</span><span class="n">wgname</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span><span class="o">.</span><span class="n">getKey1</span><span class="p">()</span>
+            <span class="n">ecl_sum</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">wgname</span><span class="o">=</span><span class="n">wgname</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span><span class="o">.</span><span class="n">getKey1</span><span class="p">()</span>
         <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
         <span class="n">days</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
-        <span class="n">t_step</span> <span class="o">=</span> <span class="n">ecl_sum</span><span class="o">.</span><span class="n">addTStep</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span>
+        <span class="n">t_step</span> <span class="o">=</span> <span class="n">ecl_sum</span><span class="o">.</span><span class="n">add_t_step</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
             <span class="n">t_step</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">var</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">ecl_sum</span>
@@ -1019,12 +1019,12 @@
     <span class="n">outputdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
     <span class="n">eclbase</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="c1"># EclSum.fwrite() can only write to current directory:</span>
+    <span class="c1"># Summary.fwrite() can only write to current directory:</span>
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="n">eclsum</span> <span class="o">=</span> <span class="n">df2eclsum</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">outputdir</span><span class="p">)</span>
-        <span class="n">EclSum</span><span class="o">.</span><span class="n">fwrite</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
+        <span class="n">Summary</span><span class="o">.</span><span class="n">fwrite</span><span class="p">(</span><span class="n">eclsum</span><span class="p">)</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 

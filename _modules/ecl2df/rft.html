@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df.rft &mdash; ecl2df 0.17.3.dev3+g7d9a800a documentation</title>
+  <title>ecl2df.rft &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev3+g7d9a800a
+                0.17.3.dev4+g798ee622
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -106,7 +106,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">ecl.eclfile</span> <span class="kn">import</span> <span class="n">EclFile</span>
+<span class="kn">from</span> <span class="nn">resdata.resfile</span> <span class="kn">import</span> <span class="n">ResdataFile</span>
 
 <span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">getLogger_ecl2csv</span>
 
@@ -145,9 +145,9 @@
 <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">_rftrecords2df</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">EclFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_rftrecords2df</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a dataframe just for navigation on the RFT records,</span>
-<span class="sd">    from the attribute &#39;headers&#39; in EclFile object constructed from the</span>
+<span class="sd">    from the attribute &#39;headers&#39; in ResdataFile object constructed from the</span>
 <span class="sd">    binary RFT file</span>
 
 <span class="sd">    The dataframe will consist of the columns and with example data:</span>
@@ -165,7 +165,7 @@
 <span class="sd">        rftfile[89] = EclKW(size=14, name=&quot;SWAT&quot;, ...)</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        rftfile (EclFile)</span>
+<span class="sd">        rftfile (ResdataFile)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nav_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rftfile</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
     <span class="n">nav_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">,</span> <span class="s2">&quot;recordlength&quot;</span><span class="p">,</span> <span class="s2">&quot;recordtype&quot;</span><span class="p">]</span>
@@ -189,14 +189,14 @@
     <span class="k">return</span> <span class="n">nav_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="rftrecords"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.rftrecords">[docs]</a><span class="k">def</span> <span class="nf">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">EclFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator for looping over RFT records in a EclFile object.</span>
+<div class="viewcode-block" id="rftrecords"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.rftrecords">[docs]</a><span class="k">def</span> <span class="nf">rftrecords</span><span class="p">(</span><span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator for looping over RFT records in a ResdataFile object.</span>
 
 <span class="sd">    Each returned RFT record is represented as a dict with the keys:</span>
 <span class="sd">        headers: pd.DataFrame, indexed by recordname</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        EclFile made from a binary RFT file.</span>
+<span class="sd">        ResdataFile made from a binary RFT file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">navigation_frame</span> <span class="o">=</span> <span class="n">_rftrecords2df</span><span class="p">(</span><span class="n">rftfile</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">timeindex</span><span class="p">,</span> <span class="n">headers</span> <span class="ow">in</span> <span class="n">navigation_frame</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;timeindex&quot;</span><span class="p">):</span>
@@ -223,7 +223,7 @@
 
 
 <div class="viewcode-block" id="get_con_seg_data"><a class="viewcode-back" href="../../ecl2df/ecl2df.rft.html#ecl2df.rft.get_con_seg_data">[docs]</a><span class="k">def</span> <span class="nf">get_con_seg_data</span><span class="p">(</span>
-    <span class="n">rftrecord</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">:</span> <span class="n">EclFile</span><span class="p">,</span> <span class="n">datatype</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">rftrecord</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">rftfile</span><span class="p">:</span> <span class="n">ResdataFile</span><span class="p">,</span> <span class="n">datatype</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a dataframe of CON* or SEG* data for a specific RFT record,</span>

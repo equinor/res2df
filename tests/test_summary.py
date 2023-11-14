@@ -319,7 +319,7 @@ def test_main_subparser(tmp_path, mocker):
     # Alternative and equivalent command line syntax for arrow output:
     tmparrowfile_alt = tmp_path / "sum2.arrow"
     mocker.patch(
-        "sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
+        "sys.argv", ["res2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
     )
     res2csv.main()
     pd.testing.assert_frame_equal(
@@ -327,7 +327,7 @@ def test_main_subparser(tmp_path, mocker):
     )
 
     # Not possible (yet?) to write arrow to stdout:
-    mocker.patch("sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", "-"])
+    mocker.patch("sys.argv", ["res2arrow", "summary", EIGHTCELLS, "-o", "-"])
     with pytest.raises(SystemExit):
         res2csv.main()
 

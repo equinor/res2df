@@ -69,7 +69,7 @@ setup(
         "console_scripts": [
             "csv2res=res2df.csv2res:main",
             "res2csv=res2df.res2csv:main",
-            "ecl2arrow=res2df.res2csv:main",
+            "res2arrow=res2df.res2csv:main",
         ],
         "ert": ["res2df_jobs = res2df.hook_implementations.jobs"],
     },

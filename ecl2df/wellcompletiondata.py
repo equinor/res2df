@@ -228,7 +228,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
         else:
             field_metadata = {}
         if colname == "DATE":
-            dtype = pyarrow.timestamp("ms")
+            dtype = pyarrow.timestamp("ns")
         elif pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
             dtype = pyarrow.int32()
         elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):

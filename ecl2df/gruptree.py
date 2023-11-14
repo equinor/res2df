@@ -424,7 +424,7 @@ def prettyprint(dframe: pd.DataFrame) -> str:
     output = ""
     for date in dframe["DATE"].dropna().unique():
         df_date = dframe[dframe.DATE == date]
-        output += "Date: " + str(date.astype("M8[D]")) + "\n"
+        output += "Date: " + pd.to_datetime(date).strftime("%Y-%m-%d") + "\n"
 
         for treetype in ["GRUPTREE", "BRANPROP"]:
             if treetype in df_date["KEYWORD"].unique():

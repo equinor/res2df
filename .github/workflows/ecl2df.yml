@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10']
+        pandas-version: ['pandas<2', 'pandas>2']
         include:
           # For one of the Python versions we
           # install the extra dependency ert
@@ -44,6 +45,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install .
+          pip install "${{matrix.pandas-version}}"
           python -c "import ecl2df"
 
       - name: Install ert

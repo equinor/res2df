@@ -942,7 +942,10 @@ def test_smry_meta_synthetic():
 def test_fix_dframe_for_libecl(dframe, expected_dframe):
     """Test the dataframe preprocessor/validator for df2eclsum works"""
     pd.testing.assert_frame_equal(
-        _fix_dframe_for_libecl(dframe), expected_dframe, check_index_type=False
+        _fix_dframe_for_libecl(dframe),
+        expected_dframe,
+        check_index_type=False,
+        check_column_type=False,
     )
 
 
@@ -1114,13 +1117,6 @@ def test_df2pyarrow_500years():
     # The index name should be ignored:
     dframe.index.name = "BOGUS"
     pyat = _df2pyarrow(dframe)
-
-    # pylint: disable=c-extension-no-member
-    with pytest.raises(pyarrow.lib.ArrowInvalid):
-        # We cannot convert this back to Pandas, since it will bail on failing
-        # to use nanosecond timestamps in the dataframe object for these dates.
-        # This is maybe a PyArrow bug/limitation that we must be aware of.
-        pyat.to_pandas()
 
     assert (
         np.array(pyat.column(0))

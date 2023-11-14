@@ -11,3 +11,5 @@ docs/ecl2df.rst
 ecl2df/version.py
 \#*
 .\#*
+venv*
+build

@@ -111,9 +111,13 @@ def test_extract_status_changes(smry, expected_wellconnstatus):
     """Testing that the extract_status_changes function is working
     correctly with various summary input
     """
-    smry["DATE"] = pd.to_datetime(smry["DATE"])
+    time_format = None if int(pd.__version__.split(".")[0]) == 1 else "mixed"
+
+    smry["DATE"] = pd.to_datetime(smry["DATE"], format=time_format, dayfirst=True)
     smry.set_index("DATE", inplace=True)
-    expected_wellconnstatus["DATE"] = pd.to_datetime(expected_wellconnstatus["DATE"])
+    expected_wellconnstatus["DATE"] = pd.to_datetime(
+        expected_wellconnstatus["DATE"], format=time_format, dayfirst=True
+    )
 
     # pylint: disable=protected-access
     pd.testing.assert_frame_equal(

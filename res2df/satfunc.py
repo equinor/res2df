@@ -104,7 +104,7 @@ def df(
     for keyword in wanted_keywords:
         frames.append(
             interpolate_defaults(
-                common.ecl_keyworddata_to_df(
+                common.keyworddata_to_df(
                     deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
                 ).assign(KEYWORD=keyword)
             )

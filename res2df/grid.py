@@ -737,7 +737,7 @@ def df2res(
             )
             logger.warning("Data will be dumped, but may error in simulator")
         strvector = "  ".join([str(x) for x in vector])
-        strvector = common.runlength_eclcompress(strvector)
+        strvector = common.runlength_compress(strvector)
 
         string += keyword + "\n"
         indent = " " * 5

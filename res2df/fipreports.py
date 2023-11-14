@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 from res2df import ResdataFiles, getLogger_res2csv
-from res2df.common import parse_ecl_month, write_dframe_stdout_file
+from res2df.common import parse_month, write_dframe_stdout_file
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +152,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
             if matcheddate is not None:
                 newdate = datetime.date(
                     year=int(matcheddate.group(3)),
-                    month=parse_ecl_month(matcheddate.group(2).upper()),
+                    month=parse_month(matcheddate.group(2).upper()),
                     day=int(matcheddate.group(1)),
                 )
                 if newdate != date:

@@ -250,24 +250,24 @@ def test_df2res():
         ),
     ],
 )
-def test_datetime_to_eclipsedate(somedate, expected):
+def test_datetime_to_ecldate(somedate, expected):
     """Test conversion of datetime to Eclipse date or datetime syntax"""
-    assert common.datetime_to_eclipsedate(somedate) == expected
+    assert common.datetime_to_ecldate(somedate) == expected
 
 
 def test_eclcompress():
     """Test that we can compress string using Eclipse style
     run-length encoding"""
-    assert common.runlength_eclcompress("") == ""
-    assert common.runlength_eclcompress(" ") == ""
-    assert common.runlength_eclcompress("1 2") == "1  2"
-    assert common.runlength_eclcompress("1 2", sep=" ") == "1 2"
-    assert common.runlength_eclcompress("1 2", sep="   ") == "1   2"
-    assert common.runlength_eclcompress("1") == "1"
-    assert common.runlength_eclcompress("1 1") == "2*1"
-    assert common.runlength_eclcompress("1 1 1") == "3*1"
-    assert common.runlength_eclcompress("1     1 1") == "3*1"
-    assert common.runlength_eclcompress("1  \n  1 1 2") == "3*1  2"
+    assert common.runlength_compress("") == ""
+    assert common.runlength_compress(" ") == ""
+    assert common.runlength_compress("1 2") == "1  2"
+    assert common.runlength_compress("1 2", sep=" ") == "1 2"
+    assert common.runlength_compress("1 2", sep="   ") == "1   2"
+    assert common.runlength_compress("1") == "1"
+    assert common.runlength_compress("1 1") == "2*1"
+    assert common.runlength_compress("1 1 1") == "3*1"
+    assert common.runlength_compress("1     1 1") == "3*1"
+    assert common.runlength_compress("1  \n  1 1 2") == "3*1  2"
 
 
 @pytest.mark.parametrize(
@@ -446,10 +446,10 @@ def test_well_matching_template(template, wells, output):
         ),
     ],
 )
-def test_generic_ecltable(
+def test_generic_deck_table(
     dframe, keyword, comment, renamer, drop_trailing_columns, expected
 ):
-    stringtable = common.generic_ecltable(
+    stringtable = common.generic_deck_table(
         dframe,
         keyword,
         comment=comment,

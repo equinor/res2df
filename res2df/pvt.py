@@ -81,7 +81,7 @@ def pvtw_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "PVTW", renamer=RENAMERS["PVTW"], recordcountername="PVTNUM"
     )
 
@@ -98,7 +98,7 @@ def density_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "DENSITY", renamer=RENAMERS["DENSITY"], recordcountername="PVTNUM"
     )
 
@@ -115,7 +115,7 @@ def rock_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "ROCK", renamer=RENAMERS["ROCK"], recordcountername="PVTNUM"
     )
 
@@ -132,7 +132,7 @@ def pvto_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvto_df = common.ecl_keyworddata_to_df(
+    pvto_df = common.keyworddata_to_df(
         deck, "PVTO", renamer=RENAMERS["PVTO"], emptyrecordcountername="PVTNUM"
     )
     return pvto_df
@@ -150,7 +150,7 @@ def pvdo_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvdg_df = common.ecl_keyworddata_to_df(
+    pvdg_df = common.keyworddata_to_df(
         deck, "PVDO", renamer=RENAMERS["PVDO"], recordcountername="PVTNUM"
     )
     return pvdg_df
@@ -168,7 +168,7 @@ def pvdg_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvdg_df = common.ecl_keyworddata_to_df(
+    pvdg_df = common.keyworddata_to_df(
         deck, "PVDG", renamer=RENAMERS["PVDG"], recordcountername="PVTNUM"
     )
     return pvdg_df
@@ -186,7 +186,7 @@ def pvtg_fromdeck(
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvtg_df = common.ecl_keyworddata_to_df(
+    pvtg_df = common.keyworddata_to_df(
         deck, "PVTG", renamer=RENAMERS["PVTG"], emptyrecordcountername="PVTNUM"
     )
     return pvtg_df

@@ -141,7 +141,7 @@ def rsvd_fromdeck(
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "RSVD", renamer=RENAMERS["RSVD"], recordcountername="EQLNUM"
     )
 
@@ -158,7 +158,7 @@ def rvvd_fromdeck(
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "RVVD", renamer=RENAMERS["RVVD"], recordcountername="EQLNUM"
     )
 
@@ -175,7 +175,7 @@ def pbvd_fromdeck(
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "PBVD", renamer=RENAMERS["PBVD"], recordcountername="EQLNUM"
     )
 
@@ -192,7 +192,7 @@ def pdvd_fromdeck(
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.ecl_keyworddata_to_df(
+    return common.keyworddata_to_df(
         deck, "PDVD", renamer=RENAMERS["PDVD"], recordcountername="EQLNUM"
     )
 
@@ -264,7 +264,7 @@ def equil_fromdeck(
         raise ValueError(f"Could not determine phase configuration, got '{phases}'")
     columnrenamer = RENAMERS[phases_from_deck(deck)]
 
-    dataframe = common.ecl_keyworddata_to_df(
+    dataframe = common.keyworddata_to_df(
         deck, "EQUIL", renamer=columnrenamer, recordcountername="EQLNUM"
     )
 
@@ -418,7 +418,7 @@ def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     phases = phases_from_columns(subset.columns)
 
-    return common.generic_ecltable(
+    return common.generic_deck_table(
         subset,
         "EQUIL",
         renamer=RENAMERS[phases],  # type: ignore

@@ -94,7 +94,7 @@ SVG_COLOR_NAMES = [
         .splitlines()
     )
 ]
-ECLMONTH2NUM = {
+MONTH2NUM = {
     "JAN": 1,
     "FEB": 2,
     "MAR": 3,
@@ -109,7 +109,7 @@ ECLMONTH2NUM = {
     "NOV": 11,
     "DEC": 12,
 }
-NUM2ECLMONTH = {num: month for month, num in ECLMONTH2NUM.items()}
+NUM2MONTH = {num: month for month, num in MONTH2NUM.items()}
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -165,14 +165,12 @@ def write_inc_stdout_file(string: str, outputfilename: str) -> None:
         print(f"Wrote to {outputfilename}")
 
 
-def parse_ecl_month(eclmonth: str) -> int:
-    """Translate Eclipse month strings to integer months"""
-    return ECLMONTH2NUM[eclmonth]
+def parse_month(rdmonth: str) -> int:
+    """Translate resdata month strings to integer months"""
+    return MONTH2NUM[rdmonth]
 
 
-def datetime_to_eclipsedate(
-    timestamp: Union[str, datetime.datetime, datetime.date]
-) -> str:
+def datetime_to_ecldate(timestamp: Union[str, datetime.datetime, datetime.date]) -> str:
     """Convert a Python timestamp or date to the Eclipse DATE format"""
     if isinstance(timestamp, str):
         if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
@@ -181,13 +179,13 @@ def datetime_to_eclipsedate(
         timestamp = dateutil.parser.parse(timestamp)  # noqa  (py36 flake8 bug)
     if not isinstance(timestamp, (datetime.datetime, datetime.date)):
         raise TypeError("Require string or datetime")
-    string = f"{timestamp.day} '{NUM2ECLMONTH[timestamp.month]}' {timestamp.year}"
+    string = f"{timestamp.day} '{NUM2MONTH[timestamp.month]}' {timestamp.year}"
     if isinstance(timestamp, datetime.datetime):
         string += " " + timestamp.strftime("%H:%M:%S")
     return string.replace("00:00:00", "").strip()
 
 
-def ecl_keyworddata_to_df(
+def keyworddata_to_df(
     deck,
     keyword: str,
     renamer: Optional[Dict[str, Union[str, List[str]]]] = None,
@@ -353,7 +351,7 @@ def parse_opmio_date_rec(record: "opm.io.DeckRecord") -> datetime.date:
     day = record[0].get_int(0)
     month = record[1].get_str(0)
     year = record[2].get_int(0)
-    return datetime.date(year=year, month=parse_ecl_month(month), day=day)
+    return datetime.date(year=year, month=parse_month(month), day=day)
 
 
 def parse_opmio_tstep_rec(record: "opm.io.DeckRecord") -> List[Union[float, int]]:
@@ -521,7 +519,7 @@ def df2res(
     This function hands over the actual text generation pr. keyword
     to functions named df2res_<keywordname> in the calling module.
 
-    These functions may again use generic_ecltable() from this module
+    These functions may again use generic_deck_table() from this module
     for the actual string construction.
 
     Args:
@@ -539,7 +537,7 @@ def df2res(
             to file.
 
     Returns:
-        string that can be used as an include file for Eclipse.
+        string that can be used as an include file for resdata.
     """
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])
@@ -624,15 +622,15 @@ def df2res(
     return string
 
 
-def generic_ecltable(
+def generic_deck_table(
     dframe: pd.DataFrame,
     keyword: str,
     comment: Optional[str] = None,
     renamer: Optional[Dict[str, str]] = None,
     drop_trailing_columns: bool = True,
 ) -> str:
-    """Construct a typical Eclipse table for data following
-    a keyword. Each row (record in Eclipse terms) ends with a slash.
+    """Construct a deck table for data following
+    a keyword. Each row ends with a slash.
 
     This function will *not* add a final slash after all rows, as
     this is keyword dependent. Some keywords require it, some keywords
@@ -747,7 +745,7 @@ def generic_ecltable(
     return string + tablestring + "\n"
 
 
-def runlength_eclcompress(string: str, sep: str = "  ") -> str:
+def runlength_compress(string: str, sep: str = "  ") -> str:
     """Compress a string of space-separated elements so that
 
        2 2 2 2 2 3 3 4

@@ -1,5 +1,5 @@
 # pylint: disable=c0301
-"""Extract FIP region reports from Eclipse PRT file"""
+"""Extract FIP region reports from PRT file"""
 
 import argparse
 import datetime
@@ -194,7 +194,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill parser with command line arguments"""
-    parser.add_argument("PRTFILE", type=str, help="Eclipse PRT file (or DATA file)")
+    parser.add_argument("PRTFILE", type=str, help="PRT file (or DATA file)")
     parser.add_argument(
         "--fipname",
         type=str,

@@ -1,7 +1,7 @@
 fipreports
 ----------
 
-fipreports is a parser for the Eclipse PRT output file, extracting data
+fipreports is a parser for the PRT output file, extracting data
 from these tables:
 
 .. literalinclude:: fipreports-example.txt

@@ -33,7 +33,7 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 It is possible to extract keywords one at a time using the ``--keywords`` command
 line option.
 
-Instead of Eclipse data decks, individual include files may also be parsed, but
+Instead of data decks, individual include files may also be parsed, but
 only one at a time.
 
 Generating include files from dataframes
@@ -55,7 +55,7 @@ the command
    # Multiplicate these rows by 0.5
    dframe.loc[rows_to_touch, "KRW"] *= 0.5
 
-For a dataframe or a CSV file in the format provided by this module, an Eclipse
+For a dataframe or a CSV file in the format provided by this module, an
 include file can be generated either with the Python API
 :func:`res2df.satfunc.df2res` function or the command
 
@@ -63,7 +63,7 @@ include file can be generated either with the Python API
 
   csv2res satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
 
-which should give a file ``relperm.inc`` that can be parsed by Eclipse. The command
+which should give a file ``relperm.inc`` that can be parsed by reservoir simulators. The command
 above will only pick the keywords ``SWOF`` and ``SGOF`` (in the case there are
 data for more keywords in the dataframe).
 

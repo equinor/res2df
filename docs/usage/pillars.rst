@@ -3,8 +3,8 @@
 pillars
 -------
 
-pillars is a module to compute data on "pillars" in the grid from an
-Eclipse simulation, including both static and dynamic data from the grid.
+pillars is a module to compute data on "pillars" in the grid from a
+simulation, including both static and dynamic data from the grid.
 
 Static data
 ^^^^^^^^^^^

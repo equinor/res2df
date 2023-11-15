@@ -1,7 +1,7 @@
 nnc
 ---
 
-nnc will extract Non-Neighbour-Connections from your Eclipse grid as pairs
+nnc will extract Non-Neighbour-Connections from your grid as pairs
 of *ijk* indices together with their associated transmissibilities.
 
 See also the :doc:`trans` module, which can extract all transmissibilities, not only

@@ -199,7 +199,7 @@ def df(
 ) -> pd.DataFrame:
     """Extract all (most) PVT data from a deck.
 
-    If you want to call this function on resdata include files,
+    If you want to call this function on include files,
     read them in to strings as in this example:
 
     > pvt_df = pvt.df(open("pvt.inc").read())
@@ -269,7 +269,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Set up sys.argv parsers for writing resdata include files from
+    """Set up sys.argv parsers for writing include files from
     dataframes (as CSV files)
 
     Arguments:

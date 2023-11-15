@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Convert dataframes (in res2df format) to resdata include files,
+Convert dataframes (in res2df format) to include files,
 for selected keywords
 """
 
@@ -10,7 +10,7 @@ import sys
 from res2df import __version__, equil, pvt, satfunc, summary, vfp
 
 # String constants in use for generating ERT forward model documentation:
-DESCRIPTION: str = """Convert CSV files into resdata include files. Uses the command
+DESCRIPTION: str = """Convert CSV files into include files. Uses the command
 line utility ``csv2res``. Run ``csv2res --help`` to see which subcommands are supported.
 No options other than the output file is possible when used directly as a forward model.
 When writing synthetic summary files, the ECLBASE with no filename suffix is expected
@@ -62,7 +62,7 @@ def get_parser() -> argparse.ArgumentParser:
         help="Write SOLUTION include files",
         description=(
             "Write SOLUTION keywords (EQUIL, RSVD, RVVD) "
-            "to resdata include files from CSV in res2df format."
+            "to include files from CSV in res2df format."
         ),
     )
     equil.fill_reverse_parser(equil_parser)
@@ -71,9 +71,7 @@ def get_parser() -> argparse.ArgumentParser:
     pvt_parser = subparsers.add_parser(
         "pvt",
         help="Write PVT include files",
-        description=(
-            "Write resdata include files from CSV files on the res2df format."
-        ),
+        description=("Write include files from CSV files on the res2df format."),
     )
     pvt.fill_reverse_parser(pvt_parser)
     pvt_parser.set_defaults(func=pvt.pvt_reverse_main)

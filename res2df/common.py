@@ -471,7 +471,7 @@ def fill_reverse_parser(
     parser: argparse.ArgumentParser, modulename: str, defaultoutputfile: str
 ):
     """A standardized submodule parser for the command line utility
-    to produce resdata include files from a CSV file.
+    to produce include files from a CSV file.
 
     Arguments:
         parser: parser to fill with arguments

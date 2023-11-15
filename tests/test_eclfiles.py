@@ -49,7 +49,7 @@ def test_filedescriptors():
     assert resdatafiles._initfile is None
 
     resdatafiles.get_rstfile()
-    # Automatically closed by libecl
+    # Automatically closed by resdata
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
     assert resdatafiles._rstfile is not None
     resdatafiles.close()

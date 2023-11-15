@@ -155,7 +155,7 @@ def test_init2df():
     assert "PORV" in init_df
 
     # The KRO data from the INIT file in Reek contains only NaN's,
-    # but libecl gives out a large negative integer/float.
+    # but resdata gives out a large negative integer/float.
     # res2df should ensure this comes out as a NaN (but it
     # should be allowed later to drop columns which have only NaNs))
     if "KRO" in init_df:

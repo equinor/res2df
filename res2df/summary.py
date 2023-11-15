@@ -336,7 +336,7 @@ def df(
             Dates past this date will be dropped, supplied
             end_date will always be included. Overriden if time_index
             is 'last'.
-        include_restart: boolean sent to libecl for whether restart
+        include_restart: boolean sent to resdata for whether restart
             files should be traversed
         params: If set, parameters.txt will be attempted loaded
             and merged with the summary data.
@@ -420,7 +420,7 @@ def df(
         column_key: meta[column_key] for column_key in dframe if column_key in meta
     }
 
-    # Remove duplicated column names. These will occur from libecl
+    # Remove duplicated column names. These will occur from resdata
     # when the user has repeated vector names in the summary SECTION
     dupes = dframe.columns.duplicated()
     if dupes.any():
@@ -610,7 +610,7 @@ def smry_meta(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     return meta
 
 
-def _fix_dframe_for_libecl(dframe: pd.DataFrame) -> pd.DataFrame:
+def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
     """Fix a dataframe making it ready for Summary.from_pandas()
 
     * Ensures that the index is always datetime, and sorted.
@@ -699,7 +699,7 @@ def df2ressum(
     if "." in casename:
         raise ValueError(f"Do not use dots in casename {casename}")
 
-    dframe = _fix_dframe_for_libecl(dframe)
+    dframe = _fix_dframe_for_resdata(dframe)
     return resdata_summary_from_pandas(casename, dframe)
     # return Summary.from_pandas(casename, dframe)
 
@@ -724,7 +724,7 @@ def _summary_pandas_frame(
 
     # pylint: disable=protected-access
     if time_index is None:
-        time_index = summary.dates  # Changed from libecl
+        time_index = summary.dates  # Changed from resdata
         data = np.zeros([len(time_index), len(keywords)])
         Summary._init_pandas_frame(
             summary, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
@@ -761,7 +761,7 @@ def resdata_summary_from_pandas(
 ) -> Summary:
     """Build an Summary object from a Pandas dataframe.
 
-    Temporarily copied from libecl to circumvent bug
+    Temporarily copied from resdata to circumvent bug
 
     https://github.com/equinor/ecl/issues/802
     """

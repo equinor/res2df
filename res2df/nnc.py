@@ -54,7 +54,7 @@ def df(
         return pd.DataFrame()
 
     # Grid indices for first cell in cell pairs, into a vertical
-    # vector. The indices are "global" in libecl terms, and are
+    # vector. The indices are "global" in resdata terms, and are
     # 1-based (FORTRAN). Convert to zero-based before sending to get_ijk()
     nnc1 = egrid_file["NNC1"][0].numpy_view().reshape(-1, 1)
     logger.info(

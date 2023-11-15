@@ -257,7 +257,7 @@ def rst2df(
         if dateinheaders or len(rstindices) > 1 and not stackdates:
             rst_df.columns = [colname + "@" + datestr for colname in rst_df.columns]
 
-        # libecl emits a number around -1.0000000200408773e+20 which
+        # resdata emits a number around -1.0000000200408773e+20 which
         # should be considered Not-a-number
         rst_df = rst_df.where(rst_df > -1e20 + 1e13)  # some trial and error
 
@@ -284,7 +284,7 @@ def gridgeometry2df(
 ) -> pd.DataFrame:
     """Produce a Pandas Dataframe with Eclipse grid geometry
 
-    Order is significant, and is determined by the order from libecl, and used
+    Order is significant, and is determined by the order from resdata, and used
     when merging with other dataframes with cell-data.
 
     Args:
@@ -447,7 +447,7 @@ def init2df(
                 ]
             ),
         )
-        # libecl emits a number around -1.0000000200408773e+20 which
+        # resdata emits a number around -1.0000000200408773e+20 which
         # should be considered Not-a-number
         init_df = init_df.where(init_df > -1e20 + 1e13)  # some trial and error
 
@@ -483,7 +483,7 @@ def df(
 
     Grid information (center coordinates x, y, z), cell
     indices (i, j, k) (indices follow the Eclipse convention starting
-    at 1, not zero as in libecl), properties from INIT, and optionally
+    at 1, not zero as in resdata), properties from INIT, and optionally
     any time dependent data from Restart files.
 
     Args:

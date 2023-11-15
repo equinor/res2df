@@ -2,7 +2,7 @@ Introduction
 ============
 
 *res2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
-around `libecl <https://github.com/equinor/libecl/>`_ and `opm.io
+around `resdata <https://github.com/equinor/resdata/>`_ and `opm.io
 <https://github.com/OPM/opm-common/>`_, which are used to access
 binary files outputted by reservoir simulators such as Eclipse, or its
 input files --- or any other tool outputting to the same data format,

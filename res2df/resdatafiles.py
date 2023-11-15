@@ -143,7 +143,7 @@ class ResdataFiles(object):
         return as Summary object
 
         Args:
-            include_restart: Sent to libecl for whether restart files
+            include_restart: Sent to resdata for whether restart files
                 should be traversed.
         """
         if not self._summary:

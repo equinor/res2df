@@ -15,7 +15,7 @@ from res2df.resdatafiles import ResdataFiles
 from res2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
-    _fix_dframe_for_libecl,
+    _fix_dframe_for_resdata,
     date_range,
     df,
     df2ressum,
@@ -394,7 +394,7 @@ def test_extrapolation():
             datetime=True,
         )
 
-    # But without datetime, we can get it extrapolated by libecl:
+    # But without datetime, we can get it extrapolated by resdata:
     assert summary.df(
         resdatafiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
     )["FOPT"].values == [lastfopt]
@@ -943,10 +943,10 @@ def test_smry_meta_synthetic():
         ),
     ],
 )
-def test_fix_dframe_for_libecl(dframe, expected_dframe):
+def test_fix_dframe_for_resdata(dframe, expected_dframe):
     """Test the dataframe preprocessor/validator for df2ressum works"""
     pd.testing.assert_frame_equal(
-        _fix_dframe_for_libecl(dframe), expected_dframe, check_index_type=False
+        _fix_dframe_for_resdata(dframe), expected_dframe, check_index_type=False
     )
 
 
@@ -1024,7 +1024,7 @@ def test_df2ressum(dframe):
     back again"""
 
     # Massage the dframe first so we can assert on equivalence after.
-    dframe = _fix_dframe_for_libecl(dframe)
+    dframe = _fix_dframe_for_resdata(dframe)
 
     summary = df2ressum(dframe)
     if dframe.empty:
@@ -1168,7 +1168,7 @@ def test_res2df_errors(tmp_path):
     Path("FOO.UNSMRY").write_bytes(os.urandom(100))
     Path("FOO.SMSPEC").write_bytes(os.urandom(100))
     with pytest.raises(OSError, match="Failed to create summary instance"):
-        # This is how libecl reacts to bogus binary data
+        # This is how resdata reacts to bogus binary data
         Summary("FOO.UNSMRY")
 
     # But ResdataFiles should be more tolerant, as it should be possible

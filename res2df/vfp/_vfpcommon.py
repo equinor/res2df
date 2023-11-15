@@ -194,12 +194,12 @@ def _write_vfp_range(
     if var_type != "UNDEFINED":
         var_type_str = var_type
 
-    ecl_str = f"-- {var_type_str} units - {unit_type} ( {len(values)} values )\n"
+    deck_str = f"-- {var_type_str} units - {unit_type} ( {len(values)} values )\n"
     for i, value in enumerate(values):
-        ecl_str += format % value
+        deck_str += format % value
         if (i + 1) % values_per_line == 0 and i < len(values) - 1:
-            ecl_str += "\n"
-    ecl_str += " /\n"
-    ecl_str += "\n"
+            deck_str += "\n"
+    deck_str += " /\n"
+    deck_str += "\n"
 
-    return ecl_str
+    return deck_str

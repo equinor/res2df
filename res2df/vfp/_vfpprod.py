@@ -834,20 +834,20 @@ def _write_basic_record(
     if alq_type != "UNDEFINED":
         alq_type_str = alq_type
 
-    ecl_str = "-- Table  Datum Depth  Rate Type  WFR Type  "
-    ecl_str += "GFR Type  THP Type  ALQ Type  UNITS   TAB Type\n"
-    ecl_str += "-- -----  -----------  ---------  --------  "
-    ecl_str += "--------  --------  --------  ------  --------\n"
-    ecl_str += f"   {tableno:5d}"
-    ecl_str += f"  {datum:11.1f}"
-    ecl_str += f"   {flo_type:>8s}"
-    ecl_str += f"  {wfr_type:>8s}"
-    ecl_str += f"  {gfr_type:>8s}"
-    ecl_str += f"  {pressure_type:>8s}"
-    ecl_str += f"  {alq_type_str:>8s}"
-    ecl_str += f"  {unit_type:>6s}"
-    ecl_str += f"  {tab_type:>8s} /\n\n"
-    return ecl_str
+    deck_str = "-- Table  Datum Depth  Rate Type  WFR Type  "
+    deck_str += "GFR Type  THP Type  ALQ Type  UNITS   TAB Type\n"
+    deck_str += "-- -----  -----------  ---------  --------  "
+    deck_str += "--------  --------  --------  ------  --------\n"
+    deck_str += f"   {tableno:5d}"
+    deck_str += f"  {datum:11.1f}"
+    deck_str += f"   {flo_type:>8s}"
+    deck_str += f"  {wfr_type:>8s}"
+    deck_str += f"  {gfr_type:>8s}"
+    deck_str += f"  {pressure_type:>8s}"
+    deck_str += f"  {alq_type_str:>8s}"
+    deck_str += f"  {unit_type:>6s}"
+    deck_str += f"  {tab_type:>8s} /\n\n"
+    return deck_str
 
 
 def _write_table(
@@ -864,23 +864,23 @@ def _write_table(
         values_per_line: Number of values per line in output
     """
 
-    ecl_str = ""
+    deck_str = ""
     for idx, row in table.iterrows():
-        ecl_str += f"{idx[0]:2d} {idx[1]:2d} {idx[2]:2d} {idx[3]:2d}"
+        deck_str += f"{idx[0]:2d} {idx[1]:2d} {idx[2]:2d} {idx[3]:2d}"
         no_flo = len(table.loc[idx].to_list())
         for n, value in enumerate(table.loc[idx].to_list()):
-            ecl_str += format % value
+            deck_str += format % value
             if (n + 1) % values_per_line == 0:
                 if n < no_flo - 1:
-                    ecl_str += "\n"
-                    ecl_str += " " * 11
+                    deck_str += "\n"
+                    deck_str += " " * 11
                 else:
-                    ecl_str += "\n"
+                    deck_str += "\n"
             elif n == no_flo - 1:
-                ecl_str += "\n"
-        ecl_str += "/\n"
+                deck_str += "\n"
+        deck_str += "/\n"
 
-    return ecl_str
+    return deck_str
 
 
 def _write_table_records(
@@ -905,7 +905,7 @@ def _write_table_records(
         values_per_line: Number of values per line in output
     """
 
-    ecl_str = ""
+    deck_str = ""
     no_records = len(thp_indices)
     no_flow_values = table.size // no_records
     if table.size % no_records > 0:
@@ -918,21 +918,21 @@ def _write_table_records(
         wfr = wfr_indices[row]
         gfr = gfr_indices[row]
         alq = alq_indices[row]
-        ecl_str += f"{thp:2d} {wfr:2d} {gfr:2d} {alq:2d}"
+        deck_str += f"{thp:2d} {wfr:2d} {gfr:2d} {alq:2d}"
         for n, value in enumerate(table[row, :]):
-            ecl_str += format % value
+            deck_str += format % value
             if (n + 1) % values_per_line == 0:
                 if n < no_flow_values - 1:
-                    ecl_str += "\n"
-                    ecl_str += " " * 11
+                    deck_str += "\n"
+                    deck_str += " " * 11
                 else:
-                    ecl_str += "\n"
+                    deck_str += "\n"
             elif n == no_flow_values - 1:
-                ecl_str += "\n"
+                deck_str += "\n"
 
-        ecl_str += "/\n"
+        deck_str += "/\n"
 
-    return ecl_str
+    return deck_str
 
 
 def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
@@ -957,16 +957,16 @@ def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     unit_type = vfpprod_data["UNIT_TYPE"]
 
     # Write dataframe to string with Eclipse format for VFPPROD
-    ecl_str = "VFPPROD\n"
+    deck_str = "VFPPROD\n"
     if comment:
-        ecl_str += common.comment_formatter(comment)
+        deck_str += common.comment_formatter(comment)
     else:
-        ecl_str += "\n"
+        deck_str += "\n"
 
     unit_value = vfpprod_data["UNIT_TYPE"].value
     if vfpprod_data["UNIT_TYPE"] == UNITTYPE.DEFAULT:
         unit_value = "1*"
-    ecl_str += _write_basic_record(
+    deck_str += _write_basic_record(
         vfpprod_data["TABLE_NUMBER"],
         vfpprod_data["DATUM"],
         vfpprod_data["RATE_TYPE"].value,
@@ -977,37 +977,37 @@ def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         unit_value,
         vfpprod_data["TAB_TYPE"].value,
     )
-    ecl_str += _write_vfp_range(
+    deck_str += _write_vfp_range(
         vfpprod_data["FLOW_VALUES"],
         rate_type.value,
         VFPPROD_UNITS[unit_type.value]["FLO"][rate_type.value],
         "%10.6g",
     )
-    ecl_str += _write_vfp_range(
+    deck_str += _write_vfp_range(
         vfpprod_data["THP_VALUES"],
         thp_type.value,
         VFPPROD_UNITS[unit_type.value]["THP"][thp_type.value],
         "%10.6g",
     )
-    ecl_str += _write_vfp_range(
+    deck_str += _write_vfp_range(
         vfpprod_data["WFR_VALUES"],
         wfr_type.value,
         VFPPROD_UNITS[unit_type.value]["WFR"][wfr_type.value],
         "%10.6g",
     )
-    ecl_str += _write_vfp_range(
+    deck_str += _write_vfp_range(
         vfpprod_data["GFR_VALUES"],
         gfr_type.value,
         VFPPROD_UNITS[unit_type.value]["GFR"][gfr_type.value],
         "%10.6g",
     )
-    ecl_str += _write_vfp_range(
+    deck_str += _write_vfp_range(
         vfpprod_data["ALQ_VALUES"],
         alq_type.value,
         VFPPROD_UNITS[unit_type.value]["ALQ"][alq_type.value],
         "%10.6g",
     )
-    ecl_str += _write_table_records(
+    deck_str += _write_table_records(
         vfpprod_data["THP_INDICES"],
         vfpprod_data["WFR_INDICES"],
         vfpprod_data["GFR_INDICES"],
@@ -1016,4 +1016,4 @@ def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         "%10.6g",
     )
 
-    return ecl_str
+    return deck_str

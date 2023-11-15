@@ -99,7 +99,7 @@ def report_block_lineparser(line: str) -> tuple:
 
 def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
     """
-    Parses a PRT file from Eclipse and finds FIPXXXX REGION REPORT blocks and
+    Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
     organizes those numbers into a dataframe
 
     Each row in the dataframe represents one parsed line in the PRT file, with

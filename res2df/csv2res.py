@@ -52,7 +52,7 @@ def get_parser() -> argparse.ArgumentParser:
     summary_parser = subparsers.add_parser(
         "summary",
         help="Write summary UNSMRY files",
-        description=("Write Eclipse UNSMRY files from CSV files."),
+        description=("Write UNSMRY files from CSV files."),
     )
     summary.fill_reverse_parser(summary_parser)
     summary_parser.set_defaults(func=summary.summary_reverse_main)

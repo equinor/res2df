@@ -1,4 +1,4 @@
-"""Converter module for Eclipse RFT output files to Pandas Dataframes
+"""Converter module for simulator RFT output files to Pandas Dataframes
 
 If MULTISEG wells are found, the segment data associated to
 a connection is merged onto the same row as additional columns,

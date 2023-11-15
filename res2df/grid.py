@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Extract grid information from Eclipse output files as Dataframes.
+Extract grid information from grid files as Dataframes.
 
 Each cell in the grid correspond to one row.
 
@@ -282,7 +282,7 @@ def rst2df(
 def gridgeometry2df(
     resdatafiles: ResdataFiles, zonemap: Optional[Dict[int, str]] = None
 ) -> pd.DataFrame:
-    """Produce a Pandas Dataframe with Eclipse gridgeometry
+    """Produce a Pandas Dataframe with Eclipse grid geometry
 
     Order is significant, and is determined by the order from libecl, and used
     when merging with other dataframes with cell-data.
@@ -369,7 +369,7 @@ def merge_initvectors(
     for API users to only use the df() function.
 
     Args:
-        resdatafiles: Object representing the Eclipse output files
+        resdatafiles: Object representing the output files
         dframe: Table data to merge with
         initvectors: Names of INIT vectors to merge in.
         ijknames: Three strings that determine the I, J and K columns to use
@@ -487,7 +487,7 @@ def df(
     any time dependent data from Restart files.
 
     Args:
-        resdatafiles: Handle to an Eclipse case
+        resdatafiles: Handle to a simulator case
         vectors: Vectors to include, wildcards
             supported. Used to match both
             INIT vectors and RESTART vectors.

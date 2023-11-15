@@ -1,7 +1,7 @@
 rft
 ---
 
-rft will convert the binary RFT files from Eclipse to dataframes or CSV files,
+rft will convert the binary RFT files from dataframes or CSV files,
 facilitating analysis of inflow and pressure for each connection the well
 has to the reservoir grid.
 

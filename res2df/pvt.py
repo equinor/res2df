@@ -1,5 +1,5 @@
 """
-Extract the PVT data from an Eclipse (input) deck as Pandas Dataframes
+Extract the PVT data from an input deck as Pandas Dataframes
 
 Data can be extracted from a full input deck or from individual files.
 """
@@ -313,7 +313,7 @@ def pvt_main(args) -> None:
 
 
 def pvt_reverse_main(args) -> None:
-    """Entry-point for module, for command line utility for CSV to Eclipse"""
+    """Entry-point for module, for command line utility for CSV to simulator deck"""
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )

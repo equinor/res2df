@@ -222,7 +222,7 @@ def satfunc_main(args) -> None:
 
 
 def satfunc_reverse_main(args) -> None:
-    """For command line utility for CSV to Eclipse"""
+    """For command line utility for CSV to resdata"""
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )

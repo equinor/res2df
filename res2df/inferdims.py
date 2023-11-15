@@ -1,6 +1,6 @@
 """
 Support module for inferring EQLDIMS and TABDIMS from incomplete
-Eclipse 100 decks (typically single include-files)
+reservoir simulator decks (typically single include-files)
 """
 
 import logging

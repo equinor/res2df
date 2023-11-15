@@ -1,4 +1,4 @@
-"""Module to hold Eclipse input and output filenames"""
+"""Module to hold simulator input and output filenames"""
 
 import errno
 import logging
@@ -47,7 +47,7 @@ class ResdataFiles(object):
     ResdataFile/Summary objects is easy for users, and with
     caching if wanted.
 
-    Various functions that needs some of the Eclipse output
+    Various functions that needs some of the simulator output
     (or input file) should be able to ask this class, and
     it should be loaded or served from cache.
     """

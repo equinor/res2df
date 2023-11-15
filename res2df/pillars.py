@@ -339,7 +339,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--region",
         help=(
-            "Name of Eclipse region parameter for which to separate the computations. "
+            "Name of region parameter for which to separate the computations. "
             "Set to empty string to have no grouping (only by pillar)."
         ),
         type=str,

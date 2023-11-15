@@ -687,7 +687,7 @@ def df2ressum(
     Args:
         dframe: Dataframe with a DATE colum (or with the
             dates/datetimes in the index).
-        casename: Name of Eclipse casename/basename to be used for the Summary object
+        casename: Name of casename/basename to be used for the Summary object
             If the Summary object is later written to disk, this will be used
             to construct the filenames.
     """
@@ -889,7 +889,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
         "-o",
         "--output",
         type=str,
-        help="Basename for Eclipse output files",
+        help="Basename for output files",
         default="SYNTSMRY",
     )
     parser.add_argument("csvfile", help="Name of CSV file with summary data.")

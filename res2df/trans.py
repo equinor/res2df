@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Extract transmissibility information from Eclipse output files as Dataframes.
+Extract transmissibility information from output files as Dataframes.
 """
 import argparse
 import logging
@@ -57,8 +57,8 @@ def df(
     you will get a corresponding FIPNUM1 and FIPNUM2 added.
 
     Args:
-        resdatafiles: An object representing your Eclipse run
-        vectors: Eclipse INIT vectors that you want to include
+        resdatafiles: An object representing your simulator run
+        vectors: simulator INIT vectors that you want to include
         boundaryfilter: Set to true if you want to filter where one INIT
             vector change. Only use for integer INIT vectors.
         group: Set to true if you want to sum transmissibilities over

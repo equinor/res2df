@@ -18,7 +18,7 @@ from .common import write_dframe_stdout_file
 logger = logging.getLogger(__name__)
 
 
-class EclipseUnitSystem(str, Enum):
+class UnitSystem(str, Enum):
     METRIC = "METRIC"
     FIELD = "FIELD"
     LAB = "LAB"
@@ -90,18 +90,18 @@ def df(
     return compdat_df
 
 
-def _get_unit_system(resdatafiles: ResdataFiles) -> EclipseUnitSystem:
+def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
     """Returns the unit system of an input deck. The options are \
     METRIC, FIELD, LAB and PVT-M.
 
     If none of these are found, the function returns METRIC which is the
     default unit system in Eclipse.
     """
-    unit_systems = [unitsystem.value for unitsystem in EclipseUnitSystem]
+    unit_systems = [unitsystem.value for unitsystem in UnitSystem]
     for keyword in resdatafiles.get_ecldeck():
         if keyword.name in unit_systems:
-            return EclipseUnitSystem(keyword.name)
-    return EclipseUnitSystem.METRIC
+            return UnitSystem(keyword.name)
+    return UnitSystem.METRIC
 
 
 def _get_metadata(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
@@ -109,10 +109,10 @@ def _get_metadata(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     meta: Dict[str, Dict[str, str]] = {}
     unitsystem = _get_unit_system(resdatafiles)
     kh_units = {
-        EclipseUnitSystem.METRIC: KHUnit.METRIC,
-        EclipseUnitSystem.FIELD: KHUnit.FIELD,
-        EclipseUnitSystem.LAB: KHUnit.LAB,
-        EclipseUnitSystem.PVTM: KHUnit.PVTM,
+        UnitSystem.METRIC: KHUnit.METRIC,
+        UnitSystem.FIELD: KHUnit.FIELD,
+        UnitSystem.LAB: KHUnit.LAB,
+        UnitSystem.PVTM: KHUnit.PVTM,
     }
     meta["KH"] = {}
     meta["KH"]["unit"] = kh_units[unitsystem].value

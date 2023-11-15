@@ -26,7 +26,7 @@ connections
 
 The last column ``DIR`` is the direction of the connection in i-j-k, space, and can
 take on the values ``I``, ``J``, and ``K``. The ``TRAN`` column has values from the
-``TRANX``, ``TRANY`` or ``TRANZ`` in the Eclipse output files.
+``TRANX``, ``TRANY`` or ``TRANZ`` in output files.
 
 You can obtain this dataframe as a CSV file by writing this command on the
 command line:

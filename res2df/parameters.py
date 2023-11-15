@@ -1,5 +1,5 @@
 """Support module for extra files with key-value information
-related to Eclipse runs"""
+related to simulator runs"""
 
 import json
 import logging
@@ -25,7 +25,7 @@ def find_parameter_files(
 
     Args:
         ecldeck_or_eclpath: Either an ResdataFiles object of
-            an Eclipse output set (only the corresponding path will be used),
+            a simulator output set (only the corresponding path will be used),
             or path to a file or directory, that will be used as a starting
             point for locating parameter files
         filebase: the base of filenames to look for.

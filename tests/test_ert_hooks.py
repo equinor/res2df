@@ -138,7 +138,7 @@ def test_get_module_variable():
     assert jobs._get_module_variable_if_exists("foo", "bar") == ""
     assert jobs._get_module_variable_if_exists(
         "res2df.res2csv", "DESCRIPTION"
-    ).startswith("Convert Eclipse input and output")
+    ).startswith("Convert reservoir simulator input and output")
     assert jobs._get_module_variable_if_exists("res2df.res2csv", "NOPE") == ""
 
 

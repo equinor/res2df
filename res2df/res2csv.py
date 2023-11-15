@@ -12,7 +12,7 @@ from typing import Optional
 from res2df import __version__
 
 # String constants in use for generating ERT forward model documentation:
-DESCRIPTION: str = """Convert Eclipse input and output files into CSV files,
+DESCRIPTION: str = """Convert reservoir simulator input and output files into CSV files,
 with the command line utility ``res2csv``. Run ``res2csv --help`` to see
 which subcommands are supported.
 
@@ -108,7 +108,7 @@ def get_parser() -> argparse.ArgumentParser:
         help="Extract transmissibilities from EGRID file",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "Extract transmissibilities (TRANX, TRANY, TRANZ) from Eclipse "
+            "Extract transmissibilities (TRANX, TRANY, TRANZ) from simulator "
             "binary output files. Each row represent a connection between a cell pair "
             "(I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for "
             "each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 "
@@ -143,10 +143,10 @@ def get_parser() -> argparse.ArgumentParser:
     )
     subparsers_dict["rft"] = subparsers.add_parser(
         "rft",
-        help=("Extract RFT data from Eclipse binary output files."),
+        help=("Extract RFT data from simulator binary output files."),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
-            "Extract RFT data from Eclipse binary output files to CSV. "
+            "Extract RFT data from simulator binary output files to CSV. "
             "Each row in the resulting table represents one point in a "
             "particular well at a particular time. "
             "If multisegment wells are found, associated data "

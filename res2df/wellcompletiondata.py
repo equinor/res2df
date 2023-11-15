@@ -90,8 +90,8 @@ def df(
     return compdat_df
 
 
-def _get_ecl_unit_system(resdatafiles: ResdataFiles) -> EclipseUnitSystem:
-    """Returns the unit system of an Eclipse input deck. The options are \
+def _get_unit_system(resdatafiles: ResdataFiles) -> EclipseUnitSystem:
+    """Returns the unit system of an input deck. The options are \
     METRIC, FIELD, LAB and PVT-M.
 
     If none of these are found, the function returns METRIC which is the
@@ -107,7 +107,7 @@ def _get_ecl_unit_system(resdatafiles: ResdataFiles) -> EclipseUnitSystem:
 def _get_metadata(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     """Provide metadata for the well completion data export"""
     meta: Dict[str, Dict[str, str]] = {}
-    unitsystem = _get_ecl_unit_system(resdatafiles)
+    unitsystem = _get_unit_system(resdatafiles)
     kh_units = {
         EclipseUnitSystem.METRIC: KHUnit.METRIC,
         EclipseUnitSystem.FIELD: KHUnit.FIELD,

@@ -84,7 +84,7 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
 
 
 def _crop_datelist(
-    eclsumsdates: List[dt.datetime],
+    summarydates: List[dt.datetime],
     freq: Union[dt.date, dt.datetime, str],
     start_date: Optional[dt.date] = None,
     end_date: Optional[dt.date] = None,
@@ -94,7 +94,7 @@ def _crop_datelist(
     only cropped or returned as is.
 
     Args:
-        eclsumsdates: list of datetimes, typically coming from Summary.dates
+        summarydates: list of datetimes, typically coming from Summary.dates
         freq: Either a date or datetime, or a frequency string
             "raw", "first" or "last".
         start_date: Dates prior to this date will be cropped.
@@ -105,7 +105,7 @@ def _crop_datelist(
     """
     datetimes: Union[List[dt.date], List[dt.datetime]] = []  # type: ignore
     if freq == FREQ_RAW:
-        datetimes = eclsumsdates
+        datetimes = summarydates
         datetimes.sort()
         if start_date:
             # Convert to datetime (at 00:00:00)
@@ -117,9 +117,9 @@ def _crop_datelist(
             datetimes = [x for x in datetimes if x < end_date]
             datetimes = datetimes + [end_date]
     elif freq == FREQ_FIRST:
-        datetimes = [min(eclsumsdates).date()]
+        datetimes = [min(summarydates).date()]
     elif freq == FREQ_LAST:
-        datetimes = [max(eclsumsdates).date()]
+        datetimes = [max(summarydates).date()]
     elif isinstance(freq, (dt.date, dt.datetime)):
         datetimes = [freq]
     return datetimes
@@ -193,7 +193,7 @@ def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.dat
 
 
 def resample_smry_dates(
-    eclsumsdates: List[dt.datetime],
+    summarydates: List[dt.datetime],
     freq: str = FREQ_RAW,
     normalize: bool = True,
     start_date: Optional[Union[str, dt.date]] = None,
@@ -206,7 +206,7 @@ def resample_smry_dates(
     can be returned, on the same date range. Incoming dates can also be cropped.
 
     Args:
-        eclsumsdates: list of datetimes, typically coming from Summary.dates
+        summarydates: list of datetimes, typically coming from Summary.dates
         freq: string denoting requested frequency for
             the returned list of datetime. 'raw' will
             return the input datetimes (no resampling).
@@ -233,7 +233,7 @@ def resample_smry_dates(
     if freq in [FREQ_RAW, FREQ_FIRST, FREQ_LAST] or isinstance(
         freq, (dt.date, dt.datetime)
     ):
-        return _crop_datelist(eclsumsdates, freq, start_date, end_date)
+        return _crop_datelist(summarydates, freq, start_date, end_date)
 
     # In case freq is an ISO-date(time)-string, interpret as such:
     try:
@@ -244,8 +244,8 @@ def resample_smry_dates(
         pass
 
     # These are datetime.datetime, not datetime.date
-    start_smry = min(eclsumsdates)
-    end_smry = max(eclsumsdates)
+    start_smry = min(summarydates)
+    end_smry = max(summarydates)
 
     # Normalize start and end date according to frequency by extending the time range.
     # [1997-11-05, 2020-03-02] and monthly frequecy
@@ -355,10 +355,10 @@ def df(
         column_keys = [column_keys]
 
     if isinstance(resdatafiles, Summary):
-        eclsum = resdatafiles
+        summary = resdatafiles
     else:
         try:
-            eclsum = resdatafiles.get_eclsum(include_restart=include_restart)
+            summary = resdatafiles.get_summary(include_restart=include_restart)
         except OSError:
             logger.warning("Error reading summary instance, returning empty dataframe")
             return pd.DataFrame()
@@ -366,7 +366,7 @@ def df(
     time_index_arg: Optional[Union[List[dt.date], List[dt.datetime]]]
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = resample_smry_dates(
-            eclsum.dates,
+            summary.dates,
             "raw",
             False,
             start_date,
@@ -374,7 +374,7 @@ def df(
         )
     elif isinstance(time_index, str):
         time_index_arg = resample_smry_dates(
-            eclsum.dates,
+            summary.dates,
             time_index,
             True,
             start_date,
@@ -402,8 +402,7 @@ def df(
         time_index_str or "raw",
     )
 
-    # dframe = eclsum.pandas_frame(time_index_arg, column_keys)
-    dframe = _libecl_eclsum_pandas_frame(eclsum, time_index_arg, column_keys)
+    dframe = _summary_pandas_frame(summary, time_index_arg, column_keys)
 
     logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",
@@ -415,7 +414,7 @@ def df(
         dframe = _merge_params(dframe, paramfile, resdatafiles)
 
     # Add metadata as an attribute the dataframe, using experimental Pandas features:
-    meta = smry_meta(eclsum)
+    meta = smry_meta(summary)
     # Slice meta to dataframe columns:
     dframe.attrs["meta"] = {
         column_key: meta[column_key] for column_key in dframe if column_key in meta
@@ -592,20 +591,20 @@ def smry_meta(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     * wgname (str or None)
     """
     if isinstance(resdatafiles, Summary):
-        eclsum = resdatafiles
+        summary = resdatafiles
     else:
-        eclsum = resdatafiles.get_eclsum()
+        summary = resdatafiles.get_summary()
 
     meta: Dict[str, Dict[str, Any]] = {}
-    for col in eclsum.keys():
+    for col in summary.keys():
         meta[col] = {}
-        meta[col]["unit"] = eclsum.unit(col)
-        meta[col]["is_total"] = eclsum.is_total(col)
-        meta[col]["is_rate"] = eclsum.is_rate(col)
-        meta[col]["is_historical"] = eclsum.smspec_node(col).is_historical()
-        meta[col]["keyword"] = eclsum.smspec_node(col).keyword
-        meta[col]["wgname"] = eclsum.smspec_node(col).wgname
-        num = eclsum.smspec_node(col).get_num()
+        meta[col]["unit"] = summary.unit(col)
+        meta[col]["is_total"] = summary.is_total(col)
+        meta[col]["is_rate"] = summary.is_rate(col)
+        meta[col]["is_historical"] = summary.smspec_node(col).is_historical()
+        meta[col]["keyword"] = summary.smspec_node(col).keyword
+        meta[col]["wgname"] = summary.smspec_node(col).wgname
+        num = summary.smspec_node(col).get_num()
         if num is not None:
             meta[col]["get_num"] = num
     return meta
@@ -701,40 +700,40 @@ def df2ressum(
         raise ValueError(f"Do not use dots in casename {casename}")
 
     dframe = _fix_dframe_for_libecl(dframe)
-    return _libecl_eclsum_from_pandas(casename, dframe)
+    return resdata_summary_from_pandas(casename, dframe)
     # return Summary.from_pandas(casename, dframe)
 
 
-def _libecl_eclsum_pandas_frame(
-    eclsum: Summary,
+def _summary_pandas_frame(
+    summary: Summary,
     time_index: Optional[Union[List[dt.date], List[dt.datetime]]] = None,
     column_keys: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """Build a Pandas dataframe from an Summary object.
 
-    Temporarily copied from libecl to circumvent bug
+    Temporarily copied from resdata to circumvent bug
 
-    https://github.com/equinor/ecl/issues/802
+    https://github.com/equinor/resdata/issues/802
     """
     if column_keys is None:
-        keywords = SummaryKeyWordVector(eclsum, add_keywords=True)
+        keywords = SummaryKeyWordVector(summary, add_keywords=True)
     else:
-        keywords = SummaryKeyWordVector(eclsum)
+        keywords = SummaryKeyWordVector(summary)
         for key in column_keys:
             keywords.add_keywords(key)
 
     # pylint: disable=protected-access
     if time_index is None:
-        time_index = eclsum.dates  # Changed from libecl
+        time_index = summary.dates  # Changed from libecl
         data = np.zeros([len(time_index), len(keywords)])
         Summary._init_pandas_frame(
-            eclsum, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+            summary, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
         )
     else:
-        time_points = eclsum._make_time_vector(time_index)
+        time_points = summary._make_time_vector(time_index)
         data = np.zeros([len(time_points), len(keywords)])
         Summary._init_pandas_frame_interp(
-            eclsum,
+            summary,
             keywords,
             time_points,
             data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
@@ -754,7 +753,7 @@ def _libecl_eclsum_pandas_frame(
     return frame
 
 
-def _libecl_eclsum_from_pandas(
+def resdata_summary_from_pandas(
     case: str,
     frame: pd.DataFrame,
     dims: Optional[List[int]] = None,
@@ -781,18 +780,20 @@ def _libecl_eclsum_from_pandas(
         header_list = Summary._compile_headers_list(headers, dims)
     if dims is None:
         dims = [1, 1, 1]
-    ecl_sum = Summary.writer(case, start_time, dims[0], dims[1], dims[2])
+    the_summary = Summary.writer(case, start_time, dims[0], dims[1], dims[2])
     for keyword, wgname, num, unit in header_list:
         var_list.append(
-            ecl_sum.add_variable(keyword, wgname=wgname, num=num, unit=unit).getKey1()
+            the_summary.add_variable(
+                keyword, wgname=wgname, num=num, unit=unit
+            ).getKey1()
         )
 
     for idx, time in enumerate(frame.index):
         days = (time - start_time).days
-        t_step = ecl_sum.add_t_step(idx + 1, days)
+        t_step = the_summary.add_t_step(idx + 1, days)
         for var in var_list:
             t_step[var] = frame.iloc[idx][var]
-    return ecl_sum
+    return the_summary
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -882,7 +883,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Fill a parser for the operation:  dataframe -> eclsum files"""
+    """Fill a parser for the operation:  dataframe -> summary files"""
 
     parser.add_argument(
         "-o",
@@ -938,10 +939,10 @@ def summary_reverse_main(args) -> None:
 
     # Summary.fwrite() can only write to current directory:
     cwd = os.getcwd()
-    eclsum = df2ressum(summary_df, eclbase)
+    summary = df2ressum(summary_df, eclbase)
     try:
         os.chdir(outputdir)
-        Summary.fwrite(eclsum)
+        Summary.fwrite(summary)
     finally:
         os.chdir(cwd)
 

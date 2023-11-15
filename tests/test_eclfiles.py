@@ -56,7 +56,7 @@ def test_filedescriptors():
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
     assert resdatafiles._rstfile is None
 
-    resdatafiles.get_eclsum()
+    resdatafiles.get_summary()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count + 1
     resdatafiles.close()
     assert len(list(fd_dir.glob("*"))) == pre_fd_count

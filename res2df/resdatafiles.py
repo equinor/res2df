@@ -70,7 +70,7 @@ class ResdataFiles(object):
         # Set class variables to None
         self._egridfile = None  # Should be ResdataFile
         self._initfile = None  # Should be ResdataFile
-        self._eclsum = None  # Should be Summary
+        self._summary = None  # Should be Summary
 
         self._egrid = None  # Should be Grid
 
@@ -138,7 +138,7 @@ class ResdataFiles(object):
 
         return self._egridfile
 
-    def get_eclsum(self, include_restart: bool = True) -> Summary:
+    def get_summary(self, include_restart: bool = True) -> Summary:
         """Find and return the summary file and
         return as Summary object
 
@@ -146,15 +146,15 @@ class ResdataFiles(object):
             include_restart: Sent to libecl for whether restart files
                 should be traversed.
         """
-        if not self._eclsum:
+        if not self._summary:
             smryfilename = self._eclbase + ".UNSMRY"
             if not Path(smryfilename).is_file():
                 raise FileNotFoundError(
                     errno.ENOENT, os.strerror(errno.ENOENT), smryfilename
                 )
             logger.info("Opening UNSMRY file: %s", smryfilename)
-            self._eclsum = Summary(smryfilename, include_restart=include_restart)
-        return self._eclsum
+            self._summary = Summary(smryfilename, include_restart=include_restart)
+        return self._summary
 
     def get_initfile(self) -> ResdataFile:
         """Find and return the INIT file as an ResdataFile object"""
@@ -207,7 +207,7 @@ class ResdataFiles(object):
         self._egridfile = None
         self._initfile = None
         # This is necessary for garbage collection to close the Summary file:
-        self._eclsum = None
+        self._summary = None
         self._rstfile = None
         self._rftfile = None
 

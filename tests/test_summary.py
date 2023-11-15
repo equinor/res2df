@@ -411,9 +411,9 @@ def test_foreseeable_future(tmp_path):
             {"DATE": "2500-01-01", "FPR": 180},
         ]
     )
-    eclsum = df2ressum(src_dframe, casename="PLUGABANDON")
+    res_summary = df2ressum(src_dframe, casename="PLUGABANDON")
 
-    dframe = summary.df(eclsum)
+    dframe = summary.df(res_summary)
     assert (
         dframe.index
         == [
@@ -426,7 +426,7 @@ def test_foreseeable_future(tmp_path):
     ).all()
 
     # Try with time interpolation involved:
-    dframe = summary.df(eclsum, time_index="yearly")
+    dframe = summary.df(res_summary, time_index="yearly")
     assert len(dframe) == 501
     assert dframe.index.max() == datetime.date(year=2500, month=1, day=1)
 
@@ -437,8 +437,8 @@ def test_foreseeable_future(tmp_path):
             "FPR": range(70),
         }
     )
-    eclsum = df2ressum(src_dframe, casename="PLUGABANDON")
-    dframe = summary.df(eclsum)
+    res_summary = df2ressum(src_dframe, casename="PLUGABANDON")
+    dframe = summary.df(res_summary)
     # Still buggy:
     assert dframe.index[-1] == dt(2068, 12, 31, 23, 57, 52)
 
@@ -449,8 +449,8 @@ def test_foreseeable_future(tmp_path):
             "FPR": range(69),
         }
     )
-    eclsum = df2ressum(src_dframe, casename="PLUGABANDON")
-    dframe = summary.df(eclsum)
+    res_summary = df2ressum(src_dframe, casename="PLUGABANDON")
+    dframe = summary.df(res_summary)
     # Works fine when stepping only 68 years:
     assert dframe.index[-1] == dt(2468, 1, 1, 0, 0, 0)
 
@@ -635,7 +635,7 @@ def test_resample_smry_dates():
 
     resdatafiles = ResdataFiles(REEK)
 
-    ecldates = resdatafiles.get_eclsum().dates
+    ecldates = resdatafiles.get_summary().dates
 
     assert isinstance(resample_smry_dates(ecldates), list)
     assert isinstance(resample_smry_dates(ecldates, freq="last"), list)
@@ -812,7 +812,7 @@ def test_unique_datetime_retain_index_name(filepath):
 
 
 def test_smry_meta():
-    """Test obtaining metadata dictionary for summary vectors from an EclSum object"""
+    """Test obtaining metadata dictionary for summary vectors from an summary object"""
     meta = smry_meta(ResdataFiles(REEK))
 
     assert isinstance(meta, dict)
@@ -852,7 +852,7 @@ def test_smry_meta_synthetic():
     ).set_index("DATE")
     synt_meta = smry_meta(df2ressum(dframe))
 
-    # Dummy unit provided by EclSum:
+    # Dummy unit provided by summary:
     assert synt_meta["FOPT"]["unit"] == "UNIT"
 
 
@@ -1020,18 +1020,18 @@ def test_fix_dframe_for_libecl(dframe, expected_dframe):
     ],
 )
 def test_df2ressum(dframe):
-    """Test that a dataframe can be converted to an EclSum object, and then read
+    """Test that a dataframe can be converted to an summary object, and then read
     back again"""
 
     # Massage the dframe first so we can assert on equivalence after.
     dframe = _fix_dframe_for_libecl(dframe)
 
-    eclsum = df2ressum(dframe)
+    summary = df2ressum(dframe)
     if dframe.empty:
-        assert eclsum is None
+        assert summary is None
         return
 
-    dframe_roundtrip = df(eclsum)
+    dframe_roundtrip = df(summary)
     pd.testing.assert_frame_equal(
         dframe.sort_index(axis=1),
         dframe_roundtrip.sort_index(axis=1),
@@ -1056,7 +1056,7 @@ def test_df2ressum_datetimeindex():
 
 
 def test_duplicated_summary_vectors(caplog):
-    """EclSum files on disk may contain repeated vectors
+    """summary files on disk may contain repeated vectors
     if the user has inserted a vector name twice in the
     SUMMARY section
 
@@ -1176,7 +1176,7 @@ def test_res2df_errors(tmp_path):
     Path("FOO.DATA").write_text("RUNSPEC", encoding="utf8")
     assert str(ResdataFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
     with pytest.raises(OSError):
-        ResdataFiles("FOO").get_eclsum()
+        ResdataFiles("FOO").get_summary()
 
     # Getting a dataframe from bogus data should give empty data:
     assert df(ResdataFiles("FOO")).empty

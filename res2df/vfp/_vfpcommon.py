@@ -1,4 +1,5 @@
-"""Common functionality for vfp module to extract VFPPROD/VFPINJ data from input deck to extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas
+"""Common functionality for vfp module to extract VFPPROD/VFPINJ data from input
+deck to extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas
 Dataframes
 
 Data can be extracted from a full input deck or from individual files. Supports

@@ -2,7 +2,7 @@ grid
 ----
 
 The grid module will extract static and dynamic cell properties from
-an Eclipse grid (from the binary output files from Eclipse). Each row
+a grid (from the binary output files from reservoir simulators). Each row
 in a returned dataframe represents one cell.
 
 Typical usage
@@ -148,7 +148,7 @@ Generating include files from grid data
 If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
 :func:`res2df.grid.df2res()` function these manipulated vectors can be written back as
-include files to Eclipse.
+include files.
 
 Say you want to change the FIPNUM, and that FIPNUM 6 should be removed, and set
 it to FIPNUM 5. This can be accomplished using

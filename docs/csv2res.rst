@@ -1,10 +1,10 @@
 csv2res
 =======
 
-Some of the modules inside res2df is able to write reservoir files
+Some of the modules inside res2df is able to write reservoir simulator input decks
 from dataframes (in the format dumped by res2df). This makes it possible
-to produce reservoir input data in any application that can write CSV files,
-and use this tool to convert it into reservoir files, or it can
+to produce reservoir input decks in any application that can write CSV files,
+and use this tool to convert it into reservoir simulator files, or it can
 facilitate operations/manipulations of an existing deck using any tool
 that can work on CSV files, by first running res2csv on an input file,
 transforming it, and writing back using csv2res.

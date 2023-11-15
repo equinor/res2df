@@ -12,7 +12,7 @@ res2df is a Pandas DataFrame wrapper around libecl and opm.io, which
 are used to access binary files outputted by reservoir simulators, 
 or its input files --- or any other tool outputting to the same data format.
 
-The reverse operation, from a Pandas DataFrame to reservoir include files,
+The reverse operation, from a Pandas DataFrame to reservoir simulator include files,
 is provided for some of the modules.
 
 The package consists of a module pr. datatype, e.g. one module for summary

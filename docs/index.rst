@@ -2,8 +2,8 @@ res2df
 ======
 
 res2df is a Pandas DataFrame wrapper around libecl and opm.io, which
-are used to access binary files outputted by the reservoir simulator
-Eclipse, or its input files --- or any other tool outputting to the same
+are used to access binary files outputted by the reservoir simulators or
+their input files --- or any other tool outputting to the same
 data format.
 
 .. toctree::
@@ -16,6 +16,7 @@ data format.
    installation
    contribution
    history
+   glossary
 
 .. toctree::
    :hidden:

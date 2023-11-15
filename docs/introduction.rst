@@ -119,7 +119,7 @@ More documentation on :doc:`usage/fipreports`.
 ^^^^^^^^^^^
 
 Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
-into one DataFrame. Can write back to Eclipse include files.
+into one DataFrame. Can write back to include files.
 
 More documentation on :doc:`usage/satfunc`.
 

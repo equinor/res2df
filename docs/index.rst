@@ -2,8 +2,8 @@ res2df
 ======
 
 res2df is a Pandas DataFrame wrapper around resdata and opm.io, which
-are used to access binary files outputted by the reservoir simulators or
-their input files --- or any other tool outputting to the same
+are used to access :term:`binary files outputted by the reservoir simulators <output file>` or
+their :term:`input files <deck>` --- or any other tool outputting to the same
 data format.
 
 .. toctree::

@@ -1174,7 +1174,7 @@ def test_res2df_errors(tmp_path):
     # But ResdataFiles should be more tolerant, as it should be possible
     # to extract other data if SMRY is corrupted
     Path("FOO.DATA").write_text("RUNSPEC", encoding="utf8")
-    assert str(ResdataFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
+    assert str(ResdataFiles("FOO").get_deck()).strip() == "RUNSPEC"
     with pytest.raises(OSError):
         ResdataFiles("FOO").get_summary()
 

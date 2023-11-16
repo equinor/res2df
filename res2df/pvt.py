@@ -218,7 +218,7 @@ def df(
         pd.DataFrame
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
 
     deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
     ntpvt = deck["TABDIMS"][0][inferdims.DIMS_POS["NTPVT"]].get_int(0)
@@ -286,7 +286,7 @@ def pvt_main(args) -> None:
     resdatafiles = ResdataFiles(args.DATAFILE)
     logger.info("Parsed %s", args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_ecldeck()
+        deck = resdatafiles.get_deck()
     if "TABDIMS" in deck:
         # Things are easier when a full deck with correct TABDIMS
         # is supplied:

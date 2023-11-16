@@ -20,9 +20,9 @@ Examples
 
     > res2csv --help
     > res2csv summary --help
-    > res2csv summary --column_keys "F*" --time_index monthly --output output.csv MYECLDECK.DATA
+    > res2csv summary --column_keys "F*" --time_index monthly --output output.csv MYDECK.DATA
     > res2csv pillars --help
-    > res2csv pillars --rstdates all MYECLDECK.DATA
+    > res2csv pillars --rstdates all MYDECK.DATA
 
 If you access the module from within a Python script, for each submodule
 there is a function called ``df()`` which provides more or less the same
@@ -33,7 +33,7 @@ a Pandas Dataframe.
 
     import res2df
 
-    resdatafiles = res2df.ResdataFiles("MYECLDECK.DATA")
+    resdatafiles = res2df.ResdataFiles("MYDECK.DATA")
     smry = res2df.summary.df(resdatafiles, column_keys="F*", time_index="monthly")
     hc_contacts = res2df.pillars.df(resdatafiles, rstdates="all")
 

@@ -25,7 +25,7 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 def test_wcon2df():
     """Test that dataframes are produced"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
-    wcondf = wcon.df(resdatafiles.get_ecldeck())
+    wcondf = wcon.df(resdatafiles.get_deck())
 
     assert not wcondf.empty
     assert "DATE" in wcondf  # for all data

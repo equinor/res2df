@@ -43,7 +43,7 @@ def test_df():
 def test_comp2df():
     """Test that dataframes are produced"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
-    compdfs = compdat.deck2dfs(resdatafiles.get_ecldeck())
+    compdfs = compdat.deck2dfs(resdatafiles.get_deck())
 
     assert not compdfs["COMPDAT"].empty
     assert not compdfs["WELSEGS"].empty

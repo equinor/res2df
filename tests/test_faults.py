@@ -27,7 +27,7 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS")
 def test_faults2df():
     """Test that dataframes are produced"""
     resdatafiles = ResdataFiles(REEK)
-    faultsdf = faults.df(resdatafiles.get_ecldeck())
+    faultsdf = faults.df(resdatafiles.get_deck())
 
     assert "NAME" in faultsdf
     assert "I" in faultsdf
@@ -55,7 +55,7 @@ FAULTS
 def test_nofaults():
     """Test on a dataset with no faults"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
-    faultsdf = faults.df(resdatafiles.get_ecldeck())
+    faultsdf = faults.df(resdatafiles.get_deck())
     assert faultsdf.empty
 
 

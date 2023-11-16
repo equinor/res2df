@@ -52,7 +52,7 @@ def basic_data(
     """
 
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
     elif isinstance(deck, str):
         deck = ResdataFiles.str2deck(deck)
 
@@ -256,7 +256,7 @@ def dfs(
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
     elif isinstance(deck, str):
         deck = ResdataFiles.str2deck(deck)
 
@@ -299,7 +299,7 @@ def pyarrow_tables(
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
     elif isinstance(deck, str):
         deck = ResdataFiles.str2deck(deck)
 
@@ -428,7 +428,7 @@ def df(
         return pd.DataFrame()
 
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
     elif isinstance(deck, str):
         deck = ResdataFiles.str2deck(deck)
 
@@ -500,7 +500,7 @@ def vfp_main(args) -> None:
         outputfile = args.output
         outputfile.replace(".arrow", "")
         vfp_arrow_tables = pyarrow_tables(
-            resdatafiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
+            resdatafiles.get_deck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
         for vfp_table in vfp_arrow_tables:
             table_number = int(
@@ -513,7 +513,7 @@ def vfp_main(args) -> None:
             logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
     else:
         dframe = df(
-            resdatafiles.get_ecldeck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
+            resdatafiles.get_deck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
         if args.output:
             common.write_dframe_stdout_file(

@@ -11,7 +11,7 @@ Supported keywords are ``EQUIL``, ``RSVD``, ``RVVD``, ``PBVD`` and
 
     from res2df import equil, ResdataFiles
 
-    dframe = equil.df(ResdataFiles('MYECLDECK.DATA'))
+    dframe = equil.df(ResdataFiles('MYDECK.DATA'))
 
 Which will provide a dataframe similar to the example below. Note that the column
 `Z` is used both for datum depth and the depth values in ``RSVD`` tables. The

@@ -161,7 +161,7 @@ def test_pvt_reek():
     """Test that the Reek PVT input can be parsed individually"""
 
     resdatafiles = ResdataFiles(REEK)
-    pvto_df = pvt.pvto_fromdeck(resdatafiles.get_ecldeck())
+    pvto_df = pvt.pvto_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvto_df
     assert "PRESSURE" in pvto_df
     assert "VOLUMEFACTOR" in pvto_df
@@ -180,7 +180,7 @@ def test_pvt_reek():
     dframe_via_string = pvt.pvto_fromdeck(pvt.df2res_pvto(pvto_df))
     pd.testing.assert_frame_equal(dframe_via_string, pvto_df)
 
-    density_df = pvt.density_fromdeck(resdatafiles.get_ecldeck())
+    density_df = pvt.density_fromdeck(resdatafiles.get_deck())
     pd.testing.assert_frame_equal(
         density_df,
         pd.DataFrame(
@@ -192,14 +192,14 @@ def test_pvt_reek():
     dframe_via_string = pvt.density_fromdeck(pvt.df2res_density(density_df))
     pd.testing.assert_frame_equal(dframe_via_string, density_df)
 
-    rock_df = pvt.rock_fromdeck(resdatafiles.get_ecldeck())
+    rock_df = pvt.rock_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in rock_df
     assert len(rock_df) == 1
     assert "PRESSURE" in rock_df
     assert "COMPRESSIBILITY" in rock_df
     assert rock_df["PRESSURE"].values[0] == 327.3
 
-    pvtw_df = pvt.pvtw_fromdeck(resdatafiles.get_ecldeck())
+    pvtw_df = pvt.pvtw_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvtw_df
     assert pvtw_df["PVTNUM"].values[0] == 1
     assert len(pvtw_df) == 1
@@ -210,7 +210,7 @@ def test_pvt_reek():
     assert "VISCOSIBILITY" in pvtw_df
     assert pvtw_df["VISCOSITY"].values[0] == 0.25
 
-    pvdg_df = pvt.pvdg_fromdeck(resdatafiles.get_ecldeck())
+    pvdg_df = pvt.pvdg_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvdg_df
     assert "PRESSURE" in pvdg_df
     assert "VOLUMEFACTOR" in pvdg_df
@@ -293,7 +293,7 @@ PVTG
 def test_density():
     """Test that DENSITY can be parsed from files and from strings"""
     resdatafiles = ResdataFiles(REEK)
-    density_df = pvt.density_fromdeck(resdatafiles.get_ecldeck())
+    density_df = pvt.density_fromdeck(resdatafiles.get_deck())
     assert len(density_df) == 1
     assert "PVTNUM" in density_df
     assert "OILDENSITY" in density_df

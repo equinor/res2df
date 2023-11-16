@@ -75,6 +75,6 @@ def test_filedescriptors():
     assert len(list(fd_dir.glob("*"))) == pre_fd_count
     assert resdatafiles._rftfile is None
 
-    resdatafiles.get_ecldeck()
+    resdatafiles.get_deck()
     # This should not leave any file descriptor open
     assert len(list(fd_dir.glob("*"))) == pre_fd_count

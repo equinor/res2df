@@ -67,7 +67,7 @@ def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
     resdatafiles = ResdataFiles(REEK)
     nncdf = nnc.df(resdatafiles)
-    faultsdf = faults.df(resdatafiles.get_ecldeck())
+    faultsdf = faults.df(resdatafiles.get_deck())
 
     merged = pd.merge(
         nncdf,

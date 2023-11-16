@@ -950,7 +950,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     Arguments:
         parser: parser to fill with arguments
     """
-    parser.add_argument("DATAFILE", help="Name of reservoir DATA file.")
+    parser.add_argument("DATAFILE", help="Name of resdata .DATA file.")
     parser.add_argument(
         "-o",
         "--output",
@@ -992,7 +992,7 @@ def df(
     Returns:
         pd.Dataframe with one row pr cell to well connection
     """
-    compdat_df = deck2dfs(resdatafiles.get_ecldeck())["COMPDAT"]
+    compdat_df = deck2dfs(resdatafiles.get_deck())["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 
     if initvectors:

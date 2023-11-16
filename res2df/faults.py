@@ -39,7 +39,7 @@ def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFram
         deck: input deck
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
 
     # In[91]: list(deck['FAULTS'][0])
     # Out[91]: [[u'F1'], [36], [36], [41], [42], [1], [14], [u'I']]
@@ -88,7 +88,7 @@ def faults_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_ecldeck()
+        deck = resdatafiles.get_deck()
     faults_df = df(deck)
     write_dframe_stdout_file(
         faults_df,

@@ -28,7 +28,7 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 def test_eightcells_dataset():
     """Test Eightcells dataset"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
-    gruptree_df = gruptree.df(resdatafiles.get_ecldeck())
+    gruptree_df = gruptree.df(resdatafiles.get_deck())
 
     expected_dframe = pd.DataFrame(
         [
@@ -45,7 +45,7 @@ def test_eightcells_dataset():
 def test_gruptree2df():
     """Test that dataframes are produced"""
     resdatafiles = ResdataFiles(REEK)
-    grupdf = gruptree.df(resdatafiles.get_ecldeck())
+    grupdf = gruptree.df(resdatafiles.get_deck())
 
     assert not grupdf.empty
     assert len(grupdf["DATE"].unique()) == 5
@@ -53,7 +53,7 @@ def test_gruptree2df():
     assert len(grupdf["PARENT"].dropna().unique()) == 3
     assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
-    grupdfnowells = gruptree.df(resdatafiles.get_ecldeck(), welspecs=False)
+    grupdfnowells = gruptree.df(resdatafiles.get_deck(), welspecs=False)
 
     assert len(grupdfnowells["KEYWORD"].unique()) == 1
     assert grupdf["PARENT"].dropna().unique()[0] == "FIELD"

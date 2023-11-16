@@ -94,7 +94,7 @@ def df(
     if isinstance(deck, ResdataFiles):
         # NB: If this is done on include files and not on DATA files
         # we can loose data for SATNUM > 1
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
     deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
     assert "TABDIMS" in deck
 
@@ -195,7 +195,7 @@ def satfunc_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_ecldeck()
+        deck = resdatafiles.get_deck()
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS
         # is supplied:

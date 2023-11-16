@@ -98,7 +98,7 @@ def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
     default unit system in Eclipse.
     """
     unit_systems = [unitsystem.value for unitsystem in UnitSystem]
-    for keyword in resdatafiles.get_ecldeck():
+    for keyword in resdatafiles.get_deck():
         if keyword.name in unit_systems:
             return UnitSystem(keyword.name)
     return UnitSystem.METRIC

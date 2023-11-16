@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def find_parameter_files(
-    ecldeck_or_eclpath: Union[ResdataFiles, str, Path], filebase: str = "parameters"
+    deck_or_eclpath: Union[ResdataFiles, str, Path], filebase: str = "parameters"
 ) -> List[Path]:
     """Locate a default prioritized list of files to try to read as key-value
 
@@ -24,7 +24,7 @@ def find_parameter_files(
     current dir, one directory up, and two directories up.
 
     Args:
-        ecldeck_or_eclpath: Either an ResdataFiles object of
+        deck_or_eclpath: Either an ResdataFiles object of
             a simulator output set (only the corresponding path will be used),
             or path to a file or directory, that will be used as a starting
             point for locating parameter files
@@ -35,10 +35,10 @@ def find_parameter_files(
     """
     eclbasepath: Path
     fname: str
-    if isinstance(ecldeck_or_eclpath, ResdataFiles):
-        eclbasepath = Path(ecldeck_or_eclpath.get_path())
-    elif isinstance(ecldeck_or_eclpath, (str, Path)):
-        eclbasepath = Path(ecldeck_or_eclpath).parent.absolute()
+    if isinstance(deck_or_eclpath, ResdataFiles):
+        eclbasepath = Path(deck_or_eclpath.get_path())
+    elif isinstance(deck_or_eclpath, (str, Path)):
+        eclbasepath = Path(deck_or_eclpath).parent.absolute()
     else:
         raise TypeError
     files_to_lookfor: List[str] = [

@@ -102,7 +102,7 @@ def df(
         pd.DataFrame, at least with columns KEYWORD and EQLNUM
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
 
     deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     ntequl = deck["EQLDIMS"][0][inferdims.DIMS_POS["NTEQUL"]].get_int(0)
@@ -316,7 +316,7 @@ def equil_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_ecldeck()
+        deck = resdatafiles.get_deck()
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS
         # is supplied:

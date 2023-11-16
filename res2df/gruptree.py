@@ -69,7 +69,7 @@ def df(
         date = None
 
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_ecldeck()
+        deck = deck.get_deck()
 
     edgerecords = []  # list of dict of rows containing an edge.
     nodedatarecords = []
@@ -454,7 +454,7 @@ def gruptree_main(args) -> None:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
     resdatafiles = ResdataFiles(args.DATAFILE)
-    dframe = df(resdatafiles.get_ecldeck(), startdate=args.startdate)
+    dframe = df(resdatafiles.get_deck(), startdate=args.startdate)
     if args.prettyprint:
         if "DATE" in dframe:
             print(prettyprint(dframe))

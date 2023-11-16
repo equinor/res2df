@@ -26,11 +26,11 @@ REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
-def test_ecldeck_to_satfunc_dframe():
+def test_deck_to_satfunc_dframe():
     """Test that dataframes can be produced from a full input deck (the
     example Reek case)"""
     resdatafiles = ResdataFiles(REEK)
-    satdf = satfunc.df(resdatafiles.get_ecldeck())
+    satdf = satfunc.df(resdatafiles.get_deck())
 
     assert set(satdf["KEYWORD"]) == {"SWOF", "SGOF"}
     assert set(satdf["SATNUM"]) == {1}
@@ -57,7 +57,7 @@ def test_satfunc_roundtrip():
     """Test that we can produce a SATNUM dataframe from the Reek case, convert
     it back to an include file, and then reinterpret it to the same"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
-    satdf = satfunc.df(resdatafiles.get_ecldeck())
+    satdf = satfunc.df(resdatafiles.get_deck())
     inc = satfunc.df2res(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(
@@ -70,7 +70,7 @@ def test_df2res_order():
     """Test that we can control the keyword order in generated
     strings by the list supplied in keywords argument"""
     resdatafiles = ResdataFiles(REEK)
-    satdf = satfunc.df(resdatafiles.get_ecldeck())
+    satdf = satfunc.df(resdatafiles.get_deck())
 
     swof_sgof = satfunc.df2res(satdf, keywords=["SWOF", "SGOF"])
     assert swof_sgof.find("SWOF") < swof_sgof.find("SGOF")

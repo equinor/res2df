@@ -686,7 +686,7 @@ def test_main_subparsers(tmp_path, mocker):
 
 
 def test_csv2res(tmp_path, mocker):
-    """Test command line interface for csv to Eclipse include files"""
+    """Test command line interface for csv to include files"""
     os.chdir(tmp_path)
     tmpcsvfile = "satfunc.csv"
 

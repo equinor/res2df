@@ -538,7 +538,7 @@ def df2res(
             to file.
 
     Returns:
-        string that can be used as an include file for resdata.
+        string that can be used as an include file.
     """
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])
@@ -630,7 +630,7 @@ def generic_deck_table(
     renamer: Optional[Dict[str, str]] = None,
     drop_trailing_columns: bool = True,
 ) -> str:
-    """Construct a deck table for data following
+    """Construct an input deck table for data following
     a keyword. Each row ends with a slash.
 
     This function will *not* add a final slash after all rows, as

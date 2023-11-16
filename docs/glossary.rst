@@ -18,7 +18,7 @@ Glossary
         (generally) or .GRDECL/.grdecl (for files included into the grid section).
 
     deck
-        Refers to a .DATA file and the include files it points to
+        Refers to a .DATA file and the include files it points to.
 
     output file
         When a reservoir simulator runs, several files will be generated.

@@ -49,7 +49,7 @@ available (here also wells from WELSPECS is included):
                     └── INJEAST
                         └── INJ1
 
-In your deck, the table will be repeated for every new occurence of the
+In your :term:`deck`, the table will be repeated for every new occurence of the
 GRUPTREE keyword in the Schedule section.
 
 GRUPNET and WELSPECS
@@ -57,10 +57,10 @@ GRUPNET and WELSPECS
 
 By default, the module will also pick up information from GRUPNET (typical
 terminal pressure values for the network nodes) and WELSPECS (well
-specifications), so for a full deck, your dataframe will contain more
+specifications), so for a full :term:`deck`, your dataframe will contain more
 information than in the example above.
 
-If our deck also contains::
+If our :term:`deck` also contains::
 
     GRUPNET
       'FIELD' 90 /

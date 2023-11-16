@@ -1,7 +1,7 @@
 summary
 ^^^^^^^
 
-This module extracts summary information from UNSMRY-files into
+This module extracts summary information from :term:`UNSMRY-files <output file>` into
 Pandas Dataframes.
 
 ..

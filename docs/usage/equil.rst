@@ -54,7 +54,8 @@ one meter for compatibility, which you could do by the statements:
 Re-exporting tables to include-files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you are done with the table, you can generate new include files from your modified
+When you are done with the table, you can generate new 
+:term:`include files <include file>` from your modified
 data by issuing
 
 .. code-block:: python

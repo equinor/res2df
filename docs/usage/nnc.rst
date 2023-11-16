@@ -45,7 +45,7 @@ Data for the ``EDITNNC`` keyword can be dumped, in order to scale the NNC connec
 using Pandas operations. Select the connections you want to scale by slicing
 the nnc dataframe (either from the nnc module, or from the trans module), and fill
 transmissibility multipliers in a new column ``TRANM``, then this can be exported
-to an include file:
+to an :term:`include file: <include file>`
 
 .. code-block:: python
 

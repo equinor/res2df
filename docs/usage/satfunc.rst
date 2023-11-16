@@ -2,8 +2,8 @@ satfunc
 -------
 
 satfunc will extract saturation functions from :term:`.DATA files <.DATA file>` or from
-include files, these are the keywords ``SWOF``, ``SGOF``, ``SGWFN``, ``SWFN``,
-``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
+:term:`include files <include file>`, these are the keywords ``SWOF``, ``SGOF``, 
+``SGWFN``, ``SWFN``, ``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
 
 The data obtained from one invocation of the satfunc module will be put in one
 dataframe, where data from different keywords are separated by the ``KEYWORD``
@@ -56,7 +56,7 @@ the command
    dframe.loc[rows_to_touch, "KRW"] *= 0.5
 
 For a dataframe or a CSV file in the format provided by this module, an
-include file can be generated either with the Python API
+:term:`include file` can be generated either with the Python API
 :func:`res2df.satfunc.df2res` function or the command
 
 .. code-block:: console
@@ -67,12 +67,12 @@ which should give a file ``relperm.inc`` that can be parsed by reservoir simulat
 above will only pick the keywords ``SWOF`` and ``SGOF`` (in the case there are
 data for more keywords in the dataframe).
 
-There are no automated checks for validity of the dumped include files.
+There are no automated checks for validity of the dumped :term:`include file <include file>`.
 
 Extracting properties pr. SATNUM
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you have an include file prepared (from any source), you might need to
+If you have an :term:`include file` prepared (from any source), you might need to
 determine certain properties like endpoint. If you need to determine for
 example "SOWCR" - the largest oil saturation for which oil is immobile,
 because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
@@ -94,7 +94,7 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
     # Apply that function individually on each SATNUM:
     sat_df.groupby("SATNUM").apply(sowcr)
 
-for an example include file, this could result in
+for an example :term:`include file`, this could result in
 
 .. code-block:: console
 
@@ -113,7 +113,7 @@ to do directly on the dataframes. Before doing manipulations of dataframes in
 through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
-Pyscal can initialize its relperm objects from include files
+Pyscal can initialize its relperm objects from :term:`include files<include file>`
 though the parsing capabilities of res2df.satfunc.
 
 The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in

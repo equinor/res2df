@@ -14,7 +14,7 @@ Example usage:
    resdatafiles = ResdataFiles("MYDATADECK.DATA")
    dframe = pvt.df(resdatafiles)
 
-Alternatively, we may also read directly from an include file
+Alternatively, we may also read directly from an :term:`include file`
 if we read the contents of the file and supply it as a string:
 
 .. code-block:: python
@@ -30,7 +30,7 @@ if we read the contents of the file and supply it as a string:
   :header-rows: 1
 
 If your PVT data resides in multiple include files, but you can't import
-the entire deck, you have to merge the dataframes in Python like this:
+the entire :term:`deck`, you have to merge the dataframes in Python like this:
 
 .. code-block:: python
 
@@ -70,7 +70,8 @@ Density values are easier to scale up or down to whatever is needed.
 Re-exporting tables to include files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you are done with the table, you can generate new include files from your modified data by issuing
+When you are done with the table, you can generate new 
+:term:`include files <include file>` from your modified data by issuing
 
 .. code-block:: python
 

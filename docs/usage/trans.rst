@@ -6,7 +6,7 @@ from a simulation grid.
 
 Python API: :func:`res2df.trans.df`
 
-Applied on a .DATA file, the *trans* module will give out a dataframe of neighbour
+Applied on a :term:`.DATA file`, the *trans* module will give out a dataframe of neighbour
 connections
 
 .. code-block:: python

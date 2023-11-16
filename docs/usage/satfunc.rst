@@ -1,7 +1,7 @@
 satfunc
 -------
 
-satfunc will extract saturation functions from .DATA files or from
+satfunc will extract saturation functions from :term:`.DATA files <.DATA file>` or from
 include files, these are the keywords ``SWOF``, ``SGOF``, ``SGWFN``, ``SWFN``,
 ``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
 

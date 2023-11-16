@@ -1,9 +1,9 @@
 csv2res
 =======
 
-Some of the modules inside res2df is able to write .DATA files
+Some of the modules inside res2df is able to write :term:`.DATA files<.DATA file>`
 from dataframes (in the format dumped by res2df). This makes it possible
-to produce .DATA files in any application that can write CSV files,
+to produce :term:`.DATA files<.DATA file>` in any application that can write CSV files,
 and use this tool to convert it into reservoir simulator files, or it can
 facilitate operations/manipulations of an existing deck using any tool
 that can work on CSV files, by first running res2csv on an input file,

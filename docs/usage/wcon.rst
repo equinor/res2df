@@ -2,7 +2,7 @@ wcon
 ^^^^
 
 This module extracts information from WCONHIST, WCONINJE, WCONINJH and
-WCONPROD from a .DATA file.
+WCONPROD from a :term:`.DATA file`.
 
 ..
   wcon.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/wcon.csv', index=False)

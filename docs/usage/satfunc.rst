@@ -1,7 +1,7 @@
 satfunc
 -------
 
-satfunc will extract saturation functions from input decks or from Eclipse
+satfunc will extract saturation functions from input decks or from
 include files, these are the keywords ``SWOF``, ``SGOF``, ``SGWFN``, ``SWFN``,
 ``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
 
@@ -37,7 +37,7 @@ Instead of data decks, individual include files may also be parsed, but
 only one at a time.
 
 Generating include files from dataframes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When a dataframe of saturation function data is loaded into Python, any operation
 may be applied on the data. Simple operations would typically be scaling, perhaps
@@ -113,7 +113,7 @@ to do directly on the dataframes. Before doing manipulations of dataframes in
 through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
-Pyscal can create initialize its relperm objects from include files
+Pyscal can initialize its relperm objects from include files
 though the parsing capabilities of res2df.satfunc.
 
 The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in

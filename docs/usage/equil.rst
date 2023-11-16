@@ -51,10 +51,11 @@ one meter for compatibility, which you could do by the statements:
    dframe.loc[rsvd_rows, "Z"] = dframe.loc[rsvd_rows, "Z"] + 1
 
 
-Re-exporting tables to include files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Re-exporting tables to include-files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you are done with the table, you can generate new include files from your modified data by issuing
+When you are done with the table, you can generate new include files from your modified
+data by issuing
 
 .. code-block:: python
 

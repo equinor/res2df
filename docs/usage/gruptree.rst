@@ -1,7 +1,8 @@
 gruptree
 --------
 
-Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from an input deck and presents the production network either as pretty-printed ASCII or in a
+Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from an input deck
+and presents the production network either as pretty-printed ASCII or in a
 dataframe-representation.
 
 The GRUPTREE section of your input deck defines the production network

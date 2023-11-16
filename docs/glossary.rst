@@ -17,7 +17,10 @@ Glossary
         in .DATA files. By convention, these files often have the extension .INC/.inc
         (generally) or .GRDECL/.grdecl (for files included into the grid section).
 
-    reservoir simulator output file
+    deck
+        Refers to a .DATA file and the include files it points to
+
+    output file
         When a reservoir simulator runs, several files will be generated.
         These will have extensions such as .EGRID, .FEGRID, .UNSMRY, .GRID, .INIT, etc.
         See the opm flow manual Appendix D (https://opm-project.org/wp-content/uploads/2023/06/OPM_Flow_Reference_Manual_2023-04_Rev-0_Reduced.pdf)

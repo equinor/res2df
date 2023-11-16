@@ -2,7 +2,7 @@ equil
 -----
 
 This is the res2df module for processing the ``SOLUTION`` section of
-the input deck.
+the .DATA file.
 
 Supported keywords are ``EQUIL``, ``RSVD``, ``RVVD``, ``PBVD`` and
 ``PDVD``. Typical usage is

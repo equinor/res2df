@@ -82,7 +82,7 @@ def deck2dfs(
 
     Args:
         deck: A deck representing the schedule
-            Does not have to be a full input deck, an include file is sufficient
+            Does not have to be a full .DATA file, an include file is sufficient
         start_date: The default date to use for
             events where the DATE or START keyword is not found in advance.
             Default: None
@@ -950,7 +950,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     Arguments:
         parser: parser to fill with arguments
     """
-    parser.add_argument("DATAFILE", help="Name of resdata .DATA file.")
+    parser.add_argument("DATAFILE", help="Name of .DATA file.")
     parser.add_argument(
         "-o",
         "--output",

@@ -321,7 +321,7 @@ def df(
     is always named "DATE".
 
     Arguments:
-        resdatafiles: ResdataFiles object representing the input deck. Alternatively
+        resdatafiles: ResdataFiles object representing a .DATA file. Alternatively
            an Summary object.
         time_index: string indicating a resampling frequency,
            'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will

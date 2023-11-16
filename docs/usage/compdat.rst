@@ -1,7 +1,7 @@
 compdat
 ^^^^^^^
 
-This module extracts COMPDAT, WELSEGS and COMPSEGS from an input deck.
+This module extracts COMPDAT, WELSEGS and COMPSEGS from a .DATA file.
 
 Additionally, it will parse WELOPEN statements and emit new COMPDAT
 statements from the actions in WELOPEN.
@@ -26,7 +26,7 @@ for each of COMPDAT, and the segmentation keywords.
 .. warning:: When WELOPEN is in use, the dataframe can differ from Eclipse
   behaviour in certain circumstances. The dataframe representation from
   ``compdat`` does not separate from a "shut" well and the open-ness of its
-  connections. So in an input deck it is possible to shut a well, and then
+  connections. So in a .DATA FILE it is possible to shut a well, and then
   reopen it, and get back the original open/shut state of individual
   connections prior to well shut.  The dataframe format will display `all`
   connections as open if a well is opened with defaulted indices.

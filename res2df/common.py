@@ -630,8 +630,7 @@ def generic_deck_table(
     renamer: Optional[Dict[str, str]] = None,
     drop_trailing_columns: bool = True,
 ) -> str:
-    """Construct an input deck table for data following
-    a keyword. Each row ends with a slash.
+    """Construct string contents of a .DATA file table.
 
     This function will *not* add a final slash after all rows, as
     this is keyword dependent. Some keywords require it, some keywords

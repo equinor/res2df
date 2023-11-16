@@ -1,13 +1,13 @@
 gruptree
 --------
 
-Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from an input deck
+Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from a .DATA file
 and presents the production network either as pretty-printed ASCII or in a
 dataframe-representation.
 
-The GRUPTREE section of your input deck defines the production network
+The GRUPTREE section of your .DATA file defines the production network
 from wells and up to the platform (and possibly also to a field having
-many platforms). In the input deck it be as simple as this::
+many platforms). In the .DATA file it be as simple as this::
 
     START
       01 'JAN' 2000 /

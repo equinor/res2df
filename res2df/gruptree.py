@@ -1,4 +1,4 @@
-"""Extract GRUPTREE information from an input deck"""
+"""Extract GRUPTREE information from a .DATA file"""
 
 import argparse
 import collections

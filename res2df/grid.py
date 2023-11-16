@@ -626,7 +626,7 @@ def df2res(
 ) -> str:
     """
     Write an include file with grid data keyword, like PERMX, PORO,
-    FIPNUM etc, for the GRID section of the input deck.
+    FIPNUM etc, for the GRID section of the .DATA file.
 
     Output (returned as string and optionally written to file) will then
     contain f.ex::

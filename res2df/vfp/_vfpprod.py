@@ -3,7 +3,7 @@ Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
 basic_data (dictionary with basic data types), df (pandas DataFrame) or
 pyarrow_tables (pyarrow.Tables).
 
-Data can be extracted from a full input deck or from individual files.
+Data can be extracted from a full .DATA file or from individual files.
 Supports output both in csv format as a pandas DataFrame or in pyarrow
 as pyarrow.Table. Also functionality to write pandas DataFrame and
 pyarrow.Table to file as Eclipse .Ecl format.
@@ -86,7 +86,7 @@ def basic_data(
     Empty string returned if vfp table number does not match any number in list
 
     Args:
-        keyword:        input deck keyword
+        keyword:        .DATA file keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds
     """
@@ -720,10 +720,10 @@ def df(
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, None]:
     """Return a dataframe or pyarrow Table of a single VFPPROD table
-    from an input deck.
+    from a .DATA file.
 
     Args:
-        keyword:        input deck keyword
+        keyword:        .DATA file keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
@@ -764,11 +764,11 @@ def pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pa.Table, None]:
-    """Return a pyarrow Table of a single VFPPROD table from an input deck.
+    """Return a pyarrow Table of a single VFPPROD table from a .DATA file.
        If no VFPPROD curve found, return None
 
     Args:
-        keyword:        input deck keyword
+        keyword:        .DATA file keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """

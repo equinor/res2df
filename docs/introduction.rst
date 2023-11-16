@@ -127,14 +127,14 @@ More documentation on :doc:`usage/satfunc`.
 ^^^^^^^^^
 
 Extracts the information in the `EQUIL` table, `RSVD` and `RVVD` in the
-input deck. Can write back to include files.
+.DATA file. Can write back to include files.
 
 More documentation on :doc:`usage/equil`.
 
 ``compdat``
 ^^^^^^^^^^^
 
-Extracts well connection data from the `COMPDAT` keyword in the input deck.
+Extracts well connection data from the `COMPDAT` keyword in the .DATA file.
 For multi-segment wells, `WELSEGS` and `COMPSEGS` is also parsed. The
 data is available as three different dataframes, which can be merged.
 
@@ -147,7 +147,7 @@ More documentation on :doc:`usage/compdat`.
 ^^^^^^^^^^^^
 
 Extracts the information from the `GRUPTREE` and `WELSPECS` keyword, at
-all timesteps, from the input deck. The tree structure at each relevant
+all timesteps, from the .DATA file. The tree structure at each relevant
 date can be returned as a dataframe of the edges, as a nested dictionary
 or as a `treelib` tree.
 
@@ -156,7 +156,7 @@ More documentation on :doc:`usage/gruptree`.
 ``pvt``
 ^^^^^^^
 
-Extracts PVT data from an input deck, from the keywords `PVTO`, `PVDG`,
+Extracts PVT data from a .DATA file, from the keywords `PVTO`, `PVDG`,
 `DENSITY`, `ROCK` etc. Can write data back to include files.
 
 More documentation on :doc:`usage/pvt`.
@@ -173,7 +173,7 @@ More documentation on :doc:`usage/wcon`.
 ^^^^^^^^^^^^^^^^
 
 This is an internal helper module in order to represent finished or
-unfinished input decks and runs. The class ResdataFiles can cache binary
+unfinished .DATA files and runs. The class ResdataFiles can cache binary
 files that are recently read, and is able to locate the various output
 files based on the basename or the `.DATA` filename.
 
@@ -183,7 +183,7 @@ Metadata support
 parameters.txt
 ^^^^^^^^^^^^^^
 
-Metadata for each input deck are sometimes added in a text file named
+Metadata for each .DATA file are sometimes added in a text file named
 ``parameters.txt``, alongside the Eclipse DATA file or one or two directory levels
 above it.
 

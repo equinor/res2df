@@ -3,7 +3,7 @@ Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
 basic_data (dictionary with basic data types), df (pandas DataFrame) or
 pyarrow_tables (pyarrow.Tables).
 
-Data can be extracted from a full input deck or from individual files.
+Data can be extracted from a full .DATA file or from individual files.
 Supports output both in csv format as a pandas DataFrame or in pyarrow
 a pyarrow.Table. Also functionality to write pandas DataFrame and
 pyarrow.Table to file as Eclipse .Ecl format
@@ -74,7 +74,7 @@ def basic_data(
     Empty string returned if vfp table number does not match any number in list
 
     Args:
-        keyword:        input deck keyword
+        keyword:        .DATA file keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds
     """
@@ -473,12 +473,12 @@ def df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, None]:
-    """Return a dataframes of a single VFPINJ table from an input deck
+    """Return a dataframes of a single VFPINJ table from a .DATA file
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
 
     Args:
-        keyword:        input deck keyword
+        keyword:        .DATA file keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
@@ -510,11 +510,11 @@ def pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pa.Table, None]:
-    """Return a pyarrow Table of a single VFPINJ table from an input deck
+    """Return a pyarrow Table of a single VFPINJ table from a .DATA file
        If no VFPINJ table found, return None
 
     Args:
-        keyword:        input deck keyword
+        keyword:        .DATA file keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """

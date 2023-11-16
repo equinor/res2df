@@ -24,7 +24,7 @@ For more documentation, see https://equinor.github.io/res2df/.
 CATEGORY: str = "utility.eclipse"
 EXAMPLES: str = """
 
-Outputting the EQUIL data from an input deck. The ECLBASE variable from your
+Outputting the EQUIL data from a .DATA file. The ECLBASE variable from your
 ERT config is supplied implicitly::
 
    FORWARD_MODEL res2csv(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
@@ -130,7 +130,7 @@ def get_parser() -> argparse.ArgumentParser:
         "pvt",
         help="Extract PVT data",
         description=(
-            "Extract data for the PVT keywords in an input deck "
+            "Extract data for the PVT keywords in a .DATA file "
             "and merge all data into a single dataframe. "
             "Supported keywords are PVTO, PVDO, PVTG, PVDG, PVTW, "
             "ROCK and DENSITY. Gas phase pressure and oil phase "

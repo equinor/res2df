@@ -1,6 +1,6 @@
 """Extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas Dataframes
 
-Data can be extracted from a full input deck or from individual files. Supports
+Data can be extracted from a full .DATA file or from individual files. Supports
 output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 """
 
@@ -45,7 +45,7 @@ def basic_data(
     BASIC_DATA_KEYS in _vfpprod and _vfpinj.
 
     Args:
-        deck:           input deck or string with deck
+        deck:           .DATA file or string with deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
@@ -250,7 +250,7 @@ def dfs(
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
 
     Args:
-        deck:           input deck or string with deck
+        deck:           .DATA file or string with deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
@@ -293,7 +293,7 @@ def pyarrow_tables(
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
 
     Args:
-        deck:           input deck or string with deck
+        deck:           .DATA file or string with deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
@@ -418,7 +418,7 @@ def df(
     All data for the keywords VFPPROD/VFPINJ will be returned.
 
     Args:
-        deck:           input deck or string wit deck
+        deck:           .DATA file or string wit deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: str with list of VFP table numbers to extract
     """

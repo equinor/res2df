@@ -346,7 +346,7 @@ def test_rogue_eclipse_output(tmp_path):
 
 
 def test_prtstring_opmflow(tmp_path):
-    """Test parsing the PRT output from OPM flow."""
+    """Test parsing the PRT output from OPM Flow."""
     prtstring = """
 Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 

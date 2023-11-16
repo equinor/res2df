@@ -134,7 +134,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
         ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
     )
 
-    # Flag for whether we are supposedly parsing a PRT file made by OPM flow:
+    # Flag for whether we are supposedly parsing a PRT file made by OPM Flow:
     opm = False
 
     with open(prtfile, encoding="utf-8") as prt_fh:

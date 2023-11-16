@@ -1,5 +1,5 @@
--- Output file printed by res2df.grid 0.6.0
--- at 2020-04-23 10:46:22.529558
+-- Output file printed by res2df.grid 0.17.2
+-- at 2023-11-16 9:31:23.318941
 
 FIPNUM
      21*2  19*1  20*2  20*1  20*2  20*1  19*2  21*1  19*2  21*1  18*2

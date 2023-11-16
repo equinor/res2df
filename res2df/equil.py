@@ -363,7 +363,7 @@ def df2res(
     solution (EQUIL, RSVD++) data.
 
     Args:
-        equil_df: Dataframe with data on res2df format.
+        equil_df: Dataframe with res2df format.
         keywords: List of keywords to include. Must be
             supported and present in the incoming dataframe.
         comments: Dictionary indexed by keyword with comments to be

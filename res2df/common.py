@@ -479,7 +479,8 @@ def fill_reverse_parser(
         defaultoutputfile: Default output filename
     """
     parser.add_argument(
-        "csvfile", help="Name of CSV file with " + modulename + " data on res2df format"
+        "csvfile",
+        help="Name of CSV file with " + modulename + " data with " "res2df format",
     )
     parser.add_argument(
         "-o",
@@ -523,7 +524,7 @@ def df2res(
     for the actual string construction.
 
     Args:
-        dataframe: Dataframe with reservoir DATA on res2df format.
+        dataframe: Dataframe with res2df format.
         keywords: List of keywords to include. Will be reduced
             to the set of keywords available in dataframe and to those supported
         comments: Dictionary indexed by keyword with comments to be

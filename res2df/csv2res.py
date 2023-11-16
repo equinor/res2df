@@ -71,7 +71,7 @@ def get_parser() -> argparse.ArgumentParser:
     pvt_parser = subparsers.add_parser(
         "pvt",
         help="Write PVT include files",
-        description=("Write include files from CSV files on the res2df format."),
+        description=("Write include files from CSV files with res2df format."),
     )
     pvt.fill_reverse_parser(pvt_parser)
     pvt_parser.set_defaults(func=pvt.pvt_reverse_main)
@@ -80,8 +80,8 @@ def get_parser() -> argparse.ArgumentParser:
         "satfunc",
         help="Write saturation function include files",
         description=(
-            "Write saturation function include files from CSV files on "
-            "the res2df format."
+            "Write saturation function include files from CSV files with "
+            "res2df format."
         ),
     )
     satfunc.fill_reverse_parser(satfunc_parser)
@@ -91,7 +91,7 @@ def get_parser() -> argparse.ArgumentParser:
         "vfp",
         help="Write VFPPROD/VFPINJ include files",
         description=(
-            "Write VFPPROD/VFPINJ include files from CSV files on the res2df format."
+            "Write VFPPROD/VFPINJ include files from CSV files with res2df format."
         ),
     )
     vfp.fill_reverse_parser(vfp_parser)

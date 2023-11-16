@@ -332,7 +332,7 @@ def df2res(
     """Generate resdata include strings from PVT dataframes
 
     Args:
-        pvt_df: Dataframe with PVT data on res2df format.
+        pvt_df: Dataframe with PVT data in res2df format.
         keywords: List of keywords to include. Must be
             supported and present in the incoming dataframe.
         comments: Dictionary indexed by keyword with comments to be

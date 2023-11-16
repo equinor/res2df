@@ -242,7 +242,7 @@ def df2res(
     saturation functions (SWOF, SGOF, ...)
 
     Args:
-        satfunc_df: Dataframe with data on res2df format.
+        satfunc_df: Dataframe with res2df format.
         keywords: List of keywords to include. Must be
             supported and present in the incoming dataframe. Keywords
             are printed in the order defined by this list.

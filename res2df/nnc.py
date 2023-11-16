@@ -31,8 +31,8 @@ def df(
     between the two cells)
 
     Args:
-        resdatafiles: object that can serve EclFile and EclGrid
-            on demand
+        resdatafiles: object that can serve reservoir simulator
+            output files on demand.
         coords: Set to True if you want the midpoint of the two
             connected cells to be computed and added to the columns
             X, Y and Z.

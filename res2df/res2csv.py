@@ -24,8 +24,8 @@ For more documentation, see https://equinor.github.io/res2df/.
 CATEGORY: str = "utility.eclipse"
 EXAMPLES: str = """
 
-Outputting the EQUIL data from a .DATA file. The ECLBASE variable from your
-ERT config is supplied implicitly::
+Outputting the EQUIL data from a .DATA file. This is implicitly 
+supplied in ERT configs::
 
    FORWARD_MODEL res2csv(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
 

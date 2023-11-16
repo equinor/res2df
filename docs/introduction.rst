@@ -4,8 +4,8 @@ Introduction
 *res2df* is a `Pandas DataFrame <https://pandas.pydata.org/>`_ wrapper
 around `resdata <https://github.com/equinor/resdata/>`_ and `opm.io
 <https://github.com/OPM/opm-common/>`_, which are used to access
-binary files outputted by reservoir simulators such as Eclipse, or its
-input files --- or any other tool outputting to the same data format,
+:term:`binary files outputted by reservoir simulators <output file>` such as Eclipse, or its
+:term:`input files <deck>` --- or any other tool outputting to the same data format,
 f.ex. `flow <https://opm-project.org/?page_id=19>`_.
 
 Most of the features can be reached from the command line, through the
@@ -45,7 +45,7 @@ Short description of each submodule
 ``summary``
 ^^^^^^^^^^^^^^
 
-Extracts summary data from `.UNSMRY` files, at requested time sampling and
+Extracts summary data from :term:`.UNSMRY <output file>` files, at requested time sampling and
 for requested vectors.
 
 More documentation on :doc:`usage/summary`.
@@ -53,7 +53,8 @@ More documentation on :doc:`usage/summary`.
 ``grid``
 ^^^^^^^^
 
-Extracts grid data from `.INIT` and `.EGRID` and `.UNRST` files. Restart file
+Extracts grid data from :term:`.INIT <output file>`, :term:`.EGRID <output file>`,
+and :term:`.UNRST <output file>` files. Restart file
 are optional to extract, and dates must be picked (or all). Data is
 merged into one DataFrame by the `i`, `j` and `k` indices. Bulk cell
 volume is included. Cells are indexed starting with 1.
@@ -94,7 +95,8 @@ More documentation on :doc:`usage/trans`.
 ``rft``
 ^^^^^^^
 
-Reads the `.RFT` files which are outputted by the simulator when
+Reads the `.RFT` files which are outputted by the 
+:term:`simulator <reservoir simulator>` when
 the `WRFTPLT` keyword is used, with details along wellbores.
 
 For multisegment wells, the well topology is calculated and data
@@ -107,7 +109,7 @@ More documentation on :doc:`usage/rft`.
 ^^^^^^^^^^^^^^
 
 Parses the PRT file looking for region reports (starting
-with " ... FIPNUM REPORT REGION". It will extract all the data
+with " ... FIPNUM REPORT REGION"). It will extract all the data
 in the ASCII table in the PRT file and organize into a dataframe,
 currently-in-place, outflow to wells, outflows to regions, etc. It also
 supports custom FIPxxxxx names.
@@ -118,8 +120,8 @@ More documentation on :doc:`usage/fipreports`.
 ``satfunc``
 ^^^^^^^^^^^
 
-Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
-into one DataFrame. Can write back to include files.
+Extracts saturation functions (SWOF, SGOF, etc) from the :term:`deck` and merges
+into one DataFrame. Can write back to :term:`include files <include file>`.
 
 More documentation on :doc:`usage/satfunc`.
 
@@ -127,7 +129,7 @@ More documentation on :doc:`usage/satfunc`.
 ^^^^^^^^^
 
 Extracts the information in the `EQUIL` table, `RSVD` and `RVVD` in the
-:term:`.DATA file`. Can write back to include files.
+:term:`.DATA file`. Can write back to :term:`include files <include file>`.
 
 More documentation on :doc:`usage/equil`.
 
@@ -138,8 +140,8 @@ Extracts well connection data from the `COMPDAT` keyword in the :term:`.DATA fil
 For multi-segment wells, `WELSEGS` and `COMPSEGS` is also parsed. The
 data is available as three different dataframes, which can be merged.
 
-It is also possible to parse individual "include" files, not only a
-finished working deck.
+It is also possible to parse individual :term:`"include files" <include file>`, not only a
+finished working :term:`deck`.
 
 More documentation on :doc:`usage/compdat`.
 
@@ -157,7 +159,7 @@ More documentation on :doc:`usage/gruptree`.
 ^^^^^^^
 
 Extracts PVT data from a :term:`.DATA file`, from the keywords `PVTO`, `PVDG`,
-`DENSITY`, `ROCK` etc. Can write data back to include files.
+`DENSITY`, `ROCK` etc. Can write data back to :term:`include files <include file>`.
 
 More documentation on :doc:`usage/pvt`.
 
@@ -174,8 +176,8 @@ More documentation on :doc:`usage/wcon`.
 
 This is an internal helper module in order to represent finished or
 unfinished :term:`.DATA files <.DATA file>` and runs. The class ResdataFiles can cache binary
-files that are recently read, and is able to locate the various output
-files based on the basename or the `.DATA` filename.
+files that are recently read, and is able to locate the various
+:term:`output files <output file>` based on the basename or the `.DATA` filename.
 
 Metadata support
 ----------------
@@ -202,9 +204,9 @@ have to be merged with pandas.merge().
 Zone names
 ^^^^^^^^^^
 
-If a text file with zone names are found alongside the Eclipse DATA file, some of the modules
-will add that information to rows where appropriate. The zone or layer file should contains
-lines like::
+If a text file with zone names are found alongside :term:`.DATA files <.DATA file>`,
+some of the modules will add that information to rows where appropriate.
+The zone or layer file should contains lines like::
 
   'ZoneA' 1-4
   'ZoneB' 5-10

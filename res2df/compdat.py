@@ -1,4 +1,4 @@
-"""Parser and dataframe generator for the resdata keywords:
+"""Parser and dataframe generator for the keywords:
   * COMPDAT
   * COMPLUMP
   * COMPSEGS

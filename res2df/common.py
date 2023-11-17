@@ -34,7 +34,7 @@ from res2df import __version__
 from .constants import MAGIC_STDOUT
 
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
-# of supported resdata keyword data
+# of supported keyword data
 OPMKEYWORDS: Dict[str, dict] = {}
 for keyw in [
     "BRANPROP",
@@ -192,7 +192,7 @@ def keyworddata_to_df(
     recordcountername: Optional[str] = None,
     emptyrecordcountername: Optional[str] = None,
 ) -> pd.DataFrame:
-    """Extract data associated to an resdata keyword into a tabular form.
+    """Extract data associated to a keyword into tabular form.
 
     Two modes of enumeration of tables in the keyworddata is supported, you
     will have to find out which one fits your particular keyword. Activate
@@ -275,7 +275,7 @@ def parse_opmio_deckrecord(
 
     Args:
         record: Record be parsed
-        keyword: Which resdata keyword this belongs to
+        keyword: Which keyword this belongs to
         itemlistname: The key in the json dict that describes the items,
             typically 'items' or 'records'
         recordindex: For keywords where itemlistname is 'records', this is a

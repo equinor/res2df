@@ -31,7 +31,7 @@ def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
     stricter mode, to detect the correct table dimensionality
 
     Arguments:
-        deck: String containing a :term:`.DATA file` or only a few resdata keywords
+        deck: String containing a :term:`.DATA file` or only a few keywords
         dimkeyword: Either TABDIMS or EQLDIMS
         dimitem: The element number in TABDIMS/EQLDIMS to modify
     Returns:

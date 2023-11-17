@@ -68,7 +68,7 @@ def _deckrecord2list(
 
     Args:
         record:      Record be parsed
-        keyword:     Which resdata keyword this belongs to
+        keyword:     Which keyword this belongs to
         recordindex: For keywords where itemlistname is 'records', this is a
                      list index to the "record".
         recordname:  Name of the record

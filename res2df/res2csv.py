@@ -151,7 +151,7 @@ def get_parser() -> argparse.ArgumentParser:
             "particular well at a particular time. "
             "If multisegment wells are found, associated data "
             "to a connection is merged onto the same row as additional columns. "
-            "You need the resdata keyword WRFTPLT present in your DATA-file to get "
+            "You need the keyword WRFTPLT present in your DATA-file to get "
             "the data outputted."
         ),
     )

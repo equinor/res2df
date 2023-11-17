@@ -630,7 +630,7 @@ def generic_deck_table(
     renamer: Optional[Dict[str, str]] = None,
     drop_trailing_columns: bool = True,
 ) -> str:
-    """Construct string contents of a .DATA file table.
+    """Construct string contents of a :term:`.DATA file` table.
 
     This function will *not* add a final slash after all rows, as
     this is keyword dependent. Some keywords require it, some keywords

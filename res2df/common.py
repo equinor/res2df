@@ -476,7 +476,7 @@ def fill_reverse_parser(
     Arguments:
         parser: parser to fill with arguments
         modulename: Will be included in the help text
-        defaultoutputfile: Default output filename
+        defaultoutputfile: Default :term:`output file`name
     """
     parser.add_argument(
         "csvfile",

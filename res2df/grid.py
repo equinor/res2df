@@ -282,13 +282,13 @@ def rst2df(
 def gridgeometry2df(
     resdatafiles: ResdataFiles, zonemap: Optional[Dict[int, str]] = None
 ) -> pd.DataFrame:
-    """Produce a Pandas Dataframe with Eclipse grid geometry
+    """Produce a Pandas Dataframe with grid geometry
 
     Order is significant, and is determined by the order from resdata, and used
     when merging with other dataframes with cell-data.
 
     Args:
-        resdatafiles: object holding the Eclipse output files.
+        resdatafiles: object holding the :term:`output files <output file>`.
         zonemap: A zonemap dictionary mapping every K index to a
             string, which will be put in a column ZONE. If none is provided,
             a zonemap from a default file will be looked for. Provide an empty
@@ -369,7 +369,7 @@ def merge_initvectors(
     for API users to only use the df() function.
 
     Args:
-        resdatafiles: Object representing the output files
+        resdatafiles: Object representing the :term:`output files <output file>`
         dframe: Table data to merge with
         initvectors: Names of INIT vectors to merge in.
         ijknames: Three strings that determine the I, J and K columns to use

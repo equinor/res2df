@@ -41,7 +41,7 @@ if HAVE_OPM:
 
 class ResdataFiles(object):
     """
-    Class for holding .DATA output files
+    Class for holding reservoir simulator :term:`output files <output file>`
 
     Exists only for convenience, so that loading of
     ResdataFile/Summary objects is easy for users, and with

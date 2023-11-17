@@ -3,7 +3,7 @@ Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
 basic_data (dictionary with basic data types), df (pandas DataFrame) or
 pyarrow_tables (pyarrow.Tables).
 
-Data can be extracted from a full .DATA file or from individual files.
+Data can be extracted from a complete deck or from individual files.
 Supports output both in csv format as a pandas DataFrame or in pyarrow
 a pyarrow.Table. Also functionality to write pandas DataFrame and
 pyarrow.Table to file as Eclipse .Ecl format

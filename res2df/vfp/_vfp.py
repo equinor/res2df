@@ -1,6 +1,6 @@
 """Extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas Dataframes
 
-Data can be extracted from a full .DATA file or from individual files. Supports
+Data can be extracted from a complete deck or from individual files. Supports
 output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 """
 

@@ -1,7 +1,7 @@
 """
 Extract the PVT data from a .DATA file as Pandas Dataframes
 
-Data can be extracted from a full .DATA file or from individual files.
+Data can be extracted from a complete deck or from individual files.
 """
 
 import argparse

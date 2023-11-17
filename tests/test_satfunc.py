@@ -27,7 +27,7 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
 def test_deck_to_satfunc_dframe():
-    """Test that dataframes can be produced from a full .DATA file (the
+    """Test that dataframes can be produced from a complete deck (the
     example Reek case)"""
     resdatafiles = ResdataFiles(REEK)
     satdf = satfunc.df(resdatafiles.get_deck())

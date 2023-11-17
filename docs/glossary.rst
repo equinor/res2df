@@ -18,7 +18,11 @@ Glossary
         (generally) or .GRDECL/.grdecl (for files included into the grid section).
 
     deck
-        Refers to a .DATA file and the include files it points to.
+        Refers to inputs passed to reservoir simulators. It may be a .DATA file and the
+        include files it points to, or it may be a single or several include files.
+        If a deck contains all the information (i.e., keywords) the simulator needs 
+        to run the requested simulation, it is defined as complete. If it is missing
+        needed information, it is incomplete.
 
     output file
         When a reservoir simulator runs, several files will be generated.

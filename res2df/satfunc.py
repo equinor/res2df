@@ -2,7 +2,7 @@
 Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from a .DATA file as Pandas DataFrame.
 
-Data can be extracted from a full .DATA file (`*.DATA`)
+Data can be extracted from a complete deck (`*.DATA`)
 or from individual files.
 
 Note that when parsing from individual files, it is

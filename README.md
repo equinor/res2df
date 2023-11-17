@@ -12,8 +12,9 @@ res2df is a Pandas DataFrame wrapper around resdata and opm.io, which
 are used to access binary files outputted by reservoir simulators, 
 or its input files --- or any other tool outputting to the same data format.
 
-The reverse operation, from a Pandas DataFrame to reservoir simulator include files,
-is provided for some of the modules.
+The reverse operation, from a Pandas DataFrame to reservoir simulator include files
+(commonly given the extension ".inc", ".grdecl" etc.) is provided for some of the 
+modules.
 
 The package consists of a module pr. datatype, e.g. one module for summary
 files (.UNSMRY), one for completion data etc.

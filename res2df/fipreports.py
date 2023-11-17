@@ -106,7 +106,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
     DATE and region index added.
 
     Args:
-        prtfile: filename (PRT) or an ResdataFiles object
+        prtfile: filename (PRT) or a resdataFiles object
         fipname: The name of the regport regions, FIPNUM, FIPZON or whatever
             Max length of the string is 8, the first three characters must be FIP,
             and the next 3 characters must be unique for a given :term:`.DATA file`.

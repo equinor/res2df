@@ -114,7 +114,7 @@ through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
 Pyscal can initialize its relperm objects from :term:`include files<include file>`
-though the parsing capabilities of res2df.satfunc.
+through the parsing capabilities of res2df.satfunc.
 
 The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in
 what it produces, and the :func:`res2df.satfunc.df2res()` can be used on both

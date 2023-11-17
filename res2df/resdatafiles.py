@@ -157,7 +157,7 @@ class ResdataFiles(object):
         return self._summary
 
     def get_initfile(self) -> ResdataFile:
-        """Find and return the INIT file as an ResdataFile object"""
+        """Find and return the INIT file as a ResdataFile object"""
         if not self._initfile:
             initfilename = self._eclbase + ".INIT"
             if not Path(initfilename).is_file():
@@ -169,7 +169,7 @@ class ResdataFiles(object):
         return self._initfile
 
     def get_rftfile(self) -> ResdataFile:
-        """Find and return the RFT file as an ResdataFile object"""
+        """Find and return the RFT file as a ResdataFile object"""
         if not self._rftfile:
             rftfilename = self._eclbase + ".RFT"
             if not Path(rftfilename).is_file():
@@ -181,7 +181,7 @@ class ResdataFiles(object):
         return self._rftfile
 
     def get_rstfile(self) -> ResdataFile:
-        """Find and return the UNRST file as an ResdataFile object"""
+        """Find and return the UNRST file as a ResdataFile object"""
         if not self._rstfile:
             rstfilename = self._eclbase + ".UNRST"
             if not Path(rstfilename).is_file():

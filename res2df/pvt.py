@@ -239,7 +239,7 @@ def df(
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Set up sys.argv parsers for parsing .DATA file or
+    """Set up sys.argv parsers for parsing :term:`.DATA file` or
     include files into dataframes
 
     Arguments:

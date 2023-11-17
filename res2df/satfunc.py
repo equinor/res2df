@@ -129,7 +129,8 @@ def df(
 
 def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     """Interpolate NaN's linearly in saturation.
-    Saturation function tables in .DATA files can have certain values defaulted.
+    Saturation function tables in :term:`.DATA files <.DATA file>`
+    can have certain values defaulted.
     When parsed by common.res2df, these values are returned as np.nan.
     The incoming dataframe must be associated to one keyword only, but
     can consist of multiple SATNUMs.

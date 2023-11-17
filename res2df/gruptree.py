@@ -1,4 +1,4 @@
-"""Extract GRUPTREE information from a .DATA file"""
+"""Extract GRUPTREE information from a :term:`.DATA file`"""
 
 import argparse
 import collections

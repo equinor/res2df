@@ -321,8 +321,8 @@ def df(
     is always named "DATE".
 
     Arguments:
-        resdatafiles: ResdataFiles object representing a .DATA file. Alternatively
-           an Summary object.
+        resdatafiles: ResdataFiles object representing a
+            :term:`.DATA file`. Alternatively a Summary object.
         time_index: string indicating a resampling frequency,
            'yearly', 'monthly', 'daily', 'last' or 'raw', the latter will
            return the simulated report steps (also default).

@@ -91,7 +91,7 @@ def df(
 
 
 def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
-    """Returns the unit system of a .DATA file. The options are \
+    """Returns the unit system of a :term:`.DATA file`. The options are \
     METRIC, FIELD, LAB and PVT-M.
 
     If none of these are found, the function returns METRIC which is the

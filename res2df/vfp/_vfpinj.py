@@ -74,7 +74,7 @@ def basic_data(
     Empty string returned if vfp table number does not match any number in list
 
     Args:
-        keyword:        .DATA file keyword
+        keyword:        :term:`.DATA file` keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds
     """
@@ -473,12 +473,12 @@ def df(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, None]:
-    """Return a dataframes of a single VFPINJ table from a .DATA file
+    """Return a dataframes of a single VFPINJ table from a :term:`.DATA file`
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
 
     Args:
-        keyword:        .DATA file keyword
+        keyword:        :term:`.DATA file` keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """
@@ -510,11 +510,11 @@ def pyarrow(
     keyword: "opm.libopmcommon_python.DeckKeyword",
     vfpnumbers_str: Optional[str] = None,
 ) -> Union[pa.Table, None]:
-    """Return a pyarrow Table of a single VFPINJ table from a .DATA file
+    """Return a pyarrow Table of a single VFPINJ table from a :term:`.DATA file`
        If no VFPINJ table found, return None
 
     Args:
-        keyword:        .DATA file keyword
+        keyword:        :term:`.DATA file` keyword
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
     """

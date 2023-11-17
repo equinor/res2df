@@ -45,7 +45,7 @@ def basic_data(
     BASIC_DATA_KEYS in _vfpprod and _vfpinj.
 
     Args:
-        deck:           .DATA file or string with deck
+        deck:           :term:`.DATA file` or string with deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
@@ -250,7 +250,7 @@ def dfs(
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
 
     Args:
-        deck:           .DATA file or string with deck
+        deck:           :term:`.DATA file` or string with deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
@@ -293,7 +293,7 @@ def pyarrow_tables(
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
 
     Args:
-        deck:           .DATA file or string with deck
+        deck:           :term:`.DATA file` or string with deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: String with list of vfp table numbers to extract.
                         Syntax "[0,1,8:11]" corresponds to [0,1,8,9,10,11].
@@ -418,7 +418,7 @@ def df(
     All data for the keywords VFPPROD/VFPINJ will be returned.
 
     Args:
-        deck:           .DATA file or string wit deck
+        deck:           :term:`.DATA file` or string wit deck
         keyword:        VFP table type, i.e. 'VFPPROD' or 'VFPINJ'
         vfpnumbers_str: str with list of VFP table numbers to extract
     """

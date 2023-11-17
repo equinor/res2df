@@ -36,7 +36,7 @@ def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFram
     All data for the keyword FAULTS will be returned.
 
     Args:
-        deck: .DATA file
+        deck: :term:`.DATA file`
     """
     if isinstance(deck, ResdataFiles):
         deck = deck.get_deck()

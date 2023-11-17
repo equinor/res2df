@@ -29,9 +29,9 @@ WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
 
 def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
-    """Loop through the deck and pick up information found
+    """Loop through the :term:`deck` and pick up information found
 
-    The loop over the deck is a state machine, as it has to pick up dates
+    The loop over the :term:`deck` is a state machine, as it has to pick up dates
     """
 
     if isinstance(deck, ResdataFiles):

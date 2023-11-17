@@ -69,22 +69,22 @@ def df(
     The two first columns in the dataframe are 'KEYWORD' (which can be
     SWOF, SGOF, etc.), and then SATNUM which is an index counter from 1 and
     onwards. Then follows the data for each individual keyword that
-    is found in the deck.
+    is found in the :term:`deck`.
 
     SATNUM data can only be parsed correctly if TABDIMS is present
     and stating how many saturation functions there should be.
     If you have a string with TABDIMS missing, you must supply
-    this as a string to this function, and not a parsed deck, as
+    this as a string to this function, and not a parsed :term:`deck`, as
     the default parser in ResdataFiles is very permissive (and only
     returning the first function by default).
 
     Arguments:
-        deck: Incoming data deck. Always
+        deck: Incoming data :term:`deck`. Always
             supply as a string if you don't know TABDIMS-NTSFUN.
         keywords: Requested keywords for which to
             to extract data.
-        ntsfun: Number of SATNUMs defined in the deck, only
-            needed if TABDIMS with NTSFUN is not found in the deck.
+        ntsfun: Number of SATNUMs defined in the :term:`deck`, only
+            needed if TABDIMS with NTSFUN is not found in the :term:`deck`.
             If not supplied (or None) and NTSFUN is not defined,
             it will be attempted inferred.
 

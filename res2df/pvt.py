@@ -72,12 +72,12 @@ RENAMERS["ROCK"] = {"PREF": "PRESSURE", "COMPRESSIBILITY": "COMPRESSIBILITY"}
 def pvtw_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PVTW from a deck
+    """Extract PVTW from a :term:`deck`
 
     Args:
         deck
-        ntpvt: Number of PVT regions in deck. Will
-            be inferred if not present in deck.
+        ntpvt: Number of PVT regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -89,12 +89,12 @@ def pvtw_fromdeck(
 def density_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract DENSITY from a deck
+    """Extract DENSITY from a :term:`deck`
 
     Args:
         deck
-        ntpvt: Number of PVT regions in deck. Will
-            be inferred if not present in deck.
+        ntpvt: Number of PVT regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -106,12 +106,12 @@ def density_fromdeck(
 def rock_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract ROCK from a deck
+    """Extract ROCK from a :term:`deck`
 
     Args:
         deck
-        ntpvt: Number of PVT regions in deck. Will
-            be inferred if not present in deck.
+        ntpvt: Number of PVT regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -123,12 +123,12 @@ def rock_fromdeck(
 def pvto_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PVTO from a deck
+    """Extract PVTO from a :term:`deck`
 
     Args:
         deck
-        ntpvt: Number of PVT regions in deck. Will
-            be inferred if not present in deck.
+        ntpvt: Number of PVT regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -141,7 +141,7 @@ def pvto_fromdeck(
 def pvdo_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PVDO from a deck
+    """Extract PVDO from a :term:`deck`
 
     Args:
         deck
@@ -159,12 +159,12 @@ def pvdo_fromdeck(
 def pvdg_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PVDG from a deck
+    """Extract PVDG from a :term:`deck`
 
     Args:
         deck
-        ntpvt: Number of PVT regions in deck. Will
-            be inferred if not present in deck.
+        ntpvt: Number of PVT regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -177,12 +177,12 @@ def pvdg_fromdeck(
 def pvtg_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PVTG from a deck
+    """Extract PVTG from a :term:`deck`
 
     Args:
         deck
-        ntpvt: Number of PVT regions in deck. Will
-            be inferred if not present in deck.
+        ntpvt: Number of PVT regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
@@ -197,7 +197,7 @@ def df(
     keywords: Optional[List[str]] = None,
     ntpvt: Optional[int] = None,
 ) -> pd.DataFrame:
-    """Extract all (most) PVT data from a deck.
+    """Extract all (most) PVT data from a :term:`deck`.
 
     If you want to call this function on :term:`include files <include file>`,
     read them in to strings as in this example:
@@ -205,12 +205,12 @@ def df(
     > pvt_df = pvt.df(open("pvt.inc").read())
 
     Arguments:
-        deck: Incoming data deck. Always
+        deck: Incoming data :term:`deck`. Always
             supply as a string if you don't know TABDIMS-NTSFUN.
         keywords: List of keywords for which data is
             wanted. All data will be merged into one dataframe.
-        pvtnumcount: Number of PVTNUMs defined in the deck, only
-            needed if TABDIMS with NTPVT is not found in the deck.
+        pvtnumcount: Number of PVTNUMs defined in the :term:`deck`, only
+            needed if TABDIMS with NTPVT is not found in the :term:`deck`.
             If not supplied (or None) and NTPVT is not defined,
             it will be attempted inferred.
 
@@ -313,7 +313,8 @@ def pvt_main(args) -> None:
 
 
 def pvt_reverse_main(args) -> None:
-    """Entry-point for module, for command line utility for CSV to simulator deck"""
+    """Entry-point for module, for command line utility for CSV to simulator
+    :term:`deck`"""
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )

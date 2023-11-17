@@ -84,7 +84,7 @@ class ResdataFiles(object):
         return Path(self._eclbase).absolute().parent
 
     def get_deck(self) -> "opm.libopmcommon_python.Deck":
-        """Return a opm.io deck of the DATA file"""
+        """Return a opm.io :term:`deck` of the DATA file"""
         if not self._deck:
             if Path(self._eclbase + ".DATA").is_file():
                 deckfile = self._eclbase + ".DATA"
@@ -100,7 +100,7 @@ class ResdataFiles(object):
     def str2deck(
         string: str, parsecontext: Optional[List[Tuple[str, Any]]] = None
     ) -> "opm.libopmcommon_python.Deck":
-        """Produce a opm.io deck from a string, using permissive
+        """Produce a opm.io :term:`deck` from a string, using permissive
         parsing by default"""
         if parsecontext is None:
             parsecontext = opm.io.ParseContext(OPMIOPARSER_RECOVERY)

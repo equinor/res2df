@@ -31,12 +31,12 @@ ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-
 
 
 def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
-    """Produce a dataframe of fault data from a deck
+    """Produce a dataframe of fault data from a :term:`deck`
 
     All data for the keyword FAULTS will be returned.
 
     Args:
-        deck: :term:`.DATA file`
+        deck: A :term:`deck`
     """
     if isinstance(deck, ResdataFiles):
         deck = deck.get_deck()

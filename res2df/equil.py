@@ -80,20 +80,20 @@ def df(
     PBVD and PDVD.
 
     How each data value in the EQUIL records are to be interpreted
-    depends on the phase configuration in the deck, which means
+    depends on the phase configuration in the :term:`deck`, which means
     that we need more than the EQUIL section alone to determine the
     dataframe.
 
-    If ntequl is not supplied and EQLDIMS is not in the deck, the
+    If ntequl is not supplied and EQLDIMS is not in the :term:`deck`, the
     equil data is not well defined in terms of OPM. This means
     that we have to infer the correct number of EQUIL lines from what
     gives us successful parsing from OPM. In those cases, the
-    deck must be supplied as a string, if not, extra EQUIL lines
+    :term:`deck` must be supplied as a string, if not, extra EQUIL lines
     are possibly already removed by the OPM parser in resdatafiles.str2deck().
 
     Arguments:
-        deck: :term:`.DATA file` or string with deck. If
-           not string, EQLDIMS must be present in the deck.
+        deck: :term:`.DATA file` or string with :term:`deck`. If
+           not string, EQLDIMS must be present in the :term:`deck`.
         keywords: Requested keywords for which to extract data.
         ntequl: If not None, should state the NTEQUL in EQLDIMS. If
             None and EQLDIMS is not present, it will be inferred.
@@ -132,12 +132,12 @@ def df(
 def rsvd_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract RSVD data from a deck
+    """Extract RSVD data from a :term:`deck`
 
     Args:
         deck
-        ntequl: Number of EQLNUM regions in deck. Will
-            be inferred if not present in deck
+        ntequl: Number of EQLNUM regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
@@ -149,12 +149,12 @@ def rsvd_fromdeck(
 def rvvd_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract RVVD data from a deck
+    """Extract RVVD data from a :term:`deck`
 
     Args:
         deck
-        ntequl: Number of EQLNUM regions in deck. Will
-            be inferred if not present in deck
+        ntequl: Number of EQLNUM regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
@@ -166,12 +166,12 @@ def rvvd_fromdeck(
 def pbvd_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PBVD data from a deck
+    """Extract PBVD data from a :term:`deck`
 
     Args:
         deck
-        ntequl: Number of EQLNUM regions in deck. Will
-            be inferred if not present in deck
+        ntequl: Number of EQLNUM regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
@@ -183,12 +183,12 @@ def pbvd_fromdeck(
 def pdvd_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract PDVD data from a deck
+    """Extract PDVD data from a :term:`deck`
 
     Args:
         deck
-        ntequl: Number of EQLNUM regions in deck. Will
-            be inferred if not present in deck
+        ntequl: Number of EQLNUM regions in :term:`deck`. Will
+            be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
@@ -198,12 +198,12 @@ def pdvd_fromdeck(
 
 
 def phases_from_deck(deck: Union[str, "opm.libopmcommon_python.Deck"]) -> str:
-    """Determined the set of phases from a deck, as
+    """Determined the set of phases from a :term:`deck`, as
     a string with values "oil-water-gas", "gas-water", "oil-water",
     or "oil-gas"
 
     Args:
-        deck: A parsed deck or DATA-file as a string
+        deck: A parsed :term:`deck` or DATA-file as a string
 
     Returns:
         String with phase configuration. Empty string if inconclusive.
@@ -247,14 +247,14 @@ def phases_from_columns(columns: List[str]) -> str:
 def equil_fromdeck(
     deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
 ) -> pd.DataFrame:
-    """Extract EQUIL data from a deck
+    """Extract EQUIL data from a :term:`deck`
 
-    If the deck is supplied as a string object, the number
+    If the :term:`deck` is supplied as a string object, the number
     of EQLNUM regions will be inferred if needed.
 
     Args:
         deck
-        ntequl: Number of EQLNUM regions in deck.
+        ntequl: Number of EQLNUM regions in :term:`deck`.
     """
     if "EQLDIMS" not in deck:
         deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)

@@ -35,7 +35,7 @@ def df(
     startdate: Optional[datetime.date] = None,
     welspecs: bool = True,
 ) -> pd.DataFrame:
-    """Extract all group information from a deck
+    """Extract all group information from a :term:`deck`
     and present as a Pandas Dataframe of all edges.
 
     Properties for nodes given in GRUPNET/NODEPROP will
@@ -52,14 +52,14 @@ def df(
     previous tree is copied and a new complete tree is added
     to the dataframe tagged with the new date.
 
-    startdate is only relevant when START is not in the deck.
+    startdate is only relevant when START is not in the :term:`deck`.
 
     Args:
         deck: opm.io Deck object or ResdataFiles
 
     Returns:
         pd.DataFrame with one row pr edge. Empty dataframe if no
-        information is found in deck.
+        information is found in :term:`deck`.
     """
 
     date: Optional[datetime.date]

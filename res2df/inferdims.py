@@ -21,9 +21,9 @@ DIMS_POS: Dict[str, int] = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)
 
 
 def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
-    """Guess the correct dimension count for an incoming deck (string)
+    """Guess the correct dimension count for an incoming :term:`deck` (string)
 
-    The incoming deck must in string form, if not, extra data is most
+    The incoming :term:`deck` must in string form, if not, extra data is most
     likely already removed by the opm.io parser. TABDIMS or EQLDIMS
     must not be present
 
@@ -94,15 +94,15 @@ def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
 def inject_dimcount(
     deckstr: str, dimkeyword: str, dimitem: int, dimvalue: int, nowarn: bool = False
 ) -> str:
-    """Insert a TABDIMS with NTSFUN into a deck
+    """Insert a TABDIMS with NTSFUN into a :term:`deck` string
 
     This is simple string manipulation, not opm.io
-    deck manipulation (which might be possible to do).
+    :term:`deck` manipulation (which might be possible to do).
 
     This function is to be wrapped by inject_xxxdims_ntxxx()
 
     Arguments:
-        deckstr: A string containing a partial deck (f.ex only
+        deckstr: A string containing a partial :term:`deck` (f.ex only
             the SWOF keyword).
         dimkeyword: Either TABDIMS or EQLDIMS
         dimitem: Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.
@@ -112,7 +112,7 @@ def inject_dimcount(
         nowarn: By default it will warn if this function
             is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.
     Returns:
-        New deck with TABDIMS/EQLDIMS prepended.
+        New :term:`deck` string with TABDIMS/EQLDIMS prepended.
     """
     assert dimvalue > 0, "dimvalue must be larger than zero"
     if dimkeyword not in ["TABDIMS", "EQLDIMS"]:
@@ -146,19 +146,19 @@ def inject_xxxdims_ntxxx(
     deck: Union[str, "opm.libopmcommon_python.Deck"],
     ntxxx_value: Optional[int] = None,
 ) -> "opm.libopmcommon_python.Deck":
-    """Ensures TABDIMS/EQLDIMS is present in a deck.
+    """Ensures TABDIMS/EQLDIMS is present in a :term:`deck`.
 
-    If ntxxx_value=None and ntxxx_name not in the deck, ntxxx_name will
-    be inferred through trial-and-error parsing of the deck, and then injected
-    into the deck.
+    If ntxxx_value=None and ntxxx_name not in the :term:`deck`, ntxxx_name will
+    be inferred through trial-and-error parsing of the :term:`deck`, and then injected
+    into the :term:`deck`.
 
     Args:
         xxxdims: TABDIMS or EQLDIMS
         ntxxx_name: NTPVT, NTEQUL or NTSFUN
-        deck: A data deck. If ntxxx_name is to be
-            estimated this *must* be a string and not a fully parsed deck.
+        deck: A data :term:`deck`. If ntxxx_name is to be
+            estimated this *must* be a string and not a fully parsed :term:`deck`.
         npxxx_value: Supply this if ntxxx_name is known, but not present in the
-            deck, this will override any guessing. If the deck already
+            deck, this will override any guessing. If the :term:`deck` already
             contains XXXDIMS, this will be ignored.
 
     Returns:

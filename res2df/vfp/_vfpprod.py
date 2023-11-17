@@ -655,7 +655,7 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
 def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
     """Perform a check of the VFPPROD data contained in the dictionary.
     Checks if all data is present and if the dimensions of the arrays
-    are consisitent.
+    are consistent.
 
     Args:
         vfp_data:   Dictionary containing all data for a VFPPROD keyword in Eclipse

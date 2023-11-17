@@ -200,7 +200,7 @@ def keyworddata_to_df(
     will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.
 
     Arguments:
-        deck: Parsed deck
+        deck: Parsed :term:`deck`
         keyword: Name of the keyword for which to extract data.
         renamer: Mapping of names present in OPM json files for the
             keyword to desired column names in returned dataframe

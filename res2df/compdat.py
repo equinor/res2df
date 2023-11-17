@@ -75,13 +75,13 @@ def deck2dfs(
     start_date: Optional[Union[str, datetime.date]] = None,
     unroll: bool = True,
 ) -> Dict[str, pd.DataFrame]:
-    """Loop through the deck and pick up information found
+    """Loop through the :term:`deck` and pick up information found
 
-    The loop over the deck is a state machine, as it has to pick up dates and
+    The loop over the :term:`deck` is a state machine, as it has to pick up dates and
     potential information from the WELSPECS keyword.
 
     Args:
-        deck: A deck representing the schedule
+        deck: A :term:`deck` representing the schedule
         start_date: The default date to use for
             events where the DATE or START keyword is not found in advance.
             Default: None
@@ -829,16 +829,17 @@ def applywelopen(
        'OP2' SHUT 66 44 10 /
       /
 
-    This deck would define two wells where OP1 and OP2 have two connected grid cells
-    each. The first welopen statment acts on the whole well, closing both the well and
-    the connections. If this statement used STOP instead of SHUT, the connections would
-    be left open. The second welopen statement acts on a single connection. Here SHUT
-    and STOP would give the same result. This behavior has been proven to be correct
-    in the simulator. The Eclipse manual states that 'If items 3 - 7 are all defaulted,
-    the Open/Shut/Stop command applies to the well, leaving the connections unchanged',
-    but this has been proven to be wrong. The state of the connection can be tested
-    by looking at the CPI summary vectors. The connection is SHUT if CPI==0 and OPEN
-    if CPI>0.
+    This :term:`deck` would define two wells where OP1 and OP2 have two
+    connected grid cells each. The first welopen statment acts on the whole
+    well, closing both the well and the connections. If this statement used STOP
+    instead of SHUT, the connections would be left open. The second welopen
+    statement acts on a single connection. Here SHUT and STOP would give the
+    same result. This behavior has been proven to be correct in the simulator.
+    The Eclipse manual states that 'If items 3 - 7 are all defaulted, the
+    Open/Shut/Stop command applies to the well, leaving the connections
+    unchanged', but this has been proven to be wrong. The state of the
+    connection can be tested by looking at the CPI summary vectors. The
+    connection is SHUT if CPI==0 and OPEN if CPI>0.
 
     WELOPEN can also be used at different dates and changes therefore the state of
     connections without explicit use of the COMPDAT keyword. This function translates

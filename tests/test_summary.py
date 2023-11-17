@@ -812,7 +812,7 @@ def test_unique_datetime_retain_index_name(filepath):
 
 
 def test_smry_meta():
-    """Test obtaining metadata dictionary for summary vectors from an summary object"""
+    """Test obtaining metadata dictionary for summary vectors from a summary object"""
     meta = smry_meta(ResdataFiles(REEK))
 
     assert isinstance(meta, dict)
@@ -1020,7 +1020,7 @@ def test_fix_dframe_for_resdata(dframe, expected_dframe):
     ],
 )
 def test_df2ressum(dframe):
-    """Test that a dataframe can be converted to an summary object, and then read
+    """Test that a dataframe can be converted to a summary object, and then read
     back again"""
 
     # Massage the dframe first so we can assert on equivalence after.

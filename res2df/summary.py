@@ -682,7 +682,7 @@ def df2ressum(
     dframe: pd.DataFrame,
     casename: str = "SYNTHETIC",
 ) -> Summary:
-    """Convert a dataframe to an Summary object
+    """Convert a dataframe to a Summary object
 
     Args:
         dframe: Dataframe with a DATE colum (or with the
@@ -709,7 +709,7 @@ def _summary_pandas_frame(
     time_index: Optional[Union[List[dt.date], List[dt.datetime]]] = None,
     column_keys: Optional[List[str]] = None,
 ) -> pd.DataFrame:
-    """Build a Pandas dataframe from an Summary object.
+    """Build a Pandas dataframe from a Summary object.
 
     Temporarily copied from resdata to circumvent bug
 
@@ -759,7 +759,7 @@ def resdata_summary_from_pandas(
     dims: Optional[List[int]] = None,
     headers: Optional[List[tuple]] = None,
 ) -> Summary:
-    """Build an Summary object from a Pandas dataframe.
+    """Build a Summary object from a Pandas dataframe.
 
     Temporarily copied from resdata to circumvent bug
 

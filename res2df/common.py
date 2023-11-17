@@ -842,7 +842,7 @@ def stack_on_colnames(
 def is_color(input_string: str) -> bool:
     """Checks if the input string is a valid color.
     That is six-digit hexadecimal, three-digit hexadecimal or
-    given as an SVG color keyword name
+    given as a SVG color keyword name
     """
     if input_string.lower() in SVG_COLOR_NAMES:
         return True

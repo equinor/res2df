@@ -95,7 +95,7 @@ def test_gridzonemap():
     )
     assert pd.isnull(df_bogus_zones["ZONE"]).all()
 
-    # Test a custom "subzone" map via direct usage of merge_zone on an dataframe
+    # Test a custom "subzone" map via direct usage of merge_zone on a dataframe
     # where ZONE already exists:
 
     dframe = grid.df(resdatafiles)

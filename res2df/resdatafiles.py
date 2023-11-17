@@ -112,7 +112,7 @@ class ResdataFiles(object):
         return ResdataFiles.str2deck(Path(filename).read_text(encoding="utf-8"))
 
     def get_egrid(self) -> Grid:
-        """Find and return EGRID file as an Grid object"""
+        """Find and return EGRID file as a Grid object"""
         if not self._egrid:
             egridfilename = self._eclbase + ".EGRID"
             if not Path(egridfilename).is_file():

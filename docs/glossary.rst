@@ -9,8 +9,7 @@ Glossary
     .DATA file
         Inputs provided to reservoir simulators such as Eclipse or OPM Flow.
         Usually a .DATA file pointing to other include files. One .DATA file
-        typically points to multiple include files. A data file is defined as
-        a **full** data file if ?...TODO
+        typically points to multiple include files.
 
     include file
         Files that provide inputs to reservoir simulators by using the INCLUDE statement

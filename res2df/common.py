@@ -154,7 +154,7 @@ def write_dframe_stdout_file(
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:
-    """Write a string (typically an include file string) to stdout
+    """Write a string (typically an :term:`include file` string) to stdout
     or to a named file"""
     if outputfilename == MAGIC_STDOUT:
         # Ignore pipe errors when writing to stdout:
@@ -471,12 +471,12 @@ def fill_reverse_parser(
     parser: argparse.ArgumentParser, modulename: str, defaultoutputfile: str
 ):
     """A standardized submodule parser for the command line utility
-    to produce include files from a CSV file.
+       to produce :term:`include files <include file>` from a CSV file.
 
     Arguments:
         parser: parser to fill with arguments
         modulename: Will be included in the help text
-        defaultoutputfile: Default :term:`output file`name
+        defaultoutputfile: Default :term:`output file` name
     """
     parser.add_argument(
         "csvfile",
@@ -538,7 +538,7 @@ def df2res(
             to file.
 
     Returns:
-        string that can be used as an include file.
+        string that can be used as an :term:`include file`.
     """
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])

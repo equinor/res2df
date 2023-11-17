@@ -625,7 +625,7 @@ def df2res(
     nocomments: bool = False,
 ) -> str:
     """
-    Write an include file with grid data keyword, like PERMX, PORO,
+    Write an :term:`include file` with grid data keyword, like PERMX, PORO,
     FIPNUM etc, for the GRID section of the :term:`.DATA file`.
 
     Output (returned as string and optionally written to file) will then

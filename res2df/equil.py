@@ -305,7 +305,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Fill a parser for the operation dataframe -> resdata include file"""
+    """Fill a parser for the operation dataframe -> resdata :term:`include file`"""
     return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
 
 

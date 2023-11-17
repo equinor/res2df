@@ -199,7 +199,7 @@ def df(
 ) -> pd.DataFrame:
     """Extract all (most) PVT data from a deck.
 
-    If you want to call this function on include files,
+    If you want to call this function on :term:`include files <include file>`,
     read them in to strings as in this example:
 
     > pvt_df = pvt.df(open("pvt.inc").read())
@@ -240,7 +240,7 @@ def df(
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Set up sys.argv parsers for parsing :term:`.DATA file` or
-    include files into dataframes
+    :term:`include files <include file>` into dataframes
 
     Arguments:
         parser (ArgumentParser or subparser): parser to fill with arguments
@@ -269,7 +269,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """Set up sys.argv parsers for writing include files from
+    """Set up sys.argv parsers for writing :term:`include files <include file>` from
     dataframes (as CSV files)
 
     Arguments:

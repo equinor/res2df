@@ -27,12 +27,12 @@ EXAMPLES: str = """
 Outputting the EQUIL data from a .DATA file. This is implicitly 
 supplied in ERT configs::
 
-   FORWARD_MODEL res2csv(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
+   FORWARD_MODEL RES2CSV(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
 
 For a yearly summary export of the realization, options have to be supplied
 with the XARG options::
 
-  FORWARD_MODEL res2csv(<SUBCOMMAND>=summary, <OUTPUT>=yearly.csv, <XARG1>="--time_index", <XARG2>="yearly")
+  FORWARD_MODEL RES2CSV(<SUBCOMMAND>=summary, <OUTPUT>=yearly.csv, <XARG1>="--time_index", <XARG2>="yearly")
 
 The quotes around double-dashed options are critical to avoid ERT taking for a
 comment. For more options, use ``<XARG3>`` etc.

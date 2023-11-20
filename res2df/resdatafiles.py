@@ -60,7 +60,7 @@ class ResdataFiles(object):
         if ".DATA" in eclbase and not Path(eclbase).is_file():
             logger.warning("File %s does not exist", eclbase)
             # (this is not an error, because it is possible
-            # to obtain summary without the DATA file being present)
+            # to obtain summary without the .DATA file being present)
 
         # Strip .DATA or . at end of eclbase:
         eclbase = rreplace(".DATA", "", eclbase)
@@ -80,11 +80,11 @@ class ResdataFiles(object):
         self._deck = None
 
     def get_path(self) -> Path:
-        """Return the full path to the directory with the DATA file"""
+        """Return the full path to the directory with the .DATA file"""
         return Path(self._eclbase).absolute().parent
 
     def get_deck(self) -> "opm.libopmcommon_python.Deck":
-        """Return a opm.io :term:`deck` of the DATA file"""
+        """Return a opm.io :term:`deck` of the .DATA file"""
         if not self._deck:
             if Path(self._eclbase + ".DATA").is_file():
                 deckfile = self._eclbase + ".DATA"

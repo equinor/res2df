@@ -246,7 +246,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         parser (ArgumentParser or subparser): parser to fill with arguments
     """
     parser.add_argument(
-        "DATAFILE", help="Name of reservoir DATA file or file with PVT keywords."
+        "DATAFILE", help="Name of reservoir .DATA file or file with PVT keywords."
     )
     parser.add_argument(
         "-o",

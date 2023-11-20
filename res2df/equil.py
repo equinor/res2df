@@ -203,7 +203,7 @@ def phases_from_deck(deck: Union[str, "opm.libopmcommon_python.Deck"]) -> str:
     or "oil-gas"
 
     Args:
-        deck: A parsed :term:`deck` or DATA-file as a string
+        deck: A parsed :term:`deck` or :term:`.DATA file` as a string
 
     Returns:
         String with phase configuration. Empty string if inconclusive.
@@ -283,7 +283,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         parser (argparse.ArgumentParser or argparse.subparser): parser to
             fill with arguments
     """
-    parser.add_argument("DATAFILE", help="Name of reservoir DATA file.")
+    parser.add_argument(
+        "DATAFILE", help="Name of the .DATA input file for the reservoir simulator"
+    )
     parser.add_argument(
         "-o",
         "--output",

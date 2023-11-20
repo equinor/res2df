@@ -80,7 +80,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
             fill with arguments
     """
     parser.add_argument(
-        "DATAFILE", help="Name of reservoir DATA file or resdata include file."
+        "DATAFILE", help="Name of reservoir .DATA file or resdata include file."
     )
     parser.add_argument(
         "-o", "--output", type=str, help="Name of output csv file.", default="wcon.csv"

@@ -186,7 +186,7 @@ parameters.txt
 ^^^^^^^^^^^^^^
 
 Metadata for each :term:`.DATA file` are sometimes added in a text file named
-``parameters.txt``, alongside the Eclipse DATA file or one or two directory levels
+``parameters.txt``, alongside the Eclipse .DATA file or one or two directory levels
 above it.
 
 Each line in the text file should contain a string, interpreted as the key, and

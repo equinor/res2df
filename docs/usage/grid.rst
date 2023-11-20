@@ -3,7 +3,7 @@ grid
 
 The grid module will extract static and dynamic cell properties from
 a grid 
-(from the :term:`binary output files from reservoir simulators <output file>`). 
+(from the :term:`output files of reservoir simulators <output file>`). 
 Each row in a returned dataframe represents one cell.
 
 Typical usage
@@ -115,7 +115,7 @@ the whereabouts of the file:
 
    resdatafiles = ResdataFiles("'MYDATADECK.DATA")
    dframe = grid.df(resdatafiles)
-   # The filename with layers is relative to DATA-file location
+   # The filename with layers is relative to .DATA file location
    # or an absolute path.
    subzonemap = res2df.common.parse_zonemapfile("subzones.lyr")
    dframe_with_subzones = common.merge_zones(

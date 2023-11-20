@@ -252,7 +252,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
     """Test explicit naming of parameters file from command line.
 
     This is a little bit tricky because the parameter file is assumed to be
-    relative to the DATA file, not to working directory unless it is absolute."""
+    relative to the .DATA file, not to working directory unless it is absolute."""
 
     tmpcsvfile = tmp_path / "smrywithrandomparams.txt"
     randomparamfile = tmp_path / "fooparams.txt"

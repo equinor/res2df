@@ -92,7 +92,7 @@ def df(
         pd.DataFrame, columns 'KEYWORD', 'SW', 'KRW', 'KROW', 'PC', ..
     """
     if isinstance(deck, ResdataFiles):
-        # NB: If this is done on include files and not on DATA files
+        # NB: If this is done on include files and not on .DATA files
         # we can loose data for SATNUM > 1
         deck = deck.get_deck()
     deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
@@ -162,7 +162,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     parser.add_argument(
         "DATAFILE",
-        help="Name of reservoir DATA file or file with saturation functions.",
+        help="Name of reservoir .DATA file or file with saturation functions.",
     )
     parser.add_argument(
         "-o",

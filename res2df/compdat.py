@@ -950,7 +950,9 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     Arguments:
         parser: parser to fill with arguments
     """
-    parser.add_argument("DATAFILE", help="Name of .DATA file.")
+    parser.add_argument(
+        "DATAFILE", help="Name of the .DATA input file for the reservoir simulator"
+    )
     parser.add_argument(
         "-o",
         "--output",

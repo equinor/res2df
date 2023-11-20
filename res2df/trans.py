@@ -261,7 +261,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     parser.add_argument(
         "DATAFILE",
-        help="Name of reservoir DATA file. "
+        help="Name of reservoir .DATA file. "
         + "INIT and EGRID file must lie alongside.",
     )
     parser.add_argument("--vectors", nargs="+", help="Extra INIT vectors to be added")

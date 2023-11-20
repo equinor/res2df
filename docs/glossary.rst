@@ -8,16 +8,16 @@ Glossary
 
     .DATA file
         Inputs provided to reservoir simulators such as Eclipse or OPM Flow.
-        Usually a .DATA file pointing to other include files. One .DATA file
+        Usually a :term:`.DATA file` pointing to other include files. One :term:`.DATA file``
         typically points to multiple include files.
 
     include file
         Files that provide inputs to reservoir simulators by using the INCLUDE statement
-        in .DATA files. By convention, these files often have the extension .INC/.inc
+        in :term:`.DATA files <.DATA file>`. By convention, these files often have the extension .INC/.inc
         (generally) or .GRDECL/.grdecl (for files included into the grid section).
 
     deck
-        Refers to inputs passed to reservoir simulators. It may be a .DATA file and the
+        Refers to inputs passed to reservoir simulators. It may be a :term:`.DATA file` and the
         include files it points to, or it may be a single or several include files.
         If a deck contains all the information (i.e., keywords) the simulator needs 
         to run the requested simulation, it is defined as complete. If it is missing

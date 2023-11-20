@@ -425,7 +425,7 @@ def df(
     dupes = dframe.columns.duplicated()
     if dupes.any():
         logger.warning(
-            "Duplicated columns detected, check your DATA file "
+            "Duplicated columns detected, check your .DATA file "
             "for repeated vectors in the SUMMARY section"
         )
         logger.warning("Duplicates: %s", list(dframe.columns[dupes]))
@@ -804,7 +804,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     parser.add_argument(
         "DATAFILE",
-        help="Name of reservoir DATA file. " + "UNSMRY file must lie alongside.",
+        help="Name of reservoir .DATA file. " + "UNSMRY file must lie alongside.",
     )
     parser.add_argument(
         "--time_index",
@@ -856,7 +856,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         type=str,
         help=(
             "Filename of key-value parameter file to look for if -p is set, "
-            "relative to reservoir DATA file or an absolute filename. "
+            "relative to reservoir .DATA file or an absolute filename. "
             "If not supplied, parameters.{json,yml,txt} in "
             "{., .. and ../..} will be merged in."
         ),

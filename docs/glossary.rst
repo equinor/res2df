@@ -4,7 +4,9 @@ Glossary
 .. glossary::
 
     reservoir simulator
-        Reservoir simulators such as OPM Flow or Eclipse. 
+        Simulation of reservoir fields come in many forms, but for the purposes of 
+        res2df we only consider simulators takes a :term:`deck` as input and produces
+        term`output file`s such `.UNSRMY`. This includes, OPM flow and Eclipse.
 
     .DATA file
         Inputs provided to reservoir simulators such as Eclipse or OPM Flow.

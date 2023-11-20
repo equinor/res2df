@@ -1,6 +1,6 @@
 """
 Extract non-neighbour connection (NNC) information from reservoir
-simulator output files.
+simulator :term:`output files <output file>`.
 """
 import argparse
 import datetime

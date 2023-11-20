@@ -344,7 +344,9 @@ def equil_main(args) -> None:
 
 
 def equil_reverse_main(args) -> None:
-    """Entry-point for module, for command line utility for CSV to resdata"""
+    """Entry-point for module, for command line utility 
+    for CSV to reservoir simulator :term:`include files <include file>`
+    """
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
@@ -361,8 +363,8 @@ def df2res(
     withphases: bool = False,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate resdata include strings from dataframes with
-    solution (EQUIL, RSVD++) data.
+    """Generate string contents of :term:`include files <include file>`
+    from dataframes with solution (EQUIL, RSVD++) data.
 
     Args:
         equil_df: Dataframe with res2df format.

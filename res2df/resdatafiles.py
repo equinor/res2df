@@ -47,8 +47,8 @@ class ResdataFiles(object):
     ResdataFile/Summary objects is easy for users, and with
     caching if wanted.
 
-    Various functions that needs some of the simulator output
-    (or input file) should be able to ask this class, and
+    Various functions that needs some of the simulator :term:`output <output file>`
+    (or :term:`input file`) should be able to ask this class, and
     it should be loaded or served from cache.
     """
 

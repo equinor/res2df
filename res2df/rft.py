@@ -654,7 +654,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         help=(
-            "Name of reservoir .DATA file or RFT file. "
+            "Name of .DATA input file for the reservoir simulator, or RFT file. "
             "If .DATA file is provided, it will look for"
             " the associated .DATA file"
         ),

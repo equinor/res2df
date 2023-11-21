@@ -540,8 +540,8 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     parser.add_argument(
         "DATAFILE",
-        help="Name of reservoir .DATA file. "
-        + "INIT and EGRID file must lie alongside.",
+        help="Name of the .DATA input file for the reservoir simulator."
+        + " There must exist .INIT and .EGRID files with the same path and basename.",
     )
     parser.add_argument(
         "--vectors",

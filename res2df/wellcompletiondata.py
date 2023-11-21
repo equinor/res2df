@@ -250,7 +250,8 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "DATAFILE",
         type=str,
-        help="Name of reservoir .DATA file. UNSMRY file must lie alongside.",
+        help="Name of the .DATA input file for the reservoir simulator."
+        + " There must exist a UNSMRY file with the same path and basename",
     )
     parser.add_argument(
         "--zonemap",

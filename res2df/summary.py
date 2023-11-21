@@ -804,7 +804,8 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     parser.add_argument(
         "DATAFILE",
-        help="Name of reservoir .DATA file. UNSMRY file must lie alongside.",
+        help="Name of the .DATA input file for the reservoir simulator."
+        + " There must exist a UNSMRY file with the same path and basename.",
     )
     parser.add_argument(
         "--time_index",
@@ -856,7 +857,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         type=str,
         help=(
             "Filename of key-value parameter file to look for if -p is set, "
-            "relative to reservoir .DATA file or an absolute filename. "
+            "relative to simulator input (.DATA) file or an absolute filename. "
             "If not supplied, parameters.{json,yml,txt} in "
             "{., .. and ../..} will be merged in."
         ),

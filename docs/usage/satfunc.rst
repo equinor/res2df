@@ -33,7 +33,7 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 It is possible to extract keywords one at a time using the ``--keywords`` command
 line option.
 
-Instead of data decks, individual include files may also be parsed, but
+Instead of complete :term:`decks <deck>`, individual include files may also be parsed, but
 only one at a time.
 
 Generating include files from dataframes

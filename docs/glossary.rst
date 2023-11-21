@@ -5,13 +5,12 @@ Glossary
 
     reservoir simulator
         Simulation of reservoir fields come in many forms, but for the purposes of 
-        res2df we only consider simulators takes a :term:`deck` as input and produces
-        term`output file`s such `.UNSRMY`. This includes, OPM flow and Eclipse.
+        res2df we only consider simulators that take a :term:`deck` as input and produces
+        :term:`output files <output file>` such `.UNSRMY`. This includes, OPM flow and Eclipse.
 
     .DATA file
-        Inputs provided to reservoir simulators such as Eclipse or OPM Flow.
-        Usually a :term:`.DATA file` pointing to other include files. One :term:`.DATA file`
-        typically points to multiple include files.
+        Input provided to reservoir simulators such as Eclipse or OPM Flow.
+        Often a :term:`.DATA file` includes other :term:`include files <include file>` with the INCLUDE keyword.
 
     include file
         Files that provide inputs to reservoir simulators by using the INCLUDE statement
@@ -22,8 +21,7 @@ Glossary
         Refers to inputs passed to reservoir simulators. It may be a :term:`.DATA file` and the
         include files it points to, or it may be a single or several include files.
         If a deck contains all the information (i.e., keywords) the simulator needs 
-        to run the requested simulation, it is defined as complete. If it is missing
-        needed information, it is incomplete.
+        to run the requested simulation, it is defined as complete. Otherwise it is incomplete.
 
     output file
         When a reservoir simulator runs, several files will be generated.

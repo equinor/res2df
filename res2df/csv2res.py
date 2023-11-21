@@ -51,7 +51,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     summary_parser = subparsers.add_parser(
         "summary",
-        help="Write summary UNSMRY files",
+        help="Write UNSMRY files",
         description=("Write UNSMRY files from CSV files."),
     )
     summary.fill_reverse_parser(summary_parser)

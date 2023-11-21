@@ -270,7 +270,7 @@ def df2res(
 
 
 def df2res_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SWOF data. Used by df2res().
+    """Create string with :term:`include file` contents for SWOF. Used by df2res().
 
     Args:
         dframe: Containing SWOF data
@@ -280,7 +280,7 @@ def df2res_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SGOF data. Used by df2res().
+    """Create string with :term:`include file` contents for SGOF. Used by df2res().
 
     Args:
         dframe: Containing SGOF data
@@ -290,7 +290,7 @@ def df2res_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SGFN data. Used by df2res().
+    """Create string with :term:`include file` contents for SGFN. Used by df2res().
 
     Args:
         dframe: Containing SGFN data
@@ -300,7 +300,7 @@ def df2res_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SGWFN data. Used by df2res().
+    """Create string with :term:`include file` contents for SGWFN. Used by df2res().
 
     Args:
         dframe: Containing SGWFN data
@@ -310,7 +310,7 @@ def df2res_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SWFN data. Used by df2res().
+    """Create string with :term:`include file` contents for SWFN. Used by df2res().
 
     Args:
         dframe: Containing SWFN data
@@ -320,7 +320,7 @@ def df2res_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SLGOF data. Used by df2res().
+    """Create string with :term:`include file` contents for SLGOF. Used by df2res().
 
     Args:
         dframe: Containing SLGOF data
@@ -330,7 +330,7 @@ def df2res_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SOF2 data. Used by df2res().
+    """Create string with :term:`include file` contents for SOF2. Used by df2res().
 
     Args:
         dframe: Containing SOF2 data
@@ -340,7 +340,7 @@ def df2res_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_sof3(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print SOF3 data. Used by df2res().
+    """Create string with :term:`include file` contents for SOF3. Used by df2res().
 
     Args:
         dframe: Containing SOF3 data
@@ -368,7 +368,8 @@ def _df2res_satfuncs(
 
     # Make a function that is to be called for each SATNUM
     def _df2res_satfuncs_satnum(keyword, dframe):
-        """Print one saturation function for one specific SATNUM"""
+        """Create string with :term:`include file` contents
+        for one saturation function for one specific SATNUM"""
         col_headers = RENAMERS[keyword]["DATA"]
         string = (
             "-- "

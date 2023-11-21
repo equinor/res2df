@@ -57,7 +57,7 @@ def test_userapi():
     hcpv_table = grst_df.groupby("FIPNUM").sum()[["OILPV", "HCPV"]]
     assert not hcpv_table.empty
 
-    # Print the HCPV table by FIPNUM:
+    # Create string with :term:`include file` contents for the HCPV table by FIPNUM:
     print()
     print((hcpv_table / 1e6).round(2))
 

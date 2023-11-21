@@ -397,7 +397,7 @@ def df2res(
 
 
 def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print EQUIL keyword with data
+    """Create string with :term:`include file` contents for EQUIL keyword
 
     Args:
         dframe: Containing EQUIL data
@@ -432,7 +432,7 @@ def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print RSVD keyword with data
+    """Create string with :term:`include file` contents for RSVD keyword
 
     This data consists of one table (rs as a function
     of depth) for each EQLNUM
@@ -445,7 +445,7 @@ def df2res_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print RVVD keyword with data
+    """Create string with :term:`include file` contents for RVVD keyword
 
     This data consists of one table (rv as a function
     of depth) for each EQLNUM
@@ -458,7 +458,7 @@ def df2res_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print PBVD keyword with data
+    """Create string with :term:`include file` contents for PBVD keyword
 
     Bubble-point versus depth
 
@@ -473,7 +473,7 @@ def df2res_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
-    """Print PDVD keyword with data.
+    """Create string with :term:`include file` contents for PDVD keyword.
 
     Dew-point versus depth.
 
@@ -505,8 +505,8 @@ def _df2res_equilfuncs(
         subset = dframe[dframe["KEYWORD"] == keyword]
 
     def _df2res_equilfuncs_eqlnum(dframe: pd.DataFrame) -> str:
-        """Print one equilibriation function table for a specific
-        EQLNUM
+        """Create string with :term:`include file` contents
+        for one equilibriation function table for a specific EQLNUM
 
         Args:
             dframe (pd.DataFrame): Cropped to only contain data for one EQLNUM

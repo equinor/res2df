@@ -353,7 +353,7 @@ def df2res(
 
 
 def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print ROCK keyword with data
+    """Create string with :term:`include file` contents for ROCK keyword
 
     Args:
         dframe (pd.DataFrame): Containing ROCK data
@@ -381,7 +381,7 @@ def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print DENSITY keyword with data
+    """Create string with :term:`include file` contents for DENSITY keyword
 
     Args:
         dframe: Containing DENSITY data
@@ -410,7 +410,7 @@ def df2res_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print PVTW keyword with data
+    """Create string with :term:`include file` contents for PVTW keyword
 
     PVTW is one line/record with data for a reference pressure
     for each PVTNUM.
@@ -446,7 +446,7 @@ def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print PVTG keyword with data
+    """Create string with :term:`include file` contents for PVTG keyword
 
     Args:
         dframe: Containing PVTG data
@@ -473,7 +473,8 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     subset = subset.set_index("PVTNUM").sort_index()
 
     def _pvtg_pvtnum(dframe):
-        """Print PVTG-data for a specific PVTNUM"""
+        """Create string with :term:`include file` contents for
+        PVTG-data with a specific PVTNUM"""
         string = ""
         dframe = dframe.set_index("PRESSURE").sort_index()
         for p_gas in dframe.index.unique():
@@ -481,7 +482,8 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return string + "/\n"
 
     def _pvtg_pvtnum_pg(dframe):
-        """Print PVTG-data for a particular gas phase pressure"""
+        """Create string with :term:`include file` contents for
+        PVTG-data with a particular gas phase pressure"""
         string = ""
         assert len(dframe.index.unique()) == 1
         p_gas = dframe.index.values[0]
@@ -505,7 +507,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print PVDG keyword with data
+    """Create string with :term:`include file` contents for PVDG keyword
 
     This data consists of one table (volumefactor and visosity
     as a function of pressure) pr. PVTNUM.
@@ -531,7 +533,8 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         subset["PVTNUM"] = 1
 
     def _pvdg_pvtnum(dframe):
-        """Print PVDG-data for a specific PVTNUM
+        """Create string with :term:`include file` contents for
+        PVDG-data with a specific PVTNUM
 
         Args:
             dframe (pd.DataFrame): Cropped to only contain the relevant data.
@@ -555,7 +558,7 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print PVDO keyword with data
+    """Create string with :term:`include file` contents for PVDO keyword
 
     Args:
         dframe: Containing PVDO data
@@ -578,7 +581,8 @@ def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         subset["PVTNUM"] = 1
 
     def _pvdo_pvtnum(dframe: pd.DataFrame) -> str:
-        """Print PVDO-data for a specific PVTNUM
+        """Create string with :term:`include file` contents
+        for PVDO-data for a specific PVTNUM
 
         Args:
             dframe (pd.DataFrame): Cropped to only contain the relevant data.
@@ -602,7 +606,7 @@ def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Print PVTO-data from a dataframe
+    """Create string with :term:`include file` contents for PVTO-data from a dataframe
 
     Args:
         dframe: Containing PVTO data
@@ -627,7 +631,8 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     subset = subset.set_index("PVTNUM").sort_index()
 
     def _pvto_pvtnum(dframe: pd.DataFrame) -> str:
-        """Print PVTO-data for a specific PVTNUM"""
+        """Create string with :term:`include file` contents
+           for PVTO-data for a specific PVTNUM"""
         string = ""
         dframe = dframe.set_index("RS").sort_index()
         for rs in dframe.index.unique():
@@ -635,7 +640,8 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return string + "/\n"
 
     def _pvto_pvtnum_rs(dframe: pd.DataFrame) -> str:
-        """Print PVTO-data for a particular RS"""
+        """Create string with :term:`include file` contents
+           for PVTO-data for a particular RS"""
         string = ""
         assert len(dframe.index.unique()) == 1
         rs = dframe.index.values[0]

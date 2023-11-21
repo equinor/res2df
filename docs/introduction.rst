@@ -136,12 +136,12 @@ More documentation on :doc:`usage/equil`.
 ``compdat``
 ^^^^^^^^^^^
 
-Extracts well connection data from the `COMPDAT` keyword in the :term:`.DATA file`.
+Extracts well connection data from the `COMPDAT` keyword in the :term:`deck`.
 For multi-segment wells, `WELSEGS` and `COMPSEGS` is also parsed. The
 data is available as three different dataframes, which can be merged.
 
-It is also possible to parse individual :term:`"include files" <include file>`, not only a
-finished working :term:`deck`.
+It is also possible to parse individual :term:`"include files" <include file>`.
+These files do not necessarily have to be part of a complete :term:`deck`
 
 More documentation on :doc:`usage/compdat`.
 

@@ -234,7 +234,7 @@ def df2res_editnnc(
             in the produced string/file
 
     Returns:
-        string with the EDITNNC keyword.
+        :term:`include file` content string with the EDITNNC keyword.
     """
 
     string = ""

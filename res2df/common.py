@@ -515,7 +515,7 @@ def df2res(
     consecutive: Optional[str] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate resdata include strings from dataframes in res2df format.
+    """Generate resdata :term:`include file` content from dataframes in res2df format.
 
     This function hands over the actual text generation pr. keyword
     to functions named df2res_<keywordname> in the calling module.
@@ -538,7 +538,7 @@ def df2res(
             to file.
 
     Returns:
-        string that can be used as an :term:`include file`.
+        string that can be used as contents of :term:`include file`.
     """
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])

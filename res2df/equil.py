@@ -344,7 +344,7 @@ def equil_main(args) -> None:
 
 
 def equil_reverse_main(args) -> None:
-    """Entry-point for module, for command line utility 
+    """Entry-point for module, for command line utility
     for CSV to reservoir simulator :term:`include files <include file>`
     """
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name

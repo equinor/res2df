@@ -239,7 +239,7 @@ def df2res(
     comments: Optional[Dict[str, str]] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate resdata include strings from dataframes with
+    """Generate resdata :term:`include file` content from dataframes with
     saturation functions (SWOF, SGOF, ...)
 
     Args:
@@ -254,7 +254,7 @@ def df2res(
             to file.
 
     Returns:
-        Generated resdata include string
+        Generated resdata :term:`include file` content
 
     """
     string = ""

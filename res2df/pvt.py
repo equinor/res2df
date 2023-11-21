@@ -330,7 +330,7 @@ def df2res(
     comments: Optional[Dict[str, str]] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Generate resdata include strings from PVT dataframes
+    """Generate resdata :term:`include file` content from PVT dataframes
 
     Args:
         pvt_df: Dataframe with PVT data in res2df format.

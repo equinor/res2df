@@ -10,7 +10,7 @@ Glossary
 
     .DATA file
         Inputs provided to reservoir simulators such as Eclipse or OPM Flow.
-        Usually a :term:`.DATA file` pointing to other include files. One :term:`.DATA file``
+        Usually a :term:`.DATA file` pointing to other include files. One :term:`.DATA file`
         typically points to multiple include files.
 
     include file

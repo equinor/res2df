@@ -632,7 +632,7 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     def _pvto_pvtnum(dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents
-           for PVTO-data for a specific PVTNUM"""
+        for PVTO-data for a specific PVTNUM"""
         string = ""
         dframe = dframe.set_index("RS").sort_index()
         for rs in dframe.index.unique():
@@ -641,7 +641,7 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     def _pvto_pvtnum_rs(dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents
-           for PVTO-data for a particular RS"""
+        for PVTO-data for a particular RS"""
         string = ""
         assert len(dframe.index.unique()) == 1
         rs = dframe.index.values[0]

@@ -331,7 +331,8 @@ def df2ress(
     keyword: str = "VFPPROD",
     comments: Optional[Dict[str, str]] = None,
 ) -> List[str]:
-    """Produce a list of strings defining VFPPROD/VFPINJ Eclipse input from a dataframe
+    """Produce a list of strings defining VFPPROD/VFPINJ Eclipse
+    :term:`input file` contents from a dataframe
 
     All data for the keyword VFPPROD or VFPINJ will be returned.
 
@@ -378,7 +379,8 @@ def df2res(
     comments: Optional[Dict[str, str]] = None,
     filename: Optional[str] = None,
 ) -> str:
-    """Produce a string defining all VFPPROD/VFPINJ Eclipse input from a dataframe
+    """Create a string defining all VFPPROD/VFPINJ Eclipse
+    :term:`input file` contents from a dataframe
 
     All data for the keywords VFPPROD/VFPINJ will be returned.
 

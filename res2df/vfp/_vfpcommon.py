@@ -181,7 +181,8 @@ def _write_vfp_range(
     format: str = "%10.6g",
     values_per_line: int = 5,
 ) -> str:
-    """Produce a string representing a resdata record for a given table range
+    """Creates a :term:`include file` content string of a resdata
+    record for a given table range
 
     Args:
         values:          List/array with the range sorted

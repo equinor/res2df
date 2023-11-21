@@ -550,7 +550,8 @@ def _write_basic_record(
     unit_type: str,
     tab_type: str,
 ) -> str:
-    """Produce a string representing the first record for Eclipse  VFPINJ keyword
+    """Creates a :term:`include file` content string of the
+    first record for the Eclipse VFPINJ keyword
 
     Args:
         tableno:       VFPROD table number
@@ -580,7 +581,8 @@ def _write_table(
     format: str = "%10.6g",
     values_per_line: int = 5,
 ) -> str:
-    """Produce a string representing a resdata record for a VFPINJ table (BHP part)
+    """Creates a :term:`include file` content string representing
+    a resdata record for a VFPINJ table (BHP part)
 
     Args:
         table:           DataFrame with multiindex for table ranges and colums
@@ -614,7 +616,8 @@ def _write_table_records(
     format: str = "%10.6g",
     values_per_line: int = 5,
 ) -> str:
-    """Produce a string representing a resdata record for a VFPINJ table (BHP part)
+    """Creates a :term:`include file` content string representing
+    for a VFPINJ table (BHP part)
 
     Args:
         thp_indices:     array of int representing index for THP value for record
@@ -652,7 +655,8 @@ def _write_table_records(
 
 
 def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
-    """Produce a string defining single VFPINJ Eclipse input from a dataframe
+    """Creates a :term:`include file` content string
+    representing single VFPINJ Eclipse input from a dataframe
 
     All data for the keywords VFPINJ will be returned.
 

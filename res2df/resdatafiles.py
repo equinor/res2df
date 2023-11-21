@@ -48,7 +48,7 @@ class ResdataFiles(object):
     caching if wanted.
 
     Various functions that needs some of the simulator :term:`output <output file>`
-    (or :term:`input file`) should be able to ask this class, and
+    (or :term:`include file`) should be able to ask this class, and
     it should be loaded or served from cache.
     """
 

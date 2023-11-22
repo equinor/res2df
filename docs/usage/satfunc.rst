@@ -1,9 +1,9 @@
 satfunc
 -------
 
-satfunc will extract saturation functions from Eclipse decks or from Eclipse
-include files, these are the keywords ``SWOF``, ``SGOF``, ``SGWFN``, ``SWFN``,
-``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
+satfunc will extract saturation functions from :term:`.DATA files <.DATA file>` or from
+:term:`include files <include file>`, these are the keywords ``SWOF``, ``SGOF``, 
+``SGWFN``, ``SWFN``, ``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
 
 The data obtained from one invocation of the satfunc module will be put in one
 dataframe, where data from different keywords are separated by the ``KEYWORD``
@@ -11,14 +11,14 @@ column.
 
 ..
   import numpy as np
-  satfunc.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).iloc[np.r_[0:5, 37:42, -5:0]].to_csv('docs/usage/satfunc.csv', index=False)
+  satfunc.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).iloc[np.r_[0:5, 37:42, -5:0]].to_csv('docs/usage/satfunc.csv', index=False)
 
 .. code-block:: python
 
-   from ecl2df import satfunc, EclFiles
+   from res2df import satfunc, ResdataFiles
 
-   eclfiles = EclFiles('MYDATADECK.DATA')
-   dframe = satfunc.df(eclfiles)
+   resdatafiles = ResdataFiles('MYDATADECK.DATA')
+   dframe = satfunc.df(resdatafiles)
 
 .. csv-table:: Example satfunc table (only a subset of the rows are shown)
    :file: satfunc.csv
@@ -28,16 +28,16 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
 .. code-block:: console
 
-  ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv
+  res2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv
 
 It is possible to extract keywords one at a time using the ``--keywords`` command
 line option.
 
-Instead of Eclipse data decks, individual include files may also be parsed, but
+Instead of complete :term:`decks <deck>`, individual include files may also be parsed, but
 only one at a time.
 
-Generating Eclipse include files from dataframes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Generating include files from dataframes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When a dataframe of saturation function data is loaded into Python, any operation
 may be applied on the data. Simple operations would typically be scaling, perhaps
@@ -55,33 +55,33 @@ the command
    # Multiplicate these rows by 0.5
    dframe.loc[rows_to_touch, "KRW"] *= 0.5
 
-For a dataframe or a CSV file in the format provided by this module, an Eclipse
-include file can be generated either with the Python API
-:func:`ecl2df.satfunc.df2ecl` function or the command
+For a dataframe or a CSV file in the format provided by this module, an
+:term:`include file` can be generated either with the Python API
+:func:`res2df.satfunc.df2res` function or the command
 
 .. code-block:: console
 
-  csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
+  csv2res satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose
 
-which should give a file ``relperm.inc`` that can be parsed by Eclipse. The command
+which should give a file ``relperm.inc`` that can be parsed by reservoir simulators. The command
 above will only pick the keywords ``SWOF`` and ``SGOF`` (in the case there are
 data for more keywords in the dataframe).
 
-There are no automated checks for validity of the dumped include files.
+There are no automated checks for validity of the dumped :term:`include file <include file>`.
 
 Extracting properties pr. SATNUM
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you have an include file prepared (from any source), you might need to
+If you have an :term:`include file` prepared (from any source), you might need to
 determine certain properties like endpoint. If you need to determine for
 example "SOWCR" - the largest oil saturation for which oil is immobile,
 because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
 
 .. code-block:: python
 
-    from ecl2df import satfunc
+    from res2df import satfunc
 
-    # Read an Eclipse include file directly into a DataFrame
+    # Read an include file directly into a DataFrame
     with open("relperm.inc") as f_handle:
         sat_df = satfunc.df(f_handle.read())
 
@@ -94,7 +94,7 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code
     # Apply that function individually on each SATNUM:
     sat_df.groupby("SATNUM").apply(sowcr)
 
-for an example include file, this could result in
+for an example :term:`include file`, this could result in
 
 .. code-block:: console
 
@@ -109,13 +109,13 @@ The pyscal library
 
 Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
-``ecl2df.satfunc``, consider if it is better to implement the manipulations
+``res2df.satfunc``, consider if it is better to implement the manipulations
 through the `pyscal <https://equinor.github.io/pyscal/>`_ library.
 Pyscal can create curves from parametrizations, and interpolate between curves.
 
-Pyscal can create initialize its relperm objects from Eclipse include files
-though the parsing capabilities of ecl2df.satfunc.
+Pyscal can initialize its relperm objects from :term:`include files<include file>`
+through the parsing capabilities of res2df.satfunc.
 
-The function ``pyscal.pyscallist.df()`` is analogous to ``ecl2df.satfunc.df()`` in
-what it produces, and the :func:`ecl2df.satfunc.df2ecl()` can be used on both
+The function ``pyscal.pyscallist.df()`` is analogous to ``res2df.satfunc.df()`` in
+what it produces, and the :func:`res2df.satfunc.df2res()` can be used on both
 (potentially with some filtering needed.).

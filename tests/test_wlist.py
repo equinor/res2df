@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat
+from res2df import ResdataFiles, compdat
 
 try:
     # pylint: disable=unused-import
@@ -145,7 +145,7 @@ except ImportError:
 )
 def test_parse_wlist(deckstr, expected_df):
     """Test basic parsing of WLIST keywords into a dataframe representation"""
-    deck = EclFiles.str2deck(deckstr)
+    deck = ResdataFiles.str2deck(deckstr)
     wlistdf = compdat.deck2dfs(deck)["WLIST"]
     pd.testing.assert_frame_equal(wlistdf, expected_df, check_like=True)
 

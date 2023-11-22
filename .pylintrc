@@ -1,4 +1,4 @@
-# PYLINT: General settings for ecl2df
+# PYLINT: General settings for res2df
 
 [GENERAL]
 disable=R0205, F0010, C0330, E1136, E0401,C0114

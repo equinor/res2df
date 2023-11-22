@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, gruptree
-from ecl2df.eclfiles import EclFiles
+from res2df import gruptree, res2csv
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -27,8 +27,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 def test_eightcells_dataset():
     """Test Eightcells dataset"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    gruptree_df = gruptree.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    gruptree_df = gruptree.df(resdatafiles.get_deck())
 
     expected_dframe = pd.DataFrame(
         [
@@ -44,8 +44,8 @@ def test_eightcells_dataset():
 
 def test_gruptree2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    grupdf = gruptree.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    grupdf = gruptree.df(resdatafiles.get_deck())
 
     assert not grupdf.empty
     assert len(grupdf["DATE"].unique()) == 5
@@ -53,7 +53,7 @@ def test_gruptree2df():
     assert len(grupdf["PARENT"].dropna().unique()) == 3
     assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
 
-    grupdfnowells = gruptree.df(eclfiles.get_ecldeck(), welspecs=False)
+    grupdfnowells = gruptree.df(resdatafiles.get_deck(), welspecs=False)
 
     assert len(grupdfnowells["KEYWORD"].unique()) == 1
     assert grupdf["PARENT"].dropna().unique()[0] == "FIELD"
@@ -75,7 +75,7 @@ WELSPECS
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.dropna().empty  # the DATE is empty
 
@@ -118,7 +118,7 @@ WELSPECS
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     grupdf[["DATE", "CHILD", "PARENT", "KEYWORD"]].to_csv("gruptree.csv", index=False)
     grupdf.to_csv("gruptreenet.csv", index=False)
@@ -161,7 +161,7 @@ GRUPNET
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck, startdate="2000-01-01")
     print(grupdf)
     assert "TERMINAL_PRESSURE" in grupdf
@@ -308,7 +308,7 @@ FIELDB
 def test_grupnetroot(schstr, expected_dframe, expected_tree):
     """Test that terminal pressure of the tree root can be
     included in the dataframe (with an empty parent)"""
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck, startdate="2000-01-01")
     non_default_columns = ["CHILD", "PARENT", "TERMINAL_PRESSURE"]
     pd.testing.assert_frame_equal(
@@ -414,7 +414,7 @@ def test_edge_dataframe2dict(dframe, expected):
 def test_emptytree_strdeck():
     """Test empty schedule sections. Don't want to crash"""
     schstr = ""
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert grupdf.empty
     gruptreedict = gruptree.edge_dataframe2dict(grupdf)
@@ -427,19 +427,19 @@ def test_emptytree_strdeck():
 
 
 def test_emptytree_commandlinetool(tmp_path, mocker, caplog):
-    """Test the command line tool on an Eclipse deck which is empty"""
+    """Test the command line tool on a .DATA file which is empty"""
     os.chdir(tmp_path)
     Path("EMPTY.DATA").write_text("", encoding="utf8")
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "gruptree", "--prettyprint", "EMPTY.DATA"])
+    res2csv.main()
     assert "No tree data to prettyprint" in caplog.text
 
 
 def test_cli_nothing_to_do(mocker, capsys):
     """Test that the client says nothing to do when DATA is supplied, but no action."""
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "EMPTY.DATA"])
+    mocker.patch("sys.argv", ["res2csv", "gruptree", "EMPTY.DATA"])
     with pytest.raises(SystemExit):
-        ecl2csv.main()
+        res2csv.main()
     assert "Nothing to do" in capsys.readouterr().out
 
 
@@ -461,7 +461,7 @@ WELSPECS
 /
 
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     grupdf = gruptree.df(deck)
     assert len(grupdf["DATE"].unique()) == 2
     print(grupdf)
@@ -470,8 +470,8 @@ WELSPECS
 def test_main(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "gruptree.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", REEK, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "gruptree", REEK, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -480,8 +480,8 @@ def test_main(tmp_path, mocker):
 
 def test_prettyprint_commandline(mocker, capsys):
     """Test pretty printing via command line interface"""
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", REEK, "--prettyprint"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "gruptree", REEK, "--prettyprint"])
+    res2csv.main()
     stdout = capsys.readouterr().out.strip()
     print(stdout)
     assert (
@@ -551,8 +551,8 @@ FIELD
 def test_main_subparser(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "gruptree.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "gruptree", "-v", REEK, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "gruptree", "-v", REEK, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -724,7 +724,7 @@ def test_branprop_nodeprop(schstr, expected_dframe, check_columns):
     """Testing that the gruptree dataframe works correctly
     when the schedule string contains BRANPROP and NODEPROP
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     dframe = gruptree.df(deck).reset_index()
     expected_dframe.DATE = pd.to_datetime(expected_dframe.DATE)
     pd.testing.assert_frame_equal(
@@ -789,5 +789,5 @@ FIELD
 
 
     """
-    dframe = gruptree.df(EclFiles.str2deck(schstr))
+    dframe = gruptree.df(ResdataFiles.str2deck(schstr))
     assert gruptree.prettyprint(dframe).strip() == expected_prettyprint.strip()

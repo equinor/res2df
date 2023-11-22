@@ -198,404 +198,404 @@ VtkWriteWaterFormationVolumeFactor="0"
 ZoltanImbalanceTol="1.1"
 
 Reading deck file '2_R001_REEK-0.DATA'
-    0 Reading RUNSPEC  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 11
-    1 Reading TITLE    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 14
-    2 Reading SAVE     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 19
-    3 Reading NOECHO   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 22
-    4 Reading DIMENS   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 25
-    5 Reading START    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 29
-    6 Reading OIL      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 36
-    7 Reading GAS      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 37
-    8 Reading WATER    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 38
-    9 Reading METRIC   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 42
-   10 Reading GRIDOPTS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 44
-   11 Reading EQLOPTS  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 52
-   12 Reading TABDIMS  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 56
-   13 Reading EQLDIMS  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 61
-   14 Reading REGDIMS  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 65
-   15 Reading FAULTDIM in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 70
-   16 Reading WELLDIMS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 74
-   17 Reading VFPPDIMS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 78
-   18 Reading VFPIDIMS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 83
-   19 Reading SMRYDIMS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 87
-   20 Reading UNIFIN   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 91
-   21 Reading UNIFOUT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 92
-   22 Reading NOINSPEC in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 95
-   23 Reading NORSSPEC in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 98
-   24 Reading GRID     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 104
-   25 Reading NOECHO   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 107
-   26 Reading INIT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 110
-   27 Reading GRIDFILE in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 113
-   28 Reading MESSAGES in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 117
-   29 Reading PINCH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 121
-   30 Reading NOECHO   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 125
-   31 Reading NOECHO   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 4
-   32 Reading MAPUNITS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 12
-   33 Reading MAPAXES  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 15
-   34 Reading GRIDUNIT in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 19
-   35 Reading SPECGRID in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 22
-   36 Reading GDORIENT in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 25
-   37 Reading COORD    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 29
-   38 Reading ZCORN    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 3229
-   39 Reading ACTNUM   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 34211
-   40 Reading ECHO     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid line 34222
-   41 Reading FAULTS   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.faults line 10
-   42 Reading PORO     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.poro line 11
-   43 Reading PERMX    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.perm line 11
-   44 Reading PERMY    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.perm line 7167
-   45 Reading PERMZ    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.perm line 14323
-   46 Reading MULTIPLY in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 146
-   47 Reading MULTFLT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.multflt line 1
-   48 Reading EQUALS   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.multz line 1
-   49 Reading EDIT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 163
-   50 Reading PROPS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 170
-   51 Reading SWOF     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/swof.inc line 9
-   52 Reading SGOF     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/sgof.txt line 9
-   53 Reading EQUALS   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.endpoints line 1
-   54 Reading COPY     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 184
-   55 Reading MULTIPLY in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 190
-   56 Reading ADD      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 193
-   57 Reading SCALECRS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 197
-   58 Reading ROCKOPTS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt line 1
-   59 Reading ROCK     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt line 4
-   60 Reading PVTW     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt line 7
-   61 Reading PVTO     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt line 10
-   62 Reading PVDG     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt line 139
-   63 Reading DENSITY  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt line 157
-   64 Reading SWATINIT in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.swatinit line 11
-   65 Reading REGIONS  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 212
-   66 Reading EQLNUM   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/regions/reek.eqlnum line 11
-   67 Reading FIPNUM   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/regions/reek.fipnum line 11
-   68 Reading EQUALS   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 222
-   69 Reading SOLUTION in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 231
-   70 Reading RTEMP    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 233
-   71 Reading EQUIL    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/solution/reek.equil line 1
-   72 Reading RSVD     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 240
-   73 Reading RPTSOL   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 246
-   74 Reading RPTRST   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 249
-   75 Reading SUMMARY  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 256
-   76 Reading FOPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 7
-   77 Reading FOPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 8
-   78 Reading FGPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 9
-   79 Reading FGPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 10
-   80 Reading FWPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 11
-   81 Reading FWPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 12
-   82 Reading FLPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 13
-   83 Reading FLPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 14
-   84 Reading FVPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 15
-   85 Reading FOPRF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 16
-   86 Reading FOPRS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 17
-   87 Reading FGSR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 18
-   88 Reading FGPRF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 19
-   89 Reading FGPRS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 20
-   90 Reading FOPP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 24
-   91 Reading FWPP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 25
-   92 Reading FGPP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 26
-   93 Reading FMWPR    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 30
-   94 Reading FMWIN    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 31
-   95 Reading FVIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 33
-   96 Reading FWIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 34
-   97 Reading FWIRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 35
-   98 Reading FGIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 36
-   99 Reading FGIRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 37
-  100 Reading FGLIR    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 39
-  101 Reading FMCTP    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 43
-  102 Reading FVPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 48
-  103 Reading FOPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 49
-  104 Reading FOPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 50
-  105 Reading FWPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 51
-  106 Reading FWPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 52
-  107 Reading FGPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 53
-  108 Reading FGPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 54
-  109 Reading FWIT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 55
-  110 Reading FWITH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 56
-  111 Reading FGIT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 57
-  112 Reading FGITH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 58
-  113 Reading FOPTF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 59
-  114 Reading FOPTS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 60
-  115 Reading FWIP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 64
-  116 Reading FOIP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 65
-  117 Reading FGIP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 66
-  118 Reading FWCT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 68
-  119 Reading FWCTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 69
-  120 Reading FGOR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 70
-  121 Reading FGORH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 71
-  122 Reading FGLR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 72
-  123 Reading FWGR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 73
-  124 Reading FPR      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 75
-  125 Reading RPR      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 77
-  126 Reading ROIP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 79
-  127 Reading ROIPL    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 81
-  128 Reading ROIPG    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 83
-  129 Reading RGIP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 85
-  130 Reading RGIPL    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 87
-  131 Reading RGIPG    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 89
-  132 Reading RGPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 91
-  133 Reading RGPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 93
-  134 Reading GMWPR    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 101
-  135 Reading GGLIR    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 104
-  136 Reading GOPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 106
-  137 Reading GOPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 108
-  138 Reading GGPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 110
-  139 Reading GGPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 112
-  140 Reading GWPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 114
-  141 Reading GWPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 116
-  142 Reading GVPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 118
-  143 Reading GLPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 120
-  144 Reading GOPRF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 122
-  145 Reading GOPRS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 124
-  146 Reading GGPRF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 126
-  147 Reading GGPRS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 128
-  148 Reading GWCT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 130
-  149 Reading GWCTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 132
-  150 Reading GGOR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 134
-  151 Reading GGORH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 136
-  152 Reading GWGR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 138
-  153 Reading GGLR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 140
-  154 Reading GOPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 142
-  155 Reading GOPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 144
-  156 Reading GGPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 146
-  157 Reading GGPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 148
-  158 Reading GWPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 150
-  159 Reading GWPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 152
-  160 Reading GVPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 154
-  161 Reading GLPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 156
-  162 Reading GOPTF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 158
-  163 Reading GOPTS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 160
-  164 Reading GGPTF    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 162
-  165 Reading GGPTS    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 164
-  166 Reading GWIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 166
-  167 Reading GVIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 168
-  168 Reading GWIRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 170
-  169 Reading GGIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 172
-  170 Reading GGIRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 174
-  171 Reading GOPP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 177
-  172 Reading GGPP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 179
-  173 Reading GWPP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 181
-  174 Reading GMCTP    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 186
-  175 Reading WOPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 190
-  176 Reading WOPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 192
-  177 Reading WGPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 194
-  178 Reading WGPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 196
-  179 Reading WWPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 198
-  180 Reading WWPRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 200
-  181 Reading WOPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 203
-  182 Reading WWPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 205
-  183 Reading WGPT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 207
-  184 Reading WOPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 209
-  185 Reading WWPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 211
-  186 Reading WGPTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 213
-  187 Reading WWCT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 216
-  188 Reading WWCTH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 218
-  189 Reading WGOR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 220
-  190 Reading WGORH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 222
-  191 Reading WWIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 224
-  192 Reading WWIRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 226
-  193 Reading WGIR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 228
-  194 Reading WGIRH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 230
-  195 Reading WWIT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 232
-  196 Reading WWITH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 234
-  197 Reading WGIT     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 236
-  198 Reading WGITH    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 238
-  199 Reading WBHP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 241
-  200 Reading WTHP     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 243
-  201 Reading WPI      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 245
-  202 Reading WVPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 247
-  203 Reading WBP      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 249
-  204 Reading WBP4     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 251
-  205 Reading WBP9     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 253
-  206 Reading WMCTL    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 255
-  207 Reading WLPR     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 257
-  208 Reading WGLIR    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 260
-  209 Reading WOGLR    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 265
-  210 Reading BPR      in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 269
-  211 Reading TCPU     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 277
-  212 Reading TCPUDAY  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 278
-  213 Reading SCHEDULE in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 265
-  214 Reading TUNING   in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 267
-  215 Reading GRUPTREE in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 4
-  216 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 9
-  217 Reading WELSPECS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 13
-  218 Reading COMPORD  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 21
-  219 Reading COMPDAT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 28
-  220 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 96
-  221 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 103
-  222 Reading WRFTPLT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 108
-  223 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 116
-  224 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 120
-  225 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 127
-  226 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 132
-  227 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 136
-  228 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 143
-  229 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 147
-  230 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 154
-  231 Reading WELSPECS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 158
-  232 Reading COMPORD  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 163
-  233 Reading COMPDAT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 167
-  234 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 187
-  235 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 194
-  236 Reading WRFTPLT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 199
-  237 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 204
-  238 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 208
-  239 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 215
-  240 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 220
-  241 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 224
-  242 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 231
-  243 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 236
-  244 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 240
-  245 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 247
-  246 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 252
-  247 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 256
-  248 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 263
-  249 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 268
-  250 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 272
-  251 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 279
-  252 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 284
-  253 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 288
-  254 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 295
-  255 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 300
-  256 Reading WELSPECS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 304
-  257 Reading COMPORD  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 310
-  258 Reading COMPDAT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 315
-  259 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 350
-  260 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 359
-  261 Reading WRFTPLT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 364
-  262 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 370
-  263 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 374
-  264 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 383
-  265 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 388
-  266 Reading WELSPECS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 392
-  267 Reading COMPORD  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 397
-  268 Reading COMPDAT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 401
-  269 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 421
-  270 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 430
-  271 Reading WRFTPLT  in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 436
-  272 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 441
-  273 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 445
-  274 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 454
-  275 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 460
-  276 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 464
-  277 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 473
-  278 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 478
-  279 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 482
-  280 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 491
-  281 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 496
-  282 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 500
-  283 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 509
-  284 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 514
-  285 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 518
-  286 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 527
-  287 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 532
-  288 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 536
-  289 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 545
-  290 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 550
-  291 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 554
-  292 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 563
-  293 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 568
-  294 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 572
-  295 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 581
-  296 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 586
-  297 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 590
-  298 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 599
-  299 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 604
-  300 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 608
-  301 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 617
-  302 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 622
-  303 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 626
-  304 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 635
-  305 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 640
-  306 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 644
-  307 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 653
-  308 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 658
-  309 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 662
-  310 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 671
-  311 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 676
-  312 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 680
-  313 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 689
-  314 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 694
-  315 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 698
-  316 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 707
-  317 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 712
-  318 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 716
-  319 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 725
-  320 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 730
-  321 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 734
-  322 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 743
-  323 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 748
-  324 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 752
-  325 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 761
-  326 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 766
-  327 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 770
-  328 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 779
-  329 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 784
-  330 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 788
-  331 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 797
-  332 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 802
-  333 Reading WCONHIST in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 806
-  334 Reading WCONINJH in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 815
-  335 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 820
-  336 Reading DATES    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 824
-  337 Reading SAVE     in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 276
-  338 Reading TSTEP    in /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 279
+    0 Reading RUNSPEC  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 11
+    1 Reading TITLE    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 14
+    2 Reading SAVE     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 19
+    3 Reading NOECHO   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 22
+    4 Reading DIMENS   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 25
+    5 Reading START    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 29
+    6 Reading OIL      in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 36
+    7 Reading GAS      in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 37
+    8 Reading WATER    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 38
+    9 Reading METRIC   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 42
+   10 Reading GRIDOPTS in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 44
+   11 Reading EQLOPTS  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 52
+   12 Reading TABDIMS  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 56
+   13 Reading EQLDIMS  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 61
+   14 Reading REGDIMS  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 65
+   15 Reading FAULTDIM in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 70
+   16 Reading WELLDIMS in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 74
+   17 Reading VFPPDIMS in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 78
+   18 Reading VFPIDIMS in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 83
+   19 Reading SMRYDIMS in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 87
+   20 Reading UNIFIN   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 91
+   21 Reading UNIFOUT  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 92
+   22 Reading NOINSPEC in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 95
+   23 Reading NORSSPEC in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 98
+   24 Reading GRID     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 104
+   25 Reading NOECHO   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 107
+   26 Reading INIT     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 110
+   27 Reading GRIDFILE in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 113
+   28 Reading MESSAGES in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 117
+   29 Reading PINCH    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 121
+   30 Reading NOECHO   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 125
+   31 Reading NOECHO   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 4
+   32 Reading MAPUNITS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 12
+   33 Reading MAPAXES  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 15
+   34 Reading GRIDUNIT in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 19
+   35 Reading SPECGRID in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 22
+   36 Reading GDORIENT in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 25
+   37 Reading COORD    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 29
+   38 Reading ZCORN    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 3229
+   39 Reading ACTNUM   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 34211
+   40 Reading ECHO     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid line 34222
+   41 Reading FAULTS   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.faults line 10
+   42 Reading PORO     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.poro line 11
+   43 Reading PERMX    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.perm line 11
+   44 Reading PERMY    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.perm line 7167
+   45 Reading PERMZ    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.perm line 14323
+   46 Reading MULTIPLY in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 146
+   47 Reading MULTFLT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.multflt line 1
+   48 Reading EQUALS   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.multz line 1
+   49 Reading EDIT     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 163
+   50 Reading PROPS    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 170
+   51 Reading SWOF     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/swof.inc line 9
+   52 Reading SGOF     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/sgof.txt line 9
+   53 Reading EQUALS   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.endpoints line 1
+   54 Reading COPY     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 184
+   55 Reading MULTIPLY in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 190
+   56 Reading ADD      in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 193
+   57 Reading SCALECRS in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 197
+   58 Reading ROCKOPTS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt line 1
+   59 Reading ROCK     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt line 4
+   60 Reading PVTW     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt line 7
+   61 Reading PVTO     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt line 10
+   62 Reading PVDG     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt line 139
+   63 Reading DENSITY  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt line 157
+   64 Reading SWATINIT in /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.swatinit line 11
+   65 Reading REGIONS  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 212
+   66 Reading EQLNUM   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/regions/reek.eqlnum line 11
+   67 Reading FIPNUM   in /home/berland/projects/res2df/tests/data/reek/eclipse/include/regions/reek.fipnum line 11
+   68 Reading EQUALS   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 222
+   69 Reading SOLUTION in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 231
+   70 Reading RTEMP    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 233
+   71 Reading EQUIL    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/solution/reek.equil line 1
+   72 Reading RSVD     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 240
+   73 Reading RPTSOL   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 246
+   74 Reading RPTRST   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 249
+   75 Reading SUMMARY  in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 256
+   76 Reading FOPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 7
+   77 Reading FOPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 8
+   78 Reading FGPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 9
+   79 Reading FGPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 10
+   80 Reading FWPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 11
+   81 Reading FWPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 12
+   82 Reading FLPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 13
+   83 Reading FLPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 14
+   84 Reading FVPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 15
+   85 Reading FOPRF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 16
+   86 Reading FOPRS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 17
+   87 Reading FGSR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 18
+   88 Reading FGPRF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 19
+   89 Reading FGPRS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 20
+   90 Reading FOPP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 24
+   91 Reading FWPP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 25
+   92 Reading FGPP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 26
+   93 Reading FMWPR    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 30
+   94 Reading FMWIN    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 31
+   95 Reading FVIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 33
+   96 Reading FWIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 34
+   97 Reading FWIRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 35
+   98 Reading FGIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 36
+   99 Reading FGIRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 37
+  100 Reading FGLIR    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 39
+  101 Reading FMCTP    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 43
+  102 Reading FVPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 48
+  103 Reading FOPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 49
+  104 Reading FOPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 50
+  105 Reading FWPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 51
+  106 Reading FWPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 52
+  107 Reading FGPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 53
+  108 Reading FGPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 54
+  109 Reading FWIT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 55
+  110 Reading FWITH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 56
+  111 Reading FGIT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 57
+  112 Reading FGITH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 58
+  113 Reading FOPTF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 59
+  114 Reading FOPTS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 60
+  115 Reading FWIP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 64
+  116 Reading FOIP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 65
+  117 Reading FGIP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 66
+  118 Reading FWCT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 68
+  119 Reading FWCTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 69
+  120 Reading FGOR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 70
+  121 Reading FGORH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 71
+  122 Reading FGLR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 72
+  123 Reading FWGR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 73
+  124 Reading FPR      in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 75
+  125 Reading RPR      in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 77
+  126 Reading ROIP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 79
+  127 Reading ROIPL    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 81
+  128 Reading ROIPG    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 83
+  129 Reading RGIP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 85
+  130 Reading RGIPL    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 87
+  131 Reading RGIPG    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 89
+  132 Reading RGPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 91
+  133 Reading RGPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 93
+  134 Reading GMWPR    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 101
+  135 Reading GGLIR    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 104
+  136 Reading GOPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 106
+  137 Reading GOPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 108
+  138 Reading GGPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 110
+  139 Reading GGPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 112
+  140 Reading GWPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 114
+  141 Reading GWPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 116
+  142 Reading GVPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 118
+  143 Reading GLPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 120
+  144 Reading GOPRF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 122
+  145 Reading GOPRS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 124
+  146 Reading GGPRF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 126
+  147 Reading GGPRS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 128
+  148 Reading GWCT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 130
+  149 Reading GWCTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 132
+  150 Reading GGOR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 134
+  151 Reading GGORH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 136
+  152 Reading GWGR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 138
+  153 Reading GGLR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 140
+  154 Reading GOPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 142
+  155 Reading GOPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 144
+  156 Reading GGPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 146
+  157 Reading GGPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 148
+  158 Reading GWPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 150
+  159 Reading GWPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 152
+  160 Reading GVPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 154
+  161 Reading GLPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 156
+  162 Reading GOPTF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 158
+  163 Reading GOPTS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 160
+  164 Reading GGPTF    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 162
+  165 Reading GGPTS    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 164
+  166 Reading GWIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 166
+  167 Reading GVIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 168
+  168 Reading GWIRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 170
+  169 Reading GGIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 172
+  170 Reading GGIRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 174
+  171 Reading GOPP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 177
+  172 Reading GGPP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 179
+  173 Reading GWPP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 181
+  174 Reading GMCTP    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 186
+  175 Reading WOPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 190
+  176 Reading WOPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 192
+  177 Reading WGPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 194
+  178 Reading WGPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 196
+  179 Reading WWPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 198
+  180 Reading WWPRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 200
+  181 Reading WOPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 203
+  182 Reading WWPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 205
+  183 Reading WGPT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 207
+  184 Reading WOPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 209
+  185 Reading WWPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 211
+  186 Reading WGPTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 213
+  187 Reading WWCT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 216
+  188 Reading WWCTH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 218
+  189 Reading WGOR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 220
+  190 Reading WGORH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 222
+  191 Reading WWIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 224
+  192 Reading WWIRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 226
+  193 Reading WGIR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 228
+  194 Reading WGIRH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 230
+  195 Reading WWIT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 232
+  196 Reading WWITH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 234
+  197 Reading WGIT     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 236
+  198 Reading WGITH    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 238
+  199 Reading WBHP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 241
+  200 Reading WTHP     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 243
+  201 Reading WPI      in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 245
+  202 Reading WVPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 247
+  203 Reading WBP      in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 249
+  204 Reading WBP4     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 251
+  205 Reading WBP9     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 253
+  206 Reading WMCTL    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 255
+  207 Reading WLPR     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 257
+  208 Reading WGLIR    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 260
+  209 Reading WOGLR    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 265
+  210 Reading BPR      in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 269
+  211 Reading TCPU     in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 277
+  212 Reading TCPUDAY  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 278
+  213 Reading SCHEDULE in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 265
+  214 Reading TUNING   in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 267
+  215 Reading GRUPTREE in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 4
+  216 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 9
+  217 Reading WELSPECS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 13
+  218 Reading COMPORD  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 21
+  219 Reading COMPDAT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 28
+  220 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 96
+  221 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 103
+  222 Reading WRFTPLT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 108
+  223 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 116
+  224 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 120
+  225 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 127
+  226 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 132
+  227 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 136
+  228 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 143
+  229 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 147
+  230 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 154
+  231 Reading WELSPECS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 158
+  232 Reading COMPORD  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 163
+  233 Reading COMPDAT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 167
+  234 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 187
+  235 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 194
+  236 Reading WRFTPLT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 199
+  237 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 204
+  238 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 208
+  239 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 215
+  240 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 220
+  241 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 224
+  242 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 231
+  243 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 236
+  244 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 240
+  245 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 247
+  246 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 252
+  247 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 256
+  248 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 263
+  249 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 268
+  250 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 272
+  251 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 279
+  252 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 284
+  253 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 288
+  254 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 295
+  255 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 300
+  256 Reading WELSPECS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 304
+  257 Reading COMPORD  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 310
+  258 Reading COMPDAT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 315
+  259 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 350
+  260 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 359
+  261 Reading WRFTPLT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 364
+  262 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 370
+  263 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 374
+  264 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 383
+  265 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 388
+  266 Reading WELSPECS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 392
+  267 Reading COMPORD  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 397
+  268 Reading COMPDAT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 401
+  269 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 421
+  270 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 430
+  271 Reading WRFTPLT  in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 436
+  272 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 441
+  273 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 445
+  274 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 454
+  275 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 460
+  276 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 464
+  277 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 473
+  278 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 478
+  279 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 482
+  280 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 491
+  281 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 496
+  282 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 500
+  283 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 509
+  284 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 514
+  285 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 518
+  286 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 527
+  287 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 532
+  288 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 536
+  289 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 545
+  290 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 550
+  291 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 554
+  292 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 563
+  293 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 568
+  294 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 572
+  295 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 581
+  296 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 586
+  297 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 590
+  298 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 599
+  299 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 604
+  300 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 608
+  301 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 617
+  302 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 622
+  303 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 626
+  304 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 635
+  305 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 640
+  306 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 644
+  307 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 653
+  308 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 658
+  309 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 662
+  310 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 671
+  311 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 676
+  312 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 680
+  313 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 689
+  314 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 694
+  315 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 698
+  316 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 707
+  317 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 712
+  318 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 716
+  319 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 725
+  320 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 730
+  321 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 734
+  322 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 743
+  323 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 748
+  324 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 752
+  325 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 761
+  326 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 766
+  327 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 770
+  328 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 779
+  329 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 784
+  330 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 788
+  331 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 797
+  332 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 802
+  333 Reading WCONHIST in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 806
+  334 Reading WCONINJH in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 815
+  335 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 820
+  336 Reading DATES    in /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 824
+  337 Reading SAVE     in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 276
+  338 Reading TSTEP    in /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 279
 
 Warning: Unsupported keywords or keyword items:
 
   SAVE: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 19
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 19
 
   NOECHO: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 22
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 22
 
   NOINSPEC: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 95
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 95
 
   NORSSPEC: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 98
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 98
 
   NOECHO: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 107
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 107
 
   PINCH: invalid value 'NOGAP' in record 1 for item 2
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 121
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 121
 
   NOECHO: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 125
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 125
 
   NOECHO: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid, line 4
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid, line 4
 
   MAPUNITS: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid, line 12
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid, line 12
 
   GRIDUNIT: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid, line 19
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid, line 19
 
   GDORIENT: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid, line 25
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid, line 25
 
   ECHO: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.grid, line 34222
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.grid, line 34222
 
   ROCKOPTS: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/props/reek.pvt, line 1
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/props/reek.pvt, line 1
 
   WBP: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry, line 249
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry, line 249
 
   WBP4: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry, line 251
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry, line 251
 
   WBP9: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry, line 253
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry, line 253
 
   SAVE: keyword not supported
-  In file: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 276
+  In file: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA, line 276
 
 Creating cornerpoint grid from keywords ZCORN, COORD and ACTNUM
 
-Loading faults from FAULTS in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.faults line 10
+Loading faults from FAULTS in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.faults line 10
 
-Applying MULTFLT in /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/grid/reek.multflt line 1
+Applying MULTFLT in /home/berland/projects/res2df/tests/data/reek/eclipse/include/grid/reek.multflt line 1
 Setting fault transmissibility multiplier 0.001 for fault F1
 Setting fault transmissibility multiplier 0.001 for fault F2
 Setting fault transmissibility multiplier 0.001 for fault F3
@@ -604,10 +604,10 @@ Setting fault transmissibility multiplier 0.001 for fault F4
 Setting fault transmissibility multiplier 0.001 for fault F5
 
 Processing dynamic information from
-/home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 265
+/home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 265
 Initializing report step 1/38 at 2000-01-01 0.0 DAYS line 265
 Processing keyword TUNING at line 267
-Reading from: /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 4
+Reading from: /home/berland/projects/res2df/tests/data/reek/eclipse/include/schedule/reek_history.sch line 4
 Processing keyword GRUPTREE at line 4
 Complete report step 1 (31.0 DAYS) at 2000-02-01 (0.0 DAYS)
 
@@ -805,13 +805,13 @@ Initializing report step 37/38 at 2002-12-31 (1065.0 DAYS) - line 820
 Complete report step 37 (1.0 DAYS) at 2003-01-01 (1095.0 DAYS)
 
 Initializing report step 38/38 at 2003-01-01 (1095.0 DAYS) - line 824
-Reading from: /home/berland/projects/ecl2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 276
+Reading from: /home/berland/projects/res2df/tests/data/reek/eclipse/model/2_R001_REEK-0.DATA line 276
 Processing keyword SAVE at line 276
 Complete report step 38 (1.0 DAYS) at 2003-01-02 (1096.0 DAYS)
 
 
 Warning: Request for missing group GMWIN in GMWPR
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 101
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 101
 
 Processing grid
 Total number of active cells: 35641 / total pore volume: 399077425 RM3
@@ -830,25 +830,25 @@ Property tree for linear solver:
 
 
 Warning: Unhandled summary keyword FGSR
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 18
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 18
 
 Warning: Unhandled summary keyword FWGR
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 73
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 73
 
 Warning: Unhandled summary keyword GWGR
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 138
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 138
 
 Warning: Unhandled summary keyword WBP
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 249
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 249
 
 Warning: Unhandled summary keyword WBP4
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 251
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 251
 
 Warning: Unhandled summary keyword WBP9
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 253
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 253
 
 Warning: Unhandled summary keyword WOGLR
-In /home/berland/projects/ecl2df/tests/data/reek/eclipse/include/summary/reek.smry line 265
+In /home/berland/projects/res2df/tests/data/reek/eclipse/include/summary/reek.smry line 265
 
 ===============Saturation Functions Diagnostics===============
 

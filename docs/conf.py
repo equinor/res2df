@@ -19,14 +19,14 @@ from importlib import metadata
 
 # -- Project information -----------------------------------------------------
 
-project = "ecl2df"
+project = "res2df"
 author = "Håvard Berland"
 copyright = f"Equinor 2019-{datetime.datetime.now().year}"
 
 # The short X.Y version
-import ecl2df  # noqa
+import res2df  # noqa
 
-release = metadata.version("ecl2df")
+release = metadata.version("res2df")
 version = release
 
 # -- General configuration ---------------------------------------------------
@@ -50,7 +50,7 @@ extensions = [
     "sphinxarg.ext",
 ]
 
-autoapi_modules: dict = {"ecl2df": None}
+autoapi_modules: dict = {"res2df": None}
 
 autodoc_default_options = {"members": None}
 
@@ -118,7 +118,7 @@ html_static_path = ["_static"]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "ecl2dfdoc"
+htmlhelp_basename = "res2dfdoc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -141,14 +141,14 @@ latex_elements: dict = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [(master_doc, "ecl2df.tex", "ecl2df Documentation", author, "manual")]
+latex_documents = [(master_doc, "res2df.tex", "res2df Documentation", author, "manual")]
 
 
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "ecl2df", "ecl2df Documentation", [author], 1)]
+man_pages = [(master_doc, "res2df", "res2df Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -159,10 +159,10 @@ man_pages = [(master_doc, "ecl2df", "ecl2df Documentation", [author], 1)]
 texinfo_documents = [
     (
         master_doc,
-        "ecl2df",
-        "ecl2df Documentation",
+        "res2df",
+        "res2df Documentation",
         author,
-        "ecl2df",
+        "res2df",
         "One line description of project.",
         "Miscellaneous",
     )

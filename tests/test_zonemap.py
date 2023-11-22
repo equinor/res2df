@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import ecl2df
+import res2df
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -14,13 +14,13 @@ REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 def test_stdzoneslyr():
     """Test that we can read zones if the zonemap is in a standard location.
 
-    The eclfiles object defines what is the standard location for the file, while
-    the actual parsing is done in ecl2df.common.parse_lyrfile() and
+    The resdatafiles object defines what is the standard location for the file, while
+    the actual parsing is done in res2df.common.parse_lyrfile() and
     converted to zonemap in common.convert_lyrlist_to_zonemap()
     """
-    eclfiles = ecl2df.EclFiles(REEK)
+    resdatafiles = res2df.ResdataFiles(REEK)
 
-    zonemap = eclfiles.get_zonemap()
+    zonemap = resdatafiles.get_zonemap()
     assert isinstance(zonemap, dict)
     assert zonemap[3] == "UpperReek"
     assert zonemap[10] == "MidReek"
@@ -37,8 +37,8 @@ def test_stdzoneslyr():
 def test_nonexistingzones():
     """Test an Eclipse case with non-existing zonemap (i.e. no zonemap file
     in the standard location)"""
-    eclfiles = ecl2df.EclFiles(REEK)
-    zonemap = eclfiles.get_zonemap("foobar")
+    resdatafiles = res2df.ResdataFiles(REEK)
+    zonemap = resdatafiles.get_zonemap("foobar")
     # (we got a warning and an empty dict)
     assert not zonemap
 
@@ -52,7 +52,7 @@ foo
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_lyrfile(lyrfile) is None
+    assert res2df.common.parse_lyrfile(lyrfile) is None
     assert "Could not parse lyr file" in caplog.text
     assert "Failed on content: foo" in caplog.text
 
@@ -64,7 +64,7 @@ foo 1 2 3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_lyrfile(lyrfile) is None
+    assert res2df.common.parse_lyrfile(lyrfile) is None
     assert "Failed on content: foo 1 2 3" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -74,7 +74,7 @@ foo 2-1
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "From_layer higher than to_layer" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -85,7 +85,7 @@ foo   3- 4 #FFGGHH
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -96,7 +96,7 @@ foo   3- 4 bluez
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
     assert "Failed on content: foo   3- 4 bluez" in caplog.text
 
     lyrfile.write_text(
@@ -105,7 +105,7 @@ invalid 1-2-3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert res2df.ResdataFiles(REEK).get_zonemap(str(lyrfile)) is None
 
 
 def test_lyrlist_format(tmp_path):
@@ -123,7 +123,7 @@ def test_lyrlist_format(tmp_path):
 """,
         encoding="utf-8",
     )
-    lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
+    lyrlist = res2df.common.parse_lyrfile(lyrfile)
 
     assert lyrlist == [
         {"name": "ZoneA", "from_layer": 1, "to_layer": 5, "color": "#FFE5F7"},
@@ -155,8 +155,8 @@ def test_convert_lyrlist_to_zonemap(tmp_path):
 """,
         encoding="utf-8",
     )
-    lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
-    zonemap = ecl2df.common.convert_lyrlist_to_zonemap(lyrlist)
+    lyrlist = res2df.common.parse_lyrfile(lyrfile)
+    zonemap = res2df.common.convert_lyrlist_to_zonemap(lyrlist)
     assert zonemap
     assert len(lyrlist) == 3
     assert len(zonemap) == 20
@@ -176,8 +176,8 @@ def test_nonstandardzones(tmp_path):
 # Difficult quote parsing above, might not run in ResInsight.
 """
     lyrfile.write_text(lyrfilecontent)
-    lyrlist = ecl2df.common.parse_lyrfile(lyrfile)
-    zonemap = ecl2df.common.convert_lyrlist_to_zonemap(lyrlist)
+    lyrlist = res2df.common.parse_lyrfile(lyrfile)
+    zonemap = res2df.common.convert_lyrlist_to_zonemap(lyrlist)
     assert 0 not in zonemap
     assert zonemap[1] == "Eiriksson"
     assert zonemap[10] == "Eiriksson"
@@ -252,7 +252,7 @@ def test_nonstandardzones(tmp_path):
 def test_merge_zones(dframe, zonedict, zoneheader, kname, expected_df):
     """Test merging of zone information into a (mocked) grid dataframe"""
     pd.testing.assert_frame_equal(
-        ecl2df.common.merge_zones(dframe, zonedict, zoneheader, kname),
+        res2df.common.merge_zones(dframe, zonedict, zoneheader, kname),
         expected_df,
         check_like=True,
     )
@@ -264,8 +264,8 @@ def test_repeated_merge_zone():
 
     dframe = pd.DataFrame([{"K1": 1, "ZONE": "upper"}])
     pd.testing.assert_frame_equal(
-        ecl2df.common.merge_zones(dframe, {1: "upper"}, "ZONE"), dframe
+        res2df.common.merge_zones(dframe, {1: "upper"}, "ZONE"), dframe
     )
     pd.testing.assert_frame_equal(
-        ecl2df.common.merge_zones(dframe, {1: "lower"}, "ZONE"), dframe
+        res2df.common.merge_zones(dframe, {1: "lower"}, "ZONE"), dframe
     )

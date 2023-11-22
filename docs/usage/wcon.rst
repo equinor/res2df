@@ -2,16 +2,16 @@ wcon
 ^^^^
 
 This module extracts information from WCONHIST, WCONINJE, WCONINJH and
-WCONPROD from an Eclipse deck.
+WCONPROD from a :term:`.DATA file`.
 
 ..
-  wcon.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/wcon.csv', index=False)
+  wcon.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/wcon.csv', index=False)
 .. code-block:: python
 
-   from ecl2df import wcon, EclFiles
+   from res2df import wcon, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = wcon.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = wcon.df(resdatafiles)
 
 .. csv-table:: Example WCON table
    :file: wcon.csv

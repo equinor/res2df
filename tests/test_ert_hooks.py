@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import ecl2df
-from ecl2df.hook_implementations import jobs
+import res2df
+from res2df.hook_implementations import jobs
 
 try:
     # pylint: disable=unused-import
@@ -24,7 +24,7 @@ DATADIR = TESTDIR / "data/reek/eclipse/model"
 @pytest.mark.skipif(
     not HAVE_ERT, reason="ERT is not installed, skipping hook implementation tests."
 )
-def test_ecl2csv_through_ert(tmp_path):
+def test_res2csv_through_ert(tmp_path):
     """Test running the ERT executable on a mocked config file"""
     os.chdir(tmp_path)
 
@@ -53,50 +53,50 @@ def test_ecl2csv_through_ert(tmp_path):
         "RUNPATH .",
     ]
 
-    csv2ecl_subcommands = ["equil", "pvt", "satfunc"]
+    csv2res_subcommands = ["equil", "pvt", "satfunc"]
 
-    for subcommand in ecl2df.SUBMODULES:
+    for subcommand in res2df.SUBMODULES:
         ert_config.append(
-            f"FORWARD_MODEL ECL2CSV(<SUBCOMMAND>={subcommand}, "
+            f"FORWARD_MODEL RES2CSV(<SUBCOMMAND>={subcommand}, "
             f"<OUTPUT>={subcommand}.csv)"
         )
 
     # Test what we can also supply additional options for some submodules:
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=summary, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=summary, "
         '<OUTPUT>=summary-yearly.csv, <XARG1>="--time_index", <XARG2>=yearly)'
     )
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=equil, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=equil, "
         '<OUTPUT>=equil-rsvd.csv, <XARG1>="--keywords", <XARG2>="RSVD")'
     )
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=pvt, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=pvt, "
         '<OUTPUT>=pvt-custom.csv, <XARG1>="--keywords", <XARG2>="PVTO")'
     )
     ert_config.append(
-        "FORWARD_MODEL ECL2CSV(<SUBCOMMAND>=satfunc, "
+        "FORWARD_MODEL RES2CSV(<SUBCOMMAND>=satfunc, "
         '<OUTPUT>=satfunc-swof.csv, <XARG1>="--keywords", <XARG2>="SWOF")'
     )
 
-    for subcommand in csv2ecl_subcommands:
+    for subcommand in csv2res_subcommands:
         ert_config.append(
-            f"FORWARD_MODEL CSV2ECL(<SUBCOMMAND>={subcommand}, "
+            f"FORWARD_MODEL CSV2RES(<SUBCOMMAND>={subcommand}, "
             f"<CSVFILE>={subcommand}.csv, <OUTPUT>={subcommand}.inc)"
         )
     ert_config.append(
-        "FORWARD_MODEL CSV2ECL(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv, "
+        "FORWARD_MODEL CSV2RES(<SUBCOMMAND>=summary, <CSVFILE>=summary-yearly.csv, "
         "<OUTPUT>=SUMYEARLY)"
     )
 
-    ert_config_filename = "ecl2csv_test.ert"
+    ert_config_filename = "res2csv_test.ert"
     Path(ert_config_filename).write_text("\n".join(ert_config), encoding="utf-8")
 
     subprocess.call(["ert", "test_run", ert_config_filename])
 
     assert Path("OK").is_file()
 
-    for subcommand in ecl2df.SUBMODULES:
+    for subcommand in res2df.SUBMODULES:
         assert Path(subcommand + ".csv").is_file()
 
     # Check the custom output where options were supplied to the subcommands:
@@ -105,7 +105,7 @@ def test_ecl2csv_through_ert(tmp_path):
     assert set(pd.read_csv("pvt-custom.csv")["KEYWORD"]) == set(["PVTO"])
     assert set(pd.read_csv("satfunc-swof.csv")["KEYWORD"]) == set(["SWOF"])
 
-    for subcommand in csv2ecl_subcommands:
+    for subcommand in csv2res_subcommands:
         assert Path(subcommand + ".inc").is_file()
 
 
@@ -114,17 +114,17 @@ def test_job_documentation():
     """Test that for registered ERT forward models the documentation is non-empty"""
     if HAVE_ERT:
         assert (
-            type(jobs.job_documentation("ECL2CSV"))
+            type(jobs.job_documentation("RES2CSV"))
             == ert.shared.plugins.plugin_response.PluginResponse
         )
         assert (
-            type(jobs.job_documentation("CSV2ECL"))
+            type(jobs.job_documentation("CSV2RES"))
             == ert.shared.plugins.plugin_response.PluginResponse
         )
 
     else:
-        assert jobs.job_documentation("ECL2CSV") is None
-        assert jobs.job_documentation("CSV2ECL") is None
+        assert jobs.job_documentation("RES2CSV") is None
+        assert jobs.job_documentation("CSV2RES") is None
 
     assert jobs.job_documentation("foobar") is None
 
@@ -137,9 +137,9 @@ def test_get_module_variable():
     # pylint: disable=protected-access
     assert jobs._get_module_variable_if_exists("foo", "bar") == ""
     assert jobs._get_module_variable_if_exists(
-        "ecl2df.ecl2csv", "DESCRIPTION"
-    ).startswith("Convert Eclipse input and output")
-    assert jobs._get_module_variable_if_exists("ecl2df.ecl2csv", "NOPE") == ""
+        "res2df.res2csv", "DESCRIPTION"
+    ).startswith("Convert reservoir simulator input and output")
+    assert jobs._get_module_variable_if_exists("res2df.res2csv", "NOPE") == ""
 
 
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")
@@ -147,4 +147,4 @@ def test_no_erthooks():
     """Test that we can import the hook implementations even when ERT is unavailable."""
     # pylint: disable=redefined-outer-name, unused-import
     # pylint: disable=reimported, import-outside-toplevel
-    from ecl2df.hook_implementations import jobs  # noqa
+    from res2df.hook_implementations import jobs  # noqa

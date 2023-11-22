@@ -7,8 +7,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, faults
-from ecl2df.eclfiles import EclFiles
+from res2df import faults, res2csv
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -26,8 +26,8 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS")
 
 def test_faults2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    faultsdf = faults.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    faultsdf = faults.df(resdatafiles.get_deck())
 
     assert "NAME" in faultsdf
     assert "I" in faultsdf
@@ -46,7 +46,7 @@ FAULTS
   'B' 2 3 4 5 6 7 'J' /
 /
 """
-    deck = EclFiles.str2deck(deckstr)
+    deck = ResdataFiles.str2deck(deckstr)
     faultsdf = faults.df(deck)
 
     assert len(faultsdf) == 16
@@ -54,8 +54,8 @@ FAULTS
 
 def test_nofaults():
     """Test on a dataset with no faults"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    faultsdf = faults.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    faultsdf = faults.df(resdatafiles.get_deck())
     assert faultsdf.empty
 
 
@@ -71,7 +71,7 @@ FAULTS
   'D' 2 2 4 4 10 10 'J' /
 /
 """
-    deck = EclFiles.str2deck(deckstr)
+    deck = ResdataFiles.str2deck(deckstr)
     faultsdf = faults.df(deck).set_index("NAME")
 
     assert len(faultsdf) == 23
@@ -82,8 +82,8 @@ FAULTS
 def test_main_subparser(tmp_path, mocker):
     """Test command line interface with subparsers"""
     tmpcsvfile = tmp_path / "faultsdf.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "faults", REEK, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "faults", REEK, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -93,7 +93,7 @@ def test_main_subparser(tmp_path, mocker):
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(
-        ["ecl2csv", "faults", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
+        ["res2csv", "faults", "-o", "-", REEK], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty

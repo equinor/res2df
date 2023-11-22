@@ -10,15 +10,15 @@ import pytest
 import yaml
 from resdata.summary import Summary
 
-from ecl2df import csv2ecl, ecl2csv, summary
-from ecl2df.eclfiles import EclFiles
-from ecl2df.summary import (
+from res2df import csv2res, res2csv, summary
+from res2df.resdatafiles import ResdataFiles
+from res2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
-    _fix_dframe_for_libecl,
+    _fix_dframe_for_resdata,
     date_range,
     df,
-    df2eclsum,
+    df2ressum,
     resample_smry_dates,
     smry_meta,
 )
@@ -44,8 +44,8 @@ SHORT_STEP_WITH_TIMESTEP_LONG = str(
 
 def test_df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    sumdf = summary.df(eclfiles)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    sumdf = summary.df(resdatafiles)
 
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
@@ -55,7 +55,7 @@ def test_df():
     assert not sumdf.columns.empty
     assert "FOPT" in sumdf.columns
 
-    sumdf = summary.df(eclfiles, datetime=True)
+    sumdf = summary.df(resdatafiles, datetime=True)
     # (datetime=True is implicit when raw time reports are requested)
     assert sumdf.index.name == "DATE"
     assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
@@ -68,7 +68,7 @@ def test_df():
 
 def test_df_column_keys():
     """Test that we can slice the dataframe on columns"""
-    sumdf = summary.df(EclFiles(REEK), column_keys="FOPT")
+    sumdf = summary.df(ResdataFiles(REEK), column_keys="FOPT")
     assert set(sumdf.columns) == {"FOPT"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT"}
 
@@ -83,29 +83,29 @@ def test_df_column_keys():
         "FOPTF",
         "FOPP",
     }
-    sumdf = summary.df(EclFiles(REEK), column_keys="FOP*")
+    sumdf = summary.df(ResdataFiles(REEK), column_keys="FOP*")
     assert set(sumdf.columns) == fop_cols
     assert set(sumdf.attrs["meta"].keys()) == fop_cols
 
-    sumdf = summary.df(EclFiles(REEK), column_keys=["FOP*"])
+    sumdf = summary.df(ResdataFiles(REEK), column_keys=["FOP*"])
     assert set(sumdf.columns) == fop_cols
     assert set(sumdf.attrs["meta"].keys()) == fop_cols
 
-    sumdf = summary.df(EclFiles(REEK), column_keys=["FOPR", "FOPT"])
+    sumdf = summary.df(ResdataFiles(REEK), column_keys=["FOPR", "FOPT"])
     assert set(sumdf.columns) == {"FOPT", "FOPR"}
     assert set(sumdf.attrs["meta"].keys()) == {"FOPT", "FOPR"}
 
-    sumdf_no_columns = summary.df(EclFiles(REEK), column_keys=["BOGUS"])
+    sumdf_no_columns = summary.df(ResdataFiles(REEK), column_keys=["BOGUS"])
     assert sumdf_no_columns.columns.empty
     assert all(sumdf_no_columns.index == sumdf.index)
 
 
 def test_summary2df_dates():
     """Test that we have some API possibilities with ISO dates"""
-    eclfiles = EclFiles(REEK)
+    resdatafiles = ResdataFiles(REEK)
 
     sumdf = summary.df(
-        eclfiles,
+        resdatafiles,
         start_date=datetime.date(2002, 1, 2),
         end_date="2002-03-01",
         time_index="daily",
@@ -119,25 +119,25 @@ def test_summary2df_dates():
     assert sumdf.index.values[0] == np.datetime64("2002-01-02")
     assert sumdf.index.values[-1] == np.datetime64("2002-03-01")
 
-    sumdf = summary.df(eclfiles, time_index="last", datetime=True)
+    sumdf = summary.df(resdatafiles, time_index="last", datetime=True)
     assert len(sumdf) == 1
     assert sumdf.index.values[0] == np.datetime64("2003-01-02")
 
     # Leave this test for the datetime=False behaviour:
-    sumdf = summary.df(eclfiles, time_index="first")
+    sumdf = summary.df(resdatafiles, time_index="first")
     assert len(sumdf) == 1
     assert str(sumdf.index.values[0]) == "2000-01-01"
 
 
 @pytest.mark.integration
-def test_ecl2csv_summary(tmp_path, mocker):
-    """Test that the command line utility ecl2csv is installed and
+def test_res2csv_summary(tmp_path, mocker):
+    """Test that the command line utility res2csv is installed and
     works with summary data"""
     tmpcsvfile = tmp_path / "sum.csv"
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             "-v",
             REEK,
@@ -149,7 +149,7 @@ def test_ecl2csv_summary(tmp_path, mocker):
             "2003-01-02",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 97  # Includes timestamps
     assert str(disk_df["DATE"].values[0]) == "2002-01-02 00:00:00"
@@ -159,7 +159,7 @@ def test_ecl2csv_summary(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             REEK,
             "-o",
@@ -172,7 +172,7 @@ def test_ecl2csv_summary(tmp_path, mocker):
             "2003-01-02",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 366
     # Pandas' csv export writes datetime64 as pure date
@@ -191,16 +191,16 @@ def test_paramsupport(tmp_path, mocker):
     """
     tmpcsvfile = tmp_path / "sum.csv"
 
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
 
-    parameterstxt = Path(eclfiles.get_path()) / "parameters.txt"
+    parameterstxt = Path(resdatafiles.get_path()) / "parameters.txt"
     if parameterstxt.is_file():
         parameterstxt.unlink()
     parameterstxt.write_text("FOO 1\nBAR 3", encoding="utf-8")
     mocker.patch(
-        "sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+        "sys.argv", ["res2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -208,14 +208,14 @@ def test_paramsupport(tmp_path, mocker):
     assert disk_df["BAR"].unique()[0] == 3
     parameterstxt.unlink()
 
-    parametersyml = Path(eclfiles.get_path()) / "parameters.yml"
+    parametersyml = Path(resdatafiles.get_path()) / "parameters.yml"
     if parametersyml.is_file():
         parametersyml.unlink()
     parametersyml.write_text(yaml.dump({"FOO": 1, "BAR": 3}), encoding="utf-8")
     mocker.patch(
-        "sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
+        "sys.argv", ["res2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile), "-p"]
     )
-    ecl2csv.main()
+    res2csv.main()
     disk_df = pd.read_csv(str(tmpcsvfile))
     assert "FOPT" in disk_df
     assert "FOO" in disk_df
@@ -226,22 +226,24 @@ def test_paramsupport(tmp_path, mocker):
     assert disk_df["BAR"].unique()[0] == 3
 
     # Test the merging from summary.df() explicitly:
-    assert "FOO" in summary.df(eclfiles, params=True, paramfile=None)
-    assert "FOO" not in summary.df(eclfiles, params=False, paramfile=None)
-    assert "FOO" not in summary.df(eclfiles, params=None, paramfile=None)
+    assert "FOO" in summary.df(resdatafiles, params=True, paramfile=None)
+    assert "FOO" not in summary.df(resdatafiles, params=False, paramfile=None)
+    assert "FOO" not in summary.df(resdatafiles, params=None, paramfile=None)
 
-    assert "FOO" in summary.df(eclfiles, params=False, paramfile=parametersyml)
-    assert "FOO" in summary.df(eclfiles, params=None, paramfile=parametersyml)
-    assert "FOO" in summary.df(eclfiles, params=None, paramfile="parameters.yml")
+    assert "FOO" in summary.df(resdatafiles, params=False, paramfile=parametersyml)
+    assert "FOO" in summary.df(resdatafiles, params=None, paramfile=parametersyml)
+    assert "FOO" in summary.df(resdatafiles, params=None, paramfile="parameters.yml")
 
     # Non-existing relative path is a soft error:
     assert "FOO" not in summary.df(
-        eclfiles, params=None, paramfile="notexisting/parameters.yml"
+        resdatafiles, params=None, paramfile="notexisting/parameters.yml"
     )
 
     # Non-existing absolute path is a hard error:
     with pytest.raises(FileNotFoundError):
-        summary.df(eclfiles, params=None, paramfile="/tmp/notexisting/parameters.yml")
+        summary.df(
+            resdatafiles, params=None, paramfile="/tmp/notexisting/parameters.yml"
+        )
 
     parametersyml.unlink()
 
@@ -250,7 +252,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
     """Test explicit naming of parameters file from command line.
 
     This is a little bit tricky because the parameter file is assumed to be
-    relative to the DATA file, not to working directory unless it is absolute."""
+    relative to the .DATA file, not to working directory unless it is absolute."""
 
     tmpcsvfile = tmp_path / "smrywithrandomparams.txt"
     randomparamfile = tmp_path / "fooparams.txt"
@@ -258,7 +260,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             "--verbose",
             EIGHTCELLS,
@@ -268,7 +270,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
             str(randomparamfile),  # Absolute filepath
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert pd.read_csv(tmpcsvfile)["FOO"].unique() == ["barrbarr"]
     assert pd.read_csv(tmpcsvfile)["COM"].unique() == [1234]
 
@@ -278,7 +280,7 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "summary",
             "--verbose",
             EIGHTCELLS,
@@ -288,15 +290,15 @@ def test_paramsupport_explicitfile(tmp_path, mocker):
             Path(randomparamfile).name,  # A relative filepath
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert "FOO" not in pd.read_csv("smry_noparams.csv")
 
 
 def test_main_subparser(tmp_path, mocker):
     """Test command line interface with output to both CSV and arrow/feather."""
     tmpcsvfile = tmp_path / "sum.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "summary", EIGHTCELLS, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -307,9 +309,9 @@ def test_main_subparser(tmp_path, mocker):
     tmparrowfile = tmp_path / "sum.arrow"
     mocker.patch(
         "sys.argv",
-        ["ecl2csv", "summary", "--arrow", EIGHTCELLS, "-o", str(tmparrowfile)],
+        ["res2csv", "summary", "--arrow", EIGHTCELLS, "-o", str(tmparrowfile)],
     )
-    ecl2csv.main()
+    res2csv.main()
     assert Path(tmpcsvfile).is_file()
     disk_arraydf = pyarrow.feather.read_table(tmparrowfile).to_pandas()
     assert "FOPT" in disk_arraydf
@@ -317,32 +319,34 @@ def test_main_subparser(tmp_path, mocker):
     # Alternative and equivalent command line syntax for arrow output:
     tmparrowfile_alt = tmp_path / "sum2.arrow"
     mocker.patch(
-        "sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
+        "sys.argv", ["res2arrow", "summary", EIGHTCELLS, "-o", str(tmparrowfile_alt)]
     )
-    ecl2csv.main()
+    res2csv.main()
     pd.testing.assert_frame_equal(
         disk_arraydf, pyarrow.feather.read_table(str(tmparrowfile_alt)).to_pandas()
     )
 
     # Not possible (yet?) to write arrow to stdout:
-    mocker.patch("sys.argv", ["ecl2arrow", "summary", EIGHTCELLS, "-o", "-"])
+    mocker.patch("sys.argv", ["res2arrow", "summary", EIGHTCELLS, "-o", "-"])
     with pytest.raises(SystemExit):
-        ecl2csv.main()
+        res2csv.main()
 
 
 def test_datenormalization():
     """Test normalization of dates, where
     dates can be ensured to be on dategrid boundaries"""
     # realization-0 here has its last summary date at 2003-01-02
-    eclfiles = EclFiles(REEK)
-    daily = summary.df(eclfiles, column_keys="FOPT", time_index="daily", datetime=True)
+    resdatafiles = ResdataFiles(REEK)
+    daily = summary.df(
+        resdatafiles, column_keys="FOPT", time_index="daily", datetime=True
+    )
     assert str(daily.index[-1])[0:10] == "2003-01-02"
     monthly = summary.df(
-        eclfiles, column_keys="FOPT", time_index="monthly", datetime=True
+        resdatafiles, column_keys="FOPT", time_index="monthly", datetime=True
     )
     assert str(monthly.index[-1])[0:10] == "2003-02-01"
     yearly = summary.df(
-        eclfiles, column_keys="FOPT", time_index="yearly", datetime=True
+        resdatafiles, column_keys="FOPT", time_index="yearly", datetime=True
     )
     assert str(yearly.index[-1])[0:10] == "2004-01-01"
 
@@ -350,9 +354,9 @@ def test_datenormalization():
 def test_extrapolation():
     """Summary data should be possible to extrapolate into
     the future, rates should be zero, cumulatives should be constant"""
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     lastfopt = summary.df(
-        eclfiles, column_keys="FOPT", time_index="last", datetime=True
+        resdatafiles, column_keys="FOPT", time_index="last", datetime=True
     )["FOPT"].values[0]
     answer = pd.DataFrame(
         # This is the maximal date for datetime64[ns]
@@ -363,7 +367,7 @@ def test_extrapolation():
 
     pd.testing.assert_frame_equal(
         summary.df(
-            eclfiles,
+            resdatafiles,
             column_keys=["FOPT", "FOPR"],
             time_index="2262-04-11",
             datetime=True,
@@ -372,7 +376,7 @@ def test_extrapolation():
     )
     pd.testing.assert_frame_equal(
         summary.df(
-            eclfiles,
+            resdatafiles,
             column_keys=["FOPT", "FOPR"],
             time_index=[datetime.date(2262, 4, 11)],
             # NB: df() does not support datetime64 for time_index
@@ -384,15 +388,15 @@ def test_extrapolation():
     # Pandas does not support DatetimeIndex beyound 2262:
     with pytest.raises(pd.errors.OutOfBoundsDatetime):
         summary.df(
-            eclfiles,
+            resdatafiles,
             column_keys=["FOPT"],
             time_index=[datetime.date(2300, 1, 1)],
             datetime=True,
         )
 
-    # But without datetime, we can get it extrapolated by libecl:
+    # But without datetime, we can get it extrapolated by resdata:
     assert summary.df(
-        eclfiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
+        resdatafiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
     )["FOPT"].values == [lastfopt]
 
 
@@ -407,9 +411,9 @@ def test_foreseeable_future(tmp_path):
             {"DATE": "2500-01-01", "FPR": 180},
         ]
     )
-    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
+    res_summary = df2ressum(src_dframe, casename="PLUGABANDON")
 
-    dframe = summary.df(eclsum)
+    dframe = summary.df(res_summary)
     assert (
         dframe.index
         == [
@@ -422,7 +426,7 @@ def test_foreseeable_future(tmp_path):
     ).all()
 
     # Try with time interpolation involved:
-    dframe = summary.df(eclsum, time_index="yearly")
+    dframe = summary.df(res_summary, time_index="yearly")
     assert len(dframe) == 501
     assert dframe.index.max() == datetime.date(year=2500, month=1, day=1)
 
@@ -433,8 +437,8 @@ def test_foreseeable_future(tmp_path):
             "FPR": range(70),
         }
     )
-    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
-    dframe = summary.df(eclsum)
+    res_summary = df2ressum(src_dframe, casename="PLUGABANDON")
+    dframe = summary.df(res_summary)
     # Still buggy:
     assert dframe.index[-1] == dt(2068, 12, 31, 23, 57, 52)
 
@@ -445,8 +449,8 @@ def test_foreseeable_future(tmp_path):
             "FPR": range(69),
         }
     )
-    eclsum = df2eclsum(src_dframe, casename="PLUGABANDON")
-    dframe = summary.df(eclsum)
+    res_summary = df2ressum(src_dframe, casename="PLUGABANDON")
+    dframe = summary.df(res_summary)
     # Works fine when stepping only 68 years:
     assert dframe.index[-1] == dt(2468, 1, 1, 0, 0, 0)
 
@@ -629,9 +633,9 @@ def test_date_range(start, end, freq, expected):
 def test_resample_smry_dates():
     """Test resampling of summary dates"""
 
-    eclfiles = EclFiles(REEK)
+    resdatafiles = ResdataFiles(REEK)
 
-    ecldates = eclfiles.get_eclsum().dates
+    ecldates = resdatafiles.get_summary().dates
 
     assert isinstance(resample_smry_dates(ecldates), list)
     assert isinstance(resample_smry_dates(ecldates, freq="last"), list)
@@ -764,7 +768,7 @@ def test_resample_smry_dates():
         == 2 + 300  # boundary dates + 2001-01-01 to 2300-01-01
     )
 
-    # Verify boundary date bug up to and including ecl2df v0.13.2
+    # Verify boundary date bug up to and including res2df v0.13.2
     assert resample_smry_dates(
         ecldates,
         start_date="2300-06-05",
@@ -792,7 +796,7 @@ def test_resample_smry_dates():
     ],
 )
 def test_unique_datetime_for_short_timesteps(filepath):
-    assert summary.df(EclFiles(filepath)).index.is_unique
+    assert summary.df(ResdataFiles(filepath)).index.is_unique
 
 
 @pytest.mark.parametrize(
@@ -804,12 +808,12 @@ def test_unique_datetime_for_short_timesteps(filepath):
 )
 def test_unique_datetime_retain_index_name(filepath):
     """Test _ensure_unique_datetime_index method retain index name"""
-    assert summary.df(EclFiles(filepath)).index.name == "DATE"
+    assert summary.df(ResdataFiles(filepath)).index.name == "DATE"
 
 
 def test_smry_meta():
-    """Test obtaining metadata dictionary for summary vectors from an EclSum object"""
-    meta = smry_meta(EclFiles(REEK))
+    """Test obtaining metadata dictionary for summary vectors from a summary object"""
+    meta = smry_meta(ResdataFiles(REEK))
 
     assert isinstance(meta, dict)
     assert "FOPT" in meta
@@ -838,7 +842,7 @@ def test_smry_meta():
 def test_smry_meta_synthetic():
     """What does meta look like when we start from a synthetic summary?
 
-    ecl2df currently does not try to set the units to anything when
+    res2df currently does not try to set the units to anything when
     making synthetic summary.
     """
     dframe = pd.DataFrame(
@@ -846,9 +850,9 @@ def test_smry_meta_synthetic():
             {"DATE": np.datetime64("2016-01-01"), "FOPT": 1000, "FOPR": 100},
         ]
     ).set_index("DATE")
-    synt_meta = smry_meta(df2eclsum(dframe))
+    synt_meta = smry_meta(df2ressum(dframe))
 
-    # Dummy unit provided by EclSum:
+    # Dummy unit provided by summary:
     assert synt_meta["FOPT"]["unit"] == "UNIT"
 
 
@@ -939,10 +943,10 @@ def test_smry_meta_synthetic():
         ),
     ],
 )
-def test_fix_dframe_for_libecl(dframe, expected_dframe):
-    """Test the dataframe preprocessor/validator for df2eclsum works"""
+def test_fix_dframe_for_resdata(dframe, expected_dframe):
+    """Test the dataframe preprocessor/validator for df2ressum works"""
     pd.testing.assert_frame_equal(
-        _fix_dframe_for_libecl(dframe), expected_dframe, check_index_type=False
+        _fix_dframe_for_resdata(dframe), expected_dframe, check_index_type=False
     )
 
 
@@ -1015,19 +1019,19 @@ def test_fix_dframe_for_libecl(dframe, expected_dframe):
         ),
     ],
 )
-def test_df2eclsum(dframe):
-    """Test that a dataframe can be converted to an EclSum object, and then read
+def test_df2ressum(dframe):
+    """Test that a dataframe can be converted to a summary object, and then read
     back again"""
 
     # Massage the dframe first so we can assert on equivalence after.
-    dframe = _fix_dframe_for_libecl(dframe)
+    dframe = _fix_dframe_for_resdata(dframe)
 
-    eclsum = df2eclsum(dframe)
+    summary = df2ressum(dframe)
     if dframe.empty:
-        assert eclsum is None
+        assert summary is None
         return
 
-    dframe_roundtrip = df(eclsum)
+    dframe_roundtrip = df(summary)
     pd.testing.assert_frame_equal(
         dframe.sort_index(axis=1),
         dframe_roundtrip.sort_index(axis=1),
@@ -1035,7 +1039,7 @@ def test_df2eclsum(dframe):
     )
 
 
-def test_df2eclsum_datetimeindex():
+def test_df2ressum_datetimeindex():
     """Test that providing a dataframe with a datetimeindex also works"""
     dframe = pd.DataFrame(
         [
@@ -1045,21 +1049,21 @@ def test_df2eclsum_datetimeindex():
     dframe["DATE"] = pd.to_datetime(dframe["DATE"])
     dframe.set_index("DATE")
 
-    roundtrip = df(df2eclsum(dframe))
+    roundtrip = df(df2ressum(dframe))
     assert isinstance(roundtrip.index, pd.DatetimeIndex)
     assert roundtrip["FOPR"].values == [100]
     assert roundtrip["FOPT"].values == [1000]
 
 
 def test_duplicated_summary_vectors(caplog):
-    """EclSum files on disk may contain repeated vectors
+    """summary files on disk may contain repeated vectors
     if the user has inserted a vector name twice in the
     SUMMARY section
 
-    ecl2df.summary.df() should deduplicate this, and give a warning.
+    res2df.summary.df() should deduplicate this, and give a warning.
     """
 
-    # ecl2df.df2eclsum() is not able to mock such a UNSMRY file.
+    # res2df.df2ressum() is not able to mock such a UNSMRY file.
     dupe_datafile = (
         TESTDIR
         / "data"
@@ -1068,7 +1072,7 @@ def test_duplicated_summary_vectors(caplog):
         / "EIGHTCELLS_DUPES.DATA"
     )
     assert "SUMMARY\nFOPR\nFOPR" in dupe_datafile.read_text()
-    deduplicated_dframe = df(EclFiles(dupe_datafile))
+    deduplicated_dframe = df(ResdataFiles(dupe_datafile))
     assert (deduplicated_dframe.columns == ["YEARS", "FOPR"]).all()
     assert "Duplicated columns detected" in caplog.text
 
@@ -1158,27 +1162,27 @@ def test_df2pyarrow_strings():
 
 
 @pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
-def test_ecl2df_errors(tmp_path):
+def test_res2df_errors(tmp_path):
     """Test error handling on bogus/corrupted summary files"""
     os.chdir(tmp_path)
     Path("FOO.UNSMRY").write_bytes(os.urandom(100))
     Path("FOO.SMSPEC").write_bytes(os.urandom(100))
     with pytest.raises(OSError, match="Failed to create summary instance"):
-        # This is how libecl reacts to bogus binary data
+        # This is how resdata reacts to bogus binary data
         Summary("FOO.UNSMRY")
 
-    # But EclFiles should be more tolerant, as it should be possible
+    # But ResdataFiles should be more tolerant, as it should be possible
     # to extract other data if SMRY is corrupted
     Path("FOO.DATA").write_text("RUNSPEC", encoding="utf8")
-    assert str(EclFiles("FOO").get_ecldeck()).strip() == "RUNSPEC"
+    assert str(ResdataFiles("FOO").get_deck()).strip() == "RUNSPEC"
     with pytest.raises(OSError):
-        EclFiles("FOO").get_eclsum()
+        ResdataFiles("FOO").get_summary()
 
     # Getting a dataframe from bogus data should give empty data:
-    assert df(EclFiles("FOO")).empty
+    assert df(ResdataFiles("FOO")).empty
 
 
-def test_df2eclsum_errors():
+def test_df2ressum_errors():
     """Test various error conditions, checking that the correct error message
     is emitted"""
     dframe = pd.DataFrame(
@@ -1187,18 +1191,18 @@ def test_df2eclsum_errors():
         ]
     )
     with pytest.raises(ValueError, match="casename foobar must be UPPER CASE"):
-        df2eclsum(dframe, casename="foobar")
+        df2ressum(dframe, casename="foobar")
     with pytest.raises(ValueError, match="Do not use dots in casename"):
-        df2eclsum(dframe, casename="FOOBAR.UNSMRY")  # .UNSMRY should not be included
+        df2ressum(dframe, casename="FOOBAR.UNSMRY")  # .UNSMRY should not be included
 
     # No date included:
     with pytest.raises(ValueError, match="dataframe must have a datetime index"):
-        df2eclsum(pd.DataFrame([{"FOPT": 1000}]))
+        df2ressum(pd.DataFrame([{"FOPT": 1000}]))
 
 
 @pytest.mark.integration
-def test_csv2ecl_summary(tmp_path, mocker):
-    """Check that we can call df2eclsum through the csv2ecl command line
+def test_csv2res_summary(tmp_path, mocker):
+    """Check that we can call df2ressum through the csv2res command line
     utility"""
     dframe = pd.DataFrame(
         [
@@ -1211,7 +1215,7 @@ def test_csv2ecl_summary(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "csv2ecl",
+            "csv2res",
             "summary",
             "-v",
             "summary.csv",
@@ -1219,7 +1223,7 @@ def test_csv2ecl_summary(tmp_path, mocker):
             "SYNTHETIC",
         ],
     )
-    csv2ecl.main()
+    csv2res.main()
     assert Path("SYNTHETIC.UNSMRY").is_file()
     assert Path("SYNTHETIC.SMSPEC").is_file()
 
@@ -1228,7 +1232,7 @@ def test_csv2ecl_summary(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "csv2ecl",
+            "csv2res",
             "summary",
             "--debug",
             "summary.csv",
@@ -1236,6 +1240,6 @@ def test_csv2ecl_summary(tmp_path, mocker):
             str(Path("foo") / Path("SYNTHETIC")),
         ],
     )
-    csv2ecl.main()
+    csv2res.main()
     assert ("foo" / Path("SYNTHETIC.UNSMRY")).is_file()
     assert ("foo" / Path("SYNTHETIC.SMSPEC")).is_file()

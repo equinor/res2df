@@ -3,8 +3,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import wellconnstatus
-from ecl2df.eclfiles import EclFiles
+from res2df import wellconnstatus
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -23,15 +23,15 @@ def test_reek_dataset():
     """Test Reek dataset. It contains no CPI data and should return
     an empty dataframe.
     """
-    eclfiles = EclFiles(REEK)
-    wellconnstatus_df = wellconnstatus.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    wellconnstatus_df = wellconnstatus.df(resdatafiles)
     assert wellconnstatus_df.empty
 
 
 def test_eightcells_dataset():
     """Test the Eightcells dataset which has CPI data"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    wellconnstatus_df = wellconnstatus.df(eclfiles)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    wellconnstatus_df = wellconnstatus.df(resdatafiles)
     expected_dframe = pd.DataFrame(
         [
             {

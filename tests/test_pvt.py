@@ -8,8 +8,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import csv2ecl, ecl2csv, pvt
-from ecl2df.eclfiles import EclFiles
+from res2df import csv2res, pvt, res2csv
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -33,7 +33,7 @@ def test_pvto_strings():
     18    25 1.14  0.59 /
     /  -- One table (pvtnum=1), two records (two gor's)
     """
-    dframe = pvt.pvto_fromdeck(EclFiles.str2deck(pvto_deck))
+    dframe = pvt.pvto_fromdeck(ResdataFiles.str2deck(pvto_deck))
     assert "PVTNUM" in dframe
     assert "RS" in dframe
     assert "PRESSURE" in dframe
@@ -47,7 +47,7 @@ def test_pvto_strings():
     assert set(dframe["PVTNUM"].values) == {1}
     assert max(dframe["PRESSURE"]) == 200
 
-    dframe_via_string = pvt.pvto_fromdeck(pvt.df2ecl_pvto(dframe))
+    dframe_via_string = pvt.pvto_fromdeck(pvt.df2res_pvto(dframe))
     pd.testing.assert_frame_equal(dframe_via_string, dframe)
 
     # Provide TABDIMS in first test.. Infer later
@@ -64,7 +64,7 @@ def test_pvto_strings():
     19    30 1.14  0.59 /
     /
     """
-    dframe = pvt.pvto_fromdeck(EclFiles.str2deck(pvto_deck))
+    dframe = pvt.pvto_fromdeck(ResdataFiles.str2deck(pvto_deck))
     assert len(dframe) == 6
     assert "PVTNUM" in dframe
     assert set(dframe["PVTNUM"].astype(int).unique()) == {1, 2}
@@ -72,7 +72,7 @@ def test_pvto_strings():
     assert len(dframe["PRESSURE"].unique()) == 6
     assert len(dframe["VOLUMEFACTOR"].unique()) == 3
 
-    dframe_via_string = pvt.pvto_fromdeck(pvt.df2ecl_pvto(dframe))
+    dframe_via_string = pvt.pvto_fromdeck(pvt.df2res_pvto(dframe))
     pd.testing.assert_frame_equal(dframe_via_string, dframe)
 
     # Now test the same but without TABDIMS:
@@ -94,11 +94,11 @@ def test_pvto_strings():
     assert len(dframe["RS"].unique()) == 4
     assert len(dframe["PRESSURE"].unique()) == 6
     assert len(dframe["VOLUMEFACTOR"].unique()) == 3
-    dframe_via_string = pvt.pvto_fromdeck(pvt.df2ecl_pvto(dframe))
+    dframe_via_string = pvt.pvto_fromdeck(pvt.df2res_pvto(dframe))
     pd.testing.assert_frame_equal(dframe_via_string, dframe)
 
     # Test emtpy data:
-    inc = pvt.df2ecl_pvto(pvt.df(""))
+    inc = pvt.df2res_pvto(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
@@ -123,7 +123,7 @@ PVDG
     assert "VISCOSITY" in dframe
 
     # Test emtpy data:
-    inc = pvt.df2ecl_pvdg(pvt.df(""))
+    inc = pvt.df2res_pvdg(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
@@ -152,7 +152,7 @@ PVDO
     )
 
     # Test emtpy data:
-    inc = pvt.df2ecl_pvdo(pvt.df(""))
+    inc = pvt.df2res_pvdo(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
@@ -160,8 +160,8 @@ PVDO
 def test_pvt_reek():
     """Test that the Reek PVT input can be parsed individually"""
 
-    eclfiles = EclFiles(REEK)
-    pvto_df = pvt.pvto_fromdeck(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    pvto_df = pvt.pvto_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvto_df
     assert "PRESSURE" in pvto_df
     assert "VOLUMEFACTOR" in pvto_df
@@ -177,10 +177,10 @@ def test_pvt_reek():
     assert pvto_df["VOLUMEFACTOR"].max() == 2.851
     assert pvto_df["VISCOSITY"].max() == 1.0001
 
-    dframe_via_string = pvt.pvto_fromdeck(pvt.df2ecl_pvto(pvto_df))
+    dframe_via_string = pvt.pvto_fromdeck(pvt.df2res_pvto(pvto_df))
     pd.testing.assert_frame_equal(dframe_via_string, pvto_df)
 
-    density_df = pvt.density_fromdeck(eclfiles.get_ecldeck())
+    density_df = pvt.density_fromdeck(resdatafiles.get_deck())
     pd.testing.assert_frame_equal(
         density_df,
         pd.DataFrame(
@@ -189,17 +189,17 @@ def test_pvt_reek():
         ),
         check_like=True,
     )
-    dframe_via_string = pvt.density_fromdeck(pvt.df2ecl_density(density_df))
+    dframe_via_string = pvt.density_fromdeck(pvt.df2res_density(density_df))
     pd.testing.assert_frame_equal(dframe_via_string, density_df)
 
-    rock_df = pvt.rock_fromdeck(eclfiles.get_ecldeck())
+    rock_df = pvt.rock_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in rock_df
     assert len(rock_df) == 1
     assert "PRESSURE" in rock_df
     assert "COMPRESSIBILITY" in rock_df
     assert rock_df["PRESSURE"].values[0] == 327.3
 
-    pvtw_df = pvt.pvtw_fromdeck(eclfiles.get_ecldeck())
+    pvtw_df = pvt.pvtw_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvtw_df
     assert pvtw_df["PVTNUM"].values[0] == 1
     assert len(pvtw_df) == 1
@@ -210,7 +210,7 @@ def test_pvt_reek():
     assert "VISCOSIBILITY" in pvtw_df
     assert pvtw_df["VISCOSITY"].values[0] == 0.25
 
-    pvdg_df = pvt.pvdg_fromdeck(eclfiles.get_ecldeck())
+    pvdg_df = pvt.pvdg_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvdg_df
     assert "PRESSURE" in pvdg_df
     assert "VOLUMEFACTOR" in pvdg_df
@@ -263,7 +263,7 @@ PVTG
     assert max(pvtg_df["VISCOSITY"]) == 0.0393
 
     # Test empty data:
-    inc = pvt.df2ecl_pvtg(pvt.df(""))
+    inc = pvt.df2res_pvtg(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
@@ -292,15 +292,15 @@ PVTG
 
 def test_density():
     """Test that DENSITY can be parsed from files and from strings"""
-    eclfiles = EclFiles(REEK)
-    density_df = pvt.density_fromdeck(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    density_df = pvt.density_fromdeck(resdatafiles.get_deck())
     assert len(density_df) == 1
     assert "PVTNUM" in density_df
     assert "OILDENSITY" in density_df
     assert "WATERDENSITY" in density_df
     assert "GASDENSITY" in density_df
 
-    dframe_via_string = pvt.density_fromdeck(pvt.df2ecl_density(density_df))
+    dframe_via_string = pvt.density_fromdeck(pvt.df2res_density(density_df))
     pd.testing.assert_frame_equal(dframe_via_string, density_df)
 
     two_pvtnum_deck = """DENSITY
@@ -308,7 +308,7 @@ def test_density():
         800      950     1.05
         /
         """
-    density_df = pvt.density_fromdeck(EclFiles.str2deck(two_pvtnum_deck))
+    density_df = pvt.density_fromdeck(ResdataFiles.str2deck(two_pvtnum_deck))
     # (a warning will be printed that we cannot guess)
     assert len(density_df) == 1
     density_df = pvt.density_fromdeck(two_pvtnum_deck)
@@ -316,11 +316,11 @@ def test_density():
     assert density_df["PVTNUM"].max() == 2
     assert density_df["PVTNUM"].min() == 1
     assert "OILDENSITY" in density_df
-    dframe_via_string = pvt.density_fromdeck(pvt.df2ecl_density(density_df))
+    dframe_via_string = pvt.density_fromdeck(pvt.df2res_density(density_df))
     pd.testing.assert_frame_equal(dframe_via_string, density_df)
 
     # Test emtpy data:
-    inc = pvt.df2ecl_density(pvt.df(""))
+    inc = pvt.df2res_density(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
@@ -329,7 +329,7 @@ def test_pvtw():
     """Test that PVTW can be parsed from a string"""
     deck = """PVTW
      327.3         1.03    4.51E-005         0.25            0 /"""
-    pvtw_df = pvt.pvtw_fromdeck(EclFiles.str2deck(deck))
+    pvtw_df = pvt.pvtw_fromdeck(ResdataFiles.str2deck(deck))
     pd.testing.assert_frame_equal(
         pvtw_df,
         pd.DataFrame(
@@ -353,7 +353,7 @@ def test_pvtw():
     assert len(pvtw_df) == 2
 
     # Test emtpy data:
-    inc = pvt.df2ecl_pvtw(pvt.df(""))
+    inc = pvt.df2res_pvtw(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
@@ -362,23 +362,23 @@ def test_rock():
     """Test parsing of the ROCK keyword from a string"""
     deck = """ROCK
      100 1.1 /"""
-    rock_df = pvt.rock_fromdeck(EclFiles.str2deck(deck))
+    rock_df = pvt.rock_fromdeck(ResdataFiles.str2deck(deck))
     assert len(rock_df) == 1
     assert "PRESSURE" in rock_df
     assert "COMPRESSIBILITY" in rock_df
-    dframe_via_string = pvt.rock_fromdeck(pvt.df2ecl_rock(rock_df))
+    dframe_via_string = pvt.rock_fromdeck(pvt.df2res_rock(rock_df))
     pd.testing.assert_frame_equal(dframe_via_string, rock_df)
 
     # Test emtpy data:
-    inc = pvt.df2ecl_rock(pvt.df(""))
+    inc = pvt.df2res_rock(pvt.df(""))
     assert "No data" in inc
     assert pvt.df(inc).empty
 
 
 def test_df():
     """Test that aggregate dataframes are produced"""
-    eclfiles = EclFiles(REEK)
-    pvtdf = pvt.df(eclfiles)
+    resdatafiles = ResdataFiles(REEK)
+    pvtdf = pvt.df(resdatafiles)
 
     assert not pvtdf.empty
     assert set(pvtdf["KEYWORD"]) == {"PVTO", "PVDG", "DENSITY", "ROCK", "PVTW"}
@@ -395,9 +395,9 @@ def test_main(tmp_path, mocker):
     os.chdir(tmp_path)
     tmpcsvfile = tmp_path / "pvt.csv"
     mocker.patch(
-        "sys.argv", ["ecl2csv", "pvt", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+        "sys.argv", ["res2csv", "pvt", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
@@ -408,9 +408,9 @@ def test_main(tmp_path, mocker):
     # Write back to include file:
     incfile = tmp_path / "pvt.inc"
     mocker.patch(
-        "sys.argv", ["csv2ecl", "pvt", "-v", str(tmpcsvfile), "-o", str(incfile)]
+        "sys.argv", ["csv2res", "pvt", "-v", str(tmpcsvfile), "-o", str(incfile)]
     )
-    csv2ecl.main()
+    csv2res.main()
 
     # Reparse the include file on disk back to dataframe
     # and check dataframe equality
@@ -428,8 +428,8 @@ def test_main(tmp_path, mocker):
     """,
         encoding="utf8",
     )
-    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "pvto.inc", "-o", "pvto.csv"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "pvt", "-v", "pvto.inc", "-o", "pvto.csv"])
+    res2csv.main()
     assert Path("pvto.csv").is_file()
 
     # Empty data:
@@ -440,8 +440,8 @@ def test_main(tmp_path, mocker):
     """,
         encoding="utf8",
     )
-    mocker.patch("sys.argv", ["ecl2csv", "pvt", "-v", "empty.inc", "-o", "empty.csv"])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "pvt", "-v", "empty.inc", "-o", "empty.csv"])
+    res2csv.main()
     assert not Path("empty.csv").read_text(encoding="utf8").strip()
 
 
@@ -449,14 +449,14 @@ def test_magic_stdout(tmp_path):
     """Test writing dataframes and include files to stdout"""
     os.chdir(tmp_path)
     result = subprocess.run(
-        ["ecl2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
+        ["res2csv", "pvt", "-o", "-", EIGHTCELLS], check=True, stdout=subprocess.PIPE
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
     assert not df_stdout.empty
 
     # Verbose options should not ruin it:
     result = subprocess.run(
-        ["ecl2csv", "pvt", "--verbose", "-o", "-", EIGHTCELLS],
+        ["res2csv", "pvt", "--verbose", "-o", "-", EIGHTCELLS],
         check=True,
         stdout=subprocess.PIPE,
     )
@@ -464,10 +464,10 @@ def test_magic_stdout(tmp_path):
     # pylint: disable=no-member  # false positive on Dataframes
     assert not df_stdout.empty
 
-    # Pipe back to csv2ecl:
+    # Pipe back to csv2res:
     df_stdout.to_csv("pvt.csv", index=False)
     result = subprocess.run(
-        ["csv2ecl", "pvt", "--verbose", "-o", "-", "pvt.csv"],
+        ["csv2res", "pvt", "--verbose", "-o", "-", "pvt.csv"],
         check=True,
         stdout=subprocess.PIPE,
     )
@@ -475,22 +475,22 @@ def test_magic_stdout(tmp_path):
     assert not dframe.empty
 
 
-def test_df2ecl():
-    """df2ecl is a wrapper around the df2ecl_* functions
+def test_df2res():
+    """df2res is a wrapper around the df2res_* functions
 
     The validity of produced dataframes is tested in other test functions
     herein, here we mainly test for the API and error handling"""
     with pytest.raises(ValueError):
-        pvt.df2ecl(pd.DataFrame())
+        pvt.df2res(pd.DataFrame())
 
 
-def test_df2ecl_pvto():
+def test_df2res_pvto():
     """Test that we can print a PVTO dataframe to E100 include file"""
     dframe = pd.DataFrame(
         columns=["PVTNUM", "RS", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"],
         data=[[1, 50, 100, 2, 1.04]],
     )
-    pvto_string = pvt.df2ecl_pvto(dframe)
+    pvto_string = pvt.df2res_pvto(dframe)
     assert "PVTO" in pvto_string
     assert "1.04" in pvto_string
     assert "100" in pvto_string
@@ -506,7 +506,7 @@ def test_df2ecl_pvto():
         columns=["PVTNUM", "RS", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"],
         data=[[1, 50, 100, 2, 1.04], [1, 50, 120, 3, 1.05]],
     )
-    pvto_string = pvt.df2ecl_pvto(dframe)
+    pvto_string = pvt.df2res_pvto(dframe)
     assert "PVTO" in pvto_string
     assert "1.05" in pvto_string
     assert "120" in pvto_string
@@ -519,17 +519,17 @@ def test_df2ecl_pvto():
     )
 
     # If PVTNUM is missing, the code gives up if there are many rows.
-    assert "PVTO" not in pvt.df2ecl_pvto(
+    assert "PVTO" not in pvt.df2res_pvto(
         pd.concat([dframe, dframe]).drop("PVTNUM", axis="columns")
     )
 
     # If only one row, this is accepted:
-    assert "PVTO" in pvt.df2ecl_pvto(dframe.head(1).drop("PVTNUM", axis="columns"))
+    assert "PVTO" in pvt.df2res_pvto(dframe.head(1).drop("PVTNUM", axis="columns"))
     # (the corner case with only one row is not very meaningful, but at
     # least it is well defined how to treat it)
 
 
-def test_df2ecl_rock(tmp_path):
+def test_df2res_rock(tmp_path):
     """Test generation of ROCK include files from dataframes"""
     os.chdir(tmp_path)
 
@@ -538,14 +538,14 @@ def test_df2ecl_rock(tmp_path):
         data=[[1, "ROCK", 100, 0.001]],
     )
 
-    rock_inc = pvt.df2ecl(rock_df)
+    rock_inc = pvt.df2res(rock_df)
     assert "ROCK" in rock_inc
-    rock_inc = pvt.df2ecl(rock_df, comments=dict(ROCK="foo"))
+    rock_inc = pvt.df2res(rock_df, comments=dict(ROCK="foo"))
     assert "foo" in rock_inc
-    rock_inc = pvt.df2ecl(rock_df, comments=dict(DENSITY="foo"))
+    rock_inc = pvt.df2res(rock_df, comments=dict(DENSITY="foo"))
     assert "foo" not in rock_inc
 
-    rock_inc = pvt.df2ecl(rock_df, comments=dict(ROCK="foo\nbar"), filename="foo.inc")
+    rock_inc = pvt.df2res(rock_df, comments=dict(ROCK="foo\nbar"), filename="foo.inc")
     assert Path("foo.inc").is_file()
     assert "foo" in rock_inc
     assert "bar" in rock_inc
@@ -559,15 +559,15 @@ def test_df2ecl_rock(tmp_path):
     rock_df = rock_df_from_inc.reindex(sorted(rock_df.columns), axis=1)
     pd.testing.assert_frame_equal(rock_df_from_inc, rock_df)
 
-    rock_inc = pvt.df2ecl(rock_df, keywords=["DENSITY"])
+    rock_inc = pvt.df2res(rock_df, keywords=["DENSITY"])
     assert not rock_inc
-    rock_inc = pvt.df2ecl(rock_df, keywords="DENSITY")
+    rock_inc = pvt.df2res(rock_df, keywords="DENSITY")
     assert not rock_inc
 
-    rock_inc = pvt.df2ecl(rock_df, keywords=["ROCK", "DENSITY"])
+    rock_inc = pvt.df2res(rock_df, keywords=["ROCK", "DENSITY"])
     assert "ROCK" in rock_inc
     assert "DENSITY" not in rock_inc
-    rock_inc = pvt.df2ecl(rock_df, keywords="ROCK")
+    rock_inc = pvt.df2res(rock_df, keywords="ROCK")
     assert "ROCK" in rock_inc
 
     # This dataframe is ignored, if we miss PVTNUM:
@@ -575,40 +575,40 @@ def test_df2ecl_rock(tmp_path):
         columns=["KEYWORD", "PRESSURE", "COMPRESSIBILITY"],
         data=[["ROCK", 100, 0.001], ["ROCK", 200, 0.002]],
     )
-    assert "ROCK" not in pvt.df2ecl_rock(ambig_rock_df)
+    assert "ROCK" not in pvt.df2res_rock(ambig_rock_df)
 
     # But if only one row, it is ok:
-    assert "ROCK" in pvt.df2ecl_rock(ambig_rock_df.head(1))
+    assert "ROCK" in pvt.df2res_rock(ambig_rock_df.head(1))
 
     # If we don't want the ROCK keyword, we won't get it:
-    nonrock_inc = pvt.df2ecl(rock_df, keywords=["PVTO"])
+    nonrock_inc = pvt.df2res(rock_df, keywords=["PVTO"])
     assert "ROCK" not in nonrock_inc
 
 
-def test_df2ecl_density():
+def test_df2res_density():
     """Test generation of PVT density include files from dataframes"""
     density_df = pd.DataFrame(
         columns=["PVTNUM", "OILDENSITY", "WATERDENSITY", "GASDENSITY"],
         data=[[1, 827.64, 999.04, 1.1427]],
     )
 
-    dens_inc = pvt.df2ecl_density(density_df)
+    dens_inc = pvt.df2res_density(density_df)
     assert "DENSITY" in dens_inc
 
     # If PVTNUM is missing, the code gives up:
-    assert "DENSITY" not in pvt.df2ecl_density(
+    assert "DENSITY" not in pvt.df2res_density(
         pd.concat([density_df, density_df]).drop("PVTNUM", axis="columns")
     )
 
     # Unless there is only one row:
-    assert "DENSITY" in pvt.df2ecl_density(density_df.drop("PVTNUM", axis="columns"))
+    assert "DENSITY" in pvt.df2res_density(density_df.drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="OILDENSITY"):
-        pvt.df2ecl_density(density_df.drop("OILDENSITY", axis="columns"))
+        pvt.df2res_density(density_df.drop("OILDENSITY", axis="columns"))
 
 
-def test_df2ecl_pvtw():
+def test_df2res_pvtw():
     """Test generation of PVTW include statements"""
     pvtw_df = pd.DataFrame(
         columns=[
@@ -621,22 +621,22 @@ def test_df2ecl_pvtw():
         ],
         data=[[327.3, 1.03, 4.51e-005, 0.25, 0.0, 1]],
     )
-    assert "PVTW" in pvt.df2ecl_pvtw(pvtw_df)
+    assert "PVTW" in pvt.df2res_pvtw(pvtw_df)
 
     # If PVTNUM is missing, the code gives up:
-    assert "PVTW" not in pvt.df2ecl_pvtw(
+    assert "PVTW" not in pvt.df2res_pvtw(
         pd.concat([pvtw_df, pvtw_df]).drop("PVTNUM", axis="columns")
     )
 
     # Unless there is only one row:
-    assert "PVTW" in pvt.df2ecl_pvtw(pvtw_df.drop("PVTNUM", axis="columns"))
+    assert "PVTW" in pvt.df2res_pvtw(pvtw_df.drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
-        pvt.df2ecl_pvtw(pvtw_df.drop("VOLUMEFACTOR", axis="columns"))
+        pvt.df2res_pvtw(pvtw_df.drop("VOLUMEFACTOR", axis="columns"))
 
 
-def test_df2ecl_pvtg():
+def test_df2res_pvtg():
     """Test generation of PVTG include statements"""
     pvtg_df = pd.DataFrame(
         columns=["OGR", "VOLUMEFACTOR", "VISCOSITY", "PRESSURE", "PVTNUM"],
@@ -646,26 +646,26 @@ def test_df2ecl_pvtg():
             [0.00014, 0.0523, 0.0234, 60.0, 2],
         ],
     )
-    assert "PVTG" in pvt.df2ecl_pvtg(pvtg_df)
-    assert "PVTG" in pvt.df2ecl_pvtg(pvtg_df.assign(KEYWORD="PVTG"))
+    assert "PVTG" in pvt.df2res_pvtg(pvtg_df)
+    assert "PVTG" in pvt.df2res_pvtg(pvtg_df.assign(KEYWORD="PVTG"))
     pd.testing.assert_frame_equal(
-        pvt.df(pvt.df2ecl_pvtg(pvtg_df)).drop("KEYWORD", axis="columns"), pvtg_df
+        pvt.df(pvt.df2res_pvtg(pvtg_df)).drop("KEYWORD", axis="columns"), pvtg_df
     )
 
     # If PVTNUM is missing, the code gives up:
-    assert "PVTG" not in pvt.df2ecl_pvtg(
+    assert "PVTG" not in pvt.df2res_pvtg(
         pd.concat([pvtg_df, pvtg_df]).drop("PVTNUM", axis="columns")
     )
 
     # Unless there is only one row:
-    assert "PVTG" in pvt.df2ecl_pvtg(pvtg_df.head(1).drop("PVTNUM", axis="columns"))
+    assert "PVTG" in pvt.df2res_pvtg(pvtg_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
-        pvt.df2ecl_pvtg(pvtg_df.drop("VOLUMEFACTOR", axis="columns"))
+        pvt.df2res_pvtg(pvtg_df.drop("VOLUMEFACTOR", axis="columns"))
 
 
-def test_df2ecl_pvdo_pvdg():
+def test_df2res_pvdo_pvdg():
     """Test construction of PVDO and PVDG statements from dataframe.
 
     The keyword data and code is similar enough to warrant one test
@@ -680,33 +680,33 @@ def test_df2ecl_pvdo_pvdg():
         ],
     )
 
-    assert "PVDO" in pvt.df2ecl_pvdo(pvdog_df)
-    assert "PVDG" in pvt.df2ecl_pvdg(pvdog_df)
+    assert "PVDO" in pvt.df2res_pvdo(pvdog_df)
+    assert "PVDG" in pvt.df2res_pvdg(pvdog_df)
 
-    assert "PVDO" in pvt.df2ecl_pvdo(pvdog_df.assign(KEYWORD="PVDO"))
-    assert "PVDG" in pvt.df2ecl_pvdg(pvdog_df.assign(KEYWORD="PVDG"))
+    assert "PVDO" in pvt.df2res_pvdo(pvdog_df.assign(KEYWORD="PVDO"))
+    assert "PVDG" in pvt.df2res_pvdg(pvdog_df.assign(KEYWORD="PVDG"))
 
     pd.testing.assert_frame_equal(
-        pvt.df(pvt.df2ecl_pvdo(pvdog_df)).drop("KEYWORD", axis="columns"), pvdog_df
+        pvt.df(pvt.df2res_pvdo(pvdog_df)).drop("KEYWORD", axis="columns"), pvdog_df
     )
     pd.testing.assert_frame_equal(
-        pvt.df(pvt.df2ecl_pvdg(pvdog_df)).drop("KEYWORD", axis="columns"), pvdog_df
+        pvt.df(pvt.df2res_pvdg(pvdog_df)).drop("KEYWORD", axis="columns"), pvdog_df
     )
 
     # If PVTNUM is missing, the code gives up:
-    assert "PVDO" not in pvt.df2ecl_pvdo(
+    assert "PVDO" not in pvt.df2res_pvdo(
         pd.concat([pvdog_df, pvdog_df]).drop("PVTNUM", axis="columns")
     )
-    assert "PVDG" not in pvt.df2ecl_pvdg(
+    assert "PVDG" not in pvt.df2res_pvdg(
         pd.concat([pvdog_df, pvdog_df]).drop("PVTNUM", axis="columns")
     )
 
     # Unless there is only one row:
-    assert "PVDO" in pvt.df2ecl_pvdo(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
-    assert "PVDG" in pvt.df2ecl_pvdg(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
+    assert "PVDO" in pvt.df2res_pvdo(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
+    assert "PVDG" in pvt.df2res_pvdg(pvdog_df.head(1).drop("PVTNUM", axis="columns"))
 
     # Missing column:
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
-        pvt.df2ecl_pvdo(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))
+        pvt.df2res_pvdo(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))
     with pytest.raises(KeyError, match="VOLUMEFACTOR"):
-        pvt.df2ecl_pvdg(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))
+        pvt.df2res_pvdg(pvdog_df.drop("VOLUMEFACTOR", axis="columns"))

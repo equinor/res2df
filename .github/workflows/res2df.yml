@@ -1,0 +1,111 @@
+name: res2df
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  release:
+    types:
+      - published
+
+env:
+  ERT_SHOW_BACKTRACE: 1
+
+jobs:
+  res2df:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']
+        include:
+          # For one of the Python versions we
+          # install the extra dependency ert
+          # (in order to not double the job matrix)
+          - python-version: '3.8'
+            install-ert: true
+    steps:
+      - name: Checkout commit locally
+        uses: actions/checkout@v3
+
+      - name: Checkout tags
+        # This seems necessary for setuptools_scm to be able to infer
+        # the correct version.
+        run: git fetch --unshallow --tags
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install res2df with dependencies
+        run: |
+          pip install --upgrade pip
+          pip install .
+          python -c "import res2df"
+
+      - name: Install ert
+        if: matrix.install-ert
+        run: pip install .[ert]
+
+      - name: Install test dependencies
+        run: pip install .[tests,docs]
+
+      - name: Check code style and typing
+        run: |
+          black --check res2df tests setup.py docs/conf.py
+          flake8 res2df tests
+          isort --check-only --profile black res2df tests
+          mypy res2df
+
+      - name: List all installed packages
+        run: pip freeze
+
+      - name: Run tests
+        run: |
+          python -c "import res2df"
+          pytest tests/
+
+      - name: Syntax check documentation
+        run: |
+          rstcheck -r docs
+
+      - name: Build documentation
+        run: |
+          python setup.py build_sphinx
+
+      - name: Update GitHub pages
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+        run: |
+            cp -R ./build/sphinx/html ../html
+
+            git config --local user.email "res2df-github-action"
+            git config --local user.name "res2df-github-action"
+            git fetch origin gh-pages
+            git checkout --track origin/gh-pages
+            git clean -f -f -d -x
+            git rm -r *
+
+            cp -R ../html/* .
+
+            git add .
+
+            if git diff-index --quiet HEAD; then
+              echo "No changes in documentation. Skip documentation deploy."
+            else
+              git commit -m "Update Github Pages"
+              git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+            fi
+
+      - name: Build python package and publish to pypi
+        if: github.event_name == 'release' && matrix.python-version == '3.8'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.res2df_pypi_token }}
+        run: |
+          python -m pip install --upgrade setuptools wheel twine
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+

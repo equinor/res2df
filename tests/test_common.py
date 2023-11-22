@@ -1,4 +1,4 @@
-"""Test module for ecl2df.common"""
+"""Test module for res2df.common"""
 
 import datetime
 import os
@@ -9,7 +9,7 @@ import packaging.version
 import pandas as pd
 import pytest
 
-from ecl2df import common, eclfiles, equil
+from res2df import common, equil, resdatafiles
 
 try:
     # pylint: disable=unused-import
@@ -147,19 +147,19 @@ def test_parse_opmio_deckrecord():
 )
 def test_handle_wanted_keywords(wanted, deckstr, supported, expected):
     """Test that we can handle list of wanted, supported and available keywords."""
-    deck = eclfiles.EclFiles.str2deck(deckstr)
+    deck = resdatafiles.ResdataFiles.str2deck(deckstr)
     assert common.handle_wanted_keywords(wanted, deck, supported) == expected
 
 
-def df2ecl_equil(dframe, comment: str = None):
-    """Wrapper function to be able to test df2ecl
+def df2res_equil(dframe, comment: str = None):
+    """Wrapper function to be able to test df2res
 
     (it asks for a function in the calling module)"""
-    return equil.df2ecl_equil(dframe, comment)
+    return equil.df2res_equil(dframe, comment)
 
 
-def test_df2ecl():
-    """Test general properties of df2ecl.
+def test_df2res():
+    """Test general properties of df2res.
 
     This function is mainly tested in each submodule."""
     dframe = pd.DataFrame(
@@ -177,33 +177,33 @@ def test_df2ecl():
     )
     with pytest.raises(AssertionError):
         # supported keywords are not supplied
-        common.df2ecl(dframe)
+        common.df2res(dframe)
     with pytest.raises(AssertionError):
-        common.df2ecl(dframe, supported=None)
+        common.df2res(dframe, supported=None)
 
     with pytest.raises(ValueError, match="KEYWORD must be in the dataframe"):
-        common.df2ecl(
+        common.df2res(
             dframe.drop("KEYWORD", axis=1), keywords=["EQUIL"], supported=["EQUIL"]
         )
 
-    string = common.df2ecl(dframe, supported=["EQUIL"])
+    string = common.df2res(dframe, supported=["EQUIL"])
     # The next calls differ only in timestamp:
     assert len(string) == len(
-        common.df2ecl(dframe, keywords="EQUIL", supported=["EQUIL"])
+        common.df2res(dframe, keywords="EQUIL", supported=["EQUIL"])
     )
     assert len(string) == len(
-        common.df2ecl(dframe, keywords=["EQUIL"], supported=["EQUIL"])
+        common.df2res(dframe, keywords=["EQUIL"], supported=["EQUIL"])
     )
     assert "EQUIL\n" in string
     assert "2469" in string
     assert "-- Output file printed by tests.test_common" in string
 
-    assert common.df2ecl(dframe, supported=["PORO"]) == ""
+    assert common.df2res(dframe, supported=["PORO"]) == ""
 
-    assert "EQUIL\n-- foobar" in common.df2ecl(
+    assert "EQUIL\n-- foobar" in common.df2res(
         dframe, comments={"EQUIL": "foobar"}, supported=["EQUIL"]
     )
-    assert "\n\n-- masterfoobar\nEQUIL" in common.df2ecl(
+    assert "\n\n-- masterfoobar\nEQUIL" in common.df2res(
         dframe, comments={"master": "masterfoobar"}, supported=["EQUIL"]
     )
 
@@ -211,16 +211,16 @@ def test_df2ecl():
     tworows["EQLNUM"] = [3, 1]
     tworows["PRESSURE"] = [3456, 1234]
     with pytest.raises(ValueError):
-        common.df2ecl(tworows, supported=["EQUIL"], consecutive="EQLNUM")
+        common.df2res(tworows, supported=["EQUIL"], consecutive="EQLNUM")
     # This would be a bug if client code did this, because the wrong
     # consecutive column is set:
-    assert "3456" in common.df2ecl(tworows, supported=["EQUIL"], consecutive="PVTNUM")
+    assert "3456" in common.df2res(tworows, supported=["EQUIL"], consecutive="PVTNUM")
     tworows["EQLNUM"] = [1, 3]
     with pytest.raises(ValueError):
-        common.df2ecl(tworows, supported=["EQUIL"], consecutive="EQLNUM")
+        common.df2res(tworows, supported=["EQUIL"], consecutive="EQLNUM")
     tworows["EQLNUM"] = [2, 1]
     # Passes because the frame is sorted on EQLNUM:
-    string = common.df2ecl(tworows, supported=["EQUIL"], consecutive="EQLNUM")
+    string = common.df2res(tworows, supported=["EQUIL"], consecutive="EQLNUM")
     assert "EQUIL" in string
     assert string.find("3456") > string.find("1234")
 
@@ -250,24 +250,24 @@ def test_df2ecl():
         ),
     ],
 )
-def test_datetime_to_eclipsedate(somedate, expected):
+def test_datetime_to_ecldate(somedate, expected):
     """Test conversion of datetime to Eclipse date or datetime syntax"""
-    assert common.datetime_to_eclipsedate(somedate) == expected
+    assert common.datetime_to_ecldate(somedate) == expected
 
 
 def test_eclcompress():
     """Test that we can compress string using Eclipse style
     run-length encoding"""
-    assert common.runlength_eclcompress("") == ""
-    assert common.runlength_eclcompress(" ") == ""
-    assert common.runlength_eclcompress("1 2") == "1  2"
-    assert common.runlength_eclcompress("1 2", sep=" ") == "1 2"
-    assert common.runlength_eclcompress("1 2", sep="   ") == "1   2"
-    assert common.runlength_eclcompress("1") == "1"
-    assert common.runlength_eclcompress("1 1") == "2*1"
-    assert common.runlength_eclcompress("1 1 1") == "3*1"
-    assert common.runlength_eclcompress("1     1 1") == "3*1"
-    assert common.runlength_eclcompress("1  \n  1 1 2") == "3*1  2"
+    assert common.runlength_compress("") == ""
+    assert common.runlength_compress(" ") == ""
+    assert common.runlength_compress("1 2") == "1  2"
+    assert common.runlength_compress("1 2", sep=" ") == "1 2"
+    assert common.runlength_compress("1 2", sep="   ") == "1   2"
+    assert common.runlength_compress("1") == "1"
+    assert common.runlength_compress("1 1") == "2*1"
+    assert common.runlength_compress("1 1 1") == "3*1"
+    assert common.runlength_compress("1     1 1") == "3*1"
+    assert common.runlength_compress("1  \n  1 1 2") == "3*1  2"
 
 
 @pytest.mark.parametrize(
@@ -446,10 +446,10 @@ def test_well_matching_template(template, wells, output):
         ),
     ],
 )
-def test_generic_ecltable(
+def test_generic_deck_table(
     dframe, keyword, comment, renamer, drop_trailing_columns, expected
 ):
-    stringtable = common.generic_ecltable(
+    stringtable = common.generic_deck_table(
         dframe,
         keyword,
         comment=comment,

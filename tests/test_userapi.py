@@ -1,10 +1,10 @@
-"""Test module for user API for ecl2df"""
+"""Test module for user API for res2df"""
 
 from pathlib import Path
 
 import pytest
 
-import ecl2df
+import res2df
 
 try:
     # pylint: disable=unused-import
@@ -28,22 +28,22 @@ def test_userapi():
     To the user reading the source: Skip all 'assert' lines, read the rest.
 
     """
-    eclfiles = ecl2df.EclFiles(REEK)
+    resdatafiles = res2df.ResdataFiles(REEK)
 
-    compdatdf = ecl2df.compdat.df(eclfiles)
-    equil = ecl2df.equil.df(eclfiles)
-    faults = ecl2df.faults.df(eclfiles)
-    fipreports = ecl2df.fipreports.df(eclfiles)
-    grid_df = ecl2df.grid.df(eclfiles)
-    grst_df = ecl2df.grid.df(eclfiles, rstdates="last")
-    gruptree = ecl2df.gruptree.df(eclfiles)
-    nnc = ecl2df.nnc.df(eclfiles)
-    pillars = ecl2df.pillars.df(eclfiles)
-    rft = ecl2df.rft.df(eclfiles)
-    satfunc = ecl2df.satfunc.df(eclfiles)
-    smry = ecl2df.summary.df(eclfiles, datetime=True)
-    trans = ecl2df.trans.df(eclfiles)
-    wcon = ecl2df.wcon.df(eclfiles)
+    compdatdf = res2df.compdat.df(resdatafiles)
+    equil = res2df.equil.df(resdatafiles)
+    faults = res2df.faults.df(resdatafiles)
+    fipreports = res2df.fipreports.df(resdatafiles)
+    grid_df = res2df.grid.df(resdatafiles)
+    grst_df = res2df.grid.df(resdatafiles, rstdates="last")
+    gruptree = res2df.gruptree.df(resdatafiles)
+    nnc = res2df.nnc.df(resdatafiles)
+    pillars = res2df.pillars.df(resdatafiles)
+    rft = res2df.rft.df(resdatafiles)
+    satfunc = res2df.satfunc.df(resdatafiles)
+    smry = res2df.summary.df(resdatafiles, datetime=True)
+    trans = res2df.trans.df(resdatafiles)
+    wcon = res2df.wcon.df(resdatafiles)
 
     assert "PORV" in grid_df
     assert "SOIL" not in grid_df
@@ -57,7 +57,7 @@ def test_userapi():
     hcpv_table = grst_df.groupby("FIPNUM").sum()[["OILPV", "HCPV"]]
     assert not hcpv_table.empty
 
-    # Print the HCPV table by FIPNUM:
+    # Create string with :term:`include file` contents for the HCPV table by FIPNUM:
     print()
     print((hcpv_table / 1e6).round(2))
 

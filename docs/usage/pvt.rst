@@ -1,7 +1,7 @@
 pvt
 ---
 
-Extracts PVT related keyword data from the PROPS section in an Eclipse deck,
+Extracts PVT related keyword data from the PROPS section in a :term:`.DATA file`,
 typically the keywords ``PVTO``, ``PVDG``, ``DENSITY`` and ``ROCK``. Data from
 all keywords will be merged into one common dataframe.
 
@@ -9,12 +9,12 @@ Example usage:
 
 .. code-block:: python
 
-   from ecl2df import pvt, EclFiles
+   from res2df import pvt, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = pvt.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = pvt.df(resdatafiles)
 
-Alternatively, we may also read directly from an include file
+Alternatively, we may also read directly from an :term:`include file`
 if we read the contents of the file and supply it as a string:
 
 .. code-block:: python
@@ -22,7 +22,7 @@ if we read the contents of the file and supply it as a string:
    dframe = pvt.df(open("pvt.inc").read())
 
 ..
-  pvt.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).tail(15).to_csv('docs/usage/pvt.csv', index=False)
+  pvt.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).tail(15).to_csv('docs/usage/pvt.csv', index=False)
 
 
 .. csv-table:: Example PVT table (last 15 rows to show non-Nan data)
@@ -30,7 +30,7 @@ if we read the contents of the file and supply it as a string:
   :header-rows: 1
 
 If your PVT data resides in multiple include files, but you can't import
-the entire deck, you have to merge the dataframes in Python like this:
+the entire :term:`deck`, you have to merge the dataframes in Python like this:
 
 .. code-block:: python
 
@@ -67,21 +67,21 @@ Possibly, different viscosity scaling pr. PVTNUM is needed
 
 Density values are easier to scale up or down to whatever is needed.
 
-Re-exporting tables to Eclipse include files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Re-exporting tables to include files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you are done with the table, you can generate new include files for
-Eclipse from your modified data by issuing
+When you are done with the table, you can generate new 
+:term:`include files <include file>` from your modified data by issuing
 
 .. code-block:: python
 
-   pvt.df2ecl(dframe, filename="pvt.inc")
+   pvt.df2res(dframe, filename="pvt.inc")
 
-When injecting this produced ``pvt.inc`` into any new Eclipse deck, ensure you
+When injecting this produced ``pvt.inc`` into any new :term:`.DATA file`, ensure you
 check which keywords have been written out, compared to what you gave in to
-`ecl2df.pvt` above. Any non-supported keywords will get lost in the import phase
-and need to be catered for outside ecl2df.
+`res2df.pvt` above. Any non-supported keywords will get lost in the import phase
+and need to be catered for outside res2df.
 
-The last step can also be done using the ``csv2ecl`` command line utility
+The last step can also be done using the ``csv2res`` command line utility
 if you dump to CSV from your Python code instead.
 

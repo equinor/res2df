@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compdat &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>compdat &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,15 +68,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -85,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -106,13 +107,13 @@
              
   <section id="compdat">
 <h1>compdat<a class="headerlink" href="#compdat" title="Permalink to this heading"></a></h1>
-<p>This module extracts COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck.</p>
+<p>This module extracts COMPDAT, WELSEGS and COMPSEGS from a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>.</p>
 <p>Additionally, it will parse WELOPEN statements and emit new COMPDAT
 statements from the actions in WELOPEN.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">compdat</span><span class="p">,</span> <span class="n">EclFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">compdat</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">compdat</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">compdat</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -418,7 +419,7 @@ for each of COMPDAT, and the segmentation keywords.</p>
 <p>When WELOPEN is in use, the dataframe can differ from Eclipse
 behaviour in certain circumstances. The dataframe representation from
 <code class="docutils literal notranslate"><span class="pre">compdat</span></code> does not separate from a “shut” well and the open-ness of its
-connections. So in an Eclipse deck it is possible to shut a well, and then
+connections. So in a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> it is possible to shut a well, and then
 reopen it, and get back the original open/shut state of individual
 connections prior to well shut.  The dataframe format will display <cite>all</cite>
 connections as open if a well is opened with defaulted indices.</p>
@@ -427,8 +428,8 @@ connections as open if a well is opened with defaulted indices.</p>
 <h2>Adding INIT data<a class="headerlink" href="#adding-init-data" title="Permalink to this heading"></a></h2>
 <p>Additional information from the grid for each connection (based on i, j, k) can
 be added to the returned data through the option <code class="docutils literal notranslate"><span class="pre">--initvectors</span></code>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX</span>
-<span class="gp"># </span><span class="o">(</span>put<span class="w"> </span>the<span class="w"> </span>DATA<span class="w"> </span>file<span class="w"> </span>first,<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>it<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>interpreted<span class="w"> </span>as<span class="w"> </span>a<span class="w"> </span>vector<span class="o">)</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX</span>
+<span class="gp"># </span><span class="o">(</span>put<span class="w"> </span>the<span class="w"> </span>.DATA<span class="w"> </span>file<span class="w"> </span>first,<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>it<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>interpreted<span class="w"> </span>as<span class="w"> </span>a<span class="w"> </span>vector<span class="o">)</span>
 </pre></div>
 </div>
 </section>

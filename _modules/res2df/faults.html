@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.faults &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.faults</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.faults</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extract the contents of the FAULTS keyword into</span>
+<span class="sd">a DataFrame</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span> <span class="nn">res2df.common</span> <span class="kn">import</span> <span class="n">parse_opmio_deckrecord</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Needed for mypy</span>
+
+    <span class="c1"># pylint: disable=unused-import</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">RECORD_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;IX1&quot;</span><span class="p">,</span> <span class="s2">&quot;IX2&quot;</span><span class="p">,</span> <span class="s2">&quot;IY1&quot;</span><span class="p">,</span> <span class="s2">&quot;IY2&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ1&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ2&quot;</span><span class="p">,</span> <span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
+<span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
+<span class="n">ALLOWED_FACES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;X-&quot;</span><span class="p">,</span> <span class="s2">&quot;Y-&quot;</span><span class="p">,</span> <span class="s2">&quot;Z-&quot;</span><span class="p">,</span> <span class="s2">&quot;I-&quot;</span><span class="p">,</span> <span class="s2">&quot;J-&quot;</span><span class="p">,</span> <span class="s2">&quot;K-&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.faults.html#res2df.faults.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dataframe of fault data from a :term:`deck`</span>
+
+<span class="sd">    All data for the keyword FAULTS will be returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck: A :term:`deck`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
+
+    <span class="c1"># In[91]: list(deck[&#39;FAULTS&#39;][0])</span>
+    <span class="c1"># Out[91]: [[u&#39;F1&#39;], [36], [36], [41], [42], [1], [14], [u&#39;I&#39;]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># It is allowed in Eclipse to use the keyword FAULTS</span>
+    <span class="c1"># as many times as needed. Thus we need to loop in some way:</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;FAULTS&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">keyword</span><span class="p">:</span>
+                <span class="c1"># Each record now has a range potentially in three</span>
+                <span class="c1"># dimensions for the fault, unroll this:</span>
+                <span class="n">frec_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="s2">&quot;FAULTS&quot;</span><span class="p">)</span>
+                <span class="n">faultname</span> <span class="o">=</span> <span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">]</span>
+                <span class="n">faultface</span> <span class="o">=</span> <span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;FACE&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;IX1&quot;</span><span class="p">],</span> <span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;IX2&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;IY1&quot;</span><span class="p">],</span> <span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;IY2&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">k_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;IZ1&quot;</span><span class="p">],</span> <span class="n">frec_dict</span><span class="p">[</span><span class="s2">&quot;IZ2&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">faultname</span><span class="p">,</span> <span class="n">i_idx</span><span class="p">,</span> <span class="n">j_idx</span><span class="p">,</span> <span class="n">k_idx</span><span class="p">,</span> <span class="n">faultface</span><span class="p">])</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">COLUMNS</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracted </span><span class="si">%i</span><span class="s2"> faults&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">dframe</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.faults.html#res2df.faults.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser: argparse.ArgumentParser or argparse.subparser</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the .DATA input file for the reservoir simulator&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;faults.csv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="faults_main"><a class="viewcode-back" href="../../res2df/res2df.faults.html#res2df.faults.faults_main">[docs]</a><span class="k">def</span> <span class="nf">faults_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">resdatafiles</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
+    <span class="n">faults_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+        <span class="n">faults_df</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Wrote to </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

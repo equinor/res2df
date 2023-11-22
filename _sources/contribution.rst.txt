@@ -1,41 +1,41 @@
 ======================
-Contributing to ecl2df
+Contributing to res2df
 ======================
 
-Contributing to ecl2df is easiest on Linux computers. Windows has not been
+Contributing to res2df is easiest on Linux computers. Windows has not been
 tested, and for Mac you will have to compile OPM yourself.
 
 Getting started as a developer
 ------------------------------
 
-The first thing to do, is to create a fork of ecl2df to your personal
-github account. Go to https://github.com/equinor/ecl2df and click the Fork
+The first thing to do, is to create a fork of res2df to your personal
+github account. Go to https://github.com/equinor/res2df and click the Fork
 button.
 
 Clone your fork to your local computer:
 
 .. code-block:: console
 
-  git clone git@github.com:<youraccount>/ecl2df
-  cd ecl2df
+  git clone git@github.com:<youraccount>/res2df
+  cd res2df
 
 Then add the upstream repository:
 
 .. code-block:: console
 
-  git remote add upstream git@github.com:equinor/ecl2df
+  git remote add upstream git@github.com:equinor/res2df
 
 This requires a valid login setup with SSH keys for you github account, needed
 for write access.
 
 After cloning, you should make a Python virtual environment in which you install
-ecl2df and its dependencies. If you want to create a new virtual environment for
-ecl2df, you can do something like the following:
+res2df and its dependencies. If you want to create a new virtual environment for
+res2df, you can do something like the following:
 
 .. code-block:: console
 
-  python3 -m venv venv-ecl2df
-  source venv-ecl2df/bin/activate
+  python3 -m venv venv-res2df
+  source venv-res2df/bin/activate
 
 and then run ``pip`` :
 
@@ -43,7 +43,7 @@ and then run ``pip`` :
 
   pip install -e .[tests,docs]
 
-to install ecl2df in "edit"-mode together will all dependencies for ecl2df, its
+to install res2df in "edit"-mode together will all dependencies for res2df, its
 test suite and documentation.
 
 A good start is to verify that all tests pass after having cloned the
@@ -73,13 +73,13 @@ Komodo in order to prepare for the command:
 
 NB: For every monthly Komodo release, you might have to remake your komodo-venv.
 
-Using ecl2df without OPM
+Using res2df without OPM
 ------------------------
 
-OPM is only pip-installable on Linux. To use the non-OPM dependent ecl2df
-modules on something else than Linux (but with libecl installed), you should
+OPM is only pip-installable on Linux. To use the non-OPM dependent res2df
+modules on something else than Linux (but with resdata installed), you should
 install all the dependencies (except OPM) using ``pip`` (see ``setup.py`` for
-list of dependencies), and then install ecl2df with the ``--no-deps`` option
+list of dependencies), and then install res2df with the ``--no-deps`` option
 to ``pip``. After this, the non-OPM dependent modules should work, and others will
 fail with import errors.
 
@@ -88,7 +88,7 @@ Development workflow
 
 If you have a feature or bugfix, a typical procedure is to:
 
-* Consider writing an issue on https://github.com/equinor/ecl2df/issues describing
+* Consider writing an issue on https://github.com/equinor/res2df/issues describing
   what is not working or what is not present.
 * Make a new git branch for your contribution, from an updated master branch.
 * Write a test for the feature or a test proving the bug. Verify that ``pytest``
@@ -100,7 +100,7 @@ If you have a feature or bugfix, a typical procedure is to:
 * Check your code quality with pylint. New code should aim for maximal pylint
   score. Pylint exceptions should only be used when warranted.
 * Commit your changes, remember to add any new files.
-* Push your branch to your fork on github, and go to github.com/equinor/ecl2df
+* Push your branch to your fork on github, and go to github.com/equinor/res2df
   and make a pull request from your branch. Link your pull request to any
   relevant issue.
 * Fix any errors that pop up from automated checks.

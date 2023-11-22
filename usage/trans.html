@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trans &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>trans &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -70,15 +70,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -87,7 +88,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -110,13 +111,13 @@
 <h1>trans<a class="headerlink" href="#trans" title="Permalink to this heading"></a></h1>
 <p>The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
 from a simulation grid.</p>
-<p>Python API: <a class="reference internal" href="../ecl2df/ecl2df.trans.html#ecl2df.trans.df" title="ecl2df.trans.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.trans.df()</span></code></a></p>
-<p>Applied on an Eclipse deck, the <em>trans</em> module will give out a dataframe of neighbour
+<p>Python API: <a class="reference internal" href="../res2df/res2df.trans.html#res2df.trans.df" title="res2df.trans.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.trans.df()</span></code></a></p>
+<p>Applied on a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>, the <em>trans</em> module will give out a dataframe of neighbour
 connections</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">EclFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -200,10 +201,10 @@ connections</p>
 </table>
 <p>The last column <code class="docutils literal notranslate"><span class="pre">DIR</span></code> is the direction of the connection in i-j-k, space, and can
 take on the values <code class="docutils literal notranslate"><span class="pre">I</span></code>, <code class="docutils literal notranslate"><span class="pre">J</span></code>, and <code class="docutils literal notranslate"><span class="pre">K</span></code>. The <code class="docutils literal notranslate"><span class="pre">TRAN</span></code> column has values from the
-<code class="docutils literal notranslate"><span class="pre">TRANX</span></code>, <code class="docutils literal notranslate"><span class="pre">TRANY</span></code> or <code class="docutils literal notranslate"><span class="pre">TRANZ</span></code> in the Eclipse output files.</p>
+<code class="docutils literal notranslate"><span class="pre">TRANX</span></code>, <code class="docutils literal notranslate"><span class="pre">TRANY</span></code> or <code class="docutils literal notranslate"><span class="pre">TRANZ</span></code> in output files.</p>
 <p>You can obtain this dataframe as a CSV file by writing this command on the
 command line:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv trans MYDATADECK.DATA --verbose --output trans.csv</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv trans MYDATADECK.DATA --verbose --output trans.csv</span>
 </pre></div>
 </div>
 <section id="adding-more-data-for-each-connection">
@@ -238,7 +239,7 @@ where this region parameter <em>changes</em>, which implies the connection is ov
 a region boundary. This is accomplished by providing a vector to include, and the
 option <code class="docutils literal notranslate"><span class="pre">boundaryfilter</span></code>. It is recommmended to include NNC in applications
 like this. Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">boundaryfilter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>which gives the dataframe</p>
@@ -380,10 +381,10 @@ naturally leads over to an application where transmissibility data is aggregated
 over a region interface. This is accomplished by adding the <code class="docutils literal notranslate"><span class="pre">group=True</span></code> option.
 (this requires one INIT vector to have been specified, and it implicitly implies
 <code class="docutils literal notranslate"><span class="pre">boundaryfilter=True</span></code>). NNC is not required, but recommended.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">EclFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">trans</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="s2">&quot;FIPNUM&quot;</span><span class="p">,</span> <span class="n">addnnc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id3">
@@ -464,7 +465,7 @@ over a region interface. This is accomplished by adding the <code class="docutil
 </tbody>
 </table>
 <p>where this last table can also be exported directly from the command line using</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv</span>
 </pre></div>
 </div>
 </section>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.gruptree &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.gruptree</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.gruptree</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Extract GRUPTREE information from a :term:`.DATA file`&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">treelib</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Needed for mypy</span>
+
+    <span class="c1"># pylint: disable=unused-import</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span> <span class="nn">res2df.common</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
+    <span class="n">parse_opmio_deckrecord</span><span class="p">,</span>
+    <span class="n">parse_opmio_tstep_rec</span><span class="p">,</span>
+    <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">startdate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">welspecs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract all group information from a :term:`deck`</span>
+<span class="sd">    and present as a Pandas Dataframe of all edges.</span>
+
+<span class="sd">    Properties for nodes given in GRUPNET/NODEPROP will</span>
+<span class="sd">    be added as extra columns.</span>
+
+<span class="sd">    From WELSPECS, well names are extracted and added</span>
+<span class="sd">    as nodes with an edge to its group.</span>
+
+<span class="sd">    The gruptree is a time dependent property,</span>
+<span class="sd">    with accumulative effects from new occurences of</span>
+<span class="sd">    GRUPNET, WELSPECS, BRANPROP and NODEPROP.</span>
+
+<span class="sd">    Whenever the GRUPTREE or BRANPROP tree changes, the</span>
+<span class="sd">    previous tree is copied and a new complete tree is added</span>
+<span class="sd">    to the dataframe tagged with the new date.</span>
+
+<span class="sd">    startdate is only relevant when START is not in the :term:`deck`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck: opm.io Deck object or ResdataFiles</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame with one row pr edge. Empty dataframe if no</span>
+<span class="sd">        information is found in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">startdate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">startdate</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
+
+    <span class="n">edgerecords</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of dict of rows containing an edge.</span>
+    <span class="n">nodedatarecords</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># In order for the GRUPTREE/BRANPROP keywords to accumulate, we</span>
+    <span class="c1"># store the edges as dictionaries indexed by the edge</span>
+    <span class="c1"># (which is a tuple of child and parent).</span>
+    <span class="n">currentedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;BRANPROP&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="c1"># Same approach for the welspecs keywords</span>
+    <span class="n">wellspecsedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Node properties from GRUPNET/NODEPROP is stored in a dataframe</span>
+    <span class="c1"># Note that it&#39;s not allowed to mix GRUPNET and NODEPROP in eclipse</span>
+    <span class="c1"># so the datframe will only contain columns from one of them</span>
+    <span class="n">nodedata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;GRUPNET&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span>
+        <span class="s2">&quot;NODEPROP&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Flags which will tell when a new network related keyword</span>
+    <span class="c1"># has been encountered</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span> <span class="s2">&quot;BRANPROP&quot;</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">,</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span> <span class="s2">&quot;NODEPROP&quot;</span><span class="p">]</span>
+    <span class="n">found_keywords</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">kword</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DATES&quot;</span><span class="p">,</span> <span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">]:</span>
+            <span class="c1"># Whenever we encounter a new DATES, it means that</span>
+            <span class="c1"># we have processed all the network keywords that</span>
+            <span class="c1"># have occured since the last date, so this is the chance</span>
+            <span class="c1"># to dump the parsed data. Also we dump the *entire* tree</span>
+            <span class="c1"># at every date with a change, not only the newfound edges.</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">found_keywords</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No date parsed, maybe you should pass --startdate&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using 1900-01-01&quot;</span><span class="p">)</span>
+                    <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">1900</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">edgerecords</span> <span class="o">+=</span> <span class="n">_write_edgerecords</span><span class="p">(</span>
+                    <span class="n">currentedges</span><span class="p">,</span> <span class="n">nodedata</span><span class="p">,</span> <span class="n">wellspecsedges</span><span class="p">,</span> <span class="n">found_keywords</span><span class="p">,</span> <span class="n">date</span>
+                <span class="p">)</span>
+                <span class="n">found_keywords</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">}</span>
+            <span class="c1"># Done dumping the data for the previous date, parse the fresh</span>
+            <span class="c1"># date:</span>
+            <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DATES&quot;</span><span class="p">,</span> <span class="s2">&quot;START&quot;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                    <span class="n">date</span> <span class="o">=</span> <span class="n">parse_opmio_date_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Parsing at date </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TSTEP&quot;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                    <span class="n">steplist</span> <span class="o">=</span> <span class="n">parse_opmio_tstep_rec</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
+                    <span class="c1"># Assuming not LAB units, then the unit is days.</span>
+                    <span class="n">days</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">steplist</span><span class="p">)</span>
+                    <span class="n">date</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;Advancing </span><span class="si">%s</span><span class="s2"> days to </span><span class="si">%s</span><span class="s2"> through TSTEP&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span> <span class="s2">&quot;BRANPROP&quot;</span><span class="p">]:</span>
+            <span class="n">found_keywords</span><span class="p">[</span><span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">renamer</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;DOWNTREE_NODE&quot;</span><span class="p">:</span> <span class="s2">&quot;CHILD_GROUP&quot;</span><span class="p">,</span> <span class="s2">&quot;UPTREE_NODE&quot;</span><span class="p">:</span> <span class="s2">&quot;PARENT_GROUP&quot;</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;BRANPROP&quot;</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">edgerec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                <span class="n">edge_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">edgerec</span><span class="p">,</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
+                <span class="n">child</span> <span class="o">=</span> <span class="n">edge_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;CHILD_GROUP&quot;</span><span class="p">)</span>
+                <span class="n">parent</span> <span class="o">=</span> <span class="n">edge_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;PARENT_GROUP&quot;</span><span class="p">)</span>
+                <span class="n">currentedges</span><span class="p">[</span><span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">][(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">)]</span> <span class="o">=</span> <span class="n">edge_dict</span>
+
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;WELSPECS&quot;</span> <span class="ow">and</span> <span class="n">welspecs</span><span class="p">:</span>
+            <span class="n">found_keywords</span><span class="p">[</span><span class="s2">&quot;WELSPECS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">wellrec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                <span class="n">wspc_dict</span> <span class="o">=</span> <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">wellrec</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">)</span>
+                <span class="n">wellspecsedges</span><span class="p">[(</span><span class="n">wspc_dict</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">],</span> <span class="n">wspc_dict</span><span class="p">[</span><span class="s2">&quot;GROUP&quot;</span><span class="p">])]</span> <span class="o">=</span> <span class="s2">&quot;WELSPECS&quot;</span>
+
+        <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span> <span class="s2">&quot;NODEPROP&quot;</span><span class="p">]:</span>
+            <span class="n">found_keywords</span><span class="p">[</span><span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">renamer</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;TERMINAL_PRESSURE&quot;</span><span class="p">}</span> <span class="k">if</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;NODEPROP&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">kword</span><span class="p">:</span>
+                <span class="n">nodedatarecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">rec</span><span class="p">,</span> <span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">nodedata</span><span class="p">[</span><span class="n">kword</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">nodedatarecords</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;NAME&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Ensure we also store any tree information found after the last DATE statement</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">found_keywords</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">edgerecords</span> <span class="o">+=</span> <span class="n">_write_edgerecords</span><span class="p">(</span>
+            <span class="n">currentedges</span><span class="p">,</span> <span class="n">nodedata</span><span class="p">,</span> <span class="n">wellspecsedges</span><span class="p">,</span> <span class="n">found_keywords</span><span class="p">,</span> <span class="n">date</span>
+        <span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">edgerecords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Remove rows with duplicate DATE, CHILD and KEYWORD</span>
+    <span class="c1"># This happens with WELSPECS if both GRUPTREE and BRANPROP is defined</span>
+    <span class="c1"># at the same timestep. And when a node is redirected to a new parent node</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dframe</span></div>
+
+
+<span class="k">def</span> <span class="nf">_write_edgerecords</span><span class="p">(</span>
+    <span class="n">currentedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span>
+    <span class="n">nodedata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">wellspecsedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">found_keywords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes a new GRUPTREE tree if there are new instances of</span>
+<span class="sd">    GRUPTREE, GRUPNET or WELSPECS and writes a new BRANPROP tree</span>
+<span class="sd">    if there are new instances of BRANPROP, NODEPROP or WELSPECS.</span>
+
+<span class="sd">    If both trees are written, any duplicate WELSPECS rows are</span>
+<span class="sd">    removed at the end of the df function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">edgerecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">treetype</span><span class="p">,</span> <span class="n">nodetype</span><span class="p">,</span> <span class="n">welspecs</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span> <span class="s2">&quot;GRUPNET&quot;</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;BRANPROP&quot;</span><span class="p">,</span> <span class="s2">&quot;NODEPROP&quot;</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">),</span>
+    <span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">found_keywords</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">treetype</span><span class="p">,</span> <span class="n">nodetype</span><span class="p">,</span> <span class="n">welspecs</span><span class="p">]):</span>
+            <span class="n">edgerecords</span> <span class="o">+=</span> <span class="n">_merge_edges_and_nodeinfo</span><span class="p">(</span>
+                <span class="n">currentedges</span><span class="p">[</span><span class="n">treetype</span><span class="p">],</span>
+                <span class="n">nodedata</span><span class="p">[</span><span class="n">nodetype</span><span class="p">],</span>
+                <span class="n">wellspecsedges</span><span class="p">,</span>
+                <span class="n">date</span><span class="p">,</span>
+                <span class="n">treetype</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">edgerecords</span>
+
+
+<span class="k">def</span> <span class="nf">_merge_edges_and_nodeinfo</span><span class="p">(</span>
+    <span class="n">currentedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">nodedata_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">wellspecsedges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">],</span>
+    <span class="n">treetype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge a list of edges with information from the nodedata dataframe.</span>
+
+<span class="sd">    Edges where there is no parent (root nodes) are identified and added</span>
+<span class="sd">    as special cases.</span>
+
+<span class="sd">    Welspecs-edges are allowed to have a parent that is missing from the</span>
+<span class="sd">    GRUPTREE tree, but these edges are ignored for BRANPROP trees.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        currentedges:</span>
+<span class="sd">        nodedata_df: Containing data for each node to add.</span>
+<span class="sd">        date: Relevant date.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of dictionaries (that can be made into a dataframe)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">edgerecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">childs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="c1"># Write GRUPTREE/BRANPROP edges</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">),</span> <span class="n">edge_dict</span> <span class="ow">in</span> <span class="n">currentedges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">child</span><span class="p">,</span> <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">treetype</span><span class="p">}</span>
+        <span class="n">childs</span> <span class="o">|=</span> <span class="p">{</span><span class="n">child</span><span class="p">}</span>
+        <span class="n">parents</span> <span class="o">|=</span> <span class="p">{</span><span class="n">parent</span><span class="p">}</span>
+        <span class="c1"># Add fields from edge_dict</span>
+        <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">edge_dict</span><span class="p">)</span>
+        <span class="c1"># Add node data</span>
+        <span class="k">if</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">nodedata_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nodedata_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">child</span><span class="p">])</span>
+        <span class="n">edgerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+
+    <span class="c1"># Write WELSPECS edges</span>
+    <span class="n">welspecs_parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">),</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">wellspecsedges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># For BRANPROP trees, only wells with a parent in the tree are added</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;BRANPROP&quot;</span> <span class="ow">and</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">childs</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">):</span>
+            <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+                <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">child</span><span class="p">,</span>
+                <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="n">parent</span><span class="p">,</span>
+                <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">edgerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;GRUPTREE&quot;</span><span class="p">:</span>
+            <span class="n">welspecs_parents</span> <span class="o">|=</span> <span class="p">{</span><span class="n">parent</span><span class="p">}</span>
+
+    <span class="c1"># Missing welspecs parents are connected directly to the FIELD node</span>
+    <span class="c1"># (only for GRUPTREE)</span>
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">welspecs_parents</span> <span class="o">-</span> <span class="n">childs</span><span class="p">:</span>
+        <span class="n">edgerecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">treetype</span><span class="p">,</span> <span class="s2">&quot;PARENT&quot;</span><span class="p">:</span> <span class="s2">&quot;FIELD&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">parents</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;FIELD&quot;</span><span class="p">}</span>
+
+    <span class="n">roots</span> <span class="o">=</span> <span class="n">parents</span> <span class="o">-</span> <span class="n">childs</span>
+    <span class="n">rootrecords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>
+        <span class="n">rec_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;CHILD&quot;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s2">&quot;KEYWORD&quot;</span><span class="p">:</span> <span class="n">treetype</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">nodedata_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="n">rec_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nodedata_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">root</span><span class="p">])</span>
+        <span class="n">rootrecords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rec_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rootrecords</span> <span class="o">+</span> <span class="n">edgerecords</span>
+
+
+<div class="viewcode-block" id="edge_dataframe2dict"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.edge_dataframe2dict">[docs]</a><span class="k">def</span> <span class="nf">edge_dataframe2dict</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert list of edges in a dataframe into a</span>
+<span class="sd">    nested dictionary (tree).</span>
+
+<span class="sd">    The dataframe cannot have multiple DATEs, filter to the date you</span>
+<span class="sd">    want prior to calling this function.</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">      [{</span>
+<span class="sd">        &#39;FIELD&#39;: {&#39;OP&#39;: {&#39;OP_1&#39;: {},</span>
+<span class="sd">        &#39;OP_2&#39;: {},</span>
+<span class="sd">        &#39;OP_3&#39;: {},</span>
+<span class="sd">        &#39;OP_4&#39;: {},</span>
+<span class="sd">        &#39;OP_5&#39;: {}},</span>
+<span class="sd">        &#39;WI&#39;: {&#39;WI_1&#39;: {}, &#39;WI_2&#39;: {}, &#39;WI_3&#39;: {}}}</span>
+<span class="sd">      }]</span>
+
+<span class="sd">    Leaf nodes have empty dictionaries as their value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of nested dictionaries, as we in general</span>
+<span class="sd">        may have more than one root. The list sorted</span>
+<span class="sd">        alphabetically on the top level node name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[{}]</span>
+    <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only handle one date at a time&quot;</span><span class="p">)</span>
+    <span class="n">subtrees</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]):</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;CHILD&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;PARENT&quot;</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">subtrees</span><span class="p">[</span><span class="n">parent</span><span class="p">][</span><span class="n">child</span><span class="p">]</span> <span class="o">=</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">child</span><span class="p">]</span>
+
+    <span class="n">children</span><span class="p">,</span> <span class="n">parents</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[{</span><span class="n">root</span><span class="p">:</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">root</span><span class="p">]}</span> <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">roots</span><span class="p">)]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_add_to_tree_from_dict</span><span class="p">(</span>
+    <span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nested_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">_add_to_tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="tree_from_dict"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.tree_from_dict">[docs]</a><span class="k">def</span> <span class="nf">tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dictionary to a treelib Tree.</span>
+
+<span class="sd">    The treelib representation of the trees is used</span>
+<span class="sd">    for pretty-printing (in ASCII) of the tree, you</span>
+<span class="sd">    only need to do str() of the returned result</span>
+<span class="sd">    from this function.</span>
+
+<span class="sd">    See `https://treelib.readthedocs.io/`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nested_dict: nested dictonary representing a tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># Return an empty string, because str(treelib.Tree()) will error</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The dict given to tree_from_dict() must have &quot;</span>
+            <span class="s2">&quot;exactly one top level key, representing a single tree.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">root_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">()</span>
+    <span class="n">_add_to_tree_from_dict</span><span class="p">(</span><span class="n">nested_dict</span><span class="p">[</span><span class="n">root_name</span><span class="p">],</span> <span class="n">root_name</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tree</span></div>
+
+
+<div class="viewcode-block" id="dict2treelib"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.dict2treelib">[docs]</a><span class="k">def</span> <span class="nf">dict2treelib</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a nested dictonary to a treelib Tree</span>
+<span class="sd">    object. This function is recursive.</span>
+
+<span class="sd">    The treelib representation of the trees is used</span>
+<span class="sd">    for pretty-printing (in ASCII) of the tree, you</span>
+<span class="sd">    only need to do str() of the returned result</span>
+<span class="sd">    from this function.</span>
+
+<span class="sd">    See `https://treelib.readthedocs.io/`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: name of root node</span>
+<span class="sd">        nested_dict: nested dictonary of the children at the root.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;dict2treelib() is deprecated and will be removed, use tree_from_dict()&quot;</span><span class="p">,</span>
+        <span class="ne">FutureWarning</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">treelib</span><span class="o">.</span><span class="n">Tree</span><span class="p">()</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">nested_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">paste</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dict2treelib</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">nested_dict</span><span class="p">[</span><span class="n">child</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">tree</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (argparse.ArgumentParser or argparse.subparser): parser</span>
+<span class="sd">            to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the .DATA input file for the reservoir simulator&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file. No CSV dump if empty&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--prettyprint&quot;</span><span class="p">,</span>
+        <span class="c1">#      type=bool,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Pretty-print the tree structure&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--startdate&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;First schedule date if not defined in input file, YYYY-MM-DD&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="prettyprint"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.prettyprint">[docs]</a><span class="k">def</span> <span class="nf">prettyprint</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string with the prettyprint of a dataframe</span>
+<span class="sd">    possibly containing multiple dates and both GRUPTREE and</span>
+<span class="sd">    BRANPROP trees&quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">df_date</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">DATE</span> <span class="o">==</span> <span class="n">date</span><span class="p">]</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s2">&quot;Date: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;M8[D]&quot;</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">for</span> <span class="n">treetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GRUPTREE&quot;</span><span class="p">,</span> <span class="s2">&quot;BRANPROP&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">treetype</span> <span class="ow">in</span> <span class="n">df_date</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="n">df_treetype</span> <span class="o">=</span> <span class="n">df_date</span><span class="p">[</span><span class="n">df_date</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">treetype</span><span class="p">,</span> <span class="s2">&quot;WELSPECS&quot;</span><span class="p">])]</span>
+                <span class="k">if</span> <span class="n">treetype</span> <span class="o">==</span> <span class="s2">&quot;BRANPROP&quot;</span><span class="p">:</span>
+                    <span class="c1"># filter out edges where the parent is not a</span>
+                    <span class="c1"># child in the tree. This will be printed as</span>
+                    <span class="c1"># a separate tree for GRUPTREE</span>
+                    <span class="n">df_treetype</span> <span class="o">=</span> <span class="n">df_treetype</span><span class="p">[</span>
+                        <span class="n">df_treetype</span><span class="o">.</span><span class="n">PARENT</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_treetype</span><span class="o">.</span><span class="n">CHILD</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+                    <span class="p">]</span>
+
+                <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">treetype</span><span class="si">}</span><span class="s2"> trees:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">edge_dataframe2dict</span><span class="p">(</span><span class="n">df_treetype</span><span class="p">):</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree_from_dict</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="gruptree_main"><a class="viewcode-back" href="../../res2df/res2df.gruptree.html#res2df.gruptree.gruptree_main">[docs]</a><span class="k">def</span> <span class="nf">gruptree_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility.&quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nothing to do. Set --output or --prettyprint&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">(),</span> <span class="n">startdate</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">startdate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;DATE&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">prettyprint</span><span class="p">(</span><span class="n">dframe</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No tree data to prettyprint&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

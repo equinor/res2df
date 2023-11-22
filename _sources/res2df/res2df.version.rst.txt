@@ -1,0 +1,10 @@
+==================
+``res2df.version``
+==================
+
+.. automodule:: res2df.version
+
+   .. contents::
+      :local:
+
+.. currentmodule:: res2df.version

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.wellcompletiondata &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.wellcompletiondata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.wellcompletiondata</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Aggregates completion data from layer to zone&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyarrow</span>
+<span class="kn">import</span> <span class="nn">pyarrow.feather</span>
+
+<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">common</span><span class="p">,</span> <span class="n">compdat</span><span class="p">,</span> <span class="n">getLogger_res2csv</span><span class="p">,</span> <span class="n">wellconnstatus</span>
+<span class="kn">from</span> <span class="nn">res2df.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
+
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="UnitSystem"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.UnitSystem">[docs]</a><span class="k">class</span> <span class="nc">UnitSystem</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;METRIC&quot;</span>
+    <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;FIELD&quot;</span>
+    <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;LAB&quot;</span>
+    <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;PVT-M&quot;</span></div>
+
+
+<div class="viewcode-block" id="KHUnit"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.KHUnit">[docs]</a><span class="k">class</span> <span class="nc">KHUnit</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;mDm&quot;</span>
+    <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;mDft&quot;</span>
+    <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;mDcm&quot;</span>
+    <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;mDm&quot;</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
+    <span class="n">zonemap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">use_wellconnstatus</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">excl_well_startswith</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregates compdat to zone level. If use_wellconnstatus is True,</span>
+<span class="sd">    the actual OP/SH status of a connection will be extracted from summary</span>
+<span class="sd">    data using the wellconnstatus module. If not, connection status is taken</span>
+<span class="sd">    directly from parsing the schedule file, using the compdat module.</span>
+
+<span class="sd">    The aggregation is done according to the following rules. A zone is</span>
+<span class="sd">    regarded as open if one or more connections are open, regardless of</span>
+<span class="sd">    if other connections are closed. And the KH is summed over open connections</span>
+<span class="sd">    only.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        resdatafiles; ResdataFiles object</span>
+<span class="sd">        zonemap: dictionary with layer-&gt;zone mapping</span>
+<span class="sd">        use_wellconnstatus: boolean</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame with one row per unique combination of well, zone and date.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">compdat</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">zonemap</span><span class="o">=</span><span class="n">zonemap</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;ZONE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;ZONE column not generated in compdat table. &quot;</span>
+            <span class="s2">&quot;Empty dataframe will be returned.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Zonemap used: </span><span class="si">{</span><span class="n">zonemap</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="c1"># Filter only the columns needed.</span>
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">compdat_df</span><span class="p">[[</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="s2">&quot;WELL&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;OP/SH&quot;</span><span class="p">,</span> <span class="s2">&quot;KH&quot;</span><span class="p">,</span> <span class="s2">&quot;ZONE&quot;</span><span class="p">]]</span>
+    <span class="c1"># Convert DATE column to datetime format</span>
+    <span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">])</span>
+
+    <span class="c1"># If excl_well_startswith is not None, filter out wells that starts with this</span>
+    <span class="k">if</span> <span class="n">excl_well_startswith</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">_excl_well_startswith</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">excl_well_startswith</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_wellconnstatus</span><span class="p">:</span>
+        <span class="n">wellconnstatus_df</span> <span class="o">=</span> <span class="n">wellconnstatus</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
+        <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">_merge_compdat_and_connstatus</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">wellconnstatus_df</span><span class="p">)</span>
+
+    <span class="n">compdat_df</span> <span class="o">=</span> <span class="n">_aggregate_layer_to_zone</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">)</span>
+
+    <span class="c1"># Add metadata as an attribute the dataframe</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">_get_metadata</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
+    <span class="c1"># Slice meta to dataframe columns:</span>
+    <span class="n">compdat_df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">column_key</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="n">column_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">compdat_df</span> <span class="k">if</span> <span class="n">column_key</span> <span class="ow">in</span> <span class="n">meta</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">compdat_df</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_unit_system</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitSystem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the unit system of a :term:`.DATA file`. The options are \</span>
+<span class="sd">    METRIC, FIELD, LAB and PVT-M.</span>
+
+<span class="sd">    If none of these are found, the function returns METRIC which is the</span>
+<span class="sd">    default unit system in Eclipse.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unit_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">unitsystem</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">unitsystem</span> <span class="ow">in</span> <span class="n">UnitSystem</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">unit_systems</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">UnitSystem</span><span class="p">(</span><span class="n">keyword</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">UnitSystem</span><span class="o">.</span><span class="n">METRIC</span>
+
+
+<span class="k">def</span> <span class="nf">_get_metadata</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide metadata for the well completion data export&quot;&quot;&quot;</span>
+    <span class="n">meta</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">unitsystem</span> <span class="o">=</span> <span class="n">_get_unit_system</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
+    <span class="n">kh_units</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">UnitSystem</span><span class="o">.</span><span class="n">METRIC</span><span class="p">:</span> <span class="n">KHUnit</span><span class="o">.</span><span class="n">METRIC</span><span class="p">,</span>
+        <span class="n">UnitSystem</span><span class="o">.</span><span class="n">FIELD</span><span class="p">:</span> <span class="n">KHUnit</span><span class="o">.</span><span class="n">FIELD</span><span class="p">,</span>
+        <span class="n">UnitSystem</span><span class="o">.</span><span class="n">LAB</span><span class="p">:</span> <span class="n">KHUnit</span><span class="o">.</span><span class="n">LAB</span><span class="p">,</span>
+        <span class="n">UnitSystem</span><span class="o">.</span><span class="n">PVTM</span><span class="p">:</span> <span class="n">KHUnit</span><span class="o">.</span><span class="n">PVTM</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;KH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;KH&quot;</span><span class="p">][</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kh_units</span><span class="p">[</span><span class="n">unitsystem</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="n">meta</span>
+
+
+<span class="k">def</span> <span class="nf">_excl_well_startswith</span><span class="p">(</span>
+    <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excl_well_startswith</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filters out rows where the well name starts with a given string&quot;&quot;&quot;</span>
+    <span class="n">keep_wells</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">well</span>
+        <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">well</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">excl_well_startswith</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">compdat_df</span><span class="p">[</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">keep_wells</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">_aggregate_layer_to_zone</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregates well completion data from layer to zone.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        compdat_df: pd.DataFrame with compdat data. Must have the following columns:</span>
+<span class="sd">        DATE, WELL, OP/SH, KH and ZONE</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame with one row per unique combination of well, zone and date.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">well</span><span class="p">,</span> <span class="n">zone</span><span class="p">,</span> <span class="n">date</span><span class="p">),</span> <span class="n">group_df</span> <span class="ow">in</span> <span class="n">compdat_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;WELL&quot;</span><span class="p">,</span> <span class="s2">&quot;ZONE&quot;</span><span class="p">,</span> <span class="s2">&quot;DATE&quot;</span><span class="p">]):</span>
+        <span class="n">open_compl_df</span> <span class="o">=</span> <span class="n">group_df</span><span class="p">[</span><span class="n">group_df</span><span class="p">[</span><span class="s2">&quot;OP/SH&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;OPEN&quot;</span><span class="p">]</span>
+        <span class="n">has_open_compl</span> <span class="o">=</span> <span class="n">open_compl_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;WELL&quot;</span><span class="p">:</span> <span class="n">well</span><span class="p">,</span>
+                <span class="s2">&quot;ZONE&quot;</span><span class="p">:</span> <span class="n">zone</span><span class="p">,</span>
+                <span class="s2">&quot;DATE&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+                <span class="s2">&quot;KH&quot;</span><span class="p">:</span> <span class="n">open_compl_df</span><span class="p">[</span><span class="s2">&quot;KH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="k">if</span> <span class="n">has_open_compl</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;OP/SH&quot;</span><span class="p">:</span> <span class="s2">&quot;OPEN&quot;</span> <span class="k">if</span> <span class="n">has_open_compl</span> <span class="k">else</span> <span class="s2">&quot;SHUT&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_merge_compdat_and_connstatus</span><span class="p">(</span>
+    <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">wellconnstatus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function merges the compdat data with the well connection status data</span>
+<span class="sd">    (extracted from the CPI summary data). The connection status data will be used</span>
+<span class="sd">    for wells where it exists. The KH will be merged from the compdat. For wells</span>
+<span class="sd">    that are not in the connection status data, the compdat data will be used as it is.</span>
+
+<span class="sd">    This approach is fast, but a couple of things should be noted:</span>
+<span class="sd">    * in the connection status data, a connection is not set to SHUT before it has been</span>
+<span class="sd">    OPEN. In the compdat data, some times all connections are first defined and the</span>
+<span class="sd">    opened later.</span>
+<span class="sd">    * any connections that are in compdat but not in connections status will be ignored</span>
+<span class="sd">    (e.g. connections that are always shut)</span>
+<span class="sd">    * there is no logic to handle KH changing with time for the same connection (this</span>
+<span class="sd">    can easily be added using apply in pandas, but it is very rare and slows down the</span>
+<span class="sd">    function significantly)</span>
+<span class="sd">    * if connection status is missing for a realization, but compdat exists, compdat</span>
+<span class="sd">    will also be ignored.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        compdat_df: pd.DataFrame with compdat data, from parsing the sch file</span>
+<span class="sd">        wellconnstatus_df: pd.DataFrame with well connection status data, extracted</span>
+<span class="sd">        from summary data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame with one row per unique combination of well, zone and date.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">match_on</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">]</span>
+    <span class="n">wellconnstatus_df</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;K1&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">wellconnstatus_df</span><span class="p">,</span>
+        <span class="n">compdat_df</span><span class="p">[</span><span class="n">match_on</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;KH&quot;</span><span class="p">,</span> <span class="s2">&quot;ZONE&quot;</span><span class="p">]],</span>
+        <span class="n">on</span><span class="o">=</span><span class="n">match_on</span><span class="p">,</span>
+        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># There will often be several rows (with different OP/SH) matching in compdat.</span>
+    <span class="c1"># Only the first is kept</span>
+    <span class="n">dframe</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DATE&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">match_on</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Concat from compdat the wells that are not in well connection status</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">dframe</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">[</span><span class="o">~</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())]]</span>
+    <span class="p">)</span>
+    <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dframe</span>
+
+
+<span class="k">def</span> <span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a pyarrow table from dataframe with well</span>
+<span class="sd">    completion data.</span>
+
+<span class="sd">    The index in the dataframe will be ignored</span>
+
+<span class="sd">    32-bit types will be used for integers and floats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">field_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pyarrow</span><span class="o">.</span><span class="n">Field</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;meta&quot;</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span> <span class="ow">and</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]:</span>
+            <span class="c1"># Boolean objects in the metadata dictionary must be converted to bytes:</span>
+            <span class="n">field_metadata</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nb">bytes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">field_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">colname</span> <span class="o">==</span> <span class="s2">&quot;DATE&quot;</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">timestamp</span><span class="p">(</span><span class="s2">&quot;ms&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_integer_dtype</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">dtypes</span><span class="p">[</span><span class="n">colname</span><span class="p">]):</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">int32</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_string_dtype</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">dtypes</span><span class="p">[</span><span class="n">colname</span><span class="p">]):</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">string</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">float32</span><span class="p">()</span>
+        <span class="n">field_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyarrow</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">colname</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">field_metadata</span><span class="p">))</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">field_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser: parser to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the .DATA input file for the reservoir simulator.&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot; There must exist a UNSMRY file with the same path and basename&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--zonemap&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Name of lyr file with layer-&gt;zone mapping&quot;</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;rms/output/zone/simgrid_zone_layer_mapping.lyr&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Name of output csv file. Use &#39;-&#39; to write to stdout. &quot;</span>
+            <span class="s2">&quot;Default &#39;well_completion_data.csv&#39;&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;well_completion_data&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--use_wellconnstatus&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use well connection status extracted from CPI* summary data.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--excl_well_startswith&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exludes wells that starts with this string from the export.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--arrow&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write to pyarrow format&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="wellcompletiondata_main"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.wellcompletiondata_main">[docs]</a><span class="k">def</span> <span class="nf">wellcompletiondata_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+    <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">zonemap</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">wellcompletiondata_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zonemap not found: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">zonemap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zonemap</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">convert_lyrlist_to_zonemap</span><span class="p">(</span><span class="n">common</span><span class="o">.</span><span class="n">parse_lyrfile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">zonemap</span><span class="p">))</span>
+        <span class="n">wellcompletiondata_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span>
+            <span class="n">resdatafiles</span><span class="p">,</span> <span class="n">zonemap</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">use_wellconnstatus</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">excl_well_startswith</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Well completion data successfully generated with zonemap: </span><span class="si">{</span><span class="n">zonemap</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">arrow</span><span class="p">:</span>
+        <span class="n">wellcompletiondata_df</span> <span class="o">=</span> <span class="n">_df2pyarrow</span><span class="p">(</span><span class="n">wellcompletiondata_df</span><span class="p">)</span>
+
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+        <span class="n">wellcompletiondata_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

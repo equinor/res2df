@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ecl2df &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>res2df &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,11 +31,11 @@
           
           
           <a href="#" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -48,15 +48,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -65,7 +66,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">ecl2df</a>
+          <a href="#">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -73,7 +74,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ecl2df</li>
+      <li class="breadcrumb-item active">res2df</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -83,11 +84,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ecl2df">
-<h1>ecl2df<a class="headerlink" href="#ecl2df" title="Permalink to this heading"></a></h1>
-<p>ecl2df is a Pandas DataFrame wrapper around libecl and opm.io, which
-are used to access binary files outputted by the reservoir simulator
-Eclipse, or its input files — or any other tool outputting to the same
+  <section id="res2df">
+<h1>res2df<a class="headerlink" href="#res2df" title="Permalink to this heading"></a></h1>
+<p>res2df is a Pandas DataFrame wrapper around resdata and opm.io, which
+are used to access <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">binary files outputted by the reservoir simulators</span></a> or
+their <a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">input files</span></a> — or any other tool outputting to the same
 data format.</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -116,29 +117,30 @@ data format.</p>
 <li class="toctree-l2"><a class="reference internal" href="usage/wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ecl2csv.html">ecl2csv</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ecl2csv.html#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ecl2csv.html#named-arguments">Named Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ecl2csv.html#Sub-commands">Sub-commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2csv.html">res2csv</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="res2csv.html#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="res2csv.html#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="res2csv.html#Sub-commands">Sub-commands</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="csv2ecl.html">csv2ecl</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="csv2ecl.html#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csv2ecl.html#named-arguments">Named Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csv2ecl.html#Sub-commands">Sub-commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2res.html">csv2res</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="csv2res.html#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv2res.html#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv2res.html#Sub-commands">Sub-commands</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to ecl2df</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to res2df</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contribution.html#getting-started-as-a-developer">Getting started as a developer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribution.html#getting-started-on-equinor-linux-computers">Getting started on Equinor Linux computers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contribution.html#using-ecl2df-without-opm">Using ecl2df without OPM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#using-res2df-without-opm">Using res2df without OPM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribution.html#development-workflow">Development workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribution.html#continuous-integration">Continuous integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contribution.html#writing-documentation">Writing documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">

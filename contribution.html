@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to ecl2df &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>Contributing to res2df &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,23 +49,24 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to ecl2df</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to res2df</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#getting-started-as-a-developer">Getting started as a developer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#getting-started-on-equinor-linux-computers">Getting started on Equinor Linux computers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-ecl2df-without-opm">Using ecl2df without OPM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-res2df-without-opm">Using res2df without OPM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#development-workflow">Development workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#continuous-integration">Continuous integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-documentation">Writing documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -74,7 +75,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">ecl2df</a>
+          <a href="index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -82,7 +83,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Contributing to ecl2df</li>
+      <li class="breadcrumb-item active">Contributing to res2df</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/contribution.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,38 +93,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="contributing-to-ecl2df">
-<h1>Contributing to ecl2df<a class="headerlink" href="#contributing-to-ecl2df" title="Permalink to this heading"></a></h1>
-<p>Contributing to ecl2df is easiest on Linux computers. Windows has not been
+  <section id="contributing-to-res2df">
+<h1>Contributing to res2df<a class="headerlink" href="#contributing-to-res2df" title="Permalink to this heading"></a></h1>
+<p>Contributing to res2df is easiest on Linux computers. Windows has not been
 tested, and for Mac you will have to compile OPM yourself.</p>
 <section id="getting-started-as-a-developer">
 <h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this heading"></a></h2>
-<p>The first thing to do, is to create a fork of ecl2df to your personal
-github account. Go to <a class="reference external" href="https://github.com/equinor/ecl2df">https://github.com/equinor/ecl2df</a> and click the Fork
+<p>The first thing to do, is to create a fork of res2df to your personal
+github account. Go to <a class="reference external" href="https://github.com/equinor/res2df">https://github.com/equinor/res2df</a> and click the Fork
 button.</p>
 <p>Clone your fork to your local computer:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone git@github.com:&lt;youraccount&gt;/ecl2df</span>
-<span class="go">cd ecl2df</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone git@github.com:&lt;youraccount&gt;/res2df</span>
+<span class="go">cd res2df</span>
 </pre></div>
 </div>
 <p>Then add the upstream repository:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git remote add upstream git@github.com:equinor/ecl2df</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git remote add upstream git@github.com:equinor/res2df</span>
 </pre></div>
 </div>
 <p>This requires a valid login setup with SSH keys for you github account, needed
 for write access.</p>
 <p>After cloning, you should make a Python virtual environment in which you install
-ecl2df and its dependencies. If you want to create a new virtual environment for
-ecl2df, you can do something like the following:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv venv-ecl2df</span>
-<span class="go">source venv-ecl2df/bin/activate</span>
+res2df and its dependencies. If you want to create a new virtual environment for
+res2df, you can do something like the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv venv-res2df</span>
+<span class="go">source venv-res2df/bin/activate</span>
 </pre></div>
 </div>
 <p>and then run <code class="docutils literal notranslate"><span class="pre">pip</span></code> :</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e .[tests,docs]</span>
 </pre></div>
 </div>
-<p>to install ecl2df in “edit”-mode together will all dependencies for ecl2df, its
+<p>to install res2df in “edit”-mode together will all dependencies for res2df, its
 test suite and documentation.</p>
 <p>A good start is to verify that all tests pass after having cloned the
 repository, which you can do by running:</p>
@@ -145,12 +146,12 @@ Komodo in order to prepare for the command:</p>
 </div>
 <p>NB: For every monthly Komodo release, you might have to remake your komodo-venv.</p>
 </section>
-<section id="using-ecl2df-without-opm">
-<h2>Using ecl2df without OPM<a class="headerlink" href="#using-ecl2df-without-opm" title="Permalink to this heading"></a></h2>
-<p>OPM is only pip-installable on Linux. To use the non-OPM dependent ecl2df
-modules on something else than Linux (but with libecl installed), you should
+<section id="using-res2df-without-opm">
+<h2>Using res2df without OPM<a class="headerlink" href="#using-res2df-without-opm" title="Permalink to this heading"></a></h2>
+<p>OPM is only pip-installable on Linux. To use the non-OPM dependent res2df
+modules on something else than Linux (but with resdata installed), you should
 install all the dependencies (except OPM) using <code class="docutils literal notranslate"><span class="pre">pip</span></code> (see <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> for
-list of dependencies), and then install ecl2df with the <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> option
+list of dependencies), and then install res2df with the <code class="docutils literal notranslate"><span class="pre">--no-deps</span></code> option
 to <code class="docutils literal notranslate"><span class="pre">pip</span></code>. After this, the non-OPM dependent modules should work, and others will
 fail with import errors.</p>
 </section>
@@ -158,7 +159,7 @@ fail with import errors.</p>
 <h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading"></a></h2>
 <p>If you have a feature or bugfix, a typical procedure is to:</p>
 <ul class="simple">
-<li><p>Consider writing an issue on <a class="reference external" href="https://github.com/equinor/ecl2df/issues">https://github.com/equinor/ecl2df/issues</a> describing
+<li><p>Consider writing an issue on <a class="reference external" href="https://github.com/equinor/res2df/issues">https://github.com/equinor/res2df/issues</a> describing
 what is not working or what is not present.</p></li>
 <li><p>Make a new git branch for your contribution, from an updated master branch.</p></li>
 <li><p>Write a test for the feature or a test proving the bug. Verify that <code class="docutils literal notranslate"><span class="pre">pytest</span></code>
@@ -170,7 +171,7 @@ docstrings.</p></li>
 <li><p>Check your code quality with pylint. New code should aim for maximal pylint
 score. Pylint exceptions should only be used when warranted.</p></li>
 <li><p>Commit your changes, remember to add any new files.</p></li>
-<li><p>Push your branch to your fork on github, and go to github.com/equinor/ecl2df
+<li><p>Push your branch to your fork on github, and go to github.com/equinor/res2df
 and make a pull request from your branch. Link your pull request to any
 relevant issue.</p></li>
 <li><p>Fix any errors that pop up from automated checks.</p></li>

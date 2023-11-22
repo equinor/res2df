@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.res2csv &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.res2csv</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.res2csv</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">End-user command line tool for accessing functionality</span>
+<span class="sd">in res2df</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="c1"># String constants in use for generating ERT forward model documentation:</span>
+<span class="n">DESCRIPTION</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert reservoir simulator input and output files into CSV files,</span>
+<span class="s2">with the command line utility ``res2csv``. Run ``res2csv --help`` to see</span>
+<span class="s2">which subcommands are supported.</span>
+
+<span class="s2">For supplying options to subcommands, you can use the arguments ``&lt;XARGn&gt;``</span>
+<span class="s2">where ``n`` goes from 1 to 10.</span>
+
+<span class="s2">For more documentation, see https://equinor.github.io/res2df/.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">CATEGORY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
+<span class="n">EXAMPLES</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">Outputting the EQUIL data from a .DATA file. This is implicitly </span>
+<span class="s2">supplied in ERT configs::</span>
+
+<span class="s2">   FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)</span>
+
+<span class="s2">For a yearly summary export of the realization, options have to be supplied</span>
+<span class="s2">with the XARG options::</span>
+
+<span class="s2">  FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=summary, &lt;OUTPUT&gt;=yearly.csv, &lt;XARG1&gt;=&quot;--time_index&quot;, &lt;XARG2&gt;=&quot;yearly&quot;)</span>
+
+<span class="s2">The quotes around double-dashed options are critical to avoid ERT taking for a</span>
+<span class="s2">comment. For more options, use ``&lt;XARG3&gt;`` etc.</span>
+<span class="s2">&quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../res2df/res2df.res2csv.html#res2df.res2csv.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make parser&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;res2csv (&quot;</span> <span class="o">+</span> <span class="n">__version__</span> <span class="o">+</span> <span class="s2">&quot;) is a command line frontend to res2df. &quot;</span>
+            <span class="s2">&quot;Documentation at https://equinor.github.io/res2df/ &quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">:</span>
+        <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;subcommand&quot;</span><span class="p">,</span>
+            <span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span>
+
+    <span class="n">subparsers_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;grid&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract grid data with properties&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each cell is represented by &quot;</span>
+            <span class="s2">&quot;one row of data. The coordinates are in the X, Y, and Z columns &quot;</span>
+            <span class="s2">&quot;and represent the grid centre. Volume pr. cell is added &quot;</span>
+            <span class="s2">&quot;and all INIT and UNRST data can be added to the rows&quot;</span>
+        <span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;summary&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract summary data&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;This is the time-dependent data for &quot;</span>
+            <span class="s2">&quot;field production data, well profiles etc. Each row contains data &quot;</span>
+            <span class="s2">&quot;for one point in time&quot;</span>
+        <span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;nnc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;nnc&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract NNC data from EGRID file&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract NNC (Non-Neighbour Connection) data from the EGRID file. &quot;</span>
+            <span class="s2">&quot;Each row is one connection, with the columns I1, J1, K1 for the first &quot;</span>
+            <span class="s2">&quot;cell in the cell pair, and I2, J2, K2 for the second. The &quot;</span>
+            <span class="s2">&quot;transmissibility for the cell pair is in the TRAN column. &quot;</span>
+            <span class="s2">&quot;See also the trans subcommand.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;faults&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;faults&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract data from the FAULTS keyword&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a particular cell and a face and the name of the fault&quot;</span>
+        <span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;trans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;trans&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract transmissibilities from EGRID file&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract transmissibilities (TRANX, TRANY, TRANZ) from simulator &quot;</span>
+            <span class="s2">&quot;binary output files. Each row represent a connection between a cell pair &quot;</span>
+            <span class="s2">&quot;(I1, J1, K1) and (I2, J2, K2). It is possible to add INIT vectors for &quot;</span>
+            <span class="s2">&quot;each of the cell in the cell pair, e.g. FIPNUM can be added as FIPNUM1 &quot;</span>
+            <span class="s2">&quot;and FIPNUM2, and it is possible to filter to connections where f.ex &quot;</span>
+            <span class="s2">&quot;FIPNUM change&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;pillars&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;pillars&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Compute data pr. cornerpoint pillar&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Compute statistics pr. pillar in a cornerpoint grid, &quot;</span>
+            <span class="s2">&quot;or alternatively by region parameter. Volumetrics, in-place, &quot;</span>
+            <span class="s2">&quot;and contacts.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;pvt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;pvt&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract PVT data&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract data for the PVT keywords in a .DATA file &quot;</span>
+            <span class="s2">&quot;and merge all data into a single dataframe. &quot;</span>
+            <span class="s2">&quot;Supported keywords are PVTO, PVDO, PVTG, PVDG, PVTW, &quot;</span>
+            <span class="s2">&quot;ROCK and DENSITY. Gas phase pressure and oil phase &quot;</span>
+            <span class="s2">&quot;pressure are both called PRESSURE in the resulting &quot;</span>
+            <span class="s2">&quot;dataframe, similar for volume factors and viscosity. &quot;</span>
+            <span class="s2">&quot;Deduce meaning for column names from the Eclipse manual. &quot;</span>
+            <span class="s2">&quot;The column KEYWORD denotes which PVT keyword a particular &quot;</span>
+            <span class="s2">&quot;data row stems from. &quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;rft&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;rft&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract RFT data from simulator binary output files.&quot;</span><span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract RFT data from simulator binary output files to CSV. &quot;</span>
+            <span class="s2">&quot;Each row in the resulting table represents one point in a &quot;</span>
+            <span class="s2">&quot;particular well at a particular time. &quot;</span>
+            <span class="s2">&quot;If multisegment wells are found, associated data &quot;</span>
+            <span class="s2">&quot;to a connection is merged onto the same row as additional columns. &quot;</span>
+            <span class="s2">&quot;You need the keyword WRFTPLT present in your .DATA file to get &quot;</span>
+            <span class="s2">&quot;the data outputted.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;fipreports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT output file.&quot;</span><span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
+            <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and &quot;</span>
+            <span class="s2">&quot;material balance errors&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;satfunc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract SWOF/SGOF/etc data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Data for all saturation functions are merged &quot;</span>
+            <span class="s2">&quot;into one dataframe for all SATNUMs. Each row has data for a &quot;</span>
+            <span class="s2">&quot;saturation point. For SWOF data, all columns related to SGOF &quot;</span>
+            <span class="s2">&quot;are empty and vice versa&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;fipreports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT output file.&quot;</span><span class="p">),</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
+            <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and &quot;</span>
+            <span class="s2">&quot;material balance errors&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;compdat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;compdat&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a cell connection to a well. &quot;</span>
+            <span class="s2">&quot;Only COMPDAT data is exposed in CSV output currently.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;equil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract EQUIL data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row contains the equilibriation data for one EQLNUM.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;gruptree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;gruptree&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract GRUPTREE data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Each row represents an edge in the GRUPTREE at a specific date.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;wellcompletiondata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;wellcompletiondata&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well completion data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents a completion, aggregated from layer to zone.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;vfp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;vfp&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract VFPINJ/VFPPROD data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represent BHP value for given value of interpolation values&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;wellconnstatus&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;wellconnstatus&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well connection status&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents an event where a well connection is changing status.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;wcon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">&quot;wcon&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract well control data&quot;</span><span class="p">,</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Each row represents the control data for a certain &quot;</span>
+            <span class="s2">&quot;well or well wildcard at a specific date&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">submodule</span><span class="p">,</span> <span class="n">subparser</span> <span class="ow">in</span> <span class="n">subparsers_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Use the submodule&#39;s fill_parser() to add the submodule specific</span>
+        <span class="c1"># arguments:</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;res2df.&quot;</span> <span class="o">+</span> <span class="n">submodule</span><span class="p">)</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">subparser</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add empty placeholders, this looks strange but is needed for the</span>
+        <span class="c1"># ERT forward model frontend, where non-used options must be supplied</span>
+        <span class="c1"># as empty string arguments (which we should ignore)</span>
+        <span class="n">subparser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;hiddenemptyplaceholders&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">SUPPRESS</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Tell argparse which main() function to use for each</span>
+        <span class="c1"># subparser/submodule:</span>
+        <span class="n">subparser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+                <span class="n">run_subparser_main</span><span class="p">,</span> <span class="n">submodule</span><span class="o">=</span><span class="n">submodule</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="n">subparser</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="run_subparser_main"><a class="viewcode-back" href="../../res2df/res2df.res2csv.html#res2df.res2csv.run_subparser_main">[docs]</a><span class="k">def</span> <span class="nf">run_subparser_main</span><span class="p">(</span>
+    <span class="n">args</span><span class="p">,</span>
+    <span class="n">submodule</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">parser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for running the subparsers main() function, with</span>
+<span class="sd">    custom argument handling.</span>
+
+<span class="sd">    In order to support ERT forward model syntax, empty positional</span>
+<span class="sd">    arguments must be allowed, but ignored. This function takes</span>
+<span class="sd">    care of shuffling the single required positional argument into</span>
+<span class="sd">    args.DATAFILE, and will error if more than one positional</span>
+<span class="sd">    argument is supplied</span>
+
+<span class="sd">    This function is to be supplied to argsparse&#39;s set_default()</span>
+<span class="sd">    function, by use of functools.partial so that the submodule_name</span>
+<span class="sd">    argument can be set.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args (Namespace): argparse argument namespace</span>
+<span class="sd">        submodule: One of res2df&#39;s submodules. That module</span>
+<span class="sd">            must have a function called &lt;submodule&gt;_main()</span>
+<span class="sd">        parser: Used for raising errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;DATAFILE&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">positionals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">))</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;PRTFILE&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="c1"># Special treatment for the fipreports submodule</span>
+        <span class="n">positionals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">))</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">hiddenemptyplaceholders</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">positionals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown argument in </span><span class="si">{</span><span class="n">positionals</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;res2df.&quot;</span> <span class="o">+</span> <span class="n">submodule</span><span class="p">)</span>
+
+    <span class="n">main_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">submodule</span> <span class="o">+</span> <span class="s2">&quot;_main&quot;</span><span class="p">)</span>
+    <span class="n">main_func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../res2df/res2df.res2csv.html#res2df.res2csv.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;arrow&quot;</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">prog</span><span class="p">:</span>
+        <span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;arrow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

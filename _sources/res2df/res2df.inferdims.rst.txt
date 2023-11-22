@@ -1,0 +1,10 @@
+====================
+``res2df.inferdims``
+====================
+
+.. automodule:: res2df.inferdims
+
+   .. contents::
+      :local:
+
+.. currentmodule:: res2df.inferdims

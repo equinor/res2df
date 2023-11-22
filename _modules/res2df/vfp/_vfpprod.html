@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.vfp._vfpprod &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../res2df.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.vfp._vfpprod</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.vfp._vfpprod</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utilities to extract the VFPPROD data from an Eclipse (input) deck.</span>
+<span class="sd">Data can be extracted from Eclipse (.Ecl format) in 3 different formats:</span>
+<span class="sd">basic_data (dictionary with basic data types), df (pandas DataFrame) or</span>
+<span class="sd">pyarrow_tables (pyarrow.Tables).</span>
+
+<span class="sd">Data can be extracted from a complete deck or from individual files.</span>
+<span class="sd">Supports output both in csv format as a pandas DataFrame or in pyarrow</span>
+<span class="sd">as pyarrow.Table. Also functionality to write pandas DataFrame and</span>
+<span class="sd">pyarrow.Table to file as Eclipse .Ecl format.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numbers</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Needed for mypy</span>
+
+    <span class="c1"># pylint: disable=unused-import</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+
+    <span class="c1"># This import is seemingly not used, but necessary for some attributes</span>
+    <span class="c1"># to be included in DeckItem objects.</span>
+    <span class="kn">from</span> <span class="nn">opm.io.deck</span> <span class="kn">import</span> <span class="n">DeckKeyword</span>  <span class="c1"># noqa</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">common</span>
+
+<span class="kn">from</span> <span class="nn">._vfpcommon</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_deckrecord2list</span><span class="p">,</span>
+    <span class="n">_stack_vfptable2df</span><span class="p">,</span>
+    <span class="n">_string2intlist</span><span class="p">,</span>
+    <span class="n">_write_vfp_range</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">._vfpdefs</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ALQ</span><span class="p">,</span>
+    <span class="n">GFR</span><span class="p">,</span>
+    <span class="n">THPTYPE</span><span class="p">,</span>
+    <span class="n">UNITTYPE</span><span class="p">,</span>
+    <span class="n">VFPPROD_FLO</span><span class="p">,</span>
+    <span class="n">VFPPROD_TABTYPE</span><span class="p">,</span>
+    <span class="n">VFPPROD_UNITS</span><span class="p">,</span>
+    <span class="n">VFPTYPE</span><span class="p">,</span>
+    <span class="n">WFR</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Keys used for basic data dictionary representation of VFPPROD</span>
+<span class="n">BASIC_DATA_KEYS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;THP_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;THP_VALUES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;THP_INDICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="basic_data"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.basic_data">[docs]</a><span class="k">def</span> <span class="nf">basic_data</span><span class="p">(</span>
+    <span class="n">keyword</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckKeyword&quot;</span><span class="p">,</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read and return all data for Eclipse VFPPROD keyword as basic data types</span>
+
+<span class="sd">    Empty string returned if vfp table number does not match any number in list</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keyword:        :term:`.DATA file` keyword</span>
+<span class="sd">        vfpnumbers_str: String with list of vfp table numbers to extract.</span>
+<span class="sd">                        Syntax &quot;[0,1,8:11]&quot; corresponds</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Number of records in keyword</span>
+    <span class="n">num_rec</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
+
+    <span class="c1"># Parse records with basic information and interpolation ranges</span>
+    <span class="n">basic_record</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Extract basic table information</span>
+    <span class="n">tableno</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;TABLE&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">vfpnumbers_str</span><span class="p">:</span>
+        <span class="n">vfpnumbers</span> <span class="o">=</span> <span class="n">_string2intlist</span><span class="p">(</span><span class="n">vfpnumbers_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tableno</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vfpnumbers</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">datum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">])</span>
+    <span class="n">rate_type</span> <span class="o">=</span> <span class="n">VFPPROD_FLO</span><span class="o">.</span><span class="n">GAS</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]:</span>
+        <span class="n">rate_type</span> <span class="o">=</span> <span class="n">VFPPROD_FLO</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]]</span>
+    <span class="n">wfr_type</span> <span class="o">=</span> <span class="n">WFR</span><span class="o">.</span><span class="n">WCT</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;WFR&quot;</span><span class="p">]:</span>
+        <span class="n">wfr_type</span> <span class="o">=</span> <span class="n">WFR</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;WFR&quot;</span><span class="p">]]</span>
+    <span class="n">gfr_type</span> <span class="o">=</span> <span class="n">GFR</span><span class="o">.</span><span class="n">GOR</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;GFR&quot;</span><span class="p">]:</span>
+        <span class="n">gfr_type</span> <span class="o">=</span> <span class="n">GFR</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;GFR&quot;</span><span class="p">]]</span>
+    <span class="n">thp_type</span> <span class="o">=</span> <span class="n">THPTYPE</span><span class="o">.</span><span class="n">THP</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;PRESSURE_DEF&quot;</span><span class="p">]:</span>
+        <span class="n">thp_type</span> <span class="o">=</span> <span class="n">THPTYPE</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;PRESSURE_DEF&quot;</span><span class="p">]]</span>
+    <span class="n">alq_type</span> <span class="o">=</span> <span class="n">ALQ</span><span class="o">.</span><span class="n">UNDEFINED</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;ALQ_DEF&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;ALQ_DEF&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="n">alq_type</span> <span class="o">=</span> <span class="n">ALQ</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;ALQ_DEF&quot;</span><span class="p">]]</span>
+    <span class="n">unit_type</span> <span class="o">=</span> <span class="n">UNITTYPE</span><span class="o">.</span><span class="n">DEFAULT</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">]:</span>
+        <span class="n">unit_type</span> <span class="o">=</span> <span class="n">UNITTYPE</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">]]</span>
+    <span class="n">tab_type</span> <span class="o">=</span> <span class="n">VFPPROD_TABTYPE</span><span class="o">.</span><span class="n">BHP</span>
+    <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;BODY_DEF&quot;</span><span class="p">]:</span>
+        <span class="n">tab_type</span> <span class="o">=</span> <span class="n">VFPPROD_TABTYPE</span><span class="p">[</span><span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;BODY_DEF&quot;</span><span class="p">]]</span>
+
+    <span class="n">flow_values</span> <span class="o">=</span> <span class="n">_deckrecord2list</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">)</span>
+    <span class="n">thp_values</span> <span class="o">=</span> <span class="n">_deckrecord2list</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;THP_VALUES&quot;</span><span class="p">)</span>
+    <span class="n">wfr_values</span> <span class="o">=</span> <span class="n">_deckrecord2list</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">)</span>
+    <span class="n">gfr_values</span> <span class="o">=</span> <span class="n">_deckrecord2list</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">)</span>
+    <span class="n">alq_values</span> <span class="o">=</span> <span class="n">_deckrecord2list</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Check of consistent dimensions</span>
+    <span class="n">no_flow_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flow_values</span><span class="p">)</span>
+    <span class="n">no_thp_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">thp_values</span><span class="p">)</span>
+    <span class="n">no_wfr_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">)</span>
+    <span class="n">no_gfr_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">)</span>
+    <span class="n">no_alq_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alq_values</span><span class="p">)</span>
+    <span class="n">no_interp_values</span> <span class="o">=</span> <span class="n">no_thp_values</span> <span class="o">*</span> <span class="n">no_wfr_values</span> <span class="o">*</span> <span class="n">no_gfr_values</span> <span class="o">*</span> <span class="n">no_alq_values</span>
+    <span class="n">no_tab_records</span> <span class="o">=</span> <span class="n">num_rec</span> <span class="o">-</span> <span class="mi">6</span>
+    <span class="k">if</span> <span class="n">no_interp_values</span> <span class="o">!=</span> <span class="n">no_tab_records</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Dimensions of interpolation ranges &quot;</span>
+            <span class="s2">&quot;does not match number of tabulated records&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Extract interpolation values and tabulated values (BHP values)</span>
+    <span class="n">bhp_table</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">thp_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wfr_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">gfr_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">alq_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">num_rec</span><span class="p">):</span>
+        <span class="n">bhp_record</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">parse_opmio_deckrecord</span><span class="p">(</span><span class="n">keyword</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span> <span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">bhp_values</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bhp_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VALUES&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">bhp_values</span> <span class="o">=</span> <span class="n">bhp_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VALUES&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bhp_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VALUES&quot;</span><span class="p">),</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+            <span class="n">bhp_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">bhp_record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VALUES&quot;</span><span class="p">)]</span>
+
+        <span class="n">thp_index</span> <span class="o">=</span> <span class="n">bhp_record</span><span class="p">[</span><span class="s2">&quot;THP_INDEX&quot;</span><span class="p">]</span>
+        <span class="n">wfr_index</span> <span class="o">=</span> <span class="n">bhp_record</span><span class="p">[</span><span class="s2">&quot;WFR_INDEX&quot;</span><span class="p">]</span>
+        <span class="n">gfr_index</span> <span class="o">=</span> <span class="n">bhp_record</span><span class="p">[</span><span class="s2">&quot;GFR_INDEX&quot;</span><span class="p">]</span>
+        <span class="n">alq_index</span> <span class="o">=</span> <span class="n">bhp_record</span><span class="p">[</span><span class="s2">&quot;ALQ_INDEX&quot;</span><span class="p">]</span>
+
+        <span class="n">thp_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thp_index</span><span class="p">)</span>
+        <span class="n">wfr_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wfr_index</span><span class="p">)</span>
+        <span class="n">gfr_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gfr_index</span><span class="p">)</span>
+        <span class="n">alq_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alq_index</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bhp_values</span><span class="p">)</span> <span class="o">!=</span> <span class="n">no_flow_values</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Dimension of record of tabulated &quot;</span>
+                <span class="s2">&quot;values does not match number of flow values&quot;</span>
+            <span class="p">)</span>
+        <span class="n">bhp_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bhp_values</span><span class="p">)</span>
+
+    <span class="n">vfpprod_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">:</span> <span class="n">VFPTYPE</span><span class="o">.</span><span class="n">VFPPROD</span><span class="p">,</span>
+        <span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">:</span> <span class="n">tableno</span><span class="p">,</span>
+        <span class="s2">&quot;DATUM&quot;</span><span class="p">:</span> <span class="n">datum</span><span class="p">,</span>
+        <span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">:</span> <span class="n">rate_type</span><span class="p">,</span>
+        <span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">:</span> <span class="n">wfr_type</span><span class="p">,</span>
+        <span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">:</span> <span class="n">gfr_type</span><span class="p">,</span>
+        <span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">:</span> <span class="n">alq_type</span><span class="p">,</span>
+        <span class="s2">&quot;THP_TYPE&quot;</span><span class="p">:</span> <span class="n">thp_type</span><span class="p">,</span>
+        <span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">:</span> <span class="n">unit_type</span><span class="p">,</span>
+        <span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">:</span> <span class="n">tab_type</span><span class="p">,</span>
+        <span class="s2">&quot;THP_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">thp_values</span><span class="p">),</span>
+        <span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">),</span>
+        <span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">),</span>
+        <span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alq_values</span><span class="p">),</span>
+        <span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flow_values</span><span class="p">),</span>
+        <span class="s2">&quot;THP_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">thp_indices</span><span class="p">),</span>
+        <span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wfr_indices</span><span class="p">),</span>
+        <span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gfr_indices</span><span class="p">),</span>
+        <span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alq_indices</span><span class="p">),</span>
+        <span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bhp_table</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">vfpprod_data</span></div>
+
+
+<div class="viewcode-block" id="basic_data2df"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.basic_data2df">[docs]</a><span class="k">def</span> <span class="nf">basic_data2df</span><span class="p">(</span>
+    <span class="n">tableno</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">datum</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rate_type</span><span class="p">:</span> <span class="n">VFPPROD_FLO</span><span class="p">,</span>
+    <span class="n">wfr_type</span><span class="p">:</span> <span class="n">WFR</span><span class="p">,</span>
+    <span class="n">gfr_type</span><span class="p">:</span> <span class="n">GFR</span><span class="p">,</span>
+    <span class="n">alq_type</span><span class="p">:</span> <span class="n">ALQ</span><span class="p">,</span>
+    <span class="n">thp_type</span><span class="p">:</span> <span class="n">THPTYPE</span><span class="p">,</span>
+    <span class="n">unit_type</span><span class="p">:</span> <span class="n">UNITTYPE</span><span class="p">,</span>
+    <span class="n">tab_type</span><span class="p">:</span> <span class="n">VFPPROD_TABTYPE</span><span class="p">,</span>
+    <span class="n">flow_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">thp_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">wfr_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gfr_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">alq_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">thp_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">wfr_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gfr_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">alq_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tab_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a pandas DataFrame from VFPPROD liftcurve data</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tableno     : table number</span>
+<span class="sd">        datum       : datum depth</span>
+<span class="sd">        rate_type   : rate type used for flow values</span>
+<span class="sd">        wfr_type    : water fraction type</span>
+<span class="sd">        gfr_type    : gas fraction type</span>
+<span class="sd">        alq_type    : artificial lift type</span>
+<span class="sd">        thp_type    : thp type</span>
+<span class="sd">        unit_type   : unit type</span>
+<span class="sd">        tab_type    : type for tabulated (record) values</span>
+<span class="sd">        flow_values : rate values used to generate table</span>
+<span class="sd">        thp_values  : THP values used to generate table</span>
+<span class="sd">        wfr_values  : water fraction values used to generate table</span>
+<span class="sd">        gfr_values  : gas fraction values used to generate table</span>
+<span class="sd">        alq_values  : artificial lift values (if any) used to generate table</span>
+<span class="sd">        thp_indices : which index in thp value table a given BHP value</span>
+<span class="sd">                      corresponds to (1-base)</span>
+<span class="sd">        wfr_indices : which index in wfr value table a given BHP value</span>
+<span class="sd">                      corresponds to (1-base)</span>
+<span class="sd">        gfr_indices : which index in gfr value table a given BHP value</span>
+<span class="sd">                      corresponds to (1-base)</span>
+<span class="sd">        alq_indices : which index in alq value table a given BHP value</span>
+<span class="sd">                      corresponds to (1-base)</span>
+<span class="sd">        tab_data    : tabulated (BHP) data</span>
+<span class="sd">                      (ordered as thp-, wfr-, gfr-, alq- and flow-values)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Generate list with values instead of indices in index columns</span>
+    <span class="n">thp_values_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">thp_values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">thp_indices</span><span class="p">]</span>
+    <span class="n">wfr_values_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">wfr_values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">wfr_indices</span><span class="p">]</span>
+    <span class="n">gfr_values_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gfr_values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gfr_indices</span><span class="p">]</span>
+    <span class="n">alq_values_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">alq_values</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alq_indices</span><span class="p">]</span>
+
+    <span class="c1"># create stacked dataframe from VFP table values</span>
+    <span class="n">index_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;WFR&quot;</span><span class="p">,</span> <span class="s2">&quot;GFR&quot;</span><span class="p">,</span> <span class="s2">&quot;ALQ&quot;</span><span class="p">]</span>
+    <span class="n">index_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">thp_values_list</span><span class="p">,</span> <span class="n">wfr_values_list</span><span class="p">,</span> <span class="n">gfr_values_list</span><span class="p">,</span> <span class="n">alq_values_list</span><span class="p">]</span>
+    <span class="n">df_bhp_stacked</span> <span class="o">=</span> <span class="n">_stack_vfptable2df</span><span class="p">(</span>
+        <span class="n">index_names</span><span class="p">,</span> <span class="n">index_values</span><span class="p">,</span> <span class="n">flow_values</span><span class="p">,</span> <span class="n">tab_data</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Add meta-data</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tableno</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datum</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_type</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rate_type</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wfr_type</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gfr_type</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alq_type</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;PRESSURE_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thp_type</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">df_bhp_stacked</span><span class="p">[</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tab_type</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="c1"># Sort the columns in wanted order</span>
+    <span class="n">df_bhp_stacked</span> <span class="o">=</span> <span class="n">df_bhp_stacked</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;RATE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;WFR&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GFR&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ALQ&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;TAB&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DATUM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PRESSURE_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="c1"># reset index (not used other than tests)</span>
+    <span class="k">return</span> <span class="n">df_bhp_stacked</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="basic_data2pyarrow"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.basic_data2pyarrow">[docs]</a><span class="k">def</span> <span class="nf">basic_data2pyarrow</span><span class="p">(</span>
+    <span class="n">tableno</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">datum</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rate_type</span><span class="p">:</span> <span class="n">VFPPROD_FLO</span><span class="p">,</span>
+    <span class="n">wfr_type</span><span class="p">:</span> <span class="n">WFR</span><span class="p">,</span>
+    <span class="n">gfr_type</span><span class="p">:</span> <span class="n">GFR</span><span class="p">,</span>
+    <span class="n">alq_type</span><span class="p">:</span> <span class="n">ALQ</span><span class="p">,</span>
+    <span class="n">thp_type</span><span class="p">:</span> <span class="n">THPTYPE</span><span class="p">,</span>
+    <span class="n">unit_type</span><span class="p">:</span> <span class="n">UNITTYPE</span><span class="p">,</span>
+    <span class="n">tab_type</span><span class="p">:</span> <span class="n">VFPPROD_TABTYPE</span><span class="p">,</span>
+    <span class="n">flow_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">thp_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">wfr_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gfr_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">alq_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">thp_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">wfr_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gfr_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">alq_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">tab_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a pyarrow Table from VFPPROD liftcurve data</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tableno     : table number</span>
+<span class="sd">        datum       : datum depth</span>
+<span class="sd">        rate_type   : rate type used for flow values</span>
+<span class="sd">        wfr_type    : water fraction type</span>
+<span class="sd">        gfr_type    : gas fraction type</span>
+<span class="sd">        alq_type    : artificial lift type</span>
+<span class="sd">        thp_type    : thp type</span>
+<span class="sd">        unit_type   : unit type</span>
+<span class="sd">        tab_type    : type for tabulated (record) values</span>
+<span class="sd">        flow_values : rate values used to generate table</span>
+<span class="sd">        thp_values  : THP values used to generate table</span>
+<span class="sd">        wfr_values  : water fraction values used to generate table</span>
+<span class="sd">        gfr_values  : gas fraction values used to generate table</span>
+<span class="sd">        alq_values  : artificial lift values (if any) used to generate table</span>
+<span class="sd">        thp_indices : THP indices for each record in tabulated data</span>
+<span class="sd">        wfr_indices : WFR indices for each record in tabulated data</span>
+<span class="sd">        gfr_indices : GFR indices for each record in tabulated data</span>
+<span class="sd">        alq_indices : ALQ indices for each record in tabulated data</span>
+<span class="sd">        tab_data    : tabulated (BHP) data</span>
+<span class="sd">                      (ordered according to thp-, wfr-, gfr-, alq- and flow-values)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Add everything except tabulated BHP pressures as meta data</span>
+    <span class="n">table_metadata</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span>
+            <span class="n">VFPTYPE</span><span class="o">.</span><span class="n">VFPPROD</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span>
+        <span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tableno</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;DATUM&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datum</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">rate_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">wfr_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">gfr_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">alq_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;THP_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">thp_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">unit_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">tab_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;THP_VALUES&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">thp_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">(),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">wfr_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">(),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">gfr_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">(),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">alq_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">(),</span>
+        <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">flow_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Column metadata is list of indices (THP,WFR,GFR,ALQ)</span>
+    <span class="n">col_metadata_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">thp_values</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">alq_values</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_records</span><span class="p">):</span>
+        <span class="n">thp_idx</span> <span class="o">=</span> <span class="n">thp_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">wfr_idx</span> <span class="o">=</span> <span class="n">wfr_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">gfr_idx</span> <span class="o">=</span> <span class="n">gfr_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">alq_idx</span> <span class="o">=</span> <span class="n">alq_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">col_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thp_idx</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">wfr_idx</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">gfr_idx</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">alq_idx</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">col_dtype</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">()</span>
+        <span class="n">col_metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;thp_idx&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">thp_idx</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+            <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;wfr_idx&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">wfr_idx</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+            <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;gfr_idx&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">gfr_idx</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+            <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;alq_idx&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">alq_idx</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+            <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">):</span> <span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="n">col_metadata_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="n">col_dtype</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">col_metadata</span><span class="p">))</span>
+
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">col_metadata_list</span><span class="p">,</span> <span class="n">table_metadata</span><span class="p">)</span>
+    <span class="n">no_thp_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">thp_values</span><span class="p">)</span>
+    <span class="n">no_wfr_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">)</span>
+    <span class="n">no_gfr_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">)</span>
+    <span class="n">no_alq_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alq_values</span><span class="p">)</span>
+    <span class="n">no_flow_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flow_values</span><span class="p">)</span>
+    <span class="n">no_records</span> <span class="o">=</span> <span class="n">no_thp_values</span> <span class="o">*</span> <span class="n">no_wfr_values</span> <span class="o">*</span> <span class="n">no_gfr_values</span> <span class="o">*</span> <span class="n">no_alq_values</span>
+    <span class="n">pa_table</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+        <span class="n">tab_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">no_records</span><span class="p">,</span> <span class="n">no_flow_values</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pa_table</span></div>
+
+
+<div class="viewcode-block" id="df2basic_data"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.df2basic_data">[docs]</a><span class="k">def</span> <span class="nf">df2basic_data</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return basic data type for VFPPROD from a pandas dataframe.</span>
+
+<span class="sd">    Return format is a dictionary all data in VFPPROD in basic data types</span>
+<span class="sd">    (str, int, float, numpy.array)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe : pandas DataFrame for VFPPROD</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="c1"># Consistency checks of data type</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">rate_type</span> <span class="o">=</span> <span class="n">VFPPROD_FLO</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of FLO type is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">wfr_type</span> <span class="o">=</span> <span class="n">WFR</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of WFR type is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">gfr_type</span> <span class="o">=</span> <span class="n">GFR</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of GFR type is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span>
+            <span class="n">alq_type</span> <span class="o">=</span> <span class="n">ALQ</span><span class="o">.</span><span class="n">UNDEFINED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alq_type</span> <span class="o">=</span> <span class="n">ALQ</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of ALQ type is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PRESSURE_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">thp_type</span> <span class="o">=</span> <span class="n">THPTYPE</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PRESSURE_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of THP type is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">tab_type</span> <span class="o">=</span> <span class="n">VFPPROD_TABTYPE</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of TAB type is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">unit_type</span> <span class="o">=</span> <span class="n">UNITTYPE</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of UNIT type is not unique&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Consistency check of basic data</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">tableno</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of TABLE_NUMBER is not unique&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">datum</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Definition of DATUM is not unique&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Reading interpolation ranges</span>
+    <span class="n">flow_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;RATE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">no_flow_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flow_values</span><span class="p">)</span>
+    <span class="n">wfr_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;WFR&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">wfr_values</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">no_wfr_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">)</span>
+    <span class="n">gfr_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;GFR&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">gfr_values</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">no_gfr_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">)</span>
+    <span class="n">alq_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;ALQ&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">alq_values</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">no_alq_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alq_values</span><span class="p">)</span>
+    <span class="n">thp_values</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">thp_values</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">no_thp_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">thp_values</span><span class="p">)</span>
+    <span class="n">no_interp_values</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">no_thp_values</span> <span class="o">*</span> <span class="n">no_alq_values</span> <span class="o">*</span> <span class="n">no_gfr_values</span> <span class="o">*</span> <span class="n">no_wfr_values</span> <span class="o">*</span> <span class="n">no_flow_values</span>
+    <span class="p">)</span>
+    <span class="n">no_tab_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
+
+    <span class="c1"># Wheck consistency of interpolation ranges and tabulated values</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_flow_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of unique rate values </span><span class="si">{</span><span class="n">no_flow_values</span><span class="si">}</span><span class="s2"> not consistent &quot;</span>
+            <span class="s2">&quot;with number of tabulated values </span><span class="si">{no_tab_values}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_wfr_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of unique wfr values </span><span class="si">{</span><span class="n">no_wfr_values</span><span class="si">}</span><span class="s2"> not &quot;</span>
+            <span class="s2">&quot;consistent with number of tabulated values </span><span class="si">{no_tab_values}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_gfr_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of unique gfr values </span><span class="si">{</span><span class="n">no_gfr_values</span><span class="si">}</span><span class="s2"> not consistent &quot;</span>
+            <span class="s2">&quot;with number of tabulated values </span><span class="si">{no_tab_values}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_alq_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of unique alq values </span><span class="si">{</span><span class="n">no_alq_values</span><span class="si">}</span><span class="s2"> not consistent &quot;</span>
+            <span class="s2">&quot;with number of tabulated values </span><span class="si">{no_tab_values}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_thp_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of unique thp values </span><span class="si">{</span><span class="n">no_thp_values</span><span class="si">}</span><span class="s2"> not consistent &quot;</span>
+            <span class="s2">&quot;with number of tabulated values </span><span class="si">{no_tab_values}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_interp_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of unique interpolation values </span><span class="si">{</span><span class="n">no_interp_values</span><span class="si">}</span><span class="s2"> not consistent &quot;</span>
+            <span class="s2">&quot;with number of tabulated values </span><span class="si">{no_tab_values}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Replace interpolation values with index in dataframe</span>
+    <span class="n">wfr_loc_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">wfr_replace_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">,</span> <span class="n">wfr_loc_indices</span><span class="p">))</span>
+    <span class="n">wfr_glob_indices</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="n">no_flow_values</span><span class="p">,</span> <span class="s2">&quot;WFR&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">wfr_replace_map</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">gfr_loc_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">gfr_replace_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">,</span> <span class="n">gfr_loc_indices</span><span class="p">))</span>
+    <span class="n">gfr_glob_indices</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="n">no_flow_values</span><span class="p">,</span> <span class="s2">&quot;GFR&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">gfr_replace_map</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">alq_loc_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alq_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">alq_replace_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">alq_values</span><span class="p">,</span> <span class="n">alq_loc_indices</span><span class="p">))</span>
+    <span class="n">alq_glob_indices</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="n">no_flow_values</span><span class="p">,</span> <span class="s2">&quot;ALQ&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">alq_replace_map</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">thp_loc_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">thp_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">thp_replace_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">thp_values</span><span class="p">,</span> <span class="n">thp_loc_indices</span><span class="p">))</span>
+    <span class="n">thp_glob_indices</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[::</span><span class="n">no_flow_values</span><span class="p">,</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thp_replace_map</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">no_records</span> <span class="o">=</span> <span class="n">no_wfr_values</span> <span class="o">*</span> <span class="n">no_gfr_values</span> <span class="o">*</span> <span class="n">no_alq_values</span> <span class="o">*</span> <span class="n">no_thp_values</span>
+    <span class="n">bhp_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;TAB&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">no_records</span><span class="p">,</span> <span class="n">no_flow_values</span><span class="p">)</span>
+
+    <span class="n">vfpprod_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">:</span> <span class="n">VFPTYPE</span><span class="o">.</span><span class="n">VFPPROD</span><span class="p">,</span>
+        <span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">:</span> <span class="n">tableno</span><span class="p">,</span>
+        <span class="s2">&quot;DATUM&quot;</span><span class="p">:</span> <span class="n">datum</span><span class="p">,</span>
+        <span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">:</span> <span class="n">rate_type</span><span class="p">,</span>
+        <span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">:</span> <span class="n">wfr_type</span><span class="p">,</span>
+        <span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">:</span> <span class="n">gfr_type</span><span class="p">,</span>
+        <span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">:</span> <span class="n">alq_type</span><span class="p">,</span>
+        <span class="s2">&quot;THP_TYPE&quot;</span><span class="p">:</span> <span class="n">thp_type</span><span class="p">,</span>
+        <span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">:</span> <span class="n">unit_type</span><span class="p">,</span>
+        <span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">:</span> <span class="n">tab_type</span><span class="p">,</span>
+        <span class="s2">&quot;THP_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">thp_values</span><span class="p">),</span>
+        <span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wfr_values</span><span class="p">),</span>
+        <span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gfr_values</span><span class="p">),</span>
+        <span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alq_values</span><span class="p">),</span>
+        <span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flow_values</span><span class="p">),</span>
+        <span class="s2">&quot;THP_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">thp_glob_indices</span><span class="p">),</span>
+        <span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wfr_glob_indices</span><span class="p">),</span>
+        <span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gfr_glob_indices</span><span class="p">),</span>
+        <span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alq_glob_indices</span><span class="p">),</span>
+        <span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bhp_table</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">vfpprod_data</span></div>
+
+
+<div class="viewcode-block" id="pyarrow2basic_data"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.pyarrow2basic_data">[docs]</a><span class="k">def</span> <span class="nf">pyarrow2basic_data</span><span class="p">(</span><span class="n">pa_table</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return basic data type for VFPPROD from a pyarrow.Table.</span>
+
+<span class="sd">    Return format is a dictionary all data in VFPPROD in basic data types</span>
+<span class="sd">    (str, int, float, numpy.array)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pa_table : pyarrow Table with data for VFPPROD</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Extract index data from colum metadata</span>
+    <span class="n">thp_indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wfr_indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">gfr_indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">alq_indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pa_table</span><span class="o">.</span><span class="n">num_columns</span><span class="p">):</span>
+        <span class="n">thp_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;thp_idx&quot;</span><span class="p">]))</span>
+        <span class="n">wfr_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;wfr_idx&quot;</span><span class="p">]))</span>
+        <span class="n">gfr_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;gfr_idx&quot;</span><span class="p">]))</span>
+        <span class="n">alq_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;alq_idx&quot;</span><span class="p">]))</span>
+
+    <span class="c1"># Extract table data as numpy.array</span>
+    <span class="n">bhp_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="n">alq_type</span> <span class="o">=</span> <span class="n">ALQ</span><span class="o">.</span><span class="n">UNDEFINED</span>
+    <span class="k">if</span> <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">:</span>
+        <span class="n">alq_type</span> <span class="o">=</span> <span class="n">ALQ</span><span class="p">[</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)]</span>
+
+    <span class="n">vfpprod_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">:</span> <span class="n">VFPTYPE</span><span class="p">[</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;DATUM&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;DATUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">:</span> <span class="n">VFPPROD_FLO</span><span class="p">[</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">:</span> <span class="n">WFR</span><span class="p">[</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">:</span> <span class="n">GFR</span><span class="p">[</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">:</span> <span class="n">alq_type</span><span class="p">,</span>
+        <span class="s2">&quot;THP_TYPE&quot;</span><span class="p">:</span> <span class="n">THPTYPE</span><span class="p">[</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;THP_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">:</span> <span class="n">UNITTYPE</span><span class="p">[</span><span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)],</span>
+        <span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">:</span> <span class="n">VFPPROD_TABTYPE</span><span class="p">[</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;THP_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;THP_VALUES&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">pa_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;THP_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">thp_indices</span><span class="p">),</span>
+        <span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wfr_indices</span><span class="p">),</span>
+        <span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gfr_indices</span><span class="p">),</span>
+        <span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alq_indices</span><span class="p">),</span>
+        <span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bhp_data</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">vfpprod_data</span></div>
+
+
+<span class="k">def</span> <span class="nf">_check_basic_data</span><span class="p">(</span><span class="n">vfp_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform a check of the VFPPROD data contained in the dictionary.</span>
+<span class="sd">    Checks if all data is present and if the dimensions of the arrays</span>
+<span class="sd">    are consistent.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vfp_data:   Dictionary containing all data for a VFPPROD keyword in Eclipse</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if all data is present</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">BASIC_DATA_KEYS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vfp_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> key is not in basic data dictionary VFPPROD&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;VFP_TYPE&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">VFPTYPE</span><span class="o">.</span><span class="n">VFPPROD</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;VFPTYPE must be VFPPROD&quot;</span><span class="p">)</span>
+
+    <span class="n">no_thp_indices</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;THP_INDICES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_wfr_indices</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_gfr_indices</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_alq_indices</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_thp_values</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;THP_VALUES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_wfr_values</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_gfr_values</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_alq_values</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_flow_values</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">no_tab_values</span> <span class="o">=</span> <span class="n">vfp_data</span><span class="p">[</span><span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="k">if</span> <span class="n">no_thp_indices</span> <span class="o">!=</span> <span class="n">no_wfr_indices</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of THP_INDICES </span><span class="si">{</span><span class="n">no_thp_indices</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;number of WFR_INDICES </span><span class="si">{</span><span class="n">no_wfr_indices</span><span class="si">}</span><span class="s2"> in basic data dictionary &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;for VFPPROD&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_thp_indices</span> <span class="o">!=</span> <span class="n">no_gfr_indices</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of THP_INDICES </span><span class="si">{</span><span class="n">no_thp_indices</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;number of GFR_INDICES </span><span class="si">{</span><span class="n">no_gfr_indices</span><span class="si">}</span><span class="s2"> in basic data dictionary &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;for VFPPROD&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_thp_indices</span> <span class="o">!=</span> <span class="n">no_alq_indices</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of THP_INDICES </span><span class="si">{</span><span class="n">no_thp_indices</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;number of ALQ_INDICES </span><span class="si">{</span><span class="n">no_alq_indices</span><span class="si">}</span><span class="s2"> in basic data dictionary &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;for VFPPROD&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">no_records</span> <span class="o">=</span> <span class="n">no_thp_values</span> <span class="o">*</span> <span class="n">no_wfr_values</span> <span class="o">*</span> <span class="n">no_gfr_values</span> <span class="o">*</span> <span class="n">no_alq_values</span>
+    <span class="k">if</span> <span class="n">no_tab_values</span> <span class="o">%</span> <span class="n">no_flow_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of BHP_TABLE values </span><span class="si">{</span><span class="n">no_tab_values</span><span class="si">}</span><span class="s2"> is not a multiplum &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;of number of THP_VALUES </span><span class="si">{</span><span class="n">no_thp_values</span><span class="si">}</span><span class="s2"> in basic data dictionary &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;for VFPPROD&quot;</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">no_tab_values</span> <span class="o">//</span> <span class="n">no_flow_values</span> <span class="o">!=</span> <span class="n">no_records</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Number of BHP_TABLE values </span><span class="si">{</span><span class="n">no_tab_values</span><span class="si">}</span><span class="s2"> is not a multiplum &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;of number of FLOW_VALUES </span><span class="si">{</span><span class="n">no_flow_values</span><span class="si">}</span><span class="s2"> in basic data dictionary &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;for VFPPROD&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">keyword</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckKeyword&quot;</span><span class="p">,</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a dataframe or pyarrow Table of a single VFPPROD table</span>
+<span class="sd">    from a :term:`.DATA file`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keyword:        :term:`.DATA file` keyword</span>
+<span class="sd">        vfpnumbers_str: String with list of vfp table numbers to extract.</span>
+<span class="sd">                        Syntax &quot;[0,1,8:11]&quot; corresponds to [0,1,8,9,10,11].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">vfpprod_data</span> <span class="o">=</span> <span class="n">basic_data</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">vfpnumbers_str</span><span class="p">)</span>
+
+    <span class="c1"># Check if vfp number exists. If not return empry DataFrame</span>
+    <span class="k">if</span> <span class="n">vfpprod_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Put VFPPROD data into pandas DataFrame</span>
+    <span class="n">df_vfpprod</span> <span class="o">=</span> <span class="n">basic_data2df</span><span class="p">(</span>
+        <span class="n">tableno</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">],</span>
+        <span class="n">datum</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">],</span>
+        <span class="n">rate_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">wfr_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">gfr_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">alq_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">thp_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">unit_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">tab_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">flow_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">thp_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">wfr_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">gfr_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">alq_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">thp_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">wfr_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">gfr_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">alq_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">tab_data</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_vfpprod</span></div>
+
+
+<div class="viewcode-block" id="pyarrow"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.pyarrow">[docs]</a><span class="k">def</span> <span class="nf">pyarrow</span><span class="p">(</span>
+    <span class="n">keyword</span><span class="p">:</span> <span class="s2">&quot;opm.libopmcommon_python.DeckKeyword&quot;</span><span class="p">,</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a pyarrow Table of a single VFPPROD table from a :term:`.DATA file`.</span>
+<span class="sd">       If no VFPPROD curve found, return None</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keyword:        :term:`.DATA file` keyword</span>
+<span class="sd">        vfpnumbers_str: String with list of vfp table numbers to extract.</span>
+<span class="sd">                        Syntax &quot;[0,1,8:11]&quot; corresponds to [0,1,8,9,10,11].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get basic data from VFPPROD tables</span>
+    <span class="n">vfpprod_data</span> <span class="o">=</span> <span class="n">basic_data</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">vfpnumbers_str</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">vfpprod_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Put VFPPROD data into pandas DataFrame</span>
+    <span class="n">pa_vfpprod</span> <span class="o">=</span> <span class="n">basic_data2pyarrow</span><span class="p">(</span>
+        <span class="n">tableno</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">],</span>
+        <span class="n">datum</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">],</span>
+        <span class="n">rate_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">wfr_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">gfr_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">alq_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">thp_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">unit_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">tab_type</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">],</span>
+        <span class="n">flow_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">thp_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">wfr_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">gfr_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">alq_values</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">thp_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">wfr_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">gfr_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">alq_indices</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">tab_data</span><span class="o">=</span><span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pa_vfpprod</span></div>
+
+
+<span class="k">def</span> <span class="nf">_write_basic_record</span><span class="p">(</span>
+    <span class="n">tableno</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">datum</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">flo_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">wfr_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">gfr_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">alq_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pressure_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">unit_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">tab_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a :term:`include file` content string representing</span>
+<span class="sd">    the first record for Eclipse VFPPROD keyword</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tableno:       VFPROD table number</span>
+<span class="sd">        datum:         datum depth</span>
+<span class="sd">        flo_type:      FLO type</span>
+<span class="sd">        wfr_type       WFR type</span>
+<span class="sd">        gfr_type       GFR type</span>
+<span class="sd">        alq_type:      ALQ type</span>
+<span class="sd">        pressure_type: THP type</span>
+<span class="sd">        unit_type:     Unit type</span>
+<span class="sd">        tab_type:      Table type (BHP/THT)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">alq_type_str</span> <span class="o">=</span> <span class="s2">&quot;&#39;&#39;&quot;</span>
+    <span class="k">if</span> <span class="n">alq_type</span> <span class="o">!=</span> <span class="s2">&quot;UNDEFINED&quot;</span><span class="p">:</span>
+        <span class="n">alq_type_str</span> <span class="o">=</span> <span class="n">alq_type</span>
+
+    <span class="n">deck_str</span> <span class="o">=</span> <span class="s2">&quot;-- Table  Datum Depth  Rate Type  WFR Type  &quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;GFR Type  THP Type  ALQ Type  UNITS   TAB Type</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;-- -----  -----------  ---------  --------  &quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;--------  --------  --------  ------  --------</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">tableno</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">datum</span><span class="si">:</span><span class="s2">11.1f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">flo_type</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">wfr_type</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">gfr_type</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">pressure_type</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">alq_type_str</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">unit_type</span><span class="si">:</span><span class="s2">&gt;6s</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">tab_type</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2"> /</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">deck_str</span>
+
+
+<span class="k">def</span> <span class="nf">_write_table</span><span class="p">(</span>
+    <span class="n">table</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;%10.3&quot;</span><span class="p">,</span>
+    <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a :term:`include file` content string representing</span>
+<span class="sd">    a resdata record for a VFPPROD table (BHP part)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table:           DataFrame with multiindex for table ranges and colums</span>
+<span class="sd">                         for tabulated values (BHP)</span>
+<span class="sd">        format:          Format string for values</span>
+<span class="sd">        values_per_line: Number of values per line in output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">deck_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">no_flo</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()):</span>
+            <span class="n">deck_str</span> <span class="o">+=</span> <span class="nb">format</span> <span class="o">%</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">values_per_line</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">no_flo</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">11</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="n">no_flo</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">deck_str</span>
+
+
+<span class="k">def</span> <span class="nf">_write_table_records</span><span class="p">(</span>
+    <span class="n">thp_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">wfr_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">gfr_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">alq_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">table</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;%10.3&quot;</span><span class="p">,</span>
+    <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a :term:`include file` content string representing a</span>
+<span class="sd">    resdata record for a VFPPROD table (BHP part)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        thp_indices:     array of int representing index for THP value for record</span>
+<span class="sd">        wfr_indices:     array of int representing index for WFR value for record</span>
+<span class="sd">        gfr_indices:     array of int representing index for GFR value for record</span>
+<span class="sd">        alq_indices:     array of int representing index for ALQ value for record</span>
+<span class="sd">        table:           DataFrame with multiindex for table ranges and colums</span>
+<span class="sd">                         for tabulated values (BHP)</span>
+<span class="sd">        format:          Format string for values</span>
+<span class="sd">        values_per_line: Number of values per line in output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">deck_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">no_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">thp_indices</span><span class="p">)</span>
+    <span class="n">no_flow_values</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="n">no_records</span>
+    <span class="k">if</span> <span class="n">table</span><span class="o">.</span><span class="n">size</span> <span class="o">%</span> <span class="n">no_records</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Incompatible BHP table size&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">no_records</span><span class="p">,</span> <span class="n">no_flow_values</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">no_records</span><span class="p">):</span>
+        <span class="n">thp</span> <span class="o">=</span> <span class="n">thp_indices</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">wfr</span> <span class="o">=</span> <span class="n">wfr_indices</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">gfr</span> <span class="o">=</span> <span class="n">gfr_indices</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">alq</span> <span class="o">=</span> <span class="n">alq_indices</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">thp</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">wfr</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gfr</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">alq</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="p">:]):</span>
+            <span class="n">deck_str</span> <span class="o">+=</span> <span class="nb">format</span> <span class="o">%</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">values_per_line</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">no_flow_values</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">11</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="n">no_flow_values</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">deck_str</span>
+
+
+<div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpprod.html#res2df.vfp._vfpprod.df2res">[docs]</a><span class="k">def</span> <span class="nf">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a :term:`include file` content string</span>
+<span class="sd">    representing single VFPPROD Eclipse input from a dataframe</span>
+
+<span class="sd">    All data for the keywords VFPPROD will be returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe:  Dataframe containing complete description of single VFPPROD input</span>
+<span class="sd">        comment: Text that will be included as comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+
+    <span class="c1"># Extract basic data structutes for VFPPROD</span>
+    <span class="n">vfpprod_data</span> <span class="o">=</span> <span class="n">df2basic_data</span><span class="p">(</span><span class="n">dframe</span><span class="p">)</span>
+    <span class="n">rate_type</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]</span>
+    <span class="n">wfr_type</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">]</span>
+    <span class="n">gfr_type</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">]</span>
+    <span class="n">alq_type</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span>
+    <span class="n">thp_type</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_TYPE&quot;</span><span class="p">]</span>
+    <span class="n">unit_type</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Write dataframe to string with Eclipse format for VFPPROD</span>
+    <span class="n">deck_str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">comment</span><span class="p">:</span>
+        <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">unit_value</span> <span class="o">=</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">if</span> <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;UNIT_TYPE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">UNITTYPE</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">:</span>
+        <span class="n">unit_value</span> <span class="o">=</span> <span class="s2">&quot;1*&quot;</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_basic_record</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">],</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;DATUM&quot;</span><span class="p">],</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">unit_value</span><span class="p">,</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;TAB_TYPE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_vfp_range</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;FLOW_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">rate_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">VFPPROD_UNITS</span><span class="p">[</span><span class="n">unit_type</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s2">&quot;FLO&quot;</span><span class="p">][</span><span class="n">rate_type</span><span class="o">.</span><span class="n">value</span><span class="p">],</span>
+        <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_vfp_range</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">thp_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">VFPPROD_UNITS</span><span class="p">[</span><span class="n">unit_type</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s2">&quot;THP&quot;</span><span class="p">][</span><span class="n">thp_type</span><span class="o">.</span><span class="n">value</span><span class="p">],</span>
+        <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_vfp_range</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">wfr_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">VFPPROD_UNITS</span><span class="p">[</span><span class="n">unit_type</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s2">&quot;WFR&quot;</span><span class="p">][</span><span class="n">wfr_type</span><span class="o">.</span><span class="n">value</span><span class="p">],</span>
+        <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_vfp_range</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">gfr_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">VFPPROD_UNITS</span><span class="p">[</span><span class="n">unit_type</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s2">&quot;GFR&quot;</span><span class="p">][</span><span class="n">gfr_type</span><span class="o">.</span><span class="n">value</span><span class="p">],</span>
+        <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_vfp_range</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_VALUES&quot;</span><span class="p">],</span>
+        <span class="n">alq_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">VFPPROD_UNITS</span><span class="p">[</span><span class="n">unit_type</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s2">&quot;ALQ&quot;</span><span class="p">][</span><span class="n">alq_type</span><span class="o">.</span><span class="n">value</span><span class="p">],</span>
+        <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deck_str</span> <span class="o">+=</span> <span class="n">_write_table_records</span><span class="p">(</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;THP_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;WFR_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;GFR_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;ALQ_INDICES&quot;</span><span class="p">],</span>
+        <span class="n">vfpprod_data</span><span class="p">[</span><span class="s2">&quot;BHP_TABLE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">deck_str</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+================
+``res2df.equil``
+================
+
+.. automodule:: res2df.equil
+
+   .. contents::
+      :local:
+
+.. currentmodule:: res2df.equil

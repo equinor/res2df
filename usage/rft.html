@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rft &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>rft &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -72,15 +72,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -89,7 +90,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -110,11 +111,11 @@
              
   <section id="rft">
 <h1>rft<a class="headerlink" href="#rft" title="Permalink to this heading"></a></h1>
-<p>rft will convert the binary RFT files from Eclipse to dataframes or CSV files,
+<p>rft will convert the binary RFT files to dataframes or CSV files,
 facilitating analysis of inflow and pressure for each connection the well
 has to the reservoir grid.</p>
 <p>Typical usage is to generate the CSV from the command line:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv rft MYDATADECK.DATA --verbose --output rft.csv</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv rft MYDATADECK.DATA --verbose --output rft.csv</span>
 </pre></div>
 </div>
 <p>It is possible to a specific well, a date (YYYY-MM-DD). If you enable debug mode
@@ -124,7 +125,7 @@ processed well.</p>
 <section id="eclipse-usage">
 <h2>Eclipse usage<a class="headerlink" href="#eclipse-usage" title="Permalink to this heading"></a></h2>
 <p>In order to get RFT files emitted from Eclipse, you need the <code class="docutils literal notranslate"><span class="pre">WRFTPLT</span></code> keyword
-in your DATA-file, example:</p>
+in your :term`.DATA file`, example:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">WRFTPLT</span>
 <span class="go">  &#39;*&#39; &#39;REPT&#39; &#39;REPT&#39; &#39;REPT&#39; /</span>
 <span class="go">/</span>

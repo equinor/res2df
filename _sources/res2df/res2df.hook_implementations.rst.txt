@@ -1,0 +1,18 @@
+===============================
+``res2df.hook_implementations``
+===============================
+
+.. automodule:: res2df.hook_implementations
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   res2df.hook_implementations.jobs
+
+.. currentmodule:: res2df.hook_implementations

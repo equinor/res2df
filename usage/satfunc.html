@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>satfunc &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>satfunc &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,7 +59,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pvt.html">pvt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rft.html">rft</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">satfunc</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#generating-eclipse-include-files-from-dataframes">Generating Eclipse include files from dataframes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generating-include-files-from-dataframes">Generating include files from dataframes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#extracting-properties-pr-satnum">Extracting properties pr. SATNUM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#the-pyscal-library">The pyscal library</a></li>
 </ul>
@@ -70,15 +70,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -87,7 +88,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -108,16 +109,16 @@
              
   <section id="satfunc">
 <h1>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this heading"></a></h1>
-<p>satfunc will extract saturation functions from Eclipse decks or from Eclipse
-include files, these are the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGWFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SWFN</span></code>,
-<code class="docutils literal notranslate"><span class="pre">SOF2</span></code>, <code class="docutils literal notranslate"><span class="pre">SGFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SOF3</span></code> and  <code class="docutils literal notranslate"><span class="pre">SLGOF</span></code>.</p>
+<p>satfunc will extract saturation functions from <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a> or from
+<a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>, these are the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code>, <code class="docutils literal notranslate"><span class="pre">SGOF</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SGWFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SWFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SOF2</span></code>, <code class="docutils literal notranslate"><span class="pre">SGFN</span></code>, <code class="docutils literal notranslate"><span class="pre">SOF3</span></code> and  <code class="docutils literal notranslate"><span class="pre">SLGOF</span></code>.</p>
 <p>The data obtained from one invocation of the satfunc module will be put in one
 dataframe, where data from different keywords are separated by the <code class="docutils literal notranslate"><span class="pre">KEYWORD</span></code>
 column.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">EclFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -304,15 +305,15 @@ column.</p>
 </tbody>
 </table>
 <p>Alternatively, the same data can be produced as a CSV file using the command line</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv satfunc MYDATADECK.DATA --verbose --output satfunc.csv</span>
 </pre></div>
 </div>
 <p>It is possible to extract keywords one at a time using the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> command
 line option.</p>
-<p>Instead of Eclipse data decks, individual include files may also be parsed, but
+<p>Instead of complete <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">decks</span></a>, individual include files may also be parsed, but
 only one at a time.</p>
-<section id="generating-eclipse-include-files-from-dataframes">
-<h2>Generating Eclipse include files from dataframes<a class="headerlink" href="#generating-eclipse-include-files-from-dataframes" title="Permalink to this heading"></a></h2>
+<section id="generating-include-files-from-dataframes">
+<h2>Generating include files from dataframes<a class="headerlink" href="#generating-include-files-from-dataframes" title="Permalink to this heading"></a></h2>
 <p>When a dataframe of saturation function data is loaded into Python, any operation
 may be applied on the data. Simple operations would typically be scaling, perhaps
 individual pr. SATNUM. Still, read below on pyscal before embarking on too many
@@ -326,26 +327,26 @@ the command</p>
 <span class="n">dframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rows_to_touch</span><span class="p">,</span> <span class="s2">&quot;KRW&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">0.5</span>
 </pre></div>
 </div>
-<p>For a dataframe or a CSV file in the format provided by this module, an Eclipse
-include file can be generated either with the Python API
-<a class="reference internal" href="../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> function or the command</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">csv2ecl satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose</span>
+<p>For a dataframe or a CSV file in the format provided by this module, an
+<a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> can be generated either with the Python API
+<a class="reference internal" href="../res2df/res2df.satfunc.html#res2df.satfunc.df2res" title="res2df.satfunc.df2res"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.satfunc.df2res()</span></code></a> function or the command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">csv2res satfunc satfunc.csv --output relperm.inc --keywords SWOF SGOF --verbose</span>
 </pre></div>
 </div>
-<p>which should give a file <code class="docutils literal notranslate"><span class="pre">relperm.inc</span></code> that can be parsed by Eclipse. The command
+<p>which should give a file <code class="docutils literal notranslate"><span class="pre">relperm.inc</span></code> that can be parsed by reservoir simulators. The command
 above will only pick the keywords <code class="docutils literal notranslate"><span class="pre">SWOF</span></code> and <code class="docutils literal notranslate"><span class="pre">SGOF</span></code> (in the case there are
 data for more keywords in the dataframe).</p>
-<p>There are no automated checks for validity of the dumped include files.</p>
+<p>There are no automated checks for validity of the dumped <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>.</p>
 </section>
 <section id="extracting-properties-pr-satnum">
 <h2>Extracting properties pr. SATNUM<a class="headerlink" href="#extracting-properties-pr-satnum" title="Permalink to this heading"></a></h2>
-<p>If you have an include file prepared (from any source), you might need to
+<p>If you have an <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> prepared (from any source), you might need to
 determine certain properties like endpoint. If you need to determine for
 example “SOWCR” - the largest oil saturation for which oil is immobile,
 because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">satfunc</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">satfunc</span>
 
-<span class="c1"># Read an Eclipse include file directly into a DataFrame</span>
+<span class="c1"># Read an include file directly into a DataFrame</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
     <span class="n">sat_df</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">f_handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
@@ -359,7 +360,7 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
 <span class="n">sat_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sowcr</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>for an example include file, this could result in</p>
+<p>for an example <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>, this could result in</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">SATNUM</span>
 <span class="go">1    0.15492</span>
 <span class="go">2    0.21002</span>
@@ -372,13 +373,13 @@ because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
 <h2>The pyscal library<a class="headerlink" href="#the-pyscal-library" title="Permalink to this heading"></a></h2>
 <p>Manipulation of curve shapes or potentially interpolation between curves is hard
 to do directly on the dataframes. Before doing manipulations of dataframes in
-<code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc</span></code>, consider if it is better to implement the manipulations
+<code class="docutils literal notranslate"><span class="pre">res2df.satfunc</span></code>, consider if it is better to implement the manipulations
 through the <a class="reference external" href="https://equinor.github.io/pyscal/">pyscal</a> library.
 Pyscal can create curves from parametrizations, and interpolate between curves.</p>
-<p>Pyscal can create initialize its relperm objects from Eclipse include files
-though the parsing capabilities of ecl2df.satfunc.</p>
-<p>The function <code class="docutils literal notranslate"><span class="pre">pyscal.pyscallist.df()</span></code> is analogous to <code class="docutils literal notranslate"><span class="pre">ecl2df.satfunc.df()</span></code> in
-what it produces, and the <a class="reference internal" href="../ecl2df/ecl2df.satfunc.html#ecl2df.satfunc.df2ecl" title="ecl2df.satfunc.df2ecl"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.satfunc.df2ecl()</span></code></a> can be used on both
+<p>Pyscal can initialize its relperm objects from <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>
+through the parsing capabilities of res2df.satfunc.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">pyscal.pyscallist.df()</span></code> is analogous to <code class="docutils literal notranslate"><span class="pre">res2df.satfunc.df()</span></code> in
+what it produces, and the <a class="reference internal" href="../res2df/res2df.satfunc.html#res2df.satfunc.df2res" title="res2df.satfunc.df2res"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.satfunc.df2res()</span></code></a> can be used on both
 (potentially with some filtering needed.).</p>
 </section>
 </section>

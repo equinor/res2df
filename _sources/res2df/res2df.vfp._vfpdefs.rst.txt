@@ -1,0 +1,10 @@
+=======================
+``res2df.vfp._vfpdefs``
+=======================
+
+.. automodule:: res2df.vfp._vfpdefs
+
+   .. contents::
+      :local:
+
+.. currentmodule:: res2df.vfp._vfpdefs

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>Introduction &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Usage and examples" href="usage.html" />
-    <link rel="prev" title="ecl2df" href="index.html" /> 
+    <link rel="prev" title="res2df" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -32,11 +32,11 @@
           
           
           <a href="index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -63,7 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#gruptree"><code class="docutils literal notranslate"><span class="pre">gruptree</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pvt"><code class="docutils literal notranslate"><span class="pre">pvt</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#wcon"><code class="docutils literal notranslate"><span class="pre">wcon</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#eclfiles"><code class="docutils literal notranslate"><span class="pre">eclfiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#resdatafiles"><code class="docutils literal notranslate"><span class="pre">resdatafiles</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#metadata-support">Metadata support</a><ul>
@@ -76,15 +76,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -93,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">ecl2df</a>
+          <a href="index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,33 +114,33 @@
              
   <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
-<p><em>ecl2df</em> is a <a class="reference external" href="https://pandas.pydata.org/">Pandas DataFrame</a> wrapper
-around <a class="reference external" href="https://github.com/equinor/libecl/">libecl</a> and <a class="reference external" href="https://github.com/OPM/opm-common/">opm.io</a>, which are used to access
-binary files outputted by the reservoir simulator Eclipse, or its
-input files — or any other tool outputting to the same data format,
+<p><em>res2df</em> is a <a class="reference external" href="https://pandas.pydata.org/">Pandas DataFrame</a> wrapper
+around <a class="reference external" href="https://github.com/equinor/resdata/">resdata</a> and <a class="reference external" href="https://github.com/OPM/opm-common/">opm.io</a>, which are used to access
+<a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">binary files outputted by reservoir simulators</span></a> such as Eclipse, or its
+<a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">input files</span></a> — or any other tool outputting to the same data format,
 f.ex. <a class="reference external" href="https://opm-project.org/?page_id=19">flow</a>.</p>
 <p>Most of the features can be reached from the command line, through the
-command line program <code class="docutils literal notranslate"><span class="pre">ecl2csv</span></code>. Use the command line tool to dump the
+command line program <code class="docutils literal notranslate"><span class="pre">res2csv</span></code>. Use the command line tool to dump the
 extracted or computed data to a CSV file, and use any other tool to
 view the CSV data.</p>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; ecl2csv --help</span>
-<span class="go">&gt; ecl2csv summary --help</span>
-<span class="go">&gt; ecl2csv summary --column_keys &quot;F*&quot; --time_index monthly --output output.csv MYECLDECK.DATA</span>
-<span class="go">&gt; ecl2csv pillars --help</span>
-<span class="go">&gt; ecl2csv pillars --rstdates all MYECLDECK.DATA</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; res2csv --help</span>
+<span class="go">&gt; res2csv summary --help</span>
+<span class="go">&gt; res2csv summary --column_keys &quot;F*&quot; --time_index monthly --output output.csv MYDECK.DATA</span>
+<span class="go">&gt; res2csv pillars --help</span>
+<span class="go">&gt; res2csv pillars --rstdates all MYDECK.DATA</span>
 </pre></div>
 </div>
 <p>If you access the module from within a Python script, for each submodule
 there is a function called <code class="docutils literal notranslate"><span class="pre">df()</span></code> which provides more or less the same
-functionality as through <code class="docutils literal notranslate"><span class="pre">ecl2csv</span></code> from the command line, but which returns
+functionality as through <code class="docutils literal notranslate"><span class="pre">res2csv</span></code> from the command line, but which returns
 a Pandas Dataframe.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ecl2df</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">res2df</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYECLDECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">smry</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;monthly&quot;</span><span class="p">)</span>
-<span class="n">hc_contacts</span> <span class="o">=</span> <span class="n">ecl2df</span><span class="o">.</span><span class="n">pillars</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">smry</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;monthly&quot;</span><span class="p">)</span>
+<span class="n">hc_contacts</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">pillars</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>See the API for more documentation and possibilities for each module.</p>
@@ -148,16 +149,17 @@ a Pandas Dataframe.</p>
 <h2>Short description of each submodule<a class="headerlink" href="#short-description-of-each-submodule" title="Permalink to this heading"></a></h2>
 <section id="summary">
 <h3><code class="docutils literal notranslate"><span class="pre">summary</span></code><a class="headerlink" href="#summary" title="Permalink to this heading"></a></h3>
-<p>Extracts summary data from <cite>.UNSMRY</cite> files, at requested time sampling and
+<p>Extracts summary data from <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.UNSMRY</span></a> files, at requested time sampling and
 for requested vectors.</p>
 <p>More documentation on <a class="reference internal" href="usage/summary.html"><span class="doc">summary</span></a>.</p>
 </section>
 <section id="grid">
 <h3><code class="docutils literal notranslate"><span class="pre">grid</span></code><a class="headerlink" href="#grid" title="Permalink to this heading"></a></h3>
-<p>Extracts grid data from <cite>.INIT</cite> and <cite>.EGRID</cite> and <cite>.UNRST</cite> files. Restart file
+<p>Extracts grid data from <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.INIT</span></a>, <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.EGRID</span></a>,
+and <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.UNRST</span></a> files. Restart file
 are optional to extract, and dates must be picked (or all). Data is
 merged into one DataFrame by the <cite>i</cite>, <cite>j</cite> and <cite>k</cite> indices. Bulk cell
-volume is included. Cells are indexed as in Eclipse, starting with 1.</p>
+volume is included. Cells are indexed starting with 1.</p>
 <p>More documentation on <a class="reference internal" href="usage/grid.html"><span class="doc">grid</span></a>.</p>
 </section>
 <section id="nnc">
@@ -187,7 +189,8 @@ communication.</p>
 </section>
 <section id="rft">
 <h3><code class="docutils literal notranslate"><span class="pre">rft</span></code><a class="headerlink" href="#rft" title="Permalink to this heading"></a></h3>
-<p>Reads the <cite>.RFT</cite> files which are outputted by the simulator when
+<p>Reads the <cite>.RFT</cite> files which are outputted by the
+<a class="reference internal" href="glossary.html#term-reservoir-simulator"><span class="xref std std-term">simulator</span></a> when
 the <cite>WRFTPLT</cite> keyword is used, with details along wellbores.</p>
 <p>For multisegment wells, the well topology is calculated and data
 is merged accordingly, for example when ICD segments are used, enabling
@@ -196,8 +199,8 @@ easy calculations of the pressure drop over an ICD valve.</p>
 </section>
 <section id="fipreports">
 <h3><code class="docutils literal notranslate"><span class="pre">fipreports</span></code><a class="headerlink" href="#fipreports" title="Permalink to this heading"></a></h3>
-<p>Parses the PRT file from Eclipse looking for region reports (starting
-with ” … FIPNUM REPORT REGION”. It will extract all the data
+<p>Parses the PRT file looking for region reports (starting
+with ” … FIPNUM REPORT REGION”). It will extract all the data
 in the ASCII table in the PRT file and organize into a dataframe,
 currently-in-place, outflow to wells, outflows to regions, etc. It also
 supports custom FIPxxxxx names.</p>
@@ -205,37 +208,37 @@ supports custom FIPxxxxx names.</p>
 </section>
 <section id="satfunc">
 <h3><code class="docutils literal notranslate"><span class="pre">satfunc</span></code><a class="headerlink" href="#satfunc" title="Permalink to this heading"></a></h3>
-<p>Extracts saturation functions (SWOF, SGOF, etc) from the deck and merges
-into one DataFrame. Can write back to Eclipse include files.</p>
+<p>Extracts saturation functions (SWOF, SGOF, etc) from the <a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">deck</span></a> and merges
+into one DataFrame. Can write back to <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>More documentation on <a class="reference internal" href="usage/satfunc.html"><span class="doc">satfunc</span></a>.</p>
 </section>
 <section id="equil">
 <h3><code class="docutils literal notranslate"><span class="pre">equil</span></code><a class="headerlink" href="#equil" title="Permalink to this heading"></a></h3>
 <p>Extracts the information in the <cite>EQUIL</cite> table, <cite>RSVD</cite> and <cite>RVVD</cite> in the
-input deck. Can write back to Eclipse include files.</p>
+<a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>. Can write back to <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>More documentation on <a class="reference internal" href="usage/equil.html"><span class="doc">equil</span></a>.</p>
 </section>
 <section id="compdat">
 <h3><code class="docutils literal notranslate"><span class="pre">compdat</span></code><a class="headerlink" href="#compdat" title="Permalink to this heading"></a></h3>
-<p>Extracts well connection data from the <cite>COMPDAT</cite> keyword in the input deck.
+<p>Extracts well connection data from the <cite>COMPDAT</cite> keyword in the <a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.
 For multi-segment wells, <cite>WELSEGS</cite> and <cite>COMPSEGS</cite> is also parsed. The
 data is available as three different dataframes, which can be merged.</p>
-<p>It is also possible to parse individual “include” files, not only a
-finished working deck.</p>
+<p>It is also possible to parse individual <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">“include files”</span></a>.
+These files do not necessarily have to be part of a complete <a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <p>More documentation on <a class="reference internal" href="usage/compdat.html"><span class="doc">compdat</span></a>.</p>
 </section>
 <section id="gruptree">
 <h3><code class="docutils literal notranslate"><span class="pre">gruptree</span></code><a class="headerlink" href="#gruptree" title="Permalink to this heading"></a></h3>
 <p>Extracts the information from the <cite>GRUPTREE</cite> and <cite>WELSPECS</cite> keyword, at
-all timesteps, from the input deck. The tree structure at each relevant
+all timesteps, from the <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>. The tree structure at each relevant
 date can be returned as a dataframe of the edges, as a nested dictionary
 or as a <cite>treelib</cite> tree.</p>
 <p>More documentation on <a class="reference internal" href="usage/gruptree.html"><span class="doc">gruptree</span></a>.</p>
 </section>
 <section id="pvt">
 <h3><code class="docutils literal notranslate"><span class="pre">pvt</span></code><a class="headerlink" href="#pvt" title="Permalink to this heading"></a></h3>
-<p>Extracts PVT data from an Eclipse deck, from the keywords <cite>PVTO</cite>, <cite>PVDG</cite>,
-<cite>DENSITY</cite>, <cite>ROCK</cite> etc. Can write data back to Eclipse include files.</p>
+<p>Extracts PVT data from a <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>, from the keywords <cite>PVTO</cite>, <cite>PVDG</cite>,
+<cite>DENSITY</cite>, <cite>ROCK</cite> etc. Can write data back to <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>More documentation on <a class="reference internal" href="usage/pvt.html"><span class="doc">pvt</span></a>.</p>
 </section>
 <section id="wcon">
@@ -244,20 +247,20 @@ or as a <cite>treelib</cite> tree.</p>
 associated data in a dataframe format.</p>
 <p>More documentation on <a class="reference internal" href="usage/wcon.html"><span class="doc">wcon</span></a>.</p>
 </section>
-<section id="eclfiles">
-<h3><code class="docutils literal notranslate"><span class="pre">eclfiles</span></code><a class="headerlink" href="#eclfiles" title="Permalink to this heading"></a></h3>
+<section id="resdatafiles">
+<h3><code class="docutils literal notranslate"><span class="pre">resdatafiles</span></code><a class="headerlink" href="#resdatafiles" title="Permalink to this heading"></a></h3>
 <p>This is an internal helper module in order to represent finished or
-unfinished Eclipse decks and runs. The class EclFiles can cache binary
-files that are recently read, and is able to locate the various output
-files based on the basename or the <cite>.DATA</cite> filename.</p>
+unfinished <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a> and runs. The class ResdataFiles can cache binary
+files that are recently read, and is able to locate the various
+<a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">output files</span></a> based on the basename or the <cite>.DATA</cite> filename.</p>
 </section>
 </section>
 <section id="metadata-support">
 <h2>Metadata support<a class="headerlink" href="#metadata-support" title="Permalink to this heading"></a></h2>
 <section id="parameters-txt">
 <h3>parameters.txt<a class="headerlink" href="#parameters-txt" title="Permalink to this heading"></a></h3>
-<p>Metadata for each Eclipse deck are sometimes added in a text file named
-<code class="docutils literal notranslate"><span class="pre">parameters.txt</span></code>, alongside the Eclipse DATA file or one or two directory levels
+<p>Metadata for each <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> are sometimes added in a text file named
+<code class="docutils literal notranslate"><span class="pre">parameters.txt</span></code>, alongside the Eclipse .DATA file or one or two directory levels
 above it.</p>
 <p>Each line in the text file should contain a string, interpreted as the key, and
 a value for the key, which can be a string or number. Some modules can merge this
@@ -269,9 +272,9 @@ have to be merged with pandas.merge().</p>
 </section>
 <section id="zone-names">
 <span id="id1"></span><h3>Zone names<a class="headerlink" href="#zone-names" title="Permalink to this heading"></a></h3>
-<p>If a text file with zone names are found alongside the Eclipse DATA file, some of the modules
-will add that information to rows where appropriate. The zone or layer file should contains
-lines like:</p>
+<p>If a text file with zone names are found alongside <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a>,
+some of the modules will add that information to rows where appropriate.
+The zone or layer file should contains lines like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;ZoneA&#39;</span> <span class="mi">1</span><span class="o">-</span><span class="mi">4</span>
 <span class="s1">&#39;ZoneB&#39;</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
 </pre></div>
@@ -294,7 +297,7 @@ lines like:</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="ecl2df" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="res2df" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="usage.html" class="btn btn-neutral float-right" title="Usage and examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

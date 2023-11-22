@@ -1,0 +1,43 @@
+==========
+``res2df``
+==========
+
+.. automodule:: res2df
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   res2df.common
+   res2df.compdat
+   res2df.constants
+   res2df.csv2res
+   res2df.equil
+   res2df.faults
+   res2df.fipreports
+   res2df.grid
+   res2df.gruptree
+   res2df.hook_implementations
+   res2df.inferdims
+   res2df.nnc
+   res2df.parameters
+   res2df.pillars
+   res2df.pvt
+   res2df.res2csv
+   res2df.resdatafiles
+   res2df.rft
+   res2df.satfunc
+   res2df.summary
+   res2df.trans
+   res2df.version
+   res2df.vfp
+   res2df.wcon
+   res2df.wellcompletiondata
+   res2df.wellconnstatus
+
+.. currentmodule:: res2df

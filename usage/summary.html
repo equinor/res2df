@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>summary &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>summary &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,15 +68,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -85,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -106,12 +107,12 @@
              
   <section id="summary">
 <h1>summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h1>
-<p>This module extracts summary information from UNSMRY-files into
+<p>This module extracts summary information from <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">UNSMRY-files</span></a> into
 Pandas Dataframes.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">summary</span><span class="p">,</span> <span class="n">EclFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">summary</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*PT&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;yearly&quot;</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">column_keys</span><span class="o">=</span><span class="s2">&quot;F*PT&quot;</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="s2">&quot;yearly&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you don’t specify <code class="docutils literal notranslate"><span class="pre">column_keys</span></code>, all included summary vectors will be
@@ -120,7 +121,7 @@ Eclipse equivalent to <code class="docutils literal notranslate"><span class="pr
 <em>monthly</em> or <em>yearly</em>.  See below for how to interpred “interpolated” summary
 data.</p>
 <p>Additional arguments are available, see the
-<a class="reference external" href="https://equinor.github.io/ecl2df/ecl2df/ecl2df.summary.html#ecl2df.summary.df">API documentation</a>
+<a class="reference external" href="https://equinor.github.io/res2df/res2df/res2df.summary.html#res2df.summary.df">API documentation</a>
 for an extensive overview.</p>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Example summary table</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>

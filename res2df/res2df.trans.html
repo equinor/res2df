@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.trans &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="res2df.version" href="res2df.version.html" />
+    <link rel="prev" title="res2df.summary" href="res2df.summary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            res2df
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="res2df.html#res2df.getLogger_res2csv"><code class="docutils literal notranslate"><span class="pre">getLogger_res2csv()</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="res2df.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="res2df.common.html"><code class="docutils literal notranslate"><span class="pre">res2df.common</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.compdat.html"><code class="docutils literal notranslate"><span class="pre">res2df.compdat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.constants.html"><code class="docutils literal notranslate"><span class="pre">res2df.constants</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.csv2res.html"><code class="docutils literal notranslate"><span class="pre">res2df.csv2res</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.equil.html"><code class="docutils literal notranslate"><span class="pre">res2df.equil</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.faults.html"><code class="docutils literal notranslate"><span class="pre">res2df.faults</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.fipreports.html"><code class="docutils literal notranslate"><span class="pre">res2df.fipreports</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.grid.html"><code class="docutils literal notranslate"><span class="pre">res2df.grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.gruptree.html"><code class="docutils literal notranslate"><span class="pre">res2df.gruptree</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">res2df.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.inferdims.html"><code class="docutils literal notranslate"><span class="pre">res2df.inferdims</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.nnc.html"><code class="docutils literal notranslate"><span class="pre">res2df.nnc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.parameters.html"><code class="docutils literal notranslate"><span class="pre">res2df.parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.pillars.html"><code class="docutils literal notranslate"><span class="pre">res2df.pillars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.pvt.html"><code class="docutils literal notranslate"><span class="pre">res2df.pvt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.res2csv.html"><code class="docutils literal notranslate"><span class="pre">res2df.res2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.resdatafiles.html"><code class="docutils literal notranslate"><span class="pre">res2df.resdatafiles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.rft.html"><code class="docutils literal notranslate"><span class="pre">res2df.rft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.satfunc.html"><code class="docutils literal notranslate"><span class="pre">res2df.satfunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.summary.html"><code class="docutils literal notranslate"><span class="pre">res2df.summary</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">res2df.trans</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#res2df.trans.df"><code class="docutils literal notranslate"><span class="pre">df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#res2df.trans.fill_parser"><code class="docutils literal notranslate"><span class="pre">fill_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#res2df.trans.make_nx_graph"><code class="docutils literal notranslate"><span class="pre">make_nx_graph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#res2df.trans.trans_main"><code class="docutils literal notranslate"><span class="pre">trans_main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.version.html"><code class="docutils literal notranslate"><span class="pre">res2df.version</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.vfp.html"><code class="docutils literal notranslate"><span class="pre">res2df.vfp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">res2df.wcon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.wellcompletiondata.html"><code class="docutils literal notranslate"><span class="pre">res2df.wellcompletiondata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="res2df.wellconnstatus.html"><code class="docutils literal notranslate"><span class="pre">res2df.wellconnstatus</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">res2df.trans</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/res2df/res2df.trans.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-res2df.trans">
+<span id="res2df-trans"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.trans</span></code><a class="headerlink" href="#module-res2df.trans" title="Permalink to this heading"></a></h1>
+<p>Extract transmissibility information from output files as Dataframes.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.trans.df">
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundaryfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlykdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlyijdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addnnc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.df" title="Permalink to this definition"></a></dt>
+<dd><p>Make a dataframe of the neighbour transmissibilities.</p>
+<p>The TRANX, TRANY and TRANZ (whenever nonzero) will be used
+to produce a row representing a cell-pair where there is
+transmissibility.</p>
+<p>You will get a dataframe with the columns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I1</span><span class="p">,</span> <span class="n">J1</span><span class="p">,</span> <span class="n">K1</span><span class="p">,</span> <span class="n">I2</span><span class="p">,</span> <span class="n">J2</span><span class="p">,</span> <span class="n">K2</span><span class="p">,</span> <span class="n">DIR</span><span class="p">,</span> <span class="n">TRAN</span>
+</pre></div>
+</div>
+<p>similar to what you get from non-neighbour connection export.</p>
+<p>If you ask for coordinates, you will also get the distance (DX,
+DY, DZ) for each connection.</p>
+<p>The DIR column indicates the direction, and can take the
+string values I, J or K.</p>
+<p>If you ask for additional vectors, like FIPNUM, then
+you will get a corresponding FIPNUM1 and FIPNUM2 added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resdatafiles</strong> (<a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>) – An object representing your simulator run</p></li>
+<li><p><strong>vectors</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – simulator INIT vectors that you want to include</p></li>
+<li><p><strong>boundaryfilter</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you want to filter where one INIT
+vector change. Only use for integer INIT vectors.</p></li>
+<li><p><strong>group</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you want to sum transmissibilities over
+boundary interfaces. Implies boundaryfilter and requires only one integer
+INIT vector.</p></li>
+<li><p><strong>coords</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you want to add coordinates for the
+average of the two cells centerpoint and the distance between
+the two cells centerpoints (X, Y, Z, DX, DY, DZ)</p></li>
+<li><p><strong>onlykdir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you only want transmissibilities in
+K direction</p></li>
+<li><p><strong>onlyijdir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you only want transmissibilities
+in the IJ-plane</p></li>
+<li><p><strong>addnnc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if NNC connection should be concatenated to
+the dataframe</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataframe with one cell-pair pr. row. Empty dataframe if error.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.trans.fill_parser">
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.fill_parser" title="Permalink to this definition"></a></dt>
+<dd><p>Set up sys.argv parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – argparse.ArgumentParser or argparse.subparser</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.trans.make_nx_graph">
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">make_nx_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#make_nx_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.make_nx_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a networkx graph for the transmissibilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="res2df.trans.trans_main">
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">trans_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#trans_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.trans_main" title="Permalink to this definition"></a></dt>
+<dd><p>This is the command line API</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="res2df.summary.html" class="btn btn-neutral float-left" title="res2df.summary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="res2df.version.html" class="btn btn-neutral float-right" title="res2df.version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

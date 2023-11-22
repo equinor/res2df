@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gruptree &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>gruptree &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,15 +68,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -85,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -106,12 +107,12 @@
              
   <section id="gruptree">
 <h1>gruptree<a class="headerlink" href="#gruptree" title="Permalink to this heading"></a></h1>
-<p>Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from an Eclipse
-deck and presents the production network either as pretty-printed ASCII or in a
+<p>Extracts data from the GRUPTREE, GRUPNET and WELSPECS keywords from a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>
+and presents the production network either as pretty-printed ASCII or in a
 dataframe-representation.</p>
-<p>The GRUPTREE section of your Eclipse deck defines the production network
+<p>The GRUPTREE section of your <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> defines the production network
 from wells and up to the platform (and possibly also to a field having
-many platforms). In the Eclipse deck it be as simple as this:</p>
+many platforms). In the <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> it be as simple as this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">START</span>
   <span class="mi">01</span> <span class="s1">&#39;JAN&#39;</span> <span class="mi">2000</span> <span class="o">/</span>
 
@@ -178,7 +179,7 @@ many platforms). In the Eclipse deck it be as simple as this:</p>
 </table>
 <p>If you run this from the command line, a pretty printed ASCII graph is also
 available (here also wells from WELSPECS is included):</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; ecl2csv gruptree --prettyprint MYDATADECK.DATA</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; res2csv gruptree --prettyprint MYDATADECK.DATA</span>
 <span class="go">Date: 2000-01-01</span>
 <span class="go">└── NORTHSEA</span>
 <span class="go">    └── AREA</span>
@@ -193,15 +194,15 @@ available (here also wells from WELSPECS is included):</p>
 <span class="go">                    └── INJ1</span>
 </pre></div>
 </div>
-<p>In your deck, the table will be repeated for every new occurence of the
+<p>In your <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, the table will be repeated for every new occurence of the
 GRUPTREE keyword in the Schedule section.</p>
 <section id="grupnet-and-welspecs">
 <h2>GRUPNET and WELSPECS<a class="headerlink" href="#grupnet-and-welspecs" title="Permalink to this heading"></a></h2>
 <p>By default, the module will also pick up information from GRUPNET (typical
 terminal pressure values for the network nodes) and WELSPECS (well
-specifications), so for a full deck, your dataframe will contain more
+specifications), so for a full <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, your dataframe will contain more
 information than in the example above.</p>
-<p>If our deck also contains:</p>
+<p>If our <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> also contains:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GRUPNET</span>
   <span class="s1">&#39;FIELD&#39;</span> <span class="mi">90</span> <span class="o">/</span>
   <span class="s1">&#39;OPWEST&#39;</span> <span class="mi">100</span> <span class="o">/</span>

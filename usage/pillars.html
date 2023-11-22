@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pillars &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>pillars &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -71,15 +71,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -88,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -109,8 +110,8 @@
              
   <section id="pillars">
 <span id="usage-pillars"></span><h1>pillars<a class="headerlink" href="#pillars" title="Permalink to this heading"></a></h1>
-<p>pillars is a module to compute data on “pillars” in the grid from an
-Eclipse simulation, including both static and dynamic data from the grid.</p>
+<p>pillars is a module to compute data on “pillars” in the grid from a
+simulation, including both static and dynamic data from the grid.</p>
 <section id="static-data">
 <h2>Static data<a class="headerlink" href="#static-data" title="Permalink to this heading"></a></h2>
 <p>Typical usage is to obtain property statistics, and compute contacts pr.
@@ -197,7 +198,7 @@ repeated for each region value where it exists.</p>
 </section>
 <section id="dynamic-data-volumes-and-fluid-contacts">
 <h2>Dynamic data, volumes and fluid contacts<a class="headerlink" href="#dynamic-data-volumes-and-fluid-contacts" title="Permalink to this heading"></a></h2>
-<p>The API <a class="reference internal" href="../ecl2df/ecl2df.pillars.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a> and command line client allows specifying
+<p>The API <a class="reference internal" href="../res2df/res2df.pillars.html#res2df.pillars.df" title="res2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.pillars.df()</span></code></a> and command line client allows specifying
 dates if dynamic data should be included through the <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> option to the
 API or the <code class="docutils literal notranslate"><span class="pre">--rstdates</span></code> option on the command line. Providing dates as an
 option will trigger computation of phase volumes <code class="docutils literal notranslate"><span class="pre">WATVOL</span></code>, <code class="docutils literal notranslate"><span class="pre">OILVOL</span></code>, and
@@ -215,11 +216,11 @@ least one cell with non-zero oil saturation.</p>
 simulation (two-phase runs), it will be the deepest cell centre with gas
 saturation above sgascutoff, among those pillars with at least one cell above
 <code class="docutils literal notranslate"><span class="pre">swatcutoff</span></code>. See the API documentation,
-<a class="reference internal" href="../ecl2df/ecl2df.pillars.html#ecl2df.pillars.compute_pillar_contacts" title="ecl2df.pillars.compute_pillar_contacts"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.compute_pillar_contacts()</span></code></a>.</p>
-<p>The functionality is also available through the command line tool <code class="docutils literal notranslate"><span class="pre">ecl2csv</span> <span class="pre">pillars</span></code>
+<a class="reference internal" href="../res2df/res2df.pillars.html#res2df.pillars.compute_pillar_contacts" title="res2df.pillars.compute_pillar_contacts"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.pillars.compute_pillar_contacts()</span></code></a>.</p>
+<p>The functionality is also available through the command line tool <code class="docutils literal notranslate"><span class="pre">res2csv</span> <span class="pre">pillars</span></code>
 as in the example:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv pillars --help  # This will display some help text</span>
-<span class="go">ecl2csv pillars MYDATAFILE.DATA --rstdates all --stackdates</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv pillars --help  # This will display some help text</span>
+<span class="go">res2csv pillars MYDATAFILE.DATA --rstdates all --stackdates</span>
 </pre></div>
 </div>
 <p>It is <em>strongly</em> recommended to play with the cutoffs to get the desired result.
@@ -235,7 +236,7 @@ contacts).</p>
 using <code class="docutils literal notranslate"><span class="pre">--group</span></code> to the command line client, and add optionally a <code class="docutils literal notranslate"><span class="pre">--region</span></code>
 parameter to group over a particular region, typically <code class="docutils literal notranslate"><span class="pre">EQLNUM</span></code>.</p>
 <p>The Python API will group over any data that is supplied via the <code class="docutils literal notranslate"><span class="pre">region</span></code>
-option, check <a class="reference internal" href="../ecl2df/ecl2df.pillars.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a></p>
+option, check <a class="reference internal" href="../res2df/res2df.pillars.html#res2df.pillars.df" title="res2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.pillars.df()</span></code></a></p>
 </section>
 <section id="stacked-version">
 <h2>Stacked version<a class="headerlink" href="#stacked-version" title="Permalink to this heading"></a></h2>
@@ -411,7 +412,7 @@ this example:</p>
 </tbody>
 </table>
 <p>This may be what you want, however it is also possible to have <code class="docutils literal notranslate"><span class="pre">DATE</span></code> as a column,
-obtained by triggering the stacking option in <a class="reference internal" href="../ecl2df/ecl2df.pillars.html#ecl2df.pillars.df" title="ecl2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.pillars.df()</span></code></a> or
+obtained by triggering the stacking option in <a class="reference internal" href="../res2df/res2df.pillars.html#res2df.pillars.df" title="res2df.pillars.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.pillars.df()</span></code></a> or
 <code class="docutils literal notranslate"><span class="pre">--stackdates</span></code> on the command line and get data like this:</p>
 <table class="docutils align-default" id="id3">
 <caption><span class="caption-text">Example pillar table with dynamical data, stacked</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>

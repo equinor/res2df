@@ -1,7 +1,7 @@
 rft
 ---
 
-rft will convert the binary RFT files from Eclipse to dataframes or CSV files,
+rft will convert the binary RFT files to dataframes or CSV files,
 facilitating analysis of inflow and pressure for each connection the well
 has to the reservoir grid.
 
@@ -9,7 +9,7 @@ Typical usage is to generate the CSV from the command line:
 
 .. code-block:: console
 
-  ecl2csv rft MYDATADECK.DATA --verbose --output rft.csv
+  res2csv rft MYDATADECK.DATA --verbose --output rft.csv
 
 It is possible to a specific well, a date (YYYY-MM-DD). If you enable debug mode
 through ``--debug``, more information is printed, including an ASCII representation
@@ -20,7 +20,7 @@ Eclipse usage
 ^^^^^^^^^^^^^
 
 In order to get RFT files emitted from Eclipse, you need the ``WRFTPLT`` keyword
-in your DATA-file, example:
+in your :term`.DATA file`, example:
 
 .. code-block:: console
 

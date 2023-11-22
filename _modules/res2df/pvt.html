@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.pvt &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.17.3.dev5+g75b2413a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
+      <li class="breadcrumb-item active">res2df.pvt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.pvt</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Extract the PVT data from a .DATA file as Pandas Dataframes</span>
+
+<span class="sd">Data can be extracted from a complete deck or from individual files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span><span class="p">,</span> <span class="n">getLogger_res2csv</span><span class="p">,</span> <span class="n">inferdims</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Needed for mypy</span>
+
+    <span class="c1"># pylint: disable=unused-import</span>
+    <span class="kn">import</span> <span class="nn">opm.io</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;PVTO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVDO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVTG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVDG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ROCK&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PVTW&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># The renamers listed here map from opm-common json item names to</span>
+<span class="c1"># desired column names in produced dataframes. They also to a certain</span>
+<span class="c1"># extent determine the structure of the dataframe, in particular</span>
+<span class="c1"># for keywords with arbitrary data amount pr. record (PVTO f.ex)</span>
+<span class="n">RENAMERS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># P_bub (bubble point pressure) is called PRESSURE for ability to merge with</span>
+<span class="c1"># other pressure data from other frames.</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVTO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;RS&quot;</span><span class="p">:</span> <span class="s2">&quot;RS&quot;</span><span class="p">,</span> <span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVDG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVDO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">]}</span>
+
+<span class="c1"># Recheck nomenclature for &quot;OGR&quot; here, is it &quot;vaporized oil-gas ratio&quot; in manual</span>
+<span class="c1"># which someone also seem to denote r_s (as opposed to R_s for GOR)</span>
+<span class="c1"># It might make sense to call it RS, but it will cause some confusion with RS from</span>
+<span class="c1"># PVTO.</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVTG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;GAS_PRESSURE&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DATA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;OGR&quot;</span><span class="p">,</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVTW&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;P_REF&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WATER_VOL_FACTOR&quot;</span><span class="p">:</span> <span class="s2">&quot;VOLUMEFACTOR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WATER_COMPRESSIBILITY&quot;</span><span class="p">:</span> <span class="s2">&quot;COMPRESSIBILITY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WATER_VISCOSITY&quot;</span><span class="p">:</span> <span class="s2">&quot;VISCOSITY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WATER_VISCOSIBILITY&quot;</span><span class="p">:</span> <span class="s2">&quot;VISCOSIBILITY&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;DENSITY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;OIL&quot;</span><span class="p">:</span> <span class="s2">&quot;OILDENSITY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WATER&quot;</span><span class="p">:</span> <span class="s2">&quot;WATERDENSITY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GAS&quot;</span><span class="p">:</span> <span class="s2">&quot;GASDENSITY&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;ROCK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;PREF&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;COMPRESSIBILITY&quot;</span><span class="p">:</span> <span class="s2">&quot;COMPRESSIBILITY&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="pvtw_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtw_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvtw_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTW from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in :term:`deck`. Will</span>
+<span class="sd">            be inferred if not present in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PVTW&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVTW&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="density_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.density_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">density_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract DENSITY from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in :term:`deck`. Will</span>
+<span class="sd">            be inferred if not present in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;DENSITY&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="rock_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.rock_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rock_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract ROCK from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in :term:`deck`. Will</span>
+<span class="sd">            be inferred if not present in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;ROCK&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;ROCK&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pvto_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvto_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvto_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTO from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in :term:`deck`. Will</span>
+<span class="sd">            be inferred if not present in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="n">pvto_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PVTO&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVTO&quot;</span><span class="p">],</span> <span class="n">emptyrecordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvto_df</span></div>
+
+
+<div class="viewcode-block" id="pvdo_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdo_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvdo_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVDO from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in deck. Will</span>
+<span class="sd">            be inferred if not present in deck.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="n">pvdg_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PVDO&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVDO&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvdg_df</span></div>
+
+
+<div class="viewcode-block" id="pvdg_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdg_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvdg_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVDG from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in :term:`deck`. Will</span>
+<span class="sd">            be inferred if not present in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="n">pvdg_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PVDG&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVDG&quot;</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvdg_df</span></div>
+
+
+<div class="viewcode-block" id="pvtg_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtg_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvtg_fromdeck</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTG from a :term:`deck`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deck</span>
+<span class="sd">        ntpvt: Number of PVT regions in :term:`deck`. Will</span>
+<span class="sd">            be inferred if not present in :term:`deck`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="n">pvtg_df</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+        <span class="n">deck</span><span class="p">,</span> <span class="s2">&quot;PVTG&quot;</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;PVTG&quot;</span><span class="p">],</span> <span class="n">emptyrecordcountername</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvtg_df</span></div>
+
+
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract all (most) PVT data from a :term:`deck`.</span>
+
+<span class="sd">    If you want to call this function on :term:`include files &lt;include file&gt;`,</span>
+<span class="sd">    read them in to strings as in this example:</span>
+
+<span class="sd">    &gt; pvt_df = pvt.df(open(&quot;pvt.inc&quot;).read())</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        deck: Incoming data :term:`deck`. Always</span>
+<span class="sd">            supply as a string if you don&#39;t know TABDIMS-NTSFUN.</span>
+<span class="sd">        keywords: List of keywords for which data is</span>
+<span class="sd">            wanted. All data will be merged into one dataframe.</span>
+<span class="sd">        pvtnumcount: Number of PVTNUMs defined in the :term:`deck`, only</span>
+<span class="sd">            needed if TABDIMS with NTPVT is not found in the :term:`deck`.</span>
+<span class="sd">            If not supplied (or None) and NTPVT is not defined,</span>
+<span class="sd">            it will be attempted inferred.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">):</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
+
+    <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTPVT&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="p">)</span>
+    <span class="n">ntpvt</span> <span class="o">=</span> <span class="n">deck</span><span class="p">[</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">inferdims</span><span class="o">.</span><span class="n">DIMS_POS</span><span class="p">[</span><span class="s2">&quot;NTPVT&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">wanted_keywords</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
+
+    <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">wanted_keywords</span><span class="p">:</span>
+        <span class="c1"># Construct the associated function names</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;_fromdeck&quot;</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">function_name</span><span class="p">]</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">ntpvt</span><span class="o">=</span><span class="n">ntpvt</span><span class="p">)</span>
+        <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">))</span>
+    <span class="n">nonempty_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">nonempty_frames</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">nonempty_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for parsing :term:`.DATA file` or</span>
+<span class="sd">    :term:`include files &lt;include file&gt;` into dataframes</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;DATAFILE&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the .DATA input file for the reservoir simulator,&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot; or file with PVT keywords.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of output csv file, default pvt.csv. Use &#39;-&#39; for stdout.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;pvt.csv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-k&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--keywords&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;List of PVT keywords to include. &quot;</span>
+            <span class="s2">&quot;If not supplied, all supported keywords will be included.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be verbose&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for writing :term:`include files &lt;include file&gt;` from</span>
+<span class="sd">    dataframes (as CSV files)</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        parser (ArgumentParser or subparser): parser to fill with arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;PVT&quot;</span><span class="p">,</span> <span class="s2">&quot;pvt.inc&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pvt_main"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for Eclipse to CSV&quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">resdatafiles</span><span class="p">:</span>
+        <span class="n">deck</span> <span class="o">=</span> <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="c1"># Things are easier when a full deck with correct TABDIMS</span>
+        <span class="c1"># is supplied:</span>
+        <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># When TABDIMS is not present, the code will try to infer</span>
+        <span class="c1"># the number of saturation functions, this is necessarily</span>
+        <span class="c1"># more error-prone, and it needs a string as input.</span>
+        <span class="n">stringdeck</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">stringdeck</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">in</span> <span class="n">pvt_df</span> <span class="ow">and</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">in</span> <span class="n">pvt_df</span><span class="p">:</span>
+        <span class="n">pvtnums</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pvtnums</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+        <span class="n">pvt_df</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+        <span class="n">logstr</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unique PVTNUMs: </span><span class="si">{</span><span class="n">pvtnums</span><span class="si">}</span><span class="s2">, PVT keywords: </span><span class="si">{</span><span class="n">keywords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to simulator</span>
+<span class="sd">    :term:`deck`&quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
+        <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">pvt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
+    <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2res</span><span class="p">(</span><span class="n">pvt_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="n">common</span><span class="o">.</span><span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res">[docs]</a><span class="k">def</span> <span class="nf">df2res</span><span class="p">(</span>
+    <span class="n">pvt_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate resdata :term:`include file` content from PVT dataframes</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pvt_df: Dataframe with PVT data in res2df format.</span>
+<span class="sd">        keywords: List of keywords to include. Must be</span>
+<span class="sd">            supported and present in the incoming dataframe.</span>
+<span class="sd">        comments: Dictionary indexed by keyword with comments to be</span>
+<span class="sd">            included pr. keyword. If a key named &quot;master&quot; is present</span>
+<span class="sd">            it will be used as a master comment for the outputted file.</span>
+<span class="sd">        filename: If supplied, the generated text will also be dumped</span>
+<span class="sd">            to file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span>
+        <span class="n">pvt_df</span><span class="p">,</span>
+        <span class="n">keywords</span><span class="p">,</span>
+        <span class="n">comments</span><span class="p">,</span>
+        <span class="n">supported</span><span class="o">=</span><span class="n">SUPPORTED_KEYWORDS</span><span class="p">,</span>
+        <span class="n">consecutive</span><span class="o">=</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df2res_rock"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_rock">[docs]</a><span class="k">def</span> <span class="nf">df2res_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for ROCK keyword</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe (pd.DataFrame): Containing ROCK data</span>
+<span class="sd">        comment (str): Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;ROCK</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   {&#39;PRESSURE&#39;:^21} {&#39;COMPRESSIBILITY&#39;:^21}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ROCK&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;COMPRESSIBILITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> /</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="df2res_density"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_density">[docs]</a><span class="k">def</span> <span class="nf">df2res_density</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for DENSITY keyword</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe: Containing DENSITY data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;DENSITY</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;OILDENSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;WATERDENSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;GASDENSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DENSITY&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;OILDENSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;WATERDENSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;GASDENSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> /</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="df2res_pvtw"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtw">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvtw</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTW keyword</span>
+
+<span class="sd">    PVTW is one line/record with data for a reference pressure</span>
+<span class="sd">    for each PVTNUM.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe: Containing PVTW data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVTW</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;COMPRESSIBILITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSIBILITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTW&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;COMPRESSIBILITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VISCOSIBILITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">/</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="df2res_pvtg"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtg">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvtg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTG keyword</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe: Containing PVTG data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVTG</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;OGR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="s1">&#39;*&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;OGR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTG&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_pvtg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for</span>
+<span class="sd">        PVTG-data with a specific PVTNUM&quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">p_gas</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">p_gas</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for</span>
+<span class="sd">        PVTG-data with a particular gas phase pressure&quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">p_gas</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_gas</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
+        <span class="k">for</span> <span class="n">rowidx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="n">indent</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;OGR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; /</span><span class="se">\n</span><span class="s2">-- End PRESSURE=</span><span class="si">{</span><span class="n">p_gas</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span>
+
+    <span class="k">for</span> <span class="n">pvtnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvtg_pvtnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">pvtnum</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="df2res_pvdg"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdg">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvdg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVDG keyword</span>
+
+<span class="sd">    This data consists of one table (volumefactor and visosity</span>
+<span class="sd">    as a function of pressure) pr. PVTNUM.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe: Containing PVDG data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVDG</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVDG&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">_pvdg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for</span>
+<span class="sd">        PVDG-data with a specific PVTNUM</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dframe (pd.DataFrame): Cropped to only contain the relevant data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">pvtnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- PVTNUM: </span><span class="si">{pvtnum}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvdg_pvtnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">pvtnum</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="df2res_pvdo"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdo">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvdo</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVDO keyword</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe: Containing PVDO data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVDO</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVDO&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">_pvdo_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
+<span class="sd">        for PVDO-data for a specific PVTNUM</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dframe (pd.DataFrame): Cropped to only contain the relevant data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;PRESSURE&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">pvtnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;-- PVTNUM: </span><span class="si">{</span><span class="n">pvtnum</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvdo_pvtnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">pvtnum</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="df2res_pvto"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvto">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvto</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTO-data from a dataframe</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dframe: Containing PVTO data</span>
+<span class="sd">        comment: Text that will be included as a comment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;-- No data!&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVTO</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- {&#39;RS&#39;:^22} {&#39;PRESSURE&#39;:^22} {&#39;VOLUMEFACTOR&#39;:^22} {&#39;VISCOSITY&#39;:^22}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- {&#39;*&#39;:^22} {&#39;PRESSURE&#39;:^22} {&#39;VOLUMEFACTOR&#39;:^22} {&#39;VISCOSITY&#39;:^22}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
+        <span class="c1"># Use everything..</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTO&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_pvto_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
+<span class="sd">        for PVTO-data for a specific PVTNUM&quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;RS&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">rs</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvto_pvtnum_rs</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">rs</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_pvto_pvtnum_rs</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
+<span class="sd">        for PVTO-data for a particular RS&quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rs</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
+        <span class="k">for</span> <span class="n">rowidx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="n">indent</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; /</span><span class="se">\n</span><span class="s2">-- End RS=</span><span class="si">{</span><span class="n">rs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span>
+
+    <span class="k">for</span> <span class="n">pvtnum</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvto_pvtnum</span><span class="p">(</span><span class="n">subset</span><span class="p">[</span><span class="n">subset</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">pvtnum</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

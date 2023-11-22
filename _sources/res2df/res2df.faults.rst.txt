@@ -1,0 +1,10 @@
+=================
+``res2df.faults``
+=================
+
+.. automodule:: res2df.faults
+
+   .. contents::
+      :local:
+
+.. currentmodule:: res2df.faults

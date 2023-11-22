@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nnc &mdash; ecl2df 0.17.3.dev4+g798ee622 documentation</title>
+  <title>nnc &mdash; res2df 0.17.3.dev5+g75b2413a documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,11 +32,11 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            ecl2df
+            res2df
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.3.dev4+g798ee622
+                0.17.3.dev5+g75b2413a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -68,15 +68,16 @@
 <li class="toctree-l2"><a class="reference internal" href="wellconnstatus.html">wellconnstatus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2csv.html">ecl2csv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csv2ecl.html">csv2ecl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csv2res.html">csv2res</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to ecl2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to res2df</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ecl2df/ecl2df.html"><code class="docutils literal notranslate"><span class="pre">ecl2df</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
 </ul>
 
         </div>
@@ -85,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">ecl2df</a>
+          <a href="../index.html">res2df</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -106,16 +107,16 @@
              
   <section id="nnc">
 <h1>nnc<a class="headerlink" href="#nnc" title="Permalink to this heading"></a></h1>
-<p>nnc will extract Non-Neighbour-Connections from your Eclipse grid as pairs
+<p>nnc will extract Non-Neighbour-Connections from your grid as pairs
 of <em>ijk</em> indices together with their associated transmissibilities.</p>
 <p>See also the <a class="reference internal" href="trans.html"><span class="doc">trans</span></a> module, which can extract all transmissibilities, not only
 non-neigbour connections.</p>
 <p>Note: Eclipse300 will not export TRANNNC data in parallel mode.
 Run in serial to get this output.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2df</span> <span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">EclFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
-<span class="n">dframe</span> <span class="o">=</span> <span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
+<span class="n">dframe</span> <span class="o">=</span> <span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
@@ -254,28 +255,28 @@ Run in serial to get this output.</p>
 </tbody>
 </table>
 <p>Alternatively, the same data can be produced as a CSV file using the command line</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecl2csv nnc MYDATADECK.DATA --verbose --output nnc.csv</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">res2csv nnc MYDATADECK.DATA --verbose --output nnc.csv</span>
 </pre></div>
 </div>
 <p>It is possible to add <em>xyz</em> coordinates for each connection (as the
 average of the xyz for each of the cells involved in a connection pair) as
 extra columns.</p>
 <p>If you only want vertical connections, add the option <code class="docutils literal notranslate"><span class="pre">--pillars</span></code> or <code class="docutils literal notranslate"><span class="pre">-vertical</span></code>,
-or set <code class="docutils literal notranslate"><span class="pre">pillars=True</span></code> if using the Python API (<a class="reference internal" href="../ecl2df/ecl2df.nnc.html#ecl2df.nnc.df" title="ecl2df.nnc.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">ecl2df.nnc.df()</span></code></a>)</p>
+or set <code class="docutils literal notranslate"><span class="pre">pillars=True</span></code> if using the Python API (<a class="reference internal" href="../res2df/res2df.nnc.html#res2df.nnc.df" title="res2df.nnc.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.nnc.df()</span></code></a>)</p>
 <section id="editnnc-export">
 <h2><code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> export<a class="headerlink" href="#editnnc-export" title="Permalink to this heading"></a></h2>
 <p>Data for the <code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> keyword can be dumped, in order to scale the NNC connections
 using Pandas operations. Select the connections you want to scale by slicing
 the nnc dataframe (either from the nnc module, or from the trans module), and fill
 transmissibility multipliers in a new column <code class="docutils literal notranslate"><span class="pre">TRANM</span></code>, then this can be exported
-to an Eclipse include file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecl2f</span> <span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">EclFiles</span>
+to an <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file:</span></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2f</span> <span class="kn">import</span> <span class="n">nnc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
-<span class="n">eclfiles</span> <span class="o">=</span> <span class="n">EclFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
-<span class="n">nnc_df</span> <span class="o">=</span> <span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">eclfiles</span><span class="p">)</span>
+<span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
+<span class="n">nnc_df</span> <span class="o">=</span> <span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
 <span class="n">nnc_df</span><span class="p">[</span><span class="s2">&quot;TRANM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Reduce all NNC transmissibilities</span>
 
-<span class="n">nnc</span><span class="o">.</span><span class="n">df2ecl_editnnc</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;editnnc.inc&quot;</span><span class="p">)</span>
+<span class="n">nnc</span><span class="o">.</span><span class="n">df2res_editnnc</span><span class="p">(</span><span class="n">nnc_df</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;editnnc.inc&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>and the contents of the exported file can be:</p>

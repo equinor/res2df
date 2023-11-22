@@ -1,7 +1,5 @@
 [![Build Status](https://img.shields.io/github/workflow/status/equinor/res2df/res2df)](https://github.com/equinor/res2df/actions?query=workflow%3Ares2df)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/equinor/res2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/res2df/context:python)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/equinor/res2df.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/equinor/res2df/alerts/)
-[![codecov](https://codecov.io/gh/equinor/res2df/branch/master/graph/badge.svg)](https://codecov.io/gh/equinor/res2df)
+[![codecov](https://codecov.io/gh/equinor/res2df/graph/badge.svg?token=3sZBGGu5VG)](https://codecov.io/gh/equinor/res2df)
 [![Python 3.8-3.10](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10-blue.svg)](https://www.python.org)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)

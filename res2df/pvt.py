@@ -11,7 +11,18 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from res2df import ResdataFiles, common, getLogger_res2csv, inferdims
+from .common import comment_formatter
+from .common import df2res as common_df2res
+from .common import fill_reverse_parser as common_fill_reverse_parser
+from .common import (
+    handle_wanted_keywords,
+    keyworddata_to_df,
+    write_dframe_stdout_file,
+    write_inc_stdout_file,
+)
+from .inferdims import DIMS_POS, inject_xxxdims_ntxxx
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
 
 try:
     # Needed for mypy
@@ -80,8 +91,8 @@ def pvtw_fromdeck(
             be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    return keyworddata_to_df(
         deck, "PVTW", renamer=RENAMERS["PVTW"], recordcountername="PVTNUM"
     )
 
@@ -97,8 +108,8 @@ def density_fromdeck(
             be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    return keyworddata_to_df(
         deck, "DENSITY", renamer=RENAMERS["DENSITY"], recordcountername="PVTNUM"
     )
 
@@ -114,8 +125,8 @@ def rock_fromdeck(
             be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    return keyworddata_to_df(
         deck, "ROCK", renamer=RENAMERS["ROCK"], recordcountername="PVTNUM"
     )
 
@@ -131,8 +142,8 @@ def pvto_fromdeck(
             be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvto_df = common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    pvto_df = keyworddata_to_df(
         deck, "PVTO", renamer=RENAMERS["PVTO"], emptyrecordcountername="PVTNUM"
     )
     return pvto_df
@@ -149,8 +160,8 @@ def pvdo_fromdeck(
             be inferred if not present in deck.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvdg_df = common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    pvdg_df = keyworddata_to_df(
         deck, "PVDO", renamer=RENAMERS["PVDO"], recordcountername="PVTNUM"
     )
     return pvdg_df
@@ -167,8 +178,8 @@ def pvdg_fromdeck(
             be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvdg_df = common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    pvdg_df = keyworddata_to_df(
         deck, "PVDG", renamer=RENAMERS["PVDG"], recordcountername="PVTNUM"
     )
     return pvdg_df
@@ -185,8 +196,8 @@ def pvtg_fromdeck(
             be inferred if not present in :term:`deck`.
     """
     if "TABDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    pvtg_df = common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    pvtg_df = keyworddata_to_df(
         deck, "PVTG", renamer=RENAMERS["PVTG"], emptyrecordcountername="PVTNUM"
     )
     return pvtg_df
@@ -220,10 +231,10 @@ def df(
     if isinstance(deck, ResdataFiles):
         deck = deck.get_deck()
 
-    deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
-    ntpvt = deck["TABDIMS"][0][inferdims.DIMS_POS["NTPVT"]].get_int(0)
+    deck = inject_xxxdims_ntxxx("TABDIMS", "NTPVT", deck, ntpvt)
+    ntpvt = deck["TABDIMS"][0][DIMS_POS["NTPVT"]].get_int(0)
 
-    wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    wanted_keywords = handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
     for keyword in wanted_keywords:
@@ -277,7 +288,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     Arguments:
         parser (ArgumentParser or subparser): parser to fill with arguments
     """
-    return common.fill_reverse_parser(parser, "PVT", "pvt.inc")
+    return common_fill_reverse_parser(parser, "PVT", "pvt.inc")
 
 
 def pvt_main(args) -> None:
@@ -305,7 +316,7 @@ def pvt_main(args) -> None:
     else:
         pvtnums = "-"
         keywords = "-"
-    common.write_dframe_stdout_file(
+    write_dframe_stdout_file(
         pvt_df,
         args.output,
         index=False,
@@ -323,7 +334,7 @@ def pvt_reverse_main(args) -> None:
     pvt_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(pvt_df, keywords=args.keywords)
-    common.write_inc_stdout_file(inc_string, args.output)
+    write_inc_stdout_file(inc_string, args.output)
 
 
 def df2res(
@@ -344,7 +355,7 @@ def df2res(
         filename: If supplied, the generated text will also be dumped
             to file.
     """
-    return common.df2res(
+    return common_df2res(
         pvt_df,
         keywords,
         comments,
@@ -364,7 +375,7 @@ def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "ROCK\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += "--   {'PRESSURE':^21} {'COMPRESSIBILITY':^21}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -392,7 +403,7 @@ def df2res_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "DENSITY\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += f"--   {'OILDENSITY':^21} {'WATERDENSITY':^21} {'GASDENSITY':^21}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -424,7 +435,7 @@ def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "PVTW\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += (
         f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'COMPRESSIBILITY':^21} "
         f"{'VISCOSITY':^21} {'VISCOSIBILITY':^21}\n"
@@ -457,7 +468,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "PVTG\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += (
         f"-- {'PRESSURE':^22} {'OGR':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     )
@@ -521,7 +532,7 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "PVDG\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'VISCOSITY':^21}  \n"
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -569,7 +580,7 @@ def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "PVDO\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'VISCOSITY':^21}\n"
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -617,7 +628,7 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "PVTO\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     string += "-- {'RS':^22} {'PRESSURE':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     string += "-- {'*':^22} {'PRESSURE':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     if "KEYWORD" not in dframe:

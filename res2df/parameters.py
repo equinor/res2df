@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Union
 import pandas as pd
 import yaml
 
-from res2df.resdatafiles import ResdataFiles
+from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 

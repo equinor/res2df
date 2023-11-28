@@ -9,8 +9,18 @@ from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from res2df import common, getLogger_res2csv, inferdims
-
+from .common import comment_formatter
+from .common import df2res as common_df2res
+from .common import fill_reverse_parser as common_fill_reverse_parser
+from .common import (
+    generic_deck_table,
+    handle_wanted_keywords,
+    keyworddata_to_df,
+    write_dframe_stdout_file,
+    write_inc_stdout_file,
+)
+from .inferdims import DIMS_POS, inject_xxxdims_ntxxx
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 try:
@@ -104,10 +114,10 @@ def df(
     if isinstance(deck, ResdataFiles):
         deck = deck.get_deck()
 
-    deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    ntequl = deck["EQLDIMS"][0][inferdims.DIMS_POS["NTEQUL"]].get_int(0)
+    deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    ntequl = deck["EQLDIMS"][0][DIMS_POS["NTEQUL"]].get_int(0)
 
-    wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    wanted_keywords = handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
     for keyword in wanted_keywords:
@@ -140,8 +150,8 @@ def rsvd_fromdeck(
             be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    return keyworddata_to_df(
         deck, "RSVD", renamer=RENAMERS["RSVD"], recordcountername="EQLNUM"
     )
 
@@ -157,8 +167,8 @@ def rvvd_fromdeck(
             be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    return keyworddata_to_df(
         deck, "RVVD", renamer=RENAMERS["RVVD"], recordcountername="EQLNUM"
     )
 
@@ -174,8 +184,8 @@ def pbvd_fromdeck(
             be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    return keyworddata_to_df(
         deck, "PBVD", renamer=RENAMERS["PBVD"], recordcountername="EQLNUM"
     )
 
@@ -191,8 +201,8 @@ def pdvd_fromdeck(
             be inferred if not present in :term:`deck`
     """
     if "EQLDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
-    return common.keyworddata_to_df(
+        deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+    return keyworddata_to_df(
         deck, "PDVD", renamer=RENAMERS["PDVD"], recordcountername="EQLNUM"
     )
 
@@ -257,14 +267,14 @@ def equil_fromdeck(
         ntequl: Number of EQLNUM regions in :term:`deck`.
     """
     if "EQLDIMS" not in deck:
-        deck = inferdims.inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
+        deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
 
     phases = phases_from_deck(deck)
     if not phases or phases not in RENAMERS:
         raise ValueError(f"Could not determine phase configuration, got '{phases}'")
     columnrenamer = RENAMERS[phases_from_deck(deck)]
 
-    dataframe = common.keyworddata_to_df(
+    dataframe = keyworddata_to_df(
         deck, "EQUIL", renamer=columnrenamer, recordcountername="EQLNUM"
     )
 
@@ -308,7 +318,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> resdata :term:`include file`"""
-    return common.fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
+    return common_fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
 
 
 def equil_main(args) -> None:
@@ -334,7 +344,7 @@ def equil_main(args) -> None:
     else:
         eqlnums = "-"
         keywords = "-"
-    common.write_dframe_stdout_file(
+    write_dframe_stdout_file(
         equil_df,
         args.output,
         index=False,
@@ -353,7 +363,7 @@ def equil_reverse_main(args) -> None:
     equil_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(equil_df, keywords=args.keywords)
-    common.write_inc_stdout_file(inc_string, args.output)
+    write_inc_stdout_file(inc_string, args.output)
 
 
 def df2res(
@@ -385,7 +395,7 @@ def df2res(
         string += (
             phases_from_columns(equil_df.columns).upper().replace("-", "\n") + "\n\n"
         )
-    string += common.df2res(
+    string += common_df2res(
         equil_df,
         keywords=keywords,
         comments=comments,
@@ -406,7 +416,7 @@ def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     if dframe.empty:
         return "-- No data!"
     string = "EQUIL\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
 
     if "KEYWORD" not in dframe:
         # Use everything..
@@ -422,7 +432,7 @@ def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     phases = phases_from_columns(subset.columns)
 
-    return common.generic_deck_table(
+    return generic_deck_table(
         subset,
         "EQUIL",
         renamer=RENAMERS[phases],  # type: ignore
@@ -494,7 +504,7 @@ def _df2res_equilfuncs(
     if dframe.empty:
         return "-- No data!"
     string = f"{keyword}\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
     col_headers = RENAMERS[keyword]["DATA"]
 
     string += f"--   {'DEPTH':^21} {col_headers[1]:^21} \n"

@@ -25,9 +25,17 @@ try:
 except ImportError:
     pass
 
-from res2df import common, getLogger_res2csv, inferdims
-
-from .common import write_dframe_stdout_file
+from .common import comment_formatter
+from .common import df2res as common_df2res
+from .common import fill_reverse_parser as common_fill_reverse_parser
+from .common import (
+    handle_wanted_keywords,
+    keyworddata_to_df,
+    write_dframe_stdout_file,
+    write_inc_stdout_file,
+)
+from .inferdims import inject_xxxdims_ntxxx
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -95,16 +103,16 @@ def df(
         # NB: If this is done on include files and not on .DATA files
         # we can loose data for SATNUM > 1
         deck = deck.get_deck()
-    deck = inferdims.inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
+    deck = inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
     assert "TABDIMS" in deck
 
-    wanted_keywords = common.handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
+    wanted_keywords = handle_wanted_keywords(keywords, deck, SUPPORTED_KEYWORDS)
 
     frames = []
     for keyword in wanted_keywords:
         frames.append(
             interpolate_defaults(
-                common.keyworddata_to_df(
+                keyworddata_to_df(
                     deck, keyword, renamer=RENAMERS[keyword], recordcountername="SATNUM"
                 ).assign(KEYWORD=keyword)
             )
@@ -131,7 +139,7 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     """Interpolate NaN's linearly in saturation.
     Saturation function tables in :term:`.DATA files <.DATA file>`
     can have certain values defaulted.
-    When parsed by common.res2df, these values are returned as np.nan.
+    When parsed by res2df, these values are returned as np.nan.
     The incoming dataframe must be associated to one keyword only, but
     can consist of multiple SATNUMs.
     """
@@ -187,7 +195,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> resdata :term:`include file`"""
-    return common.fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
+    return common_fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
 
 
 def satfunc_main(args) -> None:
@@ -231,7 +239,7 @@ def satfunc_reverse_main(args) -> None:
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(satfunc_df, keywords=args.keywords)
-    common.write_inc_stdout_file(inc_string, args.output)
+    write_inc_stdout_file(inc_string, args.output)
 
 
 def df2res(
@@ -259,7 +267,7 @@ def df2res(
 
     """
     string = ""
-    string += common.df2res(
+    string += common_df2res(
         satfunc_df,
         keywords=keywords,
         comments=comments,
@@ -356,7 +364,7 @@ def _df2res_satfuncs(
     if dframe.empty:
         return "-- No data!\n"
     string = f"{keyword}\n"
-    string += common.comment_formatter(comment)
+    string += comment_formatter(comment)
 
     if "KEYWORD" not in dframe:
         # Use everything..

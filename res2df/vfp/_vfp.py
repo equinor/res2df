@@ -25,8 +25,11 @@ try:
 except ImportError:
     pass
 
-from res2df import ResdataFiles, common, getLogger_res2csv
-
+from ..common import comment_formatter
+from ..common import fill_reverse_parser as common_fill_reverse_parser
+from ..common import write_dframe_stdout_file, write_inc_stdout_file
+from ..res2csvlogger import getLogger_res2csv
+from ..resdatafiles import ResdataFiles
 from . import _vfpinj as vfpinj
 from . import _vfpprod as vfpprod
 from ._vfpdefs import SUPPORTED_KEYWORDS, VFPTYPE
@@ -398,7 +401,7 @@ def df2res(
     str_vfps = ""
 
     if comments and "master" in comments.keys():
-        str_vfps += common.comment_formatter(comments["master"])
+        str_vfps += comment_formatter(comments["master"])
     for str_vfp in strs_vfp:
         str_vfps += str_vfp
         str_vfps += "\n"
@@ -481,7 +484,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Fill a parser for the operation dataframe -> resdata :term:`include file`"""
-    return common.fill_reverse_parser(parser, "VFPPROD, VFPINJ", "vfp.inc")
+    return common_fill_reverse_parser(parser, "VFPPROD, VFPINJ", "vfp.inc")
 
 
 def vfp_main(args) -> None:
@@ -511,7 +514,7 @@ def vfp_main(args) -> None:
                 vfp_table.schema.metadata[b"TABLE_NUMBER"].decode("utf-8")
             )
             vfp_filename = f"{outputfile}_{str(table_number)}.arrow"
-            common.write_dframe_stdout_file(
+            write_dframe_stdout_file(
                 vfp_table, vfp_filename, index=False, caller_logger=logger
             )
             logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
@@ -520,7 +523,7 @@ def vfp_main(args) -> None:
             resdatafiles.get_deck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
         )
         if args.output:
-            common.write_dframe_stdout_file(
+            write_dframe_stdout_file(
                 dframe, args.output, index=False, caller_logger=logger
             )
             logger.info(f"Parsed file {args.DATAFILE} for vfp.df")
@@ -535,4 +538,4 @@ def vfp_reverse_main(args) -> None:
     logger.info("Parsed {args.csvfile}")
     inc_string = df2res(vfp_df, args.keyword)
     if args.output:
-        common.write_inc_stdout_file(inc_string, args.output)
+        write_inc_stdout_file(inc_string, args.output)

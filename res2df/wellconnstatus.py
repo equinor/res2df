@@ -8,10 +8,10 @@ from typing import Any, List, Tuple
 import numpy as np
 import pandas as pd
 
-from res2df import getLogger_res2csv, summary
-from res2df.resdatafiles import ResdataFiles
-
 from .common import write_dframe_stdout_file
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
+from .summary import df as create_summary_df
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ def df(resdatafiles: ResdataFiles) -> pd.DataFrame:
 
     The output data set is very sparse compared to the CPI summary data.
     """
-    smry = summary.df(resdatafiles, column_keys="CPI*")
+    smry = create_summary_df(resdatafiles, column_keys="CPI*")
     return _extract_status_changes(smry)
 
 

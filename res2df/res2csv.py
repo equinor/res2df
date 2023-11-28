@@ -9,7 +9,7 @@ import importlib
 import sys
 from typing import Optional
 
-from res2df import __version__
+from .__version__ import __version__
 
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION: str = """Convert reservoir simulator input and output files into CSV files,

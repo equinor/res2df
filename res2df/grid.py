@@ -24,8 +24,14 @@ import pyarrow
 import pyarrow.feather
 from resdata.resfile import ResdataFile
 
-from res2df import __version__, common, getLogger_res2csv
-
+from .__version__ import __version__
+from .common import (
+    comment_formatter,
+    merge_zones,
+    runlength_compress,
+    write_dframe_stdout_file,
+)
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
@@ -352,7 +358,7 @@ def gridgeometry2df(
         zonemap = resdatafiles.get_zonemap()
     if zonemap:
         logger.info("Merging zonemap into grid")
-        grid_df = common.merge_zones(grid_df, zonemap, kname="K")
+        grid_df = merge_zones(grid_df, zonemap, kname="K")
 
     return grid_df
 
@@ -708,7 +714,7 @@ def df2res(
 
     string = ""
     if not nocomments:
-        string += common.comment_formatter(res2df_header)
+        string += comment_formatter(res2df_header)
     string += "\n"
 
     # If we have NaNs in the dataframe, we will be more careful (costs memory)
@@ -737,7 +743,7 @@ def df2res(
             )
             logger.warning("Data will be dumped, but may error in simulator")
         strvector = "  ".join([str(x) for x in vector])
-        strvector = common.runlength_compress(strvector)
+        strvector = runlength_compress(strvector)
 
         string += keyword + "\n"
         indent = " " * 5
@@ -775,6 +781,4 @@ def grid_main(args) -> None:
     )
     if args.arrow:
         grid_df = _df2pyarrow(grid_df)
-    common.write_dframe_stdout_file(
-        grid_df, args.output, index=False, caller_logger=logger
-    )
+    write_dframe_stdout_file(grid_df, args.output, index=False, caller_logger=logger)

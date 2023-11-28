@@ -25,7 +25,7 @@ try:
 except ImportError:
     pass
 
-from res2df import common
+from ..common import parse_opmio_deckrecord
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ def _deckrecord2list(
                      list index to the "record".
         recordname:  Name of the record
     """
-    record = common.parse_opmio_deckrecord(record, keyword, "records", recordindex)
+    record = parse_opmio_deckrecord(record, keyword, "records", recordindex)
 
     values: Union[Any, List[float]]
     # Extract interpolation ranges into lists

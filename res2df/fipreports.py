@@ -10,8 +10,9 @@ from typing import List, Optional, Union
 import numpy as np
 import pandas as pd
 
-from res2df import ResdataFiles, getLogger_res2csv
-from res2df.common import parse_month, write_dframe_stdout_file
+from .common import parse_month, write_dframe_stdout_file
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 

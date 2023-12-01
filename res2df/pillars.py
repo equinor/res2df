@@ -8,7 +8,11 @@ from typing import Dict, List, Optional, Union
 import dateutil.parser
 import pandas as pd
 
-from res2df import ResdataFiles, common, getLogger_res2csv, grid
+from .common import stack_on_colnames, write_dframe_stdout_file
+from .grid import dates2rstindices
+from .grid import df as create_grid_df
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -83,11 +87,11 @@ def df(
     if region:
         vectors.append(region)
     vectors.extend(["POR*", "PERM*", "SWAT", "SGAS", "1OVERBO", "1OVERBG"])
-    grid_df = grid.df(
+    grid_df = create_grid_df(
         resdatafiles, rstdates=rstdates, vectors=vectors, dateinheaders=True
     )
 
-    rstdates_iso = grid.dates2rstindices(resdatafiles, rstdates)[2]
+    rstdates_iso = dates2rstindices(resdatafiles, rstdates)[2]
 
     grid_df["PILLAR"] = grid_df["I"].astype(str) + "-" + grid_df["J"].astype(str)
     logger.info("Computing pillar statistics")
@@ -134,9 +138,7 @@ def df(
                 grouped = pd.merge(grouped, contacts, how="left")
 
     if stackdates:
-        return common.stack_on_colnames(
-            grouped, sep="@", stackcolname="DATE", inplace=True
-        )
+        return stack_on_colnames(grouped, sep="@", stackcolname="DATE", inplace=True)
     return grouped
 
 
@@ -443,6 +445,4 @@ def pillars_main(args) -> None:
     elif args.group:
         dframe = dframe.drop("PILLAR", axis=1).mean().to_frame().transpose()
     dframe["PORO"] = dframe["PORV"] / dframe["VOLUME"]
-    common.write_dframe_stdout_file(
-        dframe, args.output, index=False, caller_logger=logger
-    )
+    write_dframe_stdout_file(dframe, args.output, index=False, caller_logger=logger)

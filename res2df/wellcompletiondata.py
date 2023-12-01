@@ -10,10 +10,11 @@ import pandas as pd
 import pyarrow
 import pyarrow.feather
 
-from res2df import common, compdat, getLogger_res2csv, wellconnstatus
-from res2df.resdatafiles import ResdataFiles
-
-from .common import write_dframe_stdout_file
+from .common import convert_lyrlist_to_zonemap, parse_lyrfile, write_dframe_stdout_file
+from .compdat import df as create_compdat_df
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
+from .wellconnstatus import df as create_wellconnstatus_df
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ def df(
     Returns:
         pd.DataFrame with one row per unique combination of well, zone and date.
     """
-    compdat_df = compdat.df(resdatafiles, zonemap=zonemap)
+    compdat_df = create_compdat_df(resdatafiles, zonemap=zonemap)
     if "ZONE" not in compdat_df.columns:
         logger.warning(
             "ZONE column not generated in compdat table. "
@@ -75,7 +76,7 @@ def df(
         compdat_df = _excl_well_startswith(compdat_df, excl_well_startswith)
 
     if use_wellconnstatus:
-        wellconnstatus_df = wellconnstatus.df(resdatafiles)
+        wellconnstatus_df = create_wellconnstatus_df(resdatafiles)
         compdat_df = _merge_compdat_and_connstatus(compdat_df, wellconnstatus_df)
 
     compdat_df = _aggregate_layer_to_zone(compdat_df)
@@ -294,7 +295,7 @@ def wellcompletiondata_main(args):
         wellcompletiondata_df = pd.DataFrame()
         logger.info(f"Zonemap not found: {args.zonemap}")
     else:
-        zonemap = common.convert_lyrlist_to_zonemap(common.parse_lyrfile(args.zonemap))
+        zonemap = convert_lyrlist_to_zonemap(parse_lyrfile(args.zonemap))
         wellcompletiondata_df = df(
             resdatafiles, zonemap, args.use_wellconnstatus, args.excl_well_startswith
         )

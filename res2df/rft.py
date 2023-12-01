@@ -23,10 +23,9 @@ import numpy as np
 import pandas as pd
 from resdata.resfile import ResdataFile
 
-from res2df import getLogger_res2csv
-
 from .common import merge_zones, write_dframe_stdout_file
 from .gruptree import tree_from_dict
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)

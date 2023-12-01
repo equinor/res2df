@@ -29,8 +29,7 @@ except ImportError:
     # Allow parts of res2df to work without OPM:
     pass
 
-from res2df import __version__
-
+from .__version__ import __version__
 from .constants import MAGIC_STDOUT
 
 # Parse named JSON files, this exposes a dict of dictionary describing the contents

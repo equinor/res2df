@@ -16,10 +16,9 @@ import pyarrow
 import pyarrow.feather
 from resdata.summary import Summary, SummaryKeyWordVector
 
-from res2df import getLogger_res2csv
-
-from . import parameters
 from .common import write_dframe_stdout_file
+from .parameters import find_parameter_files, load, load_all
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -547,22 +546,20 @@ def _merge_params(
     """
 
     if paramfile is None and resdatafiles is not None:
-        param_files = parameters.find_parameter_files(resdatafiles)
+        param_files = find_parameter_files(resdatafiles)
         logger.info("Loading parameters from files: %s", str(param_files))
-        param_dict = parameters.load_all(param_files)
+        param_dict = load_all(param_files)
     elif (
         paramfile is not None
         and resdatafiles is not None
         and not Path(paramfile).is_absolute()
     ):
-        param_files = parameters.find_parameter_files(
-            resdatafiles, filebase=str(paramfile)
-        )
+        param_files = find_parameter_files(resdatafiles, filebase=str(paramfile))
         logger.info("Loading parameters from files: %s", str(param_files))
-        param_dict = parameters.load_all(param_files)
+        param_dict = load_all(param_files)
     elif paramfile is not None and Path(paramfile).is_absolute():
         logger.info("Loading parameters from file: %s", str(paramfile))
-        param_dict = parameters.load(paramfile)
+        param_dict = load(paramfile)
     else:
         raise ValueError("Not able to locate parameters.txt")
     logger.info("Loaded %d parameters", len(param_dict))

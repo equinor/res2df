@@ -29,8 +29,7 @@ try:
 except ImportError:
     pass
 
-from res2df import common
-
+from ..common import comment_formatter, parse_opmio_deckrecord
 from ._vfpcommon import (
     _deckrecord2list,
     _stack_vfptable2df,
@@ -83,7 +82,7 @@ def basic_data(
     num_rec = len(keyword)
 
     # Parse records with basic information and interpolation ranges
-    basic_record = common.parse_opmio_deckrecord(keyword[0], "VFPINJ", "records", 0)
+    basic_record = parse_opmio_deckrecord(keyword[0], "VFPINJ", "records", 0)
 
     # Extract basic table information
     tableno = basic_record["TABLE"]
@@ -124,7 +123,7 @@ def basic_data(
     bhp_table: List[List[float]] = []
     thp_indices: List[float] = []
     for n in range(3, num_rec):
-        bhp_record = common.parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
+        bhp_record = parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
         bhp_values: Union[Any, List[float]]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
@@ -676,7 +675,7 @@ def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     # Write dataframe to string with Eclipse format for VFPINJ
     deck_str = "VFPINJ\n"
     if comment:
-        deck_str += common.comment_formatter(comment)
+        deck_str += comment_formatter(comment)
     else:
         deck_str += "\n"
 

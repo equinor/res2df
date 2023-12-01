@@ -10,8 +10,9 @@ from typing import Union
 
 import pandas as pd
 
-from res2df import ResdataFiles, getLogger_res2csv
-from res2df.common import parse_opmio_deckrecord, write_dframe_stdout_file
+from .common import parse_opmio_deckrecord, write_dframe_stdout_file
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
 
 try:
     # Needed for mypy

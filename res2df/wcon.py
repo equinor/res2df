@@ -15,12 +15,13 @@ try:
 except ImportError:
     pass
 
-from res2df import ResdataFiles, getLogger_res2csv
-from res2df.common import (
+from .common import (
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
     write_dframe_stdout_file,
 )
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 

@@ -8,11 +8,10 @@ from typing import List, Optional, Union
 
 import pandas as pd
 
-import res2df.grid
-import res2df.nnc
-from res2df import getLogger_res2csv
-from res2df.common import write_dframe_stdout_file
-
+from .common import write_dframe_stdout_file
+from .grid import df as create_grid_df
+from .nnc import df as create_nnc_df
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 try:
@@ -101,7 +100,7 @@ def df(
             "Filtering to both k and to ij simultaneously results in empty dataframe"
         )
 
-    grid_df = res2df.grid.df(resdatafiles)
+    grid_df = create_grid_df(resdatafiles)
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
         logger.warning(
@@ -149,7 +148,7 @@ def df(
 
     if addnnc:
         logger.info("Adding NNC data")
-        nnc_df = res2df.nnc.df(resdatafiles, coords=False, pillars=False)
+        nnc_df = create_nnc_df(resdatafiles, coords=False, pillars=False)
         nnc_df["DIR"] = "NNC"
         trans_df = pd.concat([trans_df, nnc_df], sort=False)
 

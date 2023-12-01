@@ -18,7 +18,7 @@ from resdata.rd_util import FileMode
 from resdata.resfile import ResdataFile
 from resdata.summary import Summary
 
-from res2df import common
+from .common import convert_lyrlist_to_zonemap, parse_lyrfile
 
 logger = logging.getLogger(__name__)
 
@@ -250,8 +250,8 @@ class ResdataFiles(object):
                 return {}
             logger.warning("Zonefile %s not found, ignoring", fullpath)
             return {}
-        lyrlist = common.parse_lyrfile(fullpath)
-        return common.convert_lyrlist_to_zonemap(lyrlist)
+        lyrlist = parse_lyrfile(fullpath)
+        return convert_lyrlist_to_zonemap(lyrlist)
 
 
 def rreplace(pat: str, sub: str, string: str) -> str:

@@ -12,7 +12,7 @@ except ImportError:
     # Let parts of res2df work without OPM:
     pass
 
-from res2df import ResdataFiles
+from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 

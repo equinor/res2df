@@ -25,8 +25,6 @@ except ImportError:
     # Allow parts of res2df to work without OPM:
     pass
 
-from res2df import getLogger_res2csv
-
 from .common import (
     get_wells_matching_template,
     merge_zones,
@@ -36,6 +34,7 @@ from .common import (
     write_dframe_stdout_file,
 )
 from .grid import merge_initvectors
+from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)

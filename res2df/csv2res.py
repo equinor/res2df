@@ -7,7 +7,17 @@ for selected keywords
 import argparse
 import sys
 
-from res2df import __version__, equil, pvt, satfunc, summary, vfp
+from .__version__ import __version__
+from .equil import equil_reverse_main
+from .equil import fill_reverse_parser as equil_fill_reverse_parser
+from .pvt import fill_reverse_parser as pvt_fill_reverse_parser
+from .pvt import pvt_reverse_main
+from .satfunc import fill_reverse_parser as satfunc_fill_reverse_parser
+from .satfunc import satfunc_reverse_main
+from .summary import fill_reverse_parser as summary_fill_reverse_parser
+from .summary import summary_reverse_main
+from .vfp import fill_reverse_parser as vfp_fill_reverse_parser
+from .vfp import vfp_reverse_main
 
 # String constants in use for generating ERT forward model documentation:
 DESCRIPTION: str = """Convert CSV files into include files. Uses the command
@@ -54,8 +64,8 @@ def get_parser() -> argparse.ArgumentParser:
         help="Write UNSMRY files",
         description=("Write UNSMRY files from CSV files."),
     )
-    summary.fill_reverse_parser(summary_parser)
-    summary_parser.set_defaults(func=summary.summary_reverse_main)
+    summary_fill_reverse_parser(summary_parser)
+    summary_parser.set_defaults(func=summary_reverse_main)
 
     equil_parser = subparsers.add_parser(
         "equil",
@@ -65,16 +75,16 @@ def get_parser() -> argparse.ArgumentParser:
             "to include files from CSV in res2df format."
         ),
     )
-    equil.fill_reverse_parser(equil_parser)
-    equil_parser.set_defaults(func=equil.equil_reverse_main)
+    equil_fill_reverse_parser(equil_parser)
+    equil_parser.set_defaults(func=equil_reverse_main)
 
     pvt_parser = subparsers.add_parser(
         "pvt",
         help="Write PVT include files",
         description=("Write include files from CSV files with res2df format."),
     )
-    pvt.fill_reverse_parser(pvt_parser)
-    pvt_parser.set_defaults(func=pvt.pvt_reverse_main)
+    pvt_fill_reverse_parser(pvt_parser)
+    pvt_parser.set_defaults(func=pvt_reverse_main)
 
     satfunc_parser = subparsers.add_parser(
         "satfunc",
@@ -84,8 +94,8 @@ def get_parser() -> argparse.ArgumentParser:
             "res2df format."
         ),
     )
-    satfunc.fill_reverse_parser(satfunc_parser)
-    satfunc_parser.set_defaults(func=satfunc.satfunc_reverse_main)
+    satfunc_fill_reverse_parser(satfunc_parser)
+    satfunc_parser.set_defaults(func=satfunc_reverse_main)
 
     vfp_parser = subparsers.add_parser(
         "vfp",
@@ -94,8 +104,8 @@ def get_parser() -> argparse.ArgumentParser:
             "Write VFPPROD/VFPINJ include files from CSV files with res2df format."
         ),
     )
-    vfp.fill_reverse_parser(vfp_parser)
-    vfp_parser.set_defaults(func=vfp.vfp_reverse_main)
+    vfp_fill_reverse_parser(vfp_parser)
+    vfp_parser.set_defaults(func=vfp_reverse_main)
 
     return parser
 

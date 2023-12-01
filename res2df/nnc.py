@@ -11,8 +11,11 @@ from typing import Optional
 
 import pandas as pd
 
-from res2df import ResdataFiles, __version__, common, getLogger_res2csv, grid
-from res2df.common import write_dframe_stdout_file
+from .__version__ import __version__
+from .common import comment_formatter, write_dframe_stdout_file
+from .grid import gridgeometry2df
+from .res2csvlogger import getLogger_res2csv
+from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -118,7 +121,7 @@ def add_nnc_coords(nncdf: pd.DataFrame, resdatafiles: ResdataFiles) -> pd.DataFr
     Returns:
         Incoming dataframe augmented with the columns X, Y and Z.
     """
-    gridgeometry = grid.gridgeometry2df(resdatafiles)
+    gridgeometry = gridgeometry2df(resdatafiles)
     gnncdf = pd.merge(
         nncdf,
         gridgeometry,
@@ -247,7 +250,7 @@ def df2res_editnnc(
         + str(datetime.datetime.now())
     )
     if not nocomments:
-        string += common.comment_formatter(res2df_header)
+        string += comment_formatter(res2df_header)
     string += "\n"
 
     if "DIR" in nnc_df:
@@ -267,7 +270,7 @@ def df2res_editnnc(
     string += "/"
     if not nocomments:
         string += " "
-        string += common.comment_formatter(
+        string += comment_formatter(
             f"  {len(nnc_df)} nnc connections, avg multiplier {nnc_df['TRANM'].mean()}"
         )
     string += "\n\n"

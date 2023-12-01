@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.trans &mdash; res2df 1.0.1.dev1+gb05c2e91 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>res2df.trans &mdash; res2df 1.0.1.dev2+g8fa3b8f9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -33,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev1+gb05c2e91
+                1.0.1.dev2+g8fa3b8f9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -73,7 +75,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
       <li class="breadcrumb-item active">res2df.trans</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -94,11 +95,10 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">res2df.grid</span>
-<span class="kn">import</span> <span class="nn">res2df.nnc</span>
-<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">res2df.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
-
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
+<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_grid_df</span>
+<span class="kn">from</span> <span class="nn">.nnc</span> <span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_nnc_df</span>
+<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
 <span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -187,7 +187,7 @@
             <span class="s2">&quot;Filtering to both k and to ij simultaneously results in empty dataframe&quot;</span>
         <span class="p">)</span>
 
-    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">create_grid_df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
     <span class="n">existing_vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec</span> <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">vectors</span> <span class="k">if</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">existing_vectors</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -235,7 +235,7 @@
 
     <span class="k">if</span> <span class="n">addnnc</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding NNC data&quot;</span><span class="p">)</span>
-        <span class="n">nnc_df</span> <span class="o">=</span> <span class="n">res2df</span><span class="o">.</span><span class="n">nnc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">nnc_df</span> <span class="o">=</span> <span class="n">create_nnc_df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">nnc_df</span><span class="p">[</span><span class="s2">&quot;DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;NNC&quot;</span>
         <span class="n">trans_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">trans_df</span><span class="p">,</span> <span class="n">nnc_df</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 

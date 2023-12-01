@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfp &mdash; res2df 1.0.1.dev1+gb05c2e91 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>res2df.vfp._vfp &mdash; res2df 1.0.1.dev2+g8fa3b8f9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -33,7 +35,7 @@
               <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev1+gb05c2e91
+                1.0.1.dev2+g8fa3b8f9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -73,7 +75,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../../res2df.html">res2df</a></li>
       <li class="breadcrumb-item active">res2df.vfp._vfp</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -111,8 +112,11 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
-<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span><span class="p">,</span> <span class="n">getLogger_res2csv</span>
-
+<span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="n">comment_formatter</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span><span class="p">,</span> <span class="n">write_inc_stdout_file</span>
+<span class="kn">from</span> <span class="nn">..res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span> <span class="nn">..resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_vfpinj</span> <span class="k">as</span> <span class="n">vfpinj</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_vfpprod</span> <span class="k">as</span> <span class="n">vfpprod</span>
 <span class="kn">from</span> <span class="nn">._vfpdefs</span> <span class="kn">import</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">,</span> <span class="n">VFPTYPE</span>
@@ -484,7 +488,7 @@
     <span class="n">str_vfps</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">comments</span> <span class="ow">and</span> <span class="s2">&quot;master&quot;</span> <span class="ow">in</span> <span class="n">comments</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">str_vfps</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comments</span><span class="p">[</span><span class="s2">&quot;master&quot;</span><span class="p">])</span>
+        <span class="n">str_vfps</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comments</span><span class="p">[</span><span class="s2">&quot;master&quot;</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">str_vfp</span> <span class="ow">in</span> <span class="n">strs_vfp</span><span class="p">:</span>
         <span class="n">str_vfps</span> <span class="o">+=</span> <span class="n">str_vfp</span>
         <span class="n">str_vfps</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -567,7 +571,7 @@
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; resdata :term:`include file`&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;VFPPROD, VFPINJ&quot;</span><span class="p">,</span> <span class="s2">&quot;vfp.inc&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;VFPPROD, VFPINJ&quot;</span><span class="p">,</span> <span class="s2">&quot;vfp.inc&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="vfp_main"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.vfp_main">[docs]</a><span class="k">def</span> <span class="nf">vfp_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -597,7 +601,7 @@
                 <span class="n">vfp_table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;TABLE_NUMBER&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="n">vfp_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">outputfile</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">table_number</span><span class="p">)</span><span class="si">}</span><span class="s2">.arrow&quot;</span>
-            <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+            <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
                 <span class="n">vfp_table</span><span class="p">,</span> <span class="n">vfp_filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span>
             <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parsed file </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="si">}</span><span class="s2"> for vfp.dfs_arrow&quot;</span><span class="p">)</span>
@@ -606,7 +610,7 @@
             <span class="n">resdatafiles</span><span class="o">.</span><span class="n">get_deck</span><span class="p">(),</span> <span class="n">keyword</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keyword</span><span class="p">,</span> <span class="n">vfpnumbers_str</span><span class="o">=</span><span class="n">vfpnumbers</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
+            <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
                 <span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span>
             <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parsed file </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">DATAFILE</span><span class="si">}</span><span class="s2"> for vfp.df&quot;</span><span class="p">)</span></div>
@@ -621,7 +625,7 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">{args.csvfile}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2res</span><span class="p">(</span><span class="n">vfp_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">keyword</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-        <span class="n">common</span><span class="o">.</span><span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+        <span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

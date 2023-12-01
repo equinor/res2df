@@ -13,6 +13,7 @@ Submodules
 
 .. toctree::
 
+   res2df.__version__
    res2df.common
    res2df.compdat
    res2df.constants
@@ -29,6 +30,7 @@ Submodules
    res2df.pillars
    res2df.pvt
    res2df.res2csv
+   res2df.res2csvlogger
    res2df.resdatafiles
    res2df.rft
    res2df.satfunc

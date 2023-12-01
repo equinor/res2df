@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pillars &mdash; res2df 1.0.1.dev1+gb05c2e91 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>res2df.pillars &mdash; res2df 1.0.1.dev2+g8fa3b8f9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -33,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev1+gb05c2e91
+                1.0.1.dev2+g8fa3b8f9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -73,7 +75,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
       <li class="breadcrumb-item active">res2df.pillars</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -94,7 +95,11 @@
 <span class="kn">import</span> <span class="nn">dateutil.parser</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span><span class="p">,</span> <span class="n">getLogger_res2csv</span><span class="p">,</span> <span class="n">grid</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">stack_on_colnames</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
+<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">dates2rstindices</span>
+<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_grid_df</span>
+<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -169,11 +174,11 @@
     <span class="k">if</span> <span class="n">region</span><span class="p">:</span>
         <span class="n">vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
     <span class="n">vectors</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;POR*&quot;</span><span class="p">,</span> <span class="s2">&quot;PERM*&quot;</span><span class="p">,</span> <span class="s2">&quot;SWAT&quot;</span><span class="p">,</span> <span class="s2">&quot;SGAS&quot;</span><span class="p">,</span> <span class="s2">&quot;1OVERBO&quot;</span><span class="p">,</span> <span class="s2">&quot;1OVERBG&quot;</span><span class="p">])</span>
-    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span>
+    <span class="n">grid_df</span> <span class="o">=</span> <span class="n">create_grid_df</span><span class="p">(</span>
         <span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="n">rstdates</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">,</span> <span class="n">dateinheaders</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
 
-    <span class="n">rstdates_iso</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">dates2rstindices</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">rstdates_iso</span> <span class="o">=</span> <span class="n">dates2rstindices</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;J&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing pillar statistics&quot;</span><span class="p">)</span>
@@ -220,9 +225,7 @@
                 <span class="n">grouped</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">contacts</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">stackdates</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">stack_on_colnames</span><span class="p">(</span>
-            <span class="n">grouped</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">stack_on_colnames</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">grouped</span></div>
 
 
@@ -529,9 +532,7 @@
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
         <span class="n">dframe</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;PILLAR&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
     <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;PORV&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;VOLUME&quot;</span><span class="p">]</span>
-    <span class="n">common</span><span class="o">.</span><span class="n">write_dframe_stdout_file</span><span class="p">(</span>
-        <span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span>
-    <span class="p">)</span></div>
+    <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

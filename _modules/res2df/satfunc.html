@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.satfunc &mdash; res2df 1.0.1.dev1+gb05c2e91 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>res2df.satfunc &mdash; res2df 1.0.1.dev2+g8fa3b8f9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -33,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev1+gb05c2e91
+                1.0.1.dev2+g8fa3b8f9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -73,7 +75,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
       <li class="breadcrumb-item active">res2df.satfunc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -111,9 +112,17 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
-<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">common</span><span class="p">,</span> <span class="n">getLogger_res2csv</span><span class="p">,</span> <span class="n">inferdims</span>
-
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">comment_formatter</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">handle_wanted_keywords</span><span class="p">,</span>
+    <span class="n">keyworddata_to_df</span><span class="p">,</span>
+    <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
+    <span class="n">write_inc_stdout_file</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.inferdims</span> <span class="kn">import</span> <span class="n">inject_xxxdims_ntxxx</span>
+<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
 <span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -181,16 +190,16 @@
         <span class="c1"># NB: If this is done on include files and not on .DATA files</span>
         <span class="c1"># we can loose data for SATNUM &gt; 1</span>
         <span class="n">deck</span> <span class="o">=</span> <span class="n">deck</span><span class="o">.</span><span class="n">get_deck</span><span class="p">()</span>
-    <span class="n">deck</span> <span class="o">=</span> <span class="n">inferdims</span><span class="o">.</span><span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTSFUN&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="p">)</span>
+    <span class="n">deck</span> <span class="o">=</span> <span class="n">inject_xxxdims_ntxxx</span><span class="p">(</span><span class="s2">&quot;TABDIMS&quot;</span><span class="p">,</span> <span class="s2">&quot;NTSFUN&quot;</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">ntsfun</span><span class="p">)</span>
     <span class="k">assert</span> <span class="s2">&quot;TABDIMS&quot;</span> <span class="ow">in</span> <span class="n">deck</span>
 
-    <span class="n">wanted_keywords</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
+    <span class="n">wanted_keywords</span> <span class="o">=</span> <span class="n">handle_wanted_keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">deck</span><span class="p">,</span> <span class="n">SUPPORTED_KEYWORDS</span><span class="p">)</span>
 
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">wanted_keywords</span><span class="p">:</span>
         <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">interpolate_defaults</span><span class="p">(</span>
-                <span class="n">common</span><span class="o">.</span><span class="n">keyworddata_to_df</span><span class="p">(</span>
+                <span class="n">keyworddata_to_df</span><span class="p">(</span>
                     <span class="n">deck</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">RENAMERS</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span> <span class="n">recordcountername</span><span class="o">=</span><span class="s2">&quot;SATNUM&quot;</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">KEYWORD</span><span class="o">=</span><span class="n">keyword</span><span class="p">)</span>
             <span class="p">)</span>
@@ -217,7 +226,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate NaN&#39;s linearly in saturation.</span>
 <span class="sd">    Saturation function tables in :term:`.DATA files &lt;.DATA file&gt;`</span>
 <span class="sd">    can have certain values defaulted.</span>
-<span class="sd">    When parsed by common.res2df, these values are returned as np.nan.</span>
+<span class="sd">    When parsed by res2df, these values are returned as np.nan.</span>
 <span class="sd">    The incoming dataframe must be associated to one keyword only, but</span>
 <span class="sd">    can consist of multiple SATNUMs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -273,7 +282,7 @@
 
 <div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.satfunc.html#res2df.satfunc.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; resdata :term:`include file`&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;SWOF, SGOF++&quot;</span><span class="p">,</span> <span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;SWOF, SGOF++&quot;</span><span class="p">,</span> <span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="satfunc_main"><a class="viewcode-back" href="../../res2df/res2df.satfunc.html#res2df.satfunc.satfunc_main">[docs]</a><span class="k">def</span> <span class="nf">satfunc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -317,7 +326,7 @@
     <span class="n">satfunc_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">csvfile</span><span class="p">)</span>
     <span class="n">inc_string</span> <span class="o">=</span> <span class="n">df2res</span><span class="p">(</span><span class="n">satfunc_df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keywords</span><span class="p">)</span>
-    <span class="n">common</span><span class="o">.</span><span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../res2df/res2df.satfunc.html#res2df.satfunc.df2res">[docs]</a><span class="k">def</span> <span class="nf">df2res</span><span class="p">(</span>
@@ -345,7 +354,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">common_df2res</span><span class="p">(</span>
         <span class="n">satfunc_df</span><span class="p">,</span>
         <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
         <span class="n">comments</span><span class="o">=</span><span class="n">comments</span><span class="p">,</span>
@@ -442,7 +451,7 @@
     <span class="k">if</span> <span class="n">dframe</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;-- No data!</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="n">common</span><span class="o">.</span><span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
         <span class="c1"># Use everything..</span>

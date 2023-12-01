@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.csv2res &mdash; res2df 1.0.1.dev1+gb05c2e91 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>res2df.csv2res &mdash; res2df 1.0.1.dev2+g8fa3b8f9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -33,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev1+gb05c2e91
+                1.0.1.dev2+g8fa3b8f9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -73,7 +75,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../res2df.html">res2df</a></li>
       <li class="breadcrumb-item active">res2df.csv2res</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -93,7 +94,17 @@
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">equil</span><span class="p">,</span> <span class="n">pvt</span><span class="p">,</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">vfp</span>
+<span class="kn">from</span> <span class="nn">.__version__</span> <span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">.equil</span> <span class="kn">import</span> <span class="n">equil_reverse_main</span>
+<span class="kn">from</span> <span class="nn">.equil</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">equil_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">.pvt</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">pvt_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">.pvt</span> <span class="kn">import</span> <span class="n">pvt_reverse_main</span>
+<span class="kn">from</span> <span class="nn">.satfunc</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">satfunc_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">.satfunc</span> <span class="kn">import</span> <span class="n">satfunc_reverse_main</span>
+<span class="kn">from</span> <span class="nn">.summary</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">summary_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">.summary</span> <span class="kn">import</span> <span class="n">summary_reverse_main</span>
+<span class="kn">from</span> <span class="nn">.vfp</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">vfp_fill_reverse_parser</span>
+<span class="kn">from</span> <span class="nn">.vfp</span> <span class="kn">import</span> <span class="n">vfp_reverse_main</span>
 
 <span class="c1"># String constants in use for generating ERT forward model documentation:</span>
 <span class="n">DESCRIPTION</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert CSV files into include files. Uses the command</span>
@@ -140,8 +151,8 @@
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write UNSMRY files&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Write UNSMRY files from CSV files.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">summary</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
-    <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary</span><span class="o">.</span><span class="n">summary_reverse_main</span><span class="p">)</span>
+    <span class="n">summary_fill_reverse_parser</span><span class="p">(</span><span class="n">summary_parser</span><span class="p">)</span>
+    <span class="n">summary_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">summary_reverse_main</span><span class="p">)</span>
 
     <span class="n">equil_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;equil&quot;</span><span class="p">,</span>
@@ -151,16 +162,16 @@
             <span class="s2">&quot;to include files from CSV in res2df format.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">equil</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
-    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil</span><span class="o">.</span><span class="n">equil_reverse_main</span><span class="p">)</span>
+    <span class="n">equil_fill_reverse_parser</span><span class="p">(</span><span class="n">equil_parser</span><span class="p">)</span>
+    <span class="n">equil_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">equil_reverse_main</span><span class="p">)</span>
 
     <span class="n">pvt_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;pvt&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write PVT include files&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Write include files from CSV files with res2df format.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">pvt</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">pvt_parser</span><span class="p">)</span>
-    <span class="n">pvt_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pvt</span><span class="o">.</span><span class="n">pvt_reverse_main</span><span class="p">)</span>
+    <span class="n">pvt_fill_reverse_parser</span><span class="p">(</span><span class="n">pvt_parser</span><span class="p">)</span>
+    <span class="n">pvt_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">pvt_reverse_main</span><span class="p">)</span>
 
     <span class="n">satfunc_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;satfunc&quot;</span><span class="p">,</span>
@@ -170,8 +181,8 @@
             <span class="s2">&quot;res2df format.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">satfunc</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
-    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc</span><span class="o">.</span><span class="n">satfunc_reverse_main</span><span class="p">)</span>
+    <span class="n">satfunc_fill_reverse_parser</span><span class="p">(</span><span class="n">satfunc_parser</span><span class="p">)</span>
+    <span class="n">satfunc_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">satfunc_reverse_main</span><span class="p">)</span>
 
     <span class="n">vfp_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;vfp&quot;</span><span class="p">,</span>
@@ -180,8 +191,8 @@
             <span class="s2">&quot;Write VFPPROD/VFPINJ include files from CSV files with res2df format.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">vfp</span><span class="o">.</span><span class="n">fill_reverse_parser</span><span class="p">(</span><span class="n">vfp_parser</span><span class="p">)</span>
-    <span class="n">vfp_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">vfp</span><span class="o">.</span><span class="n">vfp_reverse_main</span><span class="p">)</span>
+    <span class="n">vfp_fill_reverse_parser</span><span class="p">(</span><span class="n">vfp_parser</span><span class="p">)</span>
+    <span class="n">vfp_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">vfp_reverse_main</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
 

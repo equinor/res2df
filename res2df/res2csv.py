@@ -24,7 +24,7 @@ For more documentation, see https://equinor.github.io/res2df/.
 CATEGORY: str = "utility.eclipse"
 EXAMPLES: str = """
 
-Outputting the EQUIL data from a .DATA file. This is implicitly 
+Outputting the EQUIL data from a .DATA file. This is implicitly
 supplied in ERT configs::
 
    FORWARD_MODEL RES2CSV(<SUBCOMMAND>=equil, <OUTPUT>=equil.csv)
@@ -174,16 +174,6 @@ def get_parser() -> argparse.ArgumentParser:
             "into one dataframe for all SATNUMs. Each row has data for a "
             "saturation point. For SWOF data, all columns related to SGOF "
             "are empty and vice versa"
-        ),
-    )
-    subparsers_dict["fipreports"] = subparsers.add_parser(
-        "fipreports",
-        help=("Extract FIPxxxxx REPORT REGION data from PRT output file."),
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description=(
-            "Extract FIPxxxxx REPORT REGION data from PRT file. "
-            "This parses currently in-place, outflows to wells and regions, and "
-            "material balance errors"
         ),
     )
     subparsers_dict["compdat"] = subparsers.add_parser(

@@ -475,8 +475,10 @@ EQUIL
     df = equil.df(deckstr, ntequl=1)
     # We are not able to catch this situation..
     assert len(df) == 1
-    # But this will fail:
-    with pytest.raises(ValueError):
+    # But this will fail. Which exception is raised depends
+    # on the pybind11 version opm is built with which opm
+    # version is being used. Both are possible.
+    with pytest.raises((ValueError, RuntimeError)):
         equil.df(deckstr, ntequl=3)
 
     deckstr = """

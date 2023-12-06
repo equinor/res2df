@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from ecl2df import EclFiles, compdat, ecl2csv
+from res2df import ResdataFiles, compdat, res2csv
 
 try:
     # pylint: disable=unused-import
@@ -32,8 +32,8 @@ SCHFILE_VALV = str(TESTDIR / "data/reek/eclipse/include/schedule/op6_valve1_gp.s
 
 def test_df():
     """Test main dataframe API, only testing that something comes out"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    compdat_df = compdat.df(eclfiles)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    compdat_df = compdat.df(resdatafiles)
     assert not compdat_df.empty
     assert "ZONE" in compdat_df
     assert "K1" in compdat_df
@@ -42,8 +42,8 @@ def test_df():
 
 def test_comp2df():
     """Test that dataframes are produced"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    compdfs = compdat.deck2dfs(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    compdfs = compdat.deck2dfs(resdatafiles.get_deck())
 
     assert not compdfs["COMPDAT"].empty
     assert not compdfs["WELSEGS"].empty
@@ -53,7 +53,7 @@ def test_comp2df():
 
 def test_schfile2df():
     """Test that we can process individual files"""
-    deck = EclFiles.file2deck(SCHFILE)
+    deck = ResdataFiles.file2deck(SCHFILE)
     compdfs = compdat.deck2dfs(deck)
     assert not compdfs["COMPDAT"].columns.empty
     assert not compdfs["COMPDAT"].empty
@@ -67,7 +67,7 @@ COMPDAT
 -- comments.
 /
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     compdfs = compdat.deck2dfs(deck)
     compdat_df = compdfs["COMPDAT"]
     assert compdat_df.loc[0, "SATN"] == 0
@@ -79,7 +79,7 @@ COMPDAT
  'FOO' 303 1010 031 39  /
 /
 """
-    compdat_df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    compdat_df = compdat.deck2dfs(ResdataFiles.str2deck(schstr))["COMPDAT"]
     assert len(compdat_df) == 9
     assert not compdat_df["DFACT"].values[0]
     assert not compdat_df["TRAN"].values[0]
@@ -114,7 +114,7 @@ WSEGVALV
   'OP1'   166   1   7.4294683E-06  0 / icd on segment 17, cell 41 125 29
 /
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     compdfs = compdat.deck2dfs(deck)
     compdat_df = compdfs["COMPDAT"]
     welsegs = compdfs["WELSEGS"]
@@ -182,7 +182,7 @@ COMPDAT
   'OP1' 35 111 33 33 'SHUT' /
 /
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     compdf = compdat.deck2dfs(deck)["COMPDAT"]
     dates = [str(x) for x in compdf["DATE"].unique()]
     assert len(dates) == 3
@@ -202,7 +202,7 @@ COMPDAT
  'OP1' 34 111 32 32 'OPEN' /
 /
     """
-    assert compdat.deck2dfs(EclFiles.str2deck(schstr_nodate)) == {}
+    assert compdat.deck2dfs(ResdataFiles.str2deck(schstr_nodate)) == {}
     # (critical error logged)
 
 
@@ -215,14 +215,14 @@ COMPDAT
   'OP1' 33 44 10 20  /
 /
 """
-    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    df = compdat.deck2dfs(ResdataFiles.str2deck(schstr))["COMPDAT"]
     assert df["I"].unique() == 33
     assert df["J"].unique() == 44
     assert (df["K1"].values == range(10, 20 + 1)).all()
     assert (df["K2"].values == range(10, 20 + 1)).all()
 
     # Check that we can read withoug unrolling:
-    df_noroll = compdat.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["COMPDAT"]
+    df_noroll = compdat.deck2dfs(ResdataFiles.str2deck(schstr), unroll=False)["COMPDAT"]
     assert len(df_noroll) == 1
 
 
@@ -234,7 +234,7 @@ COMPDAT
   'OP2' 1 1 1 1 /
 /
 """
-    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["COMPDAT"]
+    df = compdat.deck2dfs(ResdataFiles.str2deck(schstr))["COMPDAT"]
     assert len(df) == 2
 
 
@@ -248,10 +248,10 @@ WELSEGS
    2 3 1 1 1923.9 1689.000 0.1172 0.000015  /
 /
 """
-    df = compdat.deck2dfs(EclFiles.str2deck(schstr))["WELSEGS"]
+    df = compdat.deck2dfs(ResdataFiles.str2deck(schstr))["WELSEGS"]
     assert len(df) == 2
 
-    df = compdat.deck2dfs(EclFiles.str2deck(schstr), unroll=False)["WELSEGS"]
+    df = compdat.deck2dfs(ResdataFiles.str2deck(schstr), unroll=False)["WELSEGS"]
     assert len(df) == 1
 
 
@@ -267,33 +267,33 @@ def test_unrollbogus():
 
 def test_initmerging():
     """Test that we can ask for INIT vectors to be merged into the data"""
-    eclfiles = EclFiles(REEK)
-    noinit_df = compdat.df(eclfiles)
-    df = compdat.df(eclfiles, initvectors=[])
+    resdatafiles = ResdataFiles(REEK)
+    noinit_df = compdat.df(resdatafiles)
+    df = compdat.df(resdatafiles, initvectors=[])
     assert isinstance(df, pd.DataFrame)
     assert not df.empty
 
-    df = compdat.df(eclfiles, initvectors=["FIPNUM", "EQLNUM", "SATNUM"])
+    df = compdat.df(resdatafiles, initvectors=["FIPNUM", "EQLNUM", "SATNUM"])
     assert "FIPNUM" in df
     assert "EQLNUM" in df
     assert "SATNUM" in df
     assert len(df) == len(noinit_df)
 
-    df = compdat.df(eclfiles, initvectors="FIPNUM")
+    df = compdat.df(resdatafiles, initvectors="FIPNUM")
     assert "FIPNUM" in df
     assert len(df) == len(noinit_df)
 
     with pytest.raises(AssertionError):
-        compdat.df(eclfiles, initvectors=2)
+        compdat.df(resdatafiles, initvectors=2)
 
 
 def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "compdat.csv"
     mocker.patch(
-        "sys.argv", ["ecl2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
+        "sys.argv", ["res2csv", "compdat", "-v", EIGHTCELLS, "-o", str(tmpcsvfile)]
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -303,7 +303,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "compdat",
             EIGHTCELLS,
             "--initvectors",
@@ -312,7 +312,7 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -322,7 +322,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "compdat",
             EIGHTCELLS,
             "--initvectors",
@@ -332,7 +332,7 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -369,37 +369,39 @@ COMPDAT
 
     # pylint: disable=expression-not-assigned
     with pytest.raises(ValueError, match="WELSPECS must be provided when I"):
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i))["COMPDAT"]
+        compdat.deck2dfs(ResdataFiles.str2deck(compdat_str_def_i))["COMPDAT"]
 
     # I value of 0 also means defaulted:
     with pytest.raises(ValueError, match="WELSPECS must be provided when I"):
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i.replace("1*", "0")))[
+        compdat.deck2dfs(ResdataFiles.str2deck(compdat_str_def_i.replace("1*", "0")))[
             "COMPDAT"
         ]
 
     with pytest.raises(ValueError, match="WELSPECS must be provided when J"):
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_j))["COMPDAT"]
+        compdat.deck2dfs(ResdataFiles.str2deck(compdat_str_def_j))["COMPDAT"]
 
     # J value of 0 also means defaulted:
     with pytest.raises(ValueError, match="WELSPECS must be provided when J"):
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_j.replace("1*", "0")))[
+        compdat.deck2dfs(ResdataFiles.str2deck(compdat_str_def_j.replace("1*", "0")))[
             "COMPDAT"
         ]
 
     with pytest.raises(ValueError, match="WELSPECS must be provided"):
         # Wrong order:
-        compdat.deck2dfs(EclFiles.str2deck(compdat_str_def_i + welspecs_str))["COMPDAT"]
+        compdat.deck2dfs(ResdataFiles.str2deck(compdat_str_def_i + welspecs_str))[
+            "COMPDAT"
+        ]
 
     # Simplest example:
-    compdat_df = compdat.deck2dfs(EclFiles.str2deck(welspecs_str + compdat_str_def_i))[
-        "COMPDAT"
-    ]
+    compdat_df = compdat.deck2dfs(
+        ResdataFiles.str2deck(welspecs_str + compdat_str_def_i)
+    )["COMPDAT"]
     assert compdat_df["I"].unique() == [20]
     assert compdat_df["J"].unique() == [30]
 
     # Two wells:
     compdat_df = compdat.deck2dfs(
-        EclFiles.str2deck(
+        ResdataFiles.str2deck(
             welspecs_str.replace("OP1", "OP2").replace("30", "99")
             + welspecs_str
             + compdat_str_def_i
@@ -408,14 +410,14 @@ COMPDAT
 
     # Partial defaulting
     compdat_df = compdat.deck2dfs(
-        EclFiles.str2deck(welspecs_str + compdat_str_def_i + compdat_str_nodefaults)
+        ResdataFiles.str2deck(welspecs_str + compdat_str_def_i + compdat_str_nodefaults)
     )["COMPDAT"]
 
     assert set(compdat_df["I"].unique()) == {20, 55}
     assert set(compdat_df["J"].unique()) == {30, 66}
 
     compdat_df = compdat.deck2dfs(
-        EclFiles.str2deck(
+        ResdataFiles.str2deck(
             welspecs_str.replace("OP1", "OP2").replace("30", "99")
             + welspecs_str
             + compdat_str_def_i
@@ -430,7 +432,7 @@ COMPDAT
 
     # Same well redrilled to new location
     compdat_df = compdat.deck2dfs(
-        EclFiles.str2deck(
+        ResdataFiles.str2deck(
             "DATES\n  1 JAN 2030 /\n/\n"
             + welspecs_str
             + compdat_str_def_i
@@ -450,17 +452,17 @@ COMPDAT
 # Multisegement well testing
 def test_msw_schfile2df():
     """Test that we can process individual files with AICD and ICD MSW"""
-    deck = EclFiles.file2deck(SCHFILE_AICD)
+    deck = ResdataFiles.file2deck(SCHFILE_AICD)
     compdfs = compdat.deck2dfs(deck)
     assert not compdfs["WSEGAICD"].empty
     assert not compdfs["WSEGAICD"].columns.empty
 
-    deck = EclFiles.file2deck(SCHFILE_ICD)
+    deck = ResdataFiles.file2deck(SCHFILE_ICD)
     compdfs = compdat.deck2dfs(deck)
     assert not compdfs["WSEGSICD"].empty
     assert not compdfs["WSEGSICD"].columns.empty
 
-    deck = EclFiles.file2deck(SCHFILE_VALV)
+    deck = ResdataFiles.file2deck(SCHFILE_VALV)
     compdfs = compdat.deck2dfs(deck)
     assert not compdfs["WSEGVALV"].empty
     assert not compdfs["WSEGVALV"].columns.empty
@@ -507,7 +509,7 @@ WSEGVALV
     OP_6  31       0.0084252 0.00075  1*  /
 /
 """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     compdfs = compdat.deck2dfs(deck)
     wsegaicd = compdfs["WSEGAICD"]
     wsegsicd = compdfs["WSEGSICD"]
@@ -539,7 +541,7 @@ def test_wsegaicd():
    OPEN 1.0 1.0 1.0 2.43 1.18 10.0  /
 /
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     wsegaicd = compdat.deck2dfs(deck)["WSEGAICD"]
     pd.testing.assert_frame_equal(
         wsegaicd,
@@ -585,7 +587,7 @@ def test_wsegsicd():
                          OPEN /
             /
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     wsegsicd = compdat.deck2dfs(deck)["WSEGSICD"]
     pd.testing.assert_frame_equal(
         wsegsicd,
@@ -620,7 +622,7 @@ def test_wsegvalv():
     WELL_A   31  0.0084252 0.00075  0.5  0.216   0.0005  0.0366    SHUT    0.0008 /
     /
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
     pd.testing.assert_frame_equal(
         wsegvalv,
@@ -654,7 +656,7 @@ def test_wsegvalv_max_blank():
     WELL_A   31  0.0084252 0.00075  /
     /
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
     pd.testing.assert_frame_equal(
         wsegvalv,
@@ -688,7 +690,7 @@ def test_wsegvalv_max_default():
     WELL_A   31  0.0084252 0.00075  6* /
     /
     """
-    deck = EclFiles.str2deck(schstr)
+    deck = ResdataFiles.str2deck(schstr)
     wsegvalv = compdat.deck2dfs(deck)["WSEGVALV"]
     pd.testing.assert_frame_equal(
         wsegvalv,

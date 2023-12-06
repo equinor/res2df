@@ -4,20 +4,20 @@ trans
 The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
 from a simulation grid.
 
-Python API: :func:`ecl2df.trans.df`
+Python API: :func:`res2df.trans.df`
 
-Applied on an Eclipse deck, the *trans* module will give out a dataframe of neighbour
+Applied on a :term:`.DATA file`, the *trans* module will give out a dataframe of neighbour
 connections
 
 .. code-block:: python
 
-   from ecl2df import trans, EclFiles
+   from res2df import trans, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = ecl2df.trans.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = res2df.trans.df(resdatafiles)
 
 ..
-   ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA")).sample(7)\
+   res2df.trans.df(res2df.ResdataFiles("2_R001_REEK-0.DATA")).sample(7)\
    .to_csv("trans1.csv", float_format="%.2f", index=False)
 
 .. csv-table:: Neighbour transmissibilities, sample rows from an example simulation.
@@ -26,14 +26,14 @@ connections
 
 The last column ``DIR`` is the direction of the connection in i-j-k, space, and can
 take on the values ``I``, ``J``, and ``K``. The ``TRAN`` column has values from the
-``TRANX``, ``TRANY`` or ``TRANZ`` in the Eclipse output files.
+``TRANX``, ``TRANY`` or ``TRANZ`` in output files.
 
 You can obtain this dataframe as a CSV file by writing this command on the
 command line:
 
 .. code-block:: console
 
-   ecl2csv trans MYDATADECK.DATA --verbose --output trans.csv
+   res2csv trans MYDATADECK.DATA --verbose --output trans.csv
 
 Adding more data for each connection
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -79,12 +79,12 @@ like this. Example:
 
 .. code-block:: python
 
-   dframe = ecl2df.trans.df(eclfiles, vectors="FIPNUM", boundaryfilter=True, addnnc=True)
+   dframe = res2df.trans.df(resdatafiles, vectors="FIPNUM", boundaryfilter=True, addnnc=True)
 
 which gives the dataframe
 
 ..
-   ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", boundaryfilter=True).sample(10).to_csv("trans-boundaries.csv", index=False, float_format="%.2f")
+   res2df.trans.df(res2df.ResdataFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", boundaryfilter=True).sample(10).to_csv("trans-boundaries.csv", index=False, float_format="%.2f")
 
 .. csv-table:: Sample rows from connections where FIPNUM is changing
    :file:  trans-boundaries.csv
@@ -105,13 +105,13 @@ over a region interface. This is accomplished by adding the ``group=True`` optio
 
 .. code-block:: python
 
-   from ecl2df import trans, EclFiles
+   from res2df import trans, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = ecl2df.trans.df(eclfiles, vectors="FIPNUM", addnnc=True, group=True)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = res2df.trans.df(resdatafiles, vectors="FIPNUM", addnnc=True, group=True)
 
 ..
-   ecl2df.trans.df(ecl2df.EclFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", group=True).to_csv("trans-group.csv", index=False, float_format="%.2f")
+   res2df.trans.df(res2df.ResdataFiles("2_R001_REEK-0.DATA"), addnnc=True, vectors="FIPNUM", group=True).to_csv("trans-group.csv", index=False, float_format="%.2f")
 
 .. csv-table:: Transmissibilities summed over each FIPNUM interface
    :file: trans-group.csv
@@ -121,5 +121,5 @@ where this last table can also be exported directly from the command line using
 
 .. code-block:: console
 
-   ecl2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv
+   res2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv
 

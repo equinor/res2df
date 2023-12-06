@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import common, compdat, wellcompletiondata
-from ecl2df.eclfiles import EclFiles
-from ecl2df.wellcompletiondata import (
+from res2df import common, compdat, wellcompletiondata
+from res2df.resdatafiles import ResdataFiles
+from res2df.wellcompletiondata import (
     _aggregate_layer_to_zone,
     _df2pyarrow,
     _excl_well_startswith,
@@ -34,7 +34,7 @@ def test_eightcells_with_wellconnstatus():
     """Test the Eightcells dataset with the well connection status
     option activated (connection status extracted from summary data)
     """
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     expected_dframe = pd.DataFrame(
         [
             {
@@ -48,7 +48,7 @@ def test_eightcells_with_wellconnstatus():
     )
     pd.testing.assert_frame_equal(
         wellcompletiondata.df(
-            eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=True
+            resdatafiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=True
         ),
         expected_dframe,
         check_dtype=False,
@@ -58,7 +58,7 @@ def test_eightcells_with_wellconnstatus():
 def test_eightcells_without_wellconnstatus():
     """Test the Eightcells dataset with only the compdat export data (connection
     status extracted from parsing the schedule file)"""
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     expected_dframe = pd.DataFrame(
         [
             {
@@ -72,7 +72,7 @@ def test_eightcells_without_wellconnstatus():
     )
     pd.testing.assert_frame_equal(
         wellcompletiondata.df(
-            eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
+            resdatafiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
         ),
         expected_dframe,
         check_dtype=False,
@@ -81,9 +81,9 @@ def test_eightcells_without_wellconnstatus():
 
 def test_df2pyarrow():
     """Test that dataframe is conserved using _df2pyarrow"""
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     df = wellcompletiondata.df(
-        eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
+        resdatafiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
     )
     df["KH"] = df["KH"].astype(np.int32)
     pd.testing.assert_frame_equal(
@@ -93,9 +93,9 @@ def test_df2pyarrow():
 
 def test_metadata():
     """Test that the KH column has metadata and that unit is mDm"""
-    eclfiles = EclFiles(EIGHTCELLS)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
     df = wellcompletiondata.df(
-        eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
+        resdatafiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
     )
     assert df.attrs["meta"] == {"KH": {"unit": "mDm"}}
 
@@ -109,21 +109,21 @@ def test_empty_zonemap():
     """Test empty zonemap and zonemap with layers that doesn't exist in the compdat
     table. Both returns an empty dataframe
     """
-    eclfiles = EclFiles(EIGHTCELLS)
-    df = wellcompletiondata.df(eclfiles, zonemap={}, use_wellconnstatus=False)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    df = wellcompletiondata.df(resdatafiles, zonemap={}, use_wellconnstatus=False)
     assert df.empty
 
     zonemap = {1000: "ZONE1", -1: "ZONE1"}
-    df = wellcompletiondata.df(eclfiles, zonemap=zonemap, use_wellconnstatus=False)
+    df = wellcompletiondata.df(resdatafiles, zonemap=zonemap, use_wellconnstatus=False)
     assert df.empty
 
 
 def test_zonemap_with_some_undefined_layers():
     """Layers in the zonemap that don't exist in the compdat output will be ignored."""
-    eclfiles = EclFiles(REEK)
+    resdatafiles = ResdataFiles(REEK)
     zonemap = {1: "ZONE1", 2: "ZONE1"}
-    df = wellcompletiondata.df(eclfiles, zonemap=zonemap, use_wellconnstatus=False)
-    compdat_df = compdat.df(eclfiles)
+    df = wellcompletiondata.df(resdatafiles, zonemap=zonemap, use_wellconnstatus=False)
+    compdat_df = compdat.df(resdatafiles)
 
     # Filter compdat on layer 1 and 2
     compdat_df = compdat_df[compdat_df["K1"] <= 2]

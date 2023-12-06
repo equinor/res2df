@@ -2,23 +2,24 @@ grid
 ----
 
 The grid module will extract static and dynamic cell properties from
-an Eclipse grid (from the binary output files from Eclipse). Each row
-in a returned dataframe represents one cell.
+a grid 
+(from the :term:`output files of reservoir simulators <output file>`). 
+Each row in a returned dataframe represents one cell.
 
 Typical usage
 
 .. code-block:: python
 
-   from ecl2df import grid, EclFiles
+   from res2df import grid, ResdataFiles
 
-   eclfiles = EclFiles('MYDATADECK.DATA')
-   dframe = grid.df(eclfiles, rstdates='last')
+   resdatafiles = ResdataFiles('MYDATADECK.DATA')
+   dframe = grid.df(resdatafiles, rstdates='last')
 
-where the API is documented at :func:`ecl2df.grid.df`.
+where the API is documented at :func:`res2df.grid.df`.
 
 ..
-   eclfiles = EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')
-   grid.df(eclfiles).sample(10).to_csv('docs/usage/grid.csv', float_format="%.2f", index=False)
+   resdatafiles = ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')
+   grid.df(resdatafiles).sample(10).to_csv('docs/usage/grid.csv', float_format="%.2f", index=False)
 
 .. csv-table:: Example grid table
    :file: grid.csv
@@ -29,8 +30,8 @@ Alternatively, the same data can be produced as a CSV file using the command lin
 
 .. code-block:: console
 
-  ecl2csv grid --help  # Will display some help text
-  ecl2csv grid MYDATADECK.DATA --rstdates last --verbose --output grid.csv
+  res2csv grid --help  # Will display some help text
+  res2csv grid MYDATADECK.DATA --rstdates last --verbose --output grid.csv
 
 
 Select which vectors to include (INIT and/or restart vectors) with the
@@ -38,7 +39,7 @@ Select which vectors to include (INIT and/or restart vectors) with the
 
 .. code-block:: console
 
-  ecl2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX
+  res2csv grid --verbose MYDATADECK.DATA --vectors PRESSURE PERMX
 
 Example computations on a grid dataframe
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -110,20 +111,20 @@ the whereabouts of the file:
 
 .. code-block:: python
 
-   from ecl2df import grid, EclFiles, common
+   from res2df import grid, ResdataFiles, common
 
-   eclfiles = EclFiles("'MYDATADECK.DATA")
-   dframe = grid.df(eclfiles)
-   # The filename with layers is relative to DATA-file location
+   resdatafiles = ResdataFiles("'MYDATADECK.DATA")
+   dframe = grid.df(resdatafiles)
+   # The filename with layers is relative to .DATA file location
    # or an absolute path.
-   subzonemap = ecl2df.common.parse_zonemapfile("subzones.lyr")
+   subzonemap = res2df.common.parse_zonemapfile("subzones.lyr")
    dframe_with_subzones = common.merge_zones(
        dframe, subzonemap, zoneheader="SUBZONE", kname="K"
    )
 
 For more control over merging of zones, check the documentation for
-the function :func:`ecl2df.common.merge_zones` and
-:meth:`ecl2df.common.parse_zonemapfile`
+the function :func:`res2df.common.merge_zones` and
+:meth:`res2df.common.parse_zonemapfile`
 
 Dynamic data
 ^^^^^^^^^^^^
@@ -142,34 +143,34 @@ Calculating volumes of dynamic data (pr. some region parameter) can be obtained
 from that module as a by-product of the pillar computations.
 
 
-Generating Eclipse include files from grid data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Generating include files from grid data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
-:func:`ecl2df.grid.df2ecl()` function these manipulated vectors can be written back as
-include files to Eclipse.
+:func:`res2df.grid.df2res()` function these manipulated vectors can be written back as
+:term:`include files <include file>`.
 
 Say you want to change the FIPNUM, and that FIPNUM 6 should be removed, and set
 it to FIPNUM 5. This can be accomplished using
 
 .. code-block:: python
 
-   from ecl2df import grid, EclFiles, common
+   from res2df import grid, ResdataFiles, common
 
-   eclfiles = EclFiles("'MYDATADECK.DATA")
-   dframe = grid.df(eclfiles)
+   resdatafiles = ResdataFiles("'MYDATADECK.DATA")
+   dframe = grid.df(resdatafiles)
 
    # Change FIPNUM 6 to FIPNUM 5:
    rows_to_touch = dframe["FIPNUM"] == 6
    dframe.loc[rows_to_touch, "FIPNUM"] = 5
 
    # Write back to new include file, ensure datatype is integer.
-   grid.df2ecl(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", eclfiles=eclfiles)
+   grid.df2res(dframe, "FIPNUM", dtype=int, filename="fipnum.inc", resdatafiles=resdatafiles)
 
 This will produce the file `fipnum.inc` with the contents:
 
 .. literalinclude:: fipnum.inc
 
-It is recommended to supply the ``eclfiles`` object to ``df2ecl``, if not, correct grid
+It is recommended to supply the ``resdatafiles`` object to ``df2res``, if not, correct grid
 size can not be ensured.

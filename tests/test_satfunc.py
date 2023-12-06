@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import csv2ecl, ecl2csv, inferdims, satfunc
-from ecl2df.eclfiles import EclFiles
+from res2df import csv2res, inferdims, res2csv, satfunc
+from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
@@ -26,11 +26,11 @@ REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
-def test_ecldeck_to_satfunc_dframe():
-    """Test that dataframes can be produced from a full Eclipse deck (the
+def test_deck_to_satfunc_dframe():
+    """Test that dataframes can be produced from a complete deck (the
     example Reek case)"""
-    eclfiles = EclFiles(REEK)
-    satdf = satfunc.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    satdf = satfunc.df(resdatafiles.get_deck())
 
     assert set(satdf["KEYWORD"]) == {"SWOF", "SGOF"}
     assert set(satdf["SATNUM"]) == {1}
@@ -56,9 +56,9 @@ def test_ecldeck_to_satfunc_dframe():
 def test_satfunc_roundtrip():
     """Test that we can produce a SATNUM dataframe from the Reek case, convert
     it back to an include file, and then reinterpret it to the same"""
-    eclfiles = EclFiles(EIGHTCELLS)
-    satdf = satfunc.df(eclfiles.get_ecldeck())
-    inc = satfunc.df2ecl(satdf)
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    satdf = satfunc.df(resdatafiles.get_deck())
+    inc = satfunc.df2res(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(
         satdf.sort_values(["SATNUM", "KEYWORD"]),
@@ -66,20 +66,20 @@ def test_satfunc_roundtrip():
     )
 
 
-def test_df2ecl_order():
+def test_df2res_order():
     """Test that we can control the keyword order in generated
     strings by the list supplied in keywords argument"""
-    eclfiles = EclFiles(REEK)
-    satdf = satfunc.df(eclfiles.get_ecldeck())
+    resdatafiles = ResdataFiles(REEK)
+    satdf = satfunc.df(resdatafiles.get_deck())
 
-    swof_sgof = satfunc.df2ecl(satdf, keywords=["SWOF", "SGOF"])
+    swof_sgof = satfunc.df2res(satdf, keywords=["SWOF", "SGOF"])
     assert swof_sgof.find("SWOF") < swof_sgof.find("SGOF")
-    sgof_swof = satfunc.df2ecl(satdf, keywords=["SGOF", "SWOF"])
+    sgof_swof = satfunc.df2res(satdf, keywords=["SGOF", "SWOF"])
     assert sgof_swof.find("SGOF") < sgof_swof.find("SWOF")
 
-    only_swof = satfunc.df2ecl(satdf, keywords=["SWOF"])
+    only_swof = satfunc.df2res(satdf, keywords=["SWOF"])
     assert "SGOF" not in only_swof
-    only_sgof = satfunc.df2ecl(satdf, keywords="SGOF")
+    only_sgof = satfunc.df2res(satdf, keywords="SGOF")
     assert "SWOF" not in only_sgof
 
 
@@ -90,7 +90,7 @@ def test_nodata():
     satdf = satfunc.df(swofstr)
     assert len(satdf) == 0
 
-    inc = satfunc.df2ecl_swof(satdf)
+    inc = satfunc.df2res_swof(satdf)
     assert "No data" in inc
     df_from_inc = satfunc.df(inc)
     assert df_from_inc.empty
@@ -245,7 +245,7 @@ def test_str2df(string, expected_df):
     if expected_df.empty:
         return
 
-    inc = satfunc.df2ecl(satdf)
+    inc = satfunc.df2res(satdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(df_from_inc, expected_df)
 
@@ -272,7 +272,7 @@ SGOF
     assert "SATNUM" in sgofdf
     assert len(sgofdf["SATNUM"].unique()) == 3
     assert len(sgofdf) == 8
-    inc = satfunc.df2ecl(sgofdf)
+    inc = satfunc.df2res(sgofdf)
     df_from_inc = satfunc.df(inc)
     pd.testing.assert_frame_equal(sgofdf, df_from_inc)
 
@@ -280,9 +280,9 @@ SGOF
     sgoffile = "__sgof_tmp.txt"
     Path(sgoffile).write_text(sgofstr, encoding="utf8")
     mocker.patch(
-        "sys.argv", ["ecl2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
+        "sys.argv", ["res2csv", "satfunc", "-v", sgoffile, "-o", sgoffile + ".csv"]
     )
-    ecl2csv.main()
+    res2csv.main()
     parsed_sgof = pd.read_csv(sgoffile + ".csv")
     assert len(parsed_sgof["SATNUM"].unique()) == 3
 
@@ -657,8 +657,8 @@ SGFN
 def test_main_subparsers(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "satfunc.csv"
-    mocker.patch("sys.argv", ["ecl2csv", "satfunc", EIGHTCELLS, "-o", str(tmpcsvfile)])
-    ecl2csv.main()
+    mocker.patch("sys.argv", ["res2csv", "satfunc", EIGHTCELLS, "-o", str(tmpcsvfile)])
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile))
@@ -669,7 +669,7 @@ def test_main_subparsers(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "satfunc",
             EIGHTCELLS,
             "--keywords",
@@ -678,15 +678,15 @@ def test_main_subparsers(tmp_path, mocker):
             str(tmpcsvfile2),
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile2).is_file()
     disk_df = pd.read_csv(str(tmpcsvfile2))
     assert set(disk_df["KEYWORD"].unique()) == {"SWOF"}
 
 
-def test_csv2ecl(tmp_path, mocker):
-    """Test command line interface for csv to Eclipse include files"""
+def test_csv2res(tmp_path, mocker):
+    """Test command line interface for csv to include files"""
     os.chdir(tmp_path)
     tmpcsvfile = "satfunc.csv"
 
@@ -695,8 +695,8 @@ def test_csv2ecl(tmp_path, mocker):
         data=[["SWOF", 0.0, 0.0, 1.0, 0.0], ["SWOF", 1.0, 1.0, 0.0, 0.0]],
     )
     swof_df.to_csv(tmpcsvfile, index=False)
-    mocker.patch("sys.argv", ["csv2ecl", "satfunc", "--output", "swof.inc", tmpcsvfile])
-    csv2ecl.main()
+    mocker.patch("sys.argv", ["csv2res", "satfunc", "--output", "swof.inc", tmpcsvfile])
+    csv2res.main()
     pd.testing.assert_frame_equal(
         satfunc.df(Path("swof.inc").read_text(encoding="utf8")).drop(
             "SATNUM", axis="columns"
@@ -707,7 +707,7 @@ def test_csv2ecl(tmp_path, mocker):
 
     # Test writing to stdout:
     result = subprocess.run(
-        ["csv2ecl", "satfunc", "--output", "-", tmpcsvfile],
+        ["csv2res", "satfunc", "--output", "-", tmpcsvfile],
         stdout=subprocess.PIPE,
         check=True,
     )

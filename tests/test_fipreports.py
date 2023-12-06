@@ -8,9 +8,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ecl2df import ecl2csv, fipreports
-from ecl2df.eclfiles import EclFiles
-from ecl2df.fipreports import report_block_lineparser as parser
+from res2df import fipreports, res2csv
+from res2df.fipreports import report_block_lineparser as parser
+from res2df.resdatafiles import ResdataFiles
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -19,7 +19,7 @@ MOCKPRTFILE = str(TESTDIR / "data/fipreports/TEST1.PRT")
 
 def test_fipreports2df():
     """Test parsing of Reek dataset"""
-    prtfile = EclFiles(DATAFILE).get_prtfilename()
+    prtfile = ResdataFiles(DATAFILE).get_prtfilename()
     fipreport_df = fipreports.df(prtfile)
     assert len(fipreport_df["REGION"].unique()) == 6
     assert len(fipreport_df["DATE"].unique()) == 1
@@ -346,7 +346,7 @@ def test_rogue_eclipse_output(tmp_path):
 
 
 def test_prtstring_opmflow(tmp_path):
-    """Test parsing the PRT output from OPM flow."""
+    """Test parsing the PRT output from OPM Flow."""
     prtstring = """
 Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 
@@ -440,9 +440,9 @@ def test_cmdline(tmp_path, mocker):
     tmpcsvfile = tmp_path / "TMP-fipreports.csv"
     mocker.patch(
         "sys.argv",
-        ["ecl2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)],
+        ["res2csv", "fipreports", "-v", DATAFILE, "--output", str(tmpcsvfile)],
     )
-    ecl2csv.main()
+    res2csv.main()
 
     assert Path(tmpcsvfile).is_file()
     disk_df = pd.read_csv(tmpcsvfile)
@@ -454,7 +454,7 @@ def test_cmdline(tmp_path, mocker):
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "fipreports",
             "--debug",
             DATAFILE,
@@ -462,19 +462,19 @@ def test_cmdline(tmp_path, mocker):
             "debugmode.csv",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("debugmode.csv"), disk_df)
 
     # Directly on PRT file:
     mocker.patch(
         "sys.argv",
         [
-            "ecl2csv",
+            "res2csv",
             "fipreports",
             DATAFILE.replace("DATA", "PRT"),
             "--output",
             "fromprtfile.csv",
         ],
     )
-    ecl2csv.main()
+    res2csv.main()
     pd.testing.assert_frame_equal(pd.read_csv("fromprtfile.csv"), disk_df)

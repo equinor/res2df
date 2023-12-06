@@ -16,22 +16,22 @@ except ImportError:
 
 from ert.shared.plugins.plugin_manager import ErtPluginManager
 
-import ecl2df.hook_implementations.jobs
+import res2df.hook_implementations.jobs
 
 
 @pytest.fixture(name="expected_jobs")
-def fixture_expected_jobs(path_to_ecl2df: Path) -> Dict[str, Path]:
+def fixture_expected_jobs(path_to_res2df: Path) -> Dict[str, Path]:
     """Dictionary of installed jobs with location to job configuration"""
     expected_job_names = [
-        "ECL2CSV",
-        "CSV2ECL",
+        "RES2CSV",
+        "CSV2RES",
     ]
-    return {name: path_to_ecl2df / "config_jobs" / name for name in expected_job_names}
+    return {name: path_to_res2df / "config_jobs" / name for name in expected_job_names}
 
 
 def test_hook_implementations(expected_jobs):
     """Test that the expected jobs can be found using an ERT plugin manager"""
-    plugin_m = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
+    plugin_m = ErtPluginManager(plugins=[res2df.hook_implementations.jobs])
 
     installable_jobs = plugin_m.get_installable_jobs()
     for wf_name, wf_location in expected_jobs.items():
@@ -75,7 +75,7 @@ def test_executables(expected_jobs):
 
 def test_hook_implementations_job_docs():
     """Test extracting docs from ERT hooks"""
-    plugin_m = ErtPluginManager(plugins=[ecl2df.hook_implementations.jobs])
+    plugin_m = ErtPluginManager(plugins=[res2df.hook_implementations.jobs])
 
     installable_jobs = plugin_m.get_installable_jobs()
 

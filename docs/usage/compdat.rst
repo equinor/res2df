@@ -1,19 +1,19 @@
 compdat
 ^^^^^^^
 
-This module extracts COMPDAT, WELSEGS and COMPSEGS from an Eclipse deck.
+This module extracts COMPDAT, WELSEGS and COMPSEGS from a :term:`.DATA file`.
 
 Additionally, it will parse WELOPEN statements and emit new COMPDAT
 statements from the actions in WELOPEN.
 
 ..
-  compdat.df(EclFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/compdat.csv', index=False)
+  compdat.df(ResdataFiles('tests/data/reek/eclipse/model/2_R001_REEK-0.DATA')).head(15).to_csv('docs/usage/compdat.csv', index=False)
 .. code-block:: python
 
-   from ecl2df import compdat, EclFiles
+   from res2df import compdat, ResdataFiles
 
-   eclfiles = EclFiles("MYDATADECK.DATA")
-   dframe = compdat.df(eclfiles)
+   resdatafiles = ResdataFiles("MYDATADECK.DATA")
+   dframe = compdat.df(resdatafiles)
 
 .. csv-table:: Example COMPDAT table
    :file: compdat.csv
@@ -26,7 +26,7 @@ for each of COMPDAT, and the segmentation keywords.
 .. warning:: When WELOPEN is in use, the dataframe can differ from Eclipse
   behaviour in certain circumstances. The dataframe representation from
   ``compdat`` does not separate from a "shut" well and the open-ness of its
-  connections. So in an Eclipse deck it is possible to shut a well, and then
+  connections. So in a :term:`.DATA file` it is possible to shut a well, and then
   reopen it, and get back the original open/shut state of individual
   connections prior to well shut.  The dataframe format will display `all`
   connections as open if a well is opened with defaulted indices.
@@ -39,5 +39,5 @@ be added to the returned data through the option ``--initvectors``:
 
 .. code-block:: console
 
-   ecl2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX
-   # (put the DATA file first, if not it will be interpreted as a vector)
+   res2csv compdat --verbose MYDATADECK.DATA --initvectors FIPNUM PERMX
+   # (put the .DATA file first, if not it will be interpreted as a vector)

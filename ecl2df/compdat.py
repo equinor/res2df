@@ -932,7 +932,7 @@ def applywelopen(
         new_state["KEYWORD_IDX"] = row["KEYWORD_IDX"]
         new_state["DATE"] = row["DATE"]
 
-        compdat_df = compdat_df.append(new_state)
+        compdat_df = pd.concat([compdat_df, new_state], ignore_index=True)
 
     if not compdat_df.empty:
         compdat_df = (

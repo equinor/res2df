@@ -79,7 +79,7 @@ jobs:
           python setup.py build_sphinx
 
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8' && matrix.pandas-version == 'pandas>2'
         run: |
             cp -R ./build/sphinx/html ../html
 
@@ -102,7 +102,7 @@ jobs:
             fi
 
       - name: Build python package and publish to pypi
-        if: github.event_name == 'release' && matrix.python-version == '3.8'
+        if: github.event_name == 'release' && matrix.python-version == '3.8' && matrix.pandas-version == 'pandas>2'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.res2df_pypi_token }}

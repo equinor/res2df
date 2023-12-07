@@ -11,3 +11,5 @@ docs/res2df.rst
 res2df/version.py
 \#*
 .\#*
+venv*
+build

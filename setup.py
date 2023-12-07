@@ -19,7 +19,7 @@ REQUIREMENTS = [
     "resdata>=4.0.0",
     "numpy",
     "opm>=2020.10.2,<=2022.4",  # NB: Pypi versions.
-    "pandas<2.0",
+    "pandas",
     "pyarrow",
     "pyyaml>=5.1",
     "treelib",

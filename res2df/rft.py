@@ -409,15 +409,15 @@ def merge_icd_seg_conseg(
 
     if logger.level <= logging.DEBUG:
         logger.debug("Writing connection data to con.csv")
-        con_data[CON_TOPOLOGY_COLS.intersection(con_data.columns)].to_csv(
+        con_data[list(CON_TOPOLOGY_COLS.intersection(con_data.columns))].to_csv(
             "con.csv", index=False
         )
         logger.debug("Writing segment data to seg.csv")
-        seg_data[SEG_TOPOLOGY_COLS.intersection(seg_data.columns)].to_csv(
+        seg_data[list(SEG_TOPOLOGY_COLS.intersection(seg_data.columns))].to_csv(
             "seg.csv", index=False
         )
         logger.debug("Writing ICD data to icd.csv")
-        icd_data[ICD_TOPOLOGY_COLS.intersection(icd_data.columns)].to_csv(
+        icd_data[list(ICD_TOPOLOGY_COLS.intersection(icd_data.columns))].to_csv(
             "icd.csv", index=False
         )
 
@@ -444,7 +444,7 @@ def merge_icd_seg_conseg(
         # Gather connections that are not associated to ICDs:
         no_icd_con_segments = set(con_data["CONSEGNO"]) - set(icd_data["ICD_SEGIDX"])
         con_data_no_icd = (
-            con_data.set_index("CONSEGNO").loc[no_icd_con_segments].reset_index()
+            con_data.set_index("CONSEGNO").loc[list(no_icd_con_segments)].reset_index()
         )
     else:
         con_data_no_icd = con_data
@@ -615,7 +615,7 @@ def df(
                 "ICD_LONELYSEG",
             }
         )
-        con_icd_seg = con_icd_seg[set(con_icd_seg.columns) - delete_cols]
+        con_icd_seg = con_icd_seg[list(set(con_icd_seg.columns) - delete_cols)]
 
         rftdata.append(con_icd_seg)
 

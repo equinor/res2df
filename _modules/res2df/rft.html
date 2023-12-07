@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.rft &mdash; res2df 1.0.1.dev2+g8fa3b8f9 documentation</title>
+  <title>res2df.rft &mdash; res2df 1.0.1.dev3+gbf4029aa documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -35,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev2+g8fa3b8f9
+                1.0.1.dev3+gbf4029aa
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -496,15 +496,15 @@
 
     <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">level</span> <span class="o">&lt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing connection data to con.csv&quot;</span><span class="p">)</span>
-        <span class="n">con_data</span><span class="p">[</span><span class="n">CON_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+        <span class="n">con_data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">CON_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">con_data</span><span class="o">.</span><span class="n">columns</span><span class="p">))]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="s2">&quot;con.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing segment data to seg.csv&quot;</span><span class="p">)</span>
-        <span class="n">seg_data</span><span class="p">[</span><span class="n">SEG_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+        <span class="n">seg_data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">SEG_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">seg_data</span><span class="o">.</span><span class="n">columns</span><span class="p">))]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="s2">&quot;seg.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing ICD data to icd.csv&quot;</span><span class="p">)</span>
-        <span class="n">icd_data</span><span class="p">[</span><span class="n">ICD_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">icd_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+        <span class="n">icd_data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">ICD_TOPOLOGY_COLS</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">icd_data</span><span class="o">.</span><span class="n">columns</span><span class="p">))]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
             <span class="s2">&quot;icd.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
 
@@ -531,7 +531,7 @@
         <span class="c1"># Gather connections that are not associated to ICDs:</span>
         <span class="n">no_icd_con_segments</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">con_data</span><span class="p">[</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">icd_data</span><span class="p">[</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">])</span>
         <span class="n">con_data_no_icd</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">con_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">no_icd_con_segments</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="n">con_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">no_icd_con_segments</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">con_data_no_icd</span> <span class="o">=</span> <span class="n">con_data</span>
@@ -702,7 +702,7 @@
                 <span class="s2">&quot;ICD_LONELYSEG&quot;</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">con_icd_seg</span> <span class="o">=</span> <span class="n">con_icd_seg</span><span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">con_icd_seg</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="n">delete_cols</span><span class="p">]</span>
+        <span class="n">con_icd_seg</span> <span class="o">=</span> <span class="n">con_icd_seg</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">con_icd_seg</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="n">delete_cols</span><span class="p">)]</span>
 
         <span class="n">rftdata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">con_icd_seg</span><span class="p">)</span>
 

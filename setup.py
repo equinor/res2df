@@ -31,7 +31,6 @@ DOCS_REQUIREMENTS = [
     "autoapi",
     "ipython",
     "rstcheck",
-    "pydantic<2",  # remove this when ert unpins fastapi and pydantic
     "sphinx<7",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",

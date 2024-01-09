@@ -18,7 +18,7 @@ SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm < 6.1"]
 REQUIREMENTS = [
     "resdata>=4.0.0",
     "numpy",
-    "opm>=2020.10.2,<=2022.4",  # NB: Pypi versions.
+    "opm>=2020.10.2",
     "pandas",
     "pyarrow",
     "pyyaml>=5.1",

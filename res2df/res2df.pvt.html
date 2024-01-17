@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pvt &mdash; res2df 1.0.1.dev7+gcc784dee documentation</title>
+  <title>res2df.pvt &mdash; res2df 1.0.1.dev8+gfdf25e42 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -38,7 +38,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev7+gcc784dee
+                1.0.1.dev8+gfdf25e42
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -154,13 +154,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -175,9 +172,9 @@ read them in to strings as in this example:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – Incoming data <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Always
+<li><p><strong>deck</strong> – Incoming data <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Always
 supply as a string if you don’t know TABDIMS-NTSFUN.</p></li>
-<li><p><strong>keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of keywords for which data is
+<li><p><strong>keywords</strong> – List of keywords for which data is
 wanted. All data will be merged into one dataframe.</p></li>
 <li><p><strong>pvtnumcount</strong> – Number of PVTNUMs defined in the <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, only
 needed if TABDIMS with NTPVT is not found in the <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.
@@ -185,11 +182,8 @@ If not supplied (or None) and NTPVT is not defined,
 it will be attempted inferred.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -377,13 +371,10 @@ dataframes (as CSV files)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -395,13 +386,10 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in deck. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in deck. Will
 be inferred if not present in deck.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -436,13 +424,10 @@ be inferred if not present in deck.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -454,13 +439,10 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -472,13 +454,10 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -490,13 +469,10 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – </p></li>
-<li><p><strong>ntpvt</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
+<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>ntpvt</strong> – Number of PVT regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>

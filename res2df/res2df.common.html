@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.common &mdash; res2df 1.0.1.dev7+gcc784dee documentation</title>
+  <title>res2df.common &mdash; res2df 1.0.1.dev8+gfdf25e42 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -38,7 +38,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev7+gcc784dee
+                1.0.1.dev8+gfdf25e42
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -447,21 +447,18 @@ where the color code is optional:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>record</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DeckRecord</span></code>) – Record be parsed</p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Which keyword this belongs to</p></li>
-<li><p><strong>itemlistname</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The key in the json dict that describes the items,
+<li><p><strong>record</strong> – Record be parsed</p></li>
+<li><p><strong>keyword</strong> – Which keyword this belongs to</p></li>
+<li><p><strong>itemlistname</strong> – The key in the json dict that describes the items,
 typically ‘items’ or ‘records’</p></li>
-<li><p><strong>recordindex</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – For keywords where itemlistname is ‘records’, this is a
+<li><p><strong>recordindex</strong> – For keywords where itemlistname is ‘records’, this is a
 list index to the “record”.
 Beware, there are multiple concepts here for what we call a record.</p></li>
-<li><p><strong>renamer</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – If supplied, this dictionary will be used to remap
+<li><p><strong>renamer</strong> – If supplied, this dictionary will be used to remap
 the keys in returned dict. For items with name DATA, the dict
 value is assumed to be a list of strings to be mapped to
 each subitem.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>

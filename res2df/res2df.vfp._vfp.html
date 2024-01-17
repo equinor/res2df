@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfp &mdash; res2df 1.0.1.dev7+gcc784dee documentation</title>
+  <title>res2df.vfp._vfp &mdash; res2df 1.0.1.dev8+gfdf25e42 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -38,7 +38,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev7+gcc784dee
+                1.0.1.dev8+gfdf25e42
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -140,14 +140,11 @@ BASIC_DATA_KEYS in _vfpprod and _vfpinj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string with <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
-<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String with list of vfp table numbers to extract.
+<li><p><strong>deck</strong> – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string with <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
+<li><p><strong>keyword</strong> – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
+<li><p><strong>vfpnumbers_str</strong> – String with list of vfp table numbers to extract.
 Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -194,13 +191,10 @@ VFPPROD or VFPINJ</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string wit <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
-<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – str with list of VFP table numbers to extract</p></li>
+<li><p><strong>deck</strong> – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string wit <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
+<li><p><strong>keyword</strong> – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
+<li><p><strong>vfpnumbers_str</strong> – str with list of VFP table numbers to extract</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -273,14 +267,11 @@ included pr. keyword.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string with <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
-<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String with list of vfp table numbers to extract.
+<li><p><strong>deck</strong> – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string with <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
+<li><p><strong>keyword</strong> – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
+<li><p><strong>vfpnumbers_str</strong> – String with list of vfp table numbers to extract.
 Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -334,14 +325,11 @@ liftcurve table represented as a pyarrow Table</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Deck</span></code>]) – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string with <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
-<li><p><strong>vfpnumbers_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String with list of vfp table numbers to extract.
+<li><p><strong>deck</strong> – <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or string with <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
+<li><p><strong>keyword</strong> – VFP table type, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
+<li><p><strong>vfpnumbers_str</strong> – String with list of vfp table numbers to extract.
 Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>

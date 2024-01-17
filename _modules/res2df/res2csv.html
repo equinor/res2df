@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.res2csv &mdash; res2df 1.0.1.dev5+gbb7a6dbe documentation</title>
+  <title>res2df.res2csv &mdash; res2df 1.0.1.dev6+g9b4a4c2d documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -35,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev5+gbb7a6dbe
+                1.0.1.dev6+g9b4a4c2d
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -111,7 +111,7 @@
 <span class="n">CATEGORY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
 <span class="n">EXAMPLES</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="s2">Outputting the EQUIL data from a .DATA file. This is implicitly </span>
+<span class="s2">Outputting the EQUIL data from a .DATA file. This is implicitly</span>
 <span class="s2">supplied in ERT configs::</span>
 
 <span class="s2">   FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)</span>
@@ -263,16 +263,6 @@
             <span class="s2">&quot;are empty and vice versa&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;fipreports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;fipreports&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT output file.&quot;</span><span class="p">),</span>
-        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Extract FIPxxxxx REPORT REGION data from PRT file. &quot;</span>
-            <span class="s2">&quot;This parses currently in-place, outflows to wells and regions, and &quot;</span>
-            <span class="s2">&quot;material balance errors&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
     <span class="n">subparsers_dict</span><span class="p">[</span><span class="s2">&quot;compdat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
         <span class="s2">&quot;compdat&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Extract COMPDAT data&quot;</span><span class="p">,</span>
@@ -413,7 +403,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2023.</p>
+    <p>&#169; Copyright Equinor 2019-2024.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

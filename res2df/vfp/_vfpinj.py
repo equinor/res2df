@@ -642,11 +642,13 @@ def _write_table_records(
             if (n + 1) % values_per_line == 0:
                 if n < no_flow_values - 1:
                     deck_str += "\n"
-                    deck_str += " " * 2
+                    deck_str += " " * 11
                 else:
                     deck_str += "\n"
             elif n == no_flow_values - 1:
                 deck_str += "\n"
+            else:
+                deck_str += " "
 
         deck_str += "/\n"
 

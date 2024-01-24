@@ -408,7 +408,7 @@ def df2res(
 
     if filename:
         with open(filename, "w") as fout:
-            fout.write(str_vfp)
+            fout.write(str_vfps)
 
     return str_vfps
 

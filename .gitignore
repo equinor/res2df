@@ -13,3 +13,4 @@ res2df/version.py
 .\#*
 venv*
 build
+kenv*

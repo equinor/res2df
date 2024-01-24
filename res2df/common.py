@@ -417,10 +417,7 @@ def comment_formatter(multiline: Optional[str], prefix: str = "-- ") -> str:
     """
     if multiline is None or not multiline.strip():
         return ""
-    return (
-        "\n".join([prefix + line.strip() for line in multiline.splitlines()]).strip()
-        + "\n"
-    )
+    return "\n".join([prefix + line for line in multiline.splitlines()]) + "\n"
 
 
 def handle_wanted_keywords(

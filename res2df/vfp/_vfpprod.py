@@ -890,7 +890,7 @@ def _write_table_records(
     gfr_indices: np.ndarray,
     alq_indices: np.ndarray,
     table: np.ndarray,
-    format: str = "%10.3",
+    format: str = "%10.6g",
     values_per_line: int = 5,
 ) -> str:
     """Creates a :term:`include file` content string representing a
@@ -931,6 +931,8 @@ def _write_table_records(
                     deck_str += "\n"
             elif n == no_flow_values - 1:
                 deck_str += "\n"
+            else:
+                deck_str += " "
 
         deck_str += "/\n"
 

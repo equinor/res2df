@@ -201,6 +201,8 @@ def _write_vfp_range(
         deck_str += format % value
         if (i + 1) % values_per_line == 0 and i < len(values) - 1:
             deck_str += "\n"
+        else:
+            deck_str += " "
     deck_str += " /\n"
     deck_str += "\n"
 

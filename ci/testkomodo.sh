@@ -5,3 +5,7 @@ install_test_dependencies () {
 install_package () {
   pip install .[tests,docs]
 }
+
+start_tests () {
+  pytest --run-eclipse-simulator
+}

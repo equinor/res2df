@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pytest
-
 from ecl2df import common, ecl2csv, grid
 from ecl2df.eclfiles import EclFiles
 
@@ -195,7 +194,7 @@ def test_df2ecl(tmp_path):
         grid.df2ecl(grid_df, "FIPNUM", dtype="foo")
 
     assert "FIPNUM" in fipnum_str
-    assert "-- Output file printed by ecl2df.grid" in fipnum_str
+    assert "-- Output file printed by res2df.grid" in fipnum_str
     assert "35817 active cells" in fipnum_str  # (comment at the end)
     assert "35840 total cell count" in fipnum_str  # (comment at the end)
     assert len(fipnum_str) > 100

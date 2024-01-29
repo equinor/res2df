@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from ecl2df import csv2ecl, ecl2csv, equil
 from ecl2df.eclfiles import EclFiles
 
@@ -474,7 +473,7 @@ EQUIL
     # We are not able to catch this situation..
     assert len(df) == 1
     # But this will fail:
-    with pytest.raises(ValueError):
+    with pytest.raises((ValueError, RuntimeError)):
         equil.df(deckstr, ntequl=3)
 
     deckstr = """

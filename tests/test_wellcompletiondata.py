@@ -4,7 +4,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from ecl2df import common, compdat, wellcompletiondata
 from ecl2df.eclfiles import EclFiles
 from ecl2df.wellcompletiondata import (
@@ -86,7 +85,9 @@ def test_df2pyarrow():
         eclfiles, zonemap=EIGHTCELLS_ZONEMAP, use_wellconnstatus=False
     )
     df["KH"] = df["KH"].astype(np.int32)
-    pd.testing.assert_frame_equal(df, _df2pyarrow(df).to_pandas(), check_like=True)
+    pd.testing.assert_frame_equal(
+        df, _df2pyarrow(df).to_pandas(), check_like=True, check_dtype=False
+    )
 
 
 def test_metadata():

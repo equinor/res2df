@@ -2,10 +2,9 @@ import os
 import subprocess
 from pathlib import Path
 
+import ecl2df
 import pandas as pd
 import pytest
-
-import ecl2df
 from ecl2df.hook_implementations import jobs
 
 try:
@@ -138,7 +137,7 @@ def test_get_module_variable():
     assert jobs._get_module_variable_if_exists("foo", "bar") == ""
     assert jobs._get_module_variable_if_exists(
         "ecl2df.ecl2csv", "DESCRIPTION"
-    ).startswith("Convert Eclipse input and output")
+    ).startswith("Convert reservoir simulator input and output")
     assert jobs._get_module_variable_if_exists("ecl2df.ecl2csv", "NOPE") == ""
 
 

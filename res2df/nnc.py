@@ -2,6 +2,7 @@
 Extract non-neighbour connection (NNC) information from reservoir
 simulator :term:`output files <output file>`.
 """
+
 import argparse
 import datetime
 import logging

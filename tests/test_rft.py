@@ -1,4 +1,5 @@
 """Test module for rft"""
+
 import datetime
 import os
 import random

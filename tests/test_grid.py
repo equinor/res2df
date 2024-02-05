@@ -1,4 +1,5 @@
 """Test module for res2df.grid"""
+
 import datetime
 import os
 from pathlib import Path

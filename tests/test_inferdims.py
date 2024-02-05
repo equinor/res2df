@@ -1,4 +1,5 @@
 """Test module for satfunc2df"""
+
 import re
 
 import pytest

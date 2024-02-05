@@ -271,9 +271,9 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
 
     # We also want to flag the segment that is upstream a junction,
     merged["JUNCTION_downstream"] = False
-    merged.loc[
-        merged[merged["JUNCTION"]]["SEGIDX_upstream"], "JUNCTION_downstream"
-    ] = True
+    merged.loc[merged[merged["JUNCTION"]]["SEGIDX_upstream"], "JUNCTION_downstream"] = (
+        True
+    )
 
     return merged
 

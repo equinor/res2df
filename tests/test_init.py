@@ -1,4 +1,5 @@
 """Check that res2df's submodules are always imported"""
+
 import sys
 
 # This file tests what happens when we do this import:

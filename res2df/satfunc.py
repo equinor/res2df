@@ -12,6 +12,7 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 
 """
+
 import argparse
 import logging
 from pathlib import Path

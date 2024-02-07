@@ -14,7 +14,7 @@ except ImportError:
 # Read the contents of README.md, for PyPI
 LONG_DESCRIPTION = (Path(__file__).parent / "README.md").read_text()
 
-SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm < 6.1"]
+SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
     "resdata>=4.0.0",
     "numpy",

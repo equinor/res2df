@@ -12,41 +12,59 @@ from res2df import ResdataFiles
 
 @pytest.mark.requires_eclipse
 @pytest.mark.parametrize(
-    "history_case, history_is_abspath, eclipse_version, expectation",
+    "history_case_len, history_is_abspath, eclipse_version, expectation",
     [
-        pytest.param("EIGHTCELLS", False, "2023.1", does_not_raise()),
-        pytest.param("EIGHTCELLS" * 7, False, "2023.1", does_not_raise()),
-        pytest.param("EIGHTCELLS" * 7, False, "2021.3", does_not_raise()),
         pytest.param(
-            "EIGHTCELLS" * 8,
+            8,
             False,
             "2023.1",
             does_not_raise(),
-            id="eclipse2023-supports-longer-than-72byte-smspec",
+            id="short-dataname-and-relpath-is-fine",
         ),
         pytest.param(
-            "EIGHTCELLS" * 8,
+            72,
+            False,
+            "2023.1",
+            does_not_raise(),
+            id="long-dataname-and-relpath-is-fine-eclipse2023",
+        ),
+        pytest.param(
+            72,
+            False,
+            "2021.3",
+            does_not_raise(),
+            id="maximum-dataname-length-eclipse2021",
+        ),
+        pytest.param(
+            126,
+            False,
+            "2023.1",
+            does_not_raise(),
+            id="maximum-dataname-length-eclipse2023",
+        ),
+        pytest.param(
+            73,
             False,
             "2021.3",
             pytest.raises(AssertionError),
             id="eclipse2021-does-not-support-long-smspec-header",
         ),
         pytest.param(
-            "EIGHTCELLS" * 13,
+            127,
             False,
             "2023.1",
             pytest.raises(RuntimeError),
             id="more-than-132-chars-pr-line-in-DATA",
         ),
         pytest.param(
-            "EIGHTCELLS",
+            2,
             True,
             "2023.1",
-            does_not_raise(),  # but can fail if the pytest tmp directory is very long
+            does_not_raise(),
             id="absolute-path-for-history-reference",
         ),
         pytest.param(
-            "EIGHTCELLS" * 7,
+            110,
             True,
             "2023.1",
             pytest.raises(RuntimeError),
@@ -55,10 +73,19 @@ from res2df import ResdataFiles
     ],
 )
 def test_summary_restarts(
-    history_case, history_is_abspath, eclipse_version, expectation, tmpdir
+    history_case_len, history_is_abspath, eclipse_version, expectation, tmpdir
 ):
+    # Generate a DATA filename with parametrized length
+    history_case = ("E23456789" * 20)[0:history_case_len]
+
+    restartref = history_case if not history_is_abspath else str(tmpdir / history_case)
+
+    if history_is_abspath:
+        if len(restartref) > (132 - 6) and isinstance(expectation, does_not_raise):
+            pytest.skip("pytest tmpdir is too long for this test to work")
+
     os.chdir(tmpdir)
-    (tmpdir / f"{history_case}.DATA").write_text(eightcells_deck(), encoding="utf-8")
+    Path(restartref + ".DATA").write_text(eightcells_deck(), encoding="utf-8")
 
     restartref = history_case if not history_is_abspath else str(tmpdir / history_case)
     if history_is_abspath:

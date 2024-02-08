@@ -125,9 +125,9 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    if (
-        result.returncode != 0
-        and "LICENSE FAILURE" in result.stdout.decode() + result.stderr.decode()
+    aggregated_output = result.stdout.decode() + result.stderr.decode()
+    if result.returncode != 0 and (
+        "LICENSE FAILURE" in aggregated_output or "LICENSE ERROR" in aggregated_output
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
         time.sleep(30)

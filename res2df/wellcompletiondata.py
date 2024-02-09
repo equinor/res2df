@@ -105,8 +105,12 @@ def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
     """
     unit_systems = [unitsystem.value for unitsystem in UnitSystem]
     try:
-        deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SCHEDULE])
-    except AttributeError: # opm<=2023.10 RUNSPEC is included by default and not an option.
+        deck = resdatafiles.get_deck(
+            sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SCHEDULE]
+        )
+    except (
+        AttributeError
+    ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
         deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
     for keyword in deck:
         if keyword.name in unit_systems:

@@ -104,8 +104,12 @@ def df(
         # NB: If this is done on include files and not on .DATA files
         # we can loose data for SATNUM > 1
         try:
-            deck = deck.get_deck(sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.PROPS])
-        except AttributeError: # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = deck.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.PROPS]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
             deck = deck.get_deck(sections=[opm.io.eclSectionType.PROPS])
     deck = inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
     assert "TABDIMS" in deck
@@ -210,8 +214,12 @@ def satfunc_main(args) -> None:
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
         try:
-            deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.PROPS])
-        except AttributeError: # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = resdatafiles.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.PROPS]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
             deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.PROPS])
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS

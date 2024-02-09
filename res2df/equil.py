@@ -113,8 +113,12 @@ def df(
     """
     if isinstance(deck, ResdataFiles):
         try:
-            deck = deck.get_deck(sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SOLUTION])
-        except AttributeError: # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = deck.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SOLUTION]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
             deck = deck.get_deck(sections=[opm.io.eclSectionType.SOLUTION])
 
     deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
@@ -332,8 +336,12 @@ def equil_main(args) -> None:
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
         try:
-            deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SOLUTION])
-        except AttributeError: # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = resdatafiles.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SOLUTION]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
             deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SOLUTION])
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS

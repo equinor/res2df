@@ -519,9 +519,7 @@ def vfp_main(args) -> None:
             )
             logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
     else:
-        dframe = df(
-            resdatafiles, keyword=args.keyword, vfpnumbers_str=vfpnumbers
-        )
+        dframe = df(resdatafiles, keyword=args.keyword, vfpnumbers_str=vfpnumbers)
         if args.output:
             write_dframe_stdout_file(
                 dframe, args.output, index=False, caller_logger=logger

@@ -993,7 +993,9 @@ def df(
     Returns:
         pd.Dataframe with one row pr cell to well connection
     """
-    compdat_df = deck2dfs(resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE]))["COMPDAT"]
+    compdat_df = deck2dfs(
+        resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
+    )["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 
     if initvectors:

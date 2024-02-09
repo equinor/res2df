@@ -457,7 +457,10 @@ def gruptree_main(args) -> None:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)
     resdatafiles = ResdataFiles(args.DATAFILE)
-    dframe = df(resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE]), startdate=args.startdate)
+    dframe = df(
+        resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE]),
+        startdate=args.startdate,
+    )
     if args.prettyprint:
         if "DATE" in dframe:
             print(prettyprint(dframe))

@@ -76,14 +76,14 @@ def test_filedescriptors():
     assert resdatafiles._rftfile is None
 
     deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.PROPS])
-    assert ("WELSPECS" in deck) == False # verify section parsing
+    assert ("WELSPECS" in deck) == False  # verify section parsing
     deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
-    assert "WELSPECS" in deck # verify that last result was not cached
-    deck = resdatafiles.get_deck() # full deck will be cached
+    assert "WELSPECS" in deck  # verify that last result was not cached
+    deck = resdatafiles.get_deck()  # full deck will be cached
     assert "SWOF" in deck
     assert "WELSPECS" in deck
     deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.PROPS])
-    assert "WELSPECS" in deck # verify that the full deck was cached and used
+    assert "WELSPECS" in deck  # verify that the full deck was cached and used
     resdatafiles.get_deck()
     # This should not leave any file descriptor open
     assert len(list(fd_dir.glob("*"))) == pre_fd_count

@@ -83,7 +83,7 @@ class ResdataFiles(object):
         """Return the full path to the directory with the .DATA file"""
         return Path(self._eclbase).absolute().parent
 
-    def get_deck(self, sections: list=[]) -> "opm.libopmcommon_python.Deck":
+    def get_deck(self, sections: list = []) -> "opm.libopmcommon_python.Deck":
         """Return a opm.io :term:`deck` of the .DATA file"""
         if not self._deck:
             if Path(self._eclbase + ".DATA").is_file():
@@ -103,7 +103,6 @@ class ResdataFiles(object):
                     pass
             self._deck = opm.io.Parser().parse(deckfile, parsecontext)
         return self._deck
-
 
     @staticmethod
     def str2deck(

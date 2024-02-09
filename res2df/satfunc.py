@@ -216,7 +216,7 @@ def satfunc_main(args) -> None:
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS
         # is supplied:
-        satfunc_df = df(resdatafiles, keywords=args.keywords)
+        satfunc_df = df(deck, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string

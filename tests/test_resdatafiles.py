@@ -76,7 +76,7 @@ def test_filedescriptors():
     assert resdatafiles._rftfile is None
 
     deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.PROPS])
-    assert ("WELSPECS" in deck) == False  # verify section parsing
+    assert "WELSPECS" not in deck  # verify section parsing
     deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
     assert "WELSPECS" in deck  # verify that last result was not cached
     deck = resdatafiles.get_deck()  # full deck will be cached

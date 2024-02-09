@@ -10,6 +10,11 @@ import pandas as pd
 import pyarrow
 import pyarrow.feather
 
+try:
+    import opm.io
+except ImportError:
+    pass
+
 from .common import convert_lyrlist_to_zonemap, parse_lyrfile, write_dframe_stdout_file
 from .compdat import df as create_compdat_df
 from .res2csvlogger import getLogger_res2csv
@@ -99,7 +104,11 @@ def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
     default unit system in Eclipse.
     """
     unit_systems = [unitsystem.value for unitsystem in UnitSystem]
-    for keyword in resdatafiles.get_deck():
+    try:
+        deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SCHEDULE])
+    except AttributeError: # opm<=2023.10 RUNSPEC is included by default and not an option.
+        deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
+    for keyword in deck:
         if keyword.name in unit_systems:
             return UnitSystem(keyword.name)
     return UnitSystem.METRIC

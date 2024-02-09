@@ -36,7 +36,7 @@ def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFram
     """
 
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_deck()
+        deck = deck.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
 
     wconrecords = []  # List of dicts of every line in input file
     date = None  # DATE columns will always be there, but can contain NaN
@@ -98,7 +98,7 @@ def wcon_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_deck()
+        deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
     wcon_df = df(deck)
     write_dframe_stdout_file(
         wcon_df,

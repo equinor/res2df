@@ -67,7 +67,7 @@ as in the example:
 
 It is *strongly* recommended to play with the cutoffs to get the desired result.
 Also calibrate the computed contacts with the initial contacts, you may see that
-you should add a constance distance to all computed contacts. Beware that shale
+you should add a constant distance to all computed contacts. Beware that shale
 cells with little oil, but in the oil zone necessarily will affect the
 computation (sometimes that explains the need for calibration to initial
 contacts).

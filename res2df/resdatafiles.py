@@ -83,7 +83,7 @@ class ResdataFiles(object):
         """Return the full path to the directory with the .DATA file"""
         return Path(self._eclbase).absolute().parent
 
-    def get_deck(self) -> "opm.libopmcommon_python.Deck":
+    def get_deck(self, sections: list = []) -> "opm.libopmcommon_python.Deck":
         """Return a opm.io :term:`deck` of the .DATA file"""
         if not self._deck:
             if Path(self._eclbase + ".DATA").is_file():
@@ -92,8 +92,16 @@ class ResdataFiles(object):
                 deckfile = self._eclbase  # Will be any filename
             logger.info("Parsing deck file %s...", deckfile)
             parsecontext = opm.io.ParseContext(OPMIOPARSER_RECOVERY)
-            deck = opm.io.Parser().parse(deckfile, parsecontext)
-            self._deck = deck
+            if len(sections) > 0:
+                try:
+                    deck = opm.io.Parser().parse(deckfile, parsecontext, sections)
+                    # Return without caching as only a part of the deck is parsed
+                    return deck
+                except RuntimeError:
+                    # Occurs if not able to parse individual sections
+                    # pass to parse and cache full deck
+                    pass
+            self._deck = opm.io.Parser().parse(deckfile, parsecontext)
         return self._deck
 
     @staticmethod

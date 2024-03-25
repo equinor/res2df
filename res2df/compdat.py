@@ -20,7 +20,7 @@ import pandas as pd
 
 try:
     # pylint: disable=unused-import
-    import opm.io.deck
+    import opm.io
 except ImportError:
     # Allow parts of res2df to work without OPM:
     pass
@@ -993,7 +993,9 @@ def df(
     Returns:
         pd.Dataframe with one row pr cell to well connection
     """
-    compdat_df = deck2dfs(resdatafiles.get_deck())["COMPDAT"]
+    compdat_df = deck2dfs(
+        resdatafiles.get_deck(sections=[opm.io.eclSectionType.SCHEDULE])
+    )["COMPDAT"]
     compdat_df = unrolldf(compdat_df)
 
     if initvectors:

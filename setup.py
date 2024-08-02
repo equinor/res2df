@@ -26,6 +26,7 @@ REQUIREMENTS = [
 ]
 
 TEST_REQUIREMENTS = Path("test_requirements.txt").read_text().splitlines()
+TYPES_REQUIREMENTS = Path("types_requirements.txt").read_text().splitlines()
 
 DOCS_REQUIREMENTS = [
     "autoapi",
@@ -38,6 +39,7 @@ DOCS_REQUIREMENTS = [
 ]
 EXTRAS_REQUIRE = {
     "tests": TEST_REQUIREMENTS,
+    "types": TYPES_REQUIREMENTS,
     "docs": DOCS_REQUIREMENTS,
     "ert": ["ert>=2.38.0-b5"],
 }

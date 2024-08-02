@@ -45,6 +45,13 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install .
+
+      - name: Install numpy<2 if pandas<2
+        if: matrix.pandas-version == 'pandas<2'
+        run: pip install "numpy<2"
+
+      - name: Check pandas version
+        run: |
           pip install "${{matrix.pandas-version}}"
           python -c "import res2df"
 

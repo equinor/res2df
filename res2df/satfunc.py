@@ -103,7 +103,14 @@ def df(
     if isinstance(deck, ResdataFiles):
         # NB: If this is done on include files and not on .DATA files
         # we can loose data for SATNUM > 1
-        deck = deck.get_deck()
+        try:
+            deck = deck.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.PROPS]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = deck.get_deck(sections=[opm.io.eclSectionType.PROPS])
     deck = inject_xxxdims_ntxxx("TABDIMS", "NTSFUN", deck, ntsfun)
     assert "TABDIMS" in deck
 
@@ -206,11 +213,18 @@ def satfunc_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_deck()
+        try:
+            deck = resdatafiles.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.PROPS]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.PROPS])
     if "TABDIMS" in deck:
         # Things are easier when a full deck with (correct) TABDIMS
         # is supplied:
-        satfunc_df = df(resdatafiles, keywords=args.keywords)
+        satfunc_df = df(deck, keywords=args.keywords)
     else:
         # This might be an include file for which we have to infer/guess
         # TABDIMS. Then we send it to df() as a string

@@ -40,7 +40,7 @@ def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFram
         deck: A :term:`deck`
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_deck()
+        deck = deck.get_deck(sections=[opm.io.eclSectionType.GRID])
 
     # In[91]: list(deck['FAULTS'][0])
     # Out[91]: [[u'F1'], [36], [36], [41], [42], [1], [14], [u'I']]
@@ -91,7 +91,7 @@ def faults_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_deck()
+        deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.GRID])
     faults_df = df(deck)
     write_dframe_stdout_file(
         faults_df,

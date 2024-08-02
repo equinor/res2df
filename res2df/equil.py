@@ -112,7 +112,14 @@ def df(
         pd.DataFrame, at least with columns KEYWORD and EQLNUM
     """
     if isinstance(deck, ResdataFiles):
-        deck = deck.get_deck()
+        try:
+            deck = deck.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SOLUTION]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = deck.get_deck(sections=[opm.io.eclSectionType.SOLUTION])
 
     deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     ntequl = deck["EQLDIMS"][0][DIMS_POS["NTEQUL"]].get_int(0)
@@ -328,7 +335,14 @@ def equil_main(args) -> None:
     )
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
-        deck = resdatafiles.get_deck()
+        try:
+            deck = resdatafiles.get_deck(
+                sections=[opm.io.eclSectionType.RUNSPEC, opm.io.eclSectionType.SOLUTION]
+            )
+        except (
+            AttributeError
+        ):  # opm<=2023.10 RUNSPEC is included by default and not an option.
+            deck = resdatafiles.get_deck(sections=[opm.io.eclSectionType.SOLUTION])
     if "EQLDIMS" in deck:
         # Things are easier when a full deck with (correct) EQLDIMS
         # is supplied:

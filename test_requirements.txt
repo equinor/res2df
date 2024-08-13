@@ -8,5 +8,5 @@ pytest
 pytest-cov
 pytest-mock
 types-PyYAML
-types-pkg_resources
+types-setuptools
 types-python-dateutil

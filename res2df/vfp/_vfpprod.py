@@ -115,9 +115,8 @@ def basic_data(
     if basic_record["PRESSURE_DEF"]:
         thp_type = THPTYPE[basic_record["PRESSURE_DEF"]]
     alq_type = ALQ.UNDEFINED
-    if basic_record["ALQ_DEF"]:
-        if basic_record["ALQ_DEF"].strip():
-            alq_type = ALQ[basic_record["ALQ_DEF"]]
+    if basic_record["ALQ_DEF"] and basic_record["ALQ_DEF"].strip():
+        alq_type = ALQ[basic_record["ALQ_DEF"]]
     unit_type = UNITTYPE.DEFAULT
     if basic_record["UNITS"]:
         unit_type = UNITTYPE[basic_record["UNITS"]]
@@ -662,7 +661,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 
     # Check if all data is present
     for key in BASIC_DATA_KEYS:
-        if key not in vfp_data.keys():
+        if key not in vfp_data:
             raise KeyError(f"{key} key is not in basic data dictionary VFPPROD")
     if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPPROD:
         raise KeyError("VFPTYPE must be VFPPROD")
@@ -866,7 +865,7 @@ def _write_table(
     """
 
     deck_str = ""
-    for idx, row in table.iterrows():
+    for idx, _row in table.iterrows():
         deck_str += f"{idx[0]:2d} {idx[1]:2d} {idx[2]:2d} {idx[3]:2d}"
         no_flo = len(table.loc[idx].to_list())
         for n, value in enumerate(table.loc[idx].to_list()):

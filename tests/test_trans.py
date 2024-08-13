@@ -12,7 +12,6 @@ except ImportError:
     HAVE_NETWORKX = False
 
 import pandas as pd
-
 from res2df import res2csv, trans
 from res2df.resdatafiles import ResdataFiles
 
@@ -27,7 +26,7 @@ def test_trans():
     trans_df = trans.df(resdatafiles)
     assert "TRAN" in trans_df
     assert "DIR" in trans_df
-    assert set(trans_df["DIR"].unique()) == set(["I", "J", "K"])
+    assert set(trans_df["DIR"].unique()) == {"I", "J", "K"}
     assert trans_df["TRAN"].sum() > 0
 
     trans_full_length = len(trans_df)

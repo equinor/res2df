@@ -47,7 +47,7 @@ def report_block_lineparser(line: str) -> tuple:
 
     allowed_line_starts = [":CURRENTLY", ":OUTFLOW", ":MATERIAL", ":ORIGINALLY"]
     if not any(line.strip().upper().startswith(x) for x in allowed_line_starts):
-        return tuple()
+        return ()
 
     colonsections = line.split(":")
     to_index: Optional[int]
@@ -172,7 +172,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
 
             if in_report_block:
                 interesting_strings = ["IN PLACE", "OUTFLOW", "MATERIAL"]
-                if not sum([string in line.upper() for string in interesting_strings]):
+                if not sum(string in line.upper() for string in interesting_strings):
                     # Skip if we are not on an interesting line.
                     continue
 

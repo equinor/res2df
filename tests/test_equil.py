@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from res2df import csv2res, equil, res2csv
 from res2df.resdatafiles import ResdataFiles
 
@@ -121,9 +120,8 @@ def test_df2res_equil():
     )
 
     # Problem if we have two rows, nothing is returned and a critical error is logged
-    assert (
-        equil.df2res_equil(pd.concat([dframe, dframe]).drop("EQLNUM", axis="columns"))
-        == ""
+    assert not equil.df2res_equil(
+        pd.concat([dframe, dframe]).drop("EQLNUM", axis="columns")
     )
 
 
@@ -459,7 +457,7 @@ EQUIL
  3000 200 2200 1 2100 3 /
 """
     df = equil.df(deckstr)
-    assert set(df["GOC"].values) == set([2100, 2100])
+    assert set(df["GOC"].values) == {2100}
     assert len(df) == 2
     assert df["EQLNUM"].min() == 1
     assert df["EQLNUM"].max() == 2
@@ -493,7 +491,7 @@ EQUIL
  3000 200 2200 1 2100 3 /
 """
     df = equil.df(deckstr)
-    assert set(df["GOC"].values) == set([2100, 2100])
+    assert set(df["GOC"].values) == {2100}
     assert len(df) == 2
 
     inc = equil.df2res(df, withphases=True)

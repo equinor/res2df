@@ -40,11 +40,7 @@ def _string2intlist(list_def_str: str) -> List[int]:
     list = []
     list_def = list_def_str.strip().strip("[").strip("]")
     if list_def.strip():
-        list_items = []
-        if "," in list_def:
-            list_items = list_def.split(",")
-        else:
-            list_items = [list_def]
+        list_items = list_def.split(",") if "," in list_def else [list_def]
         for item in list_items:
             if ":" in item:
                 item_split = item.split(":")

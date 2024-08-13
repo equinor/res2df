@@ -2,6 +2,7 @@
 
 import argparse
 import collections
+import contextlib
 import datetime
 import logging
 import sys
@@ -11,13 +12,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import pandas as pd
 import treelib
 
-try:
+with contextlib.suppress(ImportError):
     # Needed for mypy
 
     # pylint: disable=unused-import
     import opm.io
-except ImportError:
-    pass
 
 from .common import (
     parse_opmio_date_rec,
@@ -64,10 +63,7 @@ def df(
     """
 
     date: Optional[datetime.date]
-    if startdate is not None:
-        date = startdate
-    else:
-        date = None
+    date = startdate if startdate is not None else None
 
     if isinstance(deck, ResdataFiles):
         deck = deck.get_deck()
@@ -307,9 +303,8 @@ def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:
     """
     if dframe.empty:
         return [{}]
-    if "DATE" in dframe:
-        if len(dframe["DATE"].unique()) > 1:
-            raise ValueError("Can only handle one date at a time")
+    if "DATE" in dframe and len(dframe["DATE"].unique()) > 1:
+        raise ValueError("Can only handle one date at a time")
     subtrees: dict = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
@@ -377,12 +372,13 @@ def dict2treelib(name: str, nested_dict: dict) -> treelib.Tree:
     warnings.warn(
         "dict2treelib() is deprecated and will be removed, use tree_from_dict()",
         FutureWarning,
+        stacklevel=1,
     )
 
     tree = treelib.Tree()
     tree.create_node(name, name)
-    for child in nested_dict.keys():
-        tree.paste(name, dict2treelib(child, nested_dict[child]))
+    for child, value in nested_dict.items():
+        tree.paste(name, dict2treelib(child, value))
     return tree
 
 
@@ -426,7 +422,7 @@ def prettyprint(dframe: pd.DataFrame) -> str:
     BRANPROP trees"""
     output = ""
     for date in dframe["DATE"].dropna().unique():
-        df_date = dframe[dframe.DATE == date]
+        df_date = dframe[date == dframe.DATE]
         output += "Date: " + pd.to_datetime(date).strftime("%Y-%m-%d") + "\n"
 
         for treetype in ["GRUPTREE", "BRANPROP"]:

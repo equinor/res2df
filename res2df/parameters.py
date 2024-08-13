@@ -81,7 +81,7 @@ def load_parameterstxt(filename: Union[str, Path]) -> Dict[str, Any]:
                 index_col=False,
             )
         except pd.errors.ParserWarning as txt_exc:
-            raise pd.errors.ParserError(txt_exc)
+            raise pd.errors.ParserError(txt_exc) from txt_exc
 
     return dframe.set_index("KEY")["VALUE"].to_dict()
 

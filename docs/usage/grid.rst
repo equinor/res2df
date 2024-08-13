@@ -2,8 +2,8 @@ grid
 ----
 
 The grid module will extract static and dynamic cell properties from
-a grid 
-(from the :term:`output files of reservoir simulators <output file>`). 
+a grid
+(from the :term:`output files of reservoir simulators <output file>`).
 Each row in a returned dataframe represents one cell.
 
 Typical usage

@@ -78,4 +78,3 @@ the dataframe will get additional rows and columns:
 .. csv-table:: Dataframe from GRUPTREE, GRUPNET and WELSPECS
    :file: gruptreenet.csv
    :header-rows: 1
-

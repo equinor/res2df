@@ -9,6 +9,7 @@ geometric information. Static data (properties) can be merged from
 the INIT file, and dynamic data can be merged from the Restart (UNRST)
 file.
 """
+
 import argparse
 import datetime
 import fnmatch
@@ -93,13 +94,12 @@ def dates2rstindices(
             if isodate not in availabledates:
                 raise ValueError("date " + str(isodate) + " not found in UNRST file")
             chosendates = [isodate]
-        else:
-            if dates == "first":
-                chosendates = [availabledates[0]]
-            elif dates == "last":
-                chosendates = [availabledates[-1]]
-            elif dates == "all":
-                chosendates = availabledates
+        elif dates == "first":
+            chosendates = [availabledates[0]]
+        elif dates == "last":
+            chosendates = [availabledates[-1]]
+        elif dates == "all":
+            chosendates = availabledates
     elif isinstance(dates, datetime.datetime):
         chosendates = [dates.date()]
     elif isinstance(dates, datetime.date):
@@ -678,10 +678,9 @@ def df2res(
     # Figure out the total number of cells for which we need to export data for:
     global_size = None
     active_cells = None
-    if resdatafiles is not None:
-        if resdatafiles.get_egrid() is not None:
-            global_size = resdatafiles.get_egrid().get_global_size()
-            active_cells = resdatafiles.get_egrid().getNumActive()
+    if resdatafiles is not None and resdatafiles.get_egrid() is not None:
+        global_size = resdatafiles.get_egrid().get_global_size()
+        active_cells = resdatafiles.get_egrid().getNumActive()
 
     if "GLOBAL_INDEX" not in grid_df:
         logger.warning(

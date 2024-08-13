@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from res2df import csv2res, inferdims, res2csv, satfunc
 from res2df.resdatafiles import ResdataFiles
 

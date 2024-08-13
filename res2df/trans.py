@@ -2,6 +2,7 @@
 """
 Extract transmissibility information from output files as Dataframes.
 """
+
 import argparse
 import logging
 from typing import List, Optional, Union

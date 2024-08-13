@@ -8,7 +8,6 @@ import numpy as np
 import packaging.version
 import pandas as pd
 import pytest
-
 from res2df import common, equil, resdatafiles
 
 try:
@@ -198,7 +197,7 @@ def test_df2res():
     assert "2469" in string
     assert "-- Output file printed by tests.test_common" in string
 
-    assert common.df2res(dframe, supported=["PORO"]) == ""
+    assert not common.df2res(dframe, supported=["PORO"])
 
     assert "EQUIL\n-- foobar" in common.df2res(
         dframe, comments={"EQUIL": "foobar"}, supported=["EQUIL"]
@@ -258,8 +257,8 @@ def test_datetime_to_ecldate(somedate, expected):
 def test_eclcompress():
     """Test that we can compress string using Eclipse style
     run-length encoding"""
-    assert common.runlength_compress("") == ""
-    assert common.runlength_compress(" ") == ""
+    assert not common.runlength_compress("")
+    assert not common.runlength_compress(" ")
     assert common.runlength_compress("1 2") == "1  2"
     assert common.runlength_compress("1 2", sep=" ") == "1 2"
     assert common.runlength_compress("1 2", sep="   ") == "1   2"

@@ -540,17 +540,20 @@ def df2res(
     calling_module = inspect.getmodule(from_module[0])
     if dataframe.empty:
         raise ValueError("Empty dataframe")
-    if consecutive is not None and consecutive in dataframe:
-        if not (
+    if (
+        consecutive is not None
+        and consecutive in dataframe
+        and not (
             min(dataframe[consecutive]) == 1
             and len(dataframe[consecutive].unique()) == max(dataframe[consecutive])
-        ):
-            logger.critical(
-                "%s inconsistent in input dataframe, got the values %s",
-                consecutive,
-                str(dataframe[consecutive].unique()),
-            )
-            raise ValueError
+        )
+    ):
+        logger.critical(
+            "%s inconsistent in input dataframe, got the values %s",
+            consecutive,
+            str(dataframe[consecutive].unique()),
+        )
+        raise ValueError
 
     # "KEYWORD" must always be in the dataframe:
     if "KEYWORD" not in dataframe:
@@ -816,7 +819,7 @@ def stack_on_colnames(
     """
     if not inplace:
         dframe = dframe.copy()
-    tuplecolumns = list(map(lambda x: tuple(x.split(sep)), dframe.columns))
+    tuplecolumns = [tuple(x.split(sep)) for x in dframe.columns]
     if max(map(len, tuplecolumns)) < 2:
         logger.info("No columns to stack")
         return dframe

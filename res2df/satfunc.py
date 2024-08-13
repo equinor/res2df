@@ -14,27 +14,26 @@ TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 """
 
 import argparse
+import contextlib
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-try:
+with contextlib.suppress(ImportError):
     # pylint: disable=unused-import
     import opm.io
-except ImportError:
-    pass
 
-from .common import comment_formatter
-from .common import df2res as common_df2res
-from .common import fill_reverse_parser as common_fill_reverse_parser
 from .common import (
+    comment_formatter,
     handle_wanted_keywords,
     keyworddata_to_df,
     write_dframe_stdout_file,
     write_inc_stdout_file,
 )
+from .common import df2res as common_df2res
+from .common import fill_reverse_parser as common_fill_reverse_parser
 from .inferdims import inject_xxxdims_ntxxx
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
@@ -367,11 +366,8 @@ def _df2res_satfuncs(
     string = f"{keyword}\n"
     string += comment_formatter(comment)
 
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == keyword]
+    # Use everything if KEYWORD not in dframe ..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == keyword]
     if "SATNUM" not in subset:
         subset["SATNUM"] = 1
     subset = subset.set_index("SATNUM").sort_index()

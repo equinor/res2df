@@ -6,7 +6,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from res2df import gruptree, res2csv
 from res2df.resdatafiles import ResdataFiles
 
@@ -51,7 +50,7 @@ def test_gruptree2df():
     assert len(grupdf["DATE"].unique()) == 5
     assert len(grupdf["CHILD"].unique()) == 11
     assert len(grupdf["PARENT"].dropna().unique()) == 3
-    assert set(grupdf["KEYWORD"].unique()) == set(["GRUPTREE", "WELSPECS"])
+    assert set(grupdf["KEYWORD"].unique()) == {"GRUPTREE", "WELSPECS"}
 
     grupdfnowells = gruptree.df(resdatafiles.get_deck(), welspecs=False)
 
@@ -423,7 +422,7 @@ def test_emptytree_strdeck():
     treelibtree = gruptree.tree_from_dict(gruptreedict[0])
     # Returning an empty string and not a treelib.Tree() is
     # a workaround for a limitation in treelib.
-    assert treelibtree == ""
+    assert not treelibtree
 
 
 def test_emptytree_commandlinetool(tmp_path, mocker, caplog):

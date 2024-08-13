@@ -2,7 +2,7 @@ satfunc
 -------
 
 satfunc will extract saturation functions from :term:`.DATA files <.DATA file>` or from
-:term:`include files <include file>`, these are the keywords ``SWOF``, ``SGOF``, 
+:term:`include files <include file>`, these are the keywords ``SWOF``, ``SGOF``,
 ``SGWFN``, ``SWFN``, ``SOF2``, ``SGFN``, ``SOF3`` and  ``SLGOF``.
 
 The data obtained from one invocation of the satfunc module will be put in one

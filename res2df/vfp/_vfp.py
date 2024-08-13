@@ -25,9 +25,8 @@ try:
 except ImportError:
     pass
 
-from ..common import comment_formatter
+from ..common import comment_formatter, write_dframe_stdout_file, write_inc_stdout_file
 from ..common import fill_reverse_parser as common_fill_reverse_parser
-from ..common import write_dframe_stdout_file, write_inc_stdout_file
 from ..res2csvlogger import getLogger_res2csv
 from ..resdatafiles import ResdataFiles
 from . import _vfpinj as vfpinj
@@ -92,7 +91,7 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
                VFPPROD or VFPINJ (see basic_data)
     """
 
-    if "VFP_TYPE" in data.keys():
+    if "VFP_TYPE" in data:
         vfp_type = data["VFP_TYPE"]
         if vfp_type == VFPTYPE.VFPPROD:
             # Check consistency of basic data
@@ -152,7 +151,7 @@ def basic_data2pyarrow(data: Dict[str, Any], /) -> pa.Table:
                VFPPROD or VFPINJ
     """
 
-    if "VFP_TYPE" in data.keys():
+    if "VFP_TYPE" in data:
         vfp_type = data["VFP_TYPE"]
         if vfp_type == VFPTYPE.VFPPROD:
             # Check consistency of basic data
@@ -357,16 +356,15 @@ def df2ress(
     for vfpno in vfp_numbers:
         df_vfp = dframe[dframe["TABLE_NUMBER"] == vfpno]
         if np.all(df_vfp["VFP_TYPE"] == keyword):
-            if comments and keyword in comments.keys():
+            if comments and keyword in comments:
                 if keyword == "VFPPROD":
                     vfp_strs.append(vfpprod.df2res(df_vfp, comments["VFPPROD"]))
                 elif keyword == "VFPINJ":
                     vfp_strs.append(vfpinj.df2res(df_vfp, comments["VFPINJ"]))
-            else:
-                if keyword == "VFPPROD":
-                    vfp_strs.append(vfpprod.df2res(df_vfp))
-                elif keyword == "VFPINJ":
-                    vfp_strs.append(vfpinj.df2res(df_vfp))
+            elif keyword == "VFPPROD":
+                vfp_strs.append(vfpprod.df2res(df_vfp))
+            elif keyword == "VFPINJ":
+                vfp_strs.append(vfpinj.df2res(df_vfp))
         else:
             raise ValueError(
                 f"VFP number {vfpno} does not have consistent "
@@ -400,14 +398,14 @@ def df2res(
     strs_vfp = df2ress(dframe, keyword=keyword, comments=comments)
     str_vfps = ""
 
-    if comments and "master" in comments.keys():
+    if comments and "master" in comments:
         str_vfps += comment_formatter(comments["master"])
     for str_vfp in strs_vfp:
         str_vfps += str_vfp
         str_vfps += "\n"
 
     if filename:
-        with open(filename, "w") as fout:
+        with open(filename, "w", encoding="utf-8") as fout:
             fout.write(str_vfps)
 
     return str_vfps
@@ -492,9 +490,8 @@ def vfp_main(args) -> None:
     logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
         __name__, vars(args)
     )
-    if args.keyword:
-        if args.keyword not in SUPPORTED_KEYWORDS:
-            raise ValueError(f"Keyword argument {args.keyword} not supported")
+    if args.keyword and args.keyword not in SUPPORTED_KEYWORDS:
+        raise ValueError(f"Keyword argument {args.keyword} not supported")
     if not args.output:
         logger.info("Nothing to do. Set --output")
         sys.exit(0)

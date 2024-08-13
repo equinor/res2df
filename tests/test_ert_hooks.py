@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 import res2df
 from res2df.hook_implementations import jobs
 
@@ -101,9 +100,9 @@ def test_res2csv_through_ert(tmp_path):
 
     # Check the custom output where options were supplied to the subcommands:
     assert len(pd.read_csv("summary-yearly.csv")) == 5
-    assert set(pd.read_csv("equil-rsvd.csv")["KEYWORD"]) == set(["RSVD"])
-    assert set(pd.read_csv("pvt-custom.csv")["KEYWORD"]) == set(["PVTO"])
-    assert set(pd.read_csv("satfunc-swof.csv")["KEYWORD"]) == set(["SWOF"])
+    assert set(pd.read_csv("equil-rsvd.csv")["KEYWORD"]) == {"RSVD"}
+    assert set(pd.read_csv("pvt-custom.csv")["KEYWORD"]) == {"PVTO"}
+    assert set(pd.read_csv("satfunc-swof.csv")["KEYWORD"]) == {"SWOF"}
 
     for subcommand in csv2res_subcommands:
         assert Path(subcommand + ".inc").is_file()
@@ -135,11 +134,11 @@ def test_get_module_variable():
     This is independent whether ERT is installed or not
     """
     # pylint: disable=protected-access
-    assert jobs._get_module_variable_if_exists("foo", "bar") == ""
+    assert not jobs._get_module_variable_if_exists("foo", "bar")
     assert jobs._get_module_variable_if_exists(
         "res2df.res2csv", "DESCRIPTION"
     ).startswith("Convert reservoir simulator input and output")
-    assert jobs._get_module_variable_if_exists("res2df.res2csv", "NOPE") == ""
+    assert not jobs._get_module_variable_if_exists("res2df.res2csv", "NOPE")
 
 
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")

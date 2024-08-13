@@ -95,7 +95,7 @@ More documentation on :doc:`usage/trans`.
 ``rft``
 ^^^^^^^
 
-Reads the `.RFT` files which are outputted by the 
+Reads the `.RFT` files which are outputted by the
 :term:`simulator <reservoir simulator>` when
 the `WRFTPLT` keyword is used, with details along wellbores.
 

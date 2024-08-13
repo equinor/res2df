@@ -1,7 +1,6 @@
 import itertools
 
 import pytest
-
 import res2df
 
 from .test_grid import EIGHTCELLS, REEK
@@ -113,13 +112,12 @@ def test_res2csv_logging(tmp_path, res2df_module, verbose, fileexport, mocker, c
         else:
             assert "INFO:" not in stdout_output
             assert "INFO:" not in stderr_output
-    else:  # "CSV" data is dumped to stdout
-        if verbose:
-            assert "INFO:" in stderr_output
-            assert "INFO:" not in stdout_output
-        else:
-            assert "INFO:" not in stdout_output
-            assert "INFO:" not in stderr_output
+    elif verbose:
+        assert "INFO:" in stderr_output
+        assert "INFO:" not in stdout_output
+    else:
+        assert "INFO:" not in stdout_output
+        assert "INFO:" not in stderr_output
 
 
 def test_repeated_logger_construction(capsys):

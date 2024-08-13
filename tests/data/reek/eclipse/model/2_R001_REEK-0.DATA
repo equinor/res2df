@@ -78,7 +78,7 @@ WELLDIMS
 VFPPDIMS
   20  20  15  15  15   50  /
 
--- If injection well VFP data is required, 
+-- If injection well VFP data is required,
 -- they should be specified here first
 VFPIDIMS
   10   2   5  /
@@ -103,7 +103,7 @@ NORSSPEC
 
 GRID
 
---Disable echoing of the input file  
+--Disable echoing of the input file
 NOECHO
 
 --Requests output of an INIT file
@@ -136,18 +136,18 @@ INCLUDE
 --Include porosity
 INCLUDE
  '../include/grid/reek.poro'  /
- 
+
 --Include permeability
 INCLUDE
  '../include/grid/reek.perm'  /
 
 
---Set Kv to Kh ratio 
+--Set Kv to Kh ratio
 MULTIPLY
  PERMZ   0.3     /
 /
 
--- Modifies the transmissibility across named fault 
+-- Modifies the transmissibility across named fault
 INCLUDE
  '../include/grid/reek.multflt'  /
 
@@ -170,20 +170,20 @@ EDIT
 PROPS
 
 -- Include relative perm data:
-INCLUDE                                
+INCLUDE
  '../include/props/swof.inc' /
 
-INCLUDE                                
+INCLUDE
  '../include/props/sgof.txt' /
 
 -- Include endpoints:
 INCLUDE
  '../include/props/reek.endpoints' /
 
--- In this example SWCR(critical water saturation) = SWL (connate water saturation) 
+-- In this example SWCR(critical water saturation) = SWL (connate water saturation)
 COPY
- SWL   SWCR  / 
- SWL   SGU   /  
+ SWL   SWCR  /
+ SWL   SGU   /
 /
 
 -- Next 2 keywords are used to make maximum gas saturation consistent: SGU=1-SWL
@@ -221,7 +221,7 @@ INCLUDE
 
 EQUALS
  SATNUM     1       /
- PVTNUM     1      /   
+ PVTNUM     1      /
 /
 
 -------------------------------------------------------------------------
@@ -232,10 +232,10 @@ SOLUTION
 
 RTEMP
  100 /
-  
-INCLUDE                                
-'../include/solution/reek.equil' /    
- 
+
+INCLUDE
+'../include/solution/reek.equil' /
+
 -- Dissolved gas-oil ratio versus depth
 RSVD
  1500 184.0
@@ -246,7 +246,7 @@ RSVD
 RPTSOL
   FIP=2 RESTART=2 FIPRESV /
 
-RPTRST                               
+RPTRST
   BASIC=5 FLOWS /
 
 ------------------------------------------------------------------------

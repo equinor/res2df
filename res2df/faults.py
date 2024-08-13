@@ -4,7 +4,9 @@ Extract the contents of the FAULTS keyword into
 a DataFrame
 
 """
+
 import argparse
+import contextlib
 import logging
 from typing import Union
 
@@ -14,14 +16,11 @@ from .common import parse_opmio_deckrecord, write_dframe_stdout_file
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-try:
+with contextlib.suppress(ImportError):
     # Needed for mypy
 
     # pylint: disable=unused-import
     import opm.io
-
-except ImportError:
-    pass
 
 
 logger = logging.getLogger(__name__)

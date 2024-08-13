@@ -3,9 +3,9 @@
 -- written and "supported" by the Statoil research center in Trondheim
 -- Please visit our wiki at
 -- http://sdp.statoil.no/wiki/index.php/Res:Programs_related_to_the_Lomeland_correlation
--- 
+--
 -- Parameter file: /scratch/fmu/havb/2_r001_reek/realization-0/iter-0/eclipse/include/props/let-swof.txt
--- 
+--
 SWOF
 -- Table 1
 -- Lomeland parameters for W-phase:

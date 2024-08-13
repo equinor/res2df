@@ -20,8 +20,3 @@ In this particular example, ``FIPZON`` was selected explicitly, either using the
 through an option to the :func:`res2df.fipreports.df` function.
 
 Using this module is easiest through ``res2csv fipreports``.
-
-
-
-
-

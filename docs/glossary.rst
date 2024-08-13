@@ -4,7 +4,7 @@ Glossary
 .. glossary::
 
     reservoir simulator
-        Simulation of reservoir fields come in many forms, but for the purposes of 
+        Simulation of reservoir fields come in many forms, but for the purposes of
         res2df we only consider simulators that take a :term:`deck` as input and produces
         :term:`output files <output file>` such `.UNSRMY`. This includes, OPM flow and Eclipse.
 
@@ -20,7 +20,7 @@ Glossary
     deck
         Refers to inputs passed to reservoir simulators. It may be a :term:`.DATA file` and the
         include files it points to, or it may be a single or several include files.
-        If a deck contains all the information (i.e., keywords) the simulator needs 
+        If a deck contains all the information (i.e., keywords) the simulator needs
         to run the requested simulation, it is defined as complete. Otherwise it is incomplete.
 
     output file

@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 from res2df import csv2res, pvt, res2csv
 from res2df.resdatafiles import ResdataFiles
 
@@ -540,12 +539,12 @@ def test_df2res_rock(tmp_path):
 
     rock_inc = pvt.df2res(rock_df)
     assert "ROCK" in rock_inc
-    rock_inc = pvt.df2res(rock_df, comments=dict(ROCK="foo"))
+    rock_inc = pvt.df2res(rock_df, comments={"ROCK": "foo"})
     assert "foo" in rock_inc
-    rock_inc = pvt.df2res(rock_df, comments=dict(DENSITY="foo"))
+    rock_inc = pvt.df2res(rock_df, comments={"DENSITY": "foo"})
     assert "foo" not in rock_inc
 
-    rock_inc = pvt.df2res(rock_df, comments=dict(ROCK="foo\nbar"), filename="foo.inc")
+    rock_inc = pvt.df2res(rock_df, comments={"ROCK": "foo\nbar"}, filename="foo.inc")
     assert Path("foo.inc").is_file()
     assert "foo" in rock_inc
     assert "bar" in rock_inc

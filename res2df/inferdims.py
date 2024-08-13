@@ -3,21 +3,20 @@ Support module for inferring EQLDIMS and TABDIMS from incomplete
 reservoir simulator decks (typically single include-files)
 """
 
+import contextlib
 import logging
 from typing import Dict, Optional, Union
 
-try:
+with contextlib.suppress(ImportError):
     import opm.io
-except ImportError:
     # Let parts of res2df work without OPM:
-    pass
 
 from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 
 # Constants to use for pointing to positions in the xxxDIMS keyword
-DIMS_POS: Dict[str, int] = dict(NTPVT=1, NTSFUN=0, NTEQUL=0)
+DIMS_POS: Dict[str, int] = {"NTPVT": 1, "NTSFUN": 0, "NTEQUL": 0}
 
 
 def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
@@ -41,12 +40,10 @@ def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
 
     if dimkeyword not in ["TABDIMS", "EQLDIMS"]:
         raise ValueError("Only supports TABDIMS and EQLDIMS")
-    if dimkeyword == "TABDIMS":
-        if dimitem not in [0, 1]:
-            raise ValueError("Only support item 0 and 1 in TABDIMS")
-    if dimkeyword == "EQLDIMS":
-        if dimitem not in [0]:
-            raise ValueError("Only item 0 in EQLDIMS can be estimated")
+    if dimkeyword == "TABDIMS" and dimitem not in [0, 1]:
+        raise ValueError("Only support item 0 and 1 in TABDIMS")
+    if dimkeyword == "EQLDIMS" and dimitem not in [0]:
+        raise ValueError("Only item 0 in EQLDIMS can be estimated")
 
     # A less than res2df-standard permissive opm.io, when using
     # this one opm.io will fail if there are extra records
@@ -117,12 +114,10 @@ def inject_dimcount(
     assert dimvalue > 0, "dimvalue must be larger than zero"
     if dimkeyword not in ["TABDIMS", "EQLDIMS"]:
         raise ValueError("Only supports TABDIMS and EQLDIMS")
-    if dimkeyword == "TABDIMS":
-        if dimitem not in [0, 1]:
-            raise ValueError("Only support item 0 and 1 in TABDIMS")
-    if dimkeyword == "EQLDIMS":
-        if dimitem not in [0]:
-            raise ValueError("Only item 0 in EQLDIMS can be injected")
+    if dimkeyword == "TABDIMS" and dimitem not in [0, 1]:
+        raise ValueError("Only support item 0 and 1 in TABDIMS")
+    if dimkeyword == "EQLDIMS" and dimitem not in [0]:
+        raise ValueError("Only item 0 in EQLDIMS can be injected")
 
     if dimkeyword in deckstr:
         if not nowarn:

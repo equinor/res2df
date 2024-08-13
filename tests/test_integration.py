@@ -3,7 +3,6 @@
 import subprocess
 
 import pytest
-
 import res2df
 
 try:

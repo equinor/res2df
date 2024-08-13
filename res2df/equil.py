@@ -3,32 +3,30 @@ Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame
 """
 
 import argparse
+import contextlib
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from .common import comment_formatter
-from .common import df2res as common_df2res
-from .common import fill_reverse_parser as common_fill_reverse_parser
 from .common import (
+    comment_formatter,
     generic_deck_table,
     handle_wanted_keywords,
     keyworddata_to_df,
     write_dframe_stdout_file,
     write_inc_stdout_file,
 )
+from .common import df2res as common_df2res
+from .common import fill_reverse_parser as common_fill_reverse_parser
 from .inferdims import DIMS_POS, inject_xxxdims_ntxxx
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-try:
+with contextlib.suppress(ImportError):
     # pylint: disable=unused-import
     import opm.io
-
-except ImportError:
-    pass
 
 
 logger = logging.getLogger(__name__)
@@ -336,7 +334,7 @@ def equil_main(args) -> None:
     else:
         # This might be an include file for which we have to infer/guess
         # EQLDIMS. Then we send it to df() as a string
-        equil_df = df(Path(args.DATAFILE).read_text())
+        equil_df = df(Path(args.DATAFILE).read_text(encoding="utf-8"))
 
     if "EQLNUM" in equil_df and "KEYWORD" in equil_df:
         eqlnums = str(len(equil_df["EQLNUM"].unique()))
@@ -417,12 +415,8 @@ def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "EQUIL\n"
     string += comment_formatter(comment)
-
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "EQUIL"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "EQUIL"]
     if "EQLNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If EQLNUM is not supplied, only one row should be given")
@@ -508,11 +502,8 @@ def _df2res_equilfuncs(
     col_headers = RENAMERS[keyword]["DATA"]
 
     string += f"--   {'DEPTH':^21} {col_headers[1]:^21} \n"
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == keyword]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == keyword]
 
     def _df2res_equilfuncs_eqlnum(dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents

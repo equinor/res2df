@@ -5,7 +5,6 @@ from contextlib import nullcontext as does_not_raise
 from pathlib import Path
 
 import pytest
-
 import res2df.summary
 from res2df import ResdataFiles
 
@@ -80,9 +79,12 @@ def test_summary_restarts(
 
     restartref = history_case if not history_is_abspath else str(tmpdir / history_case)
 
-    if history_is_abspath:
-        if len(restartref) > (132 - 6) and isinstance(expectation, does_not_raise):
-            pytest.skip("pytest tmpdir is too long for this test to work")
+    if (
+        history_is_abspath
+        and len(restartref) > (132 - 6)
+        and isinstance(expectation, does_not_raise)
+    ):
+        pytest.skip("pytest tmpdir is too long for this test to work")
 
     os.chdir(tmpdir)
     Path(restartref + ".DATA").write_text(eightcells_deck(), encoding="utf-8")
@@ -124,6 +126,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        check=False,
     )
     aggregated_output = result.stdout.decode() + result.stderr.decode()
     if result.returncode != 0 and (
@@ -135,6 +138,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            check=False,
         )
 
     if result.returncode != 0:
@@ -143,7 +147,6 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
         if result.stderr:
             print(result.stderr.decode())
         raise RuntimeError(f"reservoir simulator failed in {os.getcwd()}")
-    return None
 
 
 def eightcells_deck(

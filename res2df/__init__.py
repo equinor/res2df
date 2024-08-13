@@ -1,9 +1,9 @@
 import importlib
 from typing import List
 
-from .__version__ import __version__
-from .res2csvlogger import getLogger_res2csv
-from .resdatafiles import ResdataFiles
+from .__version__ import __version__ as __version__
+from .res2csvlogger import getLogger_res2csv as getLogger_res2csv
+from .resdatafiles import ResdataFiles as ResdataFiles
 
 SUBMODULES: List[str] = [
     "compdat",

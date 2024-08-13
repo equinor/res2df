@@ -3,7 +3,6 @@
 import re
 
 import pytest
-
 from res2df import inferdims
 
 try:

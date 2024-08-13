@@ -431,7 +431,7 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 
     # Check if all data is present
     for key in BASIC_DATA_KEYS:
-        if key not in vfp_data.keys():
+        if key not in vfp_data:
             raise KeyError(f"{key} key is not in basic data dictionary VFPINJ")
     if vfp_data["VFP_TYPE"] is not VFPTYPE.VFPINJ:
         raise KeyError("VFPTYPE must be VFPINJ")
@@ -591,7 +591,7 @@ def _write_table(
     """
 
     deck_str = ""
-    for idx, row in table.iterrows():
+    for idx, _row in table.iterrows():
         deck_str += f"{idx:2d}"
         no_flo = len(table.loc[idx].to_list())
         for n, value in enumerate(table.loc[idx].to_list()):

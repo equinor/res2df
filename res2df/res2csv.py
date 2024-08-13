@@ -3,6 +3,7 @@
 End-user command line tool for accessing functionality
 in res2df
 """
+
 import argparse
 import functools
 import importlib

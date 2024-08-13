@@ -75,7 +75,7 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
         return None
     if isinstance(some_date, dt.date):
         return some_date
-    if some_date == "":
+    if not some_date:
         return None
     if isinstance(some_date, str):
         return dateutil.parser.parse(some_date).date()  # type: ignore
@@ -114,7 +114,7 @@ def _crop_datelist(
         if end_date:
             end_date = dt.datetime.combine(end_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
-            datetimes = datetimes + [end_date]
+            datetimes += [end_date]
     elif freq == FREQ_FIRST:
         datetimes = [min(summarydates).date()]
     elif freq == FREQ_LAST:
@@ -178,7 +178,7 @@ def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.dat
             for year in range(start.year + 1, end.year + 1)
         ]
         if dt.datetime.combine(end, dt.datetime.min.time()) != dates[-1]:
-            dates = dates + [dt.datetime.combine(end, dt.datetime.min.time())]
+            dates += [dt.datetime.combine(end, dt.datetime.min.time())]
         return dates
     if freq == "monthly":
         dates = []
@@ -186,7 +186,7 @@ def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.dat
         enddatetime = dt.datetime.combine(end, dt.datetime.min.time())
         while date <= enddatetime:
             dates.append(date)
-            date = date + dateutil.relativedelta.relativedelta(months=1)  # type: ignore
+            date += dateutil.relativedelta.relativedelta(months=1)  # type: ignore
         return dates
     raise ValueError("Unsupported frequency for datetimes beyond year 2262")
 
@@ -263,19 +263,13 @@ def resample_smry_dates(
         end_normalized = _fallback_date_roll(end_smry, "forward", freq).date()
 
     if start_date is None:
-        if normalize:
-            start_date_range = start_normalized
-        else:
-            start_date_range = start_smry.date()
+        start_date_range = start_normalized if normalize else start_smry.date()
     else:
         # Normalization is not applied for explicit date
         start_date_range = start_date
 
     if end_date is None:
-        if normalize:
-            end_date_range = end_normalized
-        else:
-            end_date_range = end_smry.date()
+        end_date_range = end_normalized if normalize else end_smry.date()
     else:
         # Normalization is not applied for explicit date
         end_date_range = end_date
@@ -291,7 +285,7 @@ def resample_smry_dates(
     if start_date and start_date not in dates:
         dates = [start_date] + dates
     if end_date and end_date not in dates:
-        dates = dates + [end_date]
+        dates += [end_date]
     return dates
 
 
@@ -432,9 +426,8 @@ def df(
 
     dframe = _ensure_unique_datetime_index(dframe)
 
-    if datetime is True:
-        if dframe.index.dtype == "object":
-            dframe.index = pd.to_datetime(dframe.index)
+    if datetime is True and dframe.index.dtype == "object":
+        dframe.index = pd.to_datetime(dframe.index)
 
     return dframe
 
@@ -468,14 +461,10 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
 
             if dframe.attrs["meta"]["TIMESTEP"]["unit"] == "DAYS":
                 for idx in np.where(index_duplicates)[0]:
-                    index_as_list[idx] = index_as_list[idx] + dt.timedelta(
-                        days=dframe["TIMESTEP"][idx]
-                    )
+                    index_as_list[idx] += dt.timedelta(days=dframe["TIMESTEP"][idx])
             elif dframe.attrs["meta"]["TIMESTEP"]["unit"] == "HOURS":
                 for idx in np.where(index_duplicates)[0]:
-                    index_as_list[idx] = index_as_list[idx] + dt.timedelta(
-                        hours=dframe["TIMESTEP"][idx]
-                    )
+                    index_as_list[idx] += dt.timedelta(hours=dframe["TIMESTEP"][idx])
             else:
                 raise ValueError(
                     "Dataframe of smry data contained duplicate timestamps. "
@@ -593,7 +582,7 @@ def smry_meta(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
         summary = resdatafiles.get_summary()
 
     meta: Dict[str, Dict[str, Any]] = {}
-    for col in summary.keys():
+    for col in summary:
         meta[col] = {}
         meta[col]["unit"] = summary.unit(col)
         meta[col]["is_total"] = summary.is_total(col)

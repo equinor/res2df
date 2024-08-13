@@ -1,9 +1,4 @@
-black
-flake8
-isort
-mypy
 networkx
-pre-commit
 pytest
 pytest-cov
 pytest-mock

@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 from res2df import res2csv, rft
 from res2df.resdatafiles import ResdataFiles
 
@@ -25,7 +24,7 @@ def test_rftrecords2df():
     assert len(rftrecs[rftrecs["recordname"] == "TIME"]) == len(
         rftrecs["timeindex"].unique()
     )
-    assert set(rftrecs["recordtype"].unique()) == set(["REAL", "INTE", "CHAR"])
+    assert set(rftrecs["recordtype"].unique()) == {"REAL", "INTE", "CHAR"}
     assert rftrecs["timeindex"].dtype == int
     assert rftrecs["recordidx"].dtype == int
 

@@ -235,10 +235,7 @@ def compute_pillar_contacts(
     assert 0 <= sgascutoff <= 1
 
     # assert datestr is None or in ISO-8601 format
-    if datestr:
-        atdatestr = "@" + datestr
-    else:
-        atdatestr = ""
+    atdatestr = "@" + datestr if datestr else ""
 
     # Non-user servicable parameter, for GOC computation
     # we require cells at the contact to contain a minute saturation

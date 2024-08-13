@@ -628,17 +628,16 @@ def df(
     rftdata_df.fillna(0, inplace=True)
 
     # The HOSTGRID data seems often to be empty, check if it is and delete if so:
-    if "HOSTGRID" in rftdata_df.columns:
-        if len(rftdata_df.HOSTGRID.unique()) == 1:
-            if rftdata_df.HOSTGRID.unique()[0].strip() == "":
-                del rftdata_df["HOSTGRID"]
+    if (
+        "HOSTGRID" in rftdata_df.columns
+        and len(rftdata_df.HOSTGRID.unique()) == 1
+        and not rftdata_df.HOSTGRID.unique()[0].strip()
+    ):
+        del rftdata_df["HOSTGRID"]
 
     zonemap = resdatafiles.get_zonemap()
     if zonemap:
-        if "K" in rftdata_df:
-            kname = "K"
-        else:
-            kname = "CONKPOS"
+        kname = "K" if "K" in rftdata_df else "CONKPOS"
         rftdata_df = merge_zones(rftdata_df, zonemap, kname=kname)
 
     return rftdata_df

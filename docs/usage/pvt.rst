@@ -70,7 +70,7 @@ Density values are easier to scale up or down to whatever is needed.
 Re-exporting tables to include files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When you are done with the table, you can generate new 
+When you are done with the table, you can generate new
 :term:`include files <include file>` from your modified data by issuing
 
 .. code-block:: python
@@ -84,4 +84,3 @@ and need to be catered for outside res2df.
 
 The last step can also be done using the ``csv2res`` command line utility
 if you dump to CSV from your Python code instead.
-

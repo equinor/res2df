@@ -8,8 +8,6 @@ import pandas as pd
 import pyarrow
 import pytest
 import yaml
-from resdata.summary import Summary
-
 from res2df import csv2res, res2csv, summary
 from res2df.resdatafiles import ResdataFiles
 from res2df.summary import (
@@ -22,6 +20,7 @@ from res2df.summary import (
     resample_smry_dates,
     smry_meta,
 )
+from resdata.summary import Summary
 
 try:
     # pylint: disable=unused-import

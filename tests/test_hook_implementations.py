@@ -14,9 +14,8 @@ except ImportError:
         allow_module_level=True,
     )
 
-from ert.shared.plugins.plugin_manager import ErtPluginManager
-
 import res2df.hook_implementations.jobs
+from ert.shared.plugins.plugin_manager import ErtPluginManager
 
 
 @pytest.fixture(name="expected_jobs")
@@ -83,7 +82,7 @@ def test_hook_implementations_job_docs():
 
     assert set(docs.keys()) == set(installable_jobs.keys())
 
-    for job_name in installable_jobs.keys():
+    for job_name in installable_jobs:
         print(job_name)
-        assert docs[job_name]["description"] != ""
+        assert docs[job_name]["description"]
         assert docs[job_name]["category"] != "other"

@@ -122,4 +122,3 @@ where this last table can also be exported directly from the command line using
 .. code-block:: console
 
    res2csv trans MYDATADECK.DATA --vectors FIPNUM --nnc --group --output fipnuminterfaces.csv
-

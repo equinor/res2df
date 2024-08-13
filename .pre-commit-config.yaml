@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.5.0
+  rev: v4.6.0
   hooks:
   - id:  no-commit-to-branch
     args: ['--branch', 'master']
@@ -12,23 +12,9 @@ repos:
   - id: mixed-line-ending
   - id: trailing-whitespace
 
-- repo: https://github.com/ambv/black
-  rev: 20.8b1
-  hooks:
-  - id: black
-
-- repo: https://gitlab.com/pycqa/flake8.git
-  rev: 3.9.2
-  hooks:
-  - id: flake8
-
-- repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.910
-  hooks:
-  - id: mypy
-
-- repo: https://github.com/pycqa/isort
-  rev: 5.8.0
-  hooks:
-    - id: isort
-      name: isort
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
+    hooks:
+    - id: ruff
+      args: [ --fix ]
+    - id: ruff-format

@@ -4,7 +4,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from res2df import common, compdat, wellcompletiondata
 from res2df.resdatafiles import ResdataFiles
 from res2df.wellcompletiondata import (

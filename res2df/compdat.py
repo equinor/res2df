@@ -1,16 +1,17 @@
 """Parser and dataframe generator for the keywords:
-  * COMPDAT
-  * COMPLUMP
-  * COMPSEGS
-  * WELOPEN
-  * WELSEGS
-  * WLIST
-  * WSEGAICD
-  * WSEGSICD
-  * WSEGVALV
+* COMPDAT
+* COMPLUMP
+* COMPSEGS
+* WELOPEN
+* WELSEGS
+* WLIST
+* WSEGAICD
+* WSEGSICD
+* WSEGVALV
 """
 
 import argparse
+import contextlib
 import datetime
 import logging
 from typing import Dict, List, Optional, Union
@@ -18,12 +19,9 @@ from typing import Dict, List, Optional, Union
 import numpy as np
 import pandas as pd
 
-try:
+with contextlib.suppress(ImportError):
     # pylint: disable=unused-import
     import opm.io.deck
-except ImportError:
-    # Allow parts of res2df to work without OPM:
-    pass
 
 from .common import (
     get_wells_matching_template,
@@ -276,16 +274,16 @@ def deck2dfs(
     if "KEYWORD_IDX" in wsegvalv_df.columns:
         wsegvalv_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
 
-    return dict(
-        COMPDAT=compdat_df,
-        COMPSEGS=compsegs_df,
-        WELSEGS=welsegs_df,
-        WELOPEN=welopen_df,
-        WLIST=wlist_df,
-        WSEGSICD=wsegsicd_df,
-        WSEGAICD=wsegaicd_df,
-        WSEGVALV=wsegvalv_df,
-    )
+    return {
+        "COMPDAT": compdat_df,
+        "COMPSEGS": compsegs_df,
+        "WELSEGS": welsegs_df,
+        "WELOPEN": welopen_df,
+        "WLIST": wlist_df,
+        "WSEGSICD": wsegsicd_df,
+        "WSEGAICD": wsegaicd_df,
+        "WSEGVALV": wsegvalv_df,
+    }
 
 
 def expand_welopen(welopen_df: pd.DataFrame, compdat_df: pd.DataFrame) -> pd.DataFrame:
@@ -612,12 +610,14 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(wlist_record["WELLS"].split())
             )
-        elif wlist_record["ACTION"] in ["ADD", "DEL"]:
-            if wlist_record["NAME"] not in currentstate:
-                raise ValueError(
-                    "WLIST ADD/DEL only works on existing well lists: "
-                    f"{str(wlist_record)}"
-                )
+        elif (
+            wlist_record["ACTION"] in ["ADD", "DEL"]
+            and wlist_record["NAME"] not in currentstate
+        ):
+            raise ValueError(
+                "WLIST ADD/DEL only works on existing well lists: "
+                f"{str(wlist_record)}"
+            )
         if wlist_record["ACTION"] == "ADD":
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(
@@ -630,10 +630,8 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
         if wlist_record["ACTION"] == "DEL":
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(
-                    list(
-                        set(currentstate[wlist_record["NAME"]].split())
-                        - set(wlist_record["WELLS"].split())
-                    )
+                    set(currentstate[wlist_record["NAME"]].split())
+                    - set(wlist_record["WELLS"].split())
                 )
             )
         if wlist_record["ACTION"] == "MOV":
@@ -641,25 +639,16 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
                 currentstate[wlist_record["NAME"]] = ""
             currentstate[wlist_record["NAME"]] = " ".join(
                 sorted(
-                    list(
-                        set(currentstate[wlist_record["NAME"]].split()).union(
-                            set(wlist_record["WELLS"].split())
-                        )
+                    set(currentstate[wlist_record["NAME"]].split()).union(
+                        set(wlist_record["WELLS"].split())
                     )
                 )
             )
-            for (
-                wlist
-            ) in currentstate.keys():  # pylint: disable=consider-iterating-dictionary
+            for wlist, value in currentstate.items():
                 if wlist == wlist_record["NAME"]:
                     continue
                 currentstate[wlist] = " ".join(
-                    sorted(
-                        list(
-                            set(currentstate[wlist].split())
-                            - set(wlist_record["WELLS"].split())
-                        )
-                    )
+                    sorted(set(value.split()) - set(wlist_record["WELLS"].split()))
                 )
 
     # Dump final state:
@@ -857,11 +846,10 @@ def applywelopen(
     if isinstance(wlist_df, pd.DataFrame):
         if wlist_df.empty:
             wlist_df = None
-        else:
-            if set(wlist_df["ACTION"]) != {"NEW"}:
-                raise ValueError(
-                    "The WLIST dataframe must be expanded through expand_wlist()"
-                )
+        elif set(wlist_df["ACTION"]) != {"NEW"}:
+            raise ValueError(
+                "The WLIST dataframe must be expanded through expand_wlist()"
+            )
 
     welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
@@ -869,8 +857,8 @@ def applywelopen(
 
     for _, row in welopen_df.iterrows():
         acts_on_well = False
-        if (row["I"] is None and row["J"] is None and row["K"] is None) or (
-            row["I"] <= 0 and row["J"] <= 0 and row["K"] <= 0
+        if all(x is None for x in (row["I"], row["J"], row["K"])) or all(
+            x <= 0 for x in (row["I"], row["J"], row["K"])
         ):
             # Applies to all connections when the completion range
             # is set zero or negative.

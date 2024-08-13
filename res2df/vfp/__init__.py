@@ -1,4 +1,4 @@
-""" Module with interface for res2df to VFPPROD and VFPINJ
+"""Module with interface for res2df to VFPPROD and VFPINJ
 keywords in Eclipse.
 """
 

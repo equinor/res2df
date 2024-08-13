@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pytest
-
 from res2df import common, grid, res2csv
 from res2df.resdatafiles import ResdataFiles
 
@@ -86,9 +85,9 @@ def test_gridzonemap():
 
     df_custom_zone = grid.gridgeometry2df(resdatafiles, zonemap={1: "FIRSTLAYER"})
     assert "ZONE" in df_custom_zone
-    assert set(df_custom_zone[df_custom_zone["K"] == 1]["ZONE"].unique()) == set(
-        ["FIRSTLAYER"]
-    )
+    assert set(df_custom_zone[df_custom_zone["K"] == 1]["ZONE"].unique()) == {
+        "FIRSTLAYER"
+    }
     assert len(df_custom_zone) == len(grid_no_zone)
 
     df_bogus_zones = grid.gridgeometry2df(
@@ -103,8 +102,8 @@ def test_gridzonemap():
     subzonemap = {1: "SUBZONE1", 2: "SUBZONE2"}
     dframe = common.merge_zones(dframe, subzonemap, zoneheader="SUBZONE", kname="K")
     assert (dframe["ZONE"] == default_zonemap).all()
-    assert set(dframe[dframe["K"] == 1]["SUBZONE"].unique()) == set(["SUBZONE1"])
-    assert set(dframe[dframe["K"] == 2]["SUBZONE"].unique()) == set(["SUBZONE2"])
+    assert set(dframe[dframe["K"] == 1]["SUBZONE"].unique()) == {"SUBZONE1"}
+    assert set(dframe[dframe["K"] == 2]["SUBZONE"].unique()) == {"SUBZONE2"}
     assert len(dframe) == len(grid_no_zone)
 
 
@@ -222,7 +221,7 @@ def test_df2res(tmp_path):
     assert "FIPNUM" in fipsatnum_str
     assert "SATNUM" in fipsatnum_str
 
-    grid_df["FIPNUM"] = grid_df["FIPNUM"] * 3333
+    grid_df["FIPNUM"] *= 3333
     fipnum_big_str = grid.df2res(grid_df, "FIPNUM", dtype=int)
     assert "3333" in fipnum_big_str
     assert len(fipnum_big_str) > len(fipnum_str)
@@ -231,7 +230,7 @@ def test_df2res(tmp_path):
     grid.df2res(grid_df, ["PERMX", "PERMY", "PERMZ"], dtype=float, filename="perm.inc")
     assert Path("perm.inc").is_file()
     incstring = Path("perm.inc").read_text(encoding="utf8").splitlines()
-    assert sum([1 for line in incstring if "PERM" in line]) == 6
+    assert sum(1 for line in incstring if "PERM" in line) == 6
 
     assert grid.df2res(grid_df, ["PERMX"], dtype=float, nocomments=True) == grid.df2res(
         grid_df, ["PERMX"], dtype="float", nocomments=True

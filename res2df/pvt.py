@@ -5,32 +5,31 @@ Data can be extracted from a complete deck or from individual files.
 """
 
 import argparse
+import contextlib
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
-from .common import comment_formatter
-from .common import df2res as common_df2res
-from .common import fill_reverse_parser as common_fill_reverse_parser
 from .common import (
+    comment_formatter,
     handle_wanted_keywords,
     keyworddata_to_df,
     write_dframe_stdout_file,
     write_inc_stdout_file,
 )
+from .common import df2res as common_df2res
+from .common import fill_reverse_parser as common_fill_reverse_parser
 from .inferdims import DIMS_POS, inject_xxxdims_ntxxx
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
-try:
+with contextlib.suppress(ImportError):
     # Needed for mypy
 
     # pylint: disable=unused-import
     import opm.io
-except ImportError:
-    pass
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -377,11 +376,8 @@ def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     string = "ROCK\n"
     string += comment_formatter(comment)
     string += "--   {'PRESSURE':^21} {'COMPRESSIBILITY':^21}\n"
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "ROCK"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "ROCK"]
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
@@ -440,11 +436,8 @@ def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'COMPRESSIBILITY':^21} "
         f"{'VISCOSITY':^21} {'VISCOSIBILITY':^21}\n"
     )
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "PVTW"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "PVTW"]
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
@@ -473,11 +466,8 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         f"-- {'PRESSURE':^22} {'OGR':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     )
     string += f"-- {'*':^22} {'OGR':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "PVTG"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "PVTG"]
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
@@ -502,10 +492,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         p_gas = dframe.index.values[0]
         string += f"{p_gas:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
-            if rowidx > 0:
-                indent = "\n" + " " * 22
-            else:
-                indent = ""
+            indent = "\n" + " " * 22 if rowidx > 0 else ""
             string += (
                 indent
                 + f"{row['OGR']:20.7f}  {row['VOLUMEFACTOR']:20.7f}  "
@@ -534,11 +521,8 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     string = "PVDG\n"
     string += comment_formatter(comment)
     string += f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'VISCOSITY':^21}  \n"
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "PVDG"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "PVDG"]
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
@@ -582,11 +566,8 @@ def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     string = "PVDO\n"
     string += comment_formatter(comment)
     string += f"--   {'PRESSURE':^21} {'VOLUMEFACTOR':^21} {'VISCOSITY':^21}\n"
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "PVDO"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "PVDO"]
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
@@ -631,11 +612,9 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     string += comment_formatter(comment)
     string += "-- {'RS':^22} {'PRESSURE':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
     string += "-- {'*':^22} {'PRESSURE':^22} {'VOLUMEFACTOR':^22} {'VISCOSITY':^22}\n"
-    if "KEYWORD" not in dframe:
-        # Use everything..
-        subset = dframe
-    else:
-        subset = dframe[dframe["KEYWORD"] == "PVTO"]
+    # Use everything if KEYWORD not in dframe..
+    subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "PVTO"]
+
     if "PVTNUM" not in subset:
         if len(subset) != 1:
             logger.critical("If PVTNUM is not supplied, only one row should be given")
@@ -660,10 +639,7 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         rs = dframe.index.values[0]
         string += f"{rs:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
-            if rowidx > 0:
-                indent = "\n" + " " * 22
-            else:
-                indent = ""
+            indent = "\n" + " " * 22 if rowidx > 0 else ""
             string += (
                 indent
                 + f"{row['PRESSURE']:20.7f}  {row['VOLUMEFACTOR']:20.7f}  "

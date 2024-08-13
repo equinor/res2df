@@ -95,4 +95,3 @@ to represent ICD segments. The corresponding ``SEG*`` data for these ICD segment
 will be joined to the segment they are connected to, and have their ``SEG*`` data
 renamed to ``ICD*``. For understanding your ``ICD*`` data, look at the description of
 the analogue ``SEG*`` data above.
-

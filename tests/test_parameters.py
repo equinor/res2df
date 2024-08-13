@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pytest
 import yaml
-
 from res2df.parameters import find_parameter_files, load, load_all
 from res2df.resdatafiles import ResdataFiles
 
@@ -170,32 +169,31 @@ def test_load(tmp_path):
     assert load("empty") == {}  # A warning is logged
 
     # yaml file:
-    Path("foo.yml").write_text("foo: bar")
+    Path("foo.yml").write_text("foo: bar", encoding="utf-8")
     assert load("foo.yml") == {"foo": "bar"}
     assert load(Path("foo.yml")) == {"foo": "bar"}
 
     # yaml syntax errors:
-    Path("error.yml").write_text("foo: bar :")
+    Path("error.yml").write_text("foo: bar :", encoding="utf-8")
     with pytest.raises(ValueError, match="Could not parse error.yml"):
         load("error.yml")
 
     # json file:
-    Path("foo.json").write_text('{\n  "foo": "bar"\n}')
+    Path("foo.json").write_text('{\n  "foo": "bar"\n}', encoding="utf-8")
     assert load("foo.json") == {"foo": "bar"}
 
     # Extension does not matter:
-    Path("wrongextension.yml").write_text('{\n  "foo": "bar"\n}')
+    Path("wrongextension.yml").write_text('{\n  "foo": "bar"\n}', encoding="utf-8")
     assert load("wrongextension.yml") == {"foo": "bar"}
 
     # txt file:
-    Path("foo.txt").write_text("foo bar")
+    Path("foo.txt").write_text("foo bar", encoding="utf-8")
     assert load("foo.txt") == {"foo": "bar"}
 
     # txt file errors:
-    Path("error.txt").write_text("foo bar com")
+    Path("error.txt").write_text("foo bar com", encoding="utf-8")
     with pytest.raises(ValueError, match="Could not parse error.txt"):
-        # pylint: disable=expression-not-assigned
-        load("error.txt") == {"foo": "bar"}
+        load("error.txt")
 
     with pytest.raises(FileNotFoundError, match="notexisting not found"):
         load("notexisting")

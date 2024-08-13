@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from res2df import fipreports, res2csv
 from res2df.fipreports import report_block_lineparser as parser
 from res2df.resdatafiles import ResdataFiles
@@ -35,21 +34,19 @@ def test_opm_prt_file():
     assert len(fipreport_df) == 530
     assert len(fipreport_df["DATE"].unique()) == 38
     assert set(fipreport_df["REGION"]) == {1, 2, 3, 4, 5, 6}
-    assert set(
-        [
-            "DATE",
-            "FIPNAME",
-            "REGION",
-            "DATATYPE",
-            "STOIIP_OIL",
-            "ASSOCIATEDOIL_GAS",
-            "STOIIP_TOTAL",
-            "WIIP_TOTAL",
-            "GIIP_GAS",
-            "ASSOCIATEDGAS_OIL",
-            "GIIP_TOTAL",
-        ]
-    ).issubset(set(fipreport_df.columns))
+    assert {
+        "DATE",
+        "FIPNAME",
+        "REGION",
+        "DATATYPE",
+        "STOIIP_OIL",
+        "ASSOCIATEDOIL_GAS",
+        "STOIIP_TOTAL",
+        "WIIP_TOTAL",
+        "GIIP_GAS",
+        "ASSOCIATEDGAS_OIL",
+        "GIIP_TOTAL",
+    }.issubset(set(fipreport_df.columns))
 
 
 def test_mockprtfile():

@@ -25,13 +25,18 @@ REQUIREMENTS = [
     "treelib",
 ]
 
-TEST_REQUIREMENTS = Path("test_requirements.txt").read_text().splitlines()
-TYPES_REQUIREMENTS = Path("types_requirements.txt").read_text().splitlines()
+TEST_REQUIREMENTS = (
+    Path("test_requirements.txt").read_text(encoding="utf-8").splitlines()
+)
+TYPES_REQUIREMENTS = (
+    Path("types_requirements.txt").read_text(encoding="utf-8").splitlines()
+)
 
 DOCS_REQUIREMENTS = [
     "autoapi",
     "ipython",
     "rstcheck",
+    "setuptools",
     "sphinx<7",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
@@ -39,6 +44,7 @@ DOCS_REQUIREMENTS = [
 ]
 EXTRAS_REQUIRE = {
     "tests": TEST_REQUIREMENTS,
+    "style": ["pre-commit"],
     "types": TYPES_REQUIREMENTS,
     "docs": DOCS_REQUIREMENTS,
     "ert": ["ert>=2.38.0-b5"],

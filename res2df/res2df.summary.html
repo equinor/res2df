@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.1.2.dev3+gb59ee674 documentation</title>
+  <title>res2df.summary &mdash; res2df 1.1.3.dev1+gb1f6abd1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -38,7 +38,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.1.2.dev3+gb59ee674
+                1.1.3.dev1+gb1f6abd1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -91,7 +91,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#res2df.summary.fill_parser"><code class="docutils literal notranslate"><span class="pre">fill_parser()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#res2df.summary.fill_reverse_parser"><code class="docutils literal notranslate"><span class="pre">fill_reverse_parser()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#res2df.summary.resample_smry_dates"><code class="docutils literal notranslate"><span class="pre">resample_smry_dates()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#res2df.summary.resdata_summary_from_pandas"><code class="docutils literal notranslate"><span class="pre">resdata_summary_from_pandas()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#res2df.summary.smry_meta"><code class="docutils literal notranslate"><span class="pre">smry_meta()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#res2df.summary.summary_main"><code class="docutils literal notranslate"><span class="pre">summary_main()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#res2df.summary.summary_reverse_main"><code class="docutils literal notranslate"><span class="pre">summary_reverse_main()</span></code></a></li>
@@ -293,19 +292,6 @@ normalized dates. Overridden if freq is ‘last’.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="res2df.summary.resdata_summary_from_pandas">
-<span class="sig-prename descclassname"><span class="pre">res2df.summary.</span></span><span class="sig-name descname"><span class="pre">resdata_summary_from_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/summary.html#resdata_summary_from_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.summary.resdata_summary_from_pandas" title="Permalink to this definition"></a></dt>
-<dd><p>Build a Summary object from a Pandas dataframe.</p>
-<p>Temporarily copied from resdata to circumvent bug</p>
-<p><a class="reference external" href="https://github.com/equinor/ecl/issues/802">https://github.com/equinor/ecl/issues/802</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></p>
 </dd>
 </dl>
 </dd></dl>

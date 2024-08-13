@@ -1,7 +1,6 @@
 """Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)"""
 
 import argparse
-import ctypes
 
 # The name 'datetime' is in use by a function argument:
 import datetime as dt
@@ -15,7 +14,7 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pyarrow.feather
-from resdata.summary import Summary, SummaryKeyWordVector
+from resdata.summary import Summary
 
 from .common import write_dframe_stdout_file
 from .parameters import find_parameter_files, load, load_all
@@ -402,7 +401,7 @@ def df(
         time_index_str or "raw",
     )
 
-    dframe = _summary_pandas_frame(summary, time_index_arg, column_keys)
+    dframe = summary.pandas_frame(time_index_arg, column_keys)
 
     logger.info(
         "Dataframe with smry data ready, %d columns and %d rows",
@@ -698,100 +697,7 @@ def df2ressum(
         raise ValueError(f"Do not use dots in casename {casename}")
 
     dframe = _fix_dframe_for_resdata(dframe)
-    return resdata_summary_from_pandas(casename, dframe)
-    # return Summary.from_pandas(casename, dframe)
-
-
-def _summary_pandas_frame(
-    summary: Summary,
-    time_index: Optional[Union[List[dt.date], List[dt.datetime]]] = None,
-    column_keys: Optional[List[str]] = None,
-) -> pd.DataFrame:
-    """Build a Pandas dataframe from a Summary object.
-
-    Temporarily copied from resdata to circumvent bug
-
-    https://github.com/equinor/resdata/issues/802
-    """
-    if column_keys is None:
-        keywords = SummaryKeyWordVector(summary, add_keywords=True)
-    else:
-        keywords = SummaryKeyWordVector(summary)
-        for key in column_keys:
-            keywords.add_keywords(key)
-
-    # pylint: disable=protected-access
-    if time_index is None:
-        time_index = summary.dates  # Changed from resdata
-        data = np.zeros([len(time_index), len(keywords)])
-        Summary._init_pandas_frame(
-            summary, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-        )
-    else:
-        time_points = summary._make_time_vector(time_index)
-        data = np.zeros([len(time_points), len(keywords)])
-        Summary._init_pandas_frame_interp(
-            summary,
-            keywords,
-            time_points,
-            data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-        )
-
-    # Do not give datetime64[ms] to Pandas, it will try to convert it
-    # to datetime64[ns] and error hard if it is out of bounds (year 2262)
-    assert isinstance(time_index[0], (dt.date, dt.datetime))
-    frame = pd.DataFrame(
-        index=time_index,
-        columns=list(keywords),
-        data=data,
-    )
-
-    # frame.index.type is now either datetime64[ns] or datetime.datetime (object)
-    # depending on whether the date range ended before 2262.
-    return frame
-
-
-def resdata_summary_from_pandas(
-    case: str,
-    frame: pd.DataFrame,
-    dims: Optional[List[int]] = None,
-    headers: Optional[List[tuple]] = None,
-) -> Summary:
-    """Build a Summary object from a Pandas dataframe.
-
-    Temporarily copied from resdata to circumvent bug
-
-    https://github.com/equinor/ecl/issues/802
-    """
-    start_time = frame.index[0]
-
-    # Avoid Pandas or numpy timestamps, to avoid limitations
-    # to timestamp64[ns] date boundaries (year 2262)
-    if isinstance(start_time, pd.Timestamp):
-        start_time = start_time.to_pydatetime()
-
-    var_list = []
-    # pylint: disable=protected-access
-    if headers is None:
-        header_list = Summary._compile_headers_list(frame.columns.values, dims)
-    else:
-        header_list = Summary._compile_headers_list(headers, dims)
-    if dims is None:
-        dims = [1, 1, 1]
-    the_summary = Summary.writer(case, start_time, dims[0], dims[1], dims[2])
-    for keyword, wgname, num, unit in header_list:
-        var_list.append(
-            the_summary.add_variable(
-                keyword, wgname=wgname, num=num, unit=unit
-            ).getKey1()
-        )
-
-    for idx, time in enumerate(frame.index):
-        days = (time - start_time).days
-        t_step = the_summary.add_t_step(idx + 1, days)
-        for var in var_list:
-            t_step[var] = frame.iloc[idx][var]
-    return the_summary
+    return Summary.from_pandas(casename, dframe)
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

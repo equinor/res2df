@@ -16,7 +16,7 @@ LONG_DESCRIPTION = (Path(__file__).parent / "README.md").read_text()
 
 SETUP_REQUIREMENTS = ["setuptools>=28", "setuptools_scm"]
 REQUIREMENTS = [
-    "resdata>=4.0.0",
+    "resdata>=5.0.0-b0",
     "numpy",
     "opm>=2020.10.2",
     "pandas",

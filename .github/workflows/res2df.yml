@@ -19,17 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
-        pandas-version: ['pandas<2', 'pandas>2']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        pandas-version: ['pandas>2']
         include:
           # For one of the Python versions we
           # install the extra dependency ert
           # (in order to not double the job matrix)
+
+          # Only test with pandas < 2 for py38 and py311
+          # No wheels for python3.12 for pandas<2
           - python-version: '3.8'
             install-ert: true
+          - python-version: '3.8'
+            pandas-version: 'pandas<2'
+          - python-version: '3.11'
+            pandas-version: 'pandas<2'
+
     steps:
       - name: Checkout commit locally
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Checkout tags
         # This seems necessary for setuptools_scm to be able to infer
@@ -37,7 +45,7 @@ jobs:
         run: git fetch --unshallow --tags
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
@@ -57,14 +65,10 @@ jobs:
       - name: Check pandas version
         run: |
           pip install "${{matrix.pandas-version}}"
-          python -c "import res2df"
 
       - name: Install ert
         if: matrix.install-ert
-        run: pip install .[ert]
-
-      - name: Install test dependencies
-        run: pip install .[tests,docs,types]
+        run: pip install ".[ert]"
 
       - name: List all installed packages
         run: pip freeze

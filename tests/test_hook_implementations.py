@@ -15,7 +15,7 @@ except ImportError:
     )
 
 import res2df.hook_implementations.jobs
-from ert.shared.plugins.plugin_manager import ErtPluginManager
+from ert.plugins.plugin_manager import ErtPluginManager
 
 
 @pytest.fixture(name="expected_jobs")

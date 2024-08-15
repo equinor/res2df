@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pvt &mdash; res2df 1.1.3.dev1+gb1f6abd1 documentation</title>
+  <title>res2df.pvt &mdash; res2df 1.1.3.dev5+gf4ad52d4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -35,7 +35,7 @@
               <img src="../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.1.3.dev1+gb1f6abd1
+                1.1.3.dev5+gf4ad52d4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,32 +92,31 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">comment_formatter</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">comment_formatter</span><span class="p">,</span>
     <span class="n">handle_wanted_keywords</span><span class="p">,</span>
     <span class="n">keyworddata_to_df</span><span class="p">,</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
     <span class="n">write_inc_stdout_file</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
 <span class="kn">from</span> <span class="nn">.inferdims</span> <span class="kn">import</span> <span class="n">DIMS_POS</span><span class="p">,</span> <span class="n">inject_xxxdims_ntxxx</span>
 <span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
 <span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
 
-<span class="k">try</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
     <span class="c1"># Needed for mypy</span>
 
     <span class="c1"># pylint: disable=unused-import</span>
     <span class="kn">import</span> <span class="nn">opm.io</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">pass</span>
 
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -464,11 +463,8 @@
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;ROCK</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;--   {&#39;PRESSURE&#39;:^21} {&#39;COMPRESSIBILITY&#39;:^21}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ROCK&quot;</span><span class="p">]</span>
+    <span class="c1"># Use everything if KEYWORD not in dframe..</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ROCK&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
@@ -527,11 +523,8 @@
         <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;COMPRESSIBILITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSIBILITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTW&quot;</span><span class="p">]</span>
+    <span class="c1"># Use everything if KEYWORD not in dframe..</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTW&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
@@ -560,11 +553,8 @@
         <span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;OGR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="s1">&#39;*&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;OGR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^22</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTG&quot;</span><span class="p">]</span>
+    <span class="c1"># Use everything if KEYWORD not in dframe..</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTG&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
@@ -589,10 +579,7 @@
         <span class="n">p_gas</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_gas</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
         <span class="k">for</span> <span class="n">rowidx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span> <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
             <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
                 <span class="n">indent</span>
                 <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;OGR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
@@ -621,11 +608,8 @@
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVDG</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2">  </span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVDG&quot;</span><span class="p">]</span>
+    <span class="c1"># Use everything if KEYWORD not in dframe..</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVDG&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
@@ -669,11 +653,8 @@
     <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;PVDO</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;--   </span><span class="si">{</span><span class="s1">&#39;PRESSURE&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;VISCOSITY&#39;</span><span class="si">:</span><span class="s2">^21</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVDO&quot;</span><span class="p">]</span>
+    <span class="c1"># Use everything if KEYWORD not in dframe..</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVDO&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
@@ -718,11 +699,9 @@
     <span class="n">string</span> <span class="o">+=</span> <span class="n">comment_formatter</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- {&#39;RS&#39;:^22} {&#39;PRESSURE&#39;:^22} {&#39;VOLUMEFACTOR&#39;:^22} {&#39;VISCOSITY&#39;:^22}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;-- {&#39;*&#39;:^22} {&#39;PRESSURE&#39;:^22} {&#39;VOLUMEFACTOR&#39;:^22} {&#39;VISCOSITY&#39;:^22}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span><span class="p">:</span>
-        <span class="c1"># Use everything..</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTO&quot;</span><span class="p">]</span>
+    <span class="c1"># Use everything if KEYWORD not in dframe..</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PVTO&quot;</span><span class="p">]</span>
+
     <span class="k">if</span> <span class="s2">&quot;PVTNUM&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;If PVTNUM is not supplied, only one row should be given&quot;</span><span class="p">)</span>
@@ -747,10 +726,7 @@
         <span class="n">rs</span> <span class="o">=</span> <span class="n">dframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rs</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>
         <span class="k">for</span> <span class="n">rowidx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">22</span> <span class="k">if</span> <span class="n">rowidx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
             <span class="n">string</span> <span class="o">+=</span> <span class="p">(</span>
                 <span class="n">indent</span>
                 <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;PRESSURE&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;VOLUMEFACTOR&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">20.7f</span><span class="si">}</span><span class="s2">  &quot;</span>

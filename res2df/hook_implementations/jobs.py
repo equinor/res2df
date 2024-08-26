@@ -3,14 +3,10 @@ import sys
 from pathlib import Path
 
 try:
-    from ert.shared.plugins.plugin_manager import hook_implementation
-    from ert.shared.plugins.plugin_response import plugin_response
+    from ert import plugin as ert_plugin  # type: ignore
 except ModuleNotFoundError:
-    # ert is not installed - use dummy/transparent function decorators.
-    def hook_implementation(func):
-        return func
-
-    def plugin_response(plugin_name):  # pylint: disable=unused-argument
+    # ert is not installed - use dummy/transparent function decorator:
+    def ert_plugin(name: str = ""):
         def decorator(func):
             return func
 
@@ -28,8 +24,7 @@ def _get_jobs_from_directory(directory):
     return {path.name: str(path) for path in all_files}
 
 
-@hook_implementation
-@plugin_response(plugin_name="res2df")
+@ert_plugin(name="res2df")
 def installable_jobs():
     return _get_jobs_from_directory("config_jobs")
 
@@ -43,8 +38,7 @@ def _get_module_variable_if_exists(module_name, variable_name, default=""):
     return getattr(script_module, variable_name, default)
 
 
-@hook_implementation
-@plugin_response(plugin_name="res2df")
+@ert_plugin(name="res2df")
 def job_documentation(job_name):
     res2df_jobs = set(installable_jobs().data.keys())
     if job_name not in res2df_jobs:

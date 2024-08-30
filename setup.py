@@ -47,7 +47,7 @@ EXTRAS_REQUIRE = {
     "style": ["pre-commit"],
     "types": TYPES_REQUIREMENTS,
     "docs": DOCS_REQUIREMENTS,
-    "ert": ["ert>=2.38.0-b5"],
+    "ert": ["ert>=10.2.0b13"],
 }
 
 setup(

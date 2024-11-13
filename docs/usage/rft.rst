@@ -20,7 +20,7 @@ Eclipse usage
 ^^^^^^^^^^^^^
 
 In order to get RFT files emitted from Eclipse, you need the ``WRFTPLT`` keyword
-in your :term`.DATA file`, example:
+in your :term:`.DATA file`, example:
 
 .. code-block:: console
 

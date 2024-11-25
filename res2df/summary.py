@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional, Union
 import dateutil
 import numpy as np
 import pandas as pd
+import polars
 import pyarrow
 import pyarrow.feather
 from resdata.summary import Summary
@@ -494,33 +495,27 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
     not necessarily a Pandas datetimetype (which is only of nanosecond precision).
     This index is always named DATE in the pyarrow table.
     """
+    # Convert pandas DataFrame to Polars DataFrame
+    pl_df = polars.from_pandas(dframe)
 
-    field_list: List[pyarrow.Field] = []
-    field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
-    column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
+    # Ensure the index is added as a column named "DATE"
+    pl_df = pl_df.with_columns(
+        polars.Series("DATE", dframe.index.to_numpy().astype("datetime64[ms]"))
+    )
 
-    for colname in dframe.columns:
-        if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
-            # Boolean objects in the metadata dictionary must be converted to bytes:
-            field_metadata = {
-                bytes(key, encoding="ascii"): bytes(str(value), encoding="ascii")
-                for key, value in dframe.attrs["meta"][colname].items()
-            }
-        else:
-            field_metadata = {}
-        if pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
-            dtype = pyarrow.int32()
-        elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
-            # Parameters are potentially merged into the dataframe.
-            dtype = pyarrow.string()
-        else:
-            dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
-        column_arrays.append(dframe[colname].to_numpy())
+    type_casts = {pl.Int64: pl.Int32, pl.Float64: pl.Float32}
 
-    schema = pyarrow.schema(field_list)
+    # Apply casting directly on columns
+    pl_df = pl_df.with_columns(
+        [
+            pl.col(colname).cast(type_casts[pl_df[colname].dtype])
+            for colname in pl_df.columns
+            if pl_df[colname].dtype in type_casts
+        ]
+    )
 
-    return pyarrow.table(column_arrays, schema=schema)
+    # Convert Polars DataFrame to PyArrow Table
+    return pl_df.to_arrow()
 
 
 def _merge_params(

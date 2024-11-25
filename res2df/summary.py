@@ -499,7 +499,8 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
     field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
     column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
 
-    for colname in dframe.columns:
+    dframe_values = dframe.values.transpose()
+    for col_idx, colname in enumerate(dframe.columns):
         if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
             # Boolean objects in the metadata dictionary must be converted to bytes:
             field_metadata = {
@@ -516,7 +517,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
         else:
             dtype = pyarrow.float32()
         field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
-        column_arrays.append(dframe[colname].to_numpy())
+        column_arrays.append(dframe_values[col_idx])
 
     schema = pyarrow.schema(field_list)
 

@@ -1108,6 +1108,24 @@ def test_df2pyarrow_mix_int_float():
     pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
 
 
+@pytest.mark.timeout(10)
+def test_df2pyarrow_10000cols():
+    """Summary files with thousands of columns should not be an issue"""
+    columncount = 10000
+    dateindex = [dt(2024, 1, 1, 0, 0, 0), dt(2025, 1, 1, 0, 0, 0)]
+    dframe = pd.DataFrame(
+        columns=[f"FOO{num}" for num in range(columncount)],
+        index=dateindex,
+        data=[[1] * columncount, [2] * columncount],
+    ).astype("int32")
+    dframe.attrs["meta"] = {f"FOO{num}": {"unit": "barf"} for num in range(columncount)}
+    pyat = _df2pyarrow(dframe)
+    for num in range(columncount):
+        assert pyat.select([f"FOO{num}"]).schema[0].metadata == {
+            b"unit": b"barf",
+        }
+
+
 def test_df2pyarrow_500years():
     """Summary files can have DATE columns with timespans outside the
     Pandas dataframe nanosecond limitation. This should not present

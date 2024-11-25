@@ -1108,6 +1108,7 @@ def test_df2pyarrow_mix_int_float():
     pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
 
 
+@pytest.mark.timeout(10)
 def test_df2pyarrow_10000cols():
     """Summary files with thousands of columns should not be an issue"""
     columncount = 10000
@@ -1119,6 +1120,10 @@ def test_df2pyarrow_10000cols():
     ).astype("int32")
     dframe.attrs["meta"] = {f"FOO{num}": {"unit": "barf"} for num in range(columncount)}
     pyat = _df2pyarrow(dframe)
+    for num in range(columncount):
+        assert pyat.select([f"FOO{num}"]).schema[0].metadata == {
+            b"unit": b"barf",
+        }
 
 
 def test_df2pyarrow_500years():

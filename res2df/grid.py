@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pyarrow.feather
+import resfo
 from resdata.resfile import ResdataFile
 
 from .__version__ import __version__
@@ -199,11 +200,12 @@ def rst2df(
     # for all active cells:
     activecells = resdatafiles.get_egrid().getNumActive()
     rstvectors = []
-    for vec in resdatafiles.get_rstfile().headers:
-        if vec[1] == activecells and any(
-            fnmatch.fnmatch(vec[0], key) for key in vectors
+    for vec in resfo.lazy_read(resdatafiles.get_rstfilename()):
+        keyword_name = vec.read_keyword().strip()
+        if vec.read_length() == activecells and any(
+            fnmatch.fnmatch(keyword_name, key) for key in vectors
         ):
-            rstvectors.append(vec[0])
+            rstvectors.append(keyword_name)
     rstvectors = list(set(rstvectors))  # Make unique list
     # Note that all of these might not exist at all timesteps.
 

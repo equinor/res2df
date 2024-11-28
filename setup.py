@@ -24,7 +24,6 @@ REQUIREMENTS = [
     "pyarrow",
     "pyyaml>=5.1",
     "treelib",
-    "xtgeo<4.3.2; python_version<='3.8'",
 ]
 
 TEST_REQUIREMENTS = (

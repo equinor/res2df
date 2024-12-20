@@ -17,7 +17,7 @@ EQLDIMS
   1 /
 
 WELLDIMS
-  1 /
+  1 1 1 1 /
 
 WSEGDIMS
   1 10 10 /
@@ -161,7 +161,7 @@ WELSEGS
 COMPSEGS
  OP1 /
 --i j k branch len
-  1 1 1 1      10 10 Z /
+  1 1 1 1      10 20 Z /
 /
 
 WRFTPLT

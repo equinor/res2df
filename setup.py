@@ -38,7 +38,7 @@ DOCS_REQUIREMENTS = [
     "ipython",
     "rstcheck",
     "setuptools",
-    "sphinx<7",
+    "sphinx",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
     "sphinx_rtd_theme",

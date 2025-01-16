@@ -446,7 +446,7 @@ RSVD
     pd.testing.assert_frame_equal(rsvd_df, rsvd_df_fromcsv)
 
 
-def test_ntequl():
+def test_ntequl_no_eqldims():
     """Test that we can infer NTEQUL when not supplied"""
     deckstr = """
 GAS
@@ -479,6 +479,8 @@ EQUIL
     with pytest.raises((ValueError, RuntimeError)):
         equil.df(deckstr, ntequl=3)
 
+
+def test_ntequl_with_eqldims():
     deckstr = """
 GAS
 OIL

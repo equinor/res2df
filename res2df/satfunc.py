@@ -154,11 +154,12 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
 
     filled_frames = []
     for _, subframe in dframe.groupby("SATNUM"):
-        filled_frames.append(
-            subframe.set_index(sat_col)
-            .interpolate(method="index", limit_area="inside")
-            .reset_index()
+        subframe.set_index(sat_col, inplace=True)
+        numeric_columns = subframe.select_dtypes(include=["float", "int"]).columns
+        subframe[numeric_columns] = subframe[numeric_columns].interpolate(
+            method="index", limit_area="inside"
         )
+        filled_frames.append(subframe.reset_index())
     return pd.concat(filled_frames)
 
 

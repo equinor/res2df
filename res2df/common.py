@@ -828,7 +828,7 @@ def stack_on_colnames(
     )
     dframe = dframe.stack(future_stack=True)
     staticcols = [col[0] for col in tuplecolumns if len(col) == 1]
-    dframe[staticcols] = dframe[staticcols].fillna(method="ffill")
+    dframe[staticcols] = dframe[staticcols].ffill()
     dframe.reset_index(inplace=True)
     # Drop rows stemming from the NaNs in the second tuple-element for
     # static columns:

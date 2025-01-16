@@ -690,7 +690,7 @@ def generic_deck_table(
 
     # NaN or Nones are assumed to be defaulted, which in Eclipse terminology is
     # the string "1*":
-    dframe.fillna(value="1*", inplace=True)
+    dframe = dframe.fillna(value="1*")
 
     if drop_trailing_columns:
         for col_name in reversed(relevant_columns):

@@ -709,9 +709,9 @@ def generic_deck_table(
     }
     for int_col in integer_cols.intersection(dframe.columns):
         defaulted_rows = dframe[int_col] == "1*"
-        dframe.loc[~defaulted_rows, int_col] = (
-            dframe.loc[~defaulted_rows, int_col].astype(int).astype(str)
-        )
+        integer_values = dframe.loc[~defaulted_rows, int_col].astype(int)
+        dframe[int_col] = dframe[int_col].astype(str)
+        dframe.loc[~defaulted_rows, int_col] = integer_values
 
     # Quote all string data. This is not always needed, but needed
     # for some colums, for example well-names containing a slash.

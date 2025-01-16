@@ -826,7 +826,7 @@ def stack_on_colnames(
     dframe.columns = pd.MultiIndex.from_tuples(
         tuplecolumns, names=["dummy", stackcolname]
     )
-    dframe = dframe.stack()
+    dframe = dframe.stack(future_stack=True)
     staticcols = [col[0] for col in tuplecolumns if len(col) == 1]
     dframe[staticcols] = dframe[staticcols].fillna(method="ffill")
     dframe.reset_index(inplace=True)

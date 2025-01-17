@@ -481,14 +481,14 @@ def add_extras(dframe: pd.DataFrame, inplace: bool = True) -> pd.DataFrame:
         dframe = dframe.copy()
 
     if "CONPRES" in dframe and "SEGPRES" in dframe:
-        dframe["COMPLETION_DP"] = 0
+        dframe["COMPLETION_DP"] = 0.0
         nonzero_pres = (dframe["CONPRES"] > 0) & (dframe["SEGPRES"] > 0)
         dframe.loc[nonzero_pres, "COMPLETION_DP"] = (
             dframe.loc[nonzero_pres, "CONPRES"] - dframe.loc[nonzero_pres, "SEGPRES"]
         )
 
     if not dframe.empty:
-        dframe["DRAWDOWN"] = 0  # Set a default so that the column always exists
+        dframe["DRAWDOWN"] = 0.0  # Set a default so that the column always exists
 
     if "CONPRES" in dframe and "PRESSURE" in dframe:
         nonzero_conpres = dframe["CONPRES"] > 0

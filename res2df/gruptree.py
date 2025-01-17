@@ -9,6 +9,7 @@ import sys
 import warnings
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import numpy as np
 import pandas as pd
 import treelib
 
@@ -19,6 +20,7 @@ with contextlib.suppress(ImportError):
     import opm.io
 
 from .common import (
+    OPMKEYWORDS,
     parse_opmio_date_rec,
     parse_opmio_deckrecord,
     parse_opmio_tstep_rec,
@@ -164,6 +166,17 @@ def df(
             currentedges, nodedata, wellspecsedges, found_keywords, date
         )
     dframe = pd.DataFrame(edgerecords)
+
+    string_cols = {"PARENT", "CHILD"}
+    for keyword in ["GRUPTREE", "BRANPROP", "NODEPROP", "GRUPNET", "WELSPECS"]:
+        string_cols |= {
+            item["name"]
+            for item in OPMKEYWORDS[keyword]["items"]
+            if item["value_type"] == "STRING"
+        }
+    for col in string_cols:
+        if col in dframe:
+            dframe[col] = dframe[col].replace(np.nan, None)
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csv2res &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>csv2res &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
 
@@ -48,32 +48,32 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="res2csv.html">res2csv</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csv2res</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#res2df.csv2res-get_parser-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#res2df.csv2res-get_parser-named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Sub-commands">Sub-commands</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#summary">summary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#positional-arguments_repeat1">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#named-arguments_repeat1">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#equil">equil</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pvt">pvt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#positional-arguments_repeat2">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#named-arguments_repeat2">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#pvt">pvt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#positional-arguments_repeat3">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#named-arguments_repeat3">Named Arguments</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#satfunc">satfunc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vfp">vfp</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#positional-arguments_repeat4">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#named-arguments_repeat4">Named Arguments</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#vfp">vfp</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#positional-arguments_repeat5">Positional Arguments</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#named-arguments_repeat5">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -130,21 +130,21 @@ If you want output to your terminal, use <code class="docutils literal notransla
 you also specify the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> argument with a list of wanted keywords, all
 supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to an <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">output file</span></a>.</p>
-<p><p>csv2res (1.2.4.dev2+g370f856c) is a command line frontend to res2df. Documentation at <a class="reference external" href="https://equinor.github.io/res2df/">https://equinor.github.io/res2df/</a></p>
+<p><p>csv2res (1.2.4.dev3+g6f665b99) is a command line frontend to res2df. Documentation at <a class="reference external" href="https://equinor.github.io/res2df/">https://equinor.github.io/res2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv2res</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="p">{</span><span class="n">summary</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">vfp</span><span class="p">}</span> <span class="o">...</span>
 </pre></div>
 </div>
-<section id="positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
+<section id="res2df.csv2res-get_parser-positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#res2df.csv2res-get_parser-positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>subcommand</kbd></dt>
 <dd><p>Possible choices: summary, equil, pvt, satfunc, vfp</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<section id="res2df.csv2res-get_parser-named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#res2df.csv2res-get_parser-named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -159,28 +159,28 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments_repeat1">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat1" title="Permalink to this heading"></a></h4>
+<section id="positional-arguments">
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with summary data.</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments_repeat1">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat1" title="Permalink to this heading"></a></h4>
+<section id="named-arguments">
+<h4>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Basename for output files</p>
-<p>Default: “SYNTSMRY”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'SYNTSMRY'</span></code></p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>--debug</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 </dl>
 </section>
@@ -191,27 +191,27 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments_repeat2">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat2" title="Permalink to this heading"></a></h4>
+<section id="positional-arguments_repeat1">
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat1" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with EQUIL, RSVD++ data with res2df format</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments_repeat2">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat2" title="Permalink to this heading"></a></h4>
+<section id="named-arguments_repeat1">
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat1" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default solution.inc. Use ‘-’ for stdout.</p>
-<p>Default: “solution.inc”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'solution.inc'</span></code></p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
 <dd><p>List of EQUIL, RSVD++ keywords to include. If not supplied, all supported and found keywords will be included.</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 </dl>
 </section>
@@ -222,27 +222,27 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">pvt</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments_repeat3">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat3" title="Permalink to this heading"></a></h4>
+<section id="positional-arguments_repeat2">
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat2" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with PVT data with res2df format</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments_repeat3">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat3" title="Permalink to this heading"></a></h4>
+<section id="named-arguments_repeat2">
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat2" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default pvt.inc. Use ‘-’ for stdout.</p>
-<p>Default: “pvt.inc”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'pvt.inc'</span></code></p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
 <dd><p>List of PVT keywords to include. If not supplied, all supported and found keywords will be included.</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 </dl>
 </section>
@@ -253,27 +253,27 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments_repeat4">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat4" title="Permalink to this heading"></a></h4>
+<section id="positional-arguments_repeat3">
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat3" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with SWOF, SGOF++ data with res2df format</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments_repeat4">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat4" title="Permalink to this heading"></a></h4>
+<section id="named-arguments_repeat3">
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat3" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default relperm.inc. Use ‘-’ for stdout.</p>
-<p>Default: “relperm.inc”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'relperm.inc'</span></code></p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
 <dd><p>List of SWOF, SGOF++ keywords to include. If not supplied, all supported and found keywords will be included.</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 </dl>
 </section>
@@ -284,27 +284,27 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">vfp</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments_repeat5">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat5" title="Permalink to this heading"></a></h4>
+<section id="positional-arguments_repeat4">
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat4" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with VFPPROD, VFPINJ data with res2df format</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments_repeat5">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat5" title="Permalink to this heading"></a></h4>
+<section id="named-arguments_repeat4">
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat4" title="Permalink to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default vfp.inc. Use ‘-’ for stdout.</p>
-<p>Default: “vfp.inc”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'vfp.inc'</span></code></p>
 </dd>
 <dt><kbd>-k, --keywords</kbd></dt>
 <dd><p>List of VFPPROD, VFPINJ keywords to include. If not supplied, all supported and found keywords will be included.</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 </dl>
 </section>
@@ -323,7 +323,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

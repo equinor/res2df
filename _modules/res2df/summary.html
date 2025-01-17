@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.summary &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -82,26 +82,26 @@
   <h1>Source code for res2df.summary</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
 <span class="c1"># The name &#39;datetime&#39; is in use by a function argument:</span>
-<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">dateutil</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pyarrow</span>
-<span class="kn">import</span> <span class="nn">pyarrow.feather</span>
-<span class="kn">from</span> <span class="nn">resdata.summary</span> <span class="kn">import</span> <span class="n">Summary</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dateutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.feather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">resdata.summary</span><span class="w"> </span><span class="kn">import</span> <span class="n">Summary</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
-<span class="kn">from</span> <span class="nn">.parameters</span> <span class="kn">import</span> <span class="n">find_parameter_files</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">load_all</span>
-<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_dframe_stdout_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_parameter_files</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">load_all</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resdatafiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -123,7 +123,7 @@
 <span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
 
 
-<div class="viewcode-block" id="date_range"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.date_range">[docs]</a><span class="k">def</span> <span class="nf">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+<div class="viewcode-block" id="date_range"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.date_range">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for pandas.date_range to allow for extra res2df specific mnemonics</span>
 <span class="sd">    &#39;yearly&#39;, &#39;daily&#39;, &#39;weekly&#39;, mapped over to pandas DateOffsets.</span>
 
@@ -144,7 +144,7 @@
         <span class="k">return</span> <span class="n">_fallback_date_range</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_ensure_date_or_none</span><span class="p">(</span><span class="n">some_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_date_or_none</span><span class="p">(</span><span class="n">some_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures an object is either a date or None</span>
 
 <span class="sd">    Args:</span>
@@ -164,7 +164,7 @@
     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;some_date must be a string or a date, got </span><span class="si">{</span><span class="n">some_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_crop_datelist</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_crop_datelist</span><span class="p">(</span>
     <span class="n">summarydates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">],</span>
     <span class="n">freq</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -206,7 +206,7 @@
     <span class="k">return</span> <span class="n">datetimes</span>
 
 
-<span class="k">def</span> <span class="nf">_fallback_date_roll</span><span class="p">(</span><span class="n">rollme</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fallback_date_roll</span><span class="p">(</span><span class="n">rollme</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback function for rolling dates forward or backward onto a</span>
 <span class="sd">    date frequency boundary.</span>
 
@@ -244,7 +244,7 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_fallback_date_range</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fallback_date_range</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback routine for generating date ranges beyond Pandas datetime64[ns]</span>
 <span class="sd">    year-2262 limit.</span>
 
@@ -273,7 +273,7 @@
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported frequency for datetimes beyond year 2262&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="resample_smry_dates"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.resample_smry_dates">[docs]</a><span class="k">def</span> <span class="nf">resample_smry_dates</span><span class="p">(</span>
+<div class="viewcode-block" id="resample_smry_dates"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.resample_smry_dates">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">resample_smry_dates</span><span class="p">(</span>
     <span class="n">summarydates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">],</span>
     <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">FREQ_RAW</span><span class="p">,</span>
     <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -371,7 +371,7 @@
     <span class="k">return</span> <span class="n">dates</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
     <span class="n">time_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">column_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -514,7 +514,7 @@
     <span class="k">return</span> <span class="n">dframe</span></div>
 
 
-<span class="k">def</span> <span class="nf">_ensure_unique_datetime_index</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_unique_datetime_index</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The TIME vector may be stored with a lower resolution than individual</span>
 <span class="sd">    timesteps, leading ecl to return non-unique datetimes.</span>
@@ -563,7 +563,7 @@
     <span class="k">return</span> <span class="n">dframe</span>
 
 
-<span class="k">def</span> <span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a Pyarrow table from a dataframe, conserving metadata.</span>
 
 <span class="sd">    All integer columns will have datatype int32, all floats will have float32</span>
@@ -606,7 +606,7 @@
     <span class="k">return</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">column_arrays</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_merge_params</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_merge_params</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">paramfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -644,7 +644,7 @@
     <span class="k">return</span> <span class="n">dframe</span>
 
 
-<div class="viewcode-block" id="smry_meta"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.smry_meta">[docs]</a><span class="k">def</span> <span class="nf">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<div class="viewcode-block" id="smry_meta"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.smry_meta">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">smry_meta</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide metadata for summary data vectors.</span>
 
 <span class="sd">    A dictionary indexed by summary vector name is returned, and each</span>
@@ -679,7 +679,7 @@
     <span class="k">return</span> <span class="n">meta</span></div>
 
 
-<span class="k">def</span> <span class="nf">_fix_dframe_for_resdata</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fix_dframe_for_resdata</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a dataframe making it ready for Summary.from_pandas()</span>
 
 <span class="sd">    * Ensures that the index is always datetime, and sorted.</span>
@@ -747,7 +747,7 @@
     <span class="k">return</span> <span class="n">dframe</span>
 
 
-<div class="viewcode-block" id="df2ressum"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.df2ressum">[docs]</a><span class="k">def</span> <span class="nf">df2ressum</span><span class="p">(</span>
+<div class="viewcode-block" id="df2ressum"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.df2ressum">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2ressum</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">casename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SYNTHETIC&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
@@ -772,7 +772,7 @@
     <span class="k">return</span> <span class="n">Summary</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">casename</span><span class="p">,</span> <span class="n">dframe</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -859,7 +859,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.fill_reverse_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation:  dataframe -&gt; summary files&quot;&quot;&quot;</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -875,7 +875,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="summary_main"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.summary_main">[docs]</a><span class="k">def</span> <span class="nf">summary_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="summary_main"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.summary_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">summary_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read summary data from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -902,7 +902,7 @@
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">sum_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="summary_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.summary_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="summary_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.summary.html#res2df.summary.summary_reverse_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">summary_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point for usage with &quot;csv2res summary&quot; on the command line&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -933,7 +933,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

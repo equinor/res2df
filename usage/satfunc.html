@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>satfunc &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>satfunc &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -112,7 +112,7 @@
 <p>The data obtained from one invocation of the satfunc module will be put in one
 dataframe, where data from different keywords are separated by the <code class="docutils literal notranslate"><span class="pre">KEYWORD</span></code>
 column.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">satfunc</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
 <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
@@ -341,14 +341,14 @@ data for more keywords in the dataframe).</p>
 determine certain properties like endpoint. If you need to determine for
 example “SOWCR” - the largest oil saturation for which oil is immobile,
 because you need to avoid SOWCR + SWCR overshooting 1, you can write a code</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">satfunc</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">satfunc</span>
 
 <span class="c1"># Read an include file directly into a DataFrame</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;relperm.inc&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_handle</span><span class="p">:</span>
     <span class="n">sat_df</span> <span class="o">=</span> <span class="n">satfunc</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">f_handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
 <span class="c1"># Write a function that is to operate on each SATNUM:</span>
-<span class="k">def</span> <span class="nf">sowcr</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sowcr</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine the largest oil saturation where</span>
 <span class="sd">    oil relperm is below 1e-7&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;KROW&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e-7</span><span class="p">][</span><span class="s2">&quot;SW&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
@@ -392,7 +392,7 @@ what it produces, and the <a class="reference internal" href="../res2df/res2df.s
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

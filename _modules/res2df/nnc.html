@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.nnc &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.nnc &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -85,25 +85,25 @@
 <span class="sd">simulator :term:`output files &lt;output file&gt;`.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.__version__</span> <span class="kn">import</span> <span class="n">__version__</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">comment_formatter</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
-<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">gridgeometry2df</span>
-<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.__version__</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">comment_formatter</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">gridgeometry2df</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resdatafiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pillars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a Pandas Dataframe with NNC information</span>
@@ -191,7 +191,7 @@
     <span class="k">return</span> <span class="n">nncdf</span></div>
 
 
-<div class="viewcode-block" id="add_nnc_coords"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.add_nnc_coords">[docs]</a><span class="k">def</span> <span class="nf">add_nnc_coords</span><span class="p">(</span><span class="n">nncdf</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="add_nnc_coords"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.add_nnc_coords">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_nnc_coords</span><span class="p">(</span><span class="n">nncdf</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add columns X, Y and Z for the connection midpoint</span>
 
 <span class="sd">    This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)</span>
@@ -231,7 +231,7 @@
     <span class="k">return</span> <span class="n">gnncdf</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">nncdf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]]</span></div>
 
 
-<div class="viewcode-block" id="filter_vertical"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.filter_vertical">[docs]</a><span class="k">def</span> <span class="nf">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="filter_vertical"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.filter_vertical">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filter_vertical</span><span class="p">(</span><span class="n">nncdf</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter to vertical connections</span>
 
 <span class="sd">    Arguments:</span>
@@ -256,7 +256,7 @@
 <span class="c1"># Remaining functions are for the command line interface</span>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parser</span>
 
 <span class="sd">    Arguments:</span>
@@ -287,7 +287,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="df2res_editnnc"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.df2res_editnnc">[docs]</a><span class="k">def</span> <span class="nf">df2res_editnnc</span><span class="p">(</span>
+<div class="viewcode-block" id="df2res_editnnc"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.df2res_editnnc">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_editnnc</span><span class="p">(</span>
     <span class="n">nnc_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nocomments</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write an EDITNNC keyword</span>
@@ -364,7 +364,7 @@
     <span class="k">return</span> <span class="n">string</span></div>
 
 
-<div class="viewcode-block" id="nnc_main"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.nnc_main">[docs]</a><span class="k">def</span> <span class="nf">nnc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="nnc_main"><a class="viewcode-back" href="../../res2df/res2df.nnc.html#res2df.nnc.nnc_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">nnc_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Command line access point from main() or from res2csv via subparser&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -388,7 +388,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

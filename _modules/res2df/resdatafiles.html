@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.resdatafiles &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.resdatafiles &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -82,25 +82,25 @@
   <h1>Source code for res2df.resdatafiles</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Module to hold simulator input and output filenames&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">errno</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">errno</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">opm.io</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">opm.io</span>
 
     <span class="n">HAVE_OPM</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">HAVE_OPM</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="kn">from</span> <span class="nn">resdata.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
-<span class="kn">from</span> <span class="nn">resdata.rd_util</span> <span class="kn">import</span> <span class="n">FileMode</span>
-<span class="kn">from</span> <span class="nn">resdata.resfile</span> <span class="kn">import</span> <span class="n">ResdataFile</span>
-<span class="kn">from</span> <span class="nn">resdata.summary</span> <span class="kn">import</span> <span class="n">Summary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">resdata.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">resdata.rd_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileMode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">resdata.resfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">resdata.summary</span><span class="w"> </span><span class="kn">import</span> <span class="n">Summary</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">,</span> <span class="n">parse_lyrfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">,</span> <span class="n">parse_lyrfile</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -121,7 +121,7 @@
     <span class="p">]</span>
 
 
-<div class="viewcode-block" id="ResdataFiles"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles">[docs]</a><span class="k">class</span> <span class="nc">ResdataFiles</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ResdataFiles"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ResdataFiles</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for holding reservoir simulator :term:`output files &lt;output file&gt;`</span>
 
@@ -134,7 +134,7 @@
 <span class="sd">    it should be loaded or served from cache.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">):</span>
         <span class="c1"># eclbase might be a a Posix path object</span>
         <span class="n">eclbase</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
 
@@ -161,11 +161,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ResdataFiles.get_path"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_path"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the full path to the directory with the .DATA file&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_deck"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_deck">[docs]</a>    <span class="k">def</span> <span class="nf">get_deck</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_deck"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_deck">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_deck</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a opm.io :term:`deck` of the .DATA file&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.DATA&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
@@ -179,7 +179,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deck</span></div>
 
 <div class="viewcode-block" id="ResdataFiles.str2deck"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.str2deck">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">str2deck</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">str2deck</span><span class="p">(</span>
         <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Produce a opm.io :term:`deck` from a string, using permissive</span>
@@ -189,11 +189,11 @@
         <span class="k">return</span> <span class="n">opm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parsecontext</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ResdataFiles.file2deck"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.file2deck">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">file2deck</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to convert standalone files into opm.io Deck objects&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ResdataFiles</span><span class="o">.</span><span class="n">str2deck</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_egrid"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_egrid">[docs]</a>    <span class="k">def</span> <span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_egrid"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_egrid">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_egrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Grid</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return EGRID file as a Grid object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span><span class="p">:</span>
             <span class="n">egridfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.EGRID&quot;</span>
@@ -205,7 +205,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">egridfilename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egrid</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_egridfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_egridfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_egridfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_egridfile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_egridfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the EGRID file as a ResdataFile object</span>
 
 <span class="sd">        This gives access to data vectors defined on the grid.&quot;&quot;&quot;</span>
@@ -220,7 +220,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egridfile</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_summary"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_summary"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_summary">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Summary</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the summary file and</span>
 <span class="sd">        return as Summary object</span>
 
@@ -238,7 +238,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_summary</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="n">smryfilename</span><span class="p">,</span> <span class="n">include_restart</span><span class="o">=</span><span class="n">include_restart</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_summary</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_initfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_initfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_initfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_initfile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_initfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the INIT file as a ResdataFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span><span class="p">:</span>
             <span class="n">initfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.INIT&quot;</span>
@@ -250,7 +250,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">initfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initfile</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_rftfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_rftfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_rftfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_rftfile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_rftfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the RFT file as a ResdataFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span><span class="p">:</span>
             <span class="n">rftfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.RFT&quot;</span>
@@ -262,7 +262,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">rftfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_rstfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_rstfile">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_rstfile"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_rstfile">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_rstfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResdataFile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find and return the UNRST file as a ResdataFile object&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span><span class="p">:</span>
             <span class="n">rstfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span>
@@ -274,15 +274,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="n">ResdataFile</span><span class="p">(</span><span class="n">rstfilename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">FileMode</span><span class="o">.</span><span class="n">CLOSE_STREAM</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_rstfilename"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_rstfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_rstfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_rstfilename"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_rstfilename">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_rstfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the inferred name of the UNRST file&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.UNRST&quot;</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_prtfilename"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_prtfilename">[docs]</a>    <span class="k">def</span> <span class="nf">get_prtfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.get_prtfilename"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_prtfilename">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_prtfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the inferred name of the PRT file&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eclbase</span> <span class="o">+</span> <span class="s2">&quot;.PRT&quot;</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.close"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ResdataFiles.close"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.close">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close any opened files. Most files are opened though ecl with</span>
 <span class="sd">        an option to close the stream as possible, leaving not much work</span>
 <span class="sd">        for this function.&quot;&quot;&quot;</span>
@@ -293,7 +293,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_rstfile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rftfile</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ResdataFiles.get_zonemap"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_zonemap">[docs]</a>    <span class="k">def</span> <span class="nf">get_zonemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ResdataFiles.get_zonemap"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_zonemap">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_zonemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a dictionary from (int) K layers in the simgrid to strings</span>
 
 <span class="sd">        Typical usage is to map from grid layer to zone names.</span>
@@ -336,7 +336,7 @@
         <span class="k">return</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="rreplace"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.rreplace">[docs]</a><span class="k">def</span> <span class="nf">rreplace</span><span class="p">(</span><span class="n">pat</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="rreplace"><a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.rreplace">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rreplace</span><span class="p">(</span><span class="n">pat</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Variant of str.replace() that only replaces at the end of the string&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">string</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">pat</span><span class="p">)]</span> <span class="o">+</span> <span class="n">sub</span> <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">pat</span><span class="p">)</span> <span class="k">else</span> <span class="n">string</span>  <span class="c1"># noqa</span></div>
 </pre></div>
@@ -348,7 +348,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

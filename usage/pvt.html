@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pvt &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>pvt &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -109,7 +109,7 @@
 typically the keywords <code class="docutils literal notranslate"><span class="pre">PVTO</span></code>, <code class="docutils literal notranslate"><span class="pre">PVDG</span></code>, <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> and <code class="docutils literal notranslate"><span class="pre">ROCK</span></code>. Data from
 all keywords will be merged into one common dataframe.</p>
 <p>Example usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">pvt</span><span class="p">,</span> <span class="n">ResdataFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">pvt</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
 <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;MYDATADECK.DATA&quot;</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
@@ -321,7 +321,7 @@ if we read the contents of the file and supply it as a string:</p>
 </table>
 <p>If your PVT data resides in multiple include files, but you can’t import
 the entire <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, you have to merge the dataframes in Python like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">pvto</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pvto.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 <span class="n">density</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;density.inc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
@@ -375,7 +375,7 @@ if you dump to CSV from your Python code instead.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

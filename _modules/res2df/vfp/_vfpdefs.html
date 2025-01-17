@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfpdefs &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.vfp._vfpdefs &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -87,8 +87,8 @@
 <span class="sd">routines for VFPPROD and VFPINJ keywords in res2df.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="c1"># Supported types of VFP keywords</span>
 <span class="n">SUPPORTED_KEYWORDS</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -104,13 +104,13 @@
 
 
 <span class="c1"># Type of VFP curve</span>
-<div class="viewcode-block" id="VFPTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPTYPE">[docs]</a><span class="k">class</span> <span class="nc">VFPTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="VFPTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPTYPE">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VFPTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">VFPPROD</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span>
     <span class="n">VFPINJ</span> <span class="o">=</span> <span class="s2">&quot;VFPINJ&quot;</span></div>
 
 
 <span class="c1"># Flow rate variable types for VFPPROD</span>
-<div class="viewcode-block" id="VFPPROD_FLO"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPPROD_FLO">[docs]</a><span class="k">class</span> <span class="nc">VFPPROD_FLO</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="VFPPROD_FLO"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPPROD_FLO">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VFPPROD_FLO</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">OIL</span> <span class="o">=</span> <span class="s2">&quot;OIL&quot;</span>
     <span class="n">LIQ</span> <span class="o">=</span> <span class="s2">&quot;LIQ&quot;</span>
     <span class="n">GAS</span> <span class="o">=</span> <span class="s2">&quot;GAS&quot;</span>
@@ -119,7 +119,7 @@
 
 
 <span class="c1"># Flow rate variable types for VFPINJ</span>
-<div class="viewcode-block" id="VFPINJ_FLO"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_FLO">[docs]</a><span class="k">class</span> <span class="nc">VFPINJ_FLO</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="VFPINJ_FLO"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_FLO">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VFPINJ_FLO</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">OIL</span> <span class="o">=</span> <span class="s2">&quot;OIL&quot;</span>
     <span class="n">WAT</span> <span class="o">=</span> <span class="s2">&quot;WAT&quot;</span>
     <span class="n">GAS</span> <span class="o">=</span> <span class="s2">&quot;GAS&quot;</span>
@@ -128,7 +128,7 @@
 
 
 <span class="c1"># Water fraction types for VFPPROD</span>
-<div class="viewcode-block" id="WFR"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.WFR">[docs]</a><span class="k">class</span> <span class="nc">WFR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="WFR"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.WFR">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">WFR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">WOR</span> <span class="o">=</span> <span class="s2">&quot;WOR&quot;</span>
     <span class="n">WCT</span> <span class="o">=</span> <span class="s2">&quot;WCT&quot;</span>
     <span class="n">WGR</span> <span class="o">=</span> <span class="s2">&quot;WGR&quot;</span>
@@ -137,7 +137,7 @@
 
 
 <span class="c1"># Gas fraction types for VFPPROD</span>
-<div class="viewcode-block" id="GFR"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.GFR">[docs]</a><span class="k">class</span> <span class="nc">GFR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="GFR"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.GFR">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GFR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">GOR</span> <span class="o">=</span> <span class="s2">&quot;GOR&quot;</span>
     <span class="n">GLR</span> <span class="o">=</span> <span class="s2">&quot;GLR&quot;</span>
     <span class="n">OGR</span> <span class="o">=</span> <span class="s2">&quot;OGR&quot;</span>
@@ -145,7 +145,7 @@
 
 
 <span class="c1"># Artificial lift types for VFPPROD</span>
-<div class="viewcode-block" id="ALQ"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.ALQ">[docs]</a><span class="k">class</span> <span class="nc">ALQ</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="ALQ"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.ALQ">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ALQ</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">GRAT</span> <span class="o">=</span> <span class="s2">&quot;GRAT&quot;</span>
     <span class="n">IGLR</span> <span class="o">=</span> <span class="s2">&quot;IGLR&quot;</span>
     <span class="n">TGLR</span> <span class="o">=</span> <span class="s2">&quot;TGLR&quot;</span>
@@ -158,7 +158,7 @@
 
 
 <span class="c1"># Unit types</span>
-<div class="viewcode-block" id="UNITTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.UNITTYPE">[docs]</a><span class="k">class</span> <span class="nc">UNITTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="UNITTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.UNITTYPE">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">UNITTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;METRIC&quot;</span>
     <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;FIELD&quot;</span>
     <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;LAB&quot;</span>
@@ -167,18 +167,18 @@
 
 
 <span class="c1"># THP types supported</span>
-<div class="viewcode-block" id="THPTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.THPTYPE">[docs]</a><span class="k">class</span> <span class="nc">THPTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="THPTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.THPTYPE">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">THPTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">THP</span> <span class="o">=</span> <span class="s2">&quot;THP&quot;</span></div>
 
 
 <span class="c1"># Tabulated values types for VFPPROD</span>
-<div class="viewcode-block" id="VFPPROD_TABTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPPROD_TABTYPE">[docs]</a><span class="k">class</span> <span class="nc">VFPPROD_TABTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="VFPPROD_TABTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPPROD_TABTYPE">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VFPPROD_TABTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">BHP</span> <span class="o">=</span> <span class="s2">&quot;BHP&quot;</span>
     <span class="n">THT</span> <span class="o">=</span> <span class="s2">&quot;TEMP&quot;</span></div>
 
 
 <span class="c1"># Tabulated values types for VFPINJ</span>
-<div class="viewcode-block" id="VFPINJ_TABTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE">[docs]</a><span class="k">class</span> <span class="nc">VFPINJ_TABTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="VFPINJ_TABTYPE"><a class="viewcode-back" href="../../../res2df/res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VFPINJ_TABTYPE</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">BHP</span> <span class="o">=</span> <span class="s2">&quot;BHP&quot;</span></div>
 
 
@@ -408,7 +408,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

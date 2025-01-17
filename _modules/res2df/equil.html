@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.equil &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.equil &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -84,15 +84,15 @@
 <span class="sd">Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">comment_formatter</span><span class="p">,</span>
     <span class="n">generic_deck_table</span><span class="p">,</span>
     <span class="n">handle_wanted_keywords</span><span class="p">,</span>
@@ -100,15 +100,15 @@
     <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
     <span class="n">write_inc_stdout_file</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
-<span class="kn">from</span> <span class="nn">.inferdims</span> <span class="kn">import</span> <span class="n">DIMS_POS</span><span class="p">,</span> <span class="n">inject_xxxdims_ntxxx</span>
-<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.inferdims</span><span class="w"> </span><span class="kn">import</span> <span class="n">DIMS_POS</span><span class="p">,</span> <span class="n">inject_xxxdims_ntxxx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resdatafiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
     <span class="c1"># pylint: disable=unused-import</span>
-    <span class="kn">import</span> <span class="nn">opm.io</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">opm.io</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -161,7 +161,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -219,7 +219,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="rsvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.rsvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rsvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="rsvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.rsvd_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rsvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RSVD data from a :term:`deck`</span>
@@ -236,7 +236,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rvvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.rvvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rvvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="rvvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.rvvd_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rvvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract RVVD data from a :term:`deck`</span>
@@ -253,7 +253,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pbvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.pbvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pbvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pbvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.pbvd_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pbvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PBVD data from a :term:`deck`</span>
@@ -270,7 +270,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pdvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.pdvd_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pdvd_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pdvd_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.pdvd_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pdvd_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PDVD data from a :term:`deck`</span>
@@ -287,7 +287,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="phases_from_deck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.phases_from_deck">[docs]</a><span class="k">def</span> <span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="phases_from_deck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.phases_from_deck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">phases_from_deck</span><span class="p">(</span><span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determined the set of phases from a :term:`deck`, as</span>
 <span class="sd">    a string with values &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
 <span class="sd">    or &quot;oil-gas&quot;</span>
@@ -309,7 +309,7 @@
     <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="phases_from_columns"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.phases_from_columns">[docs]</a><span class="k">def</span> <span class="nf">phases_from_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="phases_from_columns"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.phases_from_columns">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">phases_from_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine the set of phases available in an</span>
 <span class="sd">    equil dataframe, based on which columns are there.</span>
 <span class="sd">    Returns &quot;oil-water-gas&quot;, &quot;gas-water&quot;, &quot;oil-water&quot;,</span>
@@ -334,7 +334,7 @@
     <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="equil_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.equil_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">equil_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="equil_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.equil_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">equil_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntequl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract EQUIL data from a :term:`deck`</span>
@@ -366,7 +366,7 @@
     <span class="k">return</span> <span class="n">dataframe</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -396,12 +396,12 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.fill_reverse_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill a parser for the operation dataframe -&gt; resdata :term:`include file`&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;EQUIL, RSVD++&quot;</span><span class="p">,</span> <span class="s2">&quot;solution.inc&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="equil_main"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.equil_main">[docs]</a><span class="k">def</span> <span class="nf">equil_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="equil_main"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.equil_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">equil_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read from disk and write CSV back to disk&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -433,7 +433,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="equil_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.equil_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="equil_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.equil_reverse_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">equil_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility</span>
 <span class="sd">    for CSV to reservoir simulator :term:`include files &lt;include file&gt;`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -446,7 +446,7 @@
     <span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res">[docs]</a><span class="k">def</span> <span class="nf">df2res</span><span class="p">(</span>
+<div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res</span><span class="p">(</span>
     <span class="n">equil_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -486,7 +486,7 @@
     <span class="k">return</span> <span class="n">string</span></div>
 
 
-<div class="viewcode-block" id="df2res_equil"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_equil">[docs]</a><span class="k">def</span> <span class="nf">df2res_equil</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_equil"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_equil">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_equil</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for EQUIL keyword</span>
 
 <span class="sd">    Args:</span>
@@ -517,7 +517,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res_rsvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_rsvd">[docs]</a><span class="k">def</span> <span class="nf">df2res_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_rsvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_rsvd">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_rsvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for RSVD keyword</span>
 
 <span class="sd">    This data consists of one table (rs as a function</span>
@@ -530,7 +530,7 @@
     <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RSVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res_rvvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_rvvd">[docs]</a><span class="k">def</span> <span class="nf">df2res_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_rvvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_rvvd">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_rvvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for RVVD keyword</span>
 
 <span class="sd">    This data consists of one table (rv as a function</span>
@@ -543,7 +543,7 @@
     <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;RVVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res_pbvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_pbvd">[docs]</a><span class="k">def</span> <span class="nf">df2res_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_pbvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_pbvd">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pbvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PBVD keyword</span>
 
 <span class="sd">    Bubble-point versus depth</span>
@@ -558,7 +558,7 @@
     <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PBVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res_pdvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_pdvd">[docs]</a><span class="k">def</span> <span class="nf">df2res_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="df2res_pdvd"><a class="viewcode-back" href="../../res2df/res2df.equil.html#res2df.equil.df2res_pdvd">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pdvd</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PDVD keyword.</span>
 
 <span class="sd">    Dew-point versus depth.</span>
@@ -573,7 +573,7 @@
     <span class="k">return</span> <span class="n">_df2res_equilfuncs</span><span class="p">(</span><span class="s2">&quot;PDVD&quot;</span><span class="p">,</span> <span class="n">dframe</span><span class="p">,</span> <span class="n">comment</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_df2res_equilfuncs</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_df2res_equilfuncs</span><span class="p">(</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal function to be used by df2res_&lt;keyword&gt;() functions&quot;&quot;&quot;</span>
@@ -587,7 +587,7 @@
     <span class="c1"># Use everything if KEYWORD not in dframe..</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="n">dframe</span> <span class="k">if</span> <span class="s2">&quot;KEYWORD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dframe</span> <span class="k">else</span> <span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="p">[</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">keyword</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_df2res_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_df2res_equilfuncs_eqlnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
 <span class="sd">        for one equilibriation function table for a specific EQLNUM</span>
 
@@ -617,7 +617,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

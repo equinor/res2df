@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.compdat &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.compdat &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -92,20 +92,20 @@
 <span class="sd">* WSEGVALV</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
     <span class="c1"># pylint: disable=unused-import</span>
-    <span class="kn">import</span> <span class="nn">opm.io.deck</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">opm.io.deck</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_wells_matching_template</span><span class="p">,</span>
     <span class="n">merge_zones</span><span class="p">,</span>
     <span class="n">parse_opmio_date_rec</span><span class="p">,</span>
@@ -113,9 +113,9 @@
     <span class="n">parse_opmio_tstep_rec</span><span class="p">,</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">merge_initvectors</span>
-<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge_initvectors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resdatafiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -149,7 +149,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.deck2dfs">[docs]</a><span class="k">def</span> <span class="nf">deck2dfs</span><span class="p">(</span>
+<div class="viewcode-block" id="deck2dfs"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.deck2dfs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">deck2dfs</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;opm.io.Deck&quot;</span><span class="p">,</span>
     <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">unroll</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -368,7 +368,7 @@
     <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="expand_welopen"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_welopen">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="expand_welopen"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_welopen">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_welopen</span><span class="p">(</span><span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Expands WELOPEN. First wildcard wells are expanded and then default</span>
 <span class="sd">    coordinates are expanded. The order of the expansion is important.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -376,7 +376,7 @@
     <span class="k">return</span> <span class="n">expand_welopen_defaults</span><span class="p">(</span><span class="n">exp_welopen_df</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_welopen_defaults"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_welopen_defaults">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_defaults</span><span class="p">(</span>
+<div class="viewcode-block" id="expand_welopen_defaults"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_welopen_defaults">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_welopen_defaults</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Expands rows in WELOPEN where one or two coordinates are defaulted.</span>
@@ -392,7 +392,7 @@
 <span class="sd">    to this functions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">is_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_default</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span>
@@ -451,7 +451,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">exp_welopen</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_welopen_wildcards"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_welopen_wildcards">[docs]</a><span class="k">def</span> <span class="nf">expand_welopen_wildcards</span><span class="p">(</span>
+<div class="viewcode-block" id="expand_welopen_wildcards"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_welopen_wildcards">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_welopen_wildcards</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand rows in welopen with well names containing wildcard characters,</span>
@@ -500,7 +500,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">exp_welopen</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.unrolldf">[docs]</a><span class="k">def</span> <span class="nf">unrolldf</span><span class="p">(</span>
+<div class="viewcode-block" id="unrolldf"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.unrolldf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">unrolldf</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">start_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="n">end_column</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;K2&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unroll dataframes, where some column pairs indicate</span>
@@ -558,7 +558,7 @@
     <span class="k">return</span> <span class="n">unrolled</span></div>
 
 
-<div class="viewcode-block" id="unroll_complump"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.unroll_complump">[docs]</a><span class="k">def</span> <span class="nf">unroll_complump</span><span class="p">(</span><span class="n">complump_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="unroll_complump"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.unroll_complump">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">unroll_complump</span><span class="p">(</span><span class="n">complump_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unrolls the COMPLUMP keyword where K2&gt;K1. Uses the unrolldf function,</span>
 <span class="sd">    but this function gives more precise handling of errors.</span>
 
@@ -602,7 +602,7 @@
     <span class="k">return</span> <span class="n">unrolldf</span><span class="p">(</span><span class="n">complump_df</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_wlist"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_wlist">[docs]</a><span class="k">def</span> <span class="nf">expand_wlist</span><span class="p">(</span><span class="n">wlist_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="expand_wlist"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_wlist">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_wlist</span><span class="p">(</span><span class="n">wlist_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand all WLIST actions in a dataframe into a dataframe with</span>
 <span class="sd">    only &quot;NEW&quot; actions. This makes the dataframe cheaper to parse to</span>
 <span class="sd">    get the state of the well lists at a particular date</span>
@@ -742,7 +742,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">new_records</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_complump_in_welopen_df"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_complump_in_welopen_df">[docs]</a><span class="k">def</span> <span class="nf">expand_complump_in_welopen_df</span><span class="p">(</span>
+<div class="viewcode-block" id="expand_complump_in_welopen_df"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_complump_in_welopen_df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_complump_in_welopen_df</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">complump_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Go through all elements of WELOPEN and expand the rows</span>
@@ -843,7 +843,7 @@
     <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">dframe</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_wlist_in_welopen_df"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_wlist_in_welopen_df">[docs]</a><span class="k">def</span> <span class="nf">expand_wlist_in_welopen_df</span><span class="p">(</span>
+<div class="viewcode-block" id="expand_wlist_in_welopen_df"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.expand_wlist_in_welopen_df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_wlist_in_welopen_df</span><span class="p">(</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">wlist_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Go trough a welopen dataframe and expand rows where the well-name refers</span>
@@ -877,7 +877,7 @@
     <span class="k">return</span> <span class="n">dframe</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">dframe</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="applywelopen"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.applywelopen">[docs]</a><span class="k">def</span> <span class="nf">applywelopen</span><span class="p">(</span>
+<div class="viewcode-block" id="applywelopen"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.applywelopen">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">applywelopen</span><span class="p">(</span>
     <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">welopen_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">wlist_df</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1013,7 +1013,7 @@
     <span class="k">return</span> <span class="n">compdat_df</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -1039,7 +1039,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="compdat_main"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.compdat_main">[docs]</a><span class="k">def</span> <span class="nf">compdat_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="compdat_main"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.compdat_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compdat_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -1049,7 +1049,7 @@
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.compdat.html#res2df.compdat.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
     <span class="n">initvectors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">zonemap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1089,7 +1089,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pvt &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.pvt &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -86,32 +86,32 @@
 <span class="sd">Data can be extracted from a complete deck or from individual files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">comment_formatter</span><span class="p">,</span>
     <span class="n">handle_wanted_keywords</span><span class="p">,</span>
     <span class="n">keyworddata_to_df</span><span class="p">,</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">,</span>
     <span class="n">write_inc_stdout_file</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
-<span class="kn">from</span> <span class="nn">.inferdims</span> <span class="kn">import</span> <span class="n">DIMS_POS</span><span class="p">,</span> <span class="n">inject_xxxdims_ntxxx</span>
-<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">df2res</span> <span class="k">as</span> <span class="n">common_df2res</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">common_fill_reverse_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.inferdims</span><span class="w"> </span><span class="kn">import</span> <span class="n">DIMS_POS</span><span class="p">,</span> <span class="n">inject_xxxdims_ntxxx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resdatafiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFiles</span>
 
 <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
     <span class="c1"># Needed for mypy</span>
 
     <span class="c1"># pylint: disable=unused-import</span>
-    <span class="kn">import</span> <span class="nn">opm.io</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">opm.io</span>
 
 
 <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -161,7 +161,7 @@
 <span class="n">RENAMERS</span><span class="p">[</span><span class="s2">&quot;ROCK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;PREF&quot;</span><span class="p">:</span> <span class="s2">&quot;PRESSURE&quot;</span><span class="p">,</span> <span class="s2">&quot;COMPRESSIBILITY&quot;</span><span class="p">:</span> <span class="s2">&quot;COMPRESSIBILITY&quot;</span><span class="p">}</span>
 
 
-<div class="viewcode-block" id="pvtw_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtw_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvtw_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pvtw_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtw_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvtw_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTW from a :term:`deck`</span>
@@ -178,7 +178,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="density_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.density_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">density_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="density_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.density_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">density_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract DENSITY from a :term:`deck`</span>
@@ -195,7 +195,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rock_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.rock_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">rock_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="rock_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.rock_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rock_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract ROCK from a :term:`deck`</span>
@@ -212,7 +212,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pvto_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvto_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvto_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pvto_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvto_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvto_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTO from a :term:`deck`</span>
@@ -230,7 +230,7 @@
     <span class="k">return</span> <span class="n">pvto_df</span></div>
 
 
-<div class="viewcode-block" id="pvdo_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdo_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvdo_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pvdo_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdo_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvdo_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVDO from a :term:`deck`</span>
@@ -248,7 +248,7 @@
     <span class="k">return</span> <span class="n">pvdg_df</span></div>
 
 
-<div class="viewcode-block" id="pvdg_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdg_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvdg_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pvdg_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvdg_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvdg_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVDG from a :term:`deck`</span>
@@ -266,7 +266,7 @@
     <span class="k">return</span> <span class="n">pvdg_df</span></div>
 
 
-<div class="viewcode-block" id="pvtg_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtg_fromdeck">[docs]</a><span class="k">def</span> <span class="nf">pvtg_fromdeck</span><span class="p">(</span>
+<div class="viewcode-block" id="pvtg_fromdeck"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvtg_fromdeck">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvtg_fromdeck</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span> <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract PVTG from a :term:`deck`</span>
@@ -284,7 +284,7 @@
     <span class="k">return</span> <span class="n">pvtg_df</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ntpvt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -330,7 +330,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for parsing :term:`.DATA file` or</span>
 <span class="sd">    :term:`include files &lt;include file&gt;` into dataframes</span>
 
@@ -362,7 +362,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_reverse_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_reverse_parser"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.fill_reverse_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers for writing :term:`include files &lt;include file&gt;` from</span>
 <span class="sd">    dataframes (as CSV files)</span>
 
@@ -372,7 +372,7 @@
     <span class="k">return</span> <span class="n">common_fill_reverse_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="s2">&quot;PVT&quot;</span><span class="p">,</span> <span class="s2">&quot;pvt.inc&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pvt_main"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="pvt_main"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvt_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for Eclipse to CSV&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -406,7 +406,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span> <span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="pvt_reverse_main"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.pvt_reverse_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">pvt_reverse_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility for CSV to simulator</span>
 <span class="sd">    :term:`deck`&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
@@ -418,7 +418,7 @@
     <span class="n">write_inc_stdout_file</span><span class="p">(</span><span class="n">inc_string</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res">[docs]</a><span class="k">def</span> <span class="nf">df2res</span><span class="p">(</span>
+<div class="viewcode-block" id="df2res"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res</span><span class="p">(</span>
     <span class="n">pvt_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -446,7 +446,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df2res_rock"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_rock">[docs]</a><span class="k">def</span> <span class="nf">df2res_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_rock"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_rock">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_rock</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for ROCK keyword</span>
 
 <span class="sd">    Args:</span>
@@ -471,7 +471,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2res_density"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_density">[docs]</a><span class="k">def</span> <span class="nf">df2res_density</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_density"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_density">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_density</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for DENSITY keyword</span>
 
 <span class="sd">    Args:</span>
@@ -500,7 +500,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2res_pvtw"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtw">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvtw</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_pvtw"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtw">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvtw</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTW keyword</span>
 
 <span class="sd">    PVTW is one line/record with data for a reference pressure</span>
@@ -533,7 +533,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2res_pvtg"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtg">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvtg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_pvtg"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvtg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvtg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTG keyword</span>
 
 <span class="sd">    Args:</span>
@@ -557,7 +557,7 @@
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_pvtg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pvtg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for</span>
 <span class="sd">        PVTG-data with a specific PVTNUM&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -566,7 +566,7 @@
             <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">p_gas</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pvtg_pvtnum_pg</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for</span>
 <span class="sd">        PVTG-data with a particular gas phase pressure&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -588,7 +588,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2res_pvdg"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdg">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvdg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_pvdg"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvdg</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVDG keyword</span>
 
 <span class="sd">    This data consists of one table (volumefactor and visosity</span>
@@ -611,7 +611,7 @@
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">_pvdg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pvdg_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for</span>
 <span class="sd">        PVDG-data with a specific PVTNUM</span>
 
@@ -636,7 +636,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2res_pvdo"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdo">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvdo</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_pvdo"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvdo">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvdo</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVDO keyword</span>
 
 <span class="sd">    Args:</span>
@@ -656,7 +656,7 @@
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">_pvdo_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pvdo_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
 <span class="sd">        for PVDO-data for a specific PVTNUM</span>
 
@@ -681,7 +681,7 @@
     <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="df2res_pvto"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvto">[docs]</a><span class="k">def</span> <span class="nf">df2res_pvto</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="df2res_pvto"><a class="viewcode-back" href="../../res2df/res2df.pvt.html#res2df.pvt.df2res_pvto">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df2res_pvto</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents for PVTO-data from a dataframe</span>
 
 <span class="sd">    Args:</span>
@@ -704,7 +704,7 @@
         <span class="n">subset</span><span class="p">[</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;PVTNUM&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_pvto_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pvto_pvtnum</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
 <span class="sd">        for PVTO-data for a specific PVTNUM&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -713,7 +713,7 @@
             <span class="n">string</span> <span class="o">+=</span> <span class="n">_pvto_pvtnum_rs</span><span class="p">(</span><span class="n">dframe</span><span class="p">[</span><span class="n">dframe</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">rs</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_pvto_pvtnum_rs</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pvto_pvtnum_rs</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create string with :term:`include file` contents</span>
 <span class="sd">        for PVTO-data for a particular RS&quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -742,7 +742,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

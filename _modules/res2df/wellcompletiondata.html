@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.wellcompletiondata &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>res2df.wellcompletiondata &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -82,40 +82,40 @@
   <h1>Source code for res2df.wellcompletiondata</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Aggregates completion data from layer to zone&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pyarrow</span>
-<span class="kn">import</span> <span class="nn">pyarrow.feather</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.feather</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">,</span> <span class="n">parse_lyrfile</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
-<span class="kn">from</span> <span class="nn">.compdat</span> <span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_compdat_df</span>
-<span class="kn">from</span> <span class="nn">.res2csvlogger</span> <span class="kn">import</span> <span class="n">getLogger_res2csv</span>
-<span class="kn">from</span> <span class="nn">.resdatafiles</span> <span class="kn">import</span> <span class="n">ResdataFiles</span>
-<span class="kn">from</span> <span class="nn">.wellconnstatus</span> <span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_wellconnstatus_df</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">,</span> <span class="n">parse_lyrfile</span><span class="p">,</span> <span class="n">write_dframe_stdout_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.compdat</span><span class="w"> </span><span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_compdat_df</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.res2csvlogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger_res2csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.resdatafiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResdataFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.wellconnstatus</span><span class="w"> </span><span class="kn">import</span> <span class="n">df</span> <span class="k">as</span> <span class="n">create_wellconnstatus_df</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="UnitSystem"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.UnitSystem">[docs]</a><span class="k">class</span> <span class="nc">UnitSystem</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="UnitSystem"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.UnitSystem">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">UnitSystem</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;METRIC&quot;</span>
     <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;FIELD&quot;</span>
     <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;LAB&quot;</span>
     <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;PVT-M&quot;</span></div>
 
 
-<div class="viewcode-block" id="KHUnit"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.KHUnit">[docs]</a><span class="k">class</span> <span class="nc">KHUnit</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="KHUnit"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.KHUnit">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KHUnit</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;mDm&quot;</span>
     <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;mDft&quot;</span>
     <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;mDcm&quot;</span>
     <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;mDm&quot;</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.df">[docs]</a><span class="k">def</span> <span class="nf">df</span><span class="p">(</span>
+<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
     <span class="n">zonemap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">use_wellconnstatus</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -173,7 +173,7 @@
     <span class="k">return</span> <span class="n">compdat_df</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_unit_system</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitSystem</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_unit_system</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitSystem</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the unit system of a :term:`.DATA file`. The options are \</span>
 <span class="sd">    METRIC, FIELD, LAB and PVT-M.</span>
 
@@ -187,7 +187,7 @@
     <span class="k">return</span> <span class="n">UnitSystem</span><span class="o">.</span><span class="n">METRIC</span>
 
 
-<span class="k">def</span> <span class="nf">_get_metadata</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_metadata</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide metadata for the well completion data export&quot;&quot;&quot;</span>
     <span class="n">meta</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">unitsystem</span> <span class="o">=</span> <span class="n">_get_unit_system</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
@@ -202,7 +202,7 @@
     <span class="k">return</span> <span class="n">meta</span>
 
 
-<span class="k">def</span> <span class="nf">_excl_well_startswith</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_excl_well_startswith</span><span class="p">(</span>
     <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excl_well_startswith</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Filters out rows where the well name starts with a given string&quot;&quot;&quot;</span>
@@ -214,7 +214,7 @@
     <span class="k">return</span> <span class="n">compdat_df</span><span class="p">[</span><span class="n">compdat_df</span><span class="p">[</span><span class="s2">&quot;WELL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">keep_wells</span><span class="p">)]</span>
 
 
-<span class="k">def</span> <span class="nf">_aggregate_layer_to_zone</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_aggregate_layer_to_zone</span><span class="p">(</span><span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregates well completion data from layer to zone.</span>
 
 <span class="sd">    Args:</span>
@@ -241,7 +241,7 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_merge_compdat_and_connstatus</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_merge_compdat_and_connstatus</span><span class="p">(</span>
     <span class="n">compdat_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">wellconnstatus_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function merges the compdat data with the well connection status data</span>
@@ -292,7 +292,7 @@
     <span class="k">return</span> <span class="n">dframe</span>
 
 
-<span class="k">def</span> <span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_df2pyarrow</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct a pyarrow table from dataframe with well</span>
 <span class="sd">    completion data.</span>
 
@@ -324,7 +324,7 @@
     <span class="k">return</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.fill_parser">[docs]</a><span class="k">def</span> <span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -368,7 +368,7 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="wellcompletiondata_main"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.wellcompletiondata_main">[docs]</a><span class="k">def</span> <span class="nf">wellcompletiondata_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="wellcompletiondata_main"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.wellcompletiondata_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">wellcompletiondata_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
 
@@ -400,7 +400,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

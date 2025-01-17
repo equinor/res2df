@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>grid &mdash; res2df 1.2.4.dev2+g370f856c documentation</title>
+  <title>grid &mdash; res2df 1.2.4.dev3+g6f665b99 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -112,7 +112,7 @@ a grid
 (from the <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">output files of reservoir simulators</span></a>).
 Each row in a returned dataframe represents one cell.</p>
 <p>Typical usage</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span>
 
 <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s1">&#39;MYDATADECK.DATA&#39;</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">,</span> <span class="n">rstdates</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span>
@@ -667,7 +667,7 @@ column. This can be used for statistics pr. zone,</p>
 </div>
 <p>If you have the layer information in a different file, you need to tell the code
 the whereabouts of the file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span>
 
 <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;&#39;MYDATADECK.DATA&quot;</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
@@ -704,7 +704,7 @@ scaling porosity, permeability etc. Or remapping some region parameters. Using t
 <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>Say you want to change the FIPNUM, and that FIPNUM 6 should be removed, and set
 it to FIPNUM 5. This can be accomplished using</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">res2df</span> <span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">res2df</span><span class="w"> </span><span class="kn">import</span> <span class="n">grid</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="n">common</span>
 
 <span class="n">resdatafiles</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="s2">&quot;&#39;MYDATADECK.DATA&quot;</span><span class="p">)</span>
 <span class="n">dframe</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">df</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">)</span>
@@ -748,7 +748,7 @@ size can not be ensured.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Equinor 2019-2024.</p>
+    <p>&#169; Copyright Equinor 2019-2025.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -242,7 +242,7 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
     seg_data = seg_data.sort_values("SEGIDX")
     # For the first segment, None is allowed as SEGNXT, which excludes
     # int as a  Pandas type. Convert to 0 for the moment
-    seg_data["SEGNXT"] = seg_data["SEGNXT"].fillna(value=0).astype(int)
+    seg_data["SEGNXT"] = seg_data["SEGNXT"].fillna(value="0").astype(int)
 
     # Outer merge first to add the upstream segment information to every row.
     merged = pd.merge(

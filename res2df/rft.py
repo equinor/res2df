@@ -90,8 +90,8 @@ def _rftrecords2df(rftfile: ResdataFile) -> pd.DataFrame:
     nav_df.loc[nav_df["recordname"] == "TIME", "timeindex"] = nav_df[
         nav_df["recordname"] == "TIME"
     ].index
-    nav_df.fillna(
-        method="ffill", inplace=True
+    nav_df.ffill(
+        inplace=True
     )  # forward fill (because any record is associated to the previous TIME record)
     nav_df["timeindex"] = nav_df["timeindex"].astype(int)
     logger.info(

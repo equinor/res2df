@@ -10,6 +10,7 @@ import re
 import shlex
 import signal
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
 
@@ -397,7 +398,7 @@ def merge_zones(
     zone_df.index.name = "K"
     zone_df.reset_index(inplace=True)
 
-    df[zoneheader] = df[kname].map(zonedict)
+    df[zoneheader] = df[kname].map(defaultdict(lambda: None, zonedict))
     return df
 
 

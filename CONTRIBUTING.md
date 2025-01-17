@@ -28,4 +28,3 @@ Please note that we use [`black`](https://black.readthedocs.io/en/stable/) and [
 1. Check that your pull request passes all tests.
 1. When all tests have passed and your are happy with your changes, change your pull request to "ready for review", and ask for a code review.
 1. When your code has been approved you should rebase, squash and merge your changes.
-

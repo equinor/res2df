@@ -19,21 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-        pandas-version: ['pandas>2']
+        python-version: ['3.11', '3.12']
         include:
           # For one of the Python versions we
           # install the extra dependency ert
           # (in order to not double the job matrix)
-
-          # Only test with pandas < 2 for py38 and py311
-          # No wheels for python3.12 for pandas<2
-          - python-version: '3.8'
-            install-ert: true
-          - python-version: '3.8'
-            pandas-version: 'pandas<2'
           - python-version: '3.11'
-            pandas-version: 'pandas<2'
+            install-ert: true
 
     steps:
       - name: Checkout commit locally
@@ -58,13 +50,6 @@ jobs:
           pip install --upgrade pip
           pip install ".[tests, docs]"
 
-      - name: Install numpy<2 if pandas<2
-        if: matrix.pandas-version == 'pandas<2'
-        run: pip install "numpy<2"
-
-      - name: Check pandas version
-        run: |
-          pip install "${{matrix.pandas-version}}"
 
       - name: Install ert
         if: matrix.install-ert
@@ -87,7 +72,7 @@ jobs:
           python setup.py build_sphinx
 
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8' && matrix.pandas-version == 'pandas>2'
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.11'
         run: |
             cp -R ./build/sphinx/html ../html
 
@@ -110,7 +95,7 @@ jobs:
             fi
 
       - name: Build python package and publish to pypi
-        if: github.event_name == 'release' && matrix.python-version == '3.8' && matrix.pandas-version == 'pandas>2'
+        if: github.event_name == 'release' && matrix.python-version == '3.11'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.res2df_pypi_token }}

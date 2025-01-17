@@ -298,7 +298,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help=("Name of output csv file. " "Use '-' for stdout."),
+        help=("Name of output csv file. Use '-' for stdout."),
         default="equil.csv",
     )
     parser.add_argument(

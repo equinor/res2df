@@ -90,8 +90,7 @@ def get_parser() -> argparse.ArgumentParser:
         "satfunc",
         help="Write saturation function include files",
         description=(
-            "Write saturation function include files from CSV files with "
-            "res2df format."
+            "Write saturation function include files from CSV files with res2df format."
         ),
     )
     satfunc_fill_reverse_parser(satfunc_parser)

@@ -476,7 +476,7 @@ def fill_reverse_parser(
     """
     parser.add_argument(
         "csvfile",
-        help="Name of CSV file with " + modulename + " data with " "res2df format",
+        help="Name of CSV file with " + modulename + " data with res2df format",
     )
     parser.add_argument(
         "-o",

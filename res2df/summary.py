@@ -761,9 +761,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "-o",
         "--output",
         type=str,
-        help=(
-            "Name of output file. Use '-' to write to stdout. " "Default 'summary.csv'"
-        ),
+        help=("Name of output file. Use '-' to write to stdout. Default 'summary.csv'"),
         default="summary.csv",
     )
     parser.add_argument("--arrow", action="store_true", help="Write to pyarrow format")

@@ -615,8 +615,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
             and wlist_record["NAME"] not in currentstate
         ):
             raise ValueError(
-                "WLIST ADD/DEL only works on existing well lists: "
-                f"{str(wlist_record)}"
+                f"WLIST ADD/DEL only works on existing well lists: {str(wlist_record)}"
             )
         if wlist_record["ACTION"] == "ADD":
             currentstate[wlist_record["NAME"]] = " ".join(
@@ -888,14 +887,12 @@ def applywelopen(
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
         else:
             raise ValueError(
-                "A WELOPEN keyword contains data that could not be parsed. "
-                f"\n {row} "
+                f"A WELOPEN keyword contains data that could not be parsed. \n {row} "
             )
 
         if previous_state.empty:
             raise ValueError(
-                "A WELOPEN keyword is not acting on any existing connection. "
-                f"\n {row} "
+                f"A WELOPEN keyword is not acting on any existing connection. \n {row} "
             )
 
         new_state = previous_state

@@ -91,7 +91,7 @@ def df(
     # Flags which will tell when a new network related keyword
     # has been encountered
     keywords = ["GRUPTREE", "BRANPROP", "WELSPECS", "GRUPNET", "NODEPROP"]
-    found_keywords = {key: False for key in keywords}
+    found_keywords = dict.fromkeys(keywords, False)
     for kword in deck:
         if kword.name in ["DATES", "START", "TSTEP"]:
             # Whenever we encounter a new DATES, it means that
@@ -107,7 +107,7 @@ def df(
                 edgerecords += _write_edgerecords(
                     currentedges, nodedata, wellspecsedges, found_keywords, date
                 )
-                found_keywords = {key: False for key in keywords}
+                found_keywords = dict.fromkeys(keywords, False)
             # Done dumping the data for the previous date, parse the fresh
             # date:
             if kword.name in ["DATES", "START"]:

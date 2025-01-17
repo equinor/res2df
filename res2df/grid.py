@@ -686,10 +686,7 @@ def df2res(
 
     if "GLOBAL_INDEX" not in grid_df:
         logger.warning(
-            (
-                "Global index not found in grid dataframe. "
-                "Assumes all cells are active"
-            )
+            ("Global index not found in grid dataframe. Assumes all cells are active")
         )
         # Drop NaN rows for columns to be used (triggered by stacked
         # dates and no global index, unlikely)

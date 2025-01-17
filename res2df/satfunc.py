@@ -144,9 +144,9 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     can consist of multiple SATNUMs.
     """
     sat_cols: set = {"SW", "SO", "SG", "SL"}.intersection(dframe.columns)
-    assert (
-        len(sat_cols) == 1
-    ), f"Could not determine a single saturation column in {dframe.columns}"
+    assert len(sat_cols) == 1, (
+        f"Could not determine a single saturation column in {dframe.columns}"
+    )
     sat_col = list(sat_cols)[0]
 
     if dframe[sat_col].isna().any():

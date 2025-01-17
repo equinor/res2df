@@ -461,7 +461,9 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
 
             if dframe.attrs["meta"]["TIMESTEP"]["unit"] == "DAYS":
                 for idx in np.where(index_duplicates)[0]:
-                    index_as_list[idx] += dt.timedelta(days=dframe["TIMESTEP"][idx])
+                    index_as_list[idx] += dt.timedelta(
+                        days=dframe["TIMESTEP"].iloc[idx]
+                    )
             elif dframe.attrs["meta"]["TIMESTEP"]["unit"] == "HOURS":
                 for idx in np.where(index_duplicates)[0]:
                     index_as_list[idx] += dt.timedelta(hours=dframe["TIMESTEP"][idx])

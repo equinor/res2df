@@ -31,7 +31,7 @@ def test_eightcells_dataset():
 
     expected_dframe = pd.DataFrame(
         [
-            ["2000-01-01", "FIELD", "GRUPTREE", np.nan],
+            ["2000-01-01", "FIELD", "GRUPTREE", None],
             ["2000-01-01", "OP1", "WELSPECS", "OPS"],
             ["2000-01-01", "OPS", "GRUPTREE", "FIELD"],
         ],
@@ -291,7 +291,7 @@ GRUPNET
                     {"CHILD": "FIELDB", "PARENT": None, "TERMINAL_PRESSURE": 80},
                     {"CHILD": "FIELDA", "PARENT": None, "TERMINAL_PRESSURE": 90},
                     {"CHILD": "OP", "PARENT": "FIELDA", "TERMINAL_PRESSURE": 100},
-                    {"CHILD": "OPX", "PARENT": "FIELDB", "TERMINAL_PRESSURE": None},
+                    {"CHILD": "OPX", "PARENT": "FIELDB", "TERMINAL_PRESSURE": np.nan},
                 ]
             ),
             """
@@ -588,12 +588,12 @@ BRANPROP
         """,
             pd.DataFrame(
                 [
-                    ["2000-01-01", "FIELD", "GRUPTREE", np.nan, np.nan, np.nan],
+                    ["2000-01-01", "FIELD", "GRUPTREE", None, np.nan, np.nan],
                     ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD", np.nan, np.nan],
-                    ["2000-01-01", "FIELD", "BRANPROP", np.nan, np.nan, 20],
+                    ["2000-01-01", "FIELD", "BRANPROP", None, np.nan, 20],
                     ["2000-01-01", "NODE_A", "BRANPROP", "FIELD", 1, np.nan],
                     ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A", 2, np.nan],
-                    ["2000-02-01", "FIELD", "BRANPROP", np.nan, np.nan, 20],
+                    ["2000-02-01", "FIELD", "BRANPROP", None, np.nan, 20],
                     ["2000-02-01", "NODE_A", "BRANPROP", "FIELD", 1, np.nan],
                     ["2000-02-01", "NODE_B", "BRANPROP", "FIELD", 3, np.nan],
                     ["2000-02-01", "TMPL_A", "BRANPROP", "NODE_B", 4, np.nan],
@@ -636,13 +636,13 @@ NODEPROP
         """,
             pd.DataFrame(
                 [
-                    ["2000-01-01", "FIELD", "GRUPTREE", np.nan, np.nan, np.nan],
-                    ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD", np.nan, np.nan],
-                    ["2000-01-01", "FIELD", "BRANPROP", np.nan, 20, "NO"],
-                    ["2000-01-01", "NODE_A", "BRANPROP", "FIELD", np.nan, np.nan],
+                    ["2000-01-01", "FIELD", "GRUPTREE", None, np.nan, None],
+                    ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD", None, None],
+                    ["2000-01-01", "FIELD", "BRANPROP", None, 20, "NO"],
+                    ["2000-01-01", "NODE_A", "BRANPROP", "FIELD", np.nan, None],
                     ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A", np.nan, "YES"],
-                    ["2000-02-01", "FIELD", "BRANPROP", np.nan, 22, "YES"],
-                    ["2000-02-01", "NODE_A", "BRANPROP", "FIELD", np.nan, np.nan],
+                    ["2000-02-01", "FIELD", "BRANPROP", None, 22, "YES"],
+                    ["2000-02-01", "NODE_A", "BRANPROP", "FIELD", np.nan, None],
                     ["2000-02-01", "TMPL_A", "BRANPROP", "NODE_A", np.nan, "YES"],
                 ],
                 columns=[
@@ -699,15 +699,15 @@ NODEPROP
             # where there are two trees
             pd.DataFrame(
                 [
-                    ["2000-01-01", "FIELD", "GRUPTREE", np.nan],
+                    ["2000-01-01", "FIELD", "GRUPTREE", None],
                     ["2000-01-01", "TMPL_A", "GRUPTREE", "FIELD"],
                     ["2000-01-01", "WELL_2", "WELSPECS", "TMPL_B"],
                     ["2000-01-01", "TMPL_B", "GRUPTREE", "FIELD"],
-                    ["2000-01-01", "FIELD", "BRANPROP", np.nan],
+                    ["2000-01-01", "FIELD", "BRANPROP", None],
                     ["2000-01-01", "NODE_A", "BRANPROP", "FIELD"],
                     ["2000-01-01", "TMPL_A", "BRANPROP", "NODE_A"],
                     ["2000-01-01", "WELL_1", "WELSPECS", "TMPL_A"],
-                    ["2000-02-01", "FIELD", "BRANPROP", np.nan],
+                    ["2000-02-01", "FIELD", "BRANPROP", None],
                     ["2000-02-01", "NODE_A", "BRANPROP", "FIELD"],
                     ["2000-02-01", "TMPL_A", "BRANPROP", "NODE_A"],
                     ["2000-02-01", "WELL_1", "WELSPECS", "TMPL_A"],

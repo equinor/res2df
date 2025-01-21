@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.satfunc &mdash; res2df 1.2.4.dev4+g19b15b49 documentation</title>
+  <title>res2df.satfunc &mdash; res2df 1.2.4.dev16+g7648b678 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -236,11 +236,12 @@
 
     <span class="n">filled_frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">subframe</span> <span class="ow">in</span> <span class="n">dframe</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;SATNUM&quot;</span><span class="p">):</span>
-        <span class="n">filled_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">subframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">sat_col</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">limit_area</span><span class="o">=</span><span class="s2">&quot;inside&quot;</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">subframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">sat_col</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">subframe</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">subframe</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">subframe</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">limit_area</span><span class="o">=</span><span class="s2">&quot;inside&quot;</span>
         <span class="p">)</span>
+        <span class="n">filled_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subframe</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">filled_frames</span><span class="p">)</span></div>
 
 

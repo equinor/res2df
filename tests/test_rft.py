@@ -390,24 +390,24 @@ def test_seg2dicttree():
         (pd.DataFrame(), True, pd.DataFrame()),
         (pd.DataFrame(), False, pd.DataFrame()),
         (
-            pd.DataFrame([{"CONPRES": 30, "SEGPRES": 20}]),
+            pd.DataFrame([{"CONPRES": 30.0, "SEGPRES": 20}]),
             True,
             pd.DataFrame(
-                [{"CONPRES": 30, "SEGPRES": 20, "COMPLETION_DP": 10, "DRAWDOWN": 0}]
+                [{"CONPRES": 30.0, "SEGPRES": 20, "COMPLETION_DP": 10.0, "DRAWDOWN": 0.0}]
             ),
         ),
         (
             pd.DataFrame([{"CONPRES": 30, "SEGPRES": 20}]),
             False,
             pd.DataFrame(
-                [{"CONPRES": 30, "SEGPRES": 20, "COMPLETION_DP": 10, "DRAWDOWN": 0}]
+                [{"CONPRES": 30, "SEGPRES": 20, "COMPLETION_DP": 10.0, "DRAWDOWN": 0.0}]
             ),
         ),
         (
             pd.DataFrame([{"CONPRES": 30, "PRESSURE": 40}]),
             True,
             pd.DataFrame(
-                [{"CONPRES": 30, "PRESSURE": 40, "DRAWDOWN": 10, "CONBPRES": 40}]
+                [{"CONPRES": 30, "PRESSURE": 40, "DRAWDOWN": 10.0, "CONBPRES": 40}]
             ),
         ),
         (
@@ -421,7 +421,7 @@ def test_seg2dicttree():
                         "CONLENST": 3,
                         "CONMD": 3.5,
                         "CONLENTH": 1,
-                        "DRAWDOWN": 0,
+                        "DRAWDOWN": 0.0,
                     }
                 ]
             ),
@@ -431,21 +431,21 @@ def test_seg2dicttree():
             pd.DataFrame([{"CONORAT": 400, "CONLENTH": 2}]),
             True,
             pd.DataFrame(
-                [{"CONORAT": 400, "CONLENTH": 2, "CONORATS": 200.0, "DRAWDOWN": 0}]
+                [{"CONORAT": 400, "CONLENTH": 2, "CONORATS": 200.0, "DRAWDOWN": 0.0}]
             ),
         ),
         (
             pd.DataFrame([{"CONWRAT": 400, "CONLENTH": 2}]),
             True,
             pd.DataFrame(
-                [{"CONWRAT": 400, "CONLENTH": 2, "CONWRATS": 200.0, "DRAWDOWN": 0}]
+                [{"CONWRAT": 400, "CONLENTH": 2, "CONWRATS": 200.0, "DRAWDOWN": 0.0}]
             ),
         ),
         (
             pd.DataFrame([{"CONGRAT": 400, "CONLENTH": 2}]),
             True,
             pd.DataFrame(
-                [{"CONGRAT": 400, "CONLENTH": 2, "CONGRATS": 200.0, "DRAWDOWN": 0}]
+                [{"CONGRAT": 400, "CONLENTH": 2, "CONGRATS": 200.0, "DRAWDOWN": 0.0}]
             ),
         ),
     ],

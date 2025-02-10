@@ -375,7 +375,7 @@ def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         return "-- No data!"
     string = "ROCK\n"
     string += comment_formatter(comment)
-    string += "--   {'PRESSURE':^21} {'COMPRESSIBILITY':^21}\n"
+    string += f"--   {'PRESSURE':^21} {'COMPRESSIBILITY':^21}\n"
     # Use everything if KEYWORD not in dframe..
     subset = dframe if "KEYWORD" not in dframe else dframe[dframe["KEYWORD"] == "ROCK"]
     if "PVTNUM" not in subset:

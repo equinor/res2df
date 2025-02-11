@@ -121,7 +121,7 @@ def test_summary_restarts(
 
 
 def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
-    command = ["runeclipse", "-i", "-v", eclipse_version, datafile]
+    command = ["eclrun", "-v", eclipse_version, datafile]
     result = subprocess.run(  # pylint: disable=subprocess-run-check
         command,
         stdout=subprocess.PIPE,

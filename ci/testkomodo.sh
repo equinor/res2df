@@ -3,5 +3,6 @@ install_test_dependencies () {
 }
 
 start_tests () {
+  source /prog/res/ecl/script/eclrun.bash
   pytest --run-eclipse-simulator
 }

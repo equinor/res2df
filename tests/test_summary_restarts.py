@@ -2,6 +2,7 @@ import os
 import subprocess
 import time
 from contextlib import nullcontext as does_not_raise
+from contextlib import suppress
 from pathlib import Path
 
 import pytest
@@ -121,15 +122,23 @@ def test_summary_restarts(
 
 
 def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
-    command = ["eclrun", "-v", eclipse_version, datafile]
+    command = ["eclrun", "eclipse", "-v", eclipse_version, datafile]
     result = subprocess.run(  # pylint: disable=subprocess-run-check
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        check=False,
+        check=False,  # eclrun returns code 0 no matter what error happens
     )
     aggregated_output = result.stdout.decode() + result.stderr.decode()
-    if result.returncode != 0 and (
+
+    error_count = 0
+    for line in aggregated_output.splitlines():
+        if line.startswith(" Errors"):
+            with suppress(ValueError):
+                error_count = int(line.split("Errors")[1].strip())
+    proxied_returncode = 1 if error_count > 0 else 0
+
+    if proxied_returncode != 0 and (
         "LICENSE FAILURE" in aggregated_output or "LICENSE ERROR" in aggregated_output
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
@@ -141,7 +150,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
             check=False,
         )
 
-    if result.returncode != 0:
+    if proxied_returncode != 0:
         if result.stdout:
             print(result.stdout.decode())
         if result.stderr:

@@ -66,10 +66,10 @@ def report_block_lineparser(line: str) -> tuple:
         (liquid_oil, vapour_oil, total_oil) = map(
             float_or_nan, colonsections[2].split()
         )
+    elif len(colonsections[2].split()) == 2:
+        (liquid_oil, total_oil) = map(float_or_nan, colonsections[2].split())
     elif len(colonsections[2].split()) == 1:
         total_oil = float_or_nan(colonsections[2])
-    else:
-        (liquid_oil, total_oil) = map(float_or_nan, colonsections[2].split())
 
     total_water = float_or_nan(colonsections[3])
 

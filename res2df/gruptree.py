@@ -327,7 +327,7 @@ def _add_to_tree_from_dict(
         _add_to_tree_from_dict(nested_dict=value, name=key, tree=tree, parent=name)
 
 
-def tree_from_dict(nested_dict: dict) -> treelib.Tree:
+def tree_from_dict(nested_dict: dict) -> treelib.Tree | str:
     """Convert a dictionary to a treelib Tree.
 
     The treelib representation of the trees is used

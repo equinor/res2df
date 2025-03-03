@@ -36,6 +36,12 @@ jobs:
             pandas-version: 'pandas<2'
 
     steps:
+
+      - name: Install Ubuntu dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libegl1
+
       - name: Checkout commit locally
         uses: actions/checkout@v4
 

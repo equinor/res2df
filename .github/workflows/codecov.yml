@@ -16,6 +16,12 @@ jobs:
       PYTHON: '3.8'
 
     steps:
+
+    - name: Install Ubuntu dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install libegl1
+
     - uses: actions/checkout@v4
 
     - name: Setup Python

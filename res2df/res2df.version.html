@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.version &mdash; res2df 1.3.2.dev1+g708e1667 documentation</title>
+  <title>res2df.version &mdash; res2df 1.3.2.dev3+gb10cd54e documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -80,7 +80,10 @@
 <li class="toctree-l3"><a class="reference internal" href="res2df.satfunc.html"><code class="docutils literal notranslate"><span class="pre">res2df.satfunc</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="res2df.summary.html"><code class="docutils literal notranslate"><span class="pre">res2df.summary</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="res2df.trans.html"><code class="docutils literal notranslate"><span class="pre">res2df.trans</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">res2df.version</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">res2df.version</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#variables">Variables</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="res2df.vfp.html"><code class="docutils literal notranslate"><span class="pre">res2df.vfp</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="res2df.wcon.html"><code class="docutils literal notranslate"><span class="pre">res2df.wcon</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="res2df.wellcompletiondata.html"><code class="docutils literal notranslate"><span class="pre">res2df.wellcompletiondata</span></code></a></li>
@@ -118,6 +121,78 @@
              
   <section id="module-res2df.version">
 <span id="res2df-version"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.version</span></code><a class="headerlink" href="#module-res2df.version" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#variables" id="id1">Variables</a></p></li>
+</ul>
+</nav>
+<section id="variables">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Variables</a><a class="headerlink" href="#variables" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#res2df.version.__version__" title="res2df.version.__version__"><code class="xref py py-data docutils literal notranslate"><span class="pre">__version__</span></code></a></p></li>
+<li><p><a class="reference internal" href="#res2df.version.__version_tuple__" title="res2df.version.__version_tuple__"><code class="xref py py-data docutils literal notranslate"><span class="pre">__version_tuple__</span></code></a></p></li>
+<li><p><a class="reference internal" href="#res2df.version.version" title="res2df.version.version"><code class="xref py py-data docutils literal notranslate"><span class="pre">version</span></code></a></p></li>
+<li><p><a class="reference internal" href="#res2df.version.version_tuple" title="res2df.version.version_tuple"><code class="xref py py-data docutils literal notranslate"><span class="pre">version_tuple</span></code></a></p></li>
+</ul>
+<dl class="py data">
+<dt class="sig sig-object py" id="res2df.version.__version__">
+<span class="sig-prename descclassname"><span class="pre">res2df.version.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><a class="headerlink" href="#res2df.version.__version__" title="Permalink to this definition"></a></dt>
+<dd><p>str(object=’’) -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.__str__() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to ‘strict’.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;1.3.2.dev3+gb10cd54e&#39;
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="res2df.version.__version_tuple__">
+<span class="sig-prename descclassname"><span class="pre">res2df.version.</span></span><span class="sig-name descname"><span class="pre">__version_tuple__</span></span><a class="headerlink" href="#res2df.version.__version_tuple__" title="Permalink to this definition"></a></dt>
+<dd><p>Built-in immutable sequence.</p>
+<p>If no argument is given, the constructor returns an empty tuple.
+If iterable is specified the tuple is initialized from iterable’s items.</p>
+<p>If the argument is a tuple, the return value is the same object.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(1, 3, 2, &#39;dev3&#39;, &#39;gb10cd54e&#39;)
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="res2df.version.version">
+<span class="sig-prename descclassname"><span class="pre">res2df.version.</span></span><span class="sig-name descname"><span class="pre">version</span></span><a class="headerlink" href="#res2df.version.version" title="Permalink to this definition"></a></dt>
+<dd><p>str(object=’’) -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.__str__() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to ‘strict’.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&#39;1.3.2.dev3+gb10cd54e&#39;
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="res2df.version.version_tuple">
+<span class="sig-prename descclassname"><span class="pre">res2df.version.</span></span><span class="sig-name descname"><span class="pre">version_tuple</span></span><a class="headerlink" href="#res2df.version.version_tuple" title="Permalink to this definition"></a></dt>
+<dd><p>Built-in immutable sequence.</p>
+<p>If no argument is given, the constructor returns an empty tuple.
+If iterable is specified the tuple is initialized from iterable’s items.</p>
+<p>If the argument is a tuple, the return value is the same object.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(1, 3, 2, &#39;dev3&#39;, &#39;gb10cd54e&#39;)
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
 </section>
 
 

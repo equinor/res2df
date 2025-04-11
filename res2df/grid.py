@@ -726,9 +726,9 @@ def df2res(
             raise ValueError(f"Keyword {keyword} not found in grid dataframe")
         vector = np.zeros(global_size)
         vector[grid_df["GLOBAL_INDEX"].astype(int).values] = grid_df[keyword]
-        if dtype == int:
+        if dtype is int:
             vector = vector.astype(int)
-        if dtype == float:
+        if dtype is float:
             vector = vector.astype(float)
         if len(vector) != global_size:
             logger.warning(

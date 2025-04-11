@@ -114,11 +114,11 @@ def test_job_documentation():
     if HAVE_ERT:
         assert (
             type(jobs.job_documentation("RES2CSV"))
-            == ert.plugins.plugin_response.PluginResponse
+            is ert.plugins.plugin_response.PluginResponse
         )
         assert (
             type(jobs.job_documentation("CSV2RES"))
-            == ert.plugins.plugin_response.PluginResponse
+            is ert.plugins.plugin_response.PluginResponse
         )
 
     else:

@@ -4,6 +4,7 @@ line-length = 88
 
 [lint]
 select = [
+  "E",  # pycodestyle
   "W",  # pycodestyle
   "I",  # isort
   "B",  # flake-8-bugbear

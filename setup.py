@@ -67,7 +67,6 @@ setup(
     package_data={
         "res2df": [
             "opmkeywords/*",
-            "config_jobs/*",
             "py.typed",
             "svg_color_keyword_names.txt",
         ]
@@ -79,7 +78,7 @@ setup(
             "res2csv=res2df.res2csv:main",
             "res2arrow=res2df.res2csv:main",
         ],
-        "ert": ["res2df_jobs = res2df.hook_implementations.jobs"],
+        "ert": ["res2df_steps = res2df.hook_implementations.forward_model_steps"],
     },
     test_suite="tests",
     install_requires=REQUIREMENTS,

@@ -5,7 +5,6 @@ from pathlib import Path
 import pandas as pd
 import pytest
 import res2df
-from res2df.hook_implementations import jobs
 
 try:
     # pylint: disable=unused-import
@@ -108,42 +107,9 @@ def test_res2csv_through_ert(tmp_path):
         assert Path(subcommand + ".inc").is_file()
 
 
-@pytest.mark.skipif(not HAVE_ERT, reason="ERT is not installed")
-def test_job_documentation():
-    """Test that for registered ERT forward models the documentation is non-empty"""
-    if HAVE_ERT:
-        assert (
-            type(jobs.job_documentation("RES2CSV"))
-            is ert.plugins.plugin_response.PluginResponse
-        )
-        assert (
-            type(jobs.job_documentation("CSV2RES"))
-            is ert.plugins.plugin_response.PluginResponse
-        )
-
-    else:
-        assert jobs.job_documentation("RES2CSV") is None
-        assert jobs.job_documentation("CSV2RES") is None
-
-    assert jobs.job_documentation("foobar") is None
-
-
-def test_get_module_variable():
-    """Test that we can robustly peek into jobs for metadata.
-
-    This is independent whether ERT is installed or not
-    """
-    # pylint: disable=protected-access
-    assert not jobs._get_module_variable_if_exists("foo", "bar")
-    assert jobs._get_module_variable_if_exists(
-        "res2df.res2csv", "DESCRIPTION"
-    ).startswith("Convert reservoir simulator input and output")
-    assert not jobs._get_module_variable_if_exists("res2df.res2csv", "NOPE")
-
-
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")
 def test_no_erthooks():
     """Test that we can import the hook implementations even when ERT is unavailable."""
     # pylint: disable=redefined-outer-name, unused-import
     # pylint: disable=reimported, import-outside-toplevel
-    from res2df.hook_implementations import jobs  # noqa
+    from res2df.hook_implementations import forward_model_steps  # noqa

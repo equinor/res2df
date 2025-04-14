@@ -19,21 +19,6 @@ from .summary import summary_reverse_main
 from .vfp import fill_reverse_parser as vfp_fill_reverse_parser
 from .vfp import vfp_reverse_main
 
-# String constants in use for generating ERT forward model documentation:
-DESCRIPTION: str = """Convert CSV files into include files. Uses the command
-line utility ``csv2res``. Run ``csv2res --help`` to see which subcommands are supported.
-No options other than the output file is possible when used directly as a forward model.
-When writing synthetic summary files, the ECLBASE with no filename suffix is expected
-as the OUTPUT argument."""
-CATEGORY: str = "utility.eclipse"
-EXAMPLES: str = (
-    "``FORWARD_MODEL "
-    "CSV2RES(<SUBCOMMAND>=equil, <CSVFILE>=equil.csv, "
-    "<OUTPUT>=eclipse/include/equil.inc)``"
-    "CSV2RES(<SUBCOMMAND>=summary, <CSVFILE>=summary-monthly.csv, "
-    "<OUTPUT>=eclipse/model/MONTHLYSUMMARY)``"
-)
-
 
 def get_parser() -> argparse.ArgumentParser:
     """Make parser"""

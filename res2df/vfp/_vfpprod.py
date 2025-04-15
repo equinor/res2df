@@ -141,7 +141,8 @@ def basic_data(
     if no_interp_values != no_tab_records:
         raise ValueError(
             "Dimensions of interpolation ranges "
-            "does not match number of tabulated records"
+            "does not match number of tabulated records "
+            f"in vfp table {tableno}"
         )
 
     # Extract interpolation values and tabulated values (BHP values)
@@ -171,7 +172,8 @@ def basic_data(
         if len(bhp_values) != no_flow_values:
             raise ValueError(
                 "Dimension of record of tabulated "
-                "values does not match number of flow values"
+                "values does not match number of flow values "
+                f"in vfp table {tableno}"
             )
         bhp_table.append(bhp_values)
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.grid &mdash; res2df 1.3.2.dev5+g01299e51 documentation</title>
+  <title>res2df.grid &mdash; res2df 1.3.2.dev6+g531540a1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -808,9 +808,9 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keyword </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> not found in grid dataframe&quot;</span><span class="p">)</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">global_size</span><span class="p">)</span>
         <span class="n">vector</span><span class="p">[</span><span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;GLOBAL_INDEX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_df</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
             <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
             <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span> <span class="o">!=</span> <span class="n">global_size</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>

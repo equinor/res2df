@@ -1,5 +1,0 @@
-EXECUTABLE csv2res
-
-ARGLIST <SUBCOMMAND> "--verbose" "--output" <OUTPUT> <CSVFILE>
-
-MIN_ARG 2

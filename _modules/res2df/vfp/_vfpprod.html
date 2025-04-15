@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfpprod &mdash; res2df 1.3.2.dev4+gda9ddc5b documentation</title>
+  <title>res2df.vfp._vfpprod &mdash; res2df 1.3.2.dev5+g01299e51 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -223,7 +223,8 @@
     <span class="k">if</span> <span class="n">no_interp_values</span> <span class="o">!=</span> <span class="n">no_tab_records</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Dimensions of interpolation ranges &quot;</span>
-            <span class="s2">&quot;does not match number of tabulated records&quot;</span>
+            <span class="s2">&quot;does not match number of tabulated records &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;in vfp table </span><span class="si">{</span><span class="n">tableno</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
     <span class="c1"># Extract interpolation values and tabulated values (BHP values)</span>
@@ -253,7 +254,8 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bhp_values</span><span class="p">)</span> <span class="o">!=</span> <span class="n">no_flow_values</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Dimension of record of tabulated &quot;</span>
-                <span class="s2">&quot;values does not match number of flow values&quot;</span>
+                <span class="s2">&quot;values does not match number of flow values &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;in vfp table </span><span class="si">{</span><span class="n">tableno</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="n">bhp_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bhp_values</span><span class="p">)</span>
 

@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>res2df.hook_implementations.forward_model_steps &mdash; res2df 1.3.2.dev7+g5a83bb1d documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            res2df
+              <img src="../../../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2csv.html">res2csv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csv2res.html">csv2res</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Contributing to res2df</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../res2df/res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">res2df</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">res2df.hook_implementations.forward_model_steps</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for res2df.hook_implementations.forward_model_steps</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">ForwardModelStepDocumentation</span><span class="p">,</span>
+        <span class="n">ForwardModelStepJSON</span><span class="p">,</span>
+        <span class="n">ForwardModelStepPlugin</span><span class="p">,</span>
+        <span class="n">ForwardModelStepValidationError</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ert</span><span class="w"> </span><span class="kn">import</span> <span class="n">plugin</span> <span class="k">as</span> <span class="n">ert_plugin</span>  <span class="c1"># type: ignore</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="c1"># ert is not installed, use dummy/transparent function decorator:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ert_plugin</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ForwardModelStepDocumentation</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">pass</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ForwardModelStepJSON</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">pass</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ForwardModelStepPlugin</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">pass</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ForwardModelStepValidationError</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Res2Csv"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Res2Csv</span><span class="p">(</span><span class="n">ForwardModelStepPlugin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RES2CSV&quot;</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;res2csv&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;&lt;SUBCOMMAND&gt;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&lt;OUTPUT&gt;&quot;</span><span class="p">,</span>
+                <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&lt;XARG</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&gt;&quot;</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)],</span>
+                <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&lt;ECLBASE&gt;&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">default_mapping</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;&lt;XARG</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)},</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Res2Csv.validate_pre_experiment"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pre_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fm_json</span><span class="p">:</span> <span class="n">ForwardModelStepJSON</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;SUBCOMMAND&gt;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;You must supply a value for SUBCOMMAND to RES2CSV&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;OUTPUT&gt;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;You must supply a value for OUTPUT to RES2CSV&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Res2Csv.documentation"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv.documentation">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">documentation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ForwardModelStepDocumentation</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ForwardModelStepDocumentation</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Convert reservoir simulator input and output files into CSV</span>
+<span class="s2">files, with the command line utility ``res2csv``. Run ``res2csv --help`` to see</span>
+<span class="s2">which subcommands are supported.</span>
+
+<span class="s2">For supplying options to subcommands, you can use the arguments ``&lt;XARGn&gt;``</span>
+<span class="s2">where ``n`` goes from 1 to 10.</span>
+
+<span class="s2">For more documentation, see https://equinor.github.io/res2df/.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;utility.eclipse&quot;</span><span class="p">,</span>
+            <span class="n">examples</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Outputting the EQUIL data from a .DATA file. This is implicitly</span>
+<span class="s2">supplied in ERT configs::</span>
+
+<span class="s2">   FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)</span>
+
+<span class="s2">For a yearly summary export of the realization, options have to be supplied</span>
+<span class="s2">with the XARG options::</span>
+
+<span class="s2">  FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=summary, </span><span class="se">\</span>
+<span class="s2">    &lt;OUTPUT&gt;=yearly.csv, &lt;XARG1&gt;=&quot;--time_index&quot;, &lt;XARG2&gt;=&quot;yearly&quot;)</span>
+
+<span class="s2">The quotes around double-dashed options are critical to avoid ERT taking for a</span>
+<span class="s2">comment. For more options, use ``&lt;XARG3&gt;`` etc.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Csv2Res"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Csv2Res</span><span class="p">(</span><span class="n">ForwardModelStepPlugin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CSV2RES&quot;</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;csv2res&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;&lt;SUBCOMMAND&gt;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&lt;OUTPUT&gt;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&lt;CSVFILE&gt;&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Csv2Res.validate_pre_experiment"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pre_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fm_json</span><span class="p">:</span> <span class="n">ForwardModelStepJSON</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;SUBCOMMAND&gt;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;You must supply a value for SUBCOMMAND to CSV2RES&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;OUTPUT&gt;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;You must supply a value for OUTPUT to CSV2RES&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;CSVFILE&gt;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
+                <span class="s2">&quot;You must supply a value for CSVFILE to CSV2RES&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Csv2Res.documentation"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res.documentation">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">documentation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ForwardModelStepDocumentation</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ForwardModelStepDocumentation</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Convert CSV files into include files. Uses the command</span>
+<span class="s2">line utility ``csv2res``. Run ``csv2res --help`` to see which subcommands are supported.</span>
+<span class="s2">No options other than the output file is possible when used directly as a forward model.</span>
+<span class="s2">When writing synthetic summary files, the ECLBASE with no filename suffix is expected</span>
+<span class="s2">as the OUTPUT argument.&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="s2">&quot;utility.eclipse&quot;</span><span class="p">,</span>
+            <span class="n">examples</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">&quot;``FORWARD_MODEL &quot;</span>
+                <span class="s2">&quot;CSV2RES(&lt;SUBCOMMAND&gt;=equil, &lt;CSVFILE&gt;=equil.csv, &quot;</span>
+                <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/include/equil.inc)``&quot;</span>
+                <span class="s2">&quot;CSV2RES(&lt;SUBCOMMAND&gt;=summary, &lt;CSVFILE&gt;=summary-monthly.csv, &quot;</span>
+                <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/model/MONTHLYSUMMARY)``&quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div></div>
+
+
+<span class="nd">@ert_plugin</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RES2CSV&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">installable_forward_model_steps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">ForwardModelStepPlugin</span><span class="p">]]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Res2Csv</span><span class="p">,</span> <span class="n">Csv2Res</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor 2019-2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

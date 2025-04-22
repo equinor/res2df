@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.csv2res &mdash; res2df 1.3.2.dev6+g531540a1 documentation</title>
+  <title>res2df.csv2res &mdash; res2df 1.3.2.dev7+g5a83bb1d documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -100,21 +100,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.summary</span><span class="w"> </span><span class="kn">import</span> <span class="n">summary_reverse_main</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.vfp</span><span class="w"> </span><span class="kn">import</span> <span class="n">fill_reverse_parser</span> <span class="k">as</span> <span class="n">vfp_fill_reverse_parser</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.vfp</span><span class="w"> </span><span class="kn">import</span> <span class="n">vfp_reverse_main</span>
-
-<span class="c1"># String constants in use for generating ERT forward model documentation:</span>
-<span class="n">DESCRIPTION</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert CSV files into include files. Uses the command</span>
-<span class="s2">line utility ``csv2res``. Run ``csv2res --help`` to see which subcommands are supported.</span>
-<span class="s2">No options other than the output file is possible when used directly as a forward model.</span>
-<span class="s2">When writing synthetic summary files, the ECLBASE with no filename suffix is expected</span>
-<span class="s2">as the OUTPUT argument.&quot;&quot;&quot;</span>
-<span class="n">CATEGORY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
-<span class="n">EXAMPLES</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;``FORWARD_MODEL &quot;</span>
-    <span class="s2">&quot;CSV2RES(&lt;SUBCOMMAND&gt;=equil, &lt;CSVFILE&gt;=equil.csv, &quot;</span>
-    <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/include/equil.inc)``&quot;</span>
-    <span class="s2">&quot;CSV2RES(&lt;SUBCOMMAND&gt;=summary, &lt;CSVFILE&gt;=summary-monthly.csv, &quot;</span>
-    <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/model/MONTHLYSUMMARY)``&quot;</span>
-<span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../res2df/res2df.csv2res.html#res2df.csv2res.get_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>

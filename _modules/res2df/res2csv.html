@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.res2csv &mdash; res2df 1.3.2.dev6+g531540a1 documentation</title>
+  <title>res2df.res2csv &mdash; res2df 1.3.2.dev7+g5a83bb1d documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -93,33 +93,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.__version__</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
-
-<span class="c1"># String constants in use for generating ERT forward model documentation:</span>
-<span class="n">DESCRIPTION</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Convert reservoir simulator input and output files into CSV files,</span>
-<span class="s2">with the command line utility ``res2csv``. Run ``res2csv --help`` to see</span>
-<span class="s2">which subcommands are supported.</span>
-
-<span class="s2">For supplying options to subcommands, you can use the arguments ``&lt;XARGn&gt;``</span>
-<span class="s2">where ``n`` goes from 1 to 10.</span>
-
-<span class="s2">For more documentation, see https://equinor.github.io/res2df/.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">CATEGORY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;utility.eclipse&quot;</span>
-<span class="n">EXAMPLES</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-
-<span class="s2">Outputting the EQUIL data from a .DATA file. This is implicitly</span>
-<span class="s2">supplied in ERT configs::</span>
-
-<span class="s2">   FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=equil, &lt;OUTPUT&gt;=equil.csv)</span>
-
-<span class="s2">For a yearly summary export of the realization, options have to be supplied</span>
-<span class="s2">with the XARG options::</span>
-
-<span class="s2">  FORWARD_MODEL RES2CSV(&lt;SUBCOMMAND&gt;=summary, &lt;OUTPUT&gt;=yearly.csv, &lt;XARG1&gt;=&quot;--time_index&quot;, &lt;XARG2&gt;=&quot;yearly&quot;)</span>
-
-<span class="s2">The quotes around double-dashed options are critical to avoid ERT taking for a</span>
-<span class="s2">comment. For more options, use ``&lt;XARG3&gt;`` etc.</span>
-<span class="s2">&quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
 
 
 <div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../res2df/res2df.res2csv.html#res2df.res2csv.get_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>

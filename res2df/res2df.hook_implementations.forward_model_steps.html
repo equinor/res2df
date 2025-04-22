@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.hook_implementations.jobs &mdash; res2df 1.3.2.dev6+g531540a1 documentation</title>
+  <title>res2df.hook_implementations.forward_model_steps &mdash; res2df 1.3.2.dev7+g5a83bb1d documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -110,9 +110,9 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="res2df.html"><code class="docutils literal notranslate"><span class="pre">res2df</span></code></a></li>
           <li class="breadcrumb-item"><a href="res2df.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">res2df.hook_implementations</span></code></a></li>
-      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">res2df.hook_implementations.jobs</span></code></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">res2df.hook_implementations.forward_model_steps</span></code></li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/res2df/res2df.hook_implementations.jobs.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/res2df/res2df.hook_implementations.forward_model_steps.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -120,8 +120,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-res2df.hook_implementations.jobs">
-<span id="res2df-hook-implementations-jobs"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.hook_implementations.jobs</span></code><a class="headerlink" href="#module-res2df.hook_implementations.jobs" title="Permalink to this heading"></a></h1>
+  <section id="module-res2df.hook_implementations.forward_model_steps">
+<span id="res2df-hook-implementations-forward-model-steps"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.hook_implementations.forward_model_steps</span></code><a class="headerlink" href="#module-res2df.hook_implementations.forward_model_steps" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">res2df.hook_implementations.forward_model_steps.</span></span><span class="sig-name descname"><span class="pre">Csv2Res</span></span><a class="reference internal" href="../_modules/res2df/hook_implementations/forward_model_steps.html#Csv2Res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.documentation">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">documentation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/hook_implementations/forward_model_steps.html#Csv2Res.documentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.documentation" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the documentation for the plugin forward model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardModelStepDocumentation</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment">
+<span class="sig-name descname"><span class="pre">validate_pre_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fm_json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/hook_implementations/forward_model_steps.html#Csv2Res.validate_pre_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment" title="Permalink to this definition"></a></dt>
+<dd><p>Raise errors pertaining to the environment not being
+as the forward model step requires it to be. For example
+a missing FLOW version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">res2df.hook_implementations.forward_model_steps.</span></span><span class="sig-name descname"><span class="pre">Res2Csv</span></span><a class="reference internal" href="../_modules/res2df/hook_implementations/forward_model_steps.html#Res2Csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.documentation">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">documentation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/hook_implementations/forward_model_steps.html#Res2Csv.documentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.documentation" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the documentation for the plugin forward model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardModelStepDocumentation</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment">
+<span class="sig-name descname"><span class="pre">validate_pre_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fm_json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/hook_implementations/forward_model_steps.html#Res2Csv.validate_pre_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment" title="Permalink to this definition"></a></dt>
+<dd><p>Raise errors pertaining to the environment not being
+as the forward model step requires it to be. For example
+a missing FLOW version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

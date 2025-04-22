@@ -180,6 +180,63 @@ def test_res2csv_summary(tmp_path, mocker):
     assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
 
 
+@pytest.mark.integration
+def test_res2csv_summary_no_output_on_missing_input(tmp_path, mocker):
+    """Test that no output file is created when the input file is missing."""
+
+    tmp_input_file = tmp_path / "MISSING_INPUT.UNSMRY"
+    tmp_output_file = tmp_path / "missing_output.arrow"
+
+    # Mock the command-line arguments to simulate missing input
+    mocker.patch(
+        "sys.argv",
+        [
+            "res2csv",
+            "summary",
+            "--verbose",
+            str(tmp_input_file),
+            "--output",
+            str(tmp_output_file),
+            "--arrow",
+        ],
+    )
+
+    # Run the main function and check that no output file is created
+    res2csv.main()
+    assert not tmp_output_file.exists(), (
+        "Output file should not be created for missing input."
+    )
+
+
+def test_res2csv_summary_no_output_on_invalid_input(tmp_path, mocker):
+    """Test that no output file is created when the input file is invalid."""
+
+    tmp_input_file = tmp_path / "INVALID_INPUT.UNSMRY"
+    tmp_output_file = tmp_path / "invalid_output.arrow"
+
+    tmp_input_file.touch()
+
+    # Mock the command-line arguments to simulate missing input
+    mocker.patch(
+        "sys.argv",
+        [
+            "res2csv",
+            "summary",
+            "--verbose",
+            str(tmp_input_file),
+            "--output",
+            str(tmp_output_file),
+            "--arrow",
+        ],
+    )
+
+    # Run the main function and check that no output file is created
+    res2csv.main()
+    assert not tmp_output_file.exists(), (
+        "Output file should not be created for invalid input."
+    )
+
+
 def test_paramsupport(tmp_path, mocker):
     """Test that we can merge in parameters.txt
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.3.2.dev7+g5a83bb1d documentation</title>
+  <title>res2df.summary &mdash; res2df 1.3.2.dev8+g9251b0a5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -896,6 +896,11 @@
         <span class="n">paramfile</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">paramfile</span><span class="p">,</span>
         <span class="n">datetime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sum_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No data to write. The input file may be missing or invalid.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">arrow</span><span class="p">:</span>
         <span class="n">sum_df</span> <span class="o">=</span> <span class="n">_df2pyarrow</span><span class="p">(</span><span class="n">sum_df</span><span class="p">)</span>
 

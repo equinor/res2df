@@ -814,6 +814,11 @@ def summary_main(args) -> None:
         paramfile=args.paramfile,
         datetime=False,
     )
+
+    if sum_df.empty:
+        logger.error("No data to write. The input file may be missing or invalid.")
+        return
+
     if args.arrow:
         sum_df = _df2pyarrow(sum_df)
 

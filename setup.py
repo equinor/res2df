@@ -24,6 +24,8 @@ REQUIREMENTS = [
     "pyarrow",
     "pyyaml>=5.1",
     "treelib",
+    "snowballstemmer<3",  # Temporary workaround due to Sphinx compatibility issues
+    # (see https://github.com/snowballstem/snowball/issues/229)
 ]
 
 TEST_REQUIREMENTS = (

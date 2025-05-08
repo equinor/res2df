@@ -135,9 +135,6 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
         ".+" + fipname + r"\s+REPORT\s+REGION\s+(\d+)", re.IGNORECASE
     )
 
-    # Flag for whether we are supposedly parsing a PRT file made by OPM Flow:
-    opm = False
-
     with open(prtfile, encoding="utf-8") as prt_fh:
         logger.info(
             "Parsing file %s for blocks starting with %s REPORT REGION",
@@ -148,8 +145,6 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
             matcheddate = re.match(ecl_datematcher, line)
             if matcheddate is None:
                 matcheddate = re.match(opm_datematcher, line)
-                if matcheddate is not None:
-                    opm = True
             if matcheddate is not None:
                 newdate = datetime.date(
                     year=int(matcheddate.group(3)),
@@ -176,15 +171,19 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
                     # Skip if we are not on an interesting line.
                     continue
 
-                if opm is False:
-                    # The colons in the report block are not reliably included
-                    # (differs by Eclipse version), even in the same PRT file. We
-                    # insert them in fixed positions and hope for the best (if the
-                    # ASCII table is actually dynamic with respect to content, this
-                    # will fail)
+                # The colons in the report block are not reliably included
+                # (differs by Eclipse version), even in the same PRT file. We
+                # insert them in fixed positions and hope for the best (if the
+                # ASCII table is actually dynamic with respect to content, this
+                # will fail)
+                line = line.strip()
+                if line[0] != ":":
+                    line = ":" + line
+                # There should another colon somewhere between 25 - 27
+                # (depend on OPM/Eclipse version)
+                if ":" not in line[25:27]:
                     linechars = list(line)
-                    linechars[1] = ":"
-                    linechars[27] = ":"
+                    linechars[26] = ":"
                     line = "".join(linechars)
 
                 records.append(

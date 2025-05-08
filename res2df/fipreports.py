@@ -181,7 +181,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
                     line = ":" + line
                 # There should another colon somewhere between 25 - 27
                 # (depend on OPM/Eclipse version)
-                if ":" not in line[25:27]:
+                if ":" not in line[25:27] and len(line) > 26:
                     linechars = list(line)
                     linechars[26] = ":"
                     line = "".join(linechars)

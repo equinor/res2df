@@ -69,6 +69,10 @@ def test_mockprtfile():
     assert dframe["FIPNAME"].unique() == "FIPOWG"
     assert len(dframe["DATE"].unique()) == 1
 
+    dframe = fipreports.df(MOCKPRTFILE, fipname="FIPOPM")
+    assert dframe["FIPNAME"].unique() == "FIPOPM"
+    assert len(dframe["DATE"].unique()) == 1
+
     with pytest.raises(ValueError):
         fipreports.df(MOCKPRTFILE, fipname="WIPNUM")
 

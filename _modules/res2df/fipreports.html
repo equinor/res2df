@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.fipreports &mdash; res2df 1.3.3.dev1+g8db04f4c documentation</title>
+  <title>res2df.fipreports &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -217,9 +217,6 @@
         <span class="s2">&quot;.+&quot;</span> <span class="o">+</span> <span class="n">fipname</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;\s+REPORT\s+REGION\s+(\d+)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span>
     <span class="p">)</span>
 
-    <span class="c1"># Flag for whether we are supposedly parsing a PRT file made by OPM Flow:</span>
-    <span class="n">opm</span> <span class="o">=</span> <span class="kc">False</span>
-
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">prtfile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">prt_fh</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Parsing file </span><span class="si">%s</span><span class="s2"> for blocks starting with </span><span class="si">%s</span><span class="s2"> REPORT REGION&quot;</span><span class="p">,</span>
@@ -230,8 +227,6 @@
             <span class="n">matcheddate</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">ecl_datematcher</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">matcheddate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">matcheddate</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">opm_datematcher</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">matcheddate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">opm</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">matcheddate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">newdate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span>
                     <span class="n">year</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">matcheddate</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
@@ -258,15 +253,19 @@
                     <span class="c1"># Skip if we are not on an interesting line.</span>
                     <span class="k">continue</span>
 
-                <span class="k">if</span> <span class="n">opm</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-                    <span class="c1"># The colons in the report block are not reliably included</span>
-                    <span class="c1"># (differs by Eclipse version), even in the same PRT file. We</span>
-                    <span class="c1"># insert them in fixed positions and hope for the best (if the</span>
-                    <span class="c1"># ASCII table is actually dynamic with respect to content, this</span>
-                    <span class="c1"># will fail)</span>
+                <span class="c1"># The colons in the report block are not reliably included</span>
+                <span class="c1"># (differs by Eclipse version), even in the same PRT file. We</span>
+                <span class="c1"># insert them in fixed positions and hope for the best (if the</span>
+                <span class="c1"># ASCII table is actually dynamic with respect to content, this</span>
+                <span class="c1"># will fail)</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;:&quot;</span><span class="p">:</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">line</span>
+                <span class="c1"># There should another colon somewhere between 25 - 27</span>
+                <span class="c1"># (depend on OPM/Eclipse version)</span>
+                <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">[</span><span class="mi">25</span><span class="p">:</span><span class="mi">27</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">26</span><span class="p">:</span>
                     <span class="n">linechars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-                    <span class="n">linechars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
-                    <span class="n">linechars</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
+                    <span class="n">linechars</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
                     <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">linechars</span><span class="p">)</span>
 
                 <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>

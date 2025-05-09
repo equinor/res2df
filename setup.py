@@ -53,7 +53,7 @@ EXTRAS_REQUIRE = {
 
 setup(
     name="res2df",
-    use_scm_version={"write_to": "res2df/version.py"},
+    use_scm_version={"write_to": "src/res2df/version.py"},
     cmdclass=cmdclass,
     description="Convert reservoir simulator input and output to DataFrames",
     long_description=LONG_DESCRIPTION,

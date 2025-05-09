@@ -39,4 +39,4 @@ jobs:
 
     - name: Run mypy
       run: |
-        mypy res2df
+        mypy src

@@ -8,7 +8,7 @@ res2df.egg-info
 *~
 docs/modules.rst
 docs/res2df.rst
-res2df/version.py
+src/res2df/version.py
 \#*
 .\#*
 venv*

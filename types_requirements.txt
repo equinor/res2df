@@ -1,4 +1,0 @@
-mypy
-types-PyYAML
-types-python-dateutil
-types-setuptools

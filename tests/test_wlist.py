@@ -2,6 +2,7 @@ import datetime
 
 import pandas as pd
 import pytest
+
 from res2df import ResdataFiles, compdat
 
 try:

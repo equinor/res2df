@@ -326,7 +326,7 @@ def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
 
-    children, parents = zip(*edges)
+    children, parents = zip(*edges, strict=False)
     roots = set(parents).difference(children)
     return [{root: subtrees[root]} for root in sorted(roots)]
 

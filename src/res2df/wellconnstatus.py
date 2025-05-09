@@ -76,7 +76,7 @@ def _extract_single_connection_status_changes(
     """
     status_changes = []
     prev_value = 0
-    for date, value in zip(dates, conn_values):
+    for date, value in zip(dates, conn_values, strict=False):
         if value > 0 and prev_value == 0:
             # Connection is OPEN and was SHUT at previous timestep
             status_changes.append((date, "OPEN"))

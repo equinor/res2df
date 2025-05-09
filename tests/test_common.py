@@ -8,6 +8,7 @@ import numpy as np
 import packaging.version
 import pandas as pd
 import pytest
+
 from res2df import common, equil, resdatafiles
 
 try:

@@ -358,7 +358,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
 
     # Replace interpolation values with index in dataframe
     thp_loc_indices = [float(val) for val in range(1, len(thp_values) + 1)]
-    thp_replace_map = dict(zip(thp_values, thp_loc_indices))
+    thp_replace_map = dict(zip(thp_values, thp_loc_indices, strict=False))
     thp_glob_indices = (
         dframe.loc[::no_flow_values, "PRESSURE"]
         .apply(lambda x: thp_replace_map[x])

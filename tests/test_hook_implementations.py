@@ -10,8 +10,9 @@ except ImportError:
         allow_module_level=True,
     )
 
-import res2df.hook_implementations.forward_model_steps
 from ert.plugins.plugin_manager import ErtPluginManager
+
+import res2df.hook_implementations.forward_model_steps
 
 
 def test_hooks_are_installed_in_erts_plugin_manager():

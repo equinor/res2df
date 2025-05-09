@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from res2df import res2csv, wcon
 from res2df.resdatafiles import ResdataFiles
 

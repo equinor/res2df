@@ -10,10 +10,10 @@ on:
   release:
     types:
       - published
-  
+
   schedule:
     # Run CI every night and check that tests are working with latest dependencies
-    - cron: '0 0 * * *'  
+    - cron: '0 0 * * *'
 
 env:
   ERT_SHOW_BACKTRACE: 1

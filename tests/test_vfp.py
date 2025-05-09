@@ -2,6 +2,7 @@ import copy
 
 import pandas as pd
 import pytest
+
 from res2df import ResdataFiles, vfp
 
 try:

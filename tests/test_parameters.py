@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+
 from res2df.parameters import find_parameter_files, load, load_all
 from res2df.resdatafiles import ResdataFiles
 

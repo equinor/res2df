@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from res2df import wellconnstatus
 from res2df.resdatafiles import ResdataFiles
 

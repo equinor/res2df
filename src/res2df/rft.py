@@ -304,7 +304,7 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
 
-    children, parents = zip(*edges)
+    children, parents = zip(*edges, strict=False)
     roots = set(parents).difference(children)
     trees = []
     trees.append({root: subtrees[root] for root in roots})

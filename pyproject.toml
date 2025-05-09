@@ -1,0 +1,153 @@
+[build-system]
+requires = [
+    "setuptools>=28",
+    "setuptools_scm",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/res2df/version.py"
+
+[project]
+name = "res2df"
+description = "Convert reservoir simulator input and output to DataFrames"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Håvard Berland", email = "havb@equinor.com" }
+]
+keywords = ["energy", "subsurface", "reservoir", "scientific", "engineering"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Natural Language :: English",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",    
+]
+
+dynamic = ["version"]
+
+dependencies= [
+"resdata>=5.0.0-b0",
+"resfo",
+"numpy",
+"opm>=2020.10.2",
+"pandas",
+"pyarrow",
+"pyyaml>=5.1",
+"treelib",
+]
+
+[project.optional-dependencies]
+tests = [
+    "networkx",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-timeout"
+]
+style = ["pre-commit"]
+types = [
+    "mypy",
+    "types-PyYAML",
+    "types-python-dateutil",
+    "types-setuptools"
+]
+docs = [
+    "autoapi",
+    "ipython",
+    "rstcheck",
+    "setuptools",
+    "sphinx<7",
+    "sphinx-argparse",
+    "sphinx-autodoc-typehints",
+    "sphinx_rtd_theme"
+]
+ert = ["ert>=10.2.0b13"]
+
+[project.urls]
+Homepage = "https://github.com/equinor/res2df"
+Repository = "https://github.com/equinor/res2df"
+Documentation = "https://equinor.github.io/res2df/"
+
+[project.entry-points.console_scripts]
+csv2res = "res2df.csv2res:main"
+res2csv = "res2df.res2csv:main"
+res2arrow = "res2df.res2csv:main"
+
+[project.entry-points.ert]
+res2df_steps = "res2df.hook_implementations.forward_model_steps"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["res2df*"]
+
+[tool.setuptools.package-dir]
+res2df = "src/res2df"
+
+[tool.setuptools.package-data]
+res2df = ["opmkeywords/*", "py.typed", "svg_color_keyword_names.txt"]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.pylint]
+# Module docstrings are not required
+disable = "missing-module-docstring"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks a test as an integration test",
+    "requires_eclipse: A test that requires the Eclipse simulator"
+]
+
+[tool.rstcheck]
+ignore_directives = ["argparse", "automodule"]
+ignore_messages = ["Hyperlink target .* is not referenced"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+  "E",  # pycodestyle
+  "W",  # pycodestyle
+  "I",  # isort
+  "B",  # flake-8-bugbear
+  "SIM",  # flake-8-simplify
+  "F",  # pyflakes
+  "PL",  # pylint
+  "NPY",  # numpy specific rules
+  "C4",  # flake8-comprehensions
+]
+preview = true
+ignore = [
+  "PLW2901",  # redefined-loop-name
+  "PLR2004",  # magic-value-comparison
+  "PLR0915",  # too-many-statements
+  "PLR0912",  # too-many-branches
+  "PLR0911",  # too-many-return-statements
+  "PLC2701",  # import-private-name
+  "PLR6201",  # literal-membership
+  "PLR0914",  # too-many-locals
+  "PLR6301",  # no-self-use
+  "PLW1641",  # eq-without-hash
+  "PLR0904",  # too-many-public-methods
+  "PLR1702",  # too-many-nested-blocks
+  "PLW3201",  # bad-dunder-method-name
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"res2df/__init__.py" = ["PLC0414"]
+
+[tool.ruff.lint.pylint]
+max-args = 20

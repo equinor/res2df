@@ -29,8 +29,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         cache: "pip"
-        cache-dependency-path: |
-          setup.py
 
     - name: Install res2df with style dependencies
       run: |

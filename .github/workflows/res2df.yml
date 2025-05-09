@@ -47,9 +47,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
-          cache-dependency-path: |
-            setup.py
-            test_requirements.txt
 
       - name: Install res2df with dependencies
         run: |
@@ -75,7 +72,7 @@ jobs:
 
       - name: Build documentation
         run: |
-          python setup.py build_sphinx
+          sphinx-build -W -b html docs build/sphinx/html
 
       - name: Update GitHub pages
         if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.11'

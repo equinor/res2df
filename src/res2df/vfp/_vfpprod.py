@@ -524,7 +524,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
 
     # Replace interpolation values with index in dataframe
     wfr_loc_indices = [float(val) for val in range(1, len(wfr_values) + 1)]
-    wfr_replace_map = dict(zip(wfr_values, wfr_loc_indices))
+    wfr_replace_map = dict(zip(wfr_values, wfr_loc_indices, strict=False))
     wfr_glob_indices = (
         dframe.loc[::no_flow_values, "WFR"]
         .apply(lambda x: wfr_replace_map[x])
@@ -532,7 +532,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     )
 
     gfr_loc_indices = [float(val) for val in range(1, len(gfr_values) + 1)]
-    gfr_replace_map = dict(zip(gfr_values, gfr_loc_indices))
+    gfr_replace_map = dict(zip(gfr_values, gfr_loc_indices, strict=False))
     gfr_glob_indices = (
         dframe.loc[::no_flow_values, "GFR"]
         .apply(lambda x: gfr_replace_map[x])
@@ -540,7 +540,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     )
 
     alq_loc_indices = [float(val) for val in range(1, len(alq_values) + 1)]
-    alq_replace_map = dict(zip(alq_values, alq_loc_indices))
+    alq_replace_map = dict(zip(alq_values, alq_loc_indices, strict=False))
     alq_glob_indices = (
         dframe.loc[::no_flow_values, "ALQ"]
         .apply(lambda x: alq_replace_map[x])
@@ -548,7 +548,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     )
 
     thp_loc_indices = [float(val) for val in range(1, len(thp_values) + 1)]
-    thp_replace_map = dict(zip(thp_values, thp_loc_indices))
+    thp_replace_map = dict(zip(thp_values, thp_loc_indices, strict=False))
     thp_glob_indices = (
         dframe.loc[::no_flow_values, "PRESSURE"]
         .apply(lambda x: thp_replace_map[x])

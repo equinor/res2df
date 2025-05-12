@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 import res2df
 
 TESTDIR = Path(__file__).absolute().parent

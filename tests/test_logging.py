@@ -1,6 +1,7 @@
 import itertools
 
 import pytest
+
 import res2df
 
 from .test_grid import EIGHTCELLS, REEK

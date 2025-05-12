@@ -12,6 +12,7 @@ except ImportError:
     HAVE_NETWORKX = False
 
 import pandas as pd
+
 from res2df import res2csv, trans
 from res2df.resdatafiles import ResdataFiles
 

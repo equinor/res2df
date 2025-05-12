@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from res2df import ResdataFiles, compdat, res2csv
 
 try:

@@ -6,6 +6,7 @@ from contextlib import suppress
 from pathlib import Path
 
 import pytest
+
 import res2df.summary
 from res2df import ResdataFiles
 

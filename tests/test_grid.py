@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import pyarrow
 import pytest
+
 from res2df import common, grid, res2csv
 from res2df.resdatafiles import ResdataFiles
 

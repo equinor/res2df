@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.fipreports &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+  <title>res2df.fipreports &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../../_static/jquery.js"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-      <script src="../../_static/doctools.js"></script>
-      <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -114,7 +114,9 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="report_block_lineparser"><a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.report_block_lineparser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">report_block_lineparser</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<div class="viewcode-block" id="report_block_lineparser">
+<a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.report_block_lineparser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">report_block_lineparser</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses single lines within region reports, splits data into a tuple.</span>
 
@@ -180,7 +182,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span><span class="n">prtfile</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">],</span> <span class="n">fipname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;FIPNUM&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+
+<div class="viewcode-block" id="df">
+<a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.df">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span><span class="n">prtfile</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">],</span> <span class="n">fipname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;FIPNUM&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and</span>
 <span class="sd">    organizes those numbers into a dataframe</span>
@@ -274,7 +279,10 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">REGION_REPORT_COLUMNS</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+
+<div class="viewcode-block" id="fill_parser">
+<a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.fill_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill parser with command line arguments&quot;&quot;&quot;</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;PRTFILE&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;PRT file (or .DATA file)&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -291,7 +299,10 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="fipreports_main"><a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.fipreports_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fipreports_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="fipreports_main">
+<a class="viewcode-back" href="../../res2df/res2df.fipreports.html#res2df.fipreports.fipreports_main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fipreports_main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Command line API&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span>  <span class="c1"># pylint: disable=redefined-outer-name</span>
         <span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -302,6 +313,7 @@
         <span class="n">prtfile</span> <span class="o">=</span> <span class="n">ResdataFiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">PRTFILE</span><span class="p">)</span><span class="o">.</span><span class="n">get_prtfilename</span><span class="p">()</span>
     <span class="n">dframe</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">prtfile</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">fipname</span><span class="p">)</span>
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

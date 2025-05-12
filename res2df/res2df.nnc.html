@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.nnc &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.nnc &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -125,24 +125,24 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.nnc">
-<span id="res2df-nnc"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.nnc</span></code><a class="headerlink" href="#module-res2df.nnc" title="Permalink to this heading"></a></h1>
+<span id="res2df-nnc"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.nnc</span></code><a class="headerlink" href="#module-res2df.nnc" title="Link to this heading"></a></h1>
 <p>Extract non-neighbour connection (NNC) information from reservoir
 simulator <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">output files</span></a>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.nnc.add_nnc_coords">
-<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">add_nnc_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nncdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#add_nnc_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.add_nnc_coords" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">add_nnc_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nncdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#add_nnc_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.add_nnc_coords" title="Link to this definition"></a></dt>
 <dd><p>Add columns X, Y and Z for the connection midpoint</p>
 <p>This extracts x, y and z for (I1, J1, K1) and (I2, J2, K2)
 and computes the average in each direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nncdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – With grid index columns (I1, J1, K1, I2, J2, K2)</p></li>
-<li><p><strong>resdatafiles</strong> (<a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>) – Object used to fetch grid data from EGRID.</p></li>
+<li><p><strong>nncdf</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – With grid index columns (I1, J1, K1, I2, J2, K2)</p></li>
+<li><p><strong>resdatafiles</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a></span>) – Object used to fetch grid data from EGRID.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Incoming dataframe augmented with the columns X, Y and Z.</p>
@@ -152,7 +152,7 @@ and computes the average in each direction.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.nnc.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pillars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pillars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.df" title="Link to this definition"></a></dt>
 <dd><p>Produce a Pandas Dataframe with NNC information</p>
 <p>A NNC is a pair of cells that are not next to each other
 in the index space (I, J, K), and are associated to a
@@ -163,17 +163,17 @@ between the two cells)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>resdatafiles</strong> (<a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>) – object that can serve
+<li><p><strong>resdatafiles</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a></span>) – object that can serve
 <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">reservoir simulator output files</span></a> on demand.</p></li>
-<li><p><strong>coords</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to True if you want the midpoint of the two
+<li><p><strong>coords</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to True if you want the midpoint of the two
 connected cells to be computed and added to the columns
 X, Y and Z.</p></li>
-<li><p><strong>pillars</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to True if you want to filter to vertical
+<li><p><strong>pillars</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to True if you want to filter to vertical
 (along pillars) connections only.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Empty if no NNC information found.</p>
@@ -183,7 +183,7 @@ X, Y and Z.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.nnc.df2res_editnnc">
-<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">df2res_editnnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nnc_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nocomments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#df2res_editnnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.df2res_editnnc" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">df2res_editnnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nnc_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nocomments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#df2res_editnnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.df2res_editnnc" title="Link to this definition"></a></dt>
 <dd><p>Write an EDITNNC keyword</p>
 <p>This will write:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EDITNNC</span>
@@ -212,7 +212,7 @@ in the produced string/file</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string with the EDITNNC keyword.</p>
@@ -222,29 +222,29 @@ in the produced string/file</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.nnc.fill_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.fill_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.fill_parser" title="Link to this definition"></a></dt>
 <dd><p>Set up sys.argv parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – argparse.ArgumentParser or argparse.subparser</p>
+<dd class="field-odd"><p><strong>parser</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span>) – argparse.ArgumentParser or argparse.subparser</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.nnc.filter_vertical">
-<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">filter_vertical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nncdf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#filter_vertical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.filter_vertical" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">filter_vertical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nncdf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#filter_vertical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.filter_vertical" title="Link to this definition"></a></dt>
 <dd><p>Filter to vertical connections</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nncdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – A dataframe with the columns
+<dd class="field-odd"><p><strong>nncdf</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – A dataframe with the columns
 I1, J1, K1, I2, J2, K2.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Filtered copy of incoming dataframe.</p>
@@ -254,11 +254,11 @@ I1, J1, K1, I2, J2, K2.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.nnc.nnc_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">nnc_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#nnc_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.nnc_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.nnc.</span></span><span class="sig-name descname"><span class="pre">nnc_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/nnc.html#nnc_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.nnc.nnc_main" title="Link to this definition"></a></dt>
 <dd><p>Command line access point from main() or from res2csv via subparser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>

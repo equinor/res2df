@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.inferdims &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.inferdims &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -122,12 +122,12 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.inferdims">
-<span id="res2df-inferdims"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.inferdims</span></code><a class="headerlink" href="#module-res2df.inferdims" title="Permalink to this heading"></a></h1>
+<span id="res2df-inferdims"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.inferdims</span></code><a class="headerlink" href="#module-res2df.inferdims" title="Link to this heading"></a></h1>
 <p>Support module for inferring EQLDIMS and TABDIMS from incomplete
 reservoir simulator decks (typically single include-files)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.inferdims.guess_dim">
-<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">guess_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimkeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimitem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/inferdims.html#guess_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.guess_dim" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">guess_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimkeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimitem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/inferdims.html#guess_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.guess_dim" title="Link to this definition"></a></dt>
 <dd><p>Guess the correct dimension count for an incoming <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> (string)</p>
 <p>The incoming <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> must in string form, if not, extra data is most
 likely already removed by the opm.io parser. TABDIMS or EQLDIMS
@@ -138,12 +138,12 @@ stricter mode, to detect the correct table dimensionality</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> – String containing a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> or only a few keywords</p></li>
-<li><p><strong>dimkeyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Either TABDIMS or EQLDIMS</p></li>
-<li><p><strong>dimitem</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The element number in TABDIMS/EQLDIMS to modify</p></li>
+<li><p><strong>dimkeyword</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Either TABDIMS or EQLDIMS</p></li>
+<li><p><strong>dimitem</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The element number in TABDIMS/EQLDIMS to modify</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The lowest number for which stricter opm.io parsing succeeds</p>
@@ -153,7 +153,7 @@ stricter mode, to detect the correct table dimensionality</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.inferdims.inject_dimcount">
-<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">inject_dimcount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimkeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimitem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimvalue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nowarn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/inferdims.html#inject_dimcount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.inject_dimcount" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">inject_dimcount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deckstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimkeyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimitem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimvalue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nowarn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/inferdims.html#inject_dimcount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.inject_dimcount" title="Link to this definition"></a></dt>
 <dd><p>Insert a TABDIMS with NTSFUN into a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> string</p>
 <p>This is simple string manipulation, not opm.io
 <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> manipulation (which might be possible to do).</p>
@@ -161,19 +161,19 @@ stricter mode, to detect the correct table dimensionality</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deckstr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – A string containing a partial <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> (f.ex only
+<li><p><strong>deckstr</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – A string containing a partial <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> (f.ex only
 the SWOF keyword).</p></li>
-<li><p><strong>dimkeyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Either TABDIMS or EQLDIMS</p></li>
-<li><p><strong>dimitem</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.</p></li>
-<li><p><strong>dimvalue</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The NTSFUN/NTPVT/NTEQUIL number to use
+<li><p><strong>dimkeyword</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Either TABDIMS or EQLDIMS</p></li>
+<li><p><strong>dimitem</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Item 0 (NTSSFUN) or 1 (NTPVT) of TABDIMS, only 0 for EQLDIMS.</p></li>
+<li><p><strong>dimvalue</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The NTSFUN/NTPVT/NTEQUIL number to use
 (this function does not care if it is correct or not but
 it must be larger than zero)</p></li>
-<li><p><strong>nowarn</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – By default it will warn if this function
+<li><p><strong>nowarn</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – By default it will warn if this function
 is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>New <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> string with TABDIMS/EQLDIMS prepended.</p>
@@ -183,7 +183,7 @@ is run on a deckstr with TABDIMS/EQLDIMS present. Mute this if True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.inferdims.inject_xxxdims_ntxxx">
-<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">inject_xxxdims_ntxxx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xxxdims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntxxx_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntxxx_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/inferdims.html#inject_xxxdims_ntxxx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.inject_xxxdims_ntxxx" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.inferdims.</span></span><span class="sig-name descname"><span class="pre">inject_xxxdims_ntxxx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xxxdims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntxxx_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntxxx_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/inferdims.html#inject_xxxdims_ntxxx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.inferdims.inject_xxxdims_ntxxx" title="Link to this definition"></a></dt>
 <dd><p>Ensures TABDIMS/EQLDIMS is present in a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p>
 <p>If ntxxx_value=None and ntxxx_name not in the <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, ntxxx_name will
 be inferred through trial-and-error parsing of the <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, and then injected

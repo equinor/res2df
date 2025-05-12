@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Glossary &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+  <title>Glossary &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="_static/jquery.js"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-      <script src="_static/doctools.js"></script>
-      <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fac656ce"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -83,25 +83,25 @@
            <div itemprop="articleBody">
              
   <section id="glossary">
-<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading"></a></h1>
+<h1>Glossary<a class="headerlink" href="#glossary" title="Link to this heading"></a></h1>
 <dl class="simple glossary">
-<dt id="term-reservoir-simulator">reservoir simulator<a class="headerlink" href="#term-reservoir-simulator" title="Permalink to this term"></a></dt><dd><p>Simulation of reservoir fields come in many forms, but for the purposes of
+<dt id="term-reservoir-simulator">reservoir simulator<a class="headerlink" href="#term-reservoir-simulator" title="Link to this term"></a></dt><dd><p>Simulation of reservoir fields come in many forms, but for the purposes of
 res2df we only consider simulators that take a <a class="reference internal" href="#term-deck"><span class="xref std std-term">deck</span></a> as input and produces
 <a class="reference internal" href="#term-output-file"><span class="xref std std-term">output files</span></a> such <cite>.UNSRMY</cite>. This includes, OPM flow and Eclipse.</p>
 </dd>
-<dt id="term-.DATA-file">.DATA file<a class="headerlink" href="#term-.DATA-file" title="Permalink to this term"></a></dt><dd><p>Input provided to reservoir simulators such as Eclipse or OPM Flow.
+<dt id="term-.DATA-file">.DATA file<a class="headerlink" href="#term-.DATA-file" title="Link to this term"></a></dt><dd><p>Input provided to reservoir simulators such as Eclipse or OPM Flow.
 Often a <a class="reference internal" href="#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> includes other <a class="reference internal" href="#term-include-file"><span class="xref std std-term">include files</span></a> with the INCLUDE keyword.</p>
 </dd>
-<dt id="term-include-file">include file<a class="headerlink" href="#term-include-file" title="Permalink to this term"></a></dt><dd><p>Files that provide inputs to reservoir simulators by using the INCLUDE statement
+<dt id="term-include-file">include file<a class="headerlink" href="#term-include-file" title="Link to this term"></a></dt><dd><p>Files that provide inputs to reservoir simulators by using the INCLUDE statement
 in <a class="reference internal" href="#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a>. By convention, these files often have the extension .INC/.inc
 (generally) or .GRDECL/.grdecl (for files included into the grid section).</p>
 </dd>
-<dt id="term-deck">deck<a class="headerlink" href="#term-deck" title="Permalink to this term"></a></dt><dd><p>Refers to inputs passed to reservoir simulators. It may be a <a class="reference internal" href="#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> and the
+<dt id="term-deck">deck<a class="headerlink" href="#term-deck" title="Link to this term"></a></dt><dd><p>Refers to inputs passed to reservoir simulators. It may be a <a class="reference internal" href="#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> and the
 include files it points to, or it may be a single or several include files.
 If a deck contains all the information (i.e., keywords) the simulator needs
 to run the requested simulation, it is defined as complete. Otherwise it is incomplete.</p>
 </dd>
-<dt id="term-output-file">output file<a class="headerlink" href="#term-output-file" title="Permalink to this term"></a></dt><dd><p>When a reservoir simulator runs, several files will be generated.
+<dt id="term-output-file">output file<a class="headerlink" href="#term-output-file" title="Link to this term"></a></dt><dd><p>When a reservoir simulator runs, several files will be generated.
 These will have extensions such as .EGRID, .FEGRID, .UNSMRY, .GRID, .INIT, etc.
 See the opm flow manual Appendix D (<a class="reference external" href="https://opm-project.org/wp-content/uploads/2023/06/OPM_Flow_Reference_Manual_2023-04_Rev-0_Reduced.pdf">https://opm-project.org/wp-content/uploads/2023/06/OPM_Flow_Reference_Manual_2023-04_Rev-0_Reduced.pdf</a>)</p>
 </dd>

@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfp &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.vfp._vfp &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -121,13 +121,13 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.vfp._vfp">
-<span id="res2df-vfp-vfp"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.vfp._vfp</span></code><a class="headerlink" href="#module-res2df.vfp._vfp" title="Permalink to this heading"></a></h1>
+<span id="res2df-vfp-vfp"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.vfp._vfp</span></code><a class="headerlink" href="#module-res2df.vfp._vfp" title="Link to this heading"></a></h1>
 <p>Extract the VFPPROD/VFPINJ data from an Eclipse (input) deck as Pandas Dataframes</p>
 <p>Data can be extracted from a complete deck or from individual files. Supports
 output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.basic_data">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.basic_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.basic_data" title="Link to this definition"></a></dt>
 <dd><p>Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.
 Dictionary returned contains items for liftcuve tables as simple datatypes
 Required keys in dictionary for VFPPROD and VFPINJ can be found in
@@ -146,41 +146,41 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.basic_data2df">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">basic_data2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#basic_data2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.basic_data2df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">basic_data2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#basic_data2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.basic_data2df" title="Link to this definition"></a></dt>
 <dd><p>Convert basic_data representation of VFPPROD/VFPINF
 (see function basic_data for defintion of data) into
 pandas DataFrame representation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Dictionary with basic data representation of
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary with basic data representation of
 VFPPROD or VFPINJ (see basic_data)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.basic_data2pyarrow">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">basic_data2pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#basic_data2pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.basic_data2pyarrow" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">basic_data2pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#basic_data2pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.basic_data2pyarrow" title="Link to this definition"></a></dt>
 <dd><p>Convert basic_data representation of VFPPROD/VFPINF
 (see function basic_data for defintion of data) into
 pyarrow.Table representation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Dictionary with basic data representation of
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Dictionary with basic data representation of
 VFPPROD or VFPINJ</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df" title="Link to this definition"></a></dt>
 <dd><p>Produce a dataframes of all vfp tables from a deck</p>
 <p>All data for the keywords VFPPROD/VFPINJ will be returned.</p>
 <dl class="field-list simple">
@@ -196,67 +196,67 @@ VFPPROD or VFPINJ</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.df2basic_data">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df2basic_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df2basic_data" title="Link to this definition"></a></dt>
 <dd><p>Produce a dictionary with basic data types for a VFPPROD/VFPINJ
 liftcurve table represented as a Pandas DataFrame</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p>
+<dd class="field-odd"><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.df2res">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df2res" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df2res" title="Link to this definition"></a></dt>
 <dd><p>Create a string defining all VFPPROD/VFPINJ Eclipse
 <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents from a dataframe</p>
 <p>All data for the keywords VFPPROD/VFPINJ will be returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Keywords to include, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
-<li><p><strong>comments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – comments: Dictionary indexed by keyword with comments to be
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p></li>
+<li><p><strong>keyword</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Keywords to include, i.e. ‘VFPPROD’ or ‘VFPINJ’</p></li>
+<li><p><strong>comments</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – comments: Dictionary indexed by keyword with comments to be
 included pr. keyword. If a key named “master” is present
 it will be used as a master comment for the outputted file.</p></li>
-<li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If supplied, the generated text will also be dumped
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If supplied, the generated text will also be dumped
 to file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.df2ress">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df2ress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df2ress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df2ress" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">df2ress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#df2ress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.df2ress" title="Link to this definition"></a></dt>
 <dd><p>Produce a list of strings defining VFPPROD/VFPINJ Eclipse
 <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents from a dataframe</p>
 <p>All data for the keyword VFPPROD or VFPINJ will be returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe containing complete description of VFPPROD/VFPINJ input</p></li>
 <li><p><strong>keywords</strong> – Keyword to include, ‘VFPPROD’ or ‘VFPINJ’</p></li>
-<li><p><strong>comments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Dictionary indexed by keyword with comments to be
+<li><p><strong>comments</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Dictionary indexed by keyword with comments to be
 included pr. keyword.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.dfs">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">dfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#dfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.dfs" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">dfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#dfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.dfs" title="Link to this definition"></a></dt>
 <dd><p>Produce a list of dataframes of vfp tables from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <p>Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</p>
 <dl class="field-list simple">
@@ -273,7 +273,7 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.fill_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.fill_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.fill_parser" title="Link to this definition"></a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -281,40 +281,40 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 to fill with arguments</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.fill_reverse_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.fill_reverse_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.fill_reverse_parser" title="Link to this definition"></a></dt>
 <dd><p>Fill a parser for the operation dataframe -&gt; resdata <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.pyarrow2basic_data">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">pyarrow2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#pyarrow2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.pyarrow2basic_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">pyarrow2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#pyarrow2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.pyarrow2basic_data" title="Link to this definition"></a></dt>
 <dd><p>Produce a dictionary with basic data types for a VFPPROD/VFPINJ
 liftcurve table represented as a pyarrow Table</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pa_table</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>) – pyarrow.Table representation of VFPPROD/VFPINJ</p>
+<dd class="field-odd"><p><strong>pa_table</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></span>) – pyarrow.Table representation of VFPPROD/VFPINJ</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.pyarrow_tables">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">pyarrow_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#pyarrow_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.pyarrow_tables" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">pyarrow_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VFPPROD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#pyarrow_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.pyarrow_tables" title="Link to this definition"></a></dt>
 <dd><p>Produce a list of pyarrow.Table of vfp tables from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <p>Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</p>
 <dl class="field-list simple">
@@ -331,22 +331,22 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.vfp_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">vfp_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#vfp_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.vfp_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">vfp_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#vfp_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.vfp_main" title="Link to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfp.vfp_reverse_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">vfp_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#vfp_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.vfp_reverse_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfp.</span></span><span class="sig-name descname"><span class="pre">vfp_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfp.html#vfp_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfp.vfp_reverse_main" title="Link to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility for CSV to Eclipse</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>

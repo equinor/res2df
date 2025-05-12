@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.common &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.common &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -139,23 +139,23 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.common">
-<span id="res2df-common"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.common</span></code><a class="headerlink" href="#module-res2df.common" title="Permalink to this heading"></a></h1>
+<span id="res2df-common"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.common</span></code><a class="headerlink" href="#module-res2df.common" title="Link to this heading"></a></h1>
 <p>Common functions for res2df modules</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.comment_formatter">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">comment_formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multiline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#comment_formatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.comment_formatter" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">comment_formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multiline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#comment_formatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.comment_formatter" title="Link to this definition"></a></dt>
 <dd><p>Prepends comment characters to every line in input</p>
 <p>If nothing is supplied, an empty string is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>multiline</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – String that can contain newlines</p></li>
-<li><p><strong>prefix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Comment characters to prepend every line with
+<li><p><strong>multiline</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – String that can contain newlines</p></li>
+<li><p><strong>prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Comment characters to prepend every line with
 Default is the Eclipse comment syntax ‘– ‘</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><dl class="simple">
@@ -169,11 +169,11 @@ Default is the Eclipse comment syntax ‘– ‘</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.convert_lyrlist_to_zonemap">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">convert_lyrlist_to_zonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lyrlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#convert_lyrlist_to_zonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.convert_lyrlist_to_zonemap" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">convert_lyrlist_to_zonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lyrlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#convert_lyrlist_to_zonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.convert_lyrlist_to_zonemap" title="Link to this definition"></a></dt>
 <dd><p>Returns a layer to zone map as a dictionary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lyrlist</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – list of dicts coming from parse_lyrfile()</p>
+<dd class="field-odd"><p><strong>lyrlist</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span>) – list of dicts coming from parse_lyrfile()</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>“zoneA”, 2: “zoneB”}</p>
@@ -186,18 +186,18 @@ Default is the Eclipse comment syntax ‘– ‘</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.datetime_to_ecldate">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">datetime_to_ecldate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#datetime_to_ecldate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.datetime_to_ecldate" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">datetime_to_ecldate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#datetime_to_ecldate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.datetime_to_ecldate" title="Link to this definition"></a></dt>
 <dd><p>Convert a Python timestamp or date to the Eclipse DATE format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.df2res">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consecutive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.df2res" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consecutive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.df2res" title="Link to this definition"></a></dt>
 <dd><p>Generate resdata <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content from dataframes in res2df format.</p>
 <p>This function hands over the actual text generation pr. keyword
 to functions named df2res_&lt;keywordname&gt; in the calling module.</p>
@@ -206,22 +206,22 @@ for the actual string construction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with res2df format.</p></li>
-<li><p><strong>keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – List of keywords to include. Will be reduced
+<li><p><strong>dataframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe with res2df format.</p></li>
+<li><p><strong>keywords</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – List of keywords to include. Will be reduced
 to the set of keywords available in dataframe and to those supported</p></li>
-<li><p><strong>comments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Dictionary indexed by keyword with comments to be
+<li><p><strong>comments</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Dictionary indexed by keyword with comments to be
 included pr. keyword. If a key named “master” is present
 it will be used as a master comment for the outputted file.</p></li>
-<li><p><strong>supported</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of strings of keywords which are
+<li><p><strong>supported</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – List of strings of keywords which are
 supported in this invocation of this function.</p></li>
-<li><p><strong>consecutive</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Column name for which we require the
+<li><p><strong>consecutive</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Column name for which we require the
 numbers to be consecutive. Typically PVTNUM, EQLNUM, SATNUM.</p></li>
-<li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If supplied, the generated text will also be dumped
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If supplied, the generated text will also be dumped
 to file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string that can be used as contents of <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a>.</p>
@@ -231,7 +231,7 @@ to file.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.fill_reverse_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultoutputfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.fill_reverse_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultoutputfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.fill_reverse_parser" title="Link to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>A standardized submodule parser for the command line utility</dt><dd><p>to produce <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a> from a CSV file.</p>
 </dd>
@@ -239,9 +239,9 @@ to file.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – parser to fill with arguments</p></li>
-<li><p><strong>modulename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Will be included in the help text</p></li>
-<li><p><strong>defaultoutputfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Default <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">output file</span></a> name</p></li>
+<li><p><strong>parser</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span>) – parser to fill with arguments</p></li>
+<li><p><strong>modulename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Will be included in the help text</p></li>
+<li><p><strong>defaultoutputfile</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Default <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">output file</span></a> name</p></li>
 </ul>
 </dd>
 </dl>
@@ -249,7 +249,7 @@ to file.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.generic_deck_table">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">generic_deck_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_trailing_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#generic_deck_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.generic_deck_table" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">generic_deck_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_trailing_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#generic_deck_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.generic_deck_table" title="Link to this definition"></a></dt>
 <dd><p>Construct string contents of a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> table.</p>
 <p>This function will <em>not</em> add a final slash after all rows, as
 this is keyword dependent. Some keywords require it, some keywords
@@ -265,14 +265,14 @@ or consisting of only “1*” will be dropped, as Eclipse will always
 interpret that as “1*”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.get_wells_matching_template">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">get_wells_matching_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#get_wells_matching_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.get_wells_matching_template" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">get_wells_matching_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#get_wells_matching_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.get_wells_matching_template" title="Link to this definition"></a></dt>
 <dd><p>Returns the wells in the list that is matching the template
 containing wilcard characters. The wildcard charachters supported
 are * to match zero or more charachters and ? to match a single
@@ -284,8 +284,8 @@ avoid confusion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>template</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – well name template with wildcard characters</p></li>
-<li><p><strong>wells</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – list of wells to match against the template</p></li>
+<li><p><strong>template</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – well name template with wildcard characters</p></li>
+<li><p><strong>wells</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – list of wells to match against the template</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -296,7 +296,7 @@ avoid confusion.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.handle_wanted_keywords">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">handle_wanted_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wanted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#handle_wanted_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.handle_wanted_keywords" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">handle_wanted_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wanted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#handle_wanted_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.handle_wanted_keywords" title="Link to this definition"></a></dt>
 <dd><p>Handle three list of keywords, wanted, available and supported</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -312,20 +312,20 @@ avoid confusion.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.is_color">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">is_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#is_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.is_color" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">is_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#is_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.is_color" title="Link to this definition"></a></dt>
 <dd><p>Checks if the input string is a valid color.
 That is six-digit hexadecimal, three-digit hexadecimal or
 given as a SVG color keyword name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.keyworddata_to_df">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">keyworddata_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordcountername</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emptyrecordcountername</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#keyworddata_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.keyworddata_to_df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">keyworddata_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordcountername</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emptyrecordcountername</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#keyworddata_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.keyworddata_to_df" title="Link to this definition"></a></dt>
 <dd><p>Extract data associated to a keyword into tabular form.</p>
 <p>Two modes of enumeration of tables in the keyworddata is supported, you
 will have to find out which one fits your particular keyword. Activate
@@ -335,51 +335,51 @@ will be the name of your enumeration, e.g. PVTNUM, EQLNUM or SATNUM.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deck</strong> – Parsed <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
-<li><p><strong>keyword</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of the keyword for which to extract data.</p></li>
-<li><p><strong>renamer</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]) – Mapping of names present in OPM json files for the
+<li><p><strong>keyword</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the keyword for which to extract data.</p></li>
+<li><p><strong>renamer</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]</span>) – Mapping of names present in OPM json files for the
 keyword to desired column names in returned dataframe</p></li>
-<li><p><strong>recordcountername</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If present, an extra column is added with this name
+<li><p><strong>recordcountername</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If present, an extra column is added with this name
 with consecutive rows enumerated from 1. Use this to assign
 EQLNUM or similar when this should be consecutive pr. row (not
 the case for all keywords).</p></li>
-<li><p><strong>emptyrecordcountername</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If supplied, an index is added to every parsed
+<li><p><strong>emptyrecordcountername</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If supplied, an index is added to every parsed
 row based on how many empty records is encountered. For PVTO f.ex,
 this gives the PVTNUM indexing.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.merge_zones">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">merge_zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonedict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoneheader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ZONE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'K1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#merge_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.merge_zones" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">merge_zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonedict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoneheader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ZONE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'K1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#merge_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.merge_zones" title="Link to this definition"></a></dt>
 <dd><p>Merge in a column with zone names, from a dictionary mapping
 k-index to zone name. If the zonemap is not covering all
 zones, cells will be filled with NaN.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe where we should augment a column</p></li>
-<li><p><strong>zonedict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Dictionary with integer keys pointing to strings
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe where we should augment a column</p></li>
+<li><p><strong>zonedict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary with integer keys pointing to strings
 with zone names.</p></li>
-<li><p><strong>zoneheader</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of the result column merged in,
+<li><p><strong>zoneheader</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the result column merged in,
 default: ZONE</p></li>
-<li><p><strong>kname</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Column header in your dataframe that maps to dictionary keys.
+<li><p><strong>kname</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column header in your dataframe that maps to dictionary keys.
 default K1</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.parse_lyrfile">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_lyrfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_lyrfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_lyrfile" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_lyrfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_lyrfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_lyrfile" title="Link to this definition"></a></dt>
 <dd><p>Return a list of dicts representation of the lyr file.</p>
 <p>The lyr file contains data of the following format,
 where the color code is optional:</p>
@@ -407,10 +407,10 @@ where the color code is optional:</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Absolute path to a lyr file</p>
+<dd class="field-odd"><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Absolute path to a lyr file</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of dictionaries representing the information in the lyr file.</p>
@@ -420,24 +420,24 @@ where the color code is optional:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.parse_month">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rdmonth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_month" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rdmonth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_month" title="Link to this definition"></a></dt>
 <dd><p>Translate resdata month strings to integer months</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.parse_opmio_date_rec">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_date_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_opmio_date_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_date_rec" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_date_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_opmio_date_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_date_rec" title="Link to this definition"></a></dt>
 <dd><p>Parse a opm.io.DeckRecord under a DATES or START keyword in a deck.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.parse_opmio_deckrecord">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_deckrecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itemlistname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'items'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordindex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_opmio_deckrecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_deckrecord" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_deckrecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itemlistname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'items'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recordindex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_opmio_deckrecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_deckrecord" title="Link to this definition"></a></dt>
 <dd><p>Parse an opm.io.DeckRecord belonging to a certain keyword</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -460,7 +460,7 @@ each subitem.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.parse_opmio_tstep_rec">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_tstep_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_opmio_tstep_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_tstep_rec" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">parse_opmio_tstep_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#parse_opmio_tstep_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.parse_opmio_tstep_rec" title="Link to this definition"></a></dt>
 <dd><p>Parse a record with TSTEP data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -471,7 +471,7 @@ each subitem.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.runlength_compress">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">runlength_compress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span>&#160; <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#runlength_compress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.runlength_compress" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">runlength_compress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span>&#160; <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#runlength_compress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.runlength_compress" title="Link to this definition"></a></dt>
 <dd><p>Compress a string of space-separated elements so that</p>
 <blockquote>
 <div><p>2 2 2 2 2 3 3 4</p>
@@ -494,7 +494,7 @@ str.split()</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string, shorter or equal-length to the input.</p>
@@ -504,7 +504,7 @@ str.split()</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.stack_on_colnames">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">stack_on_colnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&#64;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackcolname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DATE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#stack_on_colnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.stack_on_colnames" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">stack_on_colnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&#64;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackcolname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DATE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#stack_on_colnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.stack_on_colnames" title="Link to this definition"></a></dt>
 <dd><p>For a dataframe where some columns are multilevel, but where
 the second level is encoded in the column name, this function
 will stack the dataframe by putting the second level of the column
@@ -552,49 +552,49 @@ multiindex into its own column, best understood by this example:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – A dataframe to stack</p></li>
-<li><p><strong>sep</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The separator that is used in dframe.columns to define
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – A dataframe to stack</p></li>
+<li><p><strong>sep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The separator that is used in dframe.columns to define
 the multilevel column names.</p></li>
-<li><p><strong>stackcolname</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Used as column name for the second level
+<li><p><strong>stackcolname</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Used as column name for the second level
 of the column multiindex</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.write_dframe_stdout_file">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">write_dframe_stdout_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#write_dframe_stdout_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.write_dframe_stdout_file" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">write_dframe_stdout_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#write_dframe_stdout_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.write_dframe_stdout_file" title="Link to this definition"></a></dt>
 <dd><p>Write a dataframe to either stdout or a file</p>
 <p>If output is the magic string “-”, output is written
 to stdout.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>]) – Dataframe to write</p></li>
-<li><p><strong>output</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Filename or “-”</p></li>
-<li><p><strong>index</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Passed to to_csv()</p></li>
-<li><p><strong>caller_logger</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code>]) – Used if not stdout</p></li>
-<li><p><strong>logstr</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Logged if not stdout.</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>]</span>) – Dataframe to write</p></li>
+<li><p><strong>output</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Filename or “-”</p></li>
+<li><p><strong>index</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Passed to to_csv()</p></li>
+<li><p><strong>caller_logger</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code>]</span>) – Used if not stdout</p></li>
+<li><p><strong>logstr</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Logged if not stdout.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.common.write_inc_stdout_file">
-<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">write_inc_stdout_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfilename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#write_inc_stdout_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.write_inc_stdout_file" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.common.</span></span><span class="sig-name descname"><span class="pre">write_inc_stdout_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfilename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/common.html#write_inc_stdout_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.common.write_inc_stdout_file" title="Link to this definition"></a></dt>
 <dd><p>Write a string (typically an <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> string) to stdout
 or to a named file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>

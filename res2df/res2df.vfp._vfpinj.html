@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfpinj &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.vfp._vfpinj &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -121,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.vfp._vfpinj">
-<span id="res2df-vfp-vfpinj"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.vfp._vfpinj</span></code><a class="headerlink" href="#module-res2df.vfp._vfpinj" title="Permalink to this heading"></a></h1>
+<span id="res2df-vfp-vfpinj"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.vfp._vfpinj</span></code><a class="headerlink" href="#module-res2df.vfp._vfpinj" title="Link to this heading"></a></h1>
 <p>Utilities to extract the VFPINJ data from an Eclipse (input) deck.
 Data can be extracted from Eclipse (.Ecl format) in 3 different formats:
 basic_data (dictionary with basic data types), df (pandas DataFrame) or
@@ -132,7 +132,7 @@ a pyarrow.Table. Also functionality to write pandas DataFrame and
 pyarrow.Table to file as Eclipse .Ecl format</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.basic_data">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data" title="Link to this definition"></a></dt>
 <dd><p>Read and return all data for Eclipse VFPINJ keyword as basic data types</p>
 <p>Empty string returned if vfp table number does not match any number in list</p>
 <dl class="field-list simple">
@@ -148,60 +148,60 @@ Syntax “[0,1,8:11]” corresponds</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.basic_data2df">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#basic_data2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data2df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#basic_data2df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data2df" title="Link to this definition"></a></dt>
 <dd><p>Return a pandas DataFrame from VFPINJ liftcurve data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tableno</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – table number</p></li>
-<li><p><strong>datum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – datum depth</p></li>
-<li><p><strong>rate_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_FLO" title="res2df.vfp._vfpdefs.VFPINJ_FLO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_FLO</span></code></a>) – rate type used for flow values</p></li>
-<li><p><strong>thp_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.THPTYPE" title="res2df.vfp._vfpdefs.THPTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">THPTYPE</span></code></a>) – thp type used for THP values</p></li>
-<li><p><strong>unit_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.UNITTYPE" title="res2df.vfp._vfpdefs.UNITTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNITTYPE</span></code></a>) – unit type</p></li>
-<li><p><strong>tab_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="res2df.vfp._vfpdefs.VFPINJ_TABTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_TABTYPE</span></code></a>) – type for tabulated (record) values</p></li>
-<li><p><strong>flow_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – rate values used to generate table</p></li>
+<li><p><strong>tableno</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – table number</p></li>
+<li><p><strong>datum</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – datum depth</p></li>
+<li><p><strong>rate_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_FLO" title="res2df.vfp._vfpdefs.VFPINJ_FLO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_FLO</span></code></a></span>) – rate type used for flow values</p></li>
+<li><p><strong>thp_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.THPTYPE" title="res2df.vfp._vfpdefs.THPTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">THPTYPE</span></code></a></span>) – thp type used for THP values</p></li>
+<li><p><strong>unit_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.UNITTYPE" title="res2df.vfp._vfpdefs.UNITTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNITTYPE</span></code></a></span>) – unit type</p></li>
+<li><p><strong>tab_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="res2df.vfp._vfpdefs.VFPINJ_TABTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_TABTYPE</span></code></a></span>) – type for tabulated (record) values</p></li>
+<li><p><strong>flow_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – rate values used to generate table</p></li>
 <li><p><strong>thp_type</strong> – thp type</p></li>
-<li><p><strong>thp_indices</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – which index in thp value table a given BHP value
+<li><p><strong>thp_indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – which index in thp value table a given BHP value
 corresponds to (1-base)</p></li>
-<li><p><strong>tab_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – tabulated (BHP) data
+<li><p><strong>tab_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – tabulated (BHP) data
 (ordered as thp- and flow-values)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.basic_data2pyarrow">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#basic_data2pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data2pyarrow" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">basic_data2pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thp_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#basic_data2pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.basic_data2pyarrow" title="Link to this definition"></a></dt>
 <dd><p>Return a pyarrow Table from VFPINJ record data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tableno</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – table number</p></li>
-<li><p><strong>datum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – datum depth</p></li>
-<li><p><strong>rate_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_FLO" title="res2df.vfp._vfpdefs.VFPINJ_FLO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_FLO</span></code></a>) – rate type used for flow values</p></li>
-<li><p><strong>thp_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.THPTYPE" title="res2df.vfp._vfpdefs.THPTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">THPTYPE</span></code></a>) – thp type</p></li>
-<li><p><strong>unit_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.UNITTYPE" title="res2df.vfp._vfpdefs.UNITTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNITTYPE</span></code></a>) – unit type</p></li>
-<li><p><strong>tab_type</strong> (<a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="res2df.vfp._vfpdefs.VFPINJ_TABTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_TABTYPE</span></code></a>) – type for tabulated (record) values</p></li>
-<li><p><strong>flow_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – rate values used to generate table</p></li>
-<li><p><strong>thp_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – THP values used to generate table</p></li>
-<li><p><strong>thp_indices</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – THP indices for each record in tabulated data</p></li>
-<li><p><strong>tab_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – tabulated (BHP) data
+<li><p><strong>tableno</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – table number</p></li>
+<li><p><strong>datum</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – datum depth</p></li>
+<li><p><strong>rate_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_FLO" title="res2df.vfp._vfpdefs.VFPINJ_FLO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_FLO</span></code></a></span>) – rate type used for flow values</p></li>
+<li><p><strong>thp_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.THPTYPE" title="res2df.vfp._vfpdefs.THPTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">THPTYPE</span></code></a></span>) – thp type</p></li>
+<li><p><strong>unit_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.UNITTYPE" title="res2df.vfp._vfpdefs.UNITTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNITTYPE</span></code></a></span>) – unit type</p></li>
+<li><p><strong>tab_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.vfp._vfpdefs.html#res2df.vfp._vfpdefs.VFPINJ_TABTYPE" title="res2df.vfp._vfpdefs.VFPINJ_TABTYPE"><code class="xref py py-class docutils literal notranslate"><span class="pre">VFPINJ_TABTYPE</span></code></a></span>) – type for tabulated (record) values</p></li>
+<li><p><strong>flow_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – rate values used to generate table</p></li>
+<li><p><strong>thp_values</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – THP values used to generate table</p></li>
+<li><p><strong>thp_indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – THP indices for each record in tabulated data</p></li>
+<li><p><strong>tab_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – tabulated (BHP) data
 (ordered according to thp- and flow-values)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df" title="Link to this definition"></a></dt>
 <dd><p>Return a dataframes of a single VFPINJ table from a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a></p>
 <p>Data from the VFPINJ keyword are stacked into a Pandas Dataframe</p>
 <dl class="field-list simple">
@@ -217,42 +217,42 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.df2basic_data">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#df2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df2basic_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#df2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df2basic_data" title="Link to this definition"></a></dt>
 <dd><p>Return basic data type for VFPINJ from a pandas dataframe.</p>
 <p>Return format is a dictionary all data in VFPINJ in basic data types
 (str, int, float, numpy.array)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – pandas DataFrame for VFPINJ</p>
+<dd class="field-odd"><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – pandas DataFrame for VFPINJ</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.df2res">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df2res" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.df2res" title="Link to this definition"></a></dt>
 <dd><p>Creates a <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content string
 representing single VFPINJ Eclipse input from a dataframe</p>
 <p>All data for the keywords VFPINJ will be returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe containing complete description of single VFPINJ input</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe containing complete description of single VFPINJ input</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.pyarrow">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.pyarrow" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vfpnumbers_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#pyarrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.pyarrow" title="Link to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Return a pyarrow Table of a single VFPINJ table from a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a></dt><dd><p>If no VFPINJ table found, return None</p>
 </dd>
@@ -270,16 +270,16 @@ Syntax “[0,1,8:11]” corresponds to [0,1,8,9,10,11].</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.vfp._vfpinj.pyarrow2basic_data">
-<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#pyarrow2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.pyarrow2basic_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.vfp._vfpinj.</span></span><span class="sig-name descname"><span class="pre">pyarrow2basic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pa_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/vfp/_vfpinj.html#pyarrow2basic_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.vfp._vfpinj.pyarrow2basic_data" title="Link to this definition"></a></dt>
 <dd><p>Return basic data type for VFPINJ from a pyarrow.Table.</p>
 <p>Return format is a dictionary all data in VFPINJ in basic data types
 (str, int, float, numpy.array)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pa_table</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code>) – pyarrow Table with data for VFPINJ</p>
+<dd class="field-odd"><p><strong>pa_table</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></span>) – pyarrow Table with data for VFPINJ</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>

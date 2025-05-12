@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.wellcompletiondata &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+  <title>res2df.wellcompletiondata &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../../_static/jquery.js"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-      <script src="../../_static/doctools.js"></script>
-      <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -101,21 +101,29 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="UnitSystem"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.UnitSystem">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">UnitSystem</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="UnitSystem">
+<a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.UnitSystem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnitSystem</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;METRIC&quot;</span>
     <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;FIELD&quot;</span>
     <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;LAB&quot;</span>
     <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;PVT-M&quot;</span></div>
 
 
-<div class="viewcode-block" id="KHUnit"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.KHUnit">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KHUnit</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+
+<div class="viewcode-block" id="KHUnit">
+<a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.KHUnit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KHUnit</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">METRIC</span> <span class="o">=</span> <span class="s2">&quot;mDm&quot;</span>
     <span class="n">FIELD</span> <span class="o">=</span> <span class="s2">&quot;mDft&quot;</span>
     <span class="n">LAB</span> <span class="o">=</span> <span class="s2">&quot;mDcm&quot;</span>
     <span class="n">PVTM</span> <span class="o">=</span> <span class="s2">&quot;mDm&quot;</span></div>
 
 
-<div class="viewcode-block" id="df"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
+
+<div class="viewcode-block" id="df">
+<a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.df">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
     <span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">,</span>
     <span class="n">zonemap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">use_wellconnstatus</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -171,6 +179,7 @@
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">compdat_df</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_unit_system</span><span class="p">(</span><span class="n">resdatafiles</span><span class="p">:</span> <span class="n">ResdataFiles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitSystem</span><span class="p">:</span>
@@ -324,7 +333,9 @@
     <span class="k">return</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="fill_parser"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.fill_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<div class="viewcode-block" id="fill_parser">
+<a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.fill_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_parser</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up sys.argv parsers.</span>
 
 <span class="sd">    Arguments:</span>
@@ -368,7 +379,10 @@
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
-<div class="viewcode-block" id="wellcompletiondata_main"><a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.wellcompletiondata_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">wellcompletiondata_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="wellcompletiondata_main">
+<a class="viewcode-back" href="../../res2df/res2df.wellcompletiondata.html#res2df.wellcompletiondata.wellcompletiondata_main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">wellcompletiondata_main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry-point for module, for command line utility&quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger_res2csv</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
 
@@ -391,6 +405,7 @@
     <span class="n">write_dframe_stdout_file</span><span class="p">(</span>
         <span class="n">wellcompletiondata_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">caller_logger</span><span class="o">=</span><span class="n">logger</span>
     <span class="p">)</span></div>
+
 </pre></div>
 
            </div>

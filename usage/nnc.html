@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nnc &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>nnc &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -103,7 +103,7 @@
            <div itemprop="articleBody">
              
   <section id="nnc">
-<h1>nnc<a class="headerlink" href="#nnc" title="Permalink to this heading"></a></h1>
+<h1>nnc<a class="headerlink" href="#nnc" title="Link to this heading"></a></h1>
 <p>nnc will extract Non-Neighbour-Connections from your grid as pairs
 of <em>ijk</em> indices together with their associated transmissibilities.</p>
 <p>See also the <a class="reference internal" href="trans.html"><span class="doc">trans</span></a> module, which can extract all transmissibilities, not only
@@ -117,7 +117,7 @@ Run in serial to get this output.</p>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Example nnc table</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Example nnc table</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>I1</p></th>
 <th class="head"><p>J1</p></th>
@@ -261,7 +261,7 @@ extra columns.</p>
 <p>If you only want vertical connections, add the option <code class="docutils literal notranslate"><span class="pre">--pillars</span></code> or <code class="docutils literal notranslate"><span class="pre">-vertical</span></code>,
 or set <code class="docutils literal notranslate"><span class="pre">pillars=True</span></code> if using the Python API (<a class="reference internal" href="../res2df/res2df.nnc.html#res2df.nnc.df" title="res2df.nnc.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.nnc.df()</span></code></a>)</p>
 <section id="editnnc-export">
-<h2><code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> export<a class="headerlink" href="#editnnc-export" title="Permalink to this heading"></a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> export<a class="headerlink" href="#editnnc-export" title="Link to this heading"></a></h2>
 <p>Data for the <code class="docutils literal notranslate"><span class="pre">EDITNNC</span></code> keyword can be dumped, in order to scale the NNC connections
 using Pandas operations. Select the connections you want to scale by slicing
 the nnc dataframe (either from the nnc module, or from the trans module), and fill

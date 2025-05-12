@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.equil &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.equil &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -137,11 +137,11 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.equil">
-<span id="res2df-equil"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.equil</span></code><a class="headerlink" href="#module-res2df.equil" title="Permalink to this heading"></a></h1>
+<span id="res2df-equil"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.equil</span></code><a class="headerlink" href="#module-res2df.equil" title="Link to this heading"></a></h1>
 <p>Extract EQUIL from a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> as Pandas DataFrame</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df" title="Link to this definition"></a></dt>
 <dd><p>Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
 PBVD and PDVD.</p>
 <p>How each data value in the EQUIL records are to be interpreted
@@ -172,51 +172,51 @@ None and EQLDIMS is not present, it will be inferred.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df2res">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">withphases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">withphases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res" title="Link to this definition"></a></dt>
 <dd><p>Generate string contents of <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>
 from dataframes with solution (EQUIL, RSVD++) data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>equil_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with res2df format.</p></li>
-<li><p><strong>keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of keywords to include. Must be
+<li><p><strong>equil_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe with res2df format.</p></li>
+<li><p><strong>keywords</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – List of keywords to include. Must be
 supported and present in the incoming dataframe.</p></li>
-<li><p><strong>comments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Dictionary indexed by keyword with comments to be
+<li><p><strong>comments</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Dictionary indexed by keyword with comments to be
 included pr. keyword. If a key named “master” is present
 it will be used as a master comment for the outputted file.</p></li>
-<li><p><strong>withphases</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, the phase configuration keywords
+<li><p><strong>withphases</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, the phase configuration keywords
 will be outputted. This is mostly for testing, and should
 not be necessary in production.</p></li>
-<li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If supplied, the generated text will also be dumped
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If supplied, the generated text will also be dumped
 to file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df2res_equil">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_equil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_equil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_equil" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_equil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_equil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_equil" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for EQUIL keyword</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing EQUIL data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing EQUIL data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df2res_pbvd">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_pbvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_pbvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_pbvd" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_pbvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_pbvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_pbvd" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PBVD keyword</p>
 <p>Bubble-point versus depth</p>
 <p>This data consists of one table (Pb as a function
@@ -224,19 +224,19 @@ of depth) for each EQLNUM</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing PBVD data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing PBVD data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df2res_pdvd">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_pdvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_pdvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_pdvd" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_pdvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_pdvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_pdvd" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for PDVD keyword.</p>
 <p>Dew-point versus depth.</p>
 <p>This data consists of one table (Pd as a function
@@ -244,8 +244,8 @@ of depth) for each EQLNUM</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing PDVD data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing PDVD data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 </dl>
@@ -253,52 +253,52 @@ of depth) for each EQLNUM</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df2res_rsvd">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_rsvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_rsvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_rsvd" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_rsvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_rsvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_rsvd" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for RSVD keyword</p>
 <p>This data consists of one table (rs as a function
 of depth) for each EQLNUM</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing RSVD data</p></li>
-<li><p><strong>comment</strong> (<em>comment Text that will be included as a</em>) – </p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing RSVD data</p></li>
+<li><p><strong>comment</strong> (<em>comment Text that will be included as a</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.df2res_rvvd">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_rvvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_rvvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_rvvd" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">df2res_rvvd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#df2res_rvvd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.df2res_rvvd" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for RVVD keyword</p>
 <p>This data consists of one table (rv as a function
 of depth) for each EQLNUM</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing RVVD data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing RVVD data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.equil_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#equil_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.equil_fromdeck" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#equil_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.equil_fromdeck" title="Link to this definition"></a></dt>
 <dd><p>Extract EQUIL data from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <p>If the <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a> is supplied as a string object, the number
 of EQLNUM regions will be inferred if needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>deck</strong></p></li>
 <li><p><strong>ntequl</strong> – Number of EQLNUM regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.</p></li>
 </ul>
 </dd>
@@ -307,30 +307,30 @@ of EQLNUM regions will be inferred if needed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.equil_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#equil_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.equil_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#equil_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.equil_main" title="Link to this definition"></a></dt>
 <dd><p>Read from disk and write CSV back to disk</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.equil_reverse_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#equil_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.equil_reverse_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">equil_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#equil_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.equil_reverse_main" title="Link to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility
 for CSV to reservoir simulator <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.fill_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.fill_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.fill_parser" title="Link to this definition"></a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -338,30 +338,30 @@ for CSV to reservoir simulator <a class="reference internal" href="../glossary.h
 fill with arguments</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.fill_reverse_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.fill_reverse_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.fill_reverse_parser" title="Link to this definition"></a></dt>
 <dd><p>Fill a parser for the operation dataframe -&gt; resdata <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.pbvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">pbvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#pbvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.pbvd_fromdeck" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">pbvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#pbvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.pbvd_fromdeck" title="Link to this definition"></a></dt>
 <dd><p>Extract PBVD data from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>deck</strong></p></li>
 <li><p><strong>ntequl</strong> – Number of EQLNUM regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
 </ul>
@@ -371,12 +371,12 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.pdvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">pdvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#pdvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.pdvd_fromdeck" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">pdvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#pdvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.pdvd_fromdeck" title="Link to this definition"></a></dt>
 <dd><p>Extract PDVD data from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>deck</strong></p></li>
 <li><p><strong>ntequl</strong> – Number of EQLNUM regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
 </ul>
@@ -386,7 +386,7 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.phases_from_columns">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#phases_from_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.phases_from_columns" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#phases_from_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.phases_from_columns" title="Link to this definition"></a></dt>
 <dd><p>Determine the set of phases available in an
 equil dataframe, based on which columns are there.
 Returns “oil-water-gas”, “gas-water”, “oil-water”,
@@ -394,10 +394,10 @@ or “oil-gas”</p>
 <p>By this, we can pick the correct RENAMER to use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>columns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – list of strings we can use for the determination</p>
+<dd class="field-odd"><p><strong>columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – list of strings we can use for the determination</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String with phase configuration. Empty string if inconclusive.</p>
@@ -407,7 +407,7 @@ or “oil-gas”</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.phases_from_deck">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#phases_from_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.phases_from_deck" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">phases_from_deck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#phases_from_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.phases_from_deck" title="Link to this definition"></a></dt>
 <dd><p>Determined the set of phases from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>, as
 a string with values “oil-water-gas”, “gas-water”, “oil-water”,
 or “oil-gas”</p>
@@ -423,12 +423,12 @@ or “oil-gas”</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.rsvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">rsvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#rsvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.rsvd_fromdeck" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">rsvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#rsvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.rsvd_fromdeck" title="Link to this definition"></a></dt>
 <dd><p>Extract RSVD data from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>deck</strong></p></li>
 <li><p><strong>ntequl</strong> – Number of EQLNUM regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
 </ul>
@@ -438,12 +438,12 @@ be inferred if not present in <a class="reference internal" href="../glossary.ht
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.equil.rvvd_fromdeck">
-<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">rvvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#rvvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.rvvd_fromdeck" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.equil.</span></span><span class="sig-name descname"><span class="pre">rvvd_fromdeck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntequl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/equil.html#rvvd_fromdeck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.equil.rvvd_fromdeck" title="Link to this definition"></a></dt>
 <dd><p>Extract RVVD data from a <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>deck</strong> – </p></li>
+<li><p><strong>deck</strong></p></li>
 <li><p><strong>ntequl</strong> – Number of EQLNUM regions in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a>. Will
 be inferred if not present in <a class="reference internal" href="../glossary.html#term-deck"><span class="xref std std-term">deck</span></a></p></li>
 </ul>

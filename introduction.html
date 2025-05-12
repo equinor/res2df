@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+  <title>Introduction &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="_static/jquery.js"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-      <script src="_static/doctools.js"></script>
-      <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fac656ce"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -110,7 +110,7 @@
            <div itemprop="articleBody">
              
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
 <p><em>res2df</em> is a <a class="reference external" href="https://pandas.pydata.org/">Pandas DataFrame</a> wrapper
 around <a class="reference external" href="https://github.com/equinor/resdata/">resdata</a> and <a class="reference external" href="https://github.com/OPM/opm-common/">opm.io</a>, which are used to access
 <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">binary files outputted by reservoir simulators</span></a> such as Eclipse, or its
@@ -121,7 +121,7 @@ command line program <code class="docutils literal notranslate"><span class="pre
 extracted or computed data to a CSV file, and use any other tool to
 view the CSV data.</p>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; res2csv --help</span>
 <span class="go">&gt; res2csv summary --help</span>
 <span class="go">&gt; res2csv summary --column_keys &quot;F*&quot; --time_index monthly --output output.csv MYDECK.DATA</span>
@@ -143,15 +143,15 @@ a Pandas Dataframe.</p>
 <p>See the API for more documentation and possibilities for each module.</p>
 </section>
 <section id="short-description-of-each-submodule">
-<h2>Short description of each submodule<a class="headerlink" href="#short-description-of-each-submodule" title="Permalink to this heading"></a></h2>
+<h2>Short description of each submodule<a class="headerlink" href="#short-description-of-each-submodule" title="Link to this heading"></a></h2>
 <section id="summary">
-<h3><code class="docutils literal notranslate"><span class="pre">summary</span></code><a class="headerlink" href="#summary" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">summary</span></code><a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
 <p>Extracts summary data from <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.UNSMRY</span></a> files, at requested time sampling and
 for requested vectors.</p>
 <p>More documentation on <a class="reference internal" href="usage/summary.html"><span class="doc">summary</span></a>.</p>
 </section>
 <section id="grid">
-<h3><code class="docutils literal notranslate"><span class="pre">grid</span></code><a class="headerlink" href="#grid" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">grid</span></code><a class="headerlink" href="#grid" title="Link to this heading"></a></h3>
 <p>Extracts grid data from <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.INIT</span></a>, <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.EGRID</span></a>,
 and <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">.UNRST</span></a> files. Restart file
 are optional to extract, and dates must be picked (or all). Data is
@@ -160,7 +160,7 @@ volume is included. Cells are indexed starting with 1.</p>
 <p>More documentation on <a class="reference internal" href="usage/grid.html"><span class="doc">grid</span></a>.</p>
 </section>
 <section id="nnc">
-<h3><code class="docutils literal notranslate"><span class="pre">nnc</span></code><a class="headerlink" href="#nnc" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">nnc</span></code><a class="headerlink" href="#nnc" title="Link to this heading"></a></h3>
 <p>Extracts the non-neighbour connections in the grid (from the binary
 output data in EGRID, not the NNC input keyword), as pairs of
 <cite>ijk</cite>-indices and the associated transmissiblity. Optional filtering
@@ -168,14 +168,14 @@ to vertical connections (along pillars).</p>
 <p>More documentation on <a class="reference internal" href="usage/nnc.html"><span class="doc">nnc</span></a>.</p>
 </section>
 <section id="pillars">
-<h3><code class="docutils literal notranslate"><span class="pre">pillars</span></code><a class="headerlink" href="#pillars" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">pillars</span></code><a class="headerlink" href="#pillars" title="Link to this heading"></a></h3>
 <p>Compute statistics pr cornerpoint pillar, and optionally compute hydrocarbon
 fluid contacts pr. pillar and pr. date based on saturation cutoffs. Data
 can be grouped and aggregated over a region parameter.</p>
 <p>More documentation on <a class="reference internal" href="usage/pillars.html"><span class="doc">pillars</span></a>.</p>
 </section>
 <section id="trans">
-<h3><code class="docutils literal notranslate"><span class="pre">trans</span></code><a class="headerlink" href="#trans" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">trans</span></code><a class="headerlink" href="#trans" title="Link to this heading"></a></h3>
 <p>Extract transmissibilities for all cells. Can filter by directions, add
 transmissibilities from NNC-data. If a region vector is supplied, it is
 possible to filter on transmissibilities where the region changes, picking
@@ -185,7 +185,7 @@ communication.</p>
 <p>More documentation on <a class="reference internal" href="usage/trans.html"><span class="doc">trans</span></a>.</p>
 </section>
 <section id="rft">
-<h3><code class="docutils literal notranslate"><span class="pre">rft</span></code><a class="headerlink" href="#rft" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">rft</span></code><a class="headerlink" href="#rft" title="Link to this heading"></a></h3>
 <p>Reads the <cite>.RFT</cite> files which are outputted by the
 <a class="reference internal" href="glossary.html#term-reservoir-simulator"><span class="xref std std-term">simulator</span></a> when
 the <cite>WRFTPLT</cite> keyword is used, with details along wellbores.</p>
@@ -195,7 +195,7 @@ easy calculations of the pressure drop over an ICD valve.</p>
 <p>More documentation on <a class="reference internal" href="usage/rft.html"><span class="doc">rft</span></a>.</p>
 </section>
 <section id="fipreports">
-<h3><code class="docutils literal notranslate"><span class="pre">fipreports</span></code><a class="headerlink" href="#fipreports" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">fipreports</span></code><a class="headerlink" href="#fipreports" title="Link to this heading"></a></h3>
 <p>Parses the PRT file looking for region reports (starting
 with “ … FIPNUM REPORT REGION”). It will extract all the data
 in the ASCII table in the PRT file and organize into a dataframe,
@@ -204,19 +204,19 @@ supports custom FIPxxxxx names.</p>
 <p>More documentation on <a class="reference internal" href="usage/fipreports.html"><span class="doc">fipreports</span></a>.</p>
 </section>
 <section id="satfunc">
-<h3><code class="docutils literal notranslate"><span class="pre">satfunc</span></code><a class="headerlink" href="#satfunc" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">satfunc</span></code><a class="headerlink" href="#satfunc" title="Link to this heading"></a></h3>
 <p>Extracts saturation functions (SWOF, SGOF, etc) from the <a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">deck</span></a> and merges
 into one DataFrame. Can write back to <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>More documentation on <a class="reference internal" href="usage/satfunc.html"><span class="doc">satfunc</span></a>.</p>
 </section>
 <section id="equil">
-<h3><code class="docutils literal notranslate"><span class="pre">equil</span></code><a class="headerlink" href="#equil" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">equil</span></code><a class="headerlink" href="#equil" title="Link to this heading"></a></h3>
 <p>Extracts the information in the <cite>EQUIL</cite> table, <cite>RSVD</cite> and <cite>RVVD</cite> in the
 <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>. Can write back to <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>More documentation on <a class="reference internal" href="usage/equil.html"><span class="doc">equil</span></a>.</p>
 </section>
 <section id="compdat">
-<h3><code class="docutils literal notranslate"><span class="pre">compdat</span></code><a class="headerlink" href="#compdat" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">compdat</span></code><a class="headerlink" href="#compdat" title="Link to this heading"></a></h3>
 <p>Extracts well connection data from the <cite>COMPDAT</cite> keyword in the <a class="reference internal" href="glossary.html#term-deck"><span class="xref std std-term">deck</span></a>.
 For multi-segment wells, <cite>WELSEGS</cite> and <cite>COMPSEGS</cite> is also parsed. The
 data is available as three different dataframes, which can be merged.</p>
@@ -225,7 +225,7 @@ These files do not necessarily have to be part of a complete <a class="reference
 <p>More documentation on <a class="reference internal" href="usage/compdat.html"><span class="doc">compdat</span></a>.</p>
 </section>
 <section id="gruptree">
-<h3><code class="docutils literal notranslate"><span class="pre">gruptree</span></code><a class="headerlink" href="#gruptree" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">gruptree</span></code><a class="headerlink" href="#gruptree" title="Link to this heading"></a></h3>
 <p>Extracts the information from the <cite>GRUPTREE</cite> and <cite>WELSPECS</cite> keyword, at
 all timesteps, from the <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>. The tree structure at each relevant
 date can be returned as a dataframe of the edges, as a nested dictionary
@@ -233,19 +233,19 @@ or as a <cite>treelib</cite> tree.</p>
 <p>More documentation on <a class="reference internal" href="usage/gruptree.html"><span class="doc">gruptree</span></a>.</p>
 </section>
 <section id="pvt">
-<h3><code class="docutils literal notranslate"><span class="pre">pvt</span></code><a class="headerlink" href="#pvt" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">pvt</span></code><a class="headerlink" href="#pvt" title="Link to this heading"></a></h3>
 <p>Extracts PVT data from a <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>, from the keywords <cite>PVTO</cite>, <cite>PVDG</cite>,
 <cite>DENSITY</cite>, <cite>ROCK</cite> etc. Can write data back to <a class="reference internal" href="glossary.html#term-include-file"><span class="xref std std-term">include files</span></a>.</p>
 <p>More documentation on <a class="reference internal" href="usage/pvt.html"><span class="doc">pvt</span></a>.</p>
 </section>
 <section id="wcon">
-<h3><code class="docutils literal notranslate"><span class="pre">wcon</span></code><a class="headerlink" href="#wcon" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">wcon</span></code><a class="headerlink" href="#wcon" title="Link to this heading"></a></h3>
 <p>Extracts <cite>WCONxxxx</cite> keywords from the Schedule section, and providing the
 associated data in a dataframe format.</p>
 <p>More documentation on <a class="reference internal" href="usage/wcon.html"><span class="doc">wcon</span></a>.</p>
 </section>
 <section id="resdatafiles">
-<h3><code class="docutils literal notranslate"><span class="pre">resdatafiles</span></code><a class="headerlink" href="#resdatafiles" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">resdatafiles</span></code><a class="headerlink" href="#resdatafiles" title="Link to this heading"></a></h3>
 <p>This is an internal helper module in order to represent finished or
 unfinished <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a> and runs. The class ResdataFiles can cache binary
 files that are recently read, and is able to locate the various
@@ -253,9 +253,9 @@ files that are recently read, and is able to locate the various
 </section>
 </section>
 <section id="metadata-support">
-<h2>Metadata support<a class="headerlink" href="#metadata-support" title="Permalink to this heading"></a></h2>
+<h2>Metadata support<a class="headerlink" href="#metadata-support" title="Link to this heading"></a></h2>
 <section id="parameters-txt">
-<h3>parameters.txt<a class="headerlink" href="#parameters-txt" title="Permalink to this heading"></a></h3>
+<h3>parameters.txt<a class="headerlink" href="#parameters-txt" title="Link to this heading"></a></h3>
 <p>Metadata for each <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a> are sometimes added in a text file named
 <code class="docutils literal notranslate"><span class="pre">parameters.txt</span></code>, alongside the Eclipse .DATA file or one or two directory levels
 above it.</p>
@@ -268,7 +268,7 @@ to be of JSON or YAML format respectively, but only one of them will be parsed.<
 have to be merged with pandas.merge().</p>
 </section>
 <section id="zone-names">
-<span id="id1"></span><h3>Zone names<a class="headerlink" href="#zone-names" title="Permalink to this heading"></a></h3>
+<span id="id1"></span><h3>Zone names<a class="headerlink" href="#zone-names" title="Link to this heading"></a></h3>
 <p>If a text file with zone names are found alongside <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a>,
 some of the modules will add that information to rows where appropriate.
 The zone or layer file should contains lines like:</p>
@@ -280,11 +280,11 @@ The zone or layer file should contains lines like:</p>
 </section>
 </section>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
 <p>This library is released under GPLv3.</p>
 </section>
 <section id="copyright">
-<h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this heading"></a></h2>
+<h2>Copyright<a class="headerlink" href="#copyright" title="Link to this heading"></a></h2>
 <p>The code is Copyright Equinor ASA 2019-2020.</p>
 <p>Contributions without copyright transfer are welcome.</p>
 </section>

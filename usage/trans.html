@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trans &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>trans &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -105,7 +105,7 @@
            <div itemprop="articleBody">
              
   <section id="trans">
-<h1>trans<a class="headerlink" href="#trans" title="Permalink to this heading"></a></h1>
+<h1>trans<a class="headerlink" href="#trans" title="Link to this heading"></a></h1>
 <p>The trans module can extract transmissibilities (neighbour and non-neigbor-connections)
 from a simulation grid.</p>
 <p>Python API: <a class="reference internal" href="../res2df/res2df.trans.html#res2df.trans.df" title="res2df.trans.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.trans.df()</span></code></a></p>
@@ -118,7 +118,7 @@ connections</p>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Neighbour transmissibilities, sample rows from an example simulation.</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Neighbour transmissibilities, sample rows from an example simulation.</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>I1</p></th>
 <th class="head"><p>J1</p></th>
@@ -205,7 +205,7 @@ command line:</p>
 </pre></div>
 </div>
 <section id="adding-more-data-for-each-connection">
-<h2>Adding more data for each connection<a class="headerlink" href="#adding-more-data-for-each-connection" title="Permalink to this heading"></a></h2>
+<h2>Adding more data for each connection<a class="headerlink" href="#adding-more-data-for-each-connection" title="Link to this heading"></a></h2>
 <p>You can add <code class="docutils literal notranslate"><span class="pre">coords=True</span></code> to the <code class="docutils literal notranslate"><span class="pre">df()</span></code> call, which will add the columns <code class="docutils literal notranslate"><span class="pre">X</span></code>,
 <code class="docutils literal notranslate"><span class="pre">Y</span></code>, <code class="docutils literal notranslate"><span class="pre">Z</span></code> (which will be the average of the coordinates for the two cell
 centerpoints) and also <code class="docutils literal notranslate"><span class="pre">DX</span></code>, <code class="docutils literal notranslate"><span class="pre">DY</span></code> and <code class="docutils literal notranslate"><span class="pre">DZ</span></code> being the distance between the
@@ -221,7 +221,7 @@ see below.</p>
 column.</p>
 </section>
 <section id="filtering-connections">
-<h2>Filtering connections<a class="headerlink" href="#filtering-connections" title="Permalink to this heading"></a></h2>
+<h2>Filtering connections<a class="headerlink" href="#filtering-connections" title="Link to this heading"></a></h2>
 <p>The API supports some filtering directly in the <code class="docutils literal notranslate"><span class="pre">df()</span></code> function call for
 convenience.</p>
 <p>Simple filtering based on vertical vs horizontal can be accomplished
@@ -241,7 +241,7 @@ like this. Example:</p>
 </div>
 <p>which gives the dataframe</p>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Sample rows from connections where FIPNUM is changing</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Sample rows from connections where FIPNUM is changing</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>I1</p></th>
 <th class="head"><p>J1</p></th>
@@ -372,7 +372,7 @@ like this. Example:</p>
 all your region connections in 3D, coloured by transmissibility.</p>
 </section>
 <section id="aggregating-connection-data-over-region-interfaces">
-<h2>Aggregating connection data over region interfaces<a class="headerlink" href="#aggregating-connection-data-over-region-interfaces" title="Permalink to this heading"></a></h2>
+<h2>Aggregating connection data over region interfaces<a class="headerlink" href="#aggregating-connection-data-over-region-interfaces" title="Link to this heading"></a></h2>
 <p>The example above with filtering to wherever for example <code class="docutils literal notranslate"><span class="pre">FIPNUM</span></code> is changing,
 naturally leads over to an application where transmissibility data is aggregated
 over a region interface. This is accomplished by adding the <code class="docutils literal notranslate"><span class="pre">group=True</span></code> option.
@@ -385,7 +385,7 @@ over a region interface. This is accomplished by adding the <code class="docutil
 </pre></div>
 </div>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Transmissibilities summed over each FIPNUM interface</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Transmissibilities summed over each FIPNUM interface</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>FIPNUMPAIR</p></th>
 <th class="head"><p>TRAN</p></th>

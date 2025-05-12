@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>grid &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>grid &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -106,7 +106,7 @@
            <div itemprop="articleBody">
              
   <section id="grid">
-<h1>grid<a class="headerlink" href="#grid" title="Permalink to this heading"></a></h1>
+<h1>grid<a class="headerlink" href="#grid" title="Link to this heading"></a></h1>
 <p>The grid module will extract static and dynamic cell properties from
 a grid
 (from the <a class="reference internal" href="../glossary.html#term-output-file"><span class="xref std std-term">output files of reservoir simulators</span></a>).
@@ -120,7 +120,7 @@ Each row in a returned dataframe represents one cell.</p>
 </div>
 <p>where the API is documented at <a class="reference internal" href="../res2df/res2df.grid.html#res2df.grid.df" title="res2df.grid.df"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.grid.df()</span></code></a>.</p>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Example grid table</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Example grid table</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>I</p></th>
 <th class="head"><p>J</p></th>
@@ -610,7 +610,7 @@ Each row in a returned dataframe represents one cell.</p>
 </pre></div>
 </div>
 <section id="example-computations-on-a-grid-dataframe">
-<h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Permalink to this heading"></a></h2>
+<h2>Example computations on a grid dataframe<a class="headerlink" href="#example-computations-on-a-grid-dataframe" title="Link to this heading"></a></h2>
 <p>Some grid statistic operations are very neatly expressed using Python and
 Pandas. Some examples (provided that the <code class="docutils literal notranslate"><span class="pre">dframe</span></code> object is initialized as in
 the topmost example):</p>
@@ -652,7 +652,7 @@ compute values for every SATNUM, EQLNUM or similar. Example:</p>
 </div>
 </section>
 <section id="zone-information">
-<h2>Zone information<a class="headerlink" href="#zone-information" title="Permalink to this heading"></a></h2>
+<h2>Zone information<a class="headerlink" href="#zone-information" title="Link to this heading"></a></h2>
 <p>As mentioned in <a class="reference internal" href="../introduction.html#zone-names"><span class="std std-ref">Zone names</span></a>, if the text file called <cite>zones.lyr</cite> is found
 alongside, zone information will automatically be merged into each row based on the <cite>K</cite>
 column. This can be used for statistics pr. zone,</p>
@@ -684,7 +684,7 @@ the function <a class="reference internal" href="../res2df/res2df.common.html#re
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">res2df.common.parse_zonemapfile()</span></code></p>
 </section>
 <section id="dynamic-data">
-<h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Permalink to this heading"></a></h2>
+<h2>Dynamic data<a class="headerlink" href="#dynamic-data" title="Link to this heading"></a></h2>
 <p>By adding a restart date, dynamic data for one particular restart date can be
 added, through the API option <code class="docutils literal notranslate"><span class="pre">rstdates</span></code> or the command line option
 <code class="docutils literal notranslate"><span class="pre">--rstdates</span></code>.</p>
@@ -697,7 +697,7 @@ Calculating volumes of dynamic data (pr. some region parameter) can be obtained
 from that module as a by-product of the pillar computations.</p>
 </section>
 <section id="generating-include-files-from-grid-data">
-<h2>Generating include files from grid data<a class="headerlink" href="#generating-include-files-from-grid-data" title="Permalink to this heading"></a></h2>
+<h2>Generating include files from grid data<a class="headerlink" href="#generating-include-files-from-grid-data" title="Link to this heading"></a></h2>
 <p>If you have loaded grid data into a Pandas frame, some operations are easily performed,
 scaling porosity, permeability etc. Or remapping some region parameters. Using the
 <a class="reference internal" href="../res2df/res2df.grid.html#res2df.grid.df2res" title="res2df.grid.df2res"><code class="xref py py-func docutils literal notranslate"><span class="pre">res2df.grid.df2res()</span></code></a> function these manipulated vectors can be written back as

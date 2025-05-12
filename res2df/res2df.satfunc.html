@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.satfunc &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.satfunc &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -134,7 +134,7 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.satfunc">
-<span id="res2df-satfunc"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.satfunc</span></code><a class="headerlink" href="#module-res2df.satfunc" title="Permalink to this heading"></a></h1>
+<span id="res2df-satfunc"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.satfunc</span></code><a class="headerlink" href="#module-res2df.satfunc" title="Link to this heading"></a></h1>
 <p>Extract saturation function data (SWOF, SGOF, SWFN, etc.)
 from a .DATA file as Pandas DataFrame.</p>
 <p>Data can be extracted from a complete deck (<cite>*.DATA</cite>)
@@ -146,7 +146,7 @@ SATNUMs, but whenever this is known, it is recommended to either supply
 TABDIMS or to supply the satnumcount directly to avoid possible bugs.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntsfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df" title="Link to this definition"></a></dt>
 <dd><p>Extract the data in the saturation function keywords as a Pandas
 DataFrames.</p>
 <p>Data for all saturation functions are merged into one dataframe.
@@ -181,25 +181,25 @@ it will be attempted inferred.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">satfunc_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">satfunc_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res" title="Link to this definition"></a></dt>
 <dd><p>Generate resdata <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content from dataframes with
 saturation functions (SWOF, SGOF, …)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>satfunc_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with res2df format.</p></li>
-<li><p><strong>keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of keywords to include. Must be
+<li><p><strong>satfunc_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe with res2df format.</p></li>
+<li><p><strong>keywords</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – List of keywords to include. Must be
 supported and present in the incoming dataframe. Keywords
 are printed in the order defined by this list.</p></li>
-<li><p><strong>comments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Dictionary indexed by keyword with comments to be
+<li><p><strong>comments</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Dictionary indexed by keyword with comments to be
 included pr. keyword. If a key named “master” is present
 it will be used as a master comment for the outputted file.</p></li>
-<li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – If supplied, the generated text will also be dumped
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If supplied, the generated text will also be dumped
 to file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Generated resdata <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> content</p>
@@ -209,168 +209,168 @@ to file.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_sgfn">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sgfn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sgfn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sgfn" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sgfn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sgfn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sgfn" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SGFN. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SGFN data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SGFN data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_sgof">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sgof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sgof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sgof" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sgof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sgof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sgof" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SGOF. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SGOF data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SGOF data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_sgwfn">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sgwfn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sgwfn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sgwfn" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sgwfn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sgwfn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sgwfn" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SGWFN. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SGWFN data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SGWFN data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_slgof">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_slgof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_slgof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_slgof" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_slgof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_slgof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_slgof" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SLGOF. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SLGOF data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SLGOF data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_sof2">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sof2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sof2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sof2" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sof2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sof2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sof2" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SOF2. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SOF2 data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SOF2 data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_sof3">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sof3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sof3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sof3" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_sof3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_sof3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_sof3" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SOF3. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SOF3 data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SOF3 data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_swfn">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_swfn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_swfn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_swfn" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_swfn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_swfn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_swfn" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SWFN. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SWFN data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SWFN data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.df2res_swof">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_swof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_swof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_swof" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">df2res_swof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#df2res_swof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.df2res_swof" title="Link to this definition"></a></dt>
 <dd><p>Create string with <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a> contents for SWOF. Used by df2res().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing SWOF data</p></li>
-<li><p><strong>comment</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Text that will be included as a comment</p></li>
+<li><p><strong>dframe</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Containing SWOF data</p></li>
+<li><p><strong>comment</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Text that will be included as a comment</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.fill_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.fill_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.fill_parser" title="Link to this definition"></a></dt>
 <dd><p>Set up sys.argv parsers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parser</strong> (<em>ArgumentParser</em><em> or </em><em>subparser</em>) – parser to fill with arguments</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.fill_reverse_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.fill_reverse_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">fill_reverse_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#fill_reverse_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.fill_reverse_parser" title="Link to this definition"></a></dt>
 <dd><p>Fill a parser for the operation dataframe -&gt; resdata <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include file</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.interpolate_defaults">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">interpolate_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#interpolate_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.interpolate_defaults" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">interpolate_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#interpolate_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.interpolate_defaults" title="Link to this definition"></a></dt>
 <dd><p>Interpolate NaN’s linearly in saturation.
 Saturation function tables in <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a>
 can have certain values defaulted.
@@ -379,29 +379,29 @@ The incoming dataframe must be associated to one keyword only, but
 can consist of multiple SATNUMs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.satfunc_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">satfunc_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#satfunc_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.satfunc_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">satfunc_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#satfunc_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.satfunc_main" title="Link to this definition"></a></dt>
 <dd><p>Entry-point for module, for command line utility</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.satfunc.satfunc_reverse_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">satfunc_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#satfunc_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.satfunc_reverse_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.satfunc.</span></span><span class="sig-name descname"><span class="pre">satfunc_reverse_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/satfunc.html#satfunc_reverse_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.satfunc.satfunc_reverse_main" title="Link to this definition"></a></dt>
 <dd><p>For command line utility for CSV to resdata</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>

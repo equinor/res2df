@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.trans &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>res2df.trans &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -123,11 +123,11 @@
            <div itemprop="articleBody">
              
   <section id="module-res2df.trans">
-<span id="res2df-trans"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.trans</span></code><a class="headerlink" href="#module-res2df.trans" title="Permalink to this heading"></a></h1>
+<span id="res2df-trans"></span><h1><code class="docutils literal notranslate"><span class="pre">res2df.trans</span></code><a class="headerlink" href="#module-res2df.trans" title="Link to this heading"></a></h1>
 <p>Extract transmissibility information from output files as Dataframes.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.trans.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundaryfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlykdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlyijdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addnnc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundaryfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlykdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onlyijdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addnnc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.df" title="Link to this definition"></a></dt>
 <dd><p>Make a dataframe of the neighbour transmissibilities.</p>
 <p>The TRANX, TRANY and TRANZ (whenever nonzero) will be used
 to produce a row representing a cell-pair where there is
@@ -146,26 +146,26 @@ you will get a corresponding FIPNUM1 and FIPNUM2 added.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>resdatafiles</strong> (<a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a>) – An object representing your simulator run</p></li>
-<li><p><strong>vectors</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – simulator INIT vectors that you want to include</p></li>
-<li><p><strong>boundaryfilter</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you want to filter where one INIT
+<li><p><strong>resdatafiles</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a></span>) – An object representing your simulator run</p></li>
+<li><p><strong>vectors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – simulator INIT vectors that you want to include</p></li>
+<li><p><strong>boundaryfilter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to true if you want to filter where one INIT
 vector change. Only use for integer INIT vectors.</p></li>
-<li><p><strong>group</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you want to sum transmissibilities over
+<li><p><strong>group</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to true if you want to sum transmissibilities over
 boundary interfaces. Implies boundaryfilter and requires only one integer
 INIT vector.</p></li>
-<li><p><strong>coords</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you want to add coordinates for the
+<li><p><strong>coords</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to true if you want to add coordinates for the
 average of the two cells centerpoint and the distance between
 the two cells centerpoints (X, Y, Z, DX, DY, DZ)</p></li>
-<li><p><strong>onlykdir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you only want transmissibilities in
+<li><p><strong>onlykdir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to true if you only want transmissibilities in
 K direction</p></li>
-<li><p><strong>onlyijdir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if you only want transmissibilities
+<li><p><strong>onlyijdir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to true if you only want transmissibilities
 in the IJ-plane</p></li>
-<li><p><strong>addnnc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Set to true if NNC connection should be concatenated to
+<li><p><strong>addnnc</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Set to true if NNC connection should be concatenated to
 the dataframe</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dataframe with one cell-pair pr. row. Empty dataframe if error.</p>
@@ -175,32 +175,32 @@ the dataframe</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.trans.fill_parser">
-<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.fill_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">fill_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#fill_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.fill_parser" title="Link to this definition"></a></dt>
 <dd><p>Set up sys.argv parser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code>) – argparse.ArgumentParser or argparse.subparser</p>
+<dd class="field-odd"><p><strong>parser</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span>) – argparse.ArgumentParser or argparse.subparser</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.trans.make_nx_graph">
-<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">make_nx_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#make_nx_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.make_nx_graph" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">make_nx_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#make_nx_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.make_nx_graph" title="Link to this definition"></a></dt>
 <dd><p>Construct a networkx graph for the transmissibilities.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.trans.trans_main">
-<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">trans_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#trans_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.trans_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.trans.</span></span><span class="sig-name descname"><span class="pre">trans_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/trans.html#trans_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.trans.trans_main" title="Link to this definition"></a></dt>
 <dd><p>This is the command line API</p>
 </dd></dl>
 

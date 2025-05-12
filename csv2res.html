@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csv2res &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+  <title>csv2res &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="_static/jquery.js"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-      <script src="_static/doctools.js"></script>
-      <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fac656ce"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -115,7 +115,7 @@
            <div itemprop="articleBody">
              
   <section id="csv2res">
-<h1>csv2res<a class="headerlink" href="#csv2res" title="Permalink to this heading"></a></h1>
+<h1>csv2res<a class="headerlink" href="#csv2res" title="Link to this heading"></a></h1>
 <p>Some of the modules inside res2df is able to write <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a>
 from dataframes (in the format dumped by res2df). This makes it possible
 to produce <a class="reference internal" href="glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA files</span></a> in any application that can write CSV files,
@@ -130,13 +130,13 @@ If you want output to your terminal, use <code class="docutils literal notransla
 you also specify the <code class="docutils literal notranslate"><span class="pre">--keywords</span></code> argument with a list of wanted keywords, all
 supported keywords for a submodule which is also found in the CSV file provided,
 will be dumped to an <a class="reference internal" href="glossary.html#term-output-file"><span class="xref std std-term">output file</span></a>.</p>
-<p><p>csv2res (1.3.3.dev2+g598c97f2) is a command line frontend to res2df. Documentation at <a class="reference external" href="https://equinor.github.io/res2df/">https://equinor.github.io/res2df/</a></p>
+<p><p>csv2res (1.3.4.dev5+g55a7d82b) is a command line frontend to res2df. Documentation at <a class="reference external" href="https://equinor.github.io/res2df/">https://equinor.github.io/res2df/</a></p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv2res</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="p">{</span><span class="n">summary</span><span class="p">,</span><span class="n">equil</span><span class="p">,</span><span class="n">pvt</span><span class="p">,</span><span class="n">satfunc</span><span class="p">,</span><span class="n">vfp</span><span class="p">}</span> <span class="o">...</span>
 </pre></div>
 </div>
 <section id="res2df.csv2res-get_parser-positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#res2df.csv2res-get_parser-positional-arguments" title="Permalink to this heading"></a></h2>
+<h2>Positional Arguments<a class="headerlink" href="#res2df.csv2res-get_parser-positional-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>subcommand</kbd></dt>
 <dd><p>Possible choices: summary, equil, pvt, satfunc, vfp</p>
@@ -144,7 +144,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="res2df.csv2res-get_parser-named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#res2df.csv2res-get_parser-named-arguments" title="Permalink to this heading"></a></h2>
+<h2>Named Arguments<a class="headerlink" href="#res2df.csv2res-get_parser-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -152,15 +152,15 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="Sub-commands">
-<h2>Sub-commands<a class="headerlink" href="#Sub-commands" title="Permalink to this heading"></a></h2>
+<h2>Sub-commands<a class="headerlink" href="#Sub-commands" title="Link to this heading"></a></h2>
 <section id="summary">
-<h3>summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h3>
+<h3>summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
 <p>Write UNSMRY files from CSV files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">summary</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h4>
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with summary data.</p>
@@ -168,7 +168,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="named-arguments">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#named-arguments" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Basename for output files</p>
@@ -186,13 +186,13 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </section>
 </section>
 <section id="equil">
-<h3>equil<a class="headerlink" href="#equil" title="Permalink to this heading"></a></h3>
+<h3>equil<a class="headerlink" href="#equil" title="Link to this heading"></a></h3>
 <p>Write SOLUTION keywords (EQUIL, RSVD, RVVD) to include files from CSV in res2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">equil</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments_repeat1">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat1" title="Permalink to this heading"></a></h4>
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat1" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with EQUIL, RSVD++ data with res2df format</p>
@@ -200,7 +200,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="named-arguments_repeat1">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat1" title="Permalink to this heading"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat1" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default solution.inc. Use ‘-’ for stdout.</p>
@@ -217,13 +217,13 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </section>
 </section>
 <section id="pvt">
-<h3>pvt<a class="headerlink" href="#pvt" title="Permalink to this heading"></a></h3>
+<h3>pvt<a class="headerlink" href="#pvt" title="Link to this heading"></a></h3>
 <p>Write include files from CSV files with res2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">pvt</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments_repeat2">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat2" title="Permalink to this heading"></a></h4>
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat2" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with PVT data with res2df format</p>
@@ -231,7 +231,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="named-arguments_repeat2">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat2" title="Permalink to this heading"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat2" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default pvt.inc. Use ‘-’ for stdout.</p>
@@ -248,13 +248,13 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </section>
 </section>
 <section id="satfunc">
-<h3>satfunc<a class="headerlink" href="#satfunc" title="Permalink to this heading"></a></h3>
+<h3>satfunc<a class="headerlink" href="#satfunc" title="Link to this heading"></a></h3>
 <p>Write saturation function include files from CSV files with res2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments_repeat3">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat3" title="Permalink to this heading"></a></h4>
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat3" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with SWOF, SGOF++ data with res2df format</p>
@@ -262,7 +262,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="named-arguments_repeat3">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat3" title="Permalink to this heading"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat3" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default relperm.inc. Use ‘-’ for stdout.</p>
@@ -279,13 +279,13 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </section>
 </section>
 <section id="vfp">
-<h3>vfp<a class="headerlink" href="#vfp" title="Permalink to this heading"></a></h3>
+<h3>vfp<a class="headerlink" href="#vfp" title="Link to this heading"></a></h3>
 <p>Write VFPPROD/VFPINJ include files from CSV files with res2df format.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">csv2res</span> <span class="n">vfp</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">KEYWORDS</span> <span class="p">[</span><span class="n">KEYWORDS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">csvfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments_repeat4">
-<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat4" title="Permalink to this heading"></a></h4>
+<h4>Positional Arguments<a class="headerlink" href="#positional-arguments_repeat4" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Name of CSV file with VFPPROD, VFPINJ data with res2df format</p>
@@ -293,7 +293,7 @@ will be dumped to an <a class="reference internal" href="glossary.html#term-outp
 </dl>
 </section>
 <section id="named-arguments_repeat4">
-<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat4" title="Permalink to this heading"></a></h4>
+<h4>Named Arguments<a class="headerlink" href="#named-arguments_repeat4" title="Link to this heading"></a></h4>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output resdata include file file, default vfp.inc. Use ‘-’ for stdout.</p>

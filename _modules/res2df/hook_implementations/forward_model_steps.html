@@ -1,20 +1,20 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.hook_implementations.forward_model_steps &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+  <title>res2df.hook_implementations.forward_model_steps &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../../../_static/jquery.js"></script>
-      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-      <script src="../../../_static/doctools.js"></script>
-      <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -111,7 +111,9 @@
         <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="Res2Csv"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Res2Csv</span><span class="p">(</span><span class="n">ForwardModelStepPlugin</span><span class="p">):</span>
+<div class="viewcode-block" id="Res2Csv">
+<a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Res2Csv</span><span class="p">(</span><span class="n">ForwardModelStepPlugin</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RES2CSV&quot;</span><span class="p">,</span>
@@ -128,7 +130,9 @@
             <span class="n">default_mapping</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;&lt;XARG</span><span class="si">{</span><span class="n">num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)},</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Res2Csv.validate_pre_experiment"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pre_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fm_json</span><span class="p">:</span> <span class="n">ForwardModelStepJSON</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Res2Csv.validate_pre_experiment">
+<a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv.validate_pre_experiment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pre_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fm_json</span><span class="p">:</span> <span class="n">ForwardModelStepJSON</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;SUBCOMMAND&gt;&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
                 <span class="s2">&quot;You must supply a value for SUBCOMMAND to RES2CSV&quot;</span>
@@ -138,7 +142,10 @@
                 <span class="s2">&quot;You must supply a value for OUTPUT to RES2CSV&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Res2Csv.documentation"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv.documentation">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="Res2Csv.documentation">
+<a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Res2Csv.documentation">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">documentation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ForwardModelStepDocumentation</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ForwardModelStepDocumentation</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Convert reservoir simulator input and output files into CSV</span>
@@ -165,10 +172,14 @@
 <span class="s2">The quotes around double-dashed options are critical to avoid ERT taking for a</span>
 <span class="s2">comment. For more options, use ``&lt;XARG3&gt;`` etc.</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="Csv2Res"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Csv2Res</span><span class="p">(</span><span class="n">ForwardModelStepPlugin</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Csv2Res">
+<a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Csv2Res</span><span class="p">(</span><span class="n">ForwardModelStepPlugin</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CSV2RES&quot;</span><span class="p">,</span>
@@ -182,7 +193,9 @@
             <span class="p">],</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Csv2Res.validate_pre_experiment"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pre_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fm_json</span><span class="p">:</span> <span class="n">ForwardModelStepJSON</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Csv2Res.validate_pre_experiment">
+<a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res.validate_pre_experiment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pre_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fm_json</span><span class="p">:</span> <span class="n">ForwardModelStepJSON</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">fm_json</span><span class="p">[</span><span class="s2">&quot;argList&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&lt;SUBCOMMAND&gt;&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ForwardModelStepValidationError</span><span class="p">(</span>
                 <span class="s2">&quot;You must supply a value for SUBCOMMAND to CSV2RES&quot;</span>
@@ -196,7 +209,10 @@
                 <span class="s2">&quot;You must supply a value for CSVFILE to CSV2RES&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Csv2Res.documentation"><a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res.documentation">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="Csv2Res.documentation">
+<a class="viewcode-back" href="../../../res2df/res2df.hook_implementations.forward_model_steps.html#res2df.hook_implementations.forward_model_steps.Csv2Res.documentation">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">documentation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ForwardModelStepDocumentation</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ForwardModelStepDocumentation</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Convert CSV files into include files. Uses the command</span>
@@ -212,7 +228,9 @@
                 <span class="s2">&quot;CSV2RES(&lt;SUBCOMMAND&gt;=summary, &lt;CSVFILE&gt;=summary-monthly.csv, &quot;</span>
                 <span class="s2">&quot;&lt;OUTPUT&gt;=eclipse/model/MONTHLYSUMMARY)``&quot;</span>
             <span class="p">),</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
+
 
 
 <span class="nd">@ert_plugin</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RES2CSV&quot;</span><span class="p">)</span>

@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pvt &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>pvt &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-      <script src="../_static/doctools.js"></script>
-      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=fac656ce"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,7 +104,7 @@
            <div itemprop="articleBody">
              
   <section id="pvt">
-<h1>pvt<a class="headerlink" href="#pvt" title="Permalink to this heading"></a></h1>
+<h1>pvt<a class="headerlink" href="#pvt" title="Link to this heading"></a></h1>
 <p>Extracts PVT related keyword data from the PROPS section in a <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>,
 typically the keywords <code class="docutils literal notranslate"><span class="pre">PVTO</span></code>, <code class="docutils literal notranslate"><span class="pre">PVDG</span></code>, <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> and <code class="docutils literal notranslate"><span class="pre">ROCK</span></code>. Data from
 all keywords will be merged into one common dataframe.</p>
@@ -121,7 +121,7 @@ if we read the contents of the file and supply it as a string:</p>
 </pre></div>
 </div>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Example PVT table (last 15 rows to show non-Nan data)</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Example PVT table (last 15 rows to show non-Nan data)</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>PRESSURE</p></th>
 <th class="head"><p>VOLUMEFACTOR</p></th>
@@ -329,7 +329,7 @@ the entire <a class="reference internal" href="../glossary.html#term-deck"><span
 </pre></div>
 </div>
 <section id="transforming-pvt-data">
-<h2>Transforming PVT data<a class="headerlink" href="#transforming-pvt-data" title="Permalink to this heading"></a></h2>
+<h2>Transforming PVT data<a class="headerlink" href="#transforming-pvt-data" title="Link to this heading"></a></h2>
 <p>Care should be taken when perturbing PVT data, as a lot
 of the data values depend on each other for physical consistency.</p>
 <p>A simple example could be to scale the viscosity values up or down with
@@ -349,7 +349,7 @@ some scalar amount:</p>
 <p>Density values are easier to scale up or down to whatever is needed.</p>
 </section>
 <section id="re-exporting-tables-to-include-files">
-<h2>Re-exporting tables to include files<a class="headerlink" href="#re-exporting-tables-to-include-files" title="Permalink to this heading"></a></h2>
+<h2>Re-exporting tables to include files<a class="headerlink" href="#re-exporting-tables-to-include-files" title="Link to this heading"></a></h2>
 <p>When you are done with the table, you can generate new
 <a class="reference internal" href="../glossary.html#term-include-file"><span class="xref std std-term">include files</span></a> from your modified data by issuing</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pvt</span><span class="o">.</span><span class="n">df2res</span><span class="p">(</span><span class="n">dframe</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;pvt.inc&quot;</span><span class="p">)</span>

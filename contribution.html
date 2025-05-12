@@ -1,21 +1,21 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to res2df &mdash; res2df 1.3.3.dev2+g598c97f2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+  <title>Contributing to res2df &mdash; res2df 1.3.4.dev5+g55a7d82b documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="_static/jquery.js"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-      <script src="_static/doctools.js"></script>
-      <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fac656ce"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -91,11 +91,11 @@
            <div itemprop="articleBody">
              
   <section id="contributing-to-res2df">
-<h1>Contributing to res2df<a class="headerlink" href="#contributing-to-res2df" title="Permalink to this heading"></a></h1>
+<h1>Contributing to res2df<a class="headerlink" href="#contributing-to-res2df" title="Link to this heading"></a></h1>
 <p>Contributing to res2df is easiest on Linux computers. Windows has not been
 tested, and for Mac you will have to compile OPM yourself.</p>
 <section id="getting-started-as-a-developer">
-<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this heading"></a></h2>
+<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Link to this heading"></a></h2>
 <p>The first thing to do, is to create a fork of res2df to your personal
 github account. Go to <a class="reference external" href="https://github.com/equinor/res2df">https://github.com/equinor/res2df</a> and click the Fork
 button.</p>
@@ -130,7 +130,7 @@ repository, which you can do by running:</p>
 </div>
 </section>
 <section id="getting-started-on-equinor-linux-computers">
-<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this heading"></a></h2>
+<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Link to this heading"></a></h2>
 <p>On Equinor Linux computers, is is recommended to run with the Komodo
 environment, which will provide an analogue to <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> for
 making the virtual environment.</p>
@@ -144,7 +144,7 @@ Komodo in order to prepare for the command:</p>
 <p>NB: For every monthly Komodo release, you might have to remake your komodo-venv.</p>
 </section>
 <section id="using-res2df-without-opm">
-<h2>Using res2df without OPM<a class="headerlink" href="#using-res2df-without-opm" title="Permalink to this heading"></a></h2>
+<h2>Using res2df without OPM<a class="headerlink" href="#using-res2df-without-opm" title="Link to this heading"></a></h2>
 <p>OPM is only pip-installable on Linux. To use the non-OPM dependent res2df
 modules on something else than Linux (but with resdata installed), you should
 install all the dependencies (except OPM) using <code class="docutils literal notranslate"><span class="pre">pip</span></code> (see <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> for
@@ -153,7 +153,7 @@ to <code class="docutils literal notranslate"><span class="pre">pip</span></code
 fail with import errors.</p>
 </section>
 <section id="development-workflow">
-<h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading"></a></h2>
+<h2>Development workflow<a class="headerlink" href="#development-workflow" title="Link to this heading"></a></h2>
 <p>If you have a feature or bugfix, a typical procedure is to:</p>
 <ul class="simple">
 <li><p>Consider writing an issue on <a class="reference external" href="https://github.com/equinor/res2df/issues">https://github.com/equinor/res2df/issues</a> describing
@@ -180,7 +180,7 @@ commit that is rebased on top of the current master.</p></li>
 </ul>
 </section>
 <section id="continuous-integration">
-<h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this heading"></a></h2>
+<h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h2>
 <p>A pull request that has been pushed to Github will be subject to automatic
 testing, for code style, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and for documentation validity. If your code
 does not pass <code class="docutils literal notranslate"><span class="pre">black</span></code> or <code class="docutils literal notranslate"><span class="pre">flake8</span></code> verification it will fail the CI workflows.</p>
@@ -193,7 +193,7 @@ in place before a commit is accepted. Issue the command <code class="docutils li
 in your copy to get started with this.</p>
 </section>
 <section id="writing-documentation">
-<h2>Writing documentation<a class="headerlink" href="#writing-documentation" title="Permalink to this heading"></a></h2>
+<h2>Writing documentation<a class="headerlink" href="#writing-documentation" title="Link to this heading"></a></h2>
 <p>Write good docstrings for each function, and use Google style for arguments.
 See <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html</a>
 for specification.</p>

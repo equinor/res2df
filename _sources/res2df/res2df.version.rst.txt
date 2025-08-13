@@ -17,8 +17,6 @@ Variables
 - :py:data:`__version_tuple__`
 - :py:data:`version`
 - :py:data:`version_tuple`
-- :py:data:`__commit_id__`
-- :py:data:`commit_id`
 
 .. autodata:: __version__
    :annotation:
@@ -47,17 +45,3 @@ Variables
    .. code-block:: text
 
       (1, 3, 6)
-
-.. autodata:: __commit_id__
-   :annotation:
-
-   .. code-block:: text
-
-      'gd0e6b926c'
-
-.. autodata:: commit_id
-   :annotation:
-
-   .. code-block:: text
-
-      'gd0e6b926c'

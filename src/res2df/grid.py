@@ -438,13 +438,12 @@ def init2df(
     usevectors = []
     include_porv = False
     for vec in init.headers:
-        if vec[1] == egrid.getNumActive() and any(
+        if vec[0] == "PORV" and any(fnmatch.fnmatch("PORV", key) for key in vectors):
+            include_porv = True
+        elif vec[1] == egrid.getNumActive() and any(
             fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
             usevectors.append(vec[0])
-        if vec[0] == "PORV" and any(fnmatch.fnmatch("PORV", key) for key in vectors):
-            include_porv = True
-
     if usevectors:
         init_df = pd.DataFrame(
             columns=usevectors,
@@ -465,8 +464,6 @@ def init2df(
     else:
         init_df = pd.DataFrame()  # empty
 
-    logger.info("Extracted %s from INIT file", str(init_df.columns.values))
-
     # PORV is indexed by active_index, not global, needs special treatment:
     if include_porv:
         porv_numpy = init.iget_named_kw("PORV", 0).numpyView()
@@ -474,7 +471,8 @@ def init2df(
             egrid.get_global_index(active_index=ix)
             for ix in range(egrid.getNumActive())
         ]
-        init_df["PORV"] = porv_numpy[glob_idxs].reshape(-1, 1)
+        init_df["PORV"] = porv_numpy[glob_idxs]
+    logger.info("Extracted %s from INIT file", str(init_df.columns.values))
     return init_df
 
 

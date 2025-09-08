@@ -9,8 +9,7 @@ import pandas as pd
 import pyarrow
 import pytest
 
-from res2df import common, grid, res2csv
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, common, grid, res2csv
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -163,6 +162,17 @@ def test_init2df():
         assert np.isnan(init_df["KRO"].unique()).all()
 
 
+def test_that_init2df_works_with_only_PORV():
+    """Test that requesting only PORV works"""
+    resdatafiles = ResdataFiles(REEK)
+    init_df = grid.init2df(resdatafiles, vectors="PORV")
+
+    assert isinstance(init_df, pd.DataFrame)
+    # pylint: disable=unsupported-membership-test  # false positive on Dataframe
+    assert not init_df.empty
+    assert "PORV" in init_df
+
+
 def test_grid_df():
     """Test that dataframe with INIT vectors and coordinates can be produced"""
     resdatafiles = ResdataFiles(EIGHTCELLS)
@@ -187,6 +197,16 @@ def test_grid_df():
         / sum(grid_df["PORV"])
         < 0.00001
     )
+
+
+def test_that_grid_df_works_with_only_PORV():
+    """Test that dataframe with INIT vector PORV works"""
+    resdatafiles = ResdataFiles(EIGHTCELLS)
+    grid_df = grid.df(resdatafiles, vectors="PORV")
+
+    assert isinstance(grid_df, pd.DataFrame)
+    assert not grid_df.empty
+    assert "PORV" in grid_df
 
 
 def test_df2res(tmp_path):

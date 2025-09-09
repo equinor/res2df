@@ -69,15 +69,13 @@ def test_nnc2df_faultnames():
     nncdf = nnc.df(resdatafiles)
     faultsdf = faults.df(resdatafiles.get_deck())
 
-    merged = pd.merge(
-        nncdf,
+    merged = nncdf.merge(
         faultsdf,
         how="left",
         left_on=["I1", "J1", "K1"],
         right_on=["I", "J", "K"],
     )
-    merged = pd.merge(
-        merged,
+    merged = merged.merge(
         faultsdf,
         how="left",
         left_on=["I2", "J2", "K2"],

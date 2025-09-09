@@ -408,7 +408,7 @@ def merge_initvectors(
 
     logger.info("Merging INIT data %s into dataframe", str(initvectors))
     ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
-    return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
+    return dframe.merge(ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
 
 def init2df(

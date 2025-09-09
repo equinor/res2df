@@ -190,8 +190,7 @@ def _merge_compdat_and_connstatus(
     match_on = ["WELL", "I", "J", "K1"]
     wellconnstatus_df.rename({"K": "K1"}, axis=1, inplace=True)
 
-    dframe = pd.merge(
-        wellconnstatus_df,
+    dframe = wellconnstatus_df.merge(
         compdat_df[match_on + ["KH", "ZONE"]],
         on=match_on,
         how="left",

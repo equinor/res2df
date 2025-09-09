@@ -81,9 +81,9 @@ COMPDAT
 """
     compdat_df = compdat.deck2dfs(ResdataFiles.str2deck(schstr))["COMPDAT"]
     assert len(compdat_df) == 9
-    assert not compdat_df["DFACT"].values[0]
-    assert not compdat_df["TRAN"].values[0]
-    assert compdat_df["I"].values[0] == 303
+    assert not compdat_df["DFACT"].to_numpy()[0]
+    assert not compdat_df["TRAN"].to_numpy()[0]
+    assert compdat_df["I"].to_numpy()[0] == 303
 
 
 def test_str2df():
@@ -218,8 +218,8 @@ COMPDAT
     df = compdat.deck2dfs(ResdataFiles.str2deck(schstr))["COMPDAT"]
     assert df["I"].unique() == 33
     assert df["J"].unique() == 44
-    assert (df["K1"].values == range(10, 20 + 1)).all()
-    assert (df["K2"].values == range(10, 20 + 1)).all()
+    assert (df["K1"].to_numpy() == range(10, 20 + 1)).all()
+    assert (df["K2"].to_numpy() == range(10, 20 + 1)).all()
 
     # Check that we can read withoug unrolling:
     df_noroll = compdat.deck2dfs(ResdataFiles.str2deck(schstr), unroll=False)["COMPDAT"]

@@ -185,9 +185,9 @@ def get_con_seg_data(
     )
 
     # Ensure integer headers are integers:
-    integer_columns = headers[headers["recordtype"] == "INTE"].index.values
+    integer_columns = headers[headers["recordtype"] == "INTE"].index.to_numpy()
     for col in (set(integer_columns) - {"DATE"}).intersection(
-        set(data_headers["recordname"].values)
+        set(data_headers["recordname"].to_numpy())
     ):
         data[col] = data[col].astype(int)
     data[datatype + "IDX"] = data.index + 1  # Add an index that starts with 1
@@ -300,7 +300,7 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
         if "SEGIDX_upstream" in row and row["SEGIDX_upstream"] > 0:
             edges.append((row["SEGIDX_upstream"], row["SEGIDX"]))
     if not edges:
-        return {seg_data["SEGIDX"].values[0]: {}}
+        return {seg_data["SEGIDX"].to_numpy()[0]: {}}
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
 
@@ -354,10 +354,12 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
     #    STOP: Cannot use this criteria, because junctions  due to ICDs
     #    are legit.
     #  * The segment must be on a branch with only one segment
-    icd_seg_indices = seg_data[seg_data["LEAF"] & seg_data["LONELYSEG"]].index.values
+    icd_seg_indices = seg_data[
+        seg_data["LEAF"] & seg_data["LONELYSEG"]
+    ].index.to_numpy()
     non_icd_seg_indices = seg_data[
         ~(seg_data["LEAF"] & seg_data["LONELYSEG"])
-    ].index.values
+    ].index.to_numpy()
 
     icd_seg_data = seg_data.reindex(icd_seg_indices)
     seg_data = seg_data.reindex(non_icd_seg_indices)
@@ -367,7 +369,7 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
     logger.debug(
         "Found %d ICD segments, indices %s",
         len(icd_seg_data),
-        str(icd_seg_data["ICD_SEGIDX"].values),
+        str(icd_seg_data["ICD_SEGIDX"].to_numpy()),
     )
 
     return (seg_data, icd_seg_data)

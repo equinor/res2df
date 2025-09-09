@@ -248,7 +248,7 @@ def make_nx_graph(
     reg2 = region + "2"
     graph = networkx.Graph()
     graph.add_weighted_edges_from(
-        [tuple(row) for row in trans_df[[reg1, reg2, "TRAN"]].values]
+        [tuple(row) for row in trans_df[[reg1, reg2, "TRAN"]].to_numpy()]
     )
     return graph
 

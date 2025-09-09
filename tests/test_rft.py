@@ -90,8 +90,8 @@ def test_minimal_well():
     assert "SEGIDX" in con_seg
     con_seg = rft.add_extras(con_seg)
     assert "COMPLETION_DP" in con_seg
-    assert con_seg["COMPLETION_DP"].values[0] == 196.0 - 195.8
-    assert con_seg["DRAWDOWN"].values[0] == 200.1 - 196.0
+    assert con_seg["COMPLETION_DP"].to_numpy()[0] == 196.0 - 195.8
+    assert con_seg["DRAWDOWN"].to_numpy()[0] == 200.1 - 196.0
     assert rft.seg2dicttree(m_one_seg) == {1: {}}
     print(rft.pretty_print_well(m_one_seg))
 
@@ -160,14 +160,14 @@ def test_single_branch_icd():
 
     assert len(icd_data) == 2
     assert all(icd_data.columns.str.startswith("ICD"))
-    assert all(icd_data["ICD_SEGIDX"].values == [4, 5])
-    assert all(icd_data["ICD_SEGBRNO"].values == [2, 3])
-    assert all(icd_data["ICD_SEGBRNO_upstream"].values == [0, 0])
+    assert all(icd_data["ICD_SEGIDX"].to_numpy() == [4, 5])
+    assert all(icd_data["ICD_SEGBRNO"].to_numpy() == [2, 3])
+    assert all(icd_data["ICD_SEGBRNO_upstream"].to_numpy() == [0, 0])
 
     con_seg = rft.merge_icd_seg_conseg(con_data, seg_data, icd_data)
     assert len(con_seg) == 2
     con_seg = rft.add_extras(con_seg)
-    assert all(con_seg["DRAWDOWN"].values == [10, 10])
+    assert all(con_seg["DRAWDOWN"].to_numpy() == [10, 10])
 
 
 def test_single_branch_partly_icd():
@@ -219,7 +219,7 @@ def test_single_branch_partly_icd():
     con_seg = rft.merge_icd_seg_conseg(con_data, seg_data, icd_data)
     assert len(con_seg) == 2
     con_seg = rft.add_extras(con_seg)
-    assert all(con_seg["DRAWDOWN"].values == [10, 10])
+    assert all(con_seg["DRAWDOWN"].to_numpy() == [10, 10])
 
 
 def test_branched_icd_well():
@@ -244,9 +244,9 @@ def test_branched_icd_well():
 
     assert len(icd_data) == 2
     assert all(icd_data.columns.str.startswith("ICD"))
-    assert all(icd_data["ICD_SEGIDX"].values == [4, 5])
-    assert all(icd_data["ICD_SEGBRNO"].values == [3, 4])
-    assert all(icd_data["ICD_SEGBRNO_upstream"].values == [0, 0])
+    assert all(icd_data["ICD_SEGIDX"].to_numpy() == [4, 5])
+    assert all(icd_data["ICD_SEGBRNO"].to_numpy() == [3, 4])
+    assert all(icd_data["ICD_SEGBRNO_upstream"].to_numpy() == [0, 0])
 
     print(seg_data)
     assert rft.count_wellbranches(seg_data) == 2
@@ -255,7 +255,7 @@ def test_branched_icd_well():
     print(con_seg)
     assert len(con_seg) == 2
     con_seg = rft.add_extras(con_seg)
-    assert all(con_seg["DRAWDOWN"].values == [10, 10])
+    assert all(con_seg["DRAWDOWN"].to_numpy() == [10, 10])
 
 
 def test_longer_branched_icd_well():
@@ -302,9 +302,9 @@ def test_longer_branched_icd_well():
 
     assert len(icd_data) == 4
     assert all(icd_data.columns.str.startswith("ICD"))
-    assert set(icd_data["ICD_SEGIDX"].values) == {4, 5, 8, 9}
-    assert set(icd_data["ICD_SEGBRNO"].values) == {3, 4, 5, 6}
-    assert all(icd_data["ICD_SEGBRNO_upstream"].values == [0, 0, 0, 0])
+    assert set(icd_data["ICD_SEGIDX"].to_numpy()) == {4, 5, 8, 9}
+    assert set(icd_data["ICD_SEGBRNO"].to_numpy()) == {3, 4, 5, 6}
+    assert all(icd_data["ICD_SEGBRNO_upstream"].to_numpy() == [0, 0, 0, 0])
 
     print(seg_data)
     assert rft.count_wellbranches(seg_data) == 2
@@ -313,7 +313,7 @@ def test_longer_branched_icd_well():
     print(con_seg)
     assert len(con_seg) == 4
     con_seg = rft.add_extras(con_seg)
-    assert all(con_seg["DRAWDOWN"].values == [10, 10, 9, 9])
+    assert all(con_seg["DRAWDOWN"].to_numpy() == [10, 10, 9, 9])
 
 
 def test_longer_branched_partly_icd_well():
@@ -349,9 +349,9 @@ def test_longer_branched_partly_icd_well():
 
     assert len(icd_data) == 2
     assert all(icd_data.columns.str.startswith("ICD"))
-    assert set(icd_data["ICD_SEGIDX"].values) == {4, 5}
-    assert set(icd_data["ICD_SEGBRNO"].values) == {3, 4}
-    assert all(icd_data["ICD_SEGBRNO_upstream"].values == [0, 0])
+    assert set(icd_data["ICD_SEGIDX"].to_numpy()) == {4, 5}
+    assert set(icd_data["ICD_SEGBRNO"].to_numpy()) == {3, 4}
+    assert all(icd_data["ICD_SEGBRNO_upstream"].to_numpy() == [0, 0])
 
     print(seg_data)
     assert rft.count_wellbranches(seg_data) == 2
@@ -360,7 +360,7 @@ def test_longer_branched_partly_icd_well():
     print(con_seg)
     assert len(con_seg) == 4
     con_seg = rft.add_extras(con_seg)
-    assert all(con_seg["DRAWDOWN"].values == [10, 10, 9, 9])
+    assert all(con_seg["DRAWDOWN"].to_numpy() == [10, 10, 9, 9])
 
 
 def test_seg2dicttree():
@@ -490,7 +490,7 @@ def test_rft2df():
     assert not rftdf.empty
     assert len(rftdf) == 115
     # Each well has 14 or 15 reservoir connections (14 layers in grid)
-    assert set(rftdf.groupby("WELL")["CONIDX"].count().values) == {14, 15}
+    assert set(rftdf.groupby("WELL")["CONIDX"].count().to_numpy()) == {14, 15}
     assert not rftdf.columns.empty
 
 

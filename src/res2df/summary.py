@@ -501,7 +501,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
     field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
     column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
 
-    dframe_values = dframe.values.transpose()
+    dframe_values = dframe.to_numpy().transpose()
     for col_idx, colname in enumerate(dframe.columns):
         if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
             # Boolean objects in the metadata dictionary must be converted to bytes:
@@ -618,7 +618,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
     dframe = dframe.copy()
     if "DATE" in dframe.columns:
         # Infer datatype (Pandas cannot answer it) based on the first element:
-        if isinstance(dframe["DATE"].values[0], str):
+        if isinstance(dframe["DATE"].to_numpy()[0], str):
             # Do not use pd.Series.apply() here, Pandas would try to convert it to
             # datetime64[ns] which is limited at year 2262.
             dframe["DATE"] = pd.Series(
@@ -629,7 +629,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
                 dtype="object",
                 index=dframe.index,
             )
-        if isinstance(dframe["DATE"].values[0], dt.date):
+        if isinstance(dframe["DATE"].to_numpy()[0], dt.date):
             dframe["DATE"] = pd.Series(
                 [
                     dt.datetime.combine(dateobj, dt.datetime.min.time())
@@ -641,11 +641,11 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
 
         dframe.set_index("DATE", inplace=True)
     if not isinstance(
-        dframe.index.values[0], (dt.datetime, np.datetime64, pd.Timestamp)
+        dframe.index.to_numpy()[0], (dt.datetime, np.datetime64, pd.Timestamp)
     ):
         raise ValueError(
             "dataframe must have a datetime index, got "
-            f"{dframe.index.values[0]} of type {type(dframe.index.values[0])}"
+            f"{dframe.index.to_numpy()[0]} of type {type(dframe.index.to_numpy()[0])}"
         )
     dframe.sort_index(axis=0, inplace=True)
 

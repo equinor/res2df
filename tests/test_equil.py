@@ -137,7 +137,7 @@ EQUIL
  2000 200 2200 /
 """
     df = equil.df(deckstr)
-    assert df["OWC"].values == 2200
+    assert df["OWC"].to_numpy() == 2200
     assert len(df) == 1
     assert "IGNORE1" not in df
     assert df["EQLNUM"].unique()[0] == 1
@@ -166,7 +166,7 @@ EQUIL
  2000 200 2200 /
 """
     df = equil.df(deckstr)
-    assert df["OWC"].values == 2200
+    assert df["OWC"].to_numpy() == 2200
     assert len(df) == 1
     assert "IGNORE1" not in df
     inc = equil.df2res(df, withphases=True)
@@ -182,7 +182,7 @@ EQUIL
  2000 200 2200 /
 """
     df = equil.df(deckstr)
-    assert df["GWC"].values == 2200
+    assert df["GWC"].to_numpy() == 2200
     assert "OWC" not in df
     assert len(df) == 1
     assert "IGNORE2" not in df
@@ -199,7 +199,7 @@ EQUIL
  2000 200 2200 1 2100 3 /
 """
     df = equil.df(deckstr)
-    assert df["GOC"].values == 2100
+    assert df["GOC"].to_numpy() == 2100
     assert "GWC" not in df
     assert "OWC" not in df
     assert len(df) == 1
@@ -223,7 +223,7 @@ EQUIL
  2469.0     382.4  1000.0    0.0  0.0    0.0     2     0      20  /
 """
     df = equil.df(deckstr)
-    assert set(df["GOC"].values) == {0.0}
+    assert set(df["GOC"].to_numpy()) == {0.0}
     assert "GWC" not in df
     assert "OWC" in df
     assert len(df) == 2
@@ -289,10 +289,10 @@ RSVD
  50 100 /"""
     rsvd_df = equil.df(deckstr)
     assert "KEYWORD" in rsvd_df
-    assert "EQUIL" not in rsvd_df["KEYWORD"].values
+    assert "EQUIL" not in rsvd_df["KEYWORD"].to_numpy()
     assert max(rsvd_df["EQLNUM"]) == 3
-    assert set(rsvd_df["Z"].values) == {10, 30, 50}
-    assert set(rsvd_df["RS"].values) == {100, 400}
+    assert set(rsvd_df["Z"].to_numpy()) == {10, 30, 50}
+    assert set(rsvd_df["RS"].to_numpy()) == {100, 400}
     inc = equil.df2res(rsvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rsvd_df, df_from_inc)
@@ -311,11 +311,11 @@ RSVD
  60 1000 /"""
     rsvd_df = equil.df(deckstr)
     assert "KEYWORD" in rsvd_df
-    assert "EQUIL" not in rsvd_df["KEYWORD"].values
+    assert "EQUIL" not in rsvd_df["KEYWORD"].to_numpy()
     assert len(rsvd_df) == 4
     assert max(rsvd_df["EQLNUM"]) == 2
-    assert set(rsvd_df["Z"].values) == {10, 30, 50, 60}
-    assert set(rsvd_df["RS"].values) == {100, 400, 1000}
+    assert set(rsvd_df["Z"].to_numpy()) == {10, 30, 50, 60}
+    assert set(rsvd_df["RS"].to_numpy()) == {100, 400, 1000}
     inc = equil.df2res(rsvd_df)
     df_from_inc = equil.df(inc)
     pd.testing.assert_frame_equal(rsvd_df, df_from_inc)
@@ -334,10 +334,10 @@ RVVD
  50 100 /"""
     rvvd_df = equil.df(deckstr)
     assert "KEYWORD" in rvvd_df
-    assert "EQUIL" not in rvvd_df["KEYWORD"].values
+    assert "EQUIL" not in rvvd_df["KEYWORD"].to_numpy()
     assert max(rvvd_df["EQLNUM"]) == 3
-    assert set(rvvd_df["Z"].values) == {10, 30, 50}
-    assert set(rvvd_df["RV"].values) == {100, 400}
+    assert set(rvvd_df["Z"].to_numpy()) == {10, 30, 50}
+    assert set(rvvd_df["RV"].to_numpy()) == {100, 400}
 
     inc = equil.df2res(rvvd_df)
     df_from_inc = equil.df(inc)
@@ -357,11 +357,11 @@ RVVD
  60 1000 /"""
     rvvd_df = equil.df(deckstr)
     assert "KEYWORD" in rvvd_df
-    assert "EQUIL" not in rvvd_df["KEYWORD"].values
+    assert "EQUIL" not in rvvd_df["KEYWORD"].to_numpy()
     assert len(rvvd_df) == 4
     assert max(rvvd_df["EQLNUM"]) == 2
-    assert set(rvvd_df["Z"].values) == {10, 30, 50, 60}
-    assert set(rvvd_df["RV"].values) == {100, 400, 1000}
+    assert set(rvvd_df["Z"].to_numpy()) == {10, 30, 50, 60}
+    assert set(rvvd_df["RV"].to_numpy()) == {100, 400, 1000}
 
     inc = equil.df2res(rvvd_df)
     df_from_inc = equil.df(inc)
@@ -377,10 +377,10 @@ PBVD
  50 100 /"""
     pbvd_df = equil.df(deckstr)
     assert "KEYWORD" in pbvd_df
-    assert "EQUIL" not in pbvd_df["KEYWORD"].values
+    assert "EQUIL" not in pbvd_df["KEYWORD"].to_numpy()
     assert max(pbvd_df["EQLNUM"]) == 3
-    assert set(pbvd_df["Z"].values) == {10, 30, 50}
-    assert set(pbvd_df["PB"].values) == {100, 400}
+    assert set(pbvd_df["Z"].to_numpy()) == {10, 30, 50}
+    assert set(pbvd_df["PB"].to_numpy()) == {100, 400}
 
     inc = equil.df2res(pbvd_df)
     df_from_inc = equil.df(inc)
@@ -412,10 +412,10 @@ PDVD
  50 100 /"""
     pdvd_df = equil.df(deckstr)
     assert "KEYWORD" in pdvd_df
-    assert "EQUIL" not in pdvd_df["KEYWORD"].values
+    assert "EQUIL" not in pdvd_df["KEYWORD"].to_numpy()
     assert max(pdvd_df["EQLNUM"]) == 3
-    assert set(pdvd_df["Z"].values) == {10, 30, 50}
-    assert set(pdvd_df["PD"].values) == {100, 400}
+    assert set(pdvd_df["Z"].to_numpy()) == {10, 30, 50}
+    assert set(pdvd_df["PD"].to_numpy()) == {100, 400}
 
     inc = equil.df2res(pdvd_df)
     df_from_inc = equil.df(inc)
@@ -458,7 +458,7 @@ EQUIL
  3000 200 2200 1 2100 3 /
 """
     df = equil.df(deckstr)
-    assert set(df["GOC"].values) == {2100}
+    assert set(df["GOC"].to_numpy()) == {2100}
     assert len(df) == 2
     assert df["EQLNUM"].min() == 1
     assert df["EQLNUM"].max() == 2
@@ -494,7 +494,7 @@ EQUIL
  3000 200 2200 1 2100 3 /
 """
     df = equil.df(deckstr)
-    assert set(df["GOC"].values) == {2100}
+    assert set(df["GOC"].to_numpy()) == {2100}
     assert len(df) == 2
 
     inc = equil.df2res(df, withphases=True)

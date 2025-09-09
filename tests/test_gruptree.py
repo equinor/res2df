@@ -165,8 +165,8 @@ GRUPNET
     grupdf = gruptree.df(deck, startdate="2000-01-01")
     print(grupdf)
     assert "TERMINAL_PRESSURE" in grupdf
-    assert 90 in grupdf["TERMINAL_PRESSURE"].values
-    assert 100 in grupdf["TERMINAL_PRESSURE"].values
+    assert 90 in grupdf["TERMINAL_PRESSURE"].to_numpy()
+    assert 100 in grupdf["TERMINAL_PRESSURE"].to_numpy()
 
 
 @pytest.mark.parametrize(

@@ -316,7 +316,7 @@ def gridgeometry2df(
 
     logger.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
-    ijk = index_frame.values[:, 0:3] + 1  # ijk from resdata.grid is off by one
+    ijk = index_frame.to_numpy()[:, 0:3] + 1  # ijk from resdata.grid is off by one
 
     xyz = grid.export_position(index_frame)
     vol = grid.export_volume(index_frame)
@@ -472,7 +472,7 @@ def init2df(
             for ix in range(egrid.getNumActive())
         ]
         init_df["PORV"] = porv_numpy[glob_idxs]
-    logger.info("Extracted %s from INIT file", str(init_df.columns.values))
+    logger.info("Extracted %s from INIT file", str(init_df.columns.to_numpy()))
     return init_df
 
 
@@ -723,7 +723,7 @@ def df2res(
         if keyword not in grid_df.columns:
             raise ValueError(f"Keyword {keyword} not found in grid dataframe")
         vector = np.zeros(global_size)
-        vector[grid_df["GLOBAL_INDEX"].astype(int).values] = grid_df[keyword]
+        vector[grid_df["GLOBAL_INDEX"].astype(int).to_numpy()] = grid_df[keyword]
         if dtype is int:
             vector = vector.astype(int)
         if dtype is float:

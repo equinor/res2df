@@ -245,8 +245,7 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
     seg_data["SEGNXT"] = seg_data["SEGNXT"].fillna(value="0").astype(int)
 
     # Outer merge first to add the upstream segment information to every row.
-    merged = pd.merge(
-        seg_data,
+    merged = seg_data.merge(
         seg_data,
         how="left",
         left_on="SEGIDX",
@@ -427,14 +426,12 @@ def merge_icd_seg_conseg(
     if not icd_data.empty:
         # Merge ICD_* columns onto the dataframe representing reservoir
         # connections.
-        data = pd.merge(con_data, icd_data, left_on="CONSEGNO", right_on="ICD_SEGIDX")
+        data = con_data.merge(icd_data, left_on="CONSEGNO", right_on="ICD_SEGIDX")
 
         # Merge SEGxxxxx to the dataframe with icd's and reservoir connections.
         assert not seg_data.empty
 
-        data = pd.merge(
-            data, seg_data, how="left", left_on="ICD_SEGNXT", right_on="SEGIDX"
-        )
+        data = data.merge(seg_data, how="left", left_on="ICD_SEGNXT", right_on="SEGIDX")
 
         # The merge has potentially included extra rows due to junctions.
         # After ICD merge, we can require that SEGIDX_upstream equals CONSEGNO
@@ -455,9 +452,7 @@ def merge_icd_seg_conseg(
         data = pd.concat(
             [
                 data,
-                pd.merge(
-                    con_data_no_icd, seg_data, left_on="CONSEGNO", right_on="SEGIDX"
-                ),
+                con_data_no_icd.merge(seg_data, left_on="CONSEGNO", right_on="SEGIDX"),
             ],
             sort=False,
         )

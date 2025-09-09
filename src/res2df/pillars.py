@@ -135,7 +135,7 @@ def df(
                 datestr=datestr,
             )
             if not contacts.empty:
-                grouped = pd.merge(grouped, contacts, how="left")
+                grouped = grouped.merge(contacts, how="left")
 
     if stackdates:
         return stack_on_colnames(grouped, sep="@", stackcolname="DATE", inplace=True)
@@ -279,7 +279,7 @@ def compute_pillar_contacts(
         owc.rename(columns={"Z": "OWC" + atdatestr}, inplace=True)
         owc.reset_index(inplace=True)
         # Filter the owc frame to only those pillars that also has water:
-        owc = pd.merge(waterpillars, owc, how="inner").drop("Z", axis="columns")
+        owc = waterpillars.merge(owc, how="inner").drop("Z", axis="columns")
 
     if sgascutoff and "SGAS" + atdatestr in grid_df:
         logger.info("Calculating gas-contacts based on gas cutoff %s", str(sgascutoff))
@@ -311,7 +311,7 @@ def compute_pillar_contacts(
             goc.rename(columns={"Z": "GWC" + atdatestr}, inplace=True)
         goc.reset_index(inplace=True)
         # Filter the goc frame to only those with oil or water:
-        goc = pd.merge(gocpillars, goc, how="inner").drop("Z", axis="columns")
+        goc = gocpillars.merge(goc, how="inner").drop("Z", axis="columns")
 
     # We need to avoid merging with potentially empty DataFrames
     if owc.empty and goc.empty:
@@ -320,7 +320,7 @@ def compute_pillar_contacts(
         return owc
     if owc.empty and not goc.empty:
         return goc
-    return pd.merge(owc, goc)
+    return owc.merge(goc)
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

@@ -166,15 +166,13 @@ def df(
     if vectorscoords:
         logger.info("Adding vectors %s", str(vectorscoords))
         grid_df = grid_df.reset_index()
-        trans_df = pd.merge(
-            trans_df,
+        trans_df = trans_df.merge(
             grid_df[["I", "J", "K"] + vectorscoords],
             left_on=["I1", "J1", "K1"],
             right_on=["I", "J", "K"],
         )
         trans_df = trans_df.drop(["I", "J", "K"], axis=1)
-        trans_df = pd.merge(
-            trans_df,
+        trans_df = trans_df.merge(
             grid_df[["I", "J", "K"] + vectorscoords],
             left_on=["I2", "J2", "K2"],
             right_on=["I", "J", "K"],

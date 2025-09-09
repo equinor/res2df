@@ -272,12 +272,14 @@ def compute_pillar_contacts(
             "Calculating oil-water-contacts based on SOILcutoff %s", str(soilcutoff)
         )
         owc = (
-            grid_df[grid_df["SOIL" + atdatestr] > soilcutoff]
-            .groupby(groupbies)
-            .agg({"Z": "max"})
+            (
+                grid_df[grid_df["SOIL" + atdatestr] > soilcutoff]
+                .groupby(groupbies)
+                .agg({"Z": "max"})
+            )
+            .rename(columns={"Z": "OWC" + atdatestr})
+            .reset_index()
         )
-        owc.rename(columns={"Z": "OWC" + atdatestr}, inplace=True)
-        owc.reset_index(inplace=True)
         # Filter the owc frame to only those pillars that also has water:
         owc = waterpillars.merge(owc, how="inner").drop("Z", axis="columns")
 
@@ -298,8 +300,7 @@ def compute_pillar_contacts(
                 ]
                 .groupby(groupbies)
                 .agg({"Z": "max"})
-            )
-            goc.rename(columns={"Z": "GOC" + atdatestr}, inplace=True)
+            ).rename(columns={"Z": "GOC" + atdatestr})
         else:
             # Two-phase gas-water: GWC computation
             gocpillars = waterpillars  # In case of gas-water
@@ -307,9 +308,8 @@ def compute_pillar_contacts(
                 grid_df[grid_df["SGAS" + atdatestr] > sgascutoff]
                 .groupby(groupbies)
                 .agg({"Z": "max"})
-            )
-            goc.rename(columns={"Z": "GWC" + atdatestr}, inplace=True)
-        goc.reset_index(inplace=True)
+            ).rename(columns={"Z": "GWC" + atdatestr})
+        goc = goc.reset_index()
         # Filter the goc frame to only those with oil or water:
         goc = gocpillars.merge(goc, how="inner").drop("Z", axis="columns")
 

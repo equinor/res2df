@@ -639,7 +639,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
                 index=dframe.index,
             )
 
-        dframe.set_index("DATE", inplace=True)
+        dframe = dframe.set_index("DATE")
     if not isinstance(
         dframe.index.to_numpy()[0], (dt.datetime, np.datetime64, pd.Timestamp)
     ):
@@ -647,12 +647,12 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
             "dataframe must have a datetime index, got "
             f"{dframe.index.to_numpy()[0]} of type {type(dframe.index.to_numpy()[0])}"
         )
-    dframe.sort_index(axis=0, inplace=True)
+    dframe = dframe.sort_index(axis=0)
 
     # This column will appear if dataframes are naively written to CSV
     # files and read back in again.
     if "Unnamed: 0" in dframe:
-        dframe.drop("Unnamed: 0", axis="columns", inplace=True)
+        dframe = dframe.drop("Unnamed: 0", axis="columns")
 
     block_columns = [
         col for col in dframe.columns if (col.startswith("B") or col.startswith("LB"))

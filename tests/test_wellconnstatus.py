@@ -114,7 +114,7 @@ def test_extract_status_changes(smry, expected_wellconnstatus):
     time_format = None if int(pd.__version__.split(".")[0]) == 1 else "mixed"
 
     smry["DATE"] = pd.to_datetime(smry["DATE"], format=time_format, dayfirst=True)
-    smry.set_index("DATE", inplace=True)
+    smry = smry.set_index("DATE")
     expected_wellconnstatus["DATE"] = pd.to_datetime(
         expected_wellconnstatus["DATE"], format=time_format, dayfirst=True
     )

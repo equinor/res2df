@@ -270,7 +270,7 @@ def rst2df(
         rst_df = rst_df.where(rst_df > -1e20 + 1e13)  # some trial and error
 
         # Remove columns that are all NaN:
-        rst_df.dropna(axis="columns", how="all", inplace=True)
+        rst_df = rst_df.dropna(axis="columns", how="all")
 
         rst_df.index.name = "active"
 
@@ -282,8 +282,9 @@ def rst2df(
     if not stackdates:
         return pd.concat(rst_dfs.values(), axis=1).reset_index()
 
-    rststack = pd.concat(rst_dfs, sort=False).reset_index()
-    rststack.rename(columns={"level_0": "DATE"}, inplace=True)
+    rststack = (
+        pd.concat(rst_dfs, sort=False).reset_index().rename(columns={"level_0": "DATE"})
+    )
     return rststack
 
 
@@ -459,7 +460,7 @@ def init2df(
         init_df = init_df.where(init_df > -1e20 + 1e13)  # some trial and error
 
         # Remove columns that are all NaN:
-        init_df.dropna(axis="columns", how="all", inplace=True)
+        init_df = init_df.dropna(axis="columns", how="all")
 
     else:
         init_df = pd.DataFrame()  # empty

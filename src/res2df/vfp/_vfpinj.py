@@ -224,7 +224,7 @@ def basic_data2df(
     ]
 
     # reset index (not used other than tests)
-    df_bhp_stacked.reset_index(inplace=True, drop=True)
+    df_bhp_stacked = df_bhp_stacked.reset_index(drop=True)
     return df_bhp_stacked
 
 

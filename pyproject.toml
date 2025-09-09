@@ -127,6 +127,7 @@ select = [
   "PL",  # pylint
   "NPY",  # numpy specific rules
   "C4",  # flake8-comprehensions
+  "PD",  # pandas-vet
 ]
 preview = true
 ignore = [
@@ -143,6 +144,7 @@ ignore = [
   "PLR0904",  # too-many-public-methods
   "PLR1702",  # too-many-nested-blocks
   "PLW3201",  # bad-dunder-method-name
+  "PD013",  # pandas-use-of-dot-stack
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]

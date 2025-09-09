@@ -137,7 +137,7 @@ def _stack_vfptable2df(
     df_vfptable.columns = pd.MultiIndex.from_tuples(indextuples)
 
     # Now stack
-    df_vfptable_stacked = df_vfptable.stack()
+    df_vfptable_stacked = df_vfptable.stack(future_stack=True).sort_index()
 
     # In order to propagate the gfr, thp, wct values after
     # stacking to the correct rows, we should either understand

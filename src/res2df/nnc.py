@@ -60,7 +60,7 @@ def df(
     # Grid indices for first cell in cell pairs, into a vertical
     # vector. The indices are "global" in resdata terms, and are
     # 1-based (FORTRAN). Convert to zero-based before sending to get_ijk()
-    nnc1 = egrid_file["NNC1"][0].numpy_view().reshape(-1, 1)
+    nnc1 = egrid_file["NNC1"][0].numpy_view()
     logger.info(
         "NNC1: len: %d, min: %d, max: %d (global indices)",
         len(nnc1),
@@ -76,7 +76,8 @@ def df(
     nnc1_df[idx_cols1] += 1
 
     # Grid indices for second cell in cell pairs
-    nnc2 = egrid_file["NNC2"][0].numpy_view().reshape(-1, 1)
+    nnc2 = egrid_file["NNC2"][0].numpy_view()
+
     logger.info(
         "NNC2: len: %d, min: %d, max: %d (global indices)",
         len(nnc2),
@@ -91,7 +92,7 @@ def df(
     nnc2_df[idx_cols2] += 1
 
     # Obtain transmissibility value, corresponding to the cell pairs above.
-    tran = init_file["TRANNNC"][0].numpy_view().reshape(-1, 1)
+    tran = init_file["TRANNNC"][0].numpy_view()
     logger.info(
         "TRANNNC: len: %d, min: %f, max: %f, mean=%f",
         len(tran),

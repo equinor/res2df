@@ -757,7 +757,7 @@ def expand_complump_in_welopen_df(
                 exp_welopens.append(cell_row)
 
     dframe = pd.DataFrame(exp_welopens)
-    return dframe.astype(object).where(pd.notnull(dframe), None)
+    return dframe.astype(object).where(pd.notna(dframe), None)
 
 
 def expand_wlist_in_welopen_df(
@@ -791,7 +791,7 @@ def expand_wlist_in_welopen_df(
             # Explicit wellname was used, no expansion to happen:
             exp_welopens.append(row)
     dframe = pd.DataFrame(exp_welopens)
-    return dframe.astype(object).where(pd.notnull(dframe), None)
+    return dframe.astype(object).where(pd.notna(dframe), None)
 
 
 def applywelopen(
@@ -850,7 +850,7 @@ def applywelopen(
                 "The WLIST dataframe must be expanded through expand_wlist()"
             )
 
-    welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
+    welopen_df = welopen_df.astype(object).where(pd.notna(welopen_df), None)
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
     welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 

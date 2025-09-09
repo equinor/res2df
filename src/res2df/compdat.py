@@ -263,16 +263,16 @@ def deck2dfs(
         wsegaicd_df = unrolldf(wsegaicd_df, "SEGMENT1", "SEGMENT2")
 
     if "KEYWORD_IDX" in compdat_df.columns:
-        compdat_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        compdat_df = compdat_df.drop(["KEYWORD_IDX"], axis=1)
 
     if "KEYWORD_IDX" in wsegsicd_df.columns:
-        wsegsicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        wsegsicd_df = wsegsicd_df.drop(["KEYWORD_IDX"], axis=1)
 
     if "KEYWORD_IDX" in wsegaicd_df.columns:
-        wsegaicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        wsegaicd_df = wsegaicd_df.drop(["KEYWORD_IDX"], axis=1)
 
     if "KEYWORD_IDX" in wsegvalv_df.columns:
-        wsegvalv_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        wsegvalv_df = wsegvalv_df.drop(["KEYWORD_IDX"], axis=1)
 
     return {
         "COMPDAT": compdat_df,

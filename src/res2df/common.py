@@ -397,7 +397,7 @@ def merge_zones(
         return df
     zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
     zone_df.index.name = "K"
-    zone_df.reset_index(inplace=True)
+    zone_df = zone_df.reset_index()
 
     df[zoneheader] = df[kname].map(defaultdict(lambda: None, zonedict))
     return df
@@ -667,7 +667,7 @@ def generic_deck_table(
     # sorting from that:
     if renamer is not None:
         inv_renamer = {value: key for key, value in renamer.items()}
-        dframe.rename(inv_renamer, axis="columns", inplace=True)
+        dframe = dframe.rename(inv_renamer, axis="columns")
 
     keyword_col_headers = [item["name"] for item in OPMKEYWORDS[keyword]["items"]]
 
@@ -732,7 +732,7 @@ def generic_deck_table(
 
     # Now rename again to have prettier column names:
     if renamer is not None:
-        dframe.rename(renamer, axis="columns", inplace=True)
+        dframe = dframe.rename(renamer, axis="columns")
     # Add a final column with the end-slash, invisible header:
     dframe[" "] = "/"
     tablestring = dframe.to_string(header=True, index=False)
@@ -831,10 +831,10 @@ def stack_on_colnames(
     dframe = dframe.stack(future_stack=True)
     staticcols = [col[0] for col in tuplecolumns if len(col) == 1]
     dframe[staticcols] = dframe[staticcols].ffill()
-    dframe.reset_index(inplace=True)
+    dframe = dframe.reset_index()
     # Drop rows stemming from the NaNs in the second tuple-element for
     # static columns:
-    dframe.dropna(axis="index", subset=["DATE"], inplace=True)
+    dframe = dframe.dropna(axis="index", subset=["DATE"])
     del dframe["level_0"]
     dframe.index.name = ""
     return dframe

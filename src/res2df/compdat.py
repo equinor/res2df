@@ -330,7 +330,7 @@ def expand_welopen_defaults(
 
             # Any compdat entry with DATE==None are kept as they
             # are assumed to have an earlier date than any dates defined
-            compdat_filtered = compdat_df[compdat_df["DATE"].isnull()]
+            compdat_filtered = compdat_df[compdat_df["DATE"].isna()]
 
             # If the welopen entry DATE!=None we filter on compdat entries
             # <= this date

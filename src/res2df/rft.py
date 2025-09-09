@@ -260,7 +260,7 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
 
     # Now we can determine leaf segments by those with no extra information, since
     # we did an outer merge:
-    merged["LEAF"] = merged["SEGIDX_upstream"].replace(0, np.nan).isnull()
+    merged["LEAF"] = merged["SEGIDX_upstream"].replace(0, np.nan).isna()
 
     # Flag segments that have multiple upstream segments as junctions
     merged["JUNCTION"] = merged["SEGIDX"].duplicated(keep=False)

@@ -321,7 +321,7 @@ def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:
     subtrees: dict = collections.defaultdict(dict)
     edges = []  # List of tuples
     for _, row in dframe.iterrows():
-        if not pd.isnull(row["PARENT"]):
+        if not pd.isna(row["PARENT"]):
             edges.append((row["CHILD"], row["PARENT"]))
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]

@@ -51,13 +51,24 @@ WSEGVALV
 
 for keyword in $keywords; do
     firstletter=${keyword:0:1}
-    wget https://raw.githubusercontent.com/OPM/opm-common/master/src/opm/parser/eclipse/share/keywords/000_Eclipse100/$firstletter/$keyword -O $keyword && git add $keyword
+    wget https://raw.githubusercontent.com/OPM/opm-common/master/opm/input/eclipse/share/keywords/000_Eclipse100/$firstletter/$keyword -O $keyword
 
     # Assume that the presence of num_tables in some keywords is sort of a bug:
     perl -p -i -e 's/num_tables/size/g' $keyword
 
+    # Fix multi-line comments in JSON files by replacing newlines with spaces
+    perl -0777 -p -i -e 's/"comment"\s*:\s*"((?:[^"\\]|\\.)*)"/"comment": "\1"/g; s/\n/ /g if /"comment":/' "$keyword"
+
+
     # Pretty-print all json files (this is also done upstream)
-    jq < $keyword . > $keyword.tmp && rm $keyword && mv $keyword.tmp $keyword
+
+    if jq '.' "$keyword" > "$keyword.tmp"; then
+        rm "$keyword" && mv "$keyword.tmp" "$keyword"
+    else
+        rm "$keyword.tmp"
+    fi
+
+    git add $keyword
 done
 
 git status .

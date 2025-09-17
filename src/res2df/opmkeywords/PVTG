@@ -3,7 +3,7 @@
   "sections": [
     "PROPS"
   ],
-  "num_tables": {
+  "size": {
     "keyword": "TABDIMS",
     "item": "NTPVT"
   },

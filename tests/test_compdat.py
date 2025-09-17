@@ -517,7 +517,7 @@ WSEGVALV
     assert len(wsegaicd) == 1
     assert "WELL" in wsegaicd
     assert wsegaicd["WELL"].unique()[0] == "OP_6"
-    assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 20
+    assert len(wsegaicd.dropna(axis=1, how="all").iloc[0]) == 21
 
     # Test WSEGSICD
     assert len(wsegsicd) == 1
@@ -567,6 +567,7 @@ def test_wsegaicd():
                     "OIL_VISC_FRACTION": 2.43,
                     "WATER_VISC_FRACTION": 1.18,
                     "GAS_VISC_FRACTION": 10.0,
+                    "DENSITY_EXPONENT": 1,
                     "DATE": None,
                 }
             ]

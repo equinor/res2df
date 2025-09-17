@@ -56,6 +56,10 @@ for keyword in $keywords; do
     # Assume that the presence of num_tables in some keywords is sort of a bug:
     perl -p -i -e 's/num_tables/size/g' $keyword
 
+    # Fix multi-line comments in JSON files by replacing newlines with spaces
+    perl -0777 -p -i -e 's/"comment"\s*:\s*"((?:[^"\\]|\\.)*)"/"comment": "\1"/g; s/\n/ /g if /"comment":/' "$keyword"
+
+
     # Pretty-print all json files (this is also done upstream)
 
     if jq '.' "$keyword" > "$keyword.tmp"; then

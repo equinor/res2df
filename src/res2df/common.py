@@ -11,6 +11,7 @@ import shlex
 import signal
 import sys
 from collections import defaultdict
+from importlib import resources
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
 
@@ -82,14 +83,14 @@ for keyw in [
     "WSEGVALV",
 ]:
     OPMKEYWORDS[keyw] = json.loads(
-        (Path(__file__).parent / "opmkeywords" / keyw).read_text()
+        (resources.files(__package__) / "opmkeywords" / keyw).read_text()
     )
 
 
 SVG_COLOR_NAMES = [
     color.lower()
     for color in (
-        (Path(__file__).parent / "svg_color_keyword_names.txt")
+        (resources.files(__package__) / "svg_color_keyword_names.txt")
         .read_text(encoding="utf-8")
         .splitlines()
     )

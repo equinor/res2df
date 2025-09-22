@@ -26,6 +26,7 @@ Submodules
    res2df.hook_implementations
    res2df.inferdims
    res2df.nnc
+   res2df.opmkeywords
    res2df.parameters
    res2df.pillars
    res2df.pvt

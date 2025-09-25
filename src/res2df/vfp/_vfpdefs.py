@@ -6,10 +6,9 @@ routines for VFPPROD and VFPINJ keywords in res2df.
 """
 
 from enum import Enum
-from typing import Dict, List, Union
 
 # Supported types of VFP keywords
-SUPPORTED_KEYWORDS: List[str] = [
+SUPPORTED_KEYWORDS: list[str] = [
     "VFPPROD",
     "VFPINJ",
 ]
@@ -18,7 +17,7 @@ SUPPORTED_KEYWORDS: List[str] = [
 # desired column names in produced dataframes. They also to a certain
 # extent determine the structure of the dataframe, in particular
 # for keywords with arbitrary data amount pr. record (GAS, THP, WGR, GOR f.ex)
-RENAMERS: Dict[str, Dict[str, Union[str, List[str]]]] = {}
+RENAMERS: dict[str, dict[str, str | list[str]]] = {}
 
 
 # Type of VFP curve

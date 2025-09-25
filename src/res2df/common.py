@@ -13,7 +13,7 @@ import sys
 from collections import defaultdict
 from importlib import resources
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any
 
 import dateutil.parser
 import numpy as np
@@ -38,7 +38,7 @@ from .constants import MAGIC_STDOUT
 
 # Parse named JSON files, this exposes a dict of dictionary describing the contents
 # of supported keyword data
-OPMKEYWORDS: Dict[str, dict] = {}
+OPMKEYWORDS: dict[str, dict] = {}
 for keyw in [
     "BRANPROP",
     "COMPDAT",
@@ -118,11 +118,11 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 def write_dframe_stdout_file(
-    dframe: Union[pd.DataFrame, pa.Table],
+    dframe: pd.DataFrame | pa.Table,
     output: str,
     index: bool = False,
-    caller_logger: Optional[logging.Logger] = None,
-    logstr: Optional[str] = None,
+    caller_logger: logging.Logger | None = None,
+    logstr: str | None = None,
 ) -> None:
     """Write a dataframe to either stdout or a file
 
@@ -173,7 +173,7 @@ def parse_month(rdmonth: str) -> int:
     return MONTH2NUM[rdmonth]
 
 
-def datetime_to_ecldate(timestamp: Union[str, datetime.datetime, datetime.date]) -> str:
+def datetime_to_ecldate(timestamp: str | datetime.datetime | datetime.date) -> str:
     """Convert a Python timestamp or date to the Eclipse DATE format"""
     if isinstance(timestamp, str):
         if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
@@ -191,9 +191,9 @@ def datetime_to_ecldate(timestamp: Union[str, datetime.datetime, datetime.date])
 def keyworddata_to_df(
     deck,
     keyword: str,
-    renamer: Optional[Dict[str, Union[str, List[str]]]] = None,
-    recordcountername: Optional[str] = None,
-    emptyrecordcountername: Optional[str] = None,
+    renamer: dict[str, str | list[str]] | None = None,
+    recordcountername: str | None = None,
+    emptyrecordcountername: str | None = None,
 ) -> pd.DataFrame:
     """Extract data associated to a keyword into tabular form.
 
@@ -244,10 +244,8 @@ def keyworddata_to_df(
                 data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
             except ValueError as err:
                 raise ValueError(
-                    (
-                        f"Wrong number count for keyword {keyword}. \n"
-                        "Either your keyword is wrong, or your data is wrong"
-                    )
+                    f"Wrong number count for keyword {keyword}. \n"
+                    "Either your keyword is wrong, or your data is wrong"
                 ) from err
             data_df = pd.DataFrame(columns=renamer["DATA"], data=data_reshaped)
             # Assign the remaining items from the parsed dict to the dataframe:
@@ -267,12 +265,12 @@ def keyworddata_to_df(
 
 
 def parse_opmio_deckrecord(
-    record: "opm.libopmcommon_python.DeckRecord",
+    record: "opm.opmcommon_python.DeckRecord",
     keyword: str,
     itemlistname: str = "items",
-    recordindex: Optional[int] = None,
-    renamer: Optional[Union[Dict[str, str], Dict[str, Union[str, List[str]]]]] = None,
-) -> Dict[str, Any]:
+    recordindex: int | None = None,
+    renamer: dict[str, str] | dict[str, str | list[str]] | None = None,
+) -> dict[str, Any]:
     """
     Parse an opm.io.DeckRecord belonging to a certain keyword
 
@@ -292,7 +290,7 @@ def parse_opmio_deckrecord(
     if keyword not in OPMKEYWORDS:
         raise ValueError(f"Keyword {keyword} not supported by common.py")
 
-    rec_dict: Dict[str, Any] = {}
+    rec_dict: dict[str, Any] = {}
 
     if recordindex is None:  # Beware, 0 is different from None here.
         itemlist = OPMKEYWORDS[keyword][itemlistname]
@@ -338,7 +336,7 @@ def parse_opmio_deckrecord(
             rec_dict[item_name] = jsonitem.get("default", None)
 
     if renamer:
-        renamed_dict: Dict[str, Any] = {}
+        renamed_dict: dict[str, Any] = {}
         for key, value in rec_dict.items():
             if key in renamer and not isinstance(renamer[key], list):
                 renamed_dict[renamer[key]] = value  # type: ignore
@@ -356,7 +354,7 @@ def parse_opmio_date_rec(record: "opm.io.DeckRecord") -> datetime.date:
     return datetime.date(year=year, month=parse_month(month), day=day)
 
 
-def parse_opmio_tstep_rec(record: "opm.io.DeckRecord") -> List[Union[float, int]]:
+def parse_opmio_tstep_rec(record: "opm.io.DeckRecord") -> list[float | int]:
     """Parse a record with TSTEP data
 
     Return:
@@ -404,7 +402,7 @@ def merge_zones(
     return df
 
 
-def comment_formatter(multiline: Optional[str], prefix: str = "-- ") -> str:
+def comment_formatter(multiline: str | None, prefix: str = "-- ") -> str:
     """Prepends comment characters to every line in input
 
     If nothing is supplied, an empty string is returned.
@@ -424,11 +422,11 @@ def comment_formatter(multiline: Optional[str], prefix: str = "-- ") -> str:
 
 
 def handle_wanted_keywords(
-    wanted: Optional[List[str]],
+    wanted: list[str] | None,
     deck: "opm.io.Deck",
-    supported: List[str],
+    supported: list[str],
     modulename: str = "",
-) -> List[str]:
+) -> list[str]:
     """Handle three list of keywords, wanted, available and supported
 
     Args:
@@ -444,7 +442,7 @@ def handle_wanted_keywords(
         keywords = supported
     else:
         # Warn if some keywords are unsupported:
-        not_supported: Set[str] = set(wanted) - set(supported)
+        not_supported: set[str] = set(wanted) - set(supported)
         if not_supported:
             logger.warning(
                 "Requested keyword(s) not supported by res2df.%s: %s",
@@ -506,11 +504,11 @@ def fill_reverse_parser(
 
 def df2res(
     dataframe: pd.DataFrame,
-    keywords: Optional[Union[str, List[str], List[Optional[str]]]] = None,
-    comments: Optional[Dict[str, str]] = None,
-    supported: Optional[List[str]] = None,
-    consecutive: Optional[str] = None,
-    filename: Optional[str] = None,
+    keywords: str | list[str] | list[str | None] | None = None,
+    comments: dict[str, str] | None = None,
+    supported: list[str] | None = None,
+    consecutive: str | None = None,
+    filename: str | None = None,
 ) -> str:
     """Generate resdata :term:`include file` content from dataframes in res2df format.
 
@@ -572,7 +570,7 @@ def df2res(
         # Warn if some keywords are unsupported:
         assert keywords is not None
         assert supported is not None
-        not_supported: Set[Optional[str]] = set(keywords) - set(supported)
+        not_supported: set[str | None] = set(keywords) - set(supported)
         if not_supported:
             logger.warning(
                 "Requested keyword(s) not supported by %s: %s",
@@ -626,8 +624,8 @@ def df2res(
 def generic_deck_table(
     dframe: pd.DataFrame,
     keyword: str,
-    comment: Optional[str] = None,
-    renamer: Optional[Dict[str, str]] = None,
+    comment: str | None = None,
+    renamer: dict[str, str] | None = None,
     drop_trailing_columns: bool = True,
 ) -> str:
     """Construct string contents of a :term:`.DATA file` table.
@@ -851,7 +849,7 @@ def is_color(input_string: str) -> bool:
     return bool(re.match(regex, input_string))
 
 
-def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
+def parse_lyrfile(filename: str) -> list[dict[str, Any]] | None:
     """Return a list of dicts representation of the lyr file.
 
     The lyr file contains data of the following format,
@@ -893,11 +891,11 @@ def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
     zonelines = [line.split("--")[0].strip() for line in zonelines]
     zonelines = [line for line in zonelines if line and not line.startswith("#")]
 
-    lyrlist: List[Dict[str, Any]] = []
+    lyrlist: list[dict[str, Any]] = []
     for line in zonelines:
         try:
             linesplit = shlex.split(line)
-            zonedict: Dict[str, Any] = {"name": linesplit[0]}
+            zonedict: dict[str, Any] = {"name": linesplit[0]}
             zone_color = linesplit.pop(-1) if is_color(linesplit[-1]) else None
             if zone_color is not None:
                 zonedict["color"] = zone_color
@@ -923,7 +921,7 @@ def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
     return lyrlist
 
 
-def convert_lyrlist_to_zonemap(lyrlist: List[Dict[str, Any]]) -> Dict[int, str]:
+def convert_lyrlist_to_zonemap(lyrlist: list[dict[str, Any]]) -> dict[int, str]:
     """Returns a layer to zone map as a dictionary
 
     Args:

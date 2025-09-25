@@ -7,7 +7,7 @@ import datetime
 import logging
 import sys
 import warnings
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -31,8 +31,8 @@ logger = logging.getLogger(__name__)
 
 
 def df(
-    deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"],
-    startdate: Optional[datetime.date] = None,
+    deck: "ResdataFiles | opm.opmcommon_python.Deck",
+    startdate: datetime.date | None = None,
     welspecs: bool = True,
 ) -> pd.DataFrame:
     """Extract all group information from a :term:`deck`
@@ -62,7 +62,7 @@ def df(
         information is found in :term:`deck`.
     """
 
-    date: Optional[datetime.date]
+    date: datetime.date | None
     date = startdate if startdate is not None else None
 
     if isinstance(deck, ResdataFiles):
@@ -74,16 +74,16 @@ def df(
     # In order for the GRUPTREE/BRANPROP keywords to accumulate, we
     # store the edges as dictionaries indexed by the edge
     # (which is a tuple of child and parent).
-    currentedges: Dict[str, Dict[Tuple[str, str], Dict[str, Any]]] = {
+    currentedges: dict[str, dict[tuple[str, str], dict[str, Any]]] = {
         "GRUPTREE": {},
         "BRANPROP": {},
     }
     # Same approach for the welspecs keywords
-    wellspecsedges: Dict[Tuple[str, str], str] = {}
+    wellspecsedges: dict[tuple[str, str], str] = {}
     # Node properties from GRUPNET/NODEPROP is stored in a dataframe
     # Note that it's not allowed to mix GRUPNET and NODEPROP in eclipse
     # so the datframe will only contain columns from one of them
-    nodedata: Dict[str, pd.DataFrame] = {
+    nodedata: dict[str, pd.DataFrame] = {
         "GRUPNET": pd.DataFrame(),
         "NODEPROP": pd.DataFrame(),
     }
@@ -185,12 +185,12 @@ def df(
 
 
 def _write_edgerecords(
-    currentedges: Dict[str, Dict[Tuple[str, str], Dict[str, Any]]],
-    nodedata: Dict[str, pd.DataFrame],
-    wellspecsedges: Dict[Tuple[str, str], str],
+    currentedges: dict[str, dict[tuple[str, str], dict[str, Any]]],
+    nodedata: dict[str, pd.DataFrame],
+    wellspecsedges: dict[tuple[str, str], str],
     found_keywords: dict,
-    date: Optional[datetime.date],
-) -> List[dict]:
+    date: datetime.date | None,
+) -> list[dict]:
     """Writes a new GRUPTREE tree if there are new instances of
     GRUPTREE, GRUPNET or WELSPECS and writes a new BRANPROP tree
     if there are new instances of BRANPROP, NODEPROP or WELSPECS.
@@ -215,12 +215,12 @@ def _write_edgerecords(
 
 
 def _merge_edges_and_nodeinfo(
-    currentedges: Dict[Tuple[str, str], Dict[str, Any]],
+    currentedges: dict[tuple[str, str], dict[str, Any]],
     nodedata_df: pd.DataFrame,
-    wellspecsedges: Dict[Tuple[str, str], str],
-    date: Optional[datetime.date],
+    wellspecsedges: dict[tuple[str, str], str],
+    date: datetime.date | None,
     treetype: str,
-) -> List[dict]:
+) -> list[dict]:
     """Merge a list of edges with information from the nodedata dataframe.
 
     Edges where there is no parent (root nodes) are identified and added
@@ -285,7 +285,7 @@ def _merge_edges_and_nodeinfo(
     return rootrecords + edgerecords
 
 
-def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:
+def edge_dataframe2dict(dframe: pd.DataFrame) -> list[dict]:
     """Convert list of edges in a dataframe into a
     nested dictionary (tree).
 
@@ -328,7 +328,7 @@ def edge_dataframe2dict(dframe: pd.DataFrame) -> List[dict]:
 
 
 def _add_to_tree_from_dict(
-    nested_dict: dict, name: str, tree: treelib.Tree, parent: Optional[str] = None
+    nested_dict: dict, name: str, tree: treelib.Tree, parent: str | None = None
 ) -> None:
     assert isinstance(nested_dict, dict)
     tree.create_node(name, name, parent=parent)

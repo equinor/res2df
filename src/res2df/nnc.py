@@ -8,7 +8,6 @@ import datetime
 import logging
 import os
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 
@@ -205,7 +204,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def df2res_editnnc(
-    nnc_df: pd.DataFrame, filename: Optional[str] = None, nocomments: bool = False
+    nnc_df: pd.DataFrame, filename: str | None = None, nocomments: bool = False
 ) -> str:
     """Write an EDITNNC keyword
 

@@ -11,7 +11,7 @@ pyarrow.Table to file as Eclipse .Ecl format
 
 import logging
 import numbers
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -64,9 +64,9 @@ logger = logging.getLogger(__name__)
 
 
 def basic_data(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Dict[str, Any]:
+    keyword: "opm.opmcommon_python.DeckKeyword",
+    vfpnumbers_str: str | None = None,
+) -> dict[str, Any]:
     """Read and return all data for Eclipse VFPINJ keyword as basic data types
 
     Empty string returned if vfp table number does not match any number in list
@@ -120,11 +120,11 @@ def basic_data(
         )
 
     # Extract interpolation values and tabulated values (BHP values)
-    bhp_table: List[List[float]] = []
-    thp_indices: List[float] = []
+    bhp_table: list[list[float]] = []
+    thp_indices: list[float] = []
     for n in range(3, num_rec):
         bhp_record = parse_opmio_deckrecord(keyword[n], "VFPINJ", "records", 3)
-        bhp_values: Union[Any, List[float]]
+        bhp_values: Any | list[float]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
         elif isinstance(bhp_record.get("VALUES"), numbers.Number):
@@ -294,7 +294,7 @@ def basic_data2pyarrow(
     return pa_table
 
 
-def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
+def df2basic_data(dframe: pd.DataFrame) -> dict[str, Any]:
     """Return basic data type for VFPINJ from a pandas dataframe.
 
     Return format is a dictionary all data in VFPINJ in basic data types
@@ -384,7 +384,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     return vfpinj_data
 
 
-def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
+def pyarrow2basic_data(pa_table: pa.Table) -> dict[str, Any]:
     """Return basic data type for VFPINJ from a pyarrow.Table.
 
     Return format is a dictionary all data in VFPINJ in basic data types
@@ -421,7 +421,7 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
     return vfpinj_data
 
 
-def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
+def _check_basic_data(vfp_data: dict[str, Any]) -> bool:
     """Perform a check of the VFPINJ data contained in the dictionary.
     Checks if all data is present and if the dimensions of the arrays
     are consisitent.
@@ -470,9 +470,9 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 
 
 def df(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Union[pd.DataFrame, None]:
+    keyword: "opm.opmcommon_python.DeckKeyword",
+    vfpnumbers_str: str | None = None,
+) -> pd.DataFrame | None:
     """Return a dataframes of a single VFPINJ table from a :term:`.DATA file`
 
     Data from the VFPINJ keyword are stacked into a Pandas Dataframe
@@ -507,9 +507,9 @@ def df(
 
 
 def pyarrow(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Union[pa.Table, None]:
+    keyword: "opm.opmcommon_python.DeckKeyword",
+    vfpnumbers_str: str | None = None,
+) -> pa.Table | None:
     """Return a pyarrow Table of a single VFPINJ table from a :term:`.DATA file`
        If no VFPINJ table found, return None
 
@@ -656,7 +656,7 @@ def _write_table_records(
     return deck_str
 
 
-def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Creates a :term:`include file` content string
     representing single VFPINJ Eclipse input from a dataframe
 

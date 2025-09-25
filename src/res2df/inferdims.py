@@ -5,7 +5,6 @@ reservoir simulator decks (typically single include-files)
 
 import contextlib
 import logging
-from typing import Dict, Optional, Union
 
 with contextlib.suppress(ImportError):
     import opm.io
@@ -16,7 +15,7 @@ from .resdatafiles import ResdataFiles
 logger = logging.getLogger(__name__)
 
 # Constants to use for pointing to positions in the xxxDIMS keyword
-DIMS_POS: Dict[str, int] = {"NTPVT": 1, "NTSFUN": 0, "NTEQUL": 0}
+DIMS_POS: dict[str, int] = {"NTPVT": 1, "NTSFUN": 0, "NTEQUL": 0}
 
 
 def guess_dim(deckstring: str, dimkeyword: str, dimitem: int = 0) -> int:
@@ -138,9 +137,9 @@ def inject_dimcount(
 def inject_xxxdims_ntxxx(
     xxxdims: str,
     ntxxx_name: str,
-    deck: Union[str, "opm.libopmcommon_python.Deck"],
-    ntxxx_value: Optional[int] = None,
-) -> "opm.libopmcommon_python.Deck":
+    deck: "str | opm.opmcommon_python.Deck",
+    ntxxx_value: int | None = None,
+) -> "opm.opmcommon_python.Deck":
     """Ensures TABDIMS/EQLDIMS is present in a :term:`deck`.
 
     If ntxxx_value=None and ntxxx_name not in the :term:`deck`, ntxxx_name will

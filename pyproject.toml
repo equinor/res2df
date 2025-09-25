@@ -125,6 +125,7 @@ select = [
   "C4",  # flake8-comprehensions
   "PD",  # pandas-vet
   "RUF",  # ruff specific rules
+  "UP",  # pyupgrade
 ]
 preview = true
 ignore = [

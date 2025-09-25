@@ -2,9 +2,9 @@
 
 import argparse
 import logging
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import pandas as pd
 import pyarrow as pa
@@ -18,14 +18,14 @@ from .wellconnstatus import df as create_wellconnstatus_df
 logger = logging.getLogger(__name__)
 
 
-class UnitSystem(str, Enum):
+class UnitSystem(StrEnum):
     METRIC = "METRIC"
     FIELD = "FIELD"
     LAB = "LAB"
     PVTM = "PVT-M"
 
 
-class KHUnit(Enum):
+class KHUnit(StrEnum):
     METRIC = "mDm"
     FIELD = "mDft"
     LAB = "mDcm"
@@ -34,9 +34,9 @@ class KHUnit(Enum):
 
 def df(
     resdatafiles: ResdataFiles,
-    zonemap: Dict[int, str],
+    zonemap: dict[int, str],
     use_wellconnstatus: bool = False,
-    excl_well_startswith: Optional[str] = None,
+    excl_well_startswith: str | None = None,
 ) -> pd.DataFrame:
     """Aggregates compdat to zone level. If use_wellconnstatus is True,
     the actual OP/SH status of a connection will be extracted from summary
@@ -104,9 +104,9 @@ def _get_unit_system(resdatafiles: ResdataFiles) -> UnitSystem:
     return UnitSystem.METRIC
 
 
-def _get_metadata(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
+def _get_metadata(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
     """Provide metadata for the well completion data export"""
-    meta: Dict[str, Dict[str, str]] = {}
+    meta: dict[str, dict[str, str]] = {}
     unitsystem = _get_unit_system(resdatafiles)
     kh_units = {
         UnitSystem.METRIC: KHUnit.METRIC,
@@ -216,7 +216,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
 
     32-bit types will be used for integers and floats
     """
-    field_list: List[pa.Field] = []
+    field_list: list[pa.Field] = []
     for colname in dframe.columns:
         if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
             # Boolean objects in the metadata dictionary must be converted to bytes:

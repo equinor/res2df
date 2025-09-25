@@ -17,7 +17,8 @@ import argparse
 import collections
 import datetime
 import logging
-from typing import Any, Dict, Iterable, Optional, Set
+from collections.abc import Iterable
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -31,8 +32,8 @@ from .resdatafiles import ResdataFiles
 logger: logging.Logger = logging.getLogger(__name__)
 
 # In debug mode, these columns will be exported to three csv files.
-CON_TOPOLOGY_COLS: Set = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}
-SEG_TOPOLOGY_COLS: Set = {
+CON_TOPOLOGY_COLS: set = {"CONIDX", "CONBRNO", "CONSEGNO", "CONNXT", "DEPTH"}
+SEG_TOPOLOGY_COLS: set = {
     "SEGIDX",
     "SEGIDX_upstream",
     "SEGBRNO",
@@ -45,7 +46,7 @@ SEG_TOPOLOGY_COLS: Set = {
     "LEAF",
     "SEGDEPTH",
 }
-ICD_TOPOLOGY_COLS: Set = {
+ICD_TOPOLOGY_COLS: set = {
     "ICD_SEGBRNO_upstream",
     "ICD_SEGIDX_upstream",
     "ICD_LEAF",
@@ -103,7 +104,7 @@ def _rftrecords2df(rftfile: ResdataFile) -> pd.DataFrame:
     return nav_df.reset_index()
 
 
-def rftrecords(rftfile: ResdataFile) -> Iterable[Dict[str, Any]]:
+def rftrecords(rftfile: ResdataFile) -> Iterable[dict[str, Any]]:
     """Generator for looping over RFT records in a ResdataFile object.
 
     Each returned RFT record is represented as a dict with the keys:
@@ -137,7 +138,7 @@ def rftrecords(rftfile: ResdataFile) -> Iterable[Dict[str, Any]]:
 
 
 def get_con_seg_data(
-    rftrecord: Dict[str, Any], rftfile: ResdataFile, datatype: str
+    rftrecord: dict[str, Any], rftfile: ResdataFile, datatype: str
 ) -> pd.DataFrame:
     """
     Build a dataframe of CON* or SEG* data for a specific RFT record,
@@ -376,8 +377,8 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
 
 def merge_icd_seg_conseg(
     con_data: pd.DataFrame,
-    seg_data: Optional[pd.DataFrame] = None,
-    icd_data: Optional[pd.DataFrame] = None,
+    seg_data: pd.DataFrame | None = None,
+    icd_data: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """
     Merge ICD segments to the CONxxxxx data. We will be
@@ -512,8 +513,8 @@ def add_extras(dframe: pd.DataFrame, inplace: bool = True) -> pd.DataFrame:
 
 def df(
     resdatafiles: ResdataFiles,
-    wellname: Optional[str] = None,
-    date: Optional[str] = None,
+    wellname: str | None = None,
+    date: str | None = None,
 ) -> pd.DataFrame:
     """Loop over an RFT file and construct a dataframe representation
     of the data, ordered by well and date.

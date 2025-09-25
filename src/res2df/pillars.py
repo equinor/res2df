@@ -3,7 +3,6 @@
 import argparse
 import datetime
 import logging
-from typing import Dict, List, Optional, Union
 
 import dateutil.parser
 import pandas as pd
@@ -16,7 +15,7 @@ from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-AGGREGATORS: Dict[str, str] = {
+AGGREGATORS: dict[str, str] = {
     "VOLUME": "sum",
     "PORV": "sum",
     "PERMX": "mean",
@@ -38,8 +37,8 @@ AGGREGATORS: Dict[str, str] = {
 
 def df(
     resdatafiles: ResdataFiles,
-    region: Optional[str] = None,
-    rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
+    region: str | None = None,
+    rstdates: str | datetime.date | list[datetime.date] | None = None,
     soilcutoff: float = 0.2,
     sgascutoff: float = 0.7,
     swatcutoff: float = 0.7,
@@ -142,9 +141,7 @@ def df(
     return grouped
 
 
-def compute_volumes(
-    grid_df: pd.DataFrame, datestr: Optional[str] = None
-) -> pd.DataFrame:
+def compute_volumes(grid_df: pd.DataFrame, datestr: str | None = None) -> pd.DataFrame:
     """Compute "dynamic" volumes, volumes for data coming from the
     UNRST file (SWAT+SGAS)
 
@@ -194,11 +191,11 @@ def compute_volumes(
 
 def compute_pillar_contacts(
     grid_df: pd.DataFrame,
-    region: Optional[str] = None,
+    region: str | None = None,
     soilcutoff: float = 0.2,
     sgascutoff: float = 0.7,
     swatcutoff: float = 0.7,
-    datestr: Optional[str] = None,
+    datestr: str | None = None,
 ) -> pd.DataFrame:
     """Compute contacts pr. pillar in a grid dataframe.
 

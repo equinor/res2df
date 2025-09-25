@@ -17,7 +17,6 @@ import argparse
 import contextlib
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -39,7 +38,7 @@ from .resdatafiles import ResdataFiles
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS: List[str] = [
+SUPPORTED_KEYWORDS: list[str] = [
     "SWOF",
     "SGOF",
     "SWFN",
@@ -53,7 +52,7 @@ SUPPORTED_KEYWORDS: List[str] = [
 # RENAMERS are a dictionary of dictionaries, referring to
 # how we should rename deck record items, from the JSON
 # files in opm.common and into Dataframe column names.
-RENAMERS: Dict[str, Dict[str, Union[List[str], str]]] = {}
+RENAMERS: dict[str, dict[str, list[str] | str]] = {}
 RENAMERS["SGFN"] = {"DATA": ["SG", "KRG", "PCOG"]}
 RENAMERS["SGOF"] = {"DATA": ["SG", "KRG", "KROG", "PCOG"]}
 RENAMERS["SGWFN"] = {"DATA": ["SG", "KRG", "KRW", "PCGW"]}
@@ -65,9 +64,9 @@ RENAMERS["SWOF"] = {"DATA": ["SW", "KRW", "KROW", "PCOW"]}
 
 
 def df(
-    deck: Union[str, "opm.libopmcommon_python.Deck"],
-    keywords: Optional[List[str]] = None,
-    ntsfun: Optional[int] = None,
+    deck: "str | opm.opmcommon_python.Deck",
+    keywords: list[str] | None = None,
+    ntsfun: int | None = None,
 ) -> pd.DataFrame:
     """Extract the data in the saturation function keywords as a Pandas
     DataFrames.
@@ -240,9 +239,9 @@ def satfunc_reverse_main(args) -> None:
 
 def df2res(
     satfunc_df: pd.DataFrame,
-    keywords: Optional[List[str]] = None,
-    comments: Optional[Dict[str, str]] = None,
-    filename: Optional[str] = None,
+    keywords: list[str] | None = None,
+    comments: dict[str, str] | None = None,
+    filename: str | None = None,
 ) -> str:
     """Generate resdata :term:`include file` content from dataframes with
     saturation functions (SWOF, SGOF, ...)
@@ -274,7 +273,7 @@ def df2res(
     return string
 
 
-def df2res_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_swof(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SWOF. Used by df2res().
 
     Args:
@@ -284,7 +283,7 @@ def df2res_swof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SWOF", dframe, comment)
 
 
-def df2res_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_sgof(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SGOF. Used by df2res().
 
     Args:
@@ -294,7 +293,7 @@ def df2res_sgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SGOF", dframe, comment)
 
 
-def df2res_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_sgfn(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SGFN. Used by df2res().
 
     Args:
@@ -304,7 +303,7 @@ def df2res_sgfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SGFN", dframe, comment)
 
 
-def df2res_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_sgwfn(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SGWFN. Used by df2res().
 
     Args:
@@ -314,7 +313,7 @@ def df2res_sgwfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SGWFN", dframe, comment)
 
 
-def df2res_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_swfn(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SWFN. Used by df2res().
 
     Args:
@@ -324,7 +323,7 @@ def df2res_swfn(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SWFN", dframe, comment)
 
 
-def df2res_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_slgof(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SLGOF. Used by df2res().
 
     Args:
@@ -334,7 +333,7 @@ def df2res_slgof(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SLGOF", dframe, comment)
 
 
-def df2res_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_sof2(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SOF2. Used by df2res().
 
     Args:
@@ -344,7 +343,7 @@ def df2res_sof2(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_satfuncs("SOF2", dframe, comment)
 
 
-def df2res_sof3(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_sof3(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for SOF3. Used by df2res().
 
     Args:
@@ -355,7 +354,7 @@ def df2res_sof3(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
 
 def _df2res_satfuncs(
-    keyword: str, dframe: pd.DataFrame, comment: Optional[str] = None
+    keyword: str, dframe: pd.DataFrame, comment: str | None = None
 ) -> str:
     if dframe.empty:
         return "-- No data!\n"

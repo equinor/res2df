@@ -8,7 +8,7 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 
 import logging
 import numbers
-from typing import Any, List, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -29,7 +29,7 @@ from ..common import parse_opmio_deckrecord
 logger = logging.getLogger(__name__)
 
 
-def _string2intlist(list_def_str: str) -> List[int]:
+def _string2intlist(list_def_str: str) -> list[int]:
     """Produce a list of int from input string
 
     Args:
@@ -52,13 +52,13 @@ def _string2intlist(list_def_str: str) -> List[int]:
 
 
 def _deckrecord2list(
-    record: "opm.libopmcommon_python.DeckRecord",
+    record: "opm.opmcommon_python.DeckRecord",
     keyword: str,
     recordindex: int,
     recordname: str,
-) -> Union[Any, List[float]]:
+) -> Any | list[float]:
     """
-    Parse an opm.libopmcommon_python.DeckRecord belonging to a certain keyword
+    Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword
     and return as list of numbers
 
     Args:
@@ -70,7 +70,7 @@ def _deckrecord2list(
     """
     record = parse_opmio_deckrecord(record, keyword, "records", recordindex)
 
-    values: Union[Any, List[float]]
+    values: Any | list[float]
     # Extract interpolation ranges into lists
     if isinstance(record.get(recordname), list):
         values = record.get(recordname)
@@ -86,10 +86,10 @@ def _deckrecord2list(
 
 
 def _stack_vfptable2df(
-    index_names_list: List[str],
-    index_values_list: Union[np.ndarray, List[List[float]]],
-    flow_values_list: Union[np.ndarray, List[float]],
-    table_values_list: Union[np.ndarray, List[List[float]]],
+    index_names_list: list[str],
+    index_values_list: np.ndarray | list[list[float]],
+    flow_values_list: np.ndarray | list[float],
+    table_values_list: np.ndarray | list[list[float]],
 ) -> pd.DataFrame:
     """Return a dataframe from a list of interpolation ranges and tabulated values
 
@@ -170,7 +170,7 @@ def _stack_vfptable2df(
 
 
 def _write_vfp_range(
-    values: List[float],
+    values: list[float],
     var_type: str,
     unit_type: str,
     format: str = "%10.6g",

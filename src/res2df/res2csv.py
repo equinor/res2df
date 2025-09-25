@@ -7,7 +7,6 @@ in res2df
 import argparse
 import functools
 import importlib
-from typing import Optional
 
 from .__version__ import __version__
 
@@ -229,7 +228,7 @@ def get_parser() -> argparse.ArgumentParser:
 def run_subparser_main(
     args,
     submodule: str,
-    parser: Optional[argparse.ArgumentParser] = None,
+    parser: argparse.ArgumentParser | None = None,
 ) -> None:
     """Wrapper for running the subparsers main() function, with
     custom argument handling.

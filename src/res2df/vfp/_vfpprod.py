@@ -11,7 +11,7 @@ pyarrow.Table to file as Eclipse .Ecl format.
 
 import logging
 import numbers
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -75,9 +75,9 @@ logger = logging.getLogger(__name__)
 
 
 def basic_data(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Union[Dict[str, Any], None]:
+    keyword: "opm.opmcommon_python.DeckKeyword",
+    vfpnumbers_str: str | None = None,
+) -> dict[str, Any] | None:
     """Read and return all data for Eclipse VFPPROD keyword as basic data types
 
     Empty string returned if vfp table number does not match any number in list
@@ -144,14 +144,14 @@ def basic_data(
         )
 
     # Extract interpolation values and tabulated values (BHP values)
-    bhp_table: List[List[float]] = []
-    thp_indices: List[float] = []
-    wfr_indices: List[float] = []
-    gfr_indices: List[float] = []
-    alq_indices: List[float] = []
+    bhp_table: list[list[float]] = []
+    thp_indices: list[float] = []
+    wfr_indices: list[float] = []
+    gfr_indices: list[float] = []
+    alq_indices: list[float] = []
     for n in range(6, num_rec):
         bhp_record = parse_opmio_deckrecord(keyword[n], "VFPPROD", "records", 6)
-        bhp_values: Union[Any, List[float]]
+        bhp_values: Any | list[float]
         if isinstance(bhp_record.get("VALUES"), list):
             bhp_values = bhp_record.get("VALUES")
         elif isinstance(bhp_record.get("VALUES"), numbers.Number):
@@ -412,7 +412,7 @@ def basic_data2pyarrow(
     return pa_table
 
 
-def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
+def df2basic_data(dframe: pd.DataFrame) -> dict[str, Any]:
     """Return basic data type for VFPPROD from a pandas dataframe.
 
     Return format is a dictionary all data in VFPPROD in basic data types
@@ -582,7 +582,7 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     return vfpprod_data
 
 
-def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
+def pyarrow2basic_data(pa_table: pa.Table) -> dict[str, Any]:
     """Return basic data type for VFPPROD from a pyarrow.Table.
 
     Return format is a dictionary all data in VFPPROD in basic data types
@@ -650,7 +650,7 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Dict[str, Any]:
     return vfpprod_data
 
 
-def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
+def _check_basic_data(vfp_data: dict[str, Any]) -> bool:
     """Perform a check of the VFPPROD data contained in the dictionary.
     Checks if all data is present and if the dimensions of the arrays
     are consistent.
@@ -714,9 +714,9 @@ def _check_basic_data(vfp_data: Dict[str, Any]) -> bool:
 
 
 def df(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Union[pd.DataFrame, None]:
+    keyword: "opm.opmcommon_python.DeckKeyword",
+    vfpnumbers_str: str | None = None,
+) -> pd.DataFrame | None:
     """Return a dataframe or pyarrow Table of a single VFPPROD table
     from a :term:`.DATA file`.
 
@@ -759,9 +759,9 @@ def df(
 
 
 def pyarrow(
-    keyword: "opm.libopmcommon_python.DeckKeyword",
-    vfpnumbers_str: Optional[str] = None,
-) -> Union[pa.Table, None]:
+    keyword: "opm.opmcommon_python.DeckKeyword",
+    vfpnumbers_str: str | None = None,
+) -> pa.Table | None:
     """Return a pyarrow Table of a single VFPPROD table from a :term:`.DATA file`.
        If no VFPPROD curve found, return None
 
@@ -938,7 +938,7 @@ def _write_table_records(
     return deck_str
 
 
-def df2res(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Creates a :term:`include file` content string
     representing single VFPPROD Eclipse input from a dataframe
 

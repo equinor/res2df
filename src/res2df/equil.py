@@ -6,7 +6,6 @@ import argparse
 import contextlib
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -30,8 +29,8 @@ with contextlib.suppress(ImportError):
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS: List[str] = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
-RENAMERS: Dict[str, Dict[str, Union[str, List[str]]]] = {}
+SUPPORTED_KEYWORDS: list[str] = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
+RENAMERS: dict[str, dict[str, str | list[str]]] = {}
 RENAMERS["PBVD"] = {"DATA": ["Z", "PB"]}
 RENAMERS["PDVD"] = {"DATA": ["Z", "PD"]}
 RENAMERS["RSVD"] = {"DATA": ["Z", "RS"]}
@@ -79,9 +78,9 @@ RENAMERS["oil-gas"] = {
 
 
 def df(
-    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
-    keywords: Optional[List[str]] = None,
-    ntequl: Optional[int] = None,
+    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
+    keywords: list[str] | None = None,
+    ntequl: int | None = None,
 ) -> pd.DataFrame:
     """Extract EQUIL related keyword data, EQUIL, RSVD, RVVD
     PBVD and PDVD.
@@ -137,7 +136,7 @@ def df(
 
 
 def rsvd_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract RSVD data from a :term:`deck`
 
@@ -154,7 +153,7 @@ def rsvd_fromdeck(
 
 
 def rvvd_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract RVVD data from a :term:`deck`
 
@@ -171,7 +170,7 @@ def rvvd_fromdeck(
 
 
 def pbvd_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract PBVD data from a :term:`deck`
 
@@ -188,7 +187,7 @@ def pbvd_fromdeck(
 
 
 def pdvd_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract PDVD data from a :term:`deck`
 
@@ -204,7 +203,7 @@ def pdvd_fromdeck(
     )
 
 
-def phases_from_deck(deck: Union[str, "opm.libopmcommon_python.Deck"]) -> str:
+def phases_from_deck(deck: "str | opm.opmcommon_python.Deck") -> str:
     """Determined the set of phases from a :term:`deck`, as
     a string with values "oil-water-gas", "gas-water", "oil-water",
     or "oil-gas"
@@ -226,7 +225,7 @@ def phases_from_deck(deck: Union[str, "opm.libopmcommon_python.Deck"]) -> str:
     return ""
 
 
-def phases_from_columns(columns: List[str]) -> str:
+def phases_from_columns(columns: list[str]) -> str:
     """Determine the set of phases available in an
     equil dataframe, based on which columns are there.
     Returns "oil-water-gas", "gas-water", "oil-water",
@@ -252,7 +251,7 @@ def phases_from_columns(columns: List[str]) -> str:
 
 
 def equil_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntequl: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntequl: int | None = None
 ) -> pd.DataFrame:
     """Extract EQUIL data from a :term:`deck`
 
@@ -361,10 +360,10 @@ def equil_reverse_main(args) -> None:
 
 def df2res(
     equil_df: pd.DataFrame,
-    keywords: Optional[List[str]] = None,
-    comments: Optional[Dict[str, str]] = None,
+    keywords: list[str] | None = None,
+    comments: dict[str, str] | None = None,
     withphases: bool = False,
-    filename: Optional[str] = None,
+    filename: str | None = None,
 ) -> str:
     """Generate string contents of :term:`include files <include file>`
     from dataframes with solution (EQUIL, RSVD++) data.
@@ -399,7 +398,7 @@ def df2res(
     return string
 
 
-def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_equil(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for EQUIL keyword
 
     Args:
@@ -430,7 +429,7 @@ def df2res_equil(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     )
 
 
-def df2res_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_rsvd(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for RSVD keyword
 
     This data consists of one table (rs as a function
@@ -443,7 +442,7 @@ def df2res_rsvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_equilfuncs("RSVD", dframe, comment)
 
 
-def df2res_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_rvvd(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for RVVD keyword
 
     This data consists of one table (rv as a function
@@ -456,7 +455,7 @@ def df2res_rvvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_equilfuncs("RVVD", dframe, comment)
 
 
-def df2res_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pbvd(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PBVD keyword
 
     Bubble-point versus depth
@@ -471,7 +470,7 @@ def df2res_pbvd(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return _df2res_equilfuncs("PBVD", dframe, comment)
 
 
-def df2res_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
+def df2res_pdvd(dframe: pd.DataFrame, comment: str | None = None):
     """Create string with :term:`include file` contents for PDVD keyword.
 
     Dew-point versus depth.
@@ -487,7 +486,7 @@ def df2res_pdvd(dframe: pd.DataFrame, comment: Optional[str] = None):
 
 
 def _df2res_equilfuncs(
-    keyword: str, dframe: pd.DataFrame, comment: Optional[str] = None
+    keyword: str, dframe: pd.DataFrame, comment: str | None = None
 ) -> str:
     """Internal function to be used by df2res_<keyword>() functions"""
     if dframe.empty:

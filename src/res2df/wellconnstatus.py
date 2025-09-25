@@ -3,7 +3,7 @@
 import argparse
 import logging
 import re
-from typing import Any, List, Tuple
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -67,7 +67,7 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
 
 def _extract_single_connection_status_changes(
     dates: np.ndarray, conn_values: np.ndarray
-) -> List[Tuple[Any, str]]:
+) -> list[tuple[Any, str]]:
     """Extracts the status history of a single connection as a list of tuples
     on the form (date, status)
 

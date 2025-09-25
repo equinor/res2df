@@ -126,8 +126,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
     command = ["eclrun", "eclipse", "-v", eclipse_version, datafile]
     result = subprocess.run(
         command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         check=False,  # eclrun returns code 0 no matter what error happens
     )
     aggregated_output = result.stdout.decode() + result.stderr.decode()
@@ -146,8 +145,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
         time.sleep(30)
         result = subprocess.run(
             command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             check=False,
         )
 

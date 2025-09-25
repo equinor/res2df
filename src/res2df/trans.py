@@ -5,7 +5,6 @@ Extract transmissibility information from output files as Dataframes.
 
 import argparse
 import logging
-from typing import List, Optional, Union
 
 import pandas as pd
 
@@ -27,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 def df(
     resdatafiles: ResdataFiles,
-    vectors: Optional[Union[str, List[str]]] = None,
+    vectors: str | list[str] | None = None,
     boundaryfilter: bool = False,
     group: bool = False,
     coords: bool = False,

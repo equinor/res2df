@@ -7,7 +7,7 @@ import datetime as dt
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import dateutil
 import numpy as np
@@ -26,7 +26,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 FREQ_RAW: str = "raw"
 FREQ_FIRST: str = "first"
 FREQ_LAST: str = "last"
-PD_FREQ_MNEMONICS: Dict[str, str] = {
+PD_FREQ_MNEMONICS: dict[str, str] = {
     "daily": "D",
     "weekly": "W-MON",
     "monthly": "MS",
@@ -40,7 +40,7 @@ https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffs
 """
 
 
-def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> List[dt.datetime]:
+def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> list[dt.datetime]:
     """Wrapper for pandas.date_range to allow for extra res2df specific mnemonics
     'yearly', 'daily', 'weekly', mapped over to pandas DateOffsets.
 
@@ -61,7 +61,7 @@ def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> List[dt.dat
         return _fallback_date_range(start_date, end_date, freq)
 
 
-def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[dt.date]:
+def _ensure_date_or_none(some_date: str | dt.date | None) -> dt.date | None:
     """Ensures an object is either a date or None
 
     Args:
@@ -82,11 +82,11 @@ def _ensure_date_or_none(some_date: Optional[Union[str, dt.date]]) -> Optional[d
 
 
 def _crop_datelist(
-    summarydates: List[dt.datetime],
-    freq: Union[dt.date, dt.datetime, str],
-    start_date: Optional[dt.date] = None,
-    end_date: Optional[dt.date] = None,
-) -> Union[List[dt.date], List[dt.datetime]]:
+    summarydates: list[dt.datetime],
+    freq: dt.date | dt.datetime | str,
+    start_date: dt.date | None = None,
+    end_date: dt.date | None = None,
+) -> list[dt.date] | list[dt.datetime]:
     """Helper function for resample_smry_dates, taking care of
     the special cases where the list of dates should not be resampled, but
     only cropped or returned as is.
@@ -101,7 +101,7 @@ def _crop_datelist(
     Returns:
         list of datetimes.
     """
-    datetimes: Union[List[dt.date], List[dt.datetime]] = []  # type: ignore
+    datetimes: list[dt.date] | list[dt.datetime] = []  # type: ignore
     if freq == FREQ_RAW:
         datetimes = summarydates
         datetimes.sort()
@@ -161,7 +161,7 @@ def _fallback_date_roll(rollme: dt.datetime, direction: str, freq: str) -> dt.da
     )
 
 
-def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.datetime]:
+def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> list[dt.datetime]:
     """Fallback routine for generating date ranges beyond Pandas datetime64[ns]
     year-2262 limit.
 
@@ -191,12 +191,12 @@ def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> List[dt.dat
 
 
 def resample_smry_dates(
-    summarydates: List[dt.datetime],
+    summarydates: list[dt.datetime],
     freq: str = FREQ_RAW,
     normalize: bool = True,
-    start_date: Optional[Union[str, dt.date]] = None,
-    end_date: Optional[Union[str, dt.date]] = None,
-) -> Union[List[dt.date], List[dt.datetime]]:
+    start_date: str | dt.date | None = None,
+    end_date: str | dt.date | None = None,
+) -> list[dt.date] | list[dt.datetime]:
     """
     Resample (optionally) a list of date(time)s to a new datelist according to options.
 
@@ -290,13 +290,13 @@ def resample_smry_dates(
 
 def df(
     resdatafiles: ResdataFiles,
-    time_index: Optional[str] = None,
-    column_keys: Optional[Union[List[str], str]] = None,
-    start_date: Optional[Union[str, dt.date]] = None,
-    end_date: Optional[Union[str, dt.date]] = None,
+    time_index: str | None = None,
+    column_keys: list[str] | str | None = None,
+    start_date: str | dt.date | None = None,
+    end_date: str | dt.date | None = None,
     include_restart: bool = False,
     params: bool = False,
-    paramfile: Optional[str] = None,
+    paramfile: str | None = None,
     datetime: bool = False,  # A very poor choice of argument name [pylint]
 ):
     """
@@ -354,7 +354,7 @@ def df(
             logger.warning("Error reading summary instance, returning empty dataframe")
             return pd.DataFrame()
 
-    time_index_arg: Optional[Union[List[dt.date], List[dt.datetime]]]
+    time_index_arg: list[dt.date] | list[dt.datetime] | None
     if isinstance(time_index, str) and time_index == "raw":
         time_index_arg = resample_smry_dates(
             summary.dates,
@@ -495,7 +495,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
     This index is always named DATE in the pyarrow table.
     """
 
-    field_list: List[pa.Field] = []
+    field_list: list[pa.Field] = []
     field_list.append(pa.field("DATE", pa.timestamp("ms")))
     column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
 
@@ -526,8 +526,8 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
 
 def _merge_params(
     dframe: pd.DataFrame,
-    paramfile: Optional[Union[str, Path]] = None,
-    resdatafiles: Optional[Union[str, ResdataFiles]] = None,
+    paramfile: str | Path | None = None,
+    resdatafiles: str | ResdataFiles | None = None,
 ) -> pd.DataFrame:
     """Locate parameters in a <key> <value> file and add to the dataframe.
 
@@ -562,7 +562,7 @@ def _merge_params(
     return dframe
 
 
-def smry_meta(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
+def smry_meta(resdatafiles: ResdataFiles) -> dict[str, dict[str, Any]]:
     """Provide metadata for summary data vectors.
 
     A dictionary indexed by summary vector name is returned, and each
@@ -582,7 +582,7 @@ def smry_meta(resdatafiles: ResdataFiles) -> Dict[str, Dict[str, Any]]:
     else:
         summary = resdatafiles.get_summary()
 
-    meta: Dict[str, Dict[str, Any]] = {}
+    meta: dict[str, dict[str, Any]] = {}
     for col in summary:
         meta[col] = {}
         meta[col]["unit"] = summary.unit(col)

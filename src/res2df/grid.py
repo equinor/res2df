@@ -16,7 +16,6 @@ import fnmatch
 import logging
 import textwrap
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Type, Union
 
 import dateutil.parser
 import numpy as np
@@ -38,7 +37,7 @@ from .resdatafiles import ResdataFiles
 logger = logging.getLogger(__name__)
 
 
-def get_available_rst_dates(resdatafiles: ResdataFiles) -> List[datetime.date]:
+def get_available_rst_dates(resdatafiles: ResdataFiles) -> list[datetime.date]:
     """Return a list of datetime objects for the available dates in the RST file"""
     report_indices = ResdataFile.file_report_list(resdatafiles.get_rstfilename())
     logger.info(
@@ -54,8 +53,8 @@ def get_available_rst_dates(resdatafiles: ResdataFiles) -> List[datetime.date]:
 
 def dates2rstindices(
     resdatafiles: ResdataFiles,
-    dates: Optional[Union[str, datetime.date, List[datetime.date]]],
-) -> Tuple[List[int], List[datetime.date], List[str]]:
+    dates: str | datetime.date | list[datetime.date] | None,
+) -> tuple[list[int], list[datetime.date], list[str]]:
     """Return the restart index/indices for a given datetime or list of datetimes
 
       dates: datetime.date or list of datetime.date, must
@@ -132,7 +131,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
 
     32-bit types will be used for integers and floats (todo)
     """
-    field_list: List[pa.Field] = []
+    field_list: list[pa.Field] = []
     for colname in dframe.columns:
         if pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
             dtype = pa.int32()
@@ -149,8 +148,8 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
 
 def rst2df(
     resdatafiles: ResdataFiles,
-    date: Union[str, datetime.date, List[datetime.date]],
-    vectors: Optional[Union[str, List[str]]] = None,
+    date: str | datetime.date | list[datetime.date],
+    vectors: str | list[str] | None = None,
     dateinheaders: bool = False,
     stackdates: bool = False,
 ) -> pd.DataFrame:
@@ -286,7 +285,7 @@ def rst2df(
 
 
 def gridgeometry2df(
-    resdatafiles: ResdataFiles, zonemap: Optional[Dict[int, str]] = None
+    resdatafiles: ResdataFiles, zonemap: dict[int, str] | None = None
 ) -> pd.DataFrame:
     """Produce a Pandas Dataframe with grid geometry
 
@@ -366,8 +365,8 @@ def gridgeometry2df(
 def merge_initvectors(
     resdatafiles: ResdataFiles,
     dframe: pd.DataFrame,
-    initvectors: List[str],
-    ijknames: Optional[List[str]] = None,
+    initvectors: list[str],
+    ijknames: list[str] | None = None,
 ) -> pd.DataFrame:
     """Merge in INIT vectors to a dataframe by I, J, K.
 
@@ -410,7 +409,7 @@ def merge_initvectors(
 
 
 def init2df(
-    resdatafiles: ResdataFiles, vectors: Optional[Union[str, List[str]]] = None
+    resdatafiles: ResdataFiles, vectors: str | list[str] | None = None
 ) -> pd.DataFrame:
     """Extract information from INIT file with cell data
 
@@ -476,12 +475,12 @@ def init2df(
 
 def df(
     resdatafiles: ResdataFiles,
-    vectors: Union[str, List[str]] = "*",
+    vectors: str | list[str] = "*",
     dropconstants: bool = False,
-    rstdates: Optional[Union[str, datetime.date, List[datetime.date]]] = None,
+    rstdates: str | datetime.date | list[datetime.date] | None = None,
     dateinheaders: bool = False,
     stackdates: bool = False,
-    zonemap: Optional[Dict[int, str]] = None,
+    zonemap: dict[int, str] | None = None,
 ):
     """Produce a dataframe with grid information
 
@@ -589,7 +588,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 
 def drop_constant_columns(
-    dframe: pd.DataFrame, alwayskeep: Optional[Union[str, List[str]]] = None
+    dframe: pd.DataFrame, alwayskeep: str | list[str] | None = None
 ) -> pd.DataFrame:
     """Drop/delete constant columns from a dataframe.
 
@@ -622,10 +621,10 @@ def drop_constant_columns(
 
 def df2res(
     grid_df: pd.DataFrame,
-    keywords: Union[str, List[str]],
-    resdatafiles: Optional[ResdataFiles] = None,
-    dtype: Optional[Type] = None,
-    filename: Optional[str] = None,
+    keywords: str | list[str],
+    resdatafiles: ResdataFiles | None = None,
+    dtype: type | None = None,
+    filename: str | None = None,
     nocomments: bool = False,
 ) -> str:
     """
@@ -682,7 +681,7 @@ def df2res(
 
     if "GLOBAL_INDEX" not in grid_df:
         logger.warning(
-            ("Global index not found in grid dataframe. Assumes all cells are active")
+            "Global index not found in grid dataframe. Assumes all cells are active"
         )
         # Drop NaN rows for columns to be used (triggered by stacked
         # dates and no global index, unlikely)

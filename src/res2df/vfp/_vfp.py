@@ -7,7 +7,7 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 import argparse
 import logging
 import sys
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -36,10 +36,10 @@ logger = logging.getLogger(__name__)
 
 
 def basic_data(
-    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
+    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
     keyword: str = "VFPPROD",
-    vfpnumbers_str: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    vfpnumbers_str: str | None = None,
+) -> list[dict[str, Any]]:
     """Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.
     Dictionary returned contains items for liftcuve tables as simple datatypes
     Required keys in dictionary for VFPPROD and VFPINJ can be found in
@@ -80,7 +80,7 @@ def basic_data(
     return basic_data_vfps
 
 
-def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
+def basic_data2df(data: dict[str, Any]) -> pd.DataFrame:
     """Convert basic_data representation of VFPPROD/VFPINF
     (see function basic_data for defintion of data) into
     pandas DataFrame representation
@@ -140,7 +140,7 @@ def basic_data2df(data: Dict[str, Any]) -> pd.DataFrame:
     raise ValueError("VFP_TYPE not found in basic data")
 
 
-def basic_data2pyarrow(data: Dict[str, Any], /) -> pa.Table:
+def basic_data2pyarrow(data: dict[str, Any], /) -> pa.Table:
     """Convert basic_data representation of VFPPROD/VFPINF
     (see function basic_data for defintion of data) into
     pyarrow.Table representation
@@ -200,7 +200,7 @@ def basic_data2pyarrow(data: Dict[str, Any], /) -> pa.Table:
     raise ValueError("VFP_TYPE not found in basic data")
 
 
-def df2basic_data(dframe: pd.DataFrame, /) -> Union[Dict[str, Any], None]:
+def df2basic_data(dframe: pd.DataFrame, /) -> dict[str, Any] | None:
     """Produce a dictionary with basic data types for a VFPPROD/VFPINJ
     liftcurve table represented as a Pandas DataFrame
 
@@ -221,7 +221,7 @@ def df2basic_data(dframe: pd.DataFrame, /) -> Union[Dict[str, Any], None]:
     return None
 
 
-def pyarrow2basic_data(pa_table: pa.Table) -> Union[Dict[str, Any], None]:
+def pyarrow2basic_data(pa_table: pa.Table) -> dict[str, Any] | None:
     """Produce a dictionary with basic data types for a VFPPROD/VFPINJ
     liftcurve table represented as a pyarrow Table
 
@@ -242,10 +242,10 @@ def pyarrow2basic_data(pa_table: pa.Table) -> Union[Dict[str, Any], None]:
 
 
 def dfs(
-    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
+    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
     keyword: str = "VFPPROD",
-    vfpnumbers_str: Optional[str] = None,
-) -> List[pd.DataFrame]:
+    vfpnumbers_str: str | None = None,
+) -> list[pd.DataFrame]:
     """Produce a list of dataframes of vfp tables from a :term:`deck`
 
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
@@ -285,10 +285,10 @@ def dfs(
 
 
 def pyarrow_tables(
-    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
+    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
     keyword: str = "VFPPROD",
-    vfpnumbers_str: Optional[str] = None,
-) -> List[pa.Table]:
+    vfpnumbers_str: str | None = None,
+) -> list[pa.Table]:
     """Produce a list of pyarrow.Table of vfp tables from a :term:`deck`
 
     Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list
@@ -330,8 +330,8 @@ def pyarrow_tables(
 def df2ress(
     dframe: pd.DataFrame,
     keyword: str = "VFPPROD",
-    comments: Optional[Dict[str, str]] = None,
-) -> List[str]:
+    comments: dict[str, str] | None = None,
+) -> list[str]:
     """Produce a list of strings defining VFPPROD/VFPINJ Eclipse
     :term:`include file` contents from a dataframe
 
@@ -376,8 +376,8 @@ def df2ress(
 def df2res(
     dframe: pd.DataFrame,
     keyword: str = "VFPPROD",
-    comments: Optional[Dict[str, str]] = None,
-    filename: Optional[str] = None,
+    comments: dict[str, str] | None = None,
+    filename: str | None = None,
 ) -> str:
     """Create a string defining all VFPPROD/VFPINJ Eclipse
     :term:`include file` contents from a dataframe
@@ -411,9 +411,9 @@ def df2res(
 
 
 def df(
-    deck: Union[str, ResdataFiles, "opm.libopmcommon_python.Deck"],
+    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
     keyword: str = "VFPPROD",
-    vfpnumbers_str: Optional[str] = None,
+    vfpnumbers_str: str | None = None,
 ) -> pd.DataFrame:
     """Produce a dataframes of all vfp tables from a deck
 

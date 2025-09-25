@@ -4,7 +4,6 @@ import argparse
 import contextlib
 import datetime
 import logging
-from typing import Union
 
 import pandas as pd
 
@@ -26,7 +25,7 @@ logger = logging.getLogger(__name__)
 WCONKEYS = ["WCONHIST", "WCONINJE", "WCONINJH", "WCONPROD"]
 
 
-def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
+def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
     """Loop through the :term:`deck` and pick up information found
 
     The loop over the :term:`deck` is a state machine, as it has to pick up dates

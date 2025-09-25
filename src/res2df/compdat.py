@@ -14,7 +14,6 @@ import argparse
 import contextlib
 import datetime
 import logging
-from typing import Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -42,7 +41,7 @@ documentation ever so slightly different when naming the data.
 For COMPDAT dataframe columnnames, we prefer the RMS terms due to the
 one very long one, and mixed-case in opm
 """
-COMPDAT_RENAMER: Dict[str, str] = {
+COMPDAT_RENAMER: dict[str, str] = {
     "WELL": "WELL",
     "I": "I",
     "J": "J",
@@ -60,7 +59,7 @@ COMPDAT_RENAMER: Dict[str, str] = {
 }
 
 # Workaround an inconsistency in JSON-files for OPM-common < 2021.04:
-WSEG_RENAMER: Dict[str, str] = {
+WSEG_RENAMER: dict[str, str] = {
     "SEG1": "SEGMENT1",
     "SEG2": "SEGMENT2",
 }
@@ -68,9 +67,9 @@ WSEG_RENAMER: Dict[str, str] = {
 
 def deck2dfs(
     deck: "opm.io.Deck",
-    start_date: Optional[Union[str, datetime.date]] = None,
+    start_date: str | datetime.date | None = None,
     unroll: bool = True,
-) -> Dict[str, pd.DataFrame]:
+) -> dict[str, pd.DataFrame]:
     """Loop through the :term:`deck` and pick up information found
 
     The loop over the :term:`deck` is a state machine, as it has to pick up dates and
@@ -307,7 +306,7 @@ def expand_welopen_defaults(
     to this functions.
     """
 
-    def is_default(value: Optional[int]) -> bool:
+    def is_default(value: int | None) -> bool:
         if value is None or np.isnan(value):
             return True
         return value <= 0
@@ -561,7 +560,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
     # of dictionaries, which accumulates all WLIST directives. Every time the date
     # changes, the current state is outputted as it was valid for the previous date.
 
-    currentstate: Dict[str, str] = {}
+    currentstate: dict[str, str] = {}
 
     if wlist_df.empty:
         return wlist_df
@@ -794,8 +793,8 @@ def expand_wlist_in_welopen_df(
 def applywelopen(
     compdat_df: pd.DataFrame,
     welopen_df: pd.DataFrame,
-    wlist_df: Optional[pd.DataFrame] = None,
-    complump_df: Optional[pd.DataFrame] = None,
+    wlist_df: pd.DataFrame | None = None,
+    complump_df: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Apply WELOPEN actions to the COMPDAT dataframe.
 
@@ -961,8 +960,8 @@ def compdat_main(args):
 
 def df(
     resdatafiles: ResdataFiles,
-    initvectors: Optional[List[str]] = None,
-    zonemap: Optional[Dict[int, str]] = None,
+    initvectors: list[str] | None = None,
+    zonemap: dict[int, str] | None = None,
 ) -> pd.DataFrame:
     """Main function for Python API users
 

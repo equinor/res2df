@@ -8,7 +8,6 @@ a DataFrame
 import argparse
 import contextlib
 import logging
-from typing import Union
 
 import pandas as pd
 
@@ -28,7 +27,7 @@ COLUMNS = ["NAME", "I", "J", "K", "FACE"]
 ALLOWED_FACES = ["X", "Y", "Z", "I", "J", "K", "X-", "Y-", "Z-", "I-", "J-", "K-"]
 
 
-def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFrame:
+def df(deck: "ResdataFiles | opm.opmcommon_python.Deck") -> pd.DataFrame:
     """Produce a dataframe of fault data from a :term:`deck`
 
     All data for the keyword FAULTS will be returned.

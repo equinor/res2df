@@ -5,7 +5,7 @@ import json
 import logging
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import pandas as pd
 import yaml
@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def find_parameter_files(
-    deckpath: Union[ResdataFiles, str, Path], filebase: str = "parameters"
-) -> List[Path]:
+    deckpath: ResdataFiles | str | Path, filebase: str = "parameters"
+) -> list[Path]:
     """Locate a default prioritized list of files to try to read as key-value
 
     File extensions .yml, .json and .txt are recognized and will be found in
@@ -41,13 +41,13 @@ def find_parameter_files(
         eclbasepath = Path(deckpath).parent.absolute()
     else:
         raise TypeError
-    files_to_lookfor: List[str] = [
+    files_to_lookfor: list[str] = [
         filebase + ".json",
         filebase + ".yml",
         filebase + ".txt",
         filebase,
     ]
-    paths_to_check: List[Path] = [Path("."), Path(".."), Path("..") / Path("..")]
+    paths_to_check: list[Path] = [Path("."), Path(".."), Path("..") / Path("..")]
     foundfiles = []
     for path in paths_to_check:
         for fname in files_to_lookfor:
@@ -57,7 +57,7 @@ def find_parameter_files(
     return foundfiles
 
 
-def load_parameterstxt(filename: Union[str, Path]) -> Dict[str, Any]:
+def load_parameterstxt(filename: str | Path) -> dict[str, Any]:
     """Read parameters.txt into a dictionary
 
     Lines starting with a hash will be ignored.
@@ -87,8 +87,8 @@ def load_parameterstxt(filename: Union[str, Path]) -> Dict[str, Any]:
 
 
 def load_all(
-    filenames: Union[List[str], List[Path]], warnduplicates: bool = True
-) -> Dict[str, Any]:
+    filenames: list[str] | list[Path], warnduplicates: bool = True
+) -> dict[str, Any]:
     """Reads a list of parameter filenames
 
     Dictionaries for all files will be merged into one.
@@ -101,7 +101,7 @@ def load_all(
         filenames: Order matters.
         warnduplicates: If True (default), overlapping keys will be warned.
     """
-    keyvalues: Dict[str, Any] = {}
+    keyvalues: dict[str, Any] = {}
     for fname in filenames:
         new_params = load(fname)
         if warnduplicates and keyvalues:
@@ -113,7 +113,7 @@ def load_all(
     return keyvalues
 
 
-def load(filename: Union[str, Path]) -> Dict[str, Any]:
+def load(filename: str | Path) -> dict[str, Any]:
     """Read a parameter file as txt, yaml or json
 
     Returns:

@@ -4,7 +4,6 @@ import argparse
 import datetime
 import logging
 import re
-from typing import List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -15,7 +14,7 @@ from .resdatafiles import ResdataFiles
 
 logger = logging.getLogger(__name__)
 
-REGION_REPORT_COLUMNS: List[str] = [
+REGION_REPORT_COLUMNS: list[str] = [
     "DATE",
     "FIPNAME",
     "REGION",
@@ -49,7 +48,7 @@ def report_block_lineparser(line: str) -> tuple:
         return ()
 
     colonsections = line.split(":")
-    to_index: Optional[int]
+    to_index: int | None
     if "OUTFLOW TO REGION" in line:
         to_index = int(colonsections[1].split()[3])
         row_name = "OUTFLOW TO REGION"
@@ -58,9 +57,9 @@ def report_block_lineparser(line: str) -> tuple:
         row_name = " ".join(colonsections[1].strip().upper().split())
 
     # Oil section:
-    liquid_oil: Optional[float] = None
-    vapour_oil: Optional[float] = None
-    total_oil: Optional[float] = None
+    liquid_oil: float | None = None
+    vapour_oil: float | None = None
+    total_oil: float | None = None
     if len(colonsections[2].split()) == 3:
         (liquid_oil, vapour_oil, total_oil) = map(
             float_or_nan, colonsections[2].split()
@@ -97,7 +96,7 @@ def report_block_lineparser(line: str) -> tuple:
     )
 
 
-def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFrame:
+def df(prtfile: str | ResdataFiles, fipname: str = "FIPNUM") -> pd.DataFrame:
     """
     Parses a PRT file from and finds FIPXXXX REGION REPORT blocks and
     organizes those numbers into a dataframe

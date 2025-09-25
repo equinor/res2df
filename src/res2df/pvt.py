@@ -8,7 +8,6 @@ import argparse
 import contextlib
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -32,7 +31,7 @@ with contextlib.suppress(ImportError):
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS: List[str] = [
+SUPPORTED_KEYWORDS: list[str] = [
     "PVTO",
     "PVDO",
     "PVTG",
@@ -46,7 +45,7 @@ SUPPORTED_KEYWORDS: List[str] = [
 # desired column names in produced dataframes. They also to a certain
 # extent determine the structure of the dataframe, in particular
 # for keywords with arbitrary data amount pr. record (PVTO f.ex)
-RENAMERS: Dict[str, Dict[str, Union[str, List[str]]]] = {}
+RENAMERS: dict[str, dict[str, str | list[str]]] = {}
 
 # P_bub (bubble point pressure) is called PRESSURE for ability to merge with
 # other pressure data from other frames.
@@ -78,7 +77,7 @@ RENAMERS["ROCK"] = {"PREF": "PRESSURE", "COMPRESSIBILITY": "COMPRESSIBILITY"}
 
 
 def pvtw_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVTW from a :term:`deck`
 
@@ -95,7 +94,7 @@ def pvtw_fromdeck(
 
 
 def density_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract DENSITY from a :term:`deck`
 
@@ -112,7 +111,7 @@ def density_fromdeck(
 
 
 def rock_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract ROCK from a :term:`deck`
 
@@ -129,7 +128,7 @@ def rock_fromdeck(
 
 
 def pvto_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVTO from a :term:`deck`
 
@@ -147,7 +146,7 @@ def pvto_fromdeck(
 
 
 def pvdo_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVDO from a :term:`deck`
 
@@ -165,7 +164,7 @@ def pvdo_fromdeck(
 
 
 def pvdg_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVDG from a :term:`deck`
 
@@ -183,7 +182,7 @@ def pvdg_fromdeck(
 
 
 def pvtg_fromdeck(
-    deck: Union[str, "opm.libopmcommon_python.Deck"], ntpvt: Optional[int] = None
+    deck: "str | opm.opmcommon_python.Deck", ntpvt: int | None = None
 ) -> pd.DataFrame:
     """Extract PVTG from a :term:`deck`
 
@@ -201,9 +200,9 @@ def pvtg_fromdeck(
 
 
 def df(
-    deck: Union[str, "opm.libopmcommon_python.Deck"],
-    keywords: Optional[List[str]] = None,
-    ntpvt: Optional[int] = None,
+    deck: "str | opm.opmcommon_python.Deck",
+    keywords: list[str] | None = None,
+    ntpvt: int | None = None,
 ) -> pd.DataFrame:
     """Extract all (most) PVT data from a :term:`deck`.
 
@@ -332,9 +331,9 @@ def pvt_reverse_main(args) -> None:
 
 def df2res(
     pvt_df: pd.DataFrame,
-    keywords: Optional[Union[str, List[str]]] = None,
-    comments: Optional[Dict[str, str]] = None,
-    filename: Optional[str] = None,
+    keywords: str | list[str] | None = None,
+    comments: dict[str, str] | None = None,
+    filename: str | None = None,
 ) -> str:
     """Generate resdata :term:`include file` content from PVT dataframes
 
@@ -358,7 +357,7 @@ def df2res(
     )
 
 
-def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_rock(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for ROCK keyword
 
     Args:
@@ -383,7 +382,7 @@ def df2res_rock(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2res_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_density(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for DENSITY keyword
 
     Args:
@@ -412,7 +411,7 @@ def df2res_density(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvtw(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PVTW keyword
 
     PVTW is one line/record with data for a reference pressure
@@ -445,7 +444,7 @@ def df2res_pvtw(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvtg(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PVTG keyword
 
     Args:
@@ -500,7 +499,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvdg(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PVDG keyword
 
     This data consists of one table (volumefactor and visosity
@@ -548,7 +547,7 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvdo(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PVDO keyword
 
     Args:
@@ -593,7 +592,7 @@ def df2res_pvdo(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
     return string + "\n"
 
 
-def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
+def df2res_pvto(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PVTO-data from a dataframe
 
     Args:

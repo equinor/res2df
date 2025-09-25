@@ -4,7 +4,7 @@ import errno
 import logging
 import os
 from pathlib import Path
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any
 
 try:
     import opm.io
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 if HAVE_OPM:
     # Default parse option to opm.io for a very permissive parsing
-    OPMIOPARSER_RECOVERY: List[Tuple[str, Any]] = [
+    OPMIOPARSER_RECOVERY: list[tuple[str, Any]] = [
         ("PARSE_EXTRA_DATA", opm.io.action.ignore),
         ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
         ("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore),
@@ -39,7 +39,7 @@ if HAVE_OPM:
     ]
 
 
-class ResdataFiles(object):
+class ResdataFiles:
     """
     Class for holding reservoir simulator :term:`output files <output file>`
 
@@ -83,7 +83,7 @@ class ResdataFiles(object):
         """Return the full path to the directory with the .DATA file"""
         return Path(self._eclbase).absolute().parent
 
-    def get_deck(self) -> "opm.libopmcommon_python.Deck":
+    def get_deck(self) -> "opm.opmcommon_python.Deck":
         """Return a opm.io :term:`deck` of the .DATA file"""
         if not self._deck:
             if Path(self._eclbase + ".DATA").is_file():
@@ -98,8 +98,8 @@ class ResdataFiles(object):
 
     @staticmethod
     def str2deck(
-        string: str, parsecontext: Optional[List[Tuple[str, Any]]] = None
-    ) -> "opm.libopmcommon_python.Deck":
+        string: str, parsecontext: list[tuple[str, Any]] | None = None
+    ) -> "opm.opmcommon_python.Deck":
         """Produce a opm.io :term:`deck` from a string, using permissive
         parsing by default"""
         if parsecontext is None:
@@ -107,7 +107,7 @@ class ResdataFiles(object):
         return opm.io.Parser().parse_string(string, parsecontext)
 
     @staticmethod
-    def file2deck(filename: Union[str, Path]) -> "opm.libopmcommon_python.Deck":
+    def file2deck(filename: str | Path) -> "opm.opmcommon_python.Deck":
         """Try to convert standalone files into opm.io Deck objects"""
         return ResdataFiles.str2deck(Path(filename).read_text(encoding="utf-8"))
 

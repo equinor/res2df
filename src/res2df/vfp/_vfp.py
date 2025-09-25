@@ -16,12 +16,11 @@ import pyarrow as pa
 try:
     # Needed for mypy
 
-    # pylint: disable=unused-import
     import opm.io
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa
+    from opm.io.deck import DeckKeyword  # noqa: F401
 except ImportError:
     pass
 
@@ -510,7 +509,7 @@ def vfp_main(args) -> None:
             table_number = int(
                 vfp_table.schema.metadata[b"TABLE_NUMBER"].decode("utf-8")
             )
-            vfp_filename = f"{outputfile}_{str(table_number)}.arrow"
+            vfp_filename = f"{outputfile}_{table_number!s}.arrow"
             write_dframe_stdout_file(
                 vfp_table, vfp_filename, index=False, caller_logger=logger
             )

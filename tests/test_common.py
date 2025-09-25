@@ -12,8 +12,7 @@ import pytest
 from res2df import common, equil, resdatafiles
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 
     HAVE_OPM = True
 except ImportError:
@@ -151,7 +150,7 @@ def test_handle_wanted_keywords(wanted, deckstr, supported, expected):
     assert common.handle_wanted_keywords(wanted, deck, supported) == expected
 
 
-def df2res_equil(dframe, comment: str = None):
+def df2res_equil(dframe, comment=None):
     """Wrapper function to be able to test df2res
 
     (it asks for a function in the calling module)"""

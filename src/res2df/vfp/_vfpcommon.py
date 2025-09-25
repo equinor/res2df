@@ -16,12 +16,11 @@ import pandas as pd
 try:
     # Needed for mypy
 
-    # pylint: disable=unused-import
     import opm.io
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa
+    from opm.io.deck import DeckKeyword  # noqa: F401
 except ImportError:
     pass
 
@@ -164,7 +163,7 @@ def _stack_vfptable2df(
 
     # Sort values in correct order
     df_vfptable_stacked = df_vfptable_stacked.sort_values(
-        by=index_names_list + ["RATE"], ascending=True, ignore_index=True
+        by=[*index_names_list, "RATE"], ascending=True, ignore_index=True
     )
 
     return df_vfptable_stacked

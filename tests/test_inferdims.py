@@ -7,8 +7,7 @@ import pytest
 from res2df import inferdims
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed, nothing relevant in here then",
@@ -101,7 +100,7 @@ def test_inject_xxxdims_ntxxx():
     )
 
     assert "TABDIMS\n 1 /" in re.sub(
-        " +",
+        r" +",
         " ",
         str(
             inferdims.inject_xxxdims_ntxxx(
@@ -111,7 +110,7 @@ def test_inject_xxxdims_ntxxx():
     )
     # If no number is supplied, return the deck untouched:
     assert "TABDIMS\n 1 /" in re.sub(
-        " +",
+        r" +",
         " ",
         str(
             inferdims.inject_xxxdims_ntxxx(

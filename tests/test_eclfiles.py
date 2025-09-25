@@ -6,8 +6,7 @@ import pytest
 from res2df import ResdataFiles
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 
     HAVE_OPM = True
 except ImportError:

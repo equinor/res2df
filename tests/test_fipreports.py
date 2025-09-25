@@ -107,7 +107,7 @@ def test_prtstring(tmp_path):
  :OUTFLOW TO REGION   3    :       -66862.                      -66862.:        198900. :           -0.     -1198195.      -1198195.:
  :OUTFLOW TO REGION   8    :            0.                           0.:         38405. :            0.            0.             0.:
  ====================================================================================================================================
-"""  # noqa
+"""  # noqa: E501
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT")
@@ -250,7 +250,7 @@ def test_gaswater_report(tmp_path):
  :ORIGINALLY IN PLACE      :                                           :      19135648. :      8457278.                     8457278.:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  ====================================================================================================================================
-"""  # noqa
+"""  # noqa: E501
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
@@ -344,7 +344,7 @@ def test_drygas_report(tmp_path):
  :ORIGINALLY IN PLACE      :            0.                           0.:      10476036. :   1815774165.                  1815774165.:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  ====================================================================================================================================
-"""  # noqa
+"""  # noqa: E501
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
@@ -434,7 +434,7 @@ def test_rogue_eclipse_output(tmp_path):
  :OUTFLOW THROUGH WELLS    :                                     65430.:      -1818966. :                                 -85526625.:
  :MATERIAL BALANCE ERROR.  :                                   3419391.:        671761. :                              *************:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
-"""  # noqa
+"""  # noqa: E501
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT").set_index("DATATYPE")
@@ -457,7 +457,7 @@ Starting time step 3, stepsize 19.6 days, at day 11.4/31, date = 12-Jan-2000
 :------------------------:------------------------------------------:----------------:------------------------------------------:
 :Originally  in place    :      16530271             0      16530271:     60415965   :             0             0             0:
 :========================:==========================================:================:==========================================:
-"""  # noqa
+"""  # noqa: E501
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(prtstring, encoding="utf8")
     dframe = fipreports.df("FOO.PRT")

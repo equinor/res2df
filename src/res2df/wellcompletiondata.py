@@ -191,14 +191,14 @@ def _merge_compdat_and_connstatus(
     wellconnstatus_df = wellconnstatus_df.rename({"K": "K1"}, axis=1)
 
     dframe = wellconnstatus_df.merge(
-        compdat_df[match_on + ["KH", "ZONE"]],
+        compdat_df[[*match_on, "KH", "ZONE"]],
         on=match_on,
         how="left",
     )
 
     # There will often be several rows (with different OP/SH) matching in compdat.
     # Only the first is kept
-    dframe = dframe.drop_duplicates(subset=["DATE"] + match_on, keep="first")
+    dframe = dframe.drop_duplicates(subset=["DATE", *match_on], keep="first")
 
     # Concat from compdat the wells that are not in well connection status
     dframe = pd.concat(

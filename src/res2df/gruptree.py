@@ -137,13 +137,13 @@ def df(
                 edge_dict = parse_opmio_deckrecord(edgerec, kword.name, renamer=renamer)
                 child = edge_dict.pop("CHILD_GROUP")
                 parent = edge_dict.pop("PARENT_GROUP")
-                currentedges[kword.name][(child, parent)] = edge_dict
+                currentedges[kword.name][child, parent] = edge_dict
 
         if kword.name == "WELSPECS" and welspecs:
             found_keywords["WELSPECS"] = True
             for wellrec in kword:
                 wspc_dict = parse_opmio_deckrecord(wellrec, "WELSPECS")
-                wellspecsedges[(wspc_dict["WELL"], wspc_dict["GROUP"])] = "WELSPECS"
+                wellspecsedges[wspc_dict["WELL"], wspc_dict["GROUP"]] = "WELSPECS"
 
         if kword.name in ["GRUPNET", "NODEPROP"]:
             found_keywords[kword.name] = True
@@ -361,7 +361,7 @@ def tree_from_dict(nested_dict: dict) -> treelib.Tree | str:
             "The dict given to tree_from_dict() must have "
             "exactly one top level key, representing a single tree."
         )
-    root_name = list(nested_dict.keys())[0]
+    root_name = next(iter(nested_dict.keys()))
     tree = treelib.Tree()
     _add_to_tree_from_dict(nested_dict[root_name], root_name, tree)
     return tree

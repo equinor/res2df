@@ -147,7 +147,7 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     assert len(sat_cols) == 1, (
         f"Could not determine a single saturation column in {dframe.columns}"
     )
-    sat_col = list(sat_cols)[0]
+    sat_col = next(iter(sat_cols))
 
     if dframe[sat_col].isna().any():
         raise ValueError("nan in saturation column is not allowed")

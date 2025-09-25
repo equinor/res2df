@@ -255,12 +255,12 @@ def run_subparser_main(
         parser: Used for raising errors.
     """
     if "DATAFILE" in args:
-        positionals = list(filter(len, [args.DATAFILE] + args.hiddenemptyplaceholders))
-        args.DATAFILE = "".join([args.DATAFILE] + args.hiddenemptyplaceholders)
+        positionals = list(filter(len, [args.DATAFILE, *args.hiddenemptyplaceholders]))
+        args.DATAFILE = "".join([args.DATAFILE, *args.hiddenemptyplaceholders])
     elif "PRTFILE" in args:
         # Special treatment for the fipreports submodule
-        positionals = list(filter(len, [args.PRTFILE] + args.hiddenemptyplaceholders))
-        args.PRTFILE = "".join([args.PRTFILE] + args.hiddenemptyplaceholders)
+        positionals = list(filter(len, [args.PRTFILE, *args.hiddenemptyplaceholders]))
+        args.PRTFILE = "".join([args.PRTFILE, *args.hiddenemptyplaceholders])
     if len(positionals) > 1 and parser is not None:
         parser.error(f"Unknown argument in {positionals}")
 

@@ -38,7 +38,7 @@ PD_FREQ_MNEMONICS: Dict[str, str] = {
 """Mapping from res2df custom offset strings to Pandas DateOffset strings.
 See
 https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects
-"""  # noqa
+"""
 
 
 def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> List[dt.datetime]:
@@ -110,7 +110,7 @@ def _crop_datelist(
             # Convert to datetime (at 00:00:00)
             start_date = dt.datetime.combine(start_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x > start_date]
-            datetimes = [start_date] + datetimes
+            datetimes = [start_date, *datetimes]
         if end_date:
             end_date = dt.datetime.combine(end_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
@@ -283,7 +283,7 @@ def resample_smry_dates(
     # fit on frequency boundary. Force include these if
     # supplied as user arguments.
     if start_date and start_date not in dates:
-        dates = [start_date] + dates
+        dates = [start_date, *dates]
     if end_date and end_date not in dates:
         dates += [end_date]
     return dates

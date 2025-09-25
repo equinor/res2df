@@ -12,8 +12,7 @@ from res2df import csv2res, pvt, res2csv
 from res2df.resdatafiles import ResdataFiles
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed, nothing relevant in here then",

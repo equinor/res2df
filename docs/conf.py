@@ -24,7 +24,7 @@ author = "Håvard Berland"
 copyright = f"Equinor 2019-{datetime.datetime.now().year}"
 
 # The short X.Y version
-import res2df  # noqa
+import res2df  # noqa: F401, E402
 
 release = metadata.version("res2df")
 version = release

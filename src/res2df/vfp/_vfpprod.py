@@ -25,7 +25,7 @@ try:
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa
+    from opm.io.deck import DeckKeyword  # noqa: F401
 except ImportError:
     pass
 
@@ -389,7 +389,7 @@ def basic_data2pyarrow(
         wfr_idx = wfr_indices[i]
         gfr_idx = gfr_indices[i]
         alq_idx = alq_indices[i]
-        col_name = str(thp_idx) + f"_{str(wfr_idx)}_{str(gfr_idx)}_{str(alq_idx)}"
+        col_name = f"{thp_idx!s}_{wfr_idx!s}_{gfr_idx!s}_{alq_idx!s}"
         col_dtype = pa.float64()
         col_metadata = {
             bytes("thp_idx", encoding="ascii"): bytes(str(thp_idx), encoding="ascii"),
@@ -494,32 +494,32 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     if no_tab_values % no_flow_values != 0:
         raise ValueError(
             f"Number of unique rate values {no_flow_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
     if no_tab_values % no_wfr_values != 0:
         raise ValueError(
             f"Number of unique wfr values {no_wfr_values} not "
-            "consistent with number of tabulated values {no_tab_values}"
+            f"consistent with number of tabulated values {no_tab_values}"
         )
     if no_tab_values % no_gfr_values != 0:
         raise ValueError(
             f"Number of unique gfr values {no_gfr_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
     if no_tab_values % no_alq_values != 0:
         raise ValueError(
             f"Number of unique alq values {no_alq_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
     if no_tab_values % no_thp_values != 0:
         raise ValueError(
             f"Number of unique thp values {no_thp_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
     if no_tab_values % no_interp_values != 0:
         raise ValueError(
             f"Number of unique interpolation values {no_interp_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
 
     # Replace interpolation values with index in dataframe

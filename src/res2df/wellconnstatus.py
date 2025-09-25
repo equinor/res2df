@@ -39,7 +39,7 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
     cpi_columns = [
         col
         for col in smry.columns
-        if re.match("^CPI:[A-Z0-9_-]{1,8}:[0-9]+,[0-9]+,[0-9]+$", col)
+        if re.match(r"^CPI:[A-Z0-9_-]{1,8}:[0-9]+,[0-9]+,[0-9]+$", col)
     ]
     dframe = pd.DataFrame(columns=["DATE", "WELL", "I", "J", "K", "OP/SH"])
 

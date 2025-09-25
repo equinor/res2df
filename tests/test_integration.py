@@ -7,8 +7,7 @@ import pytest
 import res2df
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed, command line client does not work without it.",

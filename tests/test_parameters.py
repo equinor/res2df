@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 from pathlib import Path
 
 import pytest
@@ -176,7 +177,7 @@ def test_load(tmp_path):
 
     # yaml syntax errors:
     Path("error.yml").write_text("foo: bar :", encoding="utf-8")
-    with pytest.raises(ValueError, match="Could not parse error.yml"):
+    with pytest.raises(ValueError, match=re.escape("Could not parse error.yml")):
         load("error.yml")
 
     # json file:
@@ -193,7 +194,7 @@ def test_load(tmp_path):
 
     # txt file errors:
     Path("error.txt").write_text("foo bar com", encoding="utf-8")
-    with pytest.raises(ValueError, match="Could not parse error.txt"):
+    with pytest.raises(ValueError, match=re.escape("Could not parse error.txt")):
         load("error.txt")
 
     with pytest.raises(FileNotFoundError, match="notexisting not found"):

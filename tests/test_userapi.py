@@ -7,8 +7,7 @@ import pytest
 import res2df
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 
     HAVE_OPM = True
 except ImportError:

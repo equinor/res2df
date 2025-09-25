@@ -26,5 +26,5 @@ SUBMODULES: List[str] = [
 ]
 
 
-for submodule in SUBMODULES + ["res2csv", "csv2res"]:
+for submodule in [*SUBMODULES, "res2csv", "csv2res"]:
     importlib.import_module("res2df." + submodule)

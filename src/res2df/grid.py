@@ -262,7 +262,7 @@ def rst2df(
         # Tag the column names if requested, or if multiple rst indices
         # are asked for
         datestr = chosendates[rstindices.index(rstindex)].isoformat()
-        if dateinheaders or len(rstindices) > 1 and not stackdates:
+        if dateinheaders or (len(rstindices) > 1 and not stackdates):
             rst_df.columns = [colname + "@" + datestr for colname in rst_df.columns]
 
         # resdata emits a number around -1.0000000200408773e+20 which
@@ -408,7 +408,7 @@ def merge_initvectors(
     assert isinstance(initvectors, list)
 
     logger.info("Merging INIT data %s into dataframe", str(initvectors))
-    ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
+    ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K", *initvectors]]
     return dframe.merge(ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
 

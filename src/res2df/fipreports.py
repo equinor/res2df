@@ -187,7 +187,7 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
                     line = "".join(linechars)
 
                 records.append(
-                    [date, fipname, region_index] + list(report_block_lineparser(line))
+                    [date, fipname, region_index, *list(report_block_lineparser(line))]
                 )
     return pd.DataFrame(data=records, columns=REGION_REPORT_COLUMNS)
 

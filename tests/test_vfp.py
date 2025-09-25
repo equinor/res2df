@@ -6,7 +6,7 @@ import pytest
 from res2df import ResdataFiles, vfp
 
 try:
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed",

@@ -8,7 +8,7 @@ from res2df.resdatafiles import ResdataFiles
 
 try:
     # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 
     HAVE_OPM = True
 except ImportError:

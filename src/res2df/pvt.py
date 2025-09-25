@@ -548,7 +548,7 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     subset = subset.set_index("PVTNUM").sort_index()
     for pvtnum in subset.index.unique():
-        string += "-- PVTNUM: {pvtnum}\n"
+        string += f"-- PVTNUM: {pvtnum}\n"
         string += _pvdg_pvtnum(subset[subset.index == pvtnum])
 
     return string + "\n"

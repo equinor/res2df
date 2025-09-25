@@ -615,7 +615,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
             and wlist_record["NAME"] not in currentstate
         ):
             raise ValueError(
-                f"WLIST ADD/DEL only works on existing well lists: {str(wlist_record)}"
+                f"WLIST ADD/DEL only works on existing well lists: {wlist_record!s}"
             )
         if wlist_record["ACTION"] == "ADD":
             currentstate[wlist_record["NAME"]] = " ".join(

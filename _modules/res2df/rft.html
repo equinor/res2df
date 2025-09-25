@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.rft &mdash; res2df 1.3.8.dev2+gc5f74f580 documentation</title>
+  <title>res2df.rft &mdash; res2df 1.3.8.dev9+g1a506c3dd documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=552a6290"></script>
+      <script src="../../_static/documentation_options.js?v=4d3525c3"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -172,8 +172,8 @@
     <span class="n">nav_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TIME&quot;</span><span class="p">,</span> <span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nav_df</span><span class="p">[</span>
         <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TIME&quot;</span>
     <span class="p">]</span><span class="o">.</span><span class="n">index</span>
-    <span class="n">nav_df</span><span class="o">.</span><span class="n">ffill</span><span class="p">(</span>
-        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">nav_df</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">nav_df</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
     <span class="p">)</span>  <span class="c1"># forward fill (because any record is associated to the previous TIME record)</span>
     <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nav_df</span><span class="p">[</span><span class="s2">&quot;timeindex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -272,9 +272,9 @@
     <span class="p">)</span>
 
     <span class="c1"># Ensure integer headers are integers:</span>
-    <span class="n">integer_columns</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordtype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INTE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">integer_columns</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;recordtype&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;INTE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">integer_columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;DATE&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
-        <span class="nb">set</span><span class="p">(</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">data_headers</span><span class="p">[</span><span class="s2">&quot;recordname&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
     <span class="p">):</span>
         <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">data</span><span class="p">[</span><span class="n">datatype</span> <span class="o">+</span> <span class="s2">&quot;IDX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add an index that starts with 1</span>
@@ -338,8 +338,7 @@
     <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGNXT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># Outer merge first to add the upstream segment information to every row.</span>
-    <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">seg_data</span><span class="p">,</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
         <span class="n">seg_data</span><span class="p">,</span>
         <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
         <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">,</span>
@@ -354,7 +353,7 @@
 
     <span class="c1"># Now we can determine leaf segments by those with no extra information, since</span>
     <span class="c1"># we did an outer merge:</span>
-    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
 
     <span class="c1"># Flag segments that have multiple upstream segments as junctions</span>
     <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;JUNCTION&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -396,7 +395,7 @@
         <span class="k">if</span> <span class="s2">&quot;SEGIDX_upstream&quot;</span> <span class="ow">in</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;SEGIDX_upstream&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">edges</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">{}}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">{}}</span>
     <span class="k">for</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
         <span class="n">subtrees</span><span class="p">[</span><span class="n">parent</span><span class="p">][</span><span class="n">child</span><span class="p">]</span> <span class="o">=</span> <span class="n">subtrees</span><span class="p">[</span><span class="n">child</span><span class="p">]</span>
 
@@ -456,10 +455,12 @@
     <span class="c1">#    STOP: Cannot use this criteria, because junctions  due to ICDs</span>
     <span class="c1">#    are legit.</span>
     <span class="c1">#  * The segment must be on a branch with only one segment</span>
-    <span class="n">icd_seg_indices</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LONELYSEG&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">icd_seg_indices</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span>
+        <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LONELYSEG&quot;</span><span class="p">]</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="n">non_icd_seg_indices</span> <span class="o">=</span> <span class="n">seg_data</span><span class="p">[</span>
         <span class="o">~</span><span class="p">(</span><span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LEAF&quot;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">seg_data</span><span class="p">[</span><span class="s2">&quot;LONELYSEG&quot;</span><span class="p">])</span>
-    <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 
     <span class="n">icd_seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">icd_seg_indices</span><span class="p">)</span>
     <span class="n">seg_data</span> <span class="o">=</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">non_icd_seg_indices</span><span class="p">)</span>
@@ -469,7 +470,7 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
         <span class="s2">&quot;Found </span><span class="si">%d</span><span class="s2"> ICD segments, indices </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">icd_seg_data</span><span class="p">),</span>
-        <span class="nb">str</span><span class="p">(</span><span class="n">icd_seg_data</span><span class="p">[</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">icd_seg_data</span><span class="p">[</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">icd_seg_data</span><span class="p">)</span></div>
@@ -530,14 +531,12 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">icd_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="c1"># Merge ICD_* columns onto the dataframe representing reservoir</span>
         <span class="c1"># connections.</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">con_data</span><span class="p">,</span> <span class="n">icd_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">con_data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">icd_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGIDX&quot;</span><span class="p">)</span>
 
         <span class="c1"># Merge SEGxxxxx to the dataframe with icd&#39;s and reservoir connections.</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="n">seg_data</span><span class="o">.</span><span class="n">empty</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-            <span class="n">data</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGNXT&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span>
-        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;ICD_SEGNXT&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">)</span>
 
         <span class="c1"># The merge has potentially included extra rows due to junctions.</span>
         <span class="c1"># After ICD merge, we can require that SEGIDX_upstream equals CONSEGNO</span>
@@ -558,9 +557,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">data</span><span class="p">,</span>
-                <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-                    <span class="n">con_data_no_icd</span><span class="p">,</span> <span class="n">seg_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span>
-                <span class="p">),</span>
+                <span class="n">con_data_no_icd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">seg_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;CONSEGNO&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;SEGIDX&quot;</span><span class="p">),</span>
             <span class="p">],</span>
             <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
@@ -736,7 +733,7 @@
     <span class="c1"># interpreting columns with numbers as strings. An alternative</span>
     <span class="c1"># solution that keeps NaN would be to add a second row in the</span>
     <span class="c1"># output containing the datatype</span>
-    <span class="n">rftdata_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rftdata_df</span> <span class="o">=</span> <span class="n">rftdata_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># The HOSTGRID data seems often to be empty, check if it is and delete if so:</span>
     <span class="k">if</span> <span class="p">(</span>

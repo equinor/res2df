@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.pillars &mdash; res2df 1.3.8.dev2+gc5f74f580 documentation</title>
+  <title>res2df.pillars &mdash; res2df 1.3.8.dev9+g1a506c3dd documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=552a6290"></script>
+      <script src="../../_static/documentation_options.js?v=4d3525c3"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -219,7 +219,7 @@
                 <span class="n">datestr</span><span class="o">=</span><span class="n">datestr</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">contacts</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="n">grouped</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">contacts</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+                <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">contacts</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">stackdates</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">stack_on_colnames</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">stackcolname</span><span class="o">=</span><span class="s2">&quot;DATE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -362,14 +362,16 @@
             <span class="s2">&quot;Calculating oil-water-contacts based on SOILcutoff </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">soilcutoff</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">owc</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">grid_df</span><span class="p">[</span><span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;SOIL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">soilcutoff</span><span class="p">]</span>
-            <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupbies</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;max&quot;</span><span class="p">})</span>
+            <span class="p">(</span>
+                <span class="n">grid_df</span><span class="p">[</span><span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;SOIL&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">soilcutoff</span><span class="p">]</span>
+                <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupbies</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;max&quot;</span><span class="p">})</span>
+            <span class="p">)</span>
+            <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">})</span>
+            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="p">)</span>
-        <span class="n">owc</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;OWC&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">owc</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># Filter the owc frame to only those pillars that also has water:</span>
-        <span class="n">owc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">waterpillars</span><span class="p">,</span> <span class="n">owc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+        <span class="n">owc</span> <span class="o">=</span> <span class="n">waterpillars</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">owc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sgascutoff</span> <span class="ow">and</span> <span class="s2">&quot;SGAS&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span> <span class="ow">in</span> <span class="n">grid_df</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating gas-contacts based on gas cutoff </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sgascutoff</span><span class="p">))</span>
@@ -388,8 +390,7 @@
                 <span class="p">]</span>
                 <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupbies</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;max&quot;</span><span class="p">})</span>
-            <span class="p">)</span>
-            <span class="n">goc</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;GOC&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;GOC&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Two-phase gas-water: GWC computation</span>
             <span class="n">gocpillars</span> <span class="o">=</span> <span class="n">waterpillars</span>  <span class="c1"># In case of gas-water</span>
@@ -397,11 +398,10 @@
                 <span class="n">grid_df</span><span class="p">[</span><span class="n">grid_df</span><span class="p">[</span><span class="s2">&quot;SGAS&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">sgascutoff</span><span class="p">]</span>
                 <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groupbies</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;max&quot;</span><span class="p">})</span>
-            <span class="p">)</span>
-            <span class="n">goc</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;GWC&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">goc</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;GWC&quot;</span> <span class="o">+</span> <span class="n">atdatestr</span><span class="p">})</span>
+        <span class="n">goc</span> <span class="o">=</span> <span class="n">goc</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="c1"># Filter the goc frame to only those with oil or water:</span>
-        <span class="n">goc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gocpillars</span><span class="p">,</span> <span class="n">goc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+        <span class="n">goc</span> <span class="o">=</span> <span class="n">gocpillars</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">goc</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 
     <span class="c1"># We need to avoid merging with potentially empty DataFrames</span>
     <span class="k">if</span> <span class="n">owc</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="n">goc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -410,7 +410,7 @@
         <span class="k">return</span> <span class="n">owc</span>
     <span class="k">if</span> <span class="n">owc</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">goc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">goc</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">owc</span><span class="p">,</span> <span class="n">goc</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">owc</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">goc</span><span class="p">)</span></div>
 
 
 

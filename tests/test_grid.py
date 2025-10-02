@@ -1,6 +1,7 @@
 """Test module for res2df.grid"""
 
 import datetime
+import logging
 import os
 from pathlib import Path
 
@@ -600,6 +601,26 @@ def test_get_available_rst_dates():
     resdatafiles = ResdataFiles("BOGUS.DATA")
     with pytest.raises(IOError):
         resdatafiles.get_rstfile()
+
+
+def test_dates2rstindices_logging(caplog):
+    """Test warning is logged in dates2rstindices if not all requested dates are available."""
+    resdatafiles = ResdataFiles(REEK)
+    alldates = grid.get_available_rst_dates(resdatafiles)
+
+    # Case 1: check if warning is logged if not all requested dates are available
+    caplog.clear()
+    with caplog.at_level(logging.WARNING):
+        grid.dates2rstindices(resdatafiles, alldates + [datetime.date(1900, 1, 1)])
+    assert "Not all dates found in UNRST" in caplog.text
+
+    # Case 2: check if no warning is logged if all requested dates are available
+    caplog.clear()
+    with caplog.at_level(logging.WARNING):
+        grid.dates2rstindices(resdatafiles, alldates[0])
+        grid.dates2rstindices(resdatafiles, alldates[0:2])
+        grid.dates2rstindices(resdatafiles, alldates)
+    assert "Not all dates found in UNRST" not in caplog.text
 
 
 def test_rst2df():

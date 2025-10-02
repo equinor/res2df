@@ -93,7 +93,7 @@ def test_gridzonemap():
     df_bogus_zones = grid.gridgeometry2df(
         resdatafiles, zonemap={999999: "nonexistinglayer"}
     )
-    assert pd.isnull(df_bogus_zones["ZONE"]).all()
+    assert pd.isna(df_bogus_zones["ZONE"]).all()
 
     # Test a custom "subzone" map via direct usage of merge_zone on a dataframe
     # where ZONE already exists:

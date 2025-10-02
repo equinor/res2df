@@ -8,9 +8,7 @@ import pytest
 import res2df
 
 try:
-    # pylint: disable=unused-import
-
-    import ert.shared  # noqa
+    import ert.shared  # noqa: F401
 
     HAVE_ERT = True
 except ImportError:
@@ -113,4 +111,4 @@ def test_no_erthooks():
     """Test that we can import the hook implementations even when ERT is unavailable."""
     # pylint: disable=redefined-outer-name, unused-import
     # pylint: disable=reimported, import-outside-toplevel
-    from res2df.hook_implementations import forward_model_steps  # noqa
+    from res2df.hook_implementations import forward_model_steps  # noqa: F401, PLC0415

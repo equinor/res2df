@@ -111,9 +111,7 @@ def df(
     logger.info("Building transmissibility dataframe")
     if not onlykdir:
         tranx = pd.DataFrame(grid_df[grid_df["TRANX"] > 0][["I", "J", "K", "TRANX"]])
-        tranx.rename(
-            columns={"I": "I1", "J": "J1", "K": "K1", "TRANX": "TRAN"}, inplace=True
-        )
+        tranx = tranx.rename(columns={"I": "I1", "J": "J1", "K": "K1", "TRANX": "TRAN"})
         tranx["I2"] = tranx["I1"] + 1
         tranx["J2"] = tranx["J1"]
         tranx["K2"] = tranx["K1"]
@@ -123,9 +121,7 @@ def df(
 
     if not onlykdir:
         trany = pd.DataFrame(grid_df[grid_df["TRANY"] > 0][["I", "J", "K", "TRANY"]])
-        trany.rename(
-            columns={"I": "I1", "J": "J1", "K": "K1", "TRANY": "TRAN"}, inplace=True
-        )
+        trany = trany.rename(columns={"I": "I1", "J": "J1", "K": "K1", "TRANY": "TRAN"})
         trany["I2"] = trany["I1"]
         trany["J2"] = trany["J1"] + 1
         trany["K2"] = trany["K1"]
@@ -135,9 +131,7 @@ def df(
 
     if not onlyijdir:
         tranz = pd.DataFrame(grid_df[grid_df["TRANZ"] > 0][["I", "J", "K", "TRANZ"]])
-        tranz.rename(
-            columns={"I": "I1", "J": "J1", "K": "K1", "TRANZ": "TRAN"}, inplace=True
-        )
+        tranz = tranz.rename(columns={"I": "I1", "J": "J1", "K": "K1", "TRANZ": "TRAN"})
         tranz["I2"] = tranz["I1"]
         tranz["J2"] = tranz["J1"]
         tranz["K2"] = tranz["K1"] + 1
@@ -166,16 +160,14 @@ def df(
     if vectorscoords:
         logger.info("Adding vectors %s", str(vectorscoords))
         grid_df = grid_df.reset_index()
-        trans_df = pd.merge(
-            trans_df,
-            grid_df[["I", "J", "K"] + vectorscoords],
+        trans_df = trans_df.merge(
+            grid_df[["I", "J", "K", *vectorscoords]],
             left_on=["I1", "J1", "K1"],
             right_on=["I", "J", "K"],
         )
         trans_df = trans_df.drop(["I", "J", "K"], axis=1)
-        trans_df = pd.merge(
-            trans_df,
-            grid_df[["I", "J", "K"] + vectorscoords],
+        trans_df = trans_df.merge(
+            grid_df[["I", "J", "K", *vectorscoords]],
             left_on=["I2", "J2", "K2"],
             right_on=["I", "J", "K"],
             suffixes=("1", "2"),
@@ -248,7 +240,7 @@ def make_nx_graph(
     reg2 = region + "2"
     graph = networkx.Graph()
     graph.add_weighted_edges_from(
-        [tuple(row) for row in trans_df[[reg1, reg2, "TRAN"]].values]
+        [tuple(row) for row in trans_df[[reg1, reg2, "TRAN"]].to_numpy()]
     )
     return graph
 

@@ -489,7 +489,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         PVTG-data with a particular gas phase pressure"""
         string = ""
         assert len(dframe.index.unique()) == 1
-        p_gas = dframe.index.values[0]
+        p_gas = dframe.index.to_numpy()[0]
         string += f"{p_gas:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
             indent = "\n" + " " * 22 if rowidx > 0 else ""
@@ -548,7 +548,7 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
 
     subset = subset.set_index("PVTNUM").sort_index()
     for pvtnum in subset.index.unique():
-        string += "-- PVTNUM: {pvtnum}\n"
+        string += f"-- PVTNUM: {pvtnum}\n"
         string += _pvdg_pvtnum(subset[subset.index == pvtnum])
 
     return string + "\n"
@@ -636,7 +636,7 @@ def df2res_pvto(dframe: pd.DataFrame, comment: Optional[str] = None) -> str:
         for PVTO-data for a particular RS"""
         string = ""
         assert len(dframe.index.unique()) == 1
-        rs = dframe.index.values[0]
+        rs = dframe.index.to_numpy()[0]
         string += f"{rs:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
             indent = "\n" + " " * 22 if rowidx > 0 else ""

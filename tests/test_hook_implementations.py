@@ -1,9 +1,7 @@
 import pytest
 
 try:
-    # pylint: disable=unused-import
-
-    import ert  # noqa
+    import ert  # noqa: F401
 except ImportError:
     pytest.skip(
         "ERT is not installed. Skipping hook implementations.",

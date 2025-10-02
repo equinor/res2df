@@ -262,7 +262,7 @@ def rst2df(
         # Tag the column names if requested, or if multiple rst indices
         # are asked for
         datestr = chosendates[rstindices.index(rstindex)].isoformat()
-        if dateinheaders or len(rstindices) > 1 and not stackdates:
+        if dateinheaders or (len(rstindices) > 1 and not stackdates):
             rst_df.columns = [colname + "@" + datestr for colname in rst_df.columns]
 
         # resdata emits a number around -1.0000000200408773e+20 which
@@ -270,7 +270,7 @@ def rst2df(
         rst_df = rst_df.where(rst_df > -1e20 + 1e13)  # some trial and error
 
         # Remove columns that are all NaN:
-        rst_df.dropna(axis="columns", how="all", inplace=True)
+        rst_df = rst_df.dropna(axis="columns", how="all")
 
         rst_df.index.name = "active"
 
@@ -282,8 +282,9 @@ def rst2df(
     if not stackdates:
         return pd.concat(rst_dfs.values(), axis=1).reset_index()
 
-    rststack = pd.concat(rst_dfs, sort=False).reset_index()
-    rststack.rename(columns={"level_0": "DATE"}, inplace=True)
+    rststack = (
+        pd.concat(rst_dfs, sort=False).reset_index().rename(columns={"level_0": "DATE"})
+    )
     return rststack
 
 
@@ -316,7 +317,7 @@ def gridgeometry2df(
 
     logger.info("Extracting grid geometry from %s", str(egrid_file))
     index_frame = grid.export_index(active_only=True)
-    ijk = index_frame.values[:, 0:3] + 1  # ijk from resdata.grid is off by one
+    ijk = index_frame.to_numpy()[:, 0:3] + 1  # ijk from resdata.grid is off by one
 
     xyz = grid.export_position(index_frame)
     vol = grid.export_volume(index_frame)
@@ -407,8 +408,8 @@ def merge_initvectors(
     assert isinstance(initvectors, list)
 
     logger.info("Merging INIT data %s into dataframe", str(initvectors))
-    ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K"] + initvectors]
-    return pd.merge(dframe, ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
+    ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K", *initvectors]]
+    return dframe.merge(ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
 
 def init2df(
@@ -459,7 +460,7 @@ def init2df(
         init_df = init_df.where(init_df > -1e20 + 1e13)  # some trial and error
 
         # Remove columns that are all NaN:
-        init_df.dropna(axis="columns", how="all", inplace=True)
+        init_df = init_df.dropna(axis="columns", how="all")
 
     else:
         init_df = pd.DataFrame()  # empty
@@ -472,7 +473,7 @@ def init2df(
             for ix in range(egrid.getNumActive())
         ]
         init_df["PORV"] = porv_numpy[glob_idxs]
-    logger.info("Extracted %s from INIT file", str(init_df.columns.values))
+    logger.info("Extracted %s from INIT file", str(init_df.columns.to_numpy()))
     return init_df
 
 
@@ -723,7 +724,7 @@ def df2res(
         if keyword not in grid_df.columns:
             raise ValueError(f"Keyword {keyword} not found in grid dataframe")
         vector = np.zeros(global_size)
-        vector[grid_df["GLOBAL_INDEX"].astype(int).values] = grid_df[keyword]
+        vector[grid_df["GLOBAL_INDEX"].astype(int).to_numpy()] = grid_df[keyword]
         if dtype is int:
             vector = vector.astype(int)
         if dtype is float:

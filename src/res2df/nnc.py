@@ -124,15 +124,13 @@ def add_nnc_coords(nncdf: pd.DataFrame, resdatafiles: ResdataFiles) -> pd.DataFr
         Incoming dataframe augmented with the columns X, Y and Z.
     """
     gridgeometry = gridgeometry2df(resdatafiles)
-    gnncdf = pd.merge(
-        nncdf,
+    gnncdf = nncdf.merge(
         gridgeometry,
         how="left",
         left_on=["I1", "J1", "K1"],
         right_on=["I", "J", "K"],
     )
-    gnncdf = pd.merge(
-        gnncdf,
+    gnncdf = gnncdf.merge(
         gridgeometry,
         how="left",
         left_on=["I2", "J2", "K2"],
@@ -147,7 +145,7 @@ def add_nnc_coords(nncdf: pd.DataFrame, resdatafiles: ResdataFiles) -> pd.DataFr
     gnncdf["Z"] = gnncdf[["Z", "Z_2"]].mean(axis=1)
 
     # Let go of the temporary columns we have in gnncdf
-    return gnncdf[list(nncdf.columns) + ["X", "Y", "Z"]]
+    return gnncdf[[*list(nncdf.columns), "X", "Y", "Z"]]
 
 
 def filter_vertical(nncdf: pd.DataFrame) -> pd.DataFrame:

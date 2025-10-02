@@ -12,8 +12,7 @@ import pytest
 from res2df import common, equil, resdatafiles
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 
     HAVE_OPM = True
 except ImportError:
@@ -50,7 +49,7 @@ def test_stack_on_colname():
     assert len(stacked.columns) == 4
     assert len(stacked["DATE"].unique()) == 2
     assert len(stacked) == 4
-    assert not stacked.isnull().sum().sum()
+    assert not stacked.isna().sum().sum()
 
     dframe = pd.DataFrame(
         columns=[
@@ -70,7 +69,7 @@ def test_stack_on_colname():
     assert len(stacked.columns) == 5
     assert len(stacked["DATE"].unique()) == 2
     assert len(stacked) == 4
-    assert not stacked.isnull().sum().sum()
+    assert not stacked.isna().sum().sum()
 
     dframe = pd.DataFrame(
         columns=["OWC@2000-01-01", "OWC@2020-01-01"], data=[[2000, 1900], [2100, 2050]]
@@ -81,7 +80,7 @@ def test_stack_on_colname():
     assert len(stacked.columns) == 2
     assert len(stacked["DATE"].unique()) == 2
     assert len(stacked) == 4
-    assert not stacked.isnull().sum().sum()
+    assert not stacked.isna().sum().sum()
 
     dframe = pd.DataFrame(columns=["EQLNUM", "STATIC"], data=[[1, 1.2], [2, 1.3]])
     stacked = common.stack_on_colnames(dframe)
@@ -91,7 +90,7 @@ def test_stack_on_colname():
     assert "STATIC" in stacked
     assert len(stacked.columns) == 2
     assert len(stacked) == 2
-    assert not stacked.isnull().sum().sum()
+    assert not stacked.isna().sum().sum()
 
 
 def test_write_dframe_file(tmp_path):
@@ -151,7 +150,7 @@ def test_handle_wanted_keywords(wanted, deckstr, supported, expected):
     assert common.handle_wanted_keywords(wanted, deck, supported) == expected
 
 
-def df2res_equil(dframe, comment: str = None):
+def df2res_equil(dframe, comment=None):
     """Wrapper function to be able to test df2res
 
     (it asks for a function in the calling module)"""

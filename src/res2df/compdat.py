@@ -263,16 +263,16 @@ def deck2dfs(
         wsegaicd_df = unrolldf(wsegaicd_df, "SEGMENT1", "SEGMENT2")
 
     if "KEYWORD_IDX" in compdat_df.columns:
-        compdat_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        compdat_df = compdat_df.drop(["KEYWORD_IDX"], axis=1)
 
     if "KEYWORD_IDX" in wsegsicd_df.columns:
-        wsegsicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        wsegsicd_df = wsegsicd_df.drop(["KEYWORD_IDX"], axis=1)
 
     if "KEYWORD_IDX" in wsegaicd_df.columns:
-        wsegaicd_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        wsegaicd_df = wsegaicd_df.drop(["KEYWORD_IDX"], axis=1)
 
     if "KEYWORD_IDX" in wsegvalv_df.columns:
-        wsegvalv_df.drop(["KEYWORD_IDX"], axis=1, inplace=True)
+        wsegvalv_df = wsegvalv_df.drop(["KEYWORD_IDX"], axis=1)
 
     return {
         "COMPDAT": compdat_df,
@@ -330,7 +330,7 @@ def expand_welopen_defaults(
 
             # Any compdat entry with DATE==None are kept as they
             # are assumed to have an earlier date than any dates defined
-            compdat_filtered = compdat_df[compdat_df["DATE"].isnull()]
+            compdat_filtered = compdat_df[compdat_df["DATE"].isna()]
 
             # If the welopen entry DATE!=None we filter on compdat entries
             # <= this date
@@ -615,7 +615,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
             and wlist_record["NAME"] not in currentstate
         ):
             raise ValueError(
-                f"WLIST ADD/DEL only works on existing well lists: {str(wlist_record)}"
+                f"WLIST ADD/DEL only works on existing well lists: {wlist_record!s}"
             )
         if wlist_record["ACTION"] == "ADD":
             currentstate[wlist_record["NAME"]] = " ".join(
@@ -757,7 +757,7 @@ def expand_complump_in_welopen_df(
                 exp_welopens.append(cell_row)
 
     dframe = pd.DataFrame(exp_welopens)
-    return dframe.astype(object).where(pd.notnull(dframe), None)
+    return dframe.astype(object).where(pd.notna(dframe), None)
 
 
 def expand_wlist_in_welopen_df(
@@ -791,7 +791,7 @@ def expand_wlist_in_welopen_df(
             # Explicit wellname was used, no expansion to happen:
             exp_welopens.append(row)
     dframe = pd.DataFrame(exp_welopens)
-    return dframe.astype(object).where(pd.notnull(dframe), None)
+    return dframe.astype(object).where(pd.notna(dframe), None)
 
 
 def applywelopen(
@@ -850,7 +850,7 @@ def applywelopen(
                 "The WLIST dataframe must be expanded through expand_wlist()"
             )
 
-    welopen_df = welopen_df.astype(object).where(pd.notnull(welopen_df), None)
+    welopen_df = welopen_df.astype(object).where(pd.notna(welopen_df), None)
     welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
     welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 

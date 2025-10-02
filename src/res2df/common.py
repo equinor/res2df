@@ -11,6 +11,7 @@ import shlex
 import signal
 import sys
 from collections import defaultdict
+from importlib import resources
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
 
@@ -20,12 +21,11 @@ import pandas as pd
 import pyarrow
 
 try:
-    # pylint: disable=unused-import
-    import opm.io.deck  # lgtm [py/import-and-import-from]
+    import opm.io.deck
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa
+    from opm.io.deck import DeckKeyword  # noqa: F401
 except ImportError:
     # Allow parts of res2df to work without OPM:
     pass
@@ -82,14 +82,14 @@ for keyw in [
     "WSEGVALV",
 ]:
     OPMKEYWORDS[keyw] = json.loads(
-        (Path(__file__).parent / "opmkeywords" / keyw).read_text()
+        (resources.files(__package__) / "opmkeywords" / keyw).read_text()
     )
 
 
 SVG_COLOR_NAMES = [
     color.lower()
     for color in (
-        (Path(__file__).parent / "svg_color_keyword_names.txt")
+        (resources.files(__package__) / "svg_color_keyword_names.txt")
         .read_text(encoding="utf-8")
         .splitlines()
     )
@@ -176,7 +176,7 @@ def datetime_to_ecldate(timestamp: Union[str, datetime.datetime, datetime.date])
         if list(map(len, timestamp.split(" ")[0].split("-"))) != [4, 2, 2]:
             # Need this as dateutil.parser.isoparse() is not in Python 3.6.
             raise ValueError("Use ISO-format for dates")
-        timestamp = dateutil.parser.parse(timestamp)  # noqa  (py36 flake8 bug)
+        timestamp = dateutil.parser.parse(timestamp)
     if not isinstance(timestamp, (datetime.datetime, datetime.date)):
         raise TypeError("Require string or datetime")
     string = f"{timestamp.day} '{NUM2MONTH[timestamp.month]}' {timestamp.year}"
@@ -396,7 +396,7 @@ def merge_zones(
         return df
     zone_df = pd.DataFrame.from_dict(zonedict, orient="index", columns=[zoneheader])
     zone_df.index.name = "K"
-    zone_df.reset_index(inplace=True)
+    zone_df = zone_df.reset_index()
 
     df[zoneheader] = df[kname].map(defaultdict(lambda: None, zonedict))
     return df
@@ -666,7 +666,7 @@ def generic_deck_table(
     # sorting from that:
     if renamer is not None:
         inv_renamer = {value: key for key, value in renamer.items()}
-        dframe.rename(inv_renamer, axis="columns", inplace=True)
+        dframe = dframe.rename(inv_renamer, axis="columns")
 
     keyword_col_headers = [item["name"] for item in OPMKEYWORDS[keyword]["items"]]
 
@@ -680,7 +680,7 @@ def generic_deck_table(
     if rightmost_column == -1:
         # No relevant data in the dataframe
         return string
-    relevant_columns = keyword_col_headers[0 : rightmost_column + 1]  # noqa
+    relevant_columns = keyword_col_headers[0 : rightmost_column + 1]
     for colname in relevant_columns:
         # Add those that are missing, as Eclipse defaults
         if colname not in dframe:
@@ -731,7 +731,7 @@ def generic_deck_table(
 
     # Now rename again to have prettier column names:
     if renamer is not None:
-        dframe.rename(renamer, axis="columns", inplace=True)
+        dframe = dframe.rename(renamer, axis="columns")
     # Add a final column with the end-slash, invisible header:
     dframe[" "] = "/"
     tablestring = dframe.to_string(header=True, index=False)
@@ -830,10 +830,10 @@ def stack_on_colnames(
     dframe = dframe.stack(future_stack=True)
     staticcols = [col[0] for col in tuplecolumns if len(col) == 1]
     dframe[staticcols] = dframe[staticcols].ffill()
-    dframe.reset_index(inplace=True)
+    dframe = dframe.reset_index()
     # Drop rows stemming from the NaNs in the second tuple-element for
     # static columns:
-    dframe.dropna(axis="index", subset=["DATE"], inplace=True)
+    dframe = dframe.dropna(axis="index", subset=["DATE"])
     del dframe["level_0"]
     dframe.index.name = ""
     return dframe
@@ -885,7 +885,7 @@ def parse_lyrfile(filename: str) -> Optional[List[Dict[str, Any]]]:
     Returns:
         A list of dictionaries representing the information in the lyr file.
 
-    """  # noqa
+    """
 
     zonelines = Path(filename).read_text(encoding="utf-8").splitlines()
 

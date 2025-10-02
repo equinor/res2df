@@ -24,8 +24,7 @@ from res2df.summary import (
 )
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 
     HAVE_OPM = True
 except ImportError:
@@ -115,18 +114,18 @@ def test_summary2df_dates():
     assert sumdf.index.dtype in ["datetime64[ns]", "datetime64"]
 
     assert len(sumdf) == 59
-    assert str(sumdf.index.values[0])[0:10] == "2002-01-02"
-    assert sumdf.index.values[0] == np.datetime64("2002-01-02")
-    assert sumdf.index.values[-1] == np.datetime64("2002-03-01")
+    assert str(sumdf.index.to_numpy()[0])[0:10] == "2002-01-02"
+    assert sumdf.index.to_numpy()[0] == np.datetime64("2002-01-02")
+    assert sumdf.index.to_numpy()[-1] == np.datetime64("2002-03-01")
 
     sumdf = summary.df(resdatafiles, time_index="last", datetime=True)
     assert len(sumdf) == 1
-    assert sumdf.index.values[0] == np.datetime64("2003-01-02")
+    assert sumdf.index.to_numpy()[0] == np.datetime64("2003-01-02")
 
     # Leave this test for the datetime=False behaviour:
     sumdf = summary.df(resdatafiles, time_index="first")
     assert len(sumdf) == 1
-    assert str(sumdf.index.values[0]) == "2000-01-01"
+    assert str(sumdf.index.to_numpy()[0]) == "2000-01-01"
 
 
 @pytest.mark.integration
@@ -152,8 +151,8 @@ def test_res2csv_summary(tmp_path, mocker):
     res2csv.main()
     disk_df = pd.read_csv(tmpcsvfile)
     assert len(disk_df) == 97  # Includes timestamps
-    assert str(disk_df["DATE"].values[0]) == "2002-01-02 00:00:00"
-    assert str(disk_df["DATE"].values[-1]) == "2003-01-02 00:00:00"
+    assert str(disk_df["DATE"].to_numpy()[0]) == "2002-01-02 00:00:00"
+    assert str(disk_df["DATE"].to_numpy()[-1]) == "2003-01-02 00:00:00"
 
     tmpcsvfile = tmp_path / "sum.csv"
     mocker.patch(
@@ -177,8 +176,8 @@ def test_res2csv_summary(tmp_path, mocker):
     assert len(disk_df) == 366
     # Pandas' csv export writes datetime64 as pure date
     # when there are no clock-times involved:
-    assert str(disk_df["DATE"].values[0]) == "2002-01-02"
-    assert str(disk_df["DATE"].values[-1]) == "2003-01-02"
+    assert str(disk_df["DATE"].to_numpy()[0]) == "2002-01-02"
+    assert str(disk_df["DATE"].to_numpy()[-1]) == "2003-01-02"
 
 
 @pytest.mark.integration
@@ -414,7 +413,7 @@ def test_extrapolation():
     resdatafiles = ResdataFiles(EIGHTCELLS)
     lastfopt = summary.df(
         resdatafiles, column_keys="FOPT", time_index="last", datetime=True
-    )["FOPT"].values[0]
+    )["FOPT"].to_numpy()[0]
     answer = pd.DataFrame(
         # This is the maximal date for datetime64[ns]
         index=[np.datetime64("2262-04-11")],
@@ -454,7 +453,7 @@ def test_extrapolation():
     # But without datetime, we can get it extrapolated by resdata:
     assert summary.df(
         resdatafiles, column_keys=["FOPT"], time_index=[datetime.date(2300, 1, 1)]
-    )["FOPT"].values == [lastfopt]
+    )["FOPT"].to_numpy() == [lastfopt]
 
 
 def test_foreseeable_future(tmp_path):
@@ -1111,8 +1110,8 @@ def test_df2ressum_datetimeindex():
 
     roundtrip = df(df2ressum(dframe))
     assert isinstance(roundtrip.index, pd.DatetimeIndex)
-    assert roundtrip["FOPR"].values == [100]
-    assert roundtrip["FOPT"].values == [1000]
+    assert roundtrip["FOPR"].to_numpy() == [100]
+    assert roundtrip["FOPT"].to_numpy() == [1000]
 
 
 def test_duplicated_summary_vectors(caplog):

@@ -38,7 +38,7 @@ PD_FREQ_MNEMONICS: Dict[str, str] = {
 """Mapping from res2df custom offset strings to Pandas DateOffset strings.
 See
 https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects
-"""  # noqa
+"""
 
 
 def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> List[dt.datetime]:
@@ -110,7 +110,7 @@ def _crop_datelist(
             # Convert to datetime (at 00:00:00)
             start_date = dt.datetime.combine(start_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x > start_date]
-            datetimes = [start_date] + datetimes
+            datetimes = [start_date, *datetimes]
         if end_date:
             end_date = dt.datetime.combine(end_date, dt.datetime.min.time())
             datetimes = [x for x in datetimes if x < end_date]
@@ -283,7 +283,7 @@ def resample_smry_dates(
     # fit on frequency boundary. Force include these if
     # supplied as user arguments.
     if start_date and start_date not in dates:
-        dates = [start_date] + dates
+        dates = [start_date, *dates]
     if end_date and end_date not in dates:
         dates += [end_date]
     return dates
@@ -501,7 +501,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
     field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
     column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
 
-    dframe_values = dframe.values.transpose()
+    dframe_values = dframe.to_numpy().transpose()
     for col_idx, colname in enumerate(dframe.columns):
         if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
             # Boolean objects in the metadata dictionary must be converted to bytes:
@@ -618,7 +618,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
     dframe = dframe.copy()
     if "DATE" in dframe.columns:
         # Infer datatype (Pandas cannot answer it) based on the first element:
-        if isinstance(dframe["DATE"].values[0], str):
+        if isinstance(dframe["DATE"].to_numpy()[0], str):
             # Do not use pd.Series.apply() here, Pandas would try to convert it to
             # datetime64[ns] which is limited at year 2262.
             dframe["DATE"] = pd.Series(
@@ -629,7 +629,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
                 dtype="object",
                 index=dframe.index,
             )
-        if isinstance(dframe["DATE"].values[0], dt.date):
+        if isinstance(dframe["DATE"].to_numpy()[0], dt.date):
             dframe["DATE"] = pd.Series(
                 [
                     dt.datetime.combine(dateobj, dt.datetime.min.time())
@@ -639,20 +639,20 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
                 index=dframe.index,
             )
 
-        dframe.set_index("DATE", inplace=True)
+        dframe = dframe.set_index("DATE")
     if not isinstance(
-        dframe.index.values[0], (dt.datetime, np.datetime64, pd.Timestamp)
+        dframe.index.to_numpy()[0], (dt.datetime, np.datetime64, pd.Timestamp)
     ):
         raise ValueError(
             "dataframe must have a datetime index, got "
-            f"{dframe.index.values[0]} of type {type(dframe.index.values[0])}"
+            f"{dframe.index.to_numpy()[0]} of type {type(dframe.index.to_numpy()[0])}"
         )
-    dframe.sort_index(axis=0, inplace=True)
+    dframe = dframe.sort_index(axis=0)
 
     # This column will appear if dataframes are naively written to CSV
     # files and read back in again.
     if "Unnamed: 0" in dframe:
-        dframe.drop("Unnamed: 0", axis="columns", inplace=True)
+        dframe = dframe.drop("Unnamed: 0", axis="columns")
 
     block_columns = [
         col for col in dframe.columns if (col.startswith("B") or col.startswith("LB"))

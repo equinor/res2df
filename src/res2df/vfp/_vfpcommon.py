@@ -16,12 +16,11 @@ import pandas as pd
 try:
     # Needed for mypy
 
-    # pylint: disable=unused-import
     import opm.io
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa
+    from opm.io.deck import DeckKeyword  # noqa: F401
 except ImportError:
     pass
 
@@ -137,16 +136,16 @@ def _stack_vfptable2df(
     df_vfptable.columns = pd.MultiIndex.from_tuples(indextuples)
 
     # Now stack
-    df_vfptable_stacked = df_vfptable.stack()
+    df_vfptable_stacked = df_vfptable.stack(future_stack=True).sort_index()
 
     # In order to propagate the gfr, thp, wct values after
     # stacking to the correct rows, we should either understand
     # how to do that properly using pandas, but for now, we try a
     # backwards fill, hopefully that is robust enough
-    df_vfptable_stacked.bfill(inplace=True)
     # Also reset the index:
-    df_vfptable_stacked.reset_index(inplace=True)
-    df_vfptable_stacked.drop("level_0", axis="columns", inplace=True)
+    df_vfptable_stacked = (
+        df_vfptable_stacked.bfill().reset_index().drop("level_0", axis="columns")
+    )
     # This column is not meaningful (it is the old index)
 
     # Delete rows that does not belong to any flow rate (this is
@@ -163,8 +162,8 @@ def _stack_vfptable2df(
     df_vfptable_stacked["RATE"] = df_vfptable_stacked["RATE"].astype(float)
 
     # Sort values in correct order
-    df_vfptable_stacked.sort_values(
-        by=index_names_list + ["RATE"], ascending=True, inplace=True, ignore_index=True
+    df_vfptable_stacked = df_vfptable_stacked.sort_values(
+        by=[*index_names_list, "RATE"], ascending=True, ignore_index=True
     )
 
     return df_vfptable_stacked

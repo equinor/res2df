@@ -20,12 +20,11 @@ import pyarrow as pa
 try:
     # Needed for mypy
 
-    # pylint: disable=unused-import
     import opm.io
 
     # This import is seemingly not used, but necessary for some attributes
     # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa
+    from opm.io.deck import DeckKeyword  # noqa: F401
 except ImportError:
     pass
 
@@ -224,7 +223,7 @@ def basic_data2df(
     ]
 
     # reset index (not used other than tests)
-    df_bhp_stacked.reset_index(inplace=True, drop=True)
+    df_bhp_stacked = df_bhp_stacked.reset_index(drop=True)
     return df_bhp_stacked
 
 
@@ -348,12 +347,12 @@ def df2basic_data(dframe: pd.DataFrame) -> Dict[str, Any]:
     if no_tab_values % no_flow_values != 0:
         raise ValueError(
             f"Number of unique rate values {no_flow_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
     if no_tab_values % no_thp_values != 0:
         raise ValueError(
             f"Number of unique thp values {no_thp_values} not consistent "
-            "with number of tabulated values {no_tab_values}"
+            f"with number of tabulated values {no_tab_values}"
         )
 
     # Replace interpolation values with index in dataframe

@@ -15,7 +15,7 @@ from res2df.wellcompletiondata import (
 )
 
 try:
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed",
@@ -132,7 +132,7 @@ def test_zonemap_with_some_undefined_layers():
     # the compdat entries in the same layers
     for well, well_df in df.groupby("WELL"):
         assert (
-            well_df["KH"].values[0]
+            well_df["KH"].to_numpy()[0]
             == compdat_df[compdat_df["WELL"] == well]["KH"].sum()
         )
 

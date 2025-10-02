@@ -90,8 +90,8 @@ def _rftrecords2df(rftfile: ResdataFile) -> pd.DataFrame:
     nav_df.loc[nav_df["recordname"] == "TIME", "timeindex"] = nav_df[
         nav_df["recordname"] == "TIME"
     ].index
-    nav_df.ffill(
-        inplace=True
+    nav_df = (
+        nav_df.ffill()
     )  # forward fill (because any record is associated to the previous TIME record)
     nav_df["timeindex"] = nav_df["timeindex"].astype(int)
     logger.info(
@@ -185,9 +185,9 @@ def get_con_seg_data(
     )
 
     # Ensure integer headers are integers:
-    integer_columns = headers[headers["recordtype"] == "INTE"].index.values
+    integer_columns = headers[headers["recordtype"] == "INTE"].index.to_numpy()
     for col in (set(integer_columns) - {"DATE"}).intersection(
-        set(data_headers["recordname"].values)
+        set(data_headers["recordname"].to_numpy())
     ):
         data[col] = data[col].astype(int)
     data[datatype + "IDX"] = data.index + 1  # Add an index that starts with 1
@@ -245,8 +245,7 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
     seg_data["SEGNXT"] = seg_data["SEGNXT"].fillna(value="0").astype(int)
 
     # Outer merge first to add the upstream segment information to every row.
-    merged = pd.merge(
-        seg_data,
+    merged = seg_data.merge(
         seg_data,
         how="left",
         left_on="SEGIDX",
@@ -261,7 +260,7 @@ def process_seg_topology(seg_data: pd.DataFrame) -> pd.DataFrame:
 
     # Now we can determine leaf segments by those with no extra information, since
     # we did an outer merge:
-    merged["LEAF"] = merged["SEGIDX_upstream"].replace(0, np.nan).isnull()
+    merged["LEAF"] = merged["SEGIDX_upstream"].replace(0, np.nan).isna()
 
     # Flag segments that have multiple upstream segments as junctions
     merged["JUNCTION"] = merged["SEGIDX"].duplicated(keep=False)
@@ -300,7 +299,7 @@ def seg2dicttree(seg_data: pd.DataFrame) -> dict:
         if "SEGIDX_upstream" in row and row["SEGIDX_upstream"] > 0:
             edges.append((row["SEGIDX_upstream"], row["SEGIDX"]))
     if not edges:
-        return {seg_data["SEGIDX"].values[0]: {}}
+        return {seg_data["SEGIDX"].to_numpy()[0]: {}}
     for child, parent in edges:
         subtrees[parent][child] = subtrees[child]
 
@@ -354,10 +353,12 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
     #    STOP: Cannot use this criteria, because junctions  due to ICDs
     #    are legit.
     #  * The segment must be on a branch with only one segment
-    icd_seg_indices = seg_data[seg_data["LEAF"] & seg_data["LONELYSEG"]].index.values
+    icd_seg_indices = seg_data[
+        seg_data["LEAF"] & seg_data["LONELYSEG"]
+    ].index.to_numpy()
     non_icd_seg_indices = seg_data[
         ~(seg_data["LEAF"] & seg_data["LONELYSEG"])
-    ].index.values
+    ].index.to_numpy()
 
     icd_seg_data = seg_data.reindex(icd_seg_indices)
     seg_data = seg_data.reindex(non_icd_seg_indices)
@@ -367,7 +368,7 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
     logger.debug(
         "Found %d ICD segments, indices %s",
         len(icd_seg_data),
-        str(icd_seg_data["ICD_SEGIDX"].values),
+        str(icd_seg_data["ICD_SEGIDX"].to_numpy()),
     )
 
     return (seg_data, icd_seg_data)
@@ -425,14 +426,12 @@ def merge_icd_seg_conseg(
     if not icd_data.empty:
         # Merge ICD_* columns onto the dataframe representing reservoir
         # connections.
-        data = pd.merge(con_data, icd_data, left_on="CONSEGNO", right_on="ICD_SEGIDX")
+        data = con_data.merge(icd_data, left_on="CONSEGNO", right_on="ICD_SEGIDX")
 
         # Merge SEGxxxxx to the dataframe with icd's and reservoir connections.
         assert not seg_data.empty
 
-        data = pd.merge(
-            data, seg_data, how="left", left_on="ICD_SEGNXT", right_on="SEGIDX"
-        )
+        data = data.merge(seg_data, how="left", left_on="ICD_SEGNXT", right_on="SEGIDX")
 
         # The merge has potentially included extra rows due to junctions.
         # After ICD merge, we can require that SEGIDX_upstream equals CONSEGNO
@@ -453,9 +452,7 @@ def merge_icd_seg_conseg(
         data = pd.concat(
             [
                 data,
-                pd.merge(
-                    con_data_no_icd, seg_data, left_on="CONSEGNO", right_on="SEGIDX"
-                ),
+                con_data_no_icd.merge(seg_data, left_on="CONSEGNO", right_on="SEGIDX"),
             ],
             sort=False,
         )
@@ -625,7 +622,7 @@ def df(
     # interpreting columns with numbers as strings. An alternative
     # solution that keeps NaN would be to add a second row in the
     # output containing the datatype
-    rftdata_df.fillna(0, inplace=True)
+    rftdata_df = rftdata_df.fillna(0)
 
     # The HOSTGRID data seems often to be empty, check if it is and delete if so:
     if (

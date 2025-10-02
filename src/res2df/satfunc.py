@@ -124,7 +124,7 @@ def df(
         # SUPPORTED_KEYWORDS (mainly to get WaterOil before GasOil)
         # We do that by converting to a Categorical series:
         dframe["KEYWORD"] = pd.Categorical(dframe["KEYWORD"], SUPPORTED_KEYWORDS)
-        dframe.sort_values(["SATNUM", "KEYWORD"], inplace=True)
+        dframe = dframe.sort_values(["SATNUM", "KEYWORD"])
         dframe["KEYWORD"] = dframe["KEYWORD"].astype(str)
         logger.info(
             "Extracted keywords %s for %i SATNUMs",
@@ -147,14 +147,14 @@ def interpolate_defaults(dframe: pd.DataFrame) -> pd.DataFrame:
     assert len(sat_cols) == 1, (
         f"Could not determine a single saturation column in {dframe.columns}"
     )
-    sat_col = list(sat_cols)[0]
+    sat_col = next(iter(sat_cols))
 
     if dframe[sat_col].isna().any():
         raise ValueError("nan in saturation column is not allowed")
 
     filled_frames = []
     for _, subframe in dframe.groupby("SATNUM"):
-        subframe.set_index(sat_col, inplace=True)
+        subframe = subframe.set_index(sat_col)
         numeric_columns = subframe.select_dtypes(include=["float", "int"]).columns
         subframe[numeric_columns] = subframe[numeric_columns].interpolate(
             method="index", limit_area="inside"

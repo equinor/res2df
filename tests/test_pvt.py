@@ -12,8 +12,7 @@ from res2df import csv2res, pvt, res2csv
 from res2df.resdatafiles import ResdataFiles
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed, nothing relevant in here then",
@@ -44,7 +43,7 @@ def test_pvto_strings():
     assert len(dframe["PRESSURE"].unique()) == 3
     assert len(dframe["VOLUMEFACTOR"].unique()) == 3
     assert len(dframe["VISCOSITY"].unique()) == 3
-    assert set(dframe["PVTNUM"].values) == {1}
+    assert set(dframe["PVTNUM"].to_numpy()) == {1}
     assert max(dframe["PRESSURE"]) == 200
 
     dframe_via_string = pvt.pvto_fromdeck(pvt.df2res_pvto(dframe))
@@ -197,18 +196,18 @@ def test_pvt_reek():
     assert len(rock_df) == 1
     assert "PRESSURE" in rock_df
     assert "COMPRESSIBILITY" in rock_df
-    assert rock_df["PRESSURE"].values[0] == 327.3
+    assert rock_df["PRESSURE"].to_numpy()[0] == 327.3
 
     pvtw_df = pvt.pvtw_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvtw_df
-    assert pvtw_df["PVTNUM"].values[0] == 1
+    assert pvtw_df["PVTNUM"].to_numpy()[0] == 1
     assert len(pvtw_df) == 1
     assert "PRESSURE" in pvtw_df
     assert "VOLUMEFACTOR" in pvtw_df
     assert "COMPRESSIBILITY" in pvtw_df
     assert "VISCOSITY" in pvtw_df
     assert "VISCOSIBILITY" in pvtw_df
-    assert pvtw_df["VISCOSITY"].values[0] == 0.25
+    assert pvtw_df["VISCOSITY"].to_numpy()[0] == 0.25
 
     pvdg_df = pvt.pvdg_fromdeck(resdatafiles.get_deck())
     assert "PVTNUM" in pvdg_df

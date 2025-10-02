@@ -188,18 +188,17 @@ def _merge_compdat_and_connstatus(
         pd.DataFrame with one row per unique combination of well, zone and date.
     """
     match_on = ["WELL", "I", "J", "K1"]
-    wellconnstatus_df.rename({"K": "K1"}, axis=1, inplace=True)
+    wellconnstatus_df = wellconnstatus_df.rename({"K": "K1"}, axis=1)
 
-    dframe = pd.merge(
-        wellconnstatus_df,
-        compdat_df[match_on + ["KH", "ZONE"]],
+    dframe = wellconnstatus_df.merge(
+        compdat_df[[*match_on, "KH", "ZONE"]],
         on=match_on,
         how="left",
     )
 
     # There will often be several rows (with different OP/SH) matching in compdat.
     # Only the first is kept
-    dframe.drop_duplicates(subset=["DATE"] + match_on, keep="first", inplace=True)
+    dframe = dframe.drop_duplicates(subset=["DATE", *match_on], keep="first")
 
     # Concat from compdat the wells that are not in well connection status
     dframe = pd.concat(

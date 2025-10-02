@@ -11,8 +11,7 @@ from res2df import gruptree, res2csv
 from res2df.resdatafiles import ResdataFiles
 
 try:
-    # pylint: disable=unused-import
-    import opm  # noqa
+    import opm  # noqa: F401
 except ImportError:
     pytest.skip(
         "OPM is not installed, nothing relevant in here then",
@@ -165,8 +164,8 @@ GRUPNET
     grupdf = gruptree.df(deck, startdate="2000-01-01")
     print(grupdf)
     assert "TERMINAL_PRESSURE" in grupdf
-    assert 90 in grupdf["TERMINAL_PRESSURE"].values
-    assert 100 in grupdf["TERMINAL_PRESSURE"].values
+    assert 90 in grupdf["TERMINAL_PRESSURE"].to_numpy()
+    assert 100 in grupdf["TERMINAL_PRESSURE"].to_numpy()
 
 
 @pytest.mark.parametrize(

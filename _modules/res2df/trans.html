@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.trans &mdash; res2df 1.3.8.dev9+g1a506c3dd documentation</title>
+  <title>res2df.trans &mdash; res2df 1.3.8.dev10+g2da8d28a4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=4d3525c3"></script>
+      <script src="../../_static/documentation_options.js?v=e5856fbb"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -245,13 +245,13 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding vectors </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vectorscoords</span><span class="p">))</span>
         <span class="n">grid_df</span> <span class="o">=</span> <span class="n">grid_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">trans_df</span> <span class="o">=</span> <span class="n">trans_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-            <span class="n">grid_df</span><span class="p">[[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">vectorscoords</span><span class="p">],</span>
+            <span class="n">grid_df</span><span class="p">[[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">vectorscoords</span><span class="p">]],</span>
             <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I1&quot;</span><span class="p">,</span> <span class="s2">&quot;J1&quot;</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">],</span>
             <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">],</span>
         <span class="p">)</span>
         <span class="n">trans_df</span> <span class="o">=</span> <span class="n">trans_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">trans_df</span> <span class="o">=</span> <span class="n">trans_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-            <span class="n">grid_df</span><span class="p">[[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">vectorscoords</span><span class="p">],</span>
+            <span class="n">grid_df</span><span class="p">[[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">vectorscoords</span><span class="p">]],</span>
             <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I2&quot;</span><span class="p">,</span> <span class="s2">&quot;J2&quot;</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">],</span>
             <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">],</span>
             <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">),</span>

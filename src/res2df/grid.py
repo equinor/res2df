@@ -110,7 +110,7 @@ def dates2rstindices(
         chosendates = [x for x in dates if x in availabledates]
         if not chosendates:
             raise ValueError("None of the requested dates were found")
-        if len(chosendates) < len(availabledates):
+        if len(chosendates) < len(dates):
             logger.warning("Not all dates found in UNRST\n")
     else:
         raise ValueError("date " + str(dates) + " not understood")

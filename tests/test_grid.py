@@ -604,7 +604,7 @@ def test_get_available_rst_dates():
 
 
 def test_dates2rstindices_logging(caplog):
-    """Test warning is logged in dates2rstindices if not all requested dates are available."""
+    """Test warning is logged in dates2rstindices if not all dates are available."""
     resdatafiles = ResdataFiles(REEK)
     alldates = grid.get_available_rst_dates(resdatafiles)
 

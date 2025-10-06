@@ -99,10 +99,6 @@ res2df = ["opmkeywords/*", "py.typed", "svg_color_keyword_names.txt"]
 [tool.mypy]
 ignore_missing_imports = true
 
-[tool.pylint]
-# Module docstrings are not required
-disable = "missing-module-docstring"
-
 [tool.pytest.ini_options]
 markers = [
     "integration: marks a test as an integration test",

@@ -124,7 +124,7 @@ def test_summary_restarts(
 
 def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
     command = ["eclrun", "eclipse", "-v", eclipse_version, datafile]
-    result = subprocess.run(  # pylint: disable=subprocess-run-check
+    result = subprocess.run(
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -144,7 +144,7 @@ def run_reservoir_simulator(eclipse_version: str, datafile: str) -> None:
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
         time.sleep(30)
-        result = subprocess.run(  # pylint: disable=subprocess-run-check
+        result = subprocess.run(
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

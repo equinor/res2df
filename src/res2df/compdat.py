@@ -20,7 +20,6 @@ import numpy as np
 import pandas as pd
 
 with contextlib.suppress(ImportError):
-    # pylint: disable=unused-import
     import opm.io.deck
 
 from .common import (
@@ -954,9 +953,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def compdat_main(args):
     """Entry-point for module, for command line utility"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     compdat_df = df(resdatafiles, initvectors=args.initvectors)
     write_dframe_stdout_file(compdat_df, args.output, index=False, caller_logger=logger)

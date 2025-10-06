@@ -109,6 +109,4 @@ def test_res2csv_through_ert(tmp_path):
 @pytest.mark.skipif(HAVE_ERT, reason="Tested only when ERT is not available")
 def test_no_erthooks():
     """Test that we can import the hook implementations even when ERT is unavailable."""
-    # pylint: disable=redefined-outer-name, unused-import
-    # pylint: disable=reimported, import-outside-toplevel
     from res2df.hook_implementations import forward_model_steps  # noqa: F401, PLC0415

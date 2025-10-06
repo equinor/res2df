@@ -43,7 +43,6 @@ def test_gridgeometry2df(mocker):
     assert (grid_geom["Z_MAX"] > grid_geom["Z_MIN"]).all()
 
     with pytest.raises(TypeError, match="missing 1 required positional"):
-        # pylint: disable=no-value-for-parameter
         grid.gridgeometry2df()
 
     with pytest.raises(AttributeError):
@@ -59,7 +58,6 @@ def test_gridgeometry2df(mocker):
 
 def test_wrongfile():
     """Test the ResdataFiles object on nonexistent files"""
-    # pylint: disable=invalid-name,redefined-builtin
 
     # We can initalize this object with bogus:
     resdatafiles = ResdataFiles("FOO.DATA")
@@ -149,7 +147,6 @@ def test_init2df():
     init_df = grid.init2df(resdatafiles)
 
     assert isinstance(init_df, pd.DataFrame)
-    # pylint: disable=unsupported-membership-test  # false positive on Dataframe
     assert not init_df.empty
     assert "PERMX" in init_df
     assert "PORO" in init_df
@@ -169,7 +166,6 @@ def test_that_init2df_works_with_only_PORV():
     init_df = grid.init2df(resdatafiles, vectors="PORV")
 
     assert isinstance(init_df, pd.DataFrame)
-    # pylint: disable=unsupported-membership-test  # false positive on Dataframe
     assert not init_df.empty
     assert "PORV" in init_df
 
@@ -344,7 +340,6 @@ def test_df():
     resdatafiles = ResdataFiles(REEK)
     # assert error..
     with pytest.raises(TypeError):
-        # pylint: disable=no-value-for-parameter
         grid.df()
 
     grid_df = grid.df(resdatafiles)

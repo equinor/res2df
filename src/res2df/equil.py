@@ -25,7 +25,6 @@ from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
 
 with contextlib.suppress(ImportError):
-    # pylint: disable=unused-import
     import opm.io
 
 
@@ -321,9 +320,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def equil_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
         deck = resdatafiles.get_deck()
@@ -355,9 +352,7 @@ def equil_reverse_main(args) -> None:
     """Entry-point for module, for command line utility
     for CSV to reservoir simulator :term:`include files <include file>`
     """
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     equil_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(equil_df, keywords=args.keywords)

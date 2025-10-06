@@ -366,7 +366,6 @@ COMPDAT
 /
 """
 
-    # pylint: disable=expression-not-assigned
     with pytest.raises(ValueError, match="WELSPECS must be provided when I"):
         compdat.deck2dfs(ResdataFiles.str2deck(compdat_str_def_i))["COMPDAT"]
 

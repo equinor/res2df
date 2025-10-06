@@ -19,7 +19,6 @@ EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 @pytest.mark.skipif(not HAVE_OPM, reason="OPM is not installed")
 def test_filedescriptors():
     """Test that filedescriptors are properly closed"""
-    # pylint: disable=protected-access
 
     fd_dir = Path("/proc/") / str(os.getpid()) / "fd"
     if not fd_dir.exists():

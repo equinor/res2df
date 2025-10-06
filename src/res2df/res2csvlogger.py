@@ -8,7 +8,6 @@ from .constants import MAGIC_STDOUT
 def getLogger_res2csv(
     module_name: str = "res2df", args_dict: Optional[Dict[str, Union[str, bool]]] = None
 ) -> logging.Logger:
-    # pylint: disable=invalid-name
     """Provide a custom logger for res2csv and csv2res
 
     Logging output is by default split by logging levels (split between WARNING and

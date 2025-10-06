@@ -283,9 +283,7 @@ def df2res_editnnc(
 
 def nnc_main(args) -> None:
     """Command line access point from main() or from res2csv via subparser"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     nncdf = df(resdatafiles, coords=args.coords, pillars=args.pillars)
     write_dframe_stdout_file(

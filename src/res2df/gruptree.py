@@ -15,8 +15,6 @@ import treelib
 
 with contextlib.suppress(ImportError):
     # Needed for mypy
-
-    # pylint: disable=unused-import
     import opm.io
 
 from .common import (
@@ -457,9 +455,7 @@ def prettyprint(dframe: pd.DataFrame) -> str:
 
 def gruptree_main(args) -> None:
     """Entry-point for module, for command line utility."""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     if not args.output and not args.prettyprint:
         print("Nothing to do. Set --output or --prettyprint")
         sys.exit(0)

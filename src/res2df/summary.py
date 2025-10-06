@@ -299,7 +299,6 @@ def df(
     paramfile: Optional[str] = None,
     datetime: bool = False,  # A very poor choice of argument name [pylint]
 ):
-    # pylint: disable=too-many-arguments
     """
     Extract data from UNSMRY as Pandas dataframes.
 
@@ -794,9 +793,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def summary_main(args) -> None:
     """Read summary data from disk and write CSV back to disk"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     eclbase = (
         args.DATAFILE.replace(".DATA", "").replace(".UNSMRY", "").replace(".SMSPEC", "")
     )
@@ -826,9 +823,7 @@ def summary_main(args) -> None:
 
 def summary_reverse_main(args) -> None:
     """Entry point for usage with "csv2res summary" on the command line"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
 
     summary_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)

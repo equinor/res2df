@@ -411,9 +411,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def pillars_main(args) -> None:
     """This is the command line API"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
 
     resdatafiles = ResdataFiles(args.DATAFILE)
     dframe = df(

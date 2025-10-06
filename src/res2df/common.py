@@ -329,7 +329,6 @@ def parse_opmio_deckrecord(
                     # OPM DeckItem. A better solution has not yet
                     # been found in the OPM API. See also
                     # https://github.com/OPM/opm-common/issues/2598
-                    # pylint: disable=protected-access
                     if record[item_idx].__defaulted(idx):
                         rec_dict[item_name][idx] = np.nan
         else:

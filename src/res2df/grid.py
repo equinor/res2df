@@ -197,7 +197,7 @@ def rst2df(
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
     # for all active cells:
-    activecells = resdatafiles.get_egrid().getNumActive()
+    activecells = resdatafiles.get_egrid().get_num_active()
     rstvectors = []
     for vec in resfo.lazy_read(resdatafiles.get_rstfilename()):
         keyword_name = vec.read_keyword().strip()
@@ -438,7 +438,7 @@ def init2df(
     for vec in init.headers:
         if vec[0] == "PORV" and any(fnmatch.fnmatch("PORV", key) for key in vectors):
             include_porv = True
-        elif vec[1] == egrid.getNumActive() and any(
+        elif vec[1] == egrid.get_num_active() and any(
             fnmatch.fnmatch(vec[0], key) for key in vectors
         ):
             usevectors.append(vec[0])
@@ -678,7 +678,7 @@ def df2res(
     active_cells = None
     if resdatafiles is not None and resdatafiles.get_egrid() is not None:
         global_size = resdatafiles.get_egrid().get_global_size()
-        active_cells = resdatafiles.get_egrid().getNumActive()
+        active_cells = resdatafiles.get_egrid().get_num_active()
 
     if "GLOBAL_INDEX" not in grid_df:
         logger.warning(

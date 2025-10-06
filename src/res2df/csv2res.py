@@ -5,7 +5,6 @@ for selected keywords
 """
 
 import argparse
-import sys
 
 from .__version__ import __version__
 from .equil import equil_reverse_main
@@ -35,14 +34,11 @@ def get_parser() -> argparse.ArgumentParser:
         version=f"%(prog)s {__version__}",
     )
 
-    if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
-        subparsers = parser.add_subparsers(  # type: ignore
-            required=True,
-            dest="subcommand",
-            parser_class=argparse.ArgumentParser,
-        )
-    else:
-        subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
+    subparsers = parser.add_subparsers(  # type: ignore
+        required=True,
+        dest="subcommand",
+        parser_class=argparse.ArgumentParser,
+    )
 
     summary_parser = subparsers.add_parser(
         "summary",

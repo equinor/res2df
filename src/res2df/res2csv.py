@@ -7,7 +7,6 @@ in res2df
 import argparse
 import functools
 import importlib
-import sys
 from typing import Optional
 
 from .__version__ import __version__
@@ -26,14 +25,11 @@ def get_parser() -> argparse.ArgumentParser:
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
 
-    if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
-        subparsers = parser.add_subparsers(  # type: ignore
-            required=True,
-            dest="subcommand",
-            parser_class=argparse.ArgumentParser,
-        )
-    else:
-        subparsers = parser.add_subparsers(parser_class=argparse.ArgumentParser)
+    subparsers = parser.add_subparsers(  # type: ignore
+        required=True,
+        dest="subcommand",
+        parser_class=argparse.ArgumentParser,
+    )
 
     subparsers_dict = {}
     subparsers_dict["grid"] = subparsers.add_parser(

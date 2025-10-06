@@ -867,9 +867,9 @@ def applywelopen(
             ].drop_duplicates(subset=["I", "J", "K1", "K2"], keep="last")
             acts_on_well = True
         elif (
-            row["I"]
-            and row["J"]
-            and row["K"]
+            row["I"] is not None
+            and row["J"] is not None
+            and row["K"] is not None
             and row["C1"] is None
             and row["C2"] is None
         ):

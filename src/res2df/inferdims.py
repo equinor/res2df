@@ -169,9 +169,7 @@ def inject_xxxdims_ntxxx(
         return deck
 
     if xxxdims in deck and ntxxx_value is not None:
-        logger.warning(
-            "Ignoring %s argument, it is already in the deck", str(ntxxx_name)
-        )
+        logger.warning("Ignoring %s argument, it is already in the deck", ntxxx_name)
         return deck
 
     if not isinstance(deck, str):
@@ -182,7 +180,7 @@ def inject_xxxdims_ntxxx(
     # Estimate if ntxxx_value is not provided:
     if ntxxx_value is None:
         ntxxx_estimate = guess_dim(deck, xxxdims, DIMS_POS[ntxxx_name])
-        logger.warning("Estimated %s=%s", ntxxx_name, str(ntxxx_estimate))
+        logger.warning("Estimated %s=%s", ntxxx_name, ntxxx_estimate)
     else:
         ntxxx_estimate = ntxxx_value
 

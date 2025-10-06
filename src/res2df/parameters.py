@@ -107,7 +107,7 @@ def load_all(
         if warnduplicates and keyvalues:
             duplicates = set(keyvalues.keys()).intersection(set(new_params.keys()))
             if duplicates:
-                logger.debug("Duplicates keys %s", str(duplicates))
+                logger.debug("Duplicates keys %s", duplicates)
         new_params.update(keyvalues)
         keyvalues = new_params
     return keyvalues
@@ -168,7 +168,7 @@ def load(filename: Union[str, Path]) -> Dict[str, Any]:
 
     if not params_dict:
         logger.warning("%s could not be parsed as yaml, json or txt", filename)
-        logger.warning("%s%s%s", str(yaml_error), str(json_error), str(txt_error))
+        logger.warning("%s%s%s", yaml_error, json_error, txt_error)
         raise ValueError(f"Could not parse {filename}")
 
     # Filter to values that are NOT dict's. We can have dict as value when

@@ -12,8 +12,7 @@ from typing import Any, Dict, List, Optional, Union
 import dateutil
 import numpy as np
 import pandas as pd
-import pyarrow
-import pyarrow.feather
+import pyarrow as pa
 from resdata.summary import Summary
 
 from .common import write_dframe_stdout_file
@@ -483,7 +482,7 @@ def _ensure_unique_datetime_index(dframe: pd.DataFrame) -> pd.DataFrame:
     return dframe
 
 
-def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
+def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
     """Construct a Pyarrow table from a dataframe, conserving metadata.
 
     All integer columns will have datatype int32, all floats will have float32
@@ -497,8 +496,8 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
     This index is always named DATE in the pyarrow table.
     """
 
-    field_list: List[pyarrow.Field] = []
-    field_list.append(pyarrow.field("DATE", pyarrow.timestamp("ms")))
+    field_list: List[pa.Field] = []
+    field_list.append(pa.field("DATE", pa.timestamp("ms")))
     column_arrays = [dframe.index.to_numpy().astype("datetime64[ms]")]
 
     dframe_values = dframe.to_numpy().transpose()
@@ -512,18 +511,18 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
         else:
             field_metadata = {}
         if pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
-            dtype = pyarrow.int32()
+            dtype = pa.int32()
         elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
             # Parameters are potentially merged into the dataframe.
-            dtype = pyarrow.string()
+            dtype = pa.string()
         else:
-            dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
+            dtype = pa.float32()
+        field_list.append(pa.field(colname, dtype, metadata=field_metadata))
         column_arrays.append(dframe_values[col_idx])
 
-    schema = pyarrow.schema(field_list)
+    schema = pa.schema(field_list)
 
-    return pyarrow.table(column_arrays, schema=schema)
+    return pa.table(column_arrays, schema=schema)
 
 
 def _merge_params(
@@ -539,7 +538,7 @@ def _merge_params(
 
     if paramfile is None and resdatafiles is not None:
         param_files = find_parameter_files(resdatafiles)
-        logger.info("Loading parameters from files: %s", str(param_files))
+        logger.info("Loading parameters from files: %s", param_files)
         param_dict = load_all(param_files)
     elif (
         paramfile is not None
@@ -547,10 +546,10 @@ def _merge_params(
         and not Path(paramfile).is_absolute()
     ):
         param_files = find_parameter_files(resdatafiles, filebase=str(paramfile))
-        logger.info("Loading parameters from files: %s", str(param_files))
+        logger.info("Loading parameters from files: %s", param_files)
         param_dict = load_all(param_files)
     elif paramfile is not None and Path(paramfile).is_absolute():
-        logger.info("Loading parameters from file: %s", str(paramfile))
+        logger.info("Loading parameters from file: %s", paramfile)
         param_dict = load(paramfile)
     else:
         raise ValueError("Not able to locate parameters.txt")
@@ -661,7 +660,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
         dframe = dframe.drop(columns=block_columns)
         logger.warning(
             "Dropped columns with block data, not supported: %s",
-            str({colname.partition(":")[0] + ":*" for colname in block_columns}),
+            {colname.partition(":")[0] + ":*" for colname in block_columns},
         )
 
     return dframe

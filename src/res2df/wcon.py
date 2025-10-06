@@ -42,7 +42,7 @@ def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFram
     for kword in deck:
         if kword.name in ["DATES", "START"]:
             for rec in kword:
-                logger.info("Parsing at date %s", str(date))
+                logger.info("Parsing at date %s", date)
                 date = parse_opmio_date_rec(rec)
         elif kword.name == "TSTEP":
             if not date:
@@ -53,9 +53,7 @@ def df(deck: Union[ResdataFiles, "opm.libopmcommon_python.Deck"]) -> pd.DataFram
                 # Assuming not LAB units, then the unit is days.
                 days = sum(steplist)
                 date += datetime.timedelta(days=days)
-                logger.info(
-                    "Advancing %s days to %s through TSTEP", str(days), str(date)
-                )
+                logger.info("Advancing %s days to %s through TSTEP", days, date)
         elif kword.name in WCONKEYS:
             for rec in kword:  # Loop over the lines inside WCON* record
                 rec_data = parse_opmio_deckrecord(rec, kword.name)

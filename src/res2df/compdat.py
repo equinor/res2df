@@ -103,7 +103,7 @@ def deck2dfs(
         if kword.name in ["DATES", "START"]:
             for rec in kword:
                 date = parse_opmio_date_rec(rec)
-                logger.info("Parsing at date %s", str(date))
+                logger.info("Parsing at date %s", date)
         elif kword.name == "TSTEP":
             if not date:
                 logger.critical("Can't use TSTEP when there is no start_date")
@@ -114,9 +114,7 @@ def deck2dfs(
                 days = sum(steplist)
                 assert isinstance(date, datetime.date)
                 date += datetime.timedelta(days=days)
-                logger.info(
-                    "Advancing %s days to %s through TSTEP", str(days), str(date)
-                )
+                logger.info("Advancing %s days to %s through TSTEP", days, date)
         elif kword.name == "WELSPECS":
             # Information from WELSPECS are to be used in case
             # 0 or 1* is used in the I or J column in COMPDAT

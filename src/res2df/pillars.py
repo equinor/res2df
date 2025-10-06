@@ -268,9 +268,7 @@ def compute_pillar_contacts(
         .reset_index()
     )
     if soilcutoff and "SOIL" + atdatestr in grid_df:
-        logger.info(
-            "Calculating oil-water-contacts based on SOILcutoff %s", str(soilcutoff)
-        )
+        logger.info("Calculating oil-water-contacts based on SOILcutoff %s", soilcutoff)
         owc = (
             (
                 grid_df[grid_df["SOIL" + atdatestr] > soilcutoff]
@@ -284,7 +282,7 @@ def compute_pillar_contacts(
         owc = waterpillars.merge(owc, how="inner").drop("Z", axis="columns")
 
     if sgascutoff and "SGAS" + atdatestr in grid_df:
-        logger.info("Calculating gas-contacts based on gas cutoff %s", str(sgascutoff))
+        logger.info("Calculating gas-contacts based on gas cutoff %s", sgascutoff)
         if "SOIL" + atdatestr in grid_df and "SGAS" + atdatestr in grid_df:
             # Pillars to be used for GOC computation
             gocpillars = (

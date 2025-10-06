@@ -105,7 +105,7 @@ def df(
     existing_vectors = [vec for vec in vectors if vec in grid_df.columns]
     if len(existing_vectors) < len(vectors):
         logger.warning(
-            "Vectors %s not found, skipping", str(set(vectors) - set(existing_vectors))
+            "Vectors %s not found, skipping", set(vectors) - set(existing_vectors)
         )
     vectors = existing_vectors
     logger.info("Building transmissibility dataframe")
@@ -158,7 +158,7 @@ def df(
             vectorscoords.append("Z")
 
     if vectorscoords:
-        logger.info("Adding vectors %s", str(vectorscoords))
+        logger.info("Adding vectors %s", vectorscoords)
         grid_df = grid_df.reset_index()
         trans_df = trans_df.merge(
             grid_df[["I", "J", "K", *vectorscoords]],
@@ -195,7 +195,7 @@ def df(
     if group:
         assert len(vectors) == 1  # This is checked above
         assert boundaryfilter
-        logger.info("Grouping transmissiblity over %s interfaces", str(vectors[0]))
+        logger.info("Grouping transmissiblity over %s interfaces", vectors[0])
         vec1 = vectors[0] + "1"
         vec2 = vectors[0] + "2"
         pairname = vectors[0] + "PAIR"

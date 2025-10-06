@@ -153,13 +153,13 @@ def df(prtfile: Union[str, ResdataFiles], fipname: str = "FIPNUM") -> pd.DataFra
                 )
                 if newdate != date:
                     date = newdate
-                    logger.debug("Found date: %s", str(date))
+                    logger.debug("Found date: %s", date)
                 continue
             matchedreportblock = re.match(reportblockmatcher, line)
             if matchedreportblock:
                 in_report_block = True
                 region_index = int(matchedreportblock.group(1))
-                logger.debug("  Region report for region %s", str(region_index))
+                logger.debug("  Region report for region %s", region_index)
                 continue
             if line.startswith(" ============================"):
                 in_report_block = False

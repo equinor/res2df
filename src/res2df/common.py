@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Set, Union
 import dateutil.parser
 import numpy as np
 import pandas as pd
-import pyarrow
+import pyarrow as pa
 
 try:
     import opm.io.deck
@@ -115,7 +115,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 def write_dframe_stdout_file(
-    dframe: Union[pd.DataFrame, pyarrow.Table],
+    dframe: Union[pd.DataFrame, pa.Table],
     output: str,
     index: bool = False,
     caller_logger: Optional[logging.Logger] = None,
@@ -144,13 +144,13 @@ def write_dframe_stdout_file(
         if caller_logger and isinstance(dframe, pd.DataFrame) and dframe.empty:
             caller_logger.warning("Empty dataframe being written to disk")
         if caller_logger and not logstr:
-            caller_logger.info("Writing to file %s", str(output))
+            caller_logger.info("Writing to file %s", output)
         elif caller_logger and logstr:
             caller_logger.info(logstr)
         if isinstance(dframe, pd.DataFrame):
             dframe.to_csv(output, index=index)
         else:
-            pyarrow.feather.write_feather(dframe, dest=output)
+            pa.feather.write_feather(dframe, dest=output)
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:
@@ -447,7 +447,7 @@ def handle_wanted_keywords(
             logger.warning(
                 "Requested keyword(s) not supported by res2df.%s: %s",
                 modulename,
-                str(not_supported),
+                not_supported,
             )
         # Reduce to only supported keywords:
         keywords = list(set(wanted) - set(not_supported))
@@ -455,9 +455,7 @@ def handle_wanted_keywords(
         keywords_in_deck = [keyword for keyword in keywords if keyword in deck]
         not_in_deck = set(keywords) - set(keywords_in_deck)
         if not_in_deck:
-            logger.warning(
-                "Requested keyword(s) not present in deck: %s", str(not_in_deck)
-            )
+            logger.warning("Requested keyword(s) not present in deck: %s", not_in_deck)
     # Reduce again to only present keywords, but without warning:
     keywords = [keyword for keyword in keywords if keyword in deck]
 
@@ -552,7 +550,7 @@ def df2res(
         logger.critical(
             "%s inconsistent in input dataframe, got the values %s",
             consecutive,
-            str(dataframe[consecutive].unique()),
+            dataframe[consecutive].unique(),
         )
         raise ValueError
 
@@ -577,13 +575,13 @@ def df2res(
             logger.warning(
                 "Requested keyword(s) not supported by %s: %s",
                 calling_module.__name__,  # type: ignore
-                str(not_supported),
+                not_supported,
             )
         # Warn if some requested keywords are not in frame:
         not_in_frame = set(keywords) - keywords_in_frame
         if not_in_frame:
             logger.warning(
-                "Requested keyword(s) not present in dataframe: %s", str(not_in_frame)
+                "Requested keyword(s) not present in dataframe: %s", not_in_frame
             )
     keywords = [
         keyword

@@ -513,7 +513,7 @@ def vfp_main(args) -> None:
             write_dframe_stdout_file(
                 vfp_table, vfp_filename, index=False, caller_logger=logger
             )
-            logger.info(f"Parsed file {args.DATAFILE} for vfp.dfs_arrow")
+            logger.info("Parsed file %s for vfp.dfs_arrow", args.DATAFILE)
     else:
         dframe = df(
             resdatafiles.get_deck(), keyword=args.keyword, vfpnumbers_str=vfpnumbers
@@ -522,7 +522,7 @@ def vfp_main(args) -> None:
             write_dframe_stdout_file(
                 dframe, args.output, index=False, caller_logger=logger
             )
-            logger.info(f"Parsed file {args.DATAFILE} for vfp.df")
+            logger.info("Parsed file %s for vfp.df", args.DATAFILE)
 
 
 def vfp_reverse_main(args) -> None:
@@ -531,7 +531,7 @@ def vfp_reverse_main(args) -> None:
         __name__, vars(args)
     )
     vfp_df = pd.read_csv(args.csvfile)
-    logger.info("Parsed {args.csvfile}")
+    logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(vfp_df, args.keyword)
     if args.output:
         write_inc_stdout_file(inc_string, args.output)

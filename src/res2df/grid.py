@@ -21,8 +21,7 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 import dateutil.parser
 import numpy as np
 import pandas as pd
-import pyarrow
-import pyarrow.feather
+import pyarrow as pa
 import resfo
 from resdata.resfile import ResdataFile
 
@@ -44,8 +43,8 @@ def get_available_rst_dates(resdatafiles: ResdataFiles) -> List[datetime.date]:
     report_indices = ResdataFile.file_report_list(resdatafiles.get_rstfilename())
     logger.info(
         "Restart report indices (count %s): %s",
-        str(len(report_indices)),
-        str(report_indices),
+        len(report_indices),
+        report_indices,
     )
     return [
         resdatafiles.get_rstfile().iget_restart_sim_time(index).date()
@@ -117,15 +116,15 @@ def dates2rstindices(
 
     logger.info(
         "Available dates (count %s) in RST: %s",
-        str(len(availabledates)),
-        str([x.isoformat() for x in availabledates]),
+        len(availabledates),
+        [x.isoformat() for x in availabledates],
     )
     rstindices = [availabledates.index(x) for x in chosendates]
     isostrings = [x.isoformat() for x in chosendates]
     return (rstindices, chosendates, isostrings)
 
 
-def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
+def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
     """Construct a pyarrow table from dataframe with
     grid information
 
@@ -133,19 +132,19 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
 
     32-bit types will be used for integers and floats (todo)
     """
-    field_list: List[pyarrow.Field] = []
+    field_list: List[pa.Field] = []
     for colname in dframe.columns:
         if pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
-            dtype = pyarrow.int32()
+            dtype = pa.int32()
         elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
             # Parameters are potentially merged into the dataframe.
-            dtype = pyarrow.string()
+            dtype = pa.string()
         else:
-            dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype))
+            dtype = pa.float32()
+        field_list.append(pa.field(colname, dtype))
 
-    schema = pyarrow.schema(field_list)
-    return pyarrow.Table.from_pandas(dframe, schema=schema, preserve_index=False)
+    schema = pa.schema(field_list)
+    return pa.Table.from_pandas(dframe, schema=schema, preserve_index=False)
 
 
 def rst2df(
@@ -193,7 +192,7 @@ def rst2df(
     # data for:
     (rstindices, chosendates, isodates) = dates2rstindices(resdatafiles, date)
 
-    logger.info("Extracting restart information at dates %s", str(isodates))
+    logger.info("Extracting restart information at dates %s", isodates)
 
     # Determine the available restart vectors, we only include
     # those with correct length, meaning that they are defined
@@ -226,14 +225,12 @@ def rst2df(
                 pass
         logger.info(
             "Present restart vectors at index %s: %s",
-            str(rstindex),
-            str(present_rstvectors),
+            rstindex,
+            present_rstvectors,
         )
         if not present_rstvectors:
             if vectorswasdefaulted:
-                logger.warning(
-                    "No restart vectors available at index %s", str(rstindex)
-                )
+                logger.warning("No restart vectors available at index %s", rstindex)
             continue
 
         # Make the dataframe
@@ -315,7 +312,7 @@ def gridgeometry2df(
     if not egrid_file or not grid:
         raise ValueError("No EGRID file supplied")
 
-    logger.info("Extracting grid geometry from %s", str(egrid_file))
+    logger.info("Extracting grid geometry from %s", egrid_file)
     index_frame = grid.export_index(active_only=True)
     ijk = index_frame.to_numpy()[:, 0:3] + 1  # ijk from resdata.grid is off by one
 
@@ -407,7 +404,7 @@ def merge_initvectors(
         initvectors = [initvectors]
     assert isinstance(initvectors, list)
 
-    logger.info("Merging INIT data %s into dataframe", str(initvectors))
+    logger.info("Merging INIT data %s into dataframe", initvectors)
     ijkinit = df(resdatafiles, vectors=initvectors)[["I", "J", "K", *initvectors]]
     return dframe.merge(ijkinit, left_on=ijknames, right_on=["I", "J", "K"])
 
@@ -470,10 +467,10 @@ def init2df(
         porv_numpy = init.iget_named_kw("PORV", 0).numpyView()
         glob_idxs = [
             egrid.get_global_index(active_index=ix)
-            for ix in range(egrid.getNumActive())
+            for ix in range(egrid.get_num_active())
         ]
         init_df["PORV"] = porv_numpy[glob_idxs]
-    logger.info("Extracted %s from INIT file", str(init_df.columns.to_numpy()))
+    logger.info("Extracted %s from INIT file", init_df.columns.to_numpy())
     return init_df
 
 
@@ -619,7 +616,7 @@ def drop_constant_columns(
         if len(dframe[col].unique()) == 1:
             columnstodelete.append(col)
     if columnstodelete:
-        logging.info("Deleting constant columns %s", str(columnstodelete))
+        logging.info("Deleting constant columns %s", columnstodelete)
     return dframe.drop(columnstodelete, axis=1)
 
 
@@ -698,7 +695,7 @@ def df2res(
     if global_size is None:
         global_size = int(grid_df["GLOBAL_INDEX"].max() + 1)
         active_cells = len(grid_df[grid_df.index >= 0])
-        logger.warning("Global grid size estimated to %s", str(global_size))
+        logger.warning("Global grid size estimated to %s", global_size)
 
     res2df_header = (
         "Output file printed by "

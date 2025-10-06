@@ -7,8 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
-import pyarrow
-import pyarrow.feather
+import pyarrow as pa
 
 from .common import convert_lyrlist_to_zonemap, parse_lyrfile, write_dframe_stdout_file
 from .compdat import df as create_compdat_df
@@ -209,7 +208,7 @@ def _merge_compdat_and_connstatus(
     return dframe
 
 
-def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
+def _df2pyarrow(dframe: pd.DataFrame) -> pa.Table:
     """Construct a pyarrow table from dataframe with well
     completion data.
 
@@ -217,7 +216,7 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
 
     32-bit types will be used for integers and floats
     """
-    field_list: List[pyarrow.Field] = []
+    field_list: List[pa.Field] = []
     for colname in dframe.columns:
         if "meta" in dframe.attrs and colname in dframe.attrs["meta"]:
             # Boolean objects in the metadata dictionary must be converted to bytes:
@@ -228,17 +227,17 @@ def _df2pyarrow(dframe: pd.DataFrame) -> pyarrow.Table:
         else:
             field_metadata = {}
         if colname == "DATE":
-            dtype = pyarrow.timestamp("ms")
+            dtype = pa.timestamp("ms")
         elif pd.api.types.is_integer_dtype(dframe.dtypes[colname]):
-            dtype = pyarrow.int32()
+            dtype = pa.int32()
         elif pd.api.types.is_string_dtype(dframe.dtypes[colname]):
-            dtype = pyarrow.string()
+            dtype = pa.string()
         else:
-            dtype = pyarrow.float32()
-        field_list.append(pyarrow.field(colname, dtype, metadata=field_metadata))
+            dtype = pa.float32()
+        field_list.append(pa.field(colname, dtype, metadata=field_metadata))
 
-    schema = pyarrow.schema(field_list)
-    return pyarrow.Table.from_pandas(dframe, schema=schema, preserve_index=False)
+    schema = pa.schema(field_list)
+    return pa.Table.from_pandas(dframe, schema=schema, preserve_index=False)
 
 
 def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -292,7 +291,7 @@ def wellcompletiondata_main(args):
     resdatafiles = ResdataFiles(args.DATAFILE)
     if not Path(args.zonemap).is_file():
         wellcompletiondata_df = pd.DataFrame()
-        logger.info(f"Zonemap not found: {args.zonemap}")
+        logger.info("Zonemap not found: %s", args.zonemap)
     else:
         zonemap = convert_lyrlist_to_zonemap(parse_lyrfile(args.zonemap))
         wellcompletiondata_df = df(

@@ -96,8 +96,8 @@ def _rftrecords2df(rftfile: ResdataFile) -> pd.DataFrame:
     nav_df["timeindex"] = nav_df["timeindex"].astype(int)
     logger.info(
         "Located %s RFT headers at %s distinct dates",
-        str(len(nav_df)),
-        str(len(nav_df["timeindex"].unique())),
+        len(nav_df),
+        len(nav_df["timeindex"].unique()),
     )
     nav_df.index.name = "recordidx"
     return nav_df.reset_index()
@@ -368,7 +368,7 @@ def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
     logger.debug(
         "Found %d ICD segments, indices %s",
         len(icd_seg_data),
-        str(icd_seg_data["ICD_SEGIDX"].to_numpy()),
+        icd_seg_data["ICD_SEGIDX"].to_numpy(),
     )
 
     return (seg_data, icd_seg_data)
@@ -546,8 +546,8 @@ def df(
         if "DEPTH" not in headers.index:
             logger.debug(
                 "Well %s has no data to extract at %s",
-                str(rftrecord["wellname"]),
-                str(rftrecord["date"]),
+                rftrecord["wellname"],
+                rftrecord["date"],
             )
             continue
 

@@ -115,7 +115,7 @@ def df(
             if kword.name in ["DATES", "START"]:
                 for rec in kword:
                     date = parse_opmio_date_rec(rec)
-                    logger.debug("Parsing at date %s", str(date))
+                    logger.debug("Parsing at date %s", date)
             elif kword.name == "TSTEP":
                 assert date is not None
                 for rec in kword:
@@ -123,9 +123,7 @@ def df(
                     # Assuming not LAB units, then the unit is days.
                     days = sum(steplist)
                     date += datetime.timedelta(days=days)
-                    logger.info(
-                        "Advancing %s days to %s through TSTEP", str(days), str(date)
-                    )
+                    logger.info("Advancing %s days to %s through TSTEP", days, date)
         if kword.name in ["GRUPTREE", "BRANPROP"]:
             found_keywords[kword.name] = True
             renamer = (

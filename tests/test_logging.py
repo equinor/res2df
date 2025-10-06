@@ -82,7 +82,6 @@ def test_res2csv_logging(tmp_path, res2df_module, verbose, fileexport, mocker, c
     work, this is related (?) to loggers not being properly reset between each
     test invocation.
     """
-    # pylint: disable=too-many-arguments
     if res2df_module == "nnc":
         # There are no nnc's in EIGHTCELLS, so for that test
         # we need the REEK dataset:

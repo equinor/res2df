@@ -7,7 +7,6 @@ from res2df import wellconnstatus
 from res2df.resdatafiles import ResdataFiles
 
 try:
-    # pylint: disable=unused-import
     import opm  # noqa: F401
 
     HAVE_OPM = True
@@ -119,7 +118,6 @@ def test_extract_status_changes(smry, expected_wellconnstatus):
         expected_wellconnstatus["DATE"], format=time_format, dayfirst=True
     )
 
-    # pylint: disable=protected-access
     pd.testing.assert_frame_equal(
         wellconnstatus._extract_status_changes(smry),
         expected_wellconnstatus,

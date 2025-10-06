@@ -15,8 +15,6 @@ TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
-# pylint: disable=protected-access
-
 
 def test_rftrecords2df():
     """Test that we can construct a dataframe for navigating in RFT

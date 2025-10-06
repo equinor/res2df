@@ -22,7 +22,6 @@ from typing import Dict, List, Optional, Union
 import pandas as pd
 
 with contextlib.suppress(ImportError):
-    # pylint: disable=unused-import
     import opm.io
 
 from .common import (
@@ -201,9 +200,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def satfunc_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
         deck = resdatafiles.get_deck()
@@ -234,9 +231,7 @@ def satfunc_main(args) -> None:
 
 def satfunc_reverse_main(args) -> None:
     """For command line utility for CSV to resdata"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     satfunc_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(satfunc_df, keywords=args.keywords)

@@ -671,9 +671,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def rft_main(args) -> None:
     """Entry-point for module, for command line utility"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     if args.DATAFILE.endswith(".RFT"):
         # Support the RFT file as an argument also:
         resdatafiles = ResdataFiles(args.DATAFILE.replace(".RFT", "") + ".DATA")

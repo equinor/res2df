@@ -1,4 +1,3 @@
-# pylint: disable=c0301
 """Extract FIP region reports from PRT file"""
 
 import argparse
@@ -211,9 +210,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def fipreports_main(args) -> None:
     """Command line API"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     if args.PRTFILE.endswith(".PRT"):
         prtfile = args.PRTFILE
     else:

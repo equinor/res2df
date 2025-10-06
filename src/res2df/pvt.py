@@ -27,8 +27,6 @@ from .resdatafiles import ResdataFiles
 
 with contextlib.suppress(ImportError):
     # Needed for mypy
-
-    # pylint: disable=unused-import
     import opm.io
 
 
@@ -292,9 +290,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def pvt_main(args) -> None:
     """Entry-point for module, for command line utility for Eclipse to CSV"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     logger.info("Parsed %s", args.DATAFILE)
     if resdatafiles:
@@ -327,9 +323,7 @@ def pvt_main(args) -> None:
 def pvt_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to simulator
     :term:`deck`"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     pvt_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(pvt_df, keywords=args.keywords)

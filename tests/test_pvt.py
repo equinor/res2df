@@ -460,7 +460,6 @@ def test_magic_stdout(tmp_path):
         stdout=subprocess.PIPE,
     )
     df_stdout = pd.read_csv(io.StringIO(result.stdout.decode()))
-    # pylint: disable=no-member  # false positive on Dataframes
     assert not df_stdout.empty
 
     # Pipe back to csv2res:

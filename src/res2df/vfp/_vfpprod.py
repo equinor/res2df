@@ -19,8 +19,6 @@ import pyarrow as pa
 
 try:
     # Needed for mypy
-
-    # pylint: disable=unused-import
     import opm.io
 
     # This import is seemingly not used, but necessary for some attributes

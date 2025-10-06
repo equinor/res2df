@@ -486,9 +486,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
 
 def vfp_main(args) -> None:
     """Entry-point for module, for command line utility."""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     if args.keyword and args.keyword not in SUPPORTED_KEYWORDS:
         raise ValueError(f"Keyword argument {args.keyword} not supported")
     if not args.output:
@@ -527,9 +525,7 @@ def vfp_main(args) -> None:
 
 def vfp_reverse_main(args) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     vfp_df = pd.read_csv(args.csvfile)
     logger.info("Parsed %s", args.csvfile)
     inc_string = df2res(vfp_df, args.keyword)

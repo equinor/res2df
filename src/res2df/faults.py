@@ -18,8 +18,6 @@ from .resdatafiles import ResdataFiles
 
 with contextlib.suppress(ImportError):
     # Needed for mypy
-
-    # pylint: disable=unused-import
     import opm.io
 
 
@@ -85,9 +83,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 
 def faults_main(args) -> None:
     """Read from disk and write CSV back to disk"""
-    logger = getLogger_res2csv(  # pylint: disable=redefined-outer-name
-        __name__, vars(args)
-    )
+    logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
     if resdatafiles:
         deck = resdatafiles.get_deck()

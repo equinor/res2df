@@ -19,6 +19,9 @@ import dateutil.parser
 import numpy as np
 import pandas as pd
 import pyarrow as pa
+from pyarrow import (
+    feather,  # necessary as this module is not loaded unless explicitly imported
+)
 
 try:
     import opm.io.deck
@@ -150,7 +153,7 @@ def write_dframe_stdout_file(
         if isinstance(dframe, pd.DataFrame):
             dframe.to_csv(output, index=index)
         else:
-            pa.feather.write_feather(dframe, dest=output)
+            feather.write_feather(dframe, dest=output)
 
 
 def write_inc_stdout_file(string: str, outputfilename: str) -> None:

@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.rft &mdash; res2df 1.3.8.dev16+gfb98c4a85 documentation</title>
+  <title>res2df.rft &mdash; res2df 1.3.8.dev17+gdf58cce84 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=8ecb7e57"></script>
+      <script src="../_static/documentation_options.js?v=99df4347"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -195,9 +195,9 @@ of the data, ordered by well and date.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>resdatafiles</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a></span>) – Object used to locate the RFT file</p></li>
-<li><p><strong>wellname</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If provided, only wells matching this string exactly
+<li><p><strong>wellname</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If provided, only wells matching this string exactly
 will be included</p></li>
-<li><p><strong>date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – If provided, all other dates will be ignored. YYYY-MM-DD.</p></li>
+<li><p><strong>date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – If provided, all other dates will be ignored. YYYY-MM-DD.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -237,7 +237,7 @@ and row count will be the number of segments defined in WELSEGS</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rftrecord</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Data for one RFT record, provided by rftrecords()</p></li>
+<li><p><strong>rftrecord</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Data for one RFT record, provided by rftrecords()</p></li>
 <li><p><strong>rftfile</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFile</span></code></span>)</p></li>
 <li><p><strong>datatype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Either “CON” or “SEG”</p></li>
 </ul>
@@ -267,10 +267,10 @@ warn the user??</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>con_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Connection data (CONxxxx columns). One
 row pr. reservoir connection</p></li>
-<li><p><strong>seg_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span>) – Segment data, SEGxxxxx cols, one row pr. segment, and
+<li><p><strong>seg_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Segment data, SEGxxxxx cols, one row pr. segment, and
 each segment should correspond to one ICD or to one reservoir connection.
 Supply empty or None if no segments found.</p></li>
-<li><p><strong>icd_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span>) – ICD data, ICD_SEGxxxx columns. One row pr
+<li><p><strong>icd_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – ICD data, ICD_SEGxxxx columns. One row pr
 ICD segment. One-to-one correspondence to con_data through ICD_SEGBRNO
 and CONBRNO required. Can be empty or None if no ICD present.</p></li>
 </ul>
@@ -347,7 +347,7 @@ the columns SEGIDX, SEGNXT</p>
 <dd class="field-odd"><p><strong>file.</strong> (<em>ResdataFile made from a binary RFT</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
 </dd>
 </dl>
 </dd></dl>

@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.summary &mdash; res2df 1.3.8.dev16+gfb98c4a85 documentation</title>
+  <title>res2df.summary &mdash; res2df 1.3.8.dev17+gdf58cce84 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=8ecb7e57"></script>
+      <script src="../_static/documentation_options.js?v=99df4347"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -134,7 +134,7 @@
 <p>Provide a two-way Pandas DataFrame interface to Eclipse summary data (UNSMRY)</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="res2df.summary.PD_FREQ_MNEMONICS">
-<span class="sig-prename descclassname"><span class="pre">res2df.summary.</span></span><span class="sig-name descname"><span class="pre">PD_FREQ_MNEMONICS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'daily':</span> <span class="pre">'D',</span> <span class="pre">'monthly':</span> <span class="pre">'MS',</span> <span class="pre">'weekly':</span> <span class="pre">'W-MON',</span> <span class="pre">'yearly':</span> <span class="pre">'YS'}</span></em><a class="headerlink" href="#res2df.summary.PD_FREQ_MNEMONICS" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.summary.</span></span><span class="sig-name descname"><span class="pre">PD_FREQ_MNEMONICS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'daily':</span> <span class="pre">'D',</span> <span class="pre">'monthly':</span> <span class="pre">'MS',</span> <span class="pre">'weekly':</span> <span class="pre">'W-MON',</span> <span class="pre">'yearly':</span> <span class="pre">'YS'}</span></em><a class="headerlink" href="#res2df.summary.PD_FREQ_MNEMONICS" title="Link to this definition"></a></dt>
 <dd><p>Mapping from res2df custom offset strings to Pandas DateOffset strings.
 See
 <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects">https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffset-objects</a></p>
@@ -155,7 +155,7 @@ frequency.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of datetimes</p>
@@ -179,16 +179,16 @@ is always named “DATE”.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>resdatafiles</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles" title="res2df.resdatafiles.ResdataFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResdataFiles</span></code></a></span>) – ResdataFiles object representing a
 <a class="reference internal" href="../glossary.html#term-.DATA-file"><span class="xref std std-term">.DATA file</span></a>. Alternatively a Summary object.</p></li>
-<li><p><strong>time_index</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – string indicating a resampling frequency,
+<li><p><strong>time_index</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – string indicating a resampling frequency,
 ‘yearly’, ‘monthly’, ‘daily’, ‘last’ or ‘raw’, the latter will
 return the simulated report steps (also default).
 If a list of DateTime is supplied, data will be resampled
 to these.</p></li>
-<li><p><strong>column_keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – list of column key wildcards. None means everything.</p></li>
-<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – str or date with first date to include.
+<li><p><strong>column_keys</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – list of column key wildcards. None means everything.</p></li>
+<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – str or date with first date to include.
 Dates prior to this date will be dropped, supplied
 start_date will always be included.</p></li>
-<li><p><strong>end_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – str or date with last date to be included.
+<li><p><strong>end_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – str or date with last date to be included.
 Dates past this date will be dropped, supplied
 end_date will always be included. Overriden if time_index
 is ‘last’.</p></li>
@@ -264,7 +264,7 @@ can be returned, on the same date range. Incoming dates can also be cropped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>summarydates</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]</span>) – list of datetimes, typically coming from Summary.dates</p></li>
+<li><p><strong>summarydates</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]</span>) – list of datetimes, typically coming from Summary.dates</p></li>
 <li><p><strong>freq</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – string denoting requested frequency for
 the returned list of datetime. ‘raw’ will
 return the input datetimes (no resampling).
@@ -276,18 +276,18 @@ date (maximum), as a list with one element. Can also be a single date.</p></li>
 and forwards at the end to ensure the raw
 date range is covered when resampling time. This is
 ignored if start_date or end_date is explicitly supplied.</p></li>
-<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – str or date with first date to include
+<li><p><strong>start_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – str or date with first date to include
 Dates prior to this date will be dropped, supplied
 start_date will always be included. Overrides
 normalized dates.</p></li>
-<li><p><strong>end_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – str or date with last date to be included.
+<li><p><strong>end_date</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – str or date with last date to be included.
 Dates past this date will be dropped, supplied
 end_date will always be included. Overrides
 normalized dates. Overridden if freq is ‘last’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>] | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -310,7 +310,7 @@ Summary object:</p>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span></p>
 </dd>
 </dl>
 </dd></dl>

@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfp &mdash; res2df 1.3.8.dev16+gfb98c4a85 documentation</title>
+  <title>res2df.vfp._vfp &mdash; res2df 1.3.8.dev17+gdf58cce84 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8ecb7e57"></script>
+      <script src="../../../_static/documentation_options.js?v=99df4347"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -89,7 +89,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -120,10 +120,10 @@
 <div class="viewcode-block" id="basic_data">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.basic_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">basic_data</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | ResdataFiles | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data for an Eclipe VFPPROD/VFPINJ.</span>
 <span class="sd">    Dictionary returned contains items for liftcuve tables as simple datatypes</span>
 <span class="sd">    Required keys in dictionary for VFPPROD and VFPINJ can be found in</span>
@@ -167,7 +167,7 @@
 
 <div class="viewcode-block" id="basic_data2df">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.basic_data2df">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">basic_data2df</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">basic_data2df</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert basic_data representation of VFPPROD/VFPINF</span>
 <span class="sd">    (see function basic_data for defintion of data) into</span>
 <span class="sd">    pandas DataFrame representation</span>
@@ -230,7 +230,7 @@
 
 <div class="viewcode-block" id="basic_data2pyarrow">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.basic_data2pyarrow">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">basic_data2pyarrow</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">basic_data2pyarrow</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert basic_data representation of VFPPROD/VFPINF</span>
 <span class="sd">    (see function basic_data for defintion of data) into</span>
 <span class="sd">    pyarrow.Table representation</span>
@@ -293,7 +293,7 @@
 
 <div class="viewcode-block" id="df2basic_data">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.df2basic_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">df2basic_data</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df2basic_data</span><span class="p">(</span><span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data types for a VFPPROD/VFPINJ</span>
 <span class="sd">    liftcurve table represented as a Pandas DataFrame</span>
 
@@ -317,7 +317,7 @@
 
 <div class="viewcode-block" id="pyarrow2basic_data">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.pyarrow2basic_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pyarrow2basic_data</span><span class="p">(</span><span class="n">pa_table</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pyarrow2basic_data</span><span class="p">(</span><span class="n">pa_table</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dictionary with basic data types for a VFPPROD/VFPINJ</span>
 <span class="sd">    liftcurve table represented as a pyarrow Table</span>
 
@@ -341,10 +341,10 @@
 <div class="viewcode-block" id="dfs">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.dfs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | ResdataFiles | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of dataframes of vfp tables from a :term:`deck`</span>
 
 <span class="sd">    Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</span>
@@ -387,10 +387,10 @@
 <div class="viewcode-block" id="pyarrow_tables">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.pyarrow_tables">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pyarrow_tables</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | ResdataFiles | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of pyarrow.Table of vfp tables from a :term:`deck`</span>
 
 <span class="sd">    Data for the keyword VFPPROD or VFPINJ will be returned as separate item in list</span>
@@ -435,8 +435,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">df2ress</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a list of strings defining VFPPROD/VFPINJ Eclipse</span>
 <span class="sd">    :term:`include file` contents from a dataframe</span>
 
@@ -484,8 +484,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">df2res</span><span class="p">(</span>
     <span class="n">dframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="n">comments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a string defining all VFPPROD/VFPINJ Eclipse</span>
 <span class="sd">    :term:`include file` contents from a dataframe</span>
@@ -522,9 +522,9 @@
 <div class="viewcode-block" id="df">
 <a class="viewcode-back" href="../../../res2df/res2df.vfp._vfp.html#res2df.vfp._vfp.df">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df</span><span class="p">(</span>
-    <span class="n">deck</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ResdataFiles</span><span class="p">,</span> <span class="s2">&quot;opm.libopmcommon_python.Deck&quot;</span><span class="p">],</span>
+    <span class="n">deck</span><span class="p">:</span> <span class="s2">&quot;str | ResdataFiles | opm.opmcommon_python.Deck&quot;</span><span class="p">,</span>
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;VFPPROD&quot;</span><span class="p">,</span>
-    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">vfpnumbers_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce a dataframes of all vfp tables from a deck</span>
 

@@ -74,7 +74,7 @@ def basic_data(
                     basic_data_vfps.append(basic_data_vfpprod)
             elif deck_keyword.name == "VFPINJ":
                 basic_data_vfpinj = vfpinj.basic_data(deck_keyword, vfpnumbers_str)
-                if basic_data_vfpinj is not None:
+                if len(basic_data_vfpinj) > 0:
                     basic_data_vfps.append(basic_data_vfpinj)
 
     return basic_data_vfps

@@ -687,7 +687,7 @@ def df2res(
         # dates and no global index, unlikely)
         # Also copy dataframe to avoid side-effects on incoming data.
         grid_df = grid_df.dropna(
-            axis="rows", subset=[keyword for keyword in keywords if keyword in grid_df]
+            axis="index", subset=[keyword for keyword in keywords if keyword in grid_df]
         )
         grid_df["GLOBAL_INDEX"] = grid_df.index
 
@@ -713,7 +713,7 @@ def df2res(
     # If we have NaNs in the dataframe, we will be more careful (costs memory)
     if grid_df.isna().any().any():
         grid_df = grid_df.dropna(
-            axis="rows", subset=[keyword for keyword in keywords if keyword in grid_df]
+            axis="index", subset=[keyword for keyword in keywords if keyword in grid_df]
         )
 
     for keyword in keywords:

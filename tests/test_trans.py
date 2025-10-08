@@ -2,15 +2,7 @@
 
 from pathlib import Path
 
-import pytest
-
-try:
-    import networkx
-
-    HAVE_NETWORKX = True
-except ImportError:
-    HAVE_NETWORKX = False
-
+import networkx
 import pandas as pd
 
 from res2df import res2csv, trans
@@ -83,7 +75,6 @@ def test_grouptrans():
     assert trans.df(resdatafiles, vectors=["FIPNUM", "EQLNUM"], group=True).empty
 
 
-@pytest.mark.skipif(not HAVE_NETWORKX, reason="Requires networkx being installed")
 def test_nx(tmp_path):
     """Test graph generation"""
     resdatafiles = ResdataFiles(REEK)

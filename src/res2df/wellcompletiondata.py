@@ -84,7 +84,9 @@ def df(
     meta = _get_metadata(resdatafiles)
     # Slice meta to dataframe columns:
     compdat_df.attrs["meta"] = {
-        column_key: meta[column_key] for column_key in compdat_df if column_key in meta
+        column_key: meta[str(column_key)]
+        for column_key in compdat_df
+        if column_key in meta
     }
 
     return compdat_df

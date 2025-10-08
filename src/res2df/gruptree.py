@@ -220,7 +220,7 @@ def _merge_edges_and_nodeinfo(
     wellspecsedges: dict[tuple[str, str], str],
     date: datetime.date | None,
     treetype: str,
-) -> list[dict]:
+) -> list[dict[str, Any]]:
     """Merge a list of edges with information from the nodedata dataframe.
 
     Edges where there is no parent (root nodes) are identified and added
@@ -237,7 +237,7 @@ def _merge_edges_and_nodeinfo(
     Returns:
         List of dictionaries (that can be made into a dataframe)
     """
-    edgerecords = []
+    edgerecords: list[dict[str, Any]] = []
     childs = set()
     parents = set()
     # Write GRUPTREE/BRANPROP edges
@@ -249,7 +249,9 @@ def _merge_edges_and_nodeinfo(
         rec_dict.update(edge_dict)
         # Add node data
         if child in nodedata_df.index:
-            rec_dict.update(nodedata_df.loc[child])
+            rec_dict.update(
+                {str(k): v for k, v in nodedata_df.loc[child].to_dict().items()}
+            )
         edgerecords.append(rec_dict)
 
     # Write WELSPECS edges
@@ -276,11 +278,13 @@ def _merge_edges_and_nodeinfo(
         parents |= {"FIELD"}
 
     roots = parents - childs
-    rootrecords = []
+    rootrecords: list[dict[str, Any]] = []
     for root in roots:
         rec_dict = {"DATE": date, "CHILD": root, "KEYWORD": treetype}
         if root in nodedata_df.index:
-            rec_dict.update(nodedata_df.loc[root])
+            rec_dict.update(
+                {str(k): v for k, v in nodedata_df.loc[root].to_dict().items()}
+            )
         rootrecords.append(rec_dict)
     return rootrecords + edgerecords
 

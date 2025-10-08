@@ -64,7 +64,7 @@ RENAMERS["SWOF"] = {"DATA": ["SW", "KRW", "KROW", "PCOW"]}
 
 
 def df(
-    deck: "str | opm.opmcommon_python.Deck",
+    deck: "str | ResdataFiles | opm.opmcommon_python.Deck",
     keywords: list[str] | None = None,
     ntsfun: int | None = None,
 ) -> pd.DataFrame:

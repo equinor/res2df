@@ -849,40 +849,6 @@ def _write_basic_record(
     return deck_str
 
 
-def _write_table(
-    table: pd.DataFrame,
-    format: str = "%10.3",
-    values_per_line: int = 5,
-) -> str:
-    """Creates a :term:`include file` content string representing
-    a resdata record for a VFPPROD table (BHP part)
-
-    Args:
-        table:           DataFrame with multiindex for table ranges and colums
-                         for tabulated values (BHP)
-        format:          Format string for values
-        values_per_line: Number of values per line in output
-    """
-
-    deck_str = ""
-    for idx, _row in table.iterrows():
-        deck_str += f"{idx[0]:2d} {idx[1]:2d} {idx[2]:2d} {idx[3]:2d}"
-        no_flo = len(table.loc[idx].to_list())
-        for n, value in enumerate(table.loc[idx].to_list()):
-            deck_str += format % value
-            if (n + 1) % values_per_line == 0:
-                if n < no_flo - 1:
-                    deck_str += "\n"
-                    deck_str += " " * 11
-                else:
-                    deck_str += "\n"
-            elif n == no_flo - 1:
-                deck_str += "\n"
-        deck_str += "/\n"
-
-    return deck_str
-
-
 def _write_table_records(
     thp_indices: np.ndarray,
     wfr_indices: np.ndarray,

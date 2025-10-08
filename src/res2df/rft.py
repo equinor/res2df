@@ -84,13 +84,11 @@ def _rftrecords2df(rftfile: ResdataFile) -> pd.DataFrame:
     """
     nav_df = pd.DataFrame(rftfile.headers)
     nav_df.columns = ["recordname", "recordlength", "recordtype"]
-    nav_df["timeindex"] = np.nan
+    mask = nav_df["recordname"].eq("TIME")
+    nav_df["timeindex"] = np.where(mask, nav_df.index, np.nan)
     # the TIME record (in recordname) signifies that the forthcoming records
     # belong to  this TIME value, and we make a new column in the header data that
     # tells us the row number for the associated TIME record
-    nav_df.loc[nav_df["recordname"] == "TIME", "timeindex"] = nav_df[
-        nav_df["recordname"] == "TIME"
-    ].index
     nav_df = (
         nav_df.ffill()
     )  # forward fill (because any record is associated to the previous TIME record)
@@ -116,7 +114,7 @@ def rftrecords(rftfile: ResdataFile) -> Iterable[dict[str, Any]]:
     navigation_frame = _rftrecords2df(rftfile)
     for timeindex, headers in navigation_frame.groupby("timeindex"):
         headers = headers.set_index("recordname")
-        rftrecord = {}
+        rftrecord: dict[str, Any] = {}
         rftrecord["headers"] = headers
         # All rows in nav_record_df represents  the data in the current
         # RFT record
@@ -325,7 +323,7 @@ def pretty_print_well(seg_data: pd.DataFrame) -> str:
     return str(tree_from_dict(dicttree))
 
 
-def split_seg_icd(seg_data: pd.DataFrame) -> pd.DataFrame:
+def split_seg_icd(seg_data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Split a segment dataframe into a dataframe
     with non-ICD segments and one with.
 

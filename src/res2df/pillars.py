@@ -423,7 +423,7 @@ def pillars_main(args) -> None:
     groupbies = []
     aggregators = {
         key: AGGREGATORS[key.split("@")[0]]
-        for key in dframe
+        for key in dframe.columns
         if key.split("@")[0] in AGGREGATORS
     }
     if args.region and args.group:

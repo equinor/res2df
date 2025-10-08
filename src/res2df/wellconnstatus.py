@@ -5,7 +5,6 @@ import logging
 import re
 from typing import Any
 
-import numpy as np
 import pandas as pd
 
 from .common import write_dframe_stdout_file
@@ -66,7 +65,7 @@ def _extract_status_changes(smry: pd.DataFrame) -> pd.DataFrame:
 
 
 def _extract_single_connection_status_changes(
-    dates: np.ndarray, conn_values: np.ndarray
+    dates: pd.Index, conn_values: pd.Series
 ) -> list[tuple[Any, str]]:
     """Extracts the status history of a single connection as a list of tuples
     on the form (date, status)

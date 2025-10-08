@@ -234,7 +234,6 @@ def deck2dfs(
 
     if unroll and not compdat_df.empty:
         compdat_df = unrolldf(compdat_df, "K1", "K2")
-
     if not welopen_df.empty:
         compdat_df = applywelopen(
             compdat_df,
@@ -779,7 +778,7 @@ def expand_wlist_in_welopen_df(
                     .split()
                 ):
                     wellrow = row.copy()
-                    wellrow.update({"WELL": well})
+                    wellrow["WELL"] = well
                     exp_welopens.append(wellrow)
             else:
                 raise ValueError(f"Well list {wlistname} not defined at {row['DATE']}")
@@ -847,8 +846,10 @@ def applywelopen(
             )
 
     welopen_df = welopen_df.astype(object).where(pd.notna(welopen_df), None)
-    welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
-    welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
+    if wlist_df is not None:
+        welopen_df = expand_wlist_in_welopen_df(welopen_df, wlist_df)
+    if complump_df is not None:
+        welopen_df = expand_complump_in_welopen_df(welopen_df, complump_df)
 
     for _, row in welopen_df.iterrows():
         acts_on_well = False

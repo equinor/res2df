@@ -5,6 +5,7 @@ Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame
 import argparse
 import contextlib
 import logging
+from collections.abc import Container
 from pathlib import Path
 
 import pandas as pd
@@ -225,7 +226,7 @@ def phases_from_deck(deck: "str | opm.opmcommon_python.Deck") -> str:
     return ""
 
 
-def phases_from_columns(columns: list[str]) -> str:
+def phases_from_columns(columns: Container[str]) -> str:
     """Determine the set of phases available in an
     equil dataframe, based on which columns are there.
     Returns "oil-water-gas", "gas-water", "oil-water",

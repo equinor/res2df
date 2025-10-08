@@ -56,7 +56,9 @@ types = [
     "mypy",
     "types-PyYAML",
     "types-python-dateutil",
-    "types-setuptools"
+    "types-setuptools",
+    "types-networkx",
+    "pandas-stubs",
 ]
 docs = [
     "autoapi",
@@ -97,6 +99,16 @@ res2df = "src/res2df"
 res2df = ["opmkeywords/*", "py.typed", "svg_color_keyword_names.txt"]
 
 [tool.mypy]
+strict_equality = true
+extra_checks = true
+
+[[tool.mypy.overrides]]
+module = [
+    "opm.*",
+    "resfo",
+    "pyarrow", # should be removed for pyarrow > 21.0.0
+    "resdata.*",
+]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

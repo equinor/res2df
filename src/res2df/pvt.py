@@ -8,6 +8,7 @@ import argparse
 import contextlib
 import logging
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 
@@ -632,6 +633,7 @@ def df2res_pvto(dframe: pd.DataFrame, comment: str | None = None) -> str:
         rs = dframe.index.to_numpy()[0]
         string += f"{rs:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
+            rowidx = cast(int, rowidx)
             indent = "\n" + " " * 22 if rowidx > 0 else ""
             string += (
                 indent

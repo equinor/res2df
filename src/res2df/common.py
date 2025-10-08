@@ -13,7 +13,7 @@ import sys
 from collections import defaultdict
 from importlib import resources
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import dateutil.parser
 import numpy as np
@@ -215,8 +215,8 @@ def keyworddata_to_df(
             row based on how many empty records is encountered. For PVTO f.ex,
             this gives the PVTNUM indexing.
     """
-    records = []  # list of dicts or dataframes
-
+    dict_records: list[dict[str, Any]] = []
+    df_records: list[pd.DataFrame] = []
     record_counter = 1
     emptyrecord_counter = 1
     for deckrecord in deck[keyword]:
@@ -238,7 +238,10 @@ def keyworddata_to_df(
         if "DATA" in recdict and isinstance(recdict["DATA"], list):
             assert renamer is not None
             # If DATA is sometimes used for something else in the jsons, redo this.
-            data_dim = len(renamer["DATA"])  # The renamers must be in sync with json!
+            renamed_data = renamer.get("DATA", [])
+            if isinstance(renamed_data, str):
+                renamed_data = [renamed_data]
+            data_dim = len(renamed_data)  # The renamers must be in sync with json!
             data_chunks = int(len(recdict["DATA"]) / data_dim)
             try:
                 data_reshaped = np.reshape(recdict["DATA"], (data_chunks, data_dim))
@@ -247,21 +250,24 @@ def keyworddata_to_df(
                     f"Wrong number count for keyword {keyword}. \n"
                     "Either your keyword is wrong, or your data is wrong"
                 ) from err
-            data_df = pd.DataFrame(columns=renamer["DATA"], data=data_reshaped)
+            data_df = pd.DataFrame(columns=renamed_data, data=data_reshaped)
             # Assign the remaining items from the parsed dict to the dataframe:
             for key, value in recdict.items():
                 if key != "DATA":
                     data_df[key] = value
-            records.append(data_df)
-            record_counter += 1
+            df_records.append(data_df)
         else:
-            records.append(recdict)
-            record_counter += 1
-    if isinstance(records[0], pd.DataFrame):
-        dframe = pd.concat(records)
-    else:  # records contain lists.
-        dframe = pd.DataFrame(data=records)
-    return dframe.reset_index(drop=True)
+            dict_records.append(recdict)
+        record_counter += 1
+    if df_records and dict_records:
+        dict_df = pd.DataFrame(data=dict_records)
+        return pd.concat([*df_records, dict_df]).reset_index(drop=True)
+    elif df_records:  # trust that this is all one type?
+        return pd.concat(df_records).reset_index(drop=True)
+    elif dict_records:  # records contain lists.
+        return pd.DataFrame(data=dict_records).reset_index(drop=True)
+    else:
+        return pd.DataFrame()
 
 
 def parse_opmio_deckrecord(
@@ -825,7 +831,7 @@ def stack_on_colnames(
     dframe.columns = pd.MultiIndex.from_tuples(
         tuplecolumns, names=["dummy", stackcolname]
     )
-    dframe = dframe.stack(future_stack=True)
+    dframe = cast(pd.DataFrame, dframe.stack(future_stack=True))
     staticcols = [col[0] for col in tuplecolumns if len(col) == 1]
     dframe[staticcols] = dframe[staticcols].ffill()
     dframe = dframe.reset_index()

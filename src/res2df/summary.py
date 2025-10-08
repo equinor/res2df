@@ -6,6 +6,7 @@ import argparse
 import datetime as dt
 import logging
 import os
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
@@ -40,7 +41,9 @@ https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#dateoffs
 """
 
 
-def date_range(start_date: dt.date, end_date: dt.date, freq: str) -> list[dt.datetime]:
+def date_range(
+    start_date: dt.date, end_date: dt.date, freq: str
+) -> Iterable[dt.datetime]:
     """Wrapper for pandas.date_range to allow for extra res2df specific mnemonics
     'yearly', 'daily', 'weekly', mapped over to pandas DateOffsets.
 
@@ -251,12 +254,12 @@ def resample_smry_dates(
     # For yearly frequency it will return [1997-01-01, 2021-01-01].
     offset = pd.tseries.frequencies.to_offset(PD_FREQ_MNEMONICS.get(freq, freq))
     try:
-        start_normalized = offset.rollback(start_smry.date()).date()
+        start_normalized = offset.rollback(start_smry).date()
     except pd.errors.OutOfBoundsDatetime:
         # Pandas only supports datetime up to year 2262
         start_normalized = _fallback_date_roll(start_smry, "back", freq).date()
     try:
-        end_normalized = offset.rollforward(end_smry.date()).date()
+        end_normalized = offset.rollforward(end_smry).date()
     except pd.errors.OutOfBoundsDatetime:
         # Pandas only supports datetime up to year 2262
         end_normalized = _fallback_date_roll(end_smry, "forward", freq).date()

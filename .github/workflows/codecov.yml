@@ -44,7 +44,7 @@ jobs:
       run: |
         pytest tests --disable-warnings --cov=res2df --cov-report=xml
         # Uninstall packages that res2df supports not being installed:
-        uv pip uninstall ert networkx opm
+        uv pip uninstall ert opm
         # Run tests again in cov-append-mode:
         pytest tests --disable-warnings --cov=res2df --cov-report=xml --cov-append
         bash <(curl -s https://codecov.io/bash)

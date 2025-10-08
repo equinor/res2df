@@ -35,6 +35,7 @@ dynamic = ["version"]
 dependencies= [
 "resdata>=5.0.0-b0",
 "resfo",
+"networkx",
 "numpy",
 "opm>=2020.10.2",
 "pandas",
@@ -45,7 +46,6 @@ dependencies= [
 
 [project.optional-dependencies]
 tests = [
-    "networkx",
     "pytest",
     "pytest-cov",
     "pytest-mock",

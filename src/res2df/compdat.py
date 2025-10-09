@@ -239,7 +239,7 @@ def deck2dfs(
         compdat_df = applywelopen(
             compdat_df,
             expand_welopen(welopen_df, compdat_df),
-            expand_wlist(wlist_df),
+            expand_wlist(wlist_df, compdat_df),
             unroll_complump(complump_df),
         )
 
@@ -516,7 +516,58 @@ def unroll_complump(complump_df: pd.DataFrame) -> pd.DataFrame:
     return unrolldf(complump_df)
 
 
-def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
+def expand_wlist(wlist_df: pd.DataFrame, compdat_df: pd.DataFrame) -> pd.DataFrame:
+    wlist_df = expand_wlist_wildcards(wlist_df, compdat_df)
+    return expand_wlist_new_actions(wlist_df)
+
+
+def expand_wlist_wildcards(
+    wlist_df: pd.DataFrame, compdat_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Expand rows in wlist with well names containing wildcard characters,
+    with the correct wells from compdat_df that was defined at that date
+
+    Example::
+
+      WLIST
+       '*OP' NEW 'OP*'/
+      /
+
+    might become the equivalent dataframe representation of::
+
+      WLIST
+       '*OP' NEW 'OP1' 'OP2'/
+      /
+
+    if both OP1 and OP2 are defined at that time.
+
+    Args:
+        wlist_df: DataFrame with wlist
+        compdat_df: DataFrame with compdat
+
+    Returns:
+        Expanded wlist dataframe
+    """
+    exp_wlist = []
+    for _, row in wlist_df.iterrows():
+        well_list = []
+        for well in row["WELLS"].split():
+            # This well is identified as a template with wildcard characters
+            if "*" in well or "?" in well:
+                relevant_wells = compdat_df[compdat_df["DATE"] <= row["DATE"]][
+                    "WELL"
+                ].unique()
+                matched_wells = get_wells_matching_template(well, relevant_wells)
+                for well_matched in matched_wells:
+                    well_list.append(well_matched)
+            else:
+                well_list.append(well)
+        row["WELLS"] = " ".join(well_list)
+        exp_wlist.append(row)
+    return pd.DataFrame(exp_wlist)
+
+
+def expand_wlist_new_actions(wlist_df: pd.DataFrame) -> pd.DataFrame:
     """Expand all WLIST actions in a dataframe into a dataframe with
     only "NEW" actions. This makes the dataframe cheaper to parse to
     get the state of the well lists at a particular date
@@ -526,8 +577,8 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
     .. code-block::
 
       WLIST
-        '*OP' NEW OP1 /
-        '*OP' ADD OP2 /
+        '*OP' NEW 'OP1' /
+        '*OP' ADD 'OP2' /
       /
 
     is transformed into the equivalent dataframe representation of:
@@ -535,7 +586,7 @@ def expand_wlist(wlist_df: pd.DataFrame) -> pd.DataFrame:
     .. code-block::
 
       WLIST
-        '*OP' NEW OP1 OP2 /  -- wells always sorted alphabetically
+        '*OP' NEW 'OP1' 'OP2' /  -- wells always sorted alphabetically
       /
 
     and then similarly for more complex MOV, DEL and NEW actions.

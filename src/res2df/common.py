@@ -11,6 +11,7 @@ import shlex
 import signal
 import sys
 from collections import defaultdict
+from collections.abc import Iterable
 from importlib import resources
 from pathlib import Path
 from typing import Any
@@ -943,7 +944,7 @@ def convert_lyrlist_to_zonemap(lyrlist: list[dict[str, Any]]) -> dict[int, str]:
     return zonemap
 
 
-def get_wells_matching_template(template: str, wells: list):
+def get_wells_matching_template(template: str, wells: Iterable[str]) -> list[str]:
     """Returns the wells in the list that is matching the template
     containing wilcard characters. The wildcard charachters supported
     are * to match zero or more charachters and ? to match a single

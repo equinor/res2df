@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.vfp._vfpinj &mdash; res2df 1.3.8.dev17+gdf58cce84 documentation</title>
+  <title>res2df.vfp._vfpinj &mdash; res2df 1.3.8.dev21+gc0699bcb8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=99df4347"></script>
+      <script src="../../../_static/documentation_options.js?v=565f5800"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -172,7 +172,7 @@
     <span class="k">if</span> <span class="n">vfpnumbers_str</span><span class="p">:</span>
         <span class="n">vfpnumbers</span> <span class="o">=</span> <span class="n">_string2intlist</span><span class="p">(</span><span class="n">vfpnumbers_str</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tableno</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vfpnumbers</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">{}</span>
     <span class="n">datum</span> <span class="o">=</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;DATUM_DEPTH&quot;</span><span class="p">]</span>
     <span class="n">rate_type</span> <span class="o">=</span> <span class="n">VFPINJ_FLO</span><span class="o">.</span><span class="n">GAS</span>
     <span class="k">if</span> <span class="n">basic_record</span><span class="p">[</span><span class="s2">&quot;RATE_TYPE&quot;</span><span class="p">]:</span>
@@ -679,43 +679,9 @@
     <span class="k">return</span> <span class="n">deck_str</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_write_table</span><span class="p">(</span>
-    <span class="n">table</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a :term:`include file` content string representing</span>
-<span class="sd">    a resdata record for a VFPINJ table (BHP part)</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        table:           DataFrame with multiindex for table ranges and colums</span>
-<span class="sd">                         for tabulated values (BHP)</span>
-<span class="sd">        format:          Format string for values</span>
-<span class="sd">        values_per_line: Number of values per line in output</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">deck_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">_row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">deck_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">no_flo</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()):</span>
-            <span class="n">deck_str</span> <span class="o">+=</span> <span class="nb">format</span> <span class="o">%</span> <span class="n">value</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">values_per_line</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">no_flo</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">2</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="n">no_flo</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">deck_str</span> <span class="o">+=</span> <span class="s2">&quot;/</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-    <span class="k">return</span> <span class="n">deck_str</span>
-
-
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_table_records</span><span class="p">(</span>
     <span class="n">thp_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">table</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">table</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%10.6g</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="n">values_per_line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

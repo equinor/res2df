@@ -15,8 +15,7 @@
     {
       "name": "WELLS",
       "value_type": "STRING",
-      "size_type": "ALL",
-      "default": ""
+      "size_type": "ALL"
     }
   ]
 }

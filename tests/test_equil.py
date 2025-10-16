@@ -42,6 +42,7 @@ def test_equil2df():
                 "INITRS": 1.0,
                 "INITRV": 0.0,
                 "OIP_INIT": 20.0,
+                "BLACK_OIL_INIT_HG": 0.0,
                 "EQLNUM": 1,
                 "KEYWORD": "EQUIL",
             },
@@ -55,6 +56,7 @@ def test_equil2df():
                 "INITRS": 2.0,
                 "INITRV": 0.0,
                 "OIP_INIT": 20.0,
+                "BLACK_OIL_INIT_HG": 0.0,
                 "EQLNUM": 2,
                 "KEYWORD": "EQUIL",
             },
@@ -557,7 +559,7 @@ def test_main_subparser(tmp_path, mocker):
         "sys.argv", ["csv2res", "equil", "-v", "--output", "equil.inc", tmpcsvfile]
     )
     csv2res.main()
-    # NB: cvs2ecl does not output the phase configuration!
+    # NB: cvs2res does not output the phase configuration!
     phases = "WATER\nGAS\nOIL\n\n"
     ph_equil_inc = Path("phasesequil.inc")
     ph_equil_inc.write_text(

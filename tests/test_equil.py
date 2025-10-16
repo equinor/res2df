@@ -563,7 +563,7 @@ def test_main_subparser(tmp_path, mocker):
     phases = "WATER\nGAS\nOIL\n\n"
     ph_equil_inc = Path("phasesequil.inc")
     ph_equil_inc.write_text(
-        phases + Path("equil.inc", encoding="utf8").read_text(encoding="utf8"),
+        phases + Path("equil.inc").read_text(encoding="utf8"),
         encoding="utf8",
     )
 

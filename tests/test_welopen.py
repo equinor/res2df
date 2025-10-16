@@ -1126,6 +1126,59 @@ def test_welopen(test_input, expected):
             ),
             id="redefined_wlist",
         ),
+        pytest.param(
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+      'OP2' 1 1 2 2 'OPEN' /
+    /
+    WLIST
+      '*OP' NEW 'OP*' /
+      '*RR' NEW 'RR*' /
+    /
+    WELOPEN
+      '*OP' 'SHUT' 0 0 0 /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP2", 1, 1, 2, 2, "SHUT"],
+                ],
+            ),
+        ),
+        pytest.param(
+            """
+    DATES
+      1 JAN 2000 /
+    /
+    COMPDAT
+      'OP1' 1 1 1 1 'OPEN' /
+      'OP3' 1 1 2 2 'OPEN' /
+      'RR2' 2 2 3 3 'SHUT' /
+    /
+    WLIST
+      '*OP' NEW 'OP*' /
+      '*RR' NEW 'RR*' /
+      '*RR' ADD 'RR2' /
+    /
+    WELOPEN
+      '*OP' 'SHUT' 0 0 0 /
+    /
+    """,
+            pd.DataFrame(
+                columns=["DATE", "WELL", "I", "J", "K1", "K2", "OP/SH"],
+                data=[
+                    [datetime.date(2000, 1, 1), "RR2", 2, 2, 3, 3, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP1", 1, 1, 1, 1, "SHUT"],
+                    [datetime.date(2000, 1, 1), "OP3", 1, 1, 2, 2, "SHUT"],
+                ],
+            ),
+        ),
     ],
 )
 def test_welopen_wlist(test_input, expected):

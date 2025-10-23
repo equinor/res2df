@@ -1,11 +1,11 @@
 name: Style
 
 on:
- push:
-   branches:
-     - master
-     - 'version-**'
- pull_request:
+  push:
+    branches:
+      - master
+      - 'version-**'
+  pull_request:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

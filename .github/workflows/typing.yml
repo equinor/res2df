@@ -1,11 +1,15 @@
 name: Typing
 
 on:
- push:
-   branches:
-     - master
-     - 'version-**'
- pull_request:
+  push:
+    branches:
+      - master
+      - 'version-**'
+  pull_request:
+
+  schedule:
+    # Run CI every night and check that tests are working with latest dependencies
+    - cron: '0 0 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

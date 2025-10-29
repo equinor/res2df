@@ -1,4 +1,5 @@
 import itertools
+import logging
 
 import pytest
 
@@ -12,6 +13,17 @@ try:
     HAVE_OPM = True
 except ImportError:
     HAVE_OPM = False
+
+
+@pytest.fixture(autouse=True)
+def cleanup_loggers():
+    """Clean up all logger handlers after each test
+    to avoid messing up the loggers for subsequent tests.
+    """
+    yield
+    for name in list(logging.Logger.manager.loggerDict.keys()):
+        logger = logging.getLogger(name)
+        logger.handlers.clear()
 
 
 def test_default_logger_levels_and_split(capsys):

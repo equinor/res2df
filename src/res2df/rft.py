@@ -406,8 +406,7 @@ def merge_icd_seg_conseg(
         seg_data = pd.DataFrame()
     if icd_data is None:
         icd_data = pd.DataFrame()
-
-    if logger.level <= logging.DEBUG:
+    if logger.isEnabledFor(logging.DEBUG):
         logger.debug("Writing connection data to con.csv")
         con_data[list(CON_TOPOLOGY_COLS.intersection(con_data.columns))].to_csv(
             "con.csv", index=False

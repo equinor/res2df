@@ -1,7 +1,7 @@
 [![Publish to PyPI](https://github.com/equinor/res2df/actions/workflows/publish.yml/badge.svg)](https://github.com/equinor/res2df/actions/workflows/publish.yml)
 [![PyPI version](https://img.shields.io/pypi/v/res2df.svg)](https://pypi.org/project/res2df/)
 [![codecov](https://codecov.io/gh/equinor/res2df/graph/badge.svg?token=3sZBGGu5VG)](https://codecov.io/gh/equinor/res2df)
-[![Python 3.11-3.12](https://img.shields.io/badge/python-3.11%20|%203.12-blue.svg)](https://www.python.org)
+[![Python 3.11-3.13](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue.svg)](https://www.python.org)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 

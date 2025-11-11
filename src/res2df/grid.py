@@ -216,10 +216,10 @@ def rst2df(
         # Filter the rst vectors once more, all of them
         # might not be available at all timesteps:
         present_rstvectors = []
-        for vec in rstvectors:
+        for rst_vec in rstvectors:
             try:
-                if resdatafiles.get_rstfile().iget_named_kw(vec, rstindex):
-                    present_rstvectors.append(vec)
+                if resdatafiles.get_rstfile().iget_named_kw(rst_vec, rstindex):
+                    present_rstvectors.append(rst_vec)
             except IndexError:
                 pass
         logger.info(

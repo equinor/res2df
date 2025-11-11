@@ -106,7 +106,6 @@ extra_checks = true
 [[tool.mypy.overrides]]
 module = [
     "opm.*",
-    "resfo",
     "pyarrow", # should be removed for pyarrow > 21.0.0
     "resdata.*",
 ]

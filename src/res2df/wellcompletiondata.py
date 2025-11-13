@@ -34,7 +34,7 @@ class KHUnit(StrEnum):
 
 def df(
     resdatafiles: ResdataFiles,
-    zonemap: dict[int, str],
+    zonemap: dict[int, str] | None = None,
     use_wellconnstatus: bool = False,
     excl_well_startswith: str | None = None,
 ) -> pd.DataFrame:
@@ -286,7 +286,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def wellcompletiondata_main(args):
+def wellcompletiondata_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
 

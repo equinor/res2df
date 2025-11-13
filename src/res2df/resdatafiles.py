@@ -52,7 +52,7 @@ class ResdataFiles:
     it should be loaded or served from cache.
     """
 
-    def __init__(self, eclbase):
+    def __init__(self, eclbase: str | Path) -> None:
         # eclbase might be a a Posix path object
         eclbase = str(eclbase)
 
@@ -211,7 +211,7 @@ class ResdataFiles:
         self._rstfile = None
         self._rftfile = None
 
-    def get_zonemap(self, filename=None):
+    def get_zonemap(self, filename: str | None = None) -> dict[int, str]:
         """Return a dictionary from (int) K layers in the simgrid to strings
 
         Typical usage is to map from grid layer to zone names.
@@ -243,15 +243,15 @@ class ResdataFiles:
         if not Path(filename).is_absolute():
             fullpath = Path(self.get_path()) / filename
         else:
-            fullpath = filename
-        if not Path(fullpath).is_file():
+            fullpath = Path(filename)
+        if not fullpath.is_file():
             if filename_defaulted:
                 # No warnings when the default filename is not there.
                 return {}
             logger.warning("Zonefile %s not found, ignoring", fullpath)
             return {}
         lyrlist = parse_lyrfile(fullpath)
-        return convert_lyrlist_to_zonemap(lyrlist)
+        return convert_lyrlist_to_zonemap(lyrlist) or {}
 
 
 def rreplace(pat: str, sub: str, string: str) -> str:

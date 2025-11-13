@@ -24,7 +24,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
 
-    subparsers = parser.add_subparsers(  # type: ignore
+    subparsers = parser.add_subparsers(
         required=True,
         dest="subcommand",
         parser_class=argparse.ArgumentParser,
@@ -203,9 +203,7 @@ def get_parser() -> argparse.ArgumentParser:
     for submodule, subparser in subparsers_dict.items():
         # Use the submodule's fill_parser() to add the submodule specific
         # arguments:
-        importlib.import_module("res2df." + submodule).fill_parser(  # type: ignore
-            subparser
-        )
+        importlib.import_module("res2df." + submodule).fill_parser(subparser)
 
         # Add empty placeholders, this looks strange but is needed for the
         # ERT forward model frontend, where non-used options must be supplied
@@ -226,7 +224,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def run_subparser_main(
-    args,
+    args: argparse.Namespace,
     submodule: str,
     parser: argparse.ArgumentParser | None = None,
 ) -> None:

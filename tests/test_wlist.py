@@ -625,9 +625,9 @@ def test_parse_wlist(deckstr, expected_df):
         ),
     ],
 )
-def test_expand_wlist(wlist_df, expected_df):
+def test_expand_wlist_actions(wlist_df, expected_df):
     """Test expansion of a WLIST dataframe into a new WLIST dataframe
     with only "NEW" actions"""
     pd.testing.assert_frame_equal(
-        compdat.expand_wlist(wlist_df), expected_df, check_like=True
+        compdat.expand_wlist_new_actions(wlist_df), expected_df, check_like=True
     )

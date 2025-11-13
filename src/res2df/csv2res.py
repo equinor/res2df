@@ -34,7 +34,7 @@ def get_parser() -> argparse.ArgumentParser:
         version=f"%(prog)s {__version__}",
     )
 
-    subparsers = parser.add_subparsers(  # type: ignore
+    subparsers = parser.add_subparsers(
         required=True,
         dest="subcommand",
         parser_class=argparse.ArgumentParser,

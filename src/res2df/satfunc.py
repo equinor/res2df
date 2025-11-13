@@ -197,7 +197,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return common_fill_reverse_parser(parser, "SWOF, SGOF++", "relperm.inc")
 
 
-def satfunc_main(args) -> None:
+def satfunc_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
@@ -228,7 +228,7 @@ def satfunc_main(args) -> None:
     )
 
 
-def satfunc_reverse_main(args) -> None:
+def satfunc_reverse_main(args: argparse.Namespace) -> None:
     """For command line utility for CSV to resdata"""
     logger = getLogger_res2csv(__name__, vars(args))
     satfunc_df = pd.read_csv(args.csvfile)
@@ -368,7 +368,7 @@ def _df2res_satfuncs(
     subset = subset.set_index("SATNUM").sort_index()
 
     # Make a function that is to be called for each SATNUM
-    def _df2res_satfuncs_satnum(keyword, dframe):
+    def _df2res_satfuncs_satnum(keyword: str, dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents
         for one saturation function for one specific SATNUM"""
         col_headers = RENAMERS[keyword]["DATA"]

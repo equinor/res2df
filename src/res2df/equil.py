@@ -7,6 +7,7 @@ import contextlib
 import logging
 from collections.abc import Container
 from pathlib import Path
+from typing import Final
 
 import pandas as pd
 
@@ -30,51 +31,54 @@ with contextlib.suppress(ImportError):
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_KEYWORDS: list[str] = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
-RENAMERS: dict[str, dict[str, str | list[str]]] = {}
-RENAMERS["PBVD"] = {"DATA": ["Z", "PB"]}
-RENAMERS["PDVD"] = {"DATA": ["Z", "PD"]}
-RENAMERS["RSVD"] = {"DATA": ["Z", "RS"]}
-RENAMERS["RVVD"] = {"DATA": ["Z", "RV"]}
-RENAMERS["oil-water-gas"] = {
-    "DATUM_DEPTH": "Z",
-    "DATUM_PRESSURE": "PRESSURE",
-    "OWC": "OWC",
-    "PC_OWC": "PCOWC",
-    "GOC": "GOC",
-    "PC_GOC": "PCGOC",
-    "BLACK_OIL_INIT": "INITRS",
-    "BLACK_OIL_INIT_WG": "INITRV",
+SUPPORTED_KEYWORDS: Final[list[str]] = ["EQUIL", "PBVD", "PDVD", "RSVD", "RVVD"]
+TABLE_RENAMERS: Final[dict[str, dict[str, list[str]]]] = {
+    "PBVD": {"DATA": ["Z", "PB"]},
+    "PDVD": {"DATA": ["Z", "PD"]},
+    "RSVD": {"DATA": ["Z", "RS"]},
+    "RVVD": {"DATA": ["Z", "RV"]},
 }
-RENAMERS["gas-water"] = {
-    "DATUM_DEPTH": "Z",
-    "DATUM_PRESSURE": "PRESSURE",
-    "OWC": "GWC",
-    "PC_OWC": "PCGWC",
-    "GOC": "IGNORE1",
-    "PC_GOC": "IGNORE2",
-    "BLACK_OIL_INIT": "IGNORE3",
-    "BLACK_OIL_INIT_WG": "IGNORE4",
-}
-RENAMERS["oil-water"] = {
-    "DATUM_DEPTH": "Z",
-    "DATUM_PRESSURE": "PRESSURE",
-    "OWC": "OWC",
-    "PC_OWC": "PCOWC",
-    "GOC": "IGNORE1",
-    "PC_GOC": "IGNORE2",
-    "BLACK_OIL_INIT": "IGNORE3",
-    "BLACK_OIL_INIT_WG": "IGNORE4",
-}
-RENAMERS["oil-gas"] = {
-    "DATUM_DEPTH": "Z",
-    "DATUM_PRESSURE": "PRESSURE",
-    "OWC": "IGNORE1",
-    "PC_OWC": "IGNORE2",
-    "GOC": "GOC",
-    "PC_GOC": "PCGOC",
-    "BLACK_OIL_INIT": "IGNORE3",
-    "BLACK_OIL_INIT_WG": "IGNORE4",
+PHASE_RENAMERS: Final[dict[str, dict[str, str]]] = {
+    "oil-water-gas": {
+        "DATUM_DEPTH": "Z",
+        "DATUM_PRESSURE": "PRESSURE",
+        "OWC": "OWC",
+        "PC_OWC": "PCOWC",
+        "GOC": "GOC",
+        "PC_GOC": "PCGOC",
+        "BLACK_OIL_INIT": "INITRS",
+        "BLACK_OIL_INIT_WG": "INITRV",
+    },
+    "gas-water": {
+        "DATUM_DEPTH": "Z",
+        "DATUM_PRESSURE": "PRESSURE",
+        "OWC": "GWC",
+        "PC_OWC": "PCGWC",
+        "GOC": "IGNORE1",
+        "PC_GOC": "IGNORE2",
+        "BLACK_OIL_INIT": "IGNORE3",
+        "BLACK_OIL_INIT_WG": "IGNORE4",
+    },
+    "oil-water": {
+        "DATUM_DEPTH": "Z",
+        "DATUM_PRESSURE": "PRESSURE",
+        "OWC": "OWC",
+        "PC_OWC": "PCOWC",
+        "GOC": "IGNORE1",
+        "PC_GOC": "IGNORE2",
+        "BLACK_OIL_INIT": "IGNORE3",
+        "BLACK_OIL_INIT_WG": "IGNORE4",
+    },
+    "oil-gas": {
+        "DATUM_DEPTH": "Z",
+        "DATUM_PRESSURE": "PRESSURE",
+        "OWC": "IGNORE1",
+        "PC_OWC": "IGNORE2",
+        "GOC": "GOC",
+        "PC_GOC": "PCGOC",
+        "BLACK_OIL_INIT": "IGNORE3",
+        "BLACK_OIL_INIT_WG": "IGNORE4",
+    },
 }
 
 
@@ -149,7 +153,7 @@ def rsvd_fromdeck(
     if "EQLDIMS" not in deck:
         deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     return keyworddata_to_df(
-        deck, "RSVD", renamer=RENAMERS["RSVD"], recordcountername="EQLNUM"
+        deck, "RSVD", renamer=TABLE_RENAMERS["RSVD"], recordcountername="EQLNUM"
     )
 
 
@@ -166,7 +170,7 @@ def rvvd_fromdeck(
     if "EQLDIMS" not in deck:
         deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     return keyworddata_to_df(
-        deck, "RVVD", renamer=RENAMERS["RVVD"], recordcountername="EQLNUM"
+        deck, "RVVD", renamer=TABLE_RENAMERS["RVVD"], recordcountername="EQLNUM"
     )
 
 
@@ -183,7 +187,7 @@ def pbvd_fromdeck(
     if "EQLDIMS" not in deck:
         deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     return keyworddata_to_df(
-        deck, "PBVD", renamer=RENAMERS["PBVD"], recordcountername="EQLNUM"
+        deck, "PBVD", renamer=TABLE_RENAMERS["PBVD"], recordcountername="EQLNUM"
     )
 
 
@@ -200,7 +204,7 @@ def pdvd_fromdeck(
     if "EQLDIMS" not in deck:
         deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
     return keyworddata_to_df(
-        deck, "PDVD", renamer=RENAMERS["PDVD"], recordcountername="EQLNUM"
+        deck, "PDVD", renamer=TABLE_RENAMERS["PDVD"], recordcountername="EQLNUM"
     )
 
 
@@ -267,9 +271,9 @@ def equil_fromdeck(
         deck = inject_xxxdims_ntxxx("EQLDIMS", "NTEQUL", deck, ntequl)
 
     phases = phases_from_deck(deck)
-    if not phases or phases not in RENAMERS:
+    if not phases or phases not in PHASE_RENAMERS:
         raise ValueError(f"Could not determine phase configuration, got '{phases}'")
-    columnrenamer = RENAMERS[phases_from_deck(deck)]
+    columnrenamer = PHASE_RENAMERS[phases]
 
     dataframe = keyworddata_to_df(
         deck, "EQUIL", renamer=columnrenamer, recordcountername="EQLNUM"
@@ -318,7 +322,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return common_fill_reverse_parser(parser, "EQUIL, RSVD++", "solution.inc")
 
 
-def equil_main(args) -> None:
+def equil_main(args: argparse.Namespace) -> None:
     """Read from disk and write CSV back to disk"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
@@ -348,7 +352,7 @@ def equil_main(args) -> None:
     )
 
 
-def equil_reverse_main(args) -> None:
+def equil_reverse_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility
     for CSV to reservoir simulator :term:`include files <include file>`
     """
@@ -424,7 +428,7 @@ def df2res_equil(dframe: pd.DataFrame, comment: str | None = None) -> str:
     return generic_deck_table(
         subset,
         "EQUIL",
-        renamer=RENAMERS[phases],  # type: ignore
+        renamer=PHASE_RENAMERS[phases],
         comment=comment,
         drop_trailing_columns=False,
     )
@@ -471,7 +475,7 @@ def df2res_pbvd(dframe: pd.DataFrame, comment: str | None = None) -> str:
     return _df2res_equilfuncs("PBVD", dframe, comment)
 
 
-def df2res_pdvd(dframe: pd.DataFrame, comment: str | None = None):
+def df2res_pdvd(dframe: pd.DataFrame, comment: str | None = None) -> str:
     """Create string with :term:`include file` contents for PDVD keyword.
 
     Dew-point versus depth.
@@ -494,7 +498,7 @@ def _df2res_equilfuncs(
         return "-- No data!"
     string = f"{keyword}\n"
     string += comment_formatter(comment)
-    col_headers = RENAMERS[keyword]["DATA"]
+    col_headers = TABLE_RENAMERS[keyword]["DATA"]
 
     string += f"--   {'DEPTH':^21} {col_headers[1]:^21} \n"
     # Use everything if KEYWORD not in dframe..

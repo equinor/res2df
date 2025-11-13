@@ -207,7 +207,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def fipreports_main(args) -> None:
+def fipreports_main(args: argparse.Namespace) -> None:
     """Command line API"""
     logger = getLogger_res2csv(__name__, vars(args))
     if args.PRTFILE.endswith(".PRT"):

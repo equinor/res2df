@@ -1,31 +1,34 @@
 import shutil
+from collections.abc import Callable
+from typing import Any, ParamSpec
 
+P = ParamSpec("P")
 try:
-    from ert import (  # type: ignore
+    from ert import (
         ForwardModelStepDocumentation,
         ForwardModelStepJSON,
         ForwardModelStepPlugin,
         ForwardModelStepValidationError,
     )
-    from ert import plugin as ert_plugin  # type: ignore
+    from ert import plugin as ert_plugin
 except ModuleNotFoundError:
     # ert is not installed, use dummy/transparent function decorator:
-    def ert_plugin(name: str = ""):
-        def decorator(func):
+    def ert_plugin(name: str = "") -> Callable[[Callable[P, Any]], Callable[P, Any]]:
+        def decorator(func: Callable[P, Any]) -> Callable[P, Any]:
             return func
 
         return decorator
 
-    class ForwardModelStepDocumentation:  # type: ignore
+    class ForwardModelStepDocumentation:  # type: ignore[no-redef]
         pass
 
-    class ForwardModelStepJSON:  # type: ignore
+    class ForwardModelStepJSON:  # type: ignore[no-redef]
         pass
 
-    class ForwardModelStepPlugin:  # type: ignore
+    class ForwardModelStepPlugin:  # type: ignore[no-redef]
         pass
 
-    class ForwardModelStepValidationError:  # type: ignore
+    class ForwardModelStepValidationError:  # type: ignore[no-redef]
         pass
 
 

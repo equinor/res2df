@@ -484,7 +484,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return common_fill_reverse_parser(parser, "VFPPROD, VFPINJ", "vfp.inc")
 
 
-def vfp_main(args) -> None:
+def vfp_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility."""
     logger = getLogger_res2csv(__name__, vars(args))
     if args.keyword and args.keyword not in SUPPORTED_KEYWORDS:
@@ -523,7 +523,7 @@ def vfp_main(args) -> None:
             logger.info("Parsed file %s for vfp.df", args.DATAFILE)
 
 
-def vfp_reverse_main(args) -> None:
+def vfp_reverse_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility for CSV to Eclipse"""
     logger = getLogger_res2csv(__name__, vars(args))
     vfp_df = pd.read_csv(args.csvfile)

@@ -85,7 +85,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def wcon_main(args) -> None:
+def wcon_main(args: argparse.Namespace) -> None:
     """Read from disk and write CSV back to disk"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)

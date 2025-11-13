@@ -11,6 +11,7 @@ import shlex
 import signal
 import sys
 from collections import defaultdict
+from collections.abc import Mapping
 from importlib import resources
 from pathlib import Path
 from typing import Any, cast
@@ -189,9 +190,9 @@ def datetime_to_ecldate(timestamp: str | datetime.datetime | datetime.date) -> s
 
 
 def keyworddata_to_df(
-    deck,
+    deck: "opm.opmcommon_python.Deck",
     keyword: str,
-    renamer: dict[str, str | list[str]] | None = None,
+    renamer: Mapping[str, str | list[str]] | None = None,
     recordcountername: str | None = None,
     emptyrecordcountername: str | None = None,
 ) -> pd.DataFrame:
@@ -275,7 +276,7 @@ def parse_opmio_deckrecord(
     keyword: str,
     itemlistname: str = "items",
     recordindex: int | None = None,
-    renamer: dict[str, str] | dict[str, str | list[str]] | None = None,
+    renamer: Mapping[str, str | list[str]] | None = None,
 ) -> dict[str, Any]:
     """
     Parse an opm.io.DeckRecord belonging to a certain keyword
@@ -344,8 +345,9 @@ def parse_opmio_deckrecord(
     if renamer:
         renamed_dict: dict[str, Any] = {}
         for key, value in rec_dict.items():
-            if key in renamer and not isinstance(renamer[key], list):
-                renamed_dict[renamer[key]] = value  # type: ignore
+            renamed_key = renamer.get(key)
+            if isinstance(renamed_key, str):
+                renamed_dict[renamed_key] = value
             else:
                 renamed_dict[key] = value
         return renamed_dict
@@ -470,7 +472,7 @@ def handle_wanted_keywords(
 
 def fill_reverse_parser(
     parser: argparse.ArgumentParser, modulename: str, defaultoutputfile: str
-):
+) -> argparse.ArgumentParser:
     """A standardized submodule parser for the command line utility
        to produce :term:`include files <include file>` from a CSV file.
 
@@ -543,6 +545,7 @@ def df2res(
     """
     from_module = inspect.stack()[1]
     calling_module = inspect.getmodule(from_module[0])
+    assert calling_module is not None
     if dataframe.empty:
         raise ValueError("Empty dataframe")
     if (
@@ -580,7 +583,7 @@ def df2res(
         if not_supported:
             logger.warning(
                 "Requested keyword(s) not supported by %s: %s",
-                calling_module.__name__,  # type: ignore
+                calling_module.__name__,
                 not_supported,
             )
         # Warn if some requested keywords are not in frame:
@@ -601,7 +604,7 @@ def df2res(
     string = ""
     res2df_header = (
         "Output file printed by "
-        + calling_module.__name__  # type: ignore
+        + calling_module.__name__
         + " "
         + __version__
         + "\n"
@@ -631,7 +634,7 @@ def generic_deck_table(
     dframe: pd.DataFrame,
     keyword: str,
     comment: str | None = None,
-    renamer: dict[str, str] | None = None,
+    renamer: Mapping[str, str] | None = None,
     drop_trailing_columns: bool = True,
 ) -> str:
     """Construct string contents of a :term:`.DATA file` table.
@@ -855,7 +858,7 @@ def is_color(input_string: str) -> bool:
     return bool(re.match(regex, input_string))
 
 
-def parse_lyrfile(filename: str) -> list[dict[str, Any]] | None:
+def parse_lyrfile(filename: str | Path) -> list[dict[str, Any]] | None:
     """Return a list of dicts representation of the lyr file.
 
     The lyr file contains data of the following format,
@@ -927,7 +930,9 @@ def parse_lyrfile(filename: str) -> list[dict[str, Any]] | None:
     return lyrlist
 
 
-def convert_lyrlist_to_zonemap(lyrlist: list[dict[str, Any]]) -> dict[int, str]:
+def convert_lyrlist_to_zonemap(
+    lyrlist: list[dict[str, Any]] | None,
+) -> dict[int, str] | None:
     """Returns a layer to zone map as a dictionary
 
     Args:
@@ -949,7 +954,7 @@ def convert_lyrlist_to_zonemap(lyrlist: list[dict[str, Any]]) -> dict[int, str]:
     return zonemap
 
 
-def get_wells_matching_template(template: str, wells: list):
+def get_wells_matching_template(template: str, wells: list[str]) -> list[str]:
     """Returns the wells in the list that is matching the template
     containing wilcard characters. The wildcard charachters supported
     are * to match zero or more charachters and ? to match a single

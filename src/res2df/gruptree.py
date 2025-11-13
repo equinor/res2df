@@ -457,7 +457,7 @@ def prettyprint(dframe: pd.DataFrame) -> str:
     return output
 
 
-def gruptree_main(args) -> None:
+def gruptree_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility."""
     logger = getLogger_res2csv(__name__, vars(args))
     if not args.output and not args.prettyprint:

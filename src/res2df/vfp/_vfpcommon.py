@@ -7,15 +7,12 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 """
 
 import logging
-import numbers
-from typing import Any
 
 import numpy as np
 import pandas as pd
 
 try:
     # Needed for mypy
-
     import opm.io
 
     # This import is seemingly not used, but necessary for some attributes
@@ -56,7 +53,7 @@ def _deckrecord2list(
     keyword: str,
     recordindex: int,
     recordname: str,
-) -> Any | list[float]:
+) -> list[float]:
     """
     Parse an opm.opmcommon_python.DeckRecord belonging to a certain keyword
     and return as list of numbers
@@ -68,14 +65,22 @@ def _deckrecord2list(
                      list index to the "record".
         recordname:  Name of the record
     """
-    record = parse_opmio_deckrecord(record, keyword, "records", recordindex)
+    rec_dict = parse_opmio_deckrecord(record, keyword, "records", recordindex)
 
-    values: Any | list[float]
+    values: list[float]
     # Extract interpolation ranges into lists
-    if isinstance(record.get(recordname), list):
-        values = record.get(recordname)
-    elif isinstance(record.get(recordname), numbers.Number):
-        values = [record.get(recordname)]
+    tmp_val = rec_dict.get(recordname)
+    if tmp_val is None:
+        raise KeyError(f"Missing record '{recordname}' in keyword '{keyword}'")
+    if isinstance(tmp_val, (list, tuple)):
+        try:
+            values = [float(val) for val in tmp_val]
+        except (TypeError, ValueError) as e:
+            raise ValueError(
+                f"Non-numeric value in record '{recordname}' for keyword '{keyword}'"
+            ) from e
+    elif isinstance(tmp_val, (int, float)):
+        values = [float(tmp_val)]
     else:
         raise ValueError(
             f"Keyword {keyword} and recordname {recordname} "

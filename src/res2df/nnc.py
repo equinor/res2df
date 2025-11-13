@@ -280,7 +280,7 @@ def df2res_editnnc(
     return string
 
 
-def nnc_main(args) -> None:
+def nnc_main(args: argparse.Namespace) -> None:
     """Command line access point from main() or from res2csv via subparser"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)

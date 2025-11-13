@@ -21,6 +21,8 @@ import pandas as pd
 with contextlib.suppress(ImportError):
     import opm.io.deck
 
+from typing import Any
+
 from .common import (
     get_wells_matching_template,
     merge_zones,
@@ -97,6 +99,7 @@ def deck2dfs(
     complumprecords = []
     welspecs = {}
     date = start_date  # DATE column will always be there, but can contain NaN/None
+    rec_data: dict[str, Any]
     for idx, kword in enumerate(deck):
         if kword.name in ["DATES", "START"]:
             for rec in kword:
@@ -951,7 +954,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def compdat_main(args):
+def compdat_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)

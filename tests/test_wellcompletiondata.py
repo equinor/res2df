@@ -138,8 +138,8 @@ def test_zonemap_with_some_undefined_layers():
 
 
 def test_zonemap_with_no_input():
-    """Test if zonemap is picked up from default location if location or zonemap is not provided.
-    The default location is zones.lyr file in same directory as the DATA file.
+    """Test if zonemap is picked up from default location if location or zonemap is not
+    provided. The default location is zones.lyr file in same directory as the DATA file.
     If the zonemap isn't found, the dataframe will not be created."""
     resdatafiles = ResdataFiles(REEK)
     df = wellcompletiondata.df(resdatafiles)

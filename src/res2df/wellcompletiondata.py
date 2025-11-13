@@ -34,7 +34,7 @@ class KHUnit(StrEnum):
 
 def df(
     resdatafiles: ResdataFiles,
-    zonemap: dict[int, str],
+    zonemap: dict[int, str] | None = None,
     use_wellconnstatus: bool = False,
     excl_well_startswith: str | None = None,
 ) -> pd.DataFrame:
@@ -56,7 +56,11 @@ def df(
     Returns:
         pd.DataFrame with one row per unique combination of well, zone and date.
     """
-    compdat_df = create_compdat_df(resdatafiles, zonemap=zonemap)
+    if zonemap:
+        compdat_df = create_compdat_df(resdatafiles, zonemap=zonemap)
+    else:
+        compdat_df = create_compdat_df(resdatafiles)
+
     if "ZONE" not in compdat_df.columns:
         logger.warning(
             "ZONE column not generated in compdat table. "

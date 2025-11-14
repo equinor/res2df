@@ -288,7 +288,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return common_fill_reverse_parser(parser, "PVT", "pvt.inc")
 
 
-def pvt_main(args) -> None:
+def pvt_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility for Eclipse to CSV"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)
@@ -320,7 +320,7 @@ def pvt_main(args) -> None:
     )
 
 
-def pvt_reverse_main(args) -> None:
+def pvt_reverse_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility for CSV to simulator
     :term:`deck`"""
     logger = getLogger_res2csv(__name__, vars(args))
@@ -469,7 +469,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: str | None = None) -> str:
         subset["PVTNUM"] = 1
     subset = subset.set_index("PVTNUM").sort_index()
 
-    def _pvtg_pvtnum(dframe):
+    def _pvtg_pvtnum(dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents for
         PVTG-data with a specific PVTNUM"""
         string = ""
@@ -478,7 +478,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: str | None = None) -> str:
             string += _pvtg_pvtnum_pg(dframe[dframe.index == p_gas])
         return string + "/\n"
 
-    def _pvtg_pvtnum_pg(dframe):
+    def _pvtg_pvtnum_pg(dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents for
         PVTG-data with a particular gas phase pressure"""
         string = ""
@@ -486,6 +486,7 @@ def df2res_pvtg(dframe: pd.DataFrame, comment: str | None = None) -> str:
         p_gas = dframe.index.to_numpy()[0]
         string += f"{p_gas:20.7f}  "
         for rowidx, row in dframe.reset_index().iterrows():
+            rowidx = cast(int, rowidx)
             indent = "\n" + " " * 22 if rowidx > 0 else ""
             string += (
                 indent
@@ -523,7 +524,7 @@ def df2res_pvdg(dframe: pd.DataFrame, comment: str | None = None) -> str:
             return ""
         subset["PVTNUM"] = 1
 
-    def _pvdg_pvtnum(dframe):
+    def _pvdg_pvtnum(dframe: pd.DataFrame) -> str:
         """Create string with :term:`include file` contents for
         PVDG-data with a specific PVTNUM
 

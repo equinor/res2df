@@ -284,7 +284,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def trans_main(args):
+def trans_main(args: argparse.Namespace) -> None:
     """This is the command line API"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)

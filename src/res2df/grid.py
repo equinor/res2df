@@ -481,7 +481,7 @@ def df(
     dateinheaders: bool = False,
     stackdates: bool = False,
     zonemap: dict[int, str] | None = None,
-):
+) -> pd.DataFrame:
     """Produce a dataframe with grid information
 
     Grid information (center coordinates x, y, z), cell
@@ -759,7 +759,7 @@ def df2res(
     return string
 
 
-def grid_main(args) -> None:
+def grid_main(args: argparse.Namespace) -> None:
     """This is the command line API"""
     logger = getLogger_res2csv(__name__, vars(args))
     resdatafiles = ResdataFiles(args.DATAFILE)

@@ -80,7 +80,7 @@ def _ensure_date_or_none(some_date: str | dt.date | None) -> dt.date | None:
     if not some_date:
         return None
     if isinstance(some_date, str):
-        return dateutil.parser.parse(some_date).date()  # type: ignore
+        return dateutil.parser.parse(some_date).date()
     raise TypeError(f"some_date must be a string or a date, got {some_date}")
 
 
@@ -104,7 +104,7 @@ def _crop_datelist(
     Returns:
         list of datetimes.
     """
-    datetimes: list[dt.date] | list[dt.datetime] = []  # type: ignore
+    datetimes: list[dt.date] | list[dt.datetime] = []
     if freq == FREQ_RAW:
         datetimes = summarydates
         datetimes.sort()
@@ -153,9 +153,7 @@ def _fallback_date_roll(rollme: dt.datetime, direction: str, freq: str) -> dt.da
                 return dt.datetime(year=rollme.year, month=rollme.month, day=1)
             return dt.datetime(
                 year=rollme.year, month=rollme.month, day=1
-            ) + dateutil.relativedelta.relativedelta(  # type: ignore
-                months=1
-            )
+            ) + dateutil.relativedelta.relativedelta(months=1)
         return dt.datetime(year=rollme.year, month=rollme.month, day=1)
 
     raise ValueError(
@@ -188,7 +186,7 @@ def _fallback_date_range(start: dt.date, end: dt.date, freq: str) -> list[dt.dat
         enddatetime = dt.datetime.combine(end, dt.datetime.min.time())
         while date <= enddatetime:
             dates.append(date)
-            date += dateutil.relativedelta.relativedelta(months=1)  # type: ignore
+            date += dateutil.relativedelta.relativedelta(months=1)
         return dates
     raise ValueError("Unsupported frequency for datetimes beyond year 2262")
 
@@ -238,7 +236,7 @@ def resample_smry_dates(
 
     # In case freq is an ISO-date(time)-string, interpret as such:
     try:
-        parseddate = dateutil.parser.isoparse(freq)  # type: ignore
+        parseddate = dateutil.parser.isoparse(freq)
         return [parseddate]
     except ValueError:
         # freq is a frequency string or datetime.date (or similar)
@@ -301,7 +299,7 @@ def df(
     params: bool = False,
     paramfile: str | None = None,
     datetime: bool = False,  # A very poor choice of argument name [pylint]
-):
+) -> pd.DataFrame:
     """
     Extract data from UNSMRY as Pandas dataframes.
 
@@ -623,10 +621,7 @@ def _fix_dframe_for_resdata(dframe: pd.DataFrame) -> pd.DataFrame:
             # Do not use pd.Series.apply() here, Pandas would try to convert it to
             # datetime64[ns] which is limited at year 2262.
             dframe["DATE"] = pd.Series(
-                [
-                    dateutil.parser.parse(datestr)  # type: ignore
-                    for datestr in dframe["DATE"]
-                ],
+                [dateutil.parser.parse(datestr) for datestr in dframe["DATE"]],
                 dtype="object",
                 index=dframe.index,
             )
@@ -794,7 +789,7 @@ def fill_reverse_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentPar
     return parser
 
 
-def summary_main(args) -> None:
+def summary_main(args: argparse.Namespace) -> None:
     """Read summary data from disk and write CSV back to disk"""
     logger = getLogger_res2csv(__name__, vars(args))
     eclbase = (
@@ -824,7 +819,7 @@ def summary_main(args) -> None:
     write_dframe_stdout_file(sum_df, args.output, index=True, caller_logger=logger)
 
 
-def summary_reverse_main(args) -> None:
+def summary_reverse_main(args: argparse.Namespace) -> None:
     """Entry point for usage with "csv2res summary" on the command line"""
     logger = getLogger_res2csv(__name__, vars(args))
 

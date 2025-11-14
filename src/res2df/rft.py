@@ -667,7 +667,7 @@ def fill_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     return parser
 
 
-def rft_main(args) -> None:
+def rft_main(args: argparse.Namespace) -> None:
     """Entry-point for module, for command line utility"""
     logger = getLogger_res2csv(__name__, vars(args))
     if args.DATAFILE.endswith(".RFT"):

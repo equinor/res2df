@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.resdatafiles &mdash; res2df 1.3.10.dev1+gc03042365 documentation</title>
+  <title>res2df.resdatafiles &mdash; res2df 1.3.10.dev3+g1962b929b documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1147b0c8"></script>
+      <script src="../../_static/documentation_options.js?v=41010f99"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -136,7 +136,7 @@
 <span class="sd">    it should be loaded or served from cache.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eclbase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># eclbase might be a a Posix path object</span>
         <span class="n">eclbase</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">eclbase</span><span class="p">)</span>
 
@@ -336,7 +336,7 @@
 
 <div class="viewcode-block" id="ResdataFiles.get_zonemap">
 <a class="viewcode-back" href="../../res2df/res2df.resdatafiles.html#res2df.resdatafiles.ResdataFiles.get_zonemap">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_zonemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_zonemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a dictionary from (int) K layers in the simgrid to strings</span>
 
 <span class="sd">        Typical usage is to map from grid layer to zone names.</span>
@@ -368,15 +368,15 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
             <span class="n">fullpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">())</span> <span class="o">/</span> <span class="n">filename</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">fullpath</span> <span class="o">=</span> <span class="n">filename</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">fullpath</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">fullpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fullpath</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">filename_defaulted</span><span class="p">:</span>
                 <span class="c1"># No warnings when the default filename is not there.</span>
                 <span class="k">return</span> <span class="p">{}</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Zonefile </span><span class="si">%s</span><span class="s2"> not found, ignoring&quot;</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">{}</span>
         <span class="n">lyrlist</span> <span class="o">=</span> <span class="n">parse_lyrfile</span><span class="p">(</span><span class="n">fullpath</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">convert_lyrlist_to_zonemap</span><span class="p">(</span><span class="n">lyrlist</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span></div>
 </div>
 
 

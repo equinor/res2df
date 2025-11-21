@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.res2csv &mdash; res2df 1.3.10.dev1+gc03042365 documentation</title>
+  <title>res2df.res2csv &mdash; res2df 1.3.10.dev3+g1962b929b documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1147b0c8"></script>
+      <script src="../../_static/documentation_options.js?v=41010f99"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -108,7 +108,7 @@
         <span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
 
-    <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;subcommand&quot;</span><span class="p">,</span>
         <span class="n">parser_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">,</span>
@@ -287,9 +287,7 @@
     <span class="k">for</span> <span class="n">submodule</span><span class="p">,</span> <span class="n">subparser</span> <span class="ow">in</span> <span class="n">subparsers_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="c1"># Use the submodule&#39;s fill_parser() to add the submodule specific</span>
         <span class="c1"># arguments:</span>
-        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;res2df.&quot;</span> <span class="o">+</span> <span class="n">submodule</span><span class="p">)</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-            <span class="n">subparser</span>
-        <span class="p">)</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;res2df.&quot;</span> <span class="o">+</span> <span class="n">submodule</span><span class="p">)</span><span class="o">.</span><span class="n">fill_parser</span><span class="p">(</span><span class="n">subparser</span><span class="p">)</span>
 
         <span class="c1"># Add empty placeholders, this looks strange but is needed for the</span>
         <span class="c1"># ERT forward model frontend, where non-used options must be supplied</span>
@@ -313,7 +311,7 @@
 <div class="viewcode-block" id="run_subparser_main">
 <a class="viewcode-back" href="../../res2df/res2df.res2csv.html#res2df.res2csv.run_subparser_main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">run_subparser_main</span><span class="p">(</span>
-    <span class="n">args</span><span class="p">,</span>
+    <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
     <span class="n">submodule</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

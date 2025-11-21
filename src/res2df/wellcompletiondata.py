@@ -34,7 +34,7 @@ class KHUnit(StrEnum):
 
 def df(
     resdatafiles: ResdataFiles,
-    zonemap: dict[int, str],
+    zonemap: dict[int, str] | None = None,
     use_wellconnstatus: bool = False,
     excl_well_startswith: str | None = None,
 ) -> pd.DataFrame:
@@ -48,6 +48,9 @@ def df(
     if other connections are closed. And the KH is summed over open connections
     only.
 
+    If no zonemap is provided, it will be looked for in the default location
+    (the same directory as the DATA file loaded in resdatafiles).
+
     Args:
         resdatafiles; ResdataFiles object
         zonemap: dictionary with layer->zone mapping
@@ -56,7 +59,9 @@ def df(
     Returns:
         pd.DataFrame with one row per unique combination of well, zone and date.
     """
+
     compdat_df = create_compdat_df(resdatafiles, zonemap=zonemap)
+
     if "ZONE" not in compdat_df.columns:
         logger.warning(
             "ZONE column not generated in compdat table. "

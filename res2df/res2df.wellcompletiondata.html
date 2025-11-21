@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>res2df.wellcompletiondata &mdash; res2df 1.3.9 documentation</title>
+  <title>res2df.wellcompletiondata &mdash; res2df 1.3.10.dev1+gc03042365 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=98c25ec5"></script>
+      <script src="../_static/documentation_options.js?v=1147b0c8"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -139,7 +139,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="res2df.wellcompletiondata.df">
-<span class="sig-prename descclassname"><span class="pre">res2df.wellcompletiondata.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_wellconnstatus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excl_well_startswith</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/wellcompletiondata.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.wellcompletiondata.df" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">res2df.wellcompletiondata.</span></span><span class="sig-name descname"><span class="pre">df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resdatafiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zonemap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_wellconnstatus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excl_well_startswith</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/res2df/wellcompletiondata.html#df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#res2df.wellcompletiondata.df" title="Link to this definition"></a></dt>
 <dd><p>Aggregates compdat to zone level. If use_wellconnstatus is True,
 the actual OP/SH status of a connection will be extracted from summary
 data using the wellconnstatus module. If not, connection status is taken
@@ -148,11 +148,13 @@ directly from parsing the schedule file, using the compdat module.</p>
 regarded as open if one or more connections are open, regardless of
 if other connections are closed. And the KH is summed over open connections
 only.</p>
+<p>If no zonemap is provided, it will be looked for in the default location
+(the same directory as the DATA file loaded in resdatafiles).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>resdatafiles; ResdataFiles</em>)</p></li>
-<li><p><strong>zonemap</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – dictionary with layer-&gt;zone mapping</p></li>
+<li><p><strong>zonemap</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>] | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – dictionary with layer-&gt;zone mapping</p></li>
 <li><p><strong>use_wellconnstatus</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – boolean</p></li>
 </ul>
 </dd>

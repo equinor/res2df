@@ -52,7 +52,7 @@ foo
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_lyrfile(lyrfile) == {}
+    assert ecl2df.common.parse_lyrfile(lyrfile) is None
     assert "Could not parse lyr file" in caplog.text
     assert "Failed on content: foo" in caplog.text
 
@@ -64,7 +64,7 @@ foo 1 2 3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_lyrfile(lyrfile) == {}
+    assert ecl2df.common.parse_lyrfile(lyrfile) is None
     assert "Failed on content: foo 1 2 3" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"

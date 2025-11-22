@@ -52,7 +52,7 @@ foo
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_lyrfile(lyrfile) is None
+    assert ecl2df.common.parse_lyrfile(lyrfile) == {}
     assert "Could not parse lyr file" in caplog.text
     assert "Failed on content: foo" in caplog.text
 
@@ -64,7 +64,7 @@ foo 1 2 3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.common.parse_lyrfile(lyrfile) is None
+    assert ecl2df.common.parse_lyrfile(lyrfile) == {}
     assert "Failed on content: foo 1 2 3" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -74,7 +74,7 @@ foo 2-1
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) == {}
     assert "From_layer higher than to_layer" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -85,7 +85,7 @@ foo   3- 4 #FFGGHH
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) == {}
     assert "Failed on content: foo   3- 4 #FFGGHH" in caplog.text
 
     lyrfile = tmp_path / "formations.lyr"
@@ -96,7 +96,7 @@ foo   3- 4 bluez
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) == {}
     assert "Failed on content: foo   3- 4 bluez" in caplog.text
 
     lyrfile.write_text(
@@ -105,7 +105,7 @@ invalid 1-2-3
 """,
         encoding="utf-8",
     )
-    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) is None
+    assert ecl2df.EclFiles(REEK).get_zonemap(str(lyrfile)) == {}
 
 
 def test_lyrlist_format(tmp_path):

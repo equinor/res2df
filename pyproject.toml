@@ -62,7 +62,7 @@ types = [
     "pandas-stubs",
 ]
 docs = [
-    "autoapi",
+    "sphinx-autoapi",
     "ipython",
     "rstcheck",
     "setuptools",
@@ -162,6 +162,7 @@ ignore = [
 [tool.ruff.lint.extend-per-file-ignores]
 "src/res2df/__init__.py" = ["PLC0414"]
 "tests/*" = ["RUF005", "ANN"]
+"docs/*" = ["ANN"]
 
 [tool.ruff.lint.pylint]
 max-args = 20

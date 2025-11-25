@@ -78,6 +78,7 @@ jobs:
 
       - name: Build documentation
         run: |
+          sudo apt-get install graphviz
           sphinx-build -W -b html docs build/sphinx/html
 
       - name: Update GitHub pages

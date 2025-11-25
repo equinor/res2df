@@ -39,10 +39,11 @@ version = release
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "autoapi.sphinx",
+    "autoapi.extension",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
+    "sphinx.ext.inheritance_diagram",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
@@ -50,11 +51,29 @@ extensions = [
     "sphinxarg.ext",
 ]
 
-autoapi_modules: dict = {"res2df": None}
+autoapi_dirs = ["../src/res2df"]
+autoapi_root = "res2df"
+autoapi_type = "python"
+autoapi_add_toctree_entry = False
+autoapi_own_page_level = "module"
 
-autodoc_default_options = {"members": None}
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+]
+
+autodoc_default_options = {
+    "members": True,
+    "imported-members": False,
+}
 
 autosummary_generate = True
+
+suppress_warnings = [
+    "docutils",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -188,3 +207,27 @@ epub_exclude_files = ["search.html"]
 
 
 # -- Extension configuration -------------------------------------------------
+
+
+def skip_unwanted_members(app, what, name, obj, skip, options):
+    short_name = name.split(".")[-1]
+
+    if "vfp" in name and short_name.startswith("_"):
+        return False
+
+    if ".constants." in name or name.endswith(".constants"):
+        return True
+
+    if short_name == "logger":
+        return True
+
+    if what == "data" and (
+        short_name.isupper() or short_name.replace("_", "").isupper()
+    ):
+        return True
+
+    return skip
+
+
+def setup(app):
+    app.connect("autoapi-skip-member", skip_unwanted_members)

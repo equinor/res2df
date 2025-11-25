@@ -13,7 +13,8 @@ name = "res2df"
 description = "Convert reservoir simulator input and output to DataFrames"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { file = "LICENSE" }
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 authors = [
     { name = "Håvard Berland", email = "havb@equinor.com" }
 ]
@@ -28,7 +29,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Natural Language :: English",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 ]
 
 dynamic = ["version"]

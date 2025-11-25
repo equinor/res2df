@@ -6,7 +6,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-write_to = "src/res2df/version.py"
+version_file = "src/res2df/version.py"
 
 [project]
 name = "res2df"

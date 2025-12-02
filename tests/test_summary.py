@@ -10,8 +10,7 @@ import pytest
 import yaml
 from resdata.summary import Summary
 
-from res2df import csv2res, res2csv, summary
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, csv2res, res2csv, summary
 from res2df.summary import (
     _df2pyarrow,
     _fallback_date_roll,
@@ -22,13 +21,6 @@ from res2df.summary import (
     resample_smry_dates,
     smry_meta,
 )
-
-try:
-    import opm  # noqa: F401
-
-    HAVE_OPM = True
-except ImportError:
-    HAVE_OPM = False
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -1231,7 +1223,6 @@ def test_df2pyarrow_strings():
     pd.testing.assert_frame_equal(dframe, pyat_df[["FOO", "BAR"]])
 
 
-@pytest.mark.skipif(not HAVE_OPM, reason="Test requires OPM")
 def test_res2df_errors(tmp_path):
     """Test error handling on bogus/corrupted summary files"""
     os.chdir(tmp_path)

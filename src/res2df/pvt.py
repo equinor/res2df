@@ -5,11 +5,12 @@ Data can be extracted from a complete deck or from individual files.
 """
 
 import argparse
-import contextlib
 import logging
 from pathlib import Path
 from typing import cast
 
+# Needed for mypy
+import opm.io
 import pandas as pd
 
 from .common import (
@@ -24,11 +25,6 @@ from .common import fill_reverse_parser as common_fill_reverse_parser
 from .inferdims import DIMS_POS, inject_xxxdims_ntxxx
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
-
-with contextlib.suppress(ImportError):
-    # Needed for mypy
-    import opm.io
-
 
 logger: logging.Logger = logging.getLogger(__name__)
 

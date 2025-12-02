@@ -1,22 +1,12 @@
 import os
 from pathlib import Path
 
-import pytest
-
 from res2df import ResdataFiles
-
-try:
-    import opm  # noqa: F401
-
-    HAVE_OPM = True
-except ImportError:
-    HAVE_OPM = False
 
 TESTDIR = Path(__file__).absolute().parent
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 
 
-@pytest.mark.skipif(not HAVE_OPM, reason="OPM is not installed")
 def test_filedescriptors():
     """Test that filedescriptors are properly closed"""
 

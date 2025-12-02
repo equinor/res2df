@@ -3,12 +3,12 @@ Extract EQUIL from a :term:`.DATA file` as Pandas DataFrame
 """
 
 import argparse
-import contextlib
 import logging
 from collections.abc import Container
 from pathlib import Path
 from typing import Final
 
+import opm.io
 import pandas as pd
 
 from .common import (
@@ -24,10 +24,6 @@ from .common import fill_reverse_parser as common_fill_reverse_parser
 from .inferdims import DIMS_POS, inject_xxxdims_ntxxx
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
-
-with contextlib.suppress(ImportError):
-    import opm.io
-
 
 logger = logging.getLogger(__name__)
 

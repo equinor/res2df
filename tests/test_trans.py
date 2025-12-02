@@ -5,8 +5,7 @@ from pathlib import Path
 import networkx
 import pandas as pd
 
-from res2df import res2csv, trans
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, res2csv, trans
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

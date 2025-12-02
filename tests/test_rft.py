@@ -8,8 +8,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import res2csv, rft
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, res2csv, rft
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

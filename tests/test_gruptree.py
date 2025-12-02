@@ -10,14 +10,6 @@ import pytest
 from res2df import gruptree, res2csv
 from res2df.resdatafiles import ResdataFiles
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed, nothing relevant in here then",
-        allow_module_level=True,
-    )
-
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 # EIGTHCELLS is to be used in test_main_subparser when #356 is solved:

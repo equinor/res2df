@@ -6,13 +6,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-try:
-    import opm.io
-
-    HAVE_OPM = True
-except ImportError:
-    HAVE_OPM = False
-
+import opm.io
 from resdata.grid import Grid
 from resdata.rd_util import FileMode
 from resdata.resfile import ResdataFile
@@ -22,21 +16,20 @@ from .common import convert_lyrlist_to_zonemap, parse_lyrfile
 
 logger = logging.getLogger(__name__)
 
-if HAVE_OPM:
-    # Default parse option to opm.io for a very permissive parsing
-    OPMIOPARSER_RECOVERY: list[tuple[str, Any]] = [
-        ("PARSE_EXTRA_DATA", opm.io.action.ignore),
-        ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
-        ("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore),
-        ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
-        ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
-        ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
-        ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
-        ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
-        ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
-        ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
-        ("UNSUPPORTED_*", opm.io.action.ignore),
-    ]
+# Default parse option to opm.io for a very permissive parsing
+OPMIOPARSER_RECOVERY: list[tuple[str, Any]] = [
+    ("PARSE_EXTRA_DATA", opm.io.action.ignore),
+    ("PARSE_EXTRA_RECORDS", opm.io.action.ignore),
+    ("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore),
+    ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
+    ("PARSE_MISSING_INCLUDE", opm.io.action.ignore),
+    ("PARSE_MISSING_SECTIONS", opm.io.action.ignore),
+    ("PARSE_RANDOM_SLASH", opm.io.action.ignore),
+    ("PARSE_RANDOM_TEXT", opm.io.action.ignore),
+    ("PARSE_UNKNOWN_KEYWORD", opm.io.action.ignore),
+    ("SUMMARY_UNKNOWN_GROUP", opm.io.action.ignore),
+    ("UNSUPPORTED_*", opm.io.action.ignore),
+]
 
 
 class ResdataFiles:

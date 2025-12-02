@@ -10,19 +10,15 @@ import sys
 from typing import Any
 
 import numpy as np
+
+# Needed for mypy
+import opm.io
 import pandas as pd
 import pyarrow as pa
 
-try:
-    # Needed for mypy
-
-    import opm.io
-
-    # This import is seemingly not used, but necessary for some attributes
-    # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa: F401
-except ImportError:
-    pass
+# This import is seemingly not used, but necessary for some attributes
+# to be included in DeckItem objects.
+from opm.io.deck import DeckKeyword  # noqa: F401
 
 from ..common import comment_formatter, write_dframe_stdout_file, write_inc_stdout_file
 from ..common import fill_reverse_parser as common_fill_reverse_parser

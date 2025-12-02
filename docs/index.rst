@@ -23,7 +23,7 @@ data format.
    :maxdepth: 10
    :caption: Python API
 
-   res2df/res2df
+   res2df/res2df/index
 
 Indices and tables
 ==================

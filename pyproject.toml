@@ -6,14 +6,15 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-write_to = "src/res2df/version.py"
+version_file = "src/res2df/version.py"
 
 [project]
 name = "res2df"
 description = "Convert reservoir simulator input and output to DataFrames"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { file = "LICENSE" }
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 authors = [
     { name = "Håvard Berland", email = "havb@equinor.com" }
 ]
@@ -28,7 +29,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Natural Language :: English",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 ]
 
 dynamic = ["version"]
@@ -62,7 +62,7 @@ types = [
     "pandas-stubs",
 ]
 docs = [
-    "autoapi",
+    "sphinx-autoapi",
     "ipython",
     "rstcheck",
     "setuptools",
@@ -162,6 +162,7 @@ ignore = [
 [tool.ruff.lint.extend-per-file-ignores]
 "src/res2df/__init__.py" = ["PLC0414"]
 "tests/*" = ["RUF005", "ANN"]
+"docs/*" = ["ANN"]
 
 [tool.ruff.lint.pylint]
 max-args = 20

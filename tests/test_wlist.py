@@ -5,14 +5,6 @@ import pytest
 
 from res2df import ResdataFiles, compdat
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed",
-        allow_module_level=True,
-    )
-
 
 @pytest.mark.parametrize(
     "deckstr, expected_df",

@@ -5,14 +5,6 @@ import pytest
 
 from res2df import ResdataFiles, vfp
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed",
-        allow_module_level=True,
-    )
-
 VFPPROD_ARRAY_NAMES = [
     "THP_INDICES",
     "WFR_INDICES",

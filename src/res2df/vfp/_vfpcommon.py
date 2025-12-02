@@ -9,17 +9,14 @@ output both in csv format as a pandas DataFrame or in pyarrow and pyarrow.table
 import logging
 
 import numpy as np
+
+# Needed for mypy
+import opm.io
 import pandas as pd
 
-try:
-    # Needed for mypy
-    import opm.io
-
-    # This import is seemingly not used, but necessary for some attributes
-    # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa: F401
-except ImportError:
-    pass
+# This import is seemingly not used, but necessary for some attributes
+# to be included in DeckItem objects.
+from opm.io.deck import DeckKeyword  # noqa: F401
 
 from ..common import parse_opmio_deckrecord
 

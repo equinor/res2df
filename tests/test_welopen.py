@@ -5,14 +5,6 @@ import pytest
 
 from res2df import ResdataFiles, compdat
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed",
-        allow_module_level=True,
-    )
-
 WELOPEN_CASES = [
     # WELOPEN SHUT closes both well and connections
     pytest.param(

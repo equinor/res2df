@@ -3,12 +3,9 @@ Support module for inferring EQLDIMS and TABDIMS from incomplete
 reservoir simulator decks (typically single include-files)
 """
 
-import contextlib
 import logging
 
-with contextlib.suppress(ImportError):
-    import opm.io
-    # Let parts of res2df work without OPM:
+import opm.io
 
 from .resdatafiles import ResdataFiles
 

@@ -7,13 +7,6 @@ import res2df
 
 from .test_grid import EIGHTCELLS, REEK
 
-try:
-    import opm  # noqa: F401
-
-    HAVE_OPM = True
-except ImportError:
-    HAVE_OPM = False
-
 
 @pytest.fixture(autouse=True)
 def cleanup_loggers():
@@ -75,7 +68,6 @@ def test_default_logger_levels_and_split(capsys):
     assert "ERROR-text" in captured.err
 
 
-@pytest.mark.skipif(not HAVE_OPM, reason="Command line client requires OPM")
 @pytest.mark.parametrize(
     "res2df_module, verbose, fileexport",
     itertools.product(res2df.SUBMODULES, [False, True], [True, False]),

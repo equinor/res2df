@@ -8,17 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import csv2res, inferdims, res2csv, satfunc
-from res2df.resdatafiles import ResdataFiles
-
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed, nothing relevant in here then",
-        allow_module_level=True,
-    )
-
+from res2df import ResdataFiles, csv2res, inferdims, res2csv, satfunc
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

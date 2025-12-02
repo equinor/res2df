@@ -7,15 +7,6 @@ import pytest
 
 from res2df import ResdataFiles, compdat, res2csv
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed",
-        allow_module_level=True,
-    )
-
-
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")

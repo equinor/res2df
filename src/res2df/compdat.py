@@ -210,7 +210,7 @@ def deck2dfs(
                     )
                 )
                 if "INFO_TYPE" in rec_data and rec_data["INFO_TYPE"] == "ABS":
-                    rec_data["SEGMENT_MD"] = rec_data["SEGMENT_LENGTH"]
+                    rec_data["SEGMENT_MD"] = rec_data["LENGTH"]
                 welsegsrecords.append(rec_data)
         elif kword.name == "WLIST":
             for rec in kword:

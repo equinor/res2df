@@ -5,8 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import grid, pillars, res2csv
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, grid, pillars, res2csv
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

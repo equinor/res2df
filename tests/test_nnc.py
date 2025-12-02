@@ -8,16 +8,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import faults, nnc, res2csv, trans
-from res2df.resdatafiles import ResdataFiles
-
-try:
-    import opm  # noqa: F401
-
-    HAVE_OPM = True
-except ImportError:
-    HAVE_OPM = False
-
+from res2df import ResdataFiles, faults, nnc, res2csv, trans
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")
@@ -61,7 +52,6 @@ def test_nnc2df_coords():
     assert "Z" in gnncdf
 
 
-@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_nnc2df_faultnames():
     """Add faultnames from FAULTS keyword to connections"""
     resdatafiles = ResdataFiles(REEK)
@@ -113,7 +103,6 @@ def test_df2res_editnnc(tmp_path):
     print(nnc.df2res_editnnc(nnc.df(resdatafiles).head(4).assign(TRANM=0.1)))
 
 
-@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_main(tmp_path, mocker):
     """Test command line interface"""
     tmpcsvfile = tmp_path / "nnc.csv"
@@ -127,7 +116,6 @@ def test_main(tmp_path, mocker):
     assert "TRAN" in disk_df
 
 
-@pytest.mark.skipif(not HAVE_OPM, reason="Requires OPM")
 def test_magic_stdout():
     """Test that we can pipe the output into a dataframe"""
     result = subprocess.run(

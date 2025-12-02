@@ -18,21 +18,16 @@ from typing import Any, cast
 
 import dateutil.parser
 import numpy as np
+import opm.io.deck
 import pandas as pd
 import pyarrow as pa
+
+# This import is seemingly not used, but necessary for some attributes
+# to be included in DeckItem objects.
+from opm.io.deck import DeckKeyword  # noqa: F401
 from pyarrow import (
     feather,  # necessary as this module is not loaded unless explicitly imported
 )
-
-try:
-    import opm.io.deck
-
-    # This import is seemingly not used, but necessary for some attributes
-    # to be included in DeckItem objects.
-    from opm.io.deck import DeckKeyword  # noqa: F401
-except ImportError:
-    # Allow parts of res2df to work without OPM:
-    pass
 
 from .__version__ import __version__
 from .constants import MAGIC_STDOUT

@@ -5,18 +5,9 @@ import subprocess
 from pathlib import Path
 
 import pandas as pd
-import pytest
 
-from res2df import res2csv, wcon
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, res2csv, wcon
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed",
-        allow_module_level=True,
-    )
 TESTDIR = Path(__file__).absolute().parent
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")
 

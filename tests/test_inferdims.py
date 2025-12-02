@@ -6,14 +6,6 @@ import pytest
 
 from res2df import inferdims
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed, nothing relevant in here then",
-        allow_module_level=True,
-    )
-
 
 def test_injectsatnumcount():
     """Test that we always get out a string with TABDIMS"""

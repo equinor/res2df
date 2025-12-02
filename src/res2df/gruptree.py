@@ -2,7 +2,6 @@
 
 import argparse
 import collections
-import contextlib
 import datetime
 import logging
 import sys
@@ -10,12 +9,11 @@ import warnings
 from typing import Any
 
 import numpy as np
+
+# Needed for mypy
+import opm.io
 import pandas as pd
 import treelib
-
-with contextlib.suppress(ImportError):
-    # Needed for mypy
-    import opm.io
 
 from .common import (
     OPMKEYWORDS,

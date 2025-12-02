@@ -14,14 +14,11 @@ TABDIMS or to supply the satnumcount directly to avoid possible bugs.
 """
 
 import argparse
-import contextlib
 import logging
 from pathlib import Path
 
+import opm.io
 import pandas as pd
-
-with contextlib.suppress(ImportError):
-    import opm.io
 
 from .common import (
     comment_formatter,

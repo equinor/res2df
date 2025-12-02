@@ -5,22 +5,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import common, compdat, wellcompletiondata
-from res2df.resdatafiles import ResdataFiles
+from res2df import ResdataFiles, common, compdat, wellcompletiondata
 from res2df.wellcompletiondata import (
     _aggregate_layer_to_zone,
     _df2pyarrow,
     _excl_well_startswith,
     _merge_compdat_and_connstatus,
 )
-
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed",
-        allow_module_level=True,
-    )
 
 TESTDIR = Path(__file__).absolute().parent
 EIGHTCELLS = str(TESTDIR / "data/eightcells/EIGHTCELLS.DATA")

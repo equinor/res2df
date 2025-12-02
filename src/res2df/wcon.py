@@ -1,15 +1,12 @@
 """Extract WCON* from a .DATA file"""
 
 import argparse
-import contextlib
 import datetime
 import logging
 
+# Needed for mypy
+import opm.io
 import pandas as pd
-
-with contextlib.suppress(ImportError):
-    # Needed for mypy
-    import opm.io
 
 from .common import (
     parse_opmio_date_rec,

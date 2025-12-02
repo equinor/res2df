@@ -6,14 +6,6 @@ import pytest
 
 import res2df
 
-try:
-    import opm  # noqa: F401
-except ImportError:
-    pytest.skip(
-        "OPM is not installed, command line client does not work without it.",
-        allow_module_level=True,
-    )
-
 
 @pytest.mark.integration
 def test_integration():

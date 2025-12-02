@@ -8,9 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from res2df import fipreports, res2csv
+from res2df import ResdataFiles, fipreports, res2csv
 from res2df.fipreports import report_block_lineparser as parser
-from res2df.resdatafiles import ResdataFiles
 
 TESTDIR = Path(__file__).absolute().parent
 DATAFILE = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

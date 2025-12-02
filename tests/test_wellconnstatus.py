@@ -3,15 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from res2df import wellconnstatus
-from res2df.resdatafiles import ResdataFiles
-
-try:
-    import opm  # noqa: F401
-
-    HAVE_OPM = True
-except ImportError:
-    HAVE_OPM = False
+from res2df import ResdataFiles, wellconnstatus
 
 TESTDIR = Path(__file__).absolute().parent
 REEK = str(TESTDIR / "data/reek/eclipse/model/2_R001_REEK-0.DATA")

@@ -11,17 +11,13 @@
 """
 
 import argparse
-import contextlib
 import datetime
 import logging
+from typing import Any
 
 import numpy as np
+import opm.io.deck
 import pandas as pd
-
-with contextlib.suppress(ImportError):
-    import opm.io.deck
-
-from typing import Any
 
 from .common import (
     get_wells_matching_template,

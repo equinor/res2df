@@ -6,19 +6,15 @@ a DataFrame
 """
 
 import argparse
-import contextlib
 import logging
 
+# Needed for mypy
+import opm.io
 import pandas as pd
 
 from .common import parse_opmio_deckrecord, write_dframe_stdout_file
 from .res2csvlogger import getLogger_res2csv
 from .resdatafiles import ResdataFiles
-
-with contextlib.suppress(ImportError):
-    # Needed for mypy
-    import opm.io
-
 
 logger = logging.getLogger(__name__)
 
